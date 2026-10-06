@@ -32,6 +32,7 @@ from bluefern_dispatches.gaza_historical_correction import (
     _render_flash_briefing_json,
     _render_original_audio_metadata_json,
     _render_story_scoped_edition_html,
+    _render_withdrawal_payloads,
     _validate_edition_audio_ownership,
     _validate_flash_briefing_audio_ownership,
     sha256_file,
@@ -2269,6 +2270,121 @@ def test_stage_is_atomic_idempotent_and_rejects_conflict(tmp_path: Path, monkeyp
             source_root=case["source"],
             pages_root=case["pages"],
         )
+
+
+def test_story_withdrawal_feeds_get_correction_items_with_audio_placeholder(tmp_path: Path) -> None:
+    pages = tmp_path / "pages"
+    date = "2026-10-03"
+    story_id = "gaza-story-2026-10-03-003"
+    correction_id = "gaza-correction-v1-f41fb90fc692a7f19395"
+    title = "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters"
+    claim = "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus."
+
+    _write_json(
+        pages / "gaza" / "editions" / date / "curation_manifest.json",
+        [
+            {"story_id": story_id, "title": title, "summary": claim},
+            {"story_id": "gaza-story-2026-10-03-001", "title": "Unrelated", "summary": "Unrelated Gaza story."},
+        ],
+    )
+    _write_json(
+        pages / "gaza" / "editions" / date / "sources_manifest.json",
+        [
+            {
+                "source_record_id": "aljazeera-west-bank",
+                "title": title,
+                "url": "https://www.aljazeera.com/news/2026/10/3/example",
+                "used_in_story_ids": [story_id],
+            },
+            {
+                "source_record_id": "gaza-source",
+                "title": "Gaza source",
+                "url": "https://example.test/gaza",
+                "used_in_story_ids": ["gaza-story-2026-10-03-001"],
+            },
+        ],
+    )
+    _write_json(
+        pages / "gaza" / "editions" / date / "dedupe_report.json",
+        {"retained_stories": [{"story_id": story_id}, {"story_id": "gaza-story-2026-10-03-001"}]},
+    )
+    _write_json(
+        pages / "gaza" / "editions" / date / "edition_manifest.json",
+        {"story_count": 2, "included_story_count": 2, "source_count": 2},
+    )
+    edition_html = (
+        "<!doctype html><html><body><main><h2>Today&rsquo;s Read</h2>"
+        f"<p>{claim}</p><h2>Core Gaza Developments</h2>"
+        "<h2>At A Glance</h2>"
+        f"<article><h3>{title}</h3><p>{claim}</p></article>"
+        "<article><h3>Unrelated</h3><p>Unrelated Gaza story.</p></article></main></body></html>"
+    )
+    (pages / "gaza" / "editions" / date / "index.html").write_text(edition_html, encoding="utf-8")
+    for relative in ("gaza/rss.xml", "gaza/podcast.xml", "gaza/audio/podcast.xml"):
+        path = pages / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("<rss><channel><item><guid>existing</guid></item></channel></rss>", encoding="utf-8")
+    for relative in ("gaza/audio/index.html", "gaza/index.html", "gaza/archive.html", "index.html"):
+        path = pages / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("<!doctype html><html><body><main>Existing</main></body></html>", encoding="utf-8")
+    _write_json(
+        pages / "gaza" / "audio" / f"{date}.json",
+        {"script_text": claim, "audio_status": "audio_file_ready"},
+    )
+    (pages / "gaza" / "audio" / f"{date}-transcript.html").write_text(
+        f"<!doctype html><html><body><main>{claim}</main></body></html>",
+        encoding="utf-8",
+    )
+    _write_json(pages / "gaza" / "flash-briefing.json", [{"uid": f"gaza-{date}", "mainText": claim}])
+
+    correction = {
+        "correction_id": correction_id,
+        "correction_type": "story_withdrawal",
+        "story_id": story_id,
+        "owning_edition_date": date,
+        "correction_date": "2026-10-05",
+        "target_identity_fingerprint": "sha256:" + "1" * 64,
+        "prior_claim_fingerprint": "topic_fingerprint_v1:0e2c1ef92ce4dc29",
+        "withdrawal_fingerprint": "sha256:" + "2" * 64,
+        "prior_claim": claim,
+        "withdrawal_reason": "The story is outside the Gaza scope and has been withdrawn.",
+        "source_attribution": "Al Jazeera",
+        "evidence_references": [
+            {
+                "role": "source_url",
+                "url": "https://www.aljazeera.com/news/2026/10/3/example",
+                "supporting_detail": "West Bank, not Gaza.",
+            },
+            {
+                "role": "edition_html",
+                "path": f"gaza/editions/{date}/index.html",
+                "supporting_detail": "The target story was rendered.",
+            },
+        ],
+        "public_artifact_bindings": {"pages_head": "a" * 40, "edition_html_sha256": "b" * 64},
+        "audio_impacted": True,
+    }
+    audio_request = {
+        "script_text": "A correction to our October 3 Gaza dispatch.",
+        "script_sha256": "sha256:" + "3" * 64,
+        "tts_provider": "openai",
+        "tts_model": "gpt-4o-mini-tts",
+        "tts_voice": "alloy",
+    }
+
+    payloads = _render_withdrawal_payloads(pages, correction, audio_request)
+
+    rss = payloads["rss"].decode("utf-8")
+    assert "<item>" in rss
+    assert "<section" not in rss
+    assert correction_id in rss
+    for role in ("podcast", "audio_podcast"):
+        feed = payloads[role].decode("utf-8")
+        assert "<section" not in feed
+        assert correction_id in feed
+        assert f"gaza/audio/corrections/{correction_id}.mp3" in feed
+        assert 'type="audio/mpeg" length="0"' in feed
 
 
 def test_staged_verification_rejects_source_and_pages_drift(tmp_path: Path) -> None:

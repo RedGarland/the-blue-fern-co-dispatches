@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261006T124310-0700-r11",
+  "scheduled_for": "2026-10-06T12:43:10-07:00",
+  "started_at": "2026-10-06T12:43:10-07:00",
+  "completed_at": "2026-10-06T12:43:56.924550-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T11:43:20-07:00",
+    "end": "2026-10-06T12:43:56.924550-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_latest_notice_date": "2026-10-05",
+    "cms_result": "No CMS Public Notice newer than 2026-10-05; the two 2026-10-05 rescissions were prior-watch duplicates.",
+    "additional_targeted_searches": 12,
+    "additional_search_result": "No new qualifying U.S. or territory healthcare-access development found in the bounded search window.",
+    "exclusions_applied": [
+      "proposals without concrete access effect",
+      "ownership/business stories without service change",
+      "opinion",
+      "unsupported social claims",
+      "duplicates"
+    ],
+    "production_collection_authoritative": true
+  }
+}

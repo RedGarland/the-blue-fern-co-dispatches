@@ -116,7 +116,7 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-10-06T14:24:01.625793Z",
+  "last_exported_at": "2026-10-06T14:50:24.333283Z",
   "last_receipt_at": "2026-10-06T14:23:53.322753Z",
   "latest_runtime_proof_date": "2026-10-06T14:23:53.322753Z",
   "next_expected_run": null,
@@ -201,6 +201,15 @@
         "ignored_entry_count": 0,
         "malformed_entry_count": 0,
         "subtracting_entry_count": 1,
+        "unknown_disposition_count": 0
+      },
+      {
+        "applied_item_count": 0,
+        "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-2026-10-05-codex-private-dispositions.json",
+        "entry_count": 3,
+        "ignored_entry_count": 0,
+        "malformed_entry_count": 0,
+        "subtracting_entry_count": 3,
         "unknown_disposition_count": 0
       },
       {

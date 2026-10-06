@@ -2004,18 +2004,32 @@ def _render_withdrawal_payloads(
     )
 
     notice = _correction_notice_html(correction)
-    for role, relative in (
-        ("rss", "gaza/rss.xml"),
-        ("podcast", "gaza/podcast.xml"),
-        ("audio_podcast", "gaza/audio/podcast.xml"),
-        ("audio_index", "gaza/audio/index.html"),
-        ("gaza_index", "gaza/index.html"),
-        ("gaza_archive", "gaza/archive.html"),
-        ("root_index", "index.html"),
+    description = reader.feed_description
+    link = f"https://dispatches.thebluefernco.com/gaza/corrections/{correction['correction_id']}/"
+    rss_item = (
+        f"<item><title>{html.escape(reader.heading, quote=False)}</title>"
+        f"<link>{html.escape(link)}</link><guid isPermaLink=\"false\">{correction['correction_id']}</guid>"
+        f"<description>{html.escape(description, quote=False)}</description></item>"
+    )
+    podcast_item = (
+        f"<item><title>{html.escape(reader.heading, quote=False)}</title>"
+        f"<link>{html.escape(link)}</link><guid isPermaLink=\"false\">{correction['correction_id']}</guid>"
+        f"<description>{html.escape(description, quote=False)}</description>"
+        f"<enclosure url=\"https://dispatches.thebluefernco.com/gaza/audio/corrections/{correction['correction_id']}.mp3\" "
+        "type=\"audio/mpeg\" length=\"0\" /></item>"
+    )
+    for role, relative, insertion in (
+        ("rss", "gaza/rss.xml", rss_item),
+        ("podcast", "gaza/podcast.xml", podcast_item),
+        ("audio_podcast", "gaza/audio/podcast.xml", podcast_item),
+        ("audio_index", "gaza/audio/index.html", notice),
+        ("gaza_index", "gaza/index.html", notice),
+        ("gaza_archive", "gaza/archive.html", notice),
+        ("root_index", "index.html", notice),
     ):
         current = _read_text_artifact(_repo_path(pages_root, relative, role), role)
         marker = "</channel>" if role in {"rss", "podcast", "audio_podcast"} else "</main>" if "</main>" in current.text else "</body>"
-        payloads[role] = current.encode(_append_before(current.text, marker, notice, role), role)
+        payloads[role] = current.encode(_append_before(current.text, marker, insertion, role), role)
 
     audio_metadata = _load_json(
         _repo_path(pages_root, f"gaza/audio/{date}.json", "prior audio metadata"),

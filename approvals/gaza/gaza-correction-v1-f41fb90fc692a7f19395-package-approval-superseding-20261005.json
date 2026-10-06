@@ -1,0 +1,17 @@
+{
+  "approval_fingerprint": "sha256:ebd1327903227f4e99e792528eaa1277a6c2ff03f3060240332ed14e9fcece1b",
+  "approval_id": "gaza-20261003-story-withdrawal-package-approval-superseding-20261005",
+  "approved_at": "2026-10-05T23:59:00Z",
+  "approver": "William Patton / RedGarland",
+  "artifact_set_sha256": "sha256:566bbc3c9cbcd6a210961cfc9fa87ebc7ab6c4651949c4badd0392f1fe5f94ac",
+  "audio_authorized": true,
+  "audio_request_sha256": "e1813404f54674d6167a3adbe1ae065a988fb6f604c801de90bd34270dddc350",
+  "correction_id": "gaza-correction-v1-f41fb90fc692a7f19395",
+  "package_authorized": true,
+  "pages_head": "be649b38d070bef1e0f8d44d486483bf725fe624",
+  "proposal_sha256": "sha256:fe74e81b77ed4455db844c57af2f321da459132abb685b96f97e24edca850e18",
+  "publication_authorized": false,
+  "schema_version": "gaza_formal_historical_correction_release_approval_v1",
+  "scope": "formal_historical_correction",
+  "source_commit": "44fce0394058969ad10f4753b6057338cbf8cfc9"
+}

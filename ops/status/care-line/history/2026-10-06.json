@@ -17,7 +17,7 @@
     "aggregate_status": "DEGRADED",
     "all_current_failures_external": true,
     "all_current_failures_non_actionable": true,
-    "attention_task_count": 5,
+    "attention_task_count": 6,
     "attention_tasks": [
       {
         "artifact_id": "care-proof-only-food-care-continuation-20261006T202826Z-f9ce5b9a.json",
@@ -36,6 +36,14 @@
         "task_key": "care_line_approved_release_publication"
       },
       {
+        "artifact_id": "care-september-normalization-proof-20261006T214100Z.json",
+        "classification": "failure",
+        "exit_code": 1,
+        "failure_stage": "source_state",
+        "status": "FAILED",
+        "task_key": "care_line_approved_release_publication"
+      },
+      {
         "artifact_id": "20261006T130002Z-27112.json",
         "classification": "partial_success",
         "exit_code": 0,
@@ -45,14 +53,6 @@
       },
       {
         "artifact_id": "care-cleveland-404-recovery-20261006T181200Z.json",
-        "classification": "partial_success",
-        "exit_code": 0,
-        "failure_stage": "care_line_collection",
-        "status": "DEGRADED",
-        "task_key": "care_line_collection"
-      },
-      {
-        "artifact_id": "20261006T190002Z-35228.json",
         "classification": "partial_success",
         "exit_code": 0,
         "failure_stage": "care_line_collection",
@@ -117,8 +117,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-06T21:40:00.050413Z",
-  "last_receipt_at": "2026-10-06T21:14:19.471855Z",
+  "last_exported_at": "2026-10-06T21:41:24.019031Z",
+  "last_receipt_at": "2026-10-06T21:40:58.941003Z",
   "latest_runtime_proof_date": "2026-10-06T15:30:28Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -1472,6 +1472,31 @@
       "run_id": "care-proof-only-food-care-continuation-20261006T210826Z-23b2502d",
       "scheduled_for": "2026-10-06",
       "started_at": "2026-10-06T21:14:19Z",
+      "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-september-normalization-proof-20261006T214100Z.json",
+      "classification": "failure",
+      "completed_at": "2026-10-06T21:40:58Z",
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "source_state"
+        }
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failure",
+      "run_id": "care-september-normalization-proof-20261006T214100Z",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-06T21:40:58Z",
       "status": "FAILED",
       "task_key": "care_line_approved_release_publication"
     }

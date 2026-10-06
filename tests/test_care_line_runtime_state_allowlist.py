@@ -36,6 +36,17 @@ def _load_scheduler_module(repo: Path):
     return module
 
 
+def _load_publication_scheduler_module(repo: Path):
+    path = repo / "scripts" / "care_line_publication_scheduler.py"
+    spec = importlib.util.spec_from_file_location("care_line_publication_scheduler_under_test", path)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def test_care_line_runtime_paths_are_allowed_but_nearby_paths_stay_risky(monkeypatch, tmp_path: Path) -> None:
     lines = [
         "## add/care-line-runtime",
@@ -202,6 +213,121 @@ def test_care_line_scheduler_allows_sanctioned_operator_run_evidence_but_not_nea
     monkeypatch.setattr(scheduler, "_run", fake_run_nearby_operator_path)
     with pytest.raises(scheduler.SchedulerError, match="ops/operator/runs/not-a-date/runner-sync.json"):  # type: ignore[attr-defined]
         scheduler.verify_checkout(repo, "add/pages-repo-default")
+
+
+def test_care_line_publication_proof_only_allows_generated_output_residue_but_not_source_drift() -> None:
+    scheduler = _load_publication_scheduler_module(Path(__file__).resolve().parents[1])
+    status_output = "\n".join(
+        [
+            "## add/pages-repo-default",
+            " M output/site/assets/site.css",
+            " M output/site/care-line/index.html",
+            " D output/site/care-line/old.html",
+            "?? output/dispatches/care-line/editions/2026-10-06/index.html",
+            "?? output/site/care-line/editions/2026-10-06/sources_manifest.json",
+            "?? logs/care-line/publication-scheduler/2026-10-06/proof.log",
+            "?? status/care-line/publication-scheduler-runs/2026-10-06/proof.json",
+            " M src/bluefern_dispatches/care_line_national_pipeline.py",
+        ]
+    )
+
+    assert scheduler.unexpected_dirty_paths(
+        status_output,
+        allow_care_line_runtime=True,
+        allow_generated_public_output_residue=True,
+    ) == ["src/bluefern_dispatches/care_line_national_pipeline.py"]
+
+    assert scheduler.unexpected_dirty_paths(
+        status_output,
+        allow_care_line_runtime=True,
+        allow_generated_public_output_residue=False,
+    ) == [
+        "output/dispatches/care-line/editions/2026-10-06/index.html",
+        "output/site/assets/site.css",
+        "output/site/care-line/editions/2026-10-06/sources_manifest.json",
+        "output/site/care-line/index.html",
+        "output/site/care-line/old.html",
+        "src/bluefern_dispatches/care_line_national_pipeline.py",
+    ]
+
+
+@pytest.mark.parametrize("status_code", ["M ", "D ", "A ", "MM"])
+def test_care_line_publication_generated_output_staged_changes_remain_risky(status_code: str) -> None:
+    scheduler = _load_publication_scheduler_module(Path(__file__).resolve().parents[1])
+
+    assert scheduler.unexpected_dirty_paths(
+        f"{status_code} output/site/care-line/index.html\n",
+        allow_care_line_runtime=True,
+        allow_generated_public_output_residue=True,
+    ) == ["output/site/care-line/index.html"]
+
+
+def test_care_line_publication_scheduler_limits_generated_output_residue_to_proof_only(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    scheduler = _load_publication_scheduler_module(Path(__file__).resolve().parents[1])
+    calls: list[dict[str, object]] = []
+
+    class DummyLock:
+        stale_recovered = False
+
+        def __init__(self, path: Path) -> None:
+            self.path = path
+
+        def acquire(self) -> str:
+            return "acquired"
+
+        def release(self) -> None:
+            return None
+
+    def fake_verify_repo(root: Path, **kwargs):  # noqa: ANN001
+        calls.append(dict(kwargs))
+        return {"head": "abc123", "remote_head": "abc123", "unexpected_dirty_paths": []}
+
+    monkeypatch.setattr(scheduler, "SchedulerLock", DummyLock)
+    monkeypatch.setattr(scheduler, "verify_repo", fake_verify_repo)
+    monkeypatch.setattr(scheduler, "run_preflight", lambda _root, _pages_root: None)
+    monkeypatch.setattr(scheduler, "discover_release_candidates", lambda _root, _pages_root: [])
+    monkeypatch.setattr(scheduler, "_write_operational_health_receipt", lambda _root, _record: None)
+
+    source = tmp_path / "source"
+    pages = tmp_path / "pages"
+    source.mkdir()
+    pages.mkdir()
+
+    exit_code, receipt = scheduler.run_publication_once(
+        source,
+        pages,
+        source_branch="add/pages-repo-default",
+        pages_branch="gh-pages",
+        run_date="2026-10-06",
+        run_id="proof",
+        proof_only=True,
+    )
+
+    assert exit_code == 0
+    assert receipt["status"] == "safe_no_op"
+    assert [call["label"] for call in calls] == ["source repo", "Pages repo"]
+    assert calls[0]["allow_generated_public_output_residue"] is True
+    assert calls[1]["allow_generated_public_output_residue"] is False
+
+    calls.clear()
+    exit_code, receipt = scheduler.run_publication_once(
+        source,
+        pages,
+        source_branch="add/pages-repo-default",
+        pages_branch="gh-pages",
+        run_date="2026-10-06",
+        run_id="publication",
+        proof_only=False,
+    )
+
+    assert exit_code == 0
+    assert receipt["status"] == "safe_no_op"
+    assert [call["label"] for call in calls] == ["source repo", "Pages repo"]
+    assert calls[0]["allow_generated_public_output_residue"] is False
+    assert calls[1]["allow_generated_public_output_residue"] is False
 
 
 def test_care_line_collection_scheduler_help_executes_from_other_cwd(tmp_path: Path) -> None:

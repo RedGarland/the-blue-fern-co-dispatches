@@ -1,0 +1,14 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T224451-0700",
+  "scheduled_for": "2026-10-05T22:44:51-07:00",
+  "started_at": "2026-10-05T22:41:47-07:00",
+  "completed_at": "2026-10-05T22:44:51-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {"timezone":"America/Los_Angeles","since":"2026-10-05T21:44:51-07:00","through":"2026-10-05T22:44:51-07:00"},
+  "findings": [],
+  "coverage_notes": "OCHA OPT checked first; WHO checked second; 12 targeted searches completed. UN News search was blocked by robots.txt; useful coverage remained. No new qualifying development identified in-window."
+}

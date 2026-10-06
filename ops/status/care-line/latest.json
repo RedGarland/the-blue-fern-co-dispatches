@@ -85,8 +85,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-06T15:15:19.794339Z",
-  "last_receipt_at": "2026-10-06T15:00:05.445313Z",
+  "last_exported_at": "2026-10-06T15:31:36.821937Z",
+  "last_receipt_at": "2026-10-06T15:30:28.691498Z",
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -99,7 +99,7 @@
   "publication_status": "safe_no_op",
   "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "INCIDENT_OPEN",
-  "runner_source_head": "5b1428c23f05fd3a78f906bd8497889df38040f0",
+  "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "care_line_collection",
@@ -847,6 +847,27 @@
       "started_at": "2026-10-06T15:00:05.435088Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_reviewed_event_queue"
+    },
+    {
+      "artifact_id": "20261006T153018Z-33208.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-06T15:30:28Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "20261006T153018Z-33208",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-06T15:30:19Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
     }
   ]
 }

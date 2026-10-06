@@ -44,8 +44,8 @@
     "private_review_pending_item_count": 0,
     "private_review_unresolved_item_count": 0,
     "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "PARTIAL",
+    "publication_status": "skipped_not_release_ready",
+    "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "INCIDENT_OPEN",
     "stale_observability": false,
     "transient_source_failure_count": null,
@@ -76,6 +76,22 @@
       "started_at": "2026-10-06T14:54:26.299794Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
+    },
+    {
+      "artifact_id": "43724-66171b72.json",
+      "classification": "skipped_not_release_ready",
+      "completed_at": "2026-10-06T15:30:18.7162652Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": false,
+      "publication_status": "skipped_not_release_ready",
+      "run_id": "20261006T153018Z-43724-49defcb5",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-06T15:30:18.6742264Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "food_line_daily_publish"
     },
     {
       "artifact_id": "20261006T152505Z-source-watch.json",
@@ -118,9 +134,9 @@
   "incident_reference": {
     "date": "2026-10-06"
   },
-  "last_exported_at": "2026-10-06T15:28:03.219321Z",
-  "last_receipt_at": "2026-10-06T15:25:07.779760Z",
-  "latest_runtime_proof_date": "2026-10-06T15:25:05.375594Z",
+  "last_exported_at": "2026-10-06T15:31:36.821937Z",
+  "last_receipt_at": "2026-10-06T15:30:18.716265Z",
+  "latest_runtime_proof_date": "2026-10-06T15:30:18.716265Z",
   "next_expected_run": null,
   "observed_date": "2026-10-06",
   "private_review_backlog": {
@@ -241,13 +257,13 @@
   },
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "skipped_not_release_ready"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "PARTIAL",
+  "publication_status": "skipped_not_release_ready",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "INCIDENT_OPEN",
-  "runner_source_head": "5b1428c23f05fd3a78f906bd8497889df38040f0",
+  "runner_source_head": null,
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_after": "2026-10-06T14:00:00Z",
   "stale_observability": false,
@@ -688,6 +704,22 @@
       "started_at": "2026-10-06T14:54:26.299794Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
+    },
+    {
+      "artifact_id": "43724-66171b72.json",
+      "classification": "skipped_not_release_ready",
+      "completed_at": "2026-10-06T15:30:18.7162652Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": false,
+      "publication_status": "skipped_not_release_ready",
+      "run_id": "20261006T153018Z-43724-49defcb5",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-06T15:30:18.6742264Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "food_line_daily_publish"
     },
     {
       "artifact_id": "20261006T073344Z-source-watch.json",

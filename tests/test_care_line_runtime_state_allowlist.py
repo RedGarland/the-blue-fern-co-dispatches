@@ -288,7 +288,7 @@ def test_care_line_publication_scheduler_limits_generated_output_residue_to_proo
     monkeypatch.setattr(scheduler, "SchedulerLock", DummyLock)
     monkeypatch.setattr(scheduler, "verify_repo", fake_verify_repo)
     monkeypatch.setattr(scheduler, "run_preflight", lambda _root, _pages_root: None)
-    monkeypatch.setattr(scheduler, "discover_release_candidates", lambda _root, _pages_root: [])
+    monkeypatch.setattr(scheduler, "discover_release_candidates", lambda *args: [])
     monkeypatch.setattr(scheduler, "_write_operational_health_receipt", lambda _root, _record: None)
 
     source = tmp_path / "source"

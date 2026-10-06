@@ -216,6 +216,12 @@ def _verify_protected_file(source_root: Path, path: Path) -> None:
         raise PublicationSchedulerError(f"approved release artifact differs from protected HEAD: {relative}")
 
 
+def _is_protected_file_at_head(source_root: Path, path: Path) -> bool:
+    relative = path.resolve().relative_to(source_root.resolve()).as_posix()
+    protected = _run(["git", "rev-parse", f"HEAD:{relative}"], cwd=source_root)
+    return protected.returncode == 0
+
+
 def _verify_protected_bundle(source_root: Path, bundle: CareLineApprovedReleaseBundle) -> None:
     for path in (bundle.proposal_path, bundle.review_snapshot_path):
         _verify_protected_file(source_root, path)
@@ -241,7 +247,12 @@ def _already_published(pages_root: Path, edition_date: str) -> bool:
     return listable
 
 
-def discover_release_candidates(source_root: Path, pages_root: Path) -> list[ReleaseCandidate]:
+def discover_release_candidates(
+    source_root: Path,
+    pages_root: Path,
+    ignore_unprotected_private_artifacts: bool = False,
+    ignored_unprotected_artifacts: list[str] | None = None,
+) -> list[ReleaseCandidate]:
     proposal_root = source_root / "data" / "dispatches" / "care-line" / "review" / "proposed-editions"
     review_root = source_root / "data" / "dispatches" / "care-line" / "review" / "signal-reviews"
     proposal_dates = {path.stem for path in proposal_root.glob("*.json")} if proposal_root.exists() else set()
@@ -252,6 +263,19 @@ def discover_release_candidates(source_root: Path, pages_root: Path) -> list[Rel
             datetime.strptime(edition_date, "%Y-%m-%d")
         except ValueError as exc:
             raise PublicationSchedulerError(f"invalid Care Line approved release filename date: {edition_date}") from exc
+        proposal_path = proposal_root / f"{edition_date}.json"
+        review_path = review_root / f"{edition_date}.json"
+        if ignore_unprotected_private_artifacts:
+            existing_paths = [path for path in (proposal_path, review_path) if path.exists()]
+            unprotected_paths = [
+                path.resolve().relative_to(source_root.resolve()).as_posix()
+                for path in existing_paths
+                if not _is_protected_file_at_head(source_root, path)
+            ]
+            if unprotected_paths:
+                if ignored_unprotected_artifacts is not None:
+                    ignored_unprotected_artifacts.extend(unprotected_paths)
+                continue
         if edition_date not in proposal_dates or edition_date not in review_dates:
             raise PublicationSchedulerError(f"incomplete Care Line approved release artifact pair: {edition_date}")
         bundle = load_approved_release(source_root, edition_date)
@@ -406,6 +430,7 @@ def _initial_receipt(
         "approved_release_sha256": None,
         "review_snapshot_sha256": None,
         "release_ready": False,
+        "ignored_unprotected_release_artifacts": [],
         "no_op_reason": None,
         "publication_attempted": False,
         "publication_runner_status": None,
@@ -497,7 +522,9 @@ def run_publication_once(
         stage = "preflight"
         run_preflight(root, pages_root)
         stage = "approved_release_check"
-        candidates = discover_release_candidates(root, pages_root)
+        ignored_unprotected_release_artifacts: list[str] = []
+        candidates = discover_release_candidates(root, pages_root, proof_only, ignored_unprotected_release_artifacts)
+        receipt["ignored_unprotected_release_artifacts"] = sorted(dict.fromkeys(ignored_unprotected_release_artifacts))
         pending = [candidate for candidate in candidates if not candidate.already_published]
         receipt["release_candidates"] = [candidate.edition_date for candidate in pending]
         receipt["already_published_releases"] = [

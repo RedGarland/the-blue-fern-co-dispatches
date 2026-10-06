@@ -49,7 +49,14 @@ def _install_healthy_checks(monkeypatch: pytest.MonkeyPatch, *, pages_after: str
     monkeypatch.setattr(scheduler, "LOCK_PATH", Path("locks/publication.lock"))
     page_calls = 0
 
-    def verify(root: Path, *, branch: str, label: str, allow_care_line_runtime: bool):  # noqa: ANN001
+    def verify(
+        root: Path,
+        *,
+        branch: str,
+        label: str,
+        allow_care_line_runtime: bool,
+        allow_generated_public_output_residue: bool = False,
+    ):  # noqa: ANN001
         nonlocal page_calls
         if label == "Pages repo":
             page_calls += 1
@@ -191,7 +198,14 @@ def test_dirty_source_or_pages_fails_closed_with_receipt(
     monkeypatch.setattr(scheduler, "LOCK_PATH", Path("locks/publication.lock"))
     monkeypatch.setattr(scheduler, "SchedulerLock", DummyLock)
 
-    def verify(root: Path, *, branch: str, label: str, allow_care_line_runtime: bool):  # noqa: ANN001
+    def verify(
+        root: Path,
+        *,
+        branch: str,
+        label: str,
+        allow_care_line_runtime: bool,
+        allow_generated_public_output_residue: bool = False,
+    ):  # noqa: ANN001
         if label == dirty_label:
             raise scheduler.PublicationSchedulerError(f"{label} contains risky dirty paths: unsafe.txt")
         return _state(root, label, "source-head" if label == "source repo" else "pages-old")
@@ -314,6 +328,58 @@ def test_release_discovery_requires_protected_artifacts(tmp_path: Path, monkeypa
     proposal["headline"] = "local-only change"
     proposal_path.write_text(json.dumps(proposal, indent=2) + "\n", encoding="utf-8")
     with pytest.raises(scheduler.PublicationSchedulerError, match="differs from protected HEAD"):
+        scheduler.discover_release_candidates(source, pages)
+
+
+def test_release_discovery_proof_only_ignores_unprotected_private_artifacts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = tmp_path / "source"
+    pages = tmp_path / "pages"
+    proposal_root = source / "data" / "dispatches" / "care-line" / "review" / "proposed-editions"
+    review_root = source / "data" / "dispatches" / "care-line" / "review" / "signal-reviews"
+    proposal_root.mkdir(parents=True)
+    review_root.mkdir(parents=True)
+    pages.mkdir()
+    (proposal_root / f"{DATE}.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "bluefern.care_line.proposed_edition.v1",
+                "edition_date": DATE,
+                "release_ready": True,
+                "approved_signal_ids": ["candidate-1"],
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    (review_root / f"{DATE}.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "bluefern.care_line.review_snapshot.v2",
+                "edition_date": DATE,
+                "release_ready": True,
+                "review_payload": {"items": [{"candidate_id": "candidate-1"}]},
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    _git(source, "init")
+    _git(source, "config", "user.email", "tests@example.test")
+    _git(source, "config", "user.name", "Tests")
+    ignored: list[str] = []
+
+    assert scheduler.discover_release_candidates(source, pages, True, ignored) == []
+    assert ignored == [
+        f"data/dispatches/care-line/review/proposed-editions/{DATE}.json",
+        f"data/dispatches/care-line/review/signal-reviews/{DATE}.json",
+    ]
+
+    with pytest.raises(scheduler.PublicationSchedulerError, match="not protected at HEAD"):
         scheduler.discover_release_candidates(source, pages)
 
 

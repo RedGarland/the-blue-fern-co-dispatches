@@ -42,7 +42,13 @@ def utc_now() -> str:
 
 
 def _git_head(root: Path) -> str | None:
-    result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=False)
+    result = subprocess.run(
+        ["git", "-c", f"safe.directory={root.resolve().as_posix()}", "rev-parse", "HEAD"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     return result.stdout.strip() if result.returncode == 0 else None
 
 

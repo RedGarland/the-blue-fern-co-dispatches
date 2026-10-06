@@ -16,11 +16,10 @@ FOOD_LINE_OUTPUT_REVIEW_RE = re.compile(r"^output/review/food-line(?:/.*)?$")
 PUBLIC_SITE_VISUAL_REVIEW_RE = re.compile(r"^output/review/public-site-visuals(?:[-_/].*)?$")
 BLUEFERN_PUBLIC_SURFACE_REVIEW_RE = re.compile(r"^output/review/bluefern-[a-z0-9_-]+(?:/.*)?$")
 GAZA_ARCHIVE_REVIEW_RE = re.compile(r"^output/review/gaza-archive-[a-z0-9_-]+(?:/.*)?$")
-DISPATCHES_DIRECTORY_REPAIR_RE = re.compile(
-    r"^output/review/dispatches-directory-repair-[a-z0-9_-]+(?:/.*)?$"
-)
-HOMEPAGE_CURRENT_DESK_REPAIR_RE = re.compile(
-    r"^output/review/homepage-current-desk-pages-repair(?:[-_/].*)?$"
+PUBLIC_SURFACE_REPAIR_REVIEW_RE = re.compile(
+    r"^output/review/[a-z0-9][a-z0-9_-]*"
+    r"(?:repair|proof|visual|screenshot|screenshots|audit|check)"
+    r"[a-z0-9_-]*(?:[-_/].*)?$"
 )
 PUBLIC_SURFACE_BACKUP_RE = re.compile(r"^output/tmp-backups-pages(?:/.*)?$")
 FOOD_LINE_OUTPUT_SITE_RE = re.compile(r"^output/site/food-line(?:/.*)?$")
@@ -146,9 +145,7 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
         return "review_output"
     if GAZA_ARCHIVE_REVIEW_RE.match(lower):
         return "review_output"
-    if DISPATCHES_DIRECTORY_REPAIR_RE.match(lower):
-        return "review_output"
-    if HOMEPAGE_CURRENT_DESK_REPAIR_RE.match(lower):
+    if PUBLIC_SURFACE_REPAIR_REVIEW_RE.match(lower):
         return "review_output"
     if FOOD_LINE_OUTPUT_REVIEW_RE.match(lower):
         return "review_output"
@@ -197,8 +194,12 @@ def food_line_runtime_paths() -> list[str]:
         "output/review/public-site-visuals",
         "output/review/bluefern-",
         "output/review/gaza-archive-",
-        "output/review/dispatches-directory-repair-",
-        "output/review/homepage-current-desk-pages-repair",
+        "output/review/*repair*",
+        "output/review/*proof*",
+        "output/review/*visual*",
+        "output/review/*screenshot*",
+        "output/review/*audit*",
+        "output/review/*check*",
         "output/tmp-backups-pages/",
         "output/site/food-line/",
         "output/dispatches/food-line/editions/",

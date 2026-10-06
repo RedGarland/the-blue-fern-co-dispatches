@@ -235,6 +235,7 @@ foreach ($target in $Targets) {
         IncomingPaths = @()
         UntrackedIncomingCollisions = @()
         TrackedIncomingCollisions = @()
+        LocalAheadCommits = @()
         SanctionedTrackedStatePreserved = $false
         PreValidation = $null
         MergeAttempted = $false
@@ -276,6 +277,15 @@ foreach ($target in $Targets) {
 
         $ancestor = Invoke-Git -Root $root -Arguments @("merge-base", "--is-ancestor", "HEAD", $targetRef) -AllowFailure
         if ($ancestor.ExitCode -ne 0) {
+            $ahead = Invoke-Git -Root $root -Arguments @("log", "--oneline", "--no-decorate", "$targetRef..HEAD") -AllowFailure
+            $row.LocalAheadCommits = @(
+                $ahead.Output -split "`r?`n" |
+                    Where-Object { $_ } |
+                    Select-Object -First 20
+            )
+            if (@($row.LocalAheadCommits).Count -gt 0) {
+                throw "current HEAD is not an ancestor of $targetRef; runner has local commits after protected head: $($row.LocalAheadCommits -join '; ')"
+            }
             throw "current HEAD is not an ancestor of $targetRef"
         }
 

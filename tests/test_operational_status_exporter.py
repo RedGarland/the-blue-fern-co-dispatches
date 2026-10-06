@@ -2648,9 +2648,10 @@ def test_prepare_status_checkout_does_not_consult_stale_remote_tracking_ref(monk
 
     def fake_run(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
         calls.append(args)
-        if args[1:] == ["branch", "--show-current"]:
+        command = args[3:] if len(args) > 3 and args[1] == "-c" and args[2].startswith("safe.directory=") else args[1:]
+        if command == ["branch", "--show-current"]:
             return subprocess.CompletedProcess(args, 0, stdout=f"{branch}\n", stderr="")
-        if args[1:] == ["merge-base", "--is-ancestor", "HEAD", f"origin/{branch}"]:
+        if command == ["merge-base", "--is-ancestor", "HEAD", f"origin/{branch}"]:
             return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
         return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
 
@@ -2658,10 +2659,10 @@ def test_prepare_status_checkout_does_not_consult_stale_remote_tracking_ref(monk
 
     prepare_status_checkout(tmp_path, branch=branch)
 
-    assert ["git", "fetch", "--no-tags", "origin", f"refs/heads/{branch}"] in calls
-    assert ["git", "merge-base", "--is-ancestor", "HEAD", "FETCH_HEAD"] in calls
-    assert ["git", "merge", "--ff-only", "FETCH_HEAD"] in calls
-    assert ["git", "merge-base", "--is-ancestor", "HEAD", f"origin/{branch}"] not in calls
+    assert any(call[-4:] == ["fetch", "--no-tags", "origin", f"refs/heads/{branch}"] for call in calls)
+    assert any(call[-4:] == ["merge-base", "--is-ancestor", "HEAD", "FETCH_HEAD"] for call in calls)
+    assert any(call[-3:] == ["merge", "--ff-only", "FETCH_HEAD"] for call in calls)
+    assert not any(call[-4:] == ["merge-base", "--is-ancestor", "HEAD", f"origin/{branch}"] for call in calls)
 
 
 def test_prepare_status_checkout_succeeds_when_head_already_equals_fetch_head(tmp_path: Path) -> None:
@@ -2803,7 +2804,8 @@ def test_prepare_status_checkout_does_not_use_force_reset_or_rebase(monkeypatch:
 
     def fake_run(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
         calls.append(args)
-        if args[1:] == ["branch", "--show-current"]:
+        command = args[3:] if len(args) > 3 and args[1] == "-c" and args[2].startswith("safe.directory=") else args[1:]
+        if command == ["branch", "--show-current"]:
             return subprocess.CompletedProcess(args, 0, stdout="ops/status/food-line-2026-09-10\n", stderr="")
         return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
 
@@ -2818,7 +2820,8 @@ def test_prepare_status_checkout_does_not_use_force_reset_or_rebase(monkeypatch:
     assert "clean" not in flattened
     assert "stash" not in flattened
     assert "rebase" not in flattened
-    assert ["git", "merge", "--ff-only", "FETCH_HEAD"] in calls
+    assert any(call[-3:] == ["merge", "--ff-only", "FETCH_HEAD"] for call in calls)
+    assert all(call[:2] == ["git", "-c"] and call[2].startswith("safe.directory=") for call in calls)
 
 
 def test_commit_and_push_force_stages_ignored_ops_status_artifact(tmp_path: Path) -> None:
@@ -2982,7 +2985,7 @@ def test_commit_and_push_does_not_use_cleanup_or_force_push(monkeypatch: pytest.
 
     def fake_run(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
         calls.append(args)
-        command = args[1:]
+        command = args[3:] if len(args) > 3 and args[1] == "-c" and args[2].startswith("safe.directory=") else args[1:]
         if command[:2] == ["status", "--porcelain=v1"] and "--ignored=matching" not in command:
             return subprocess.CompletedProcess(args, 0, stdout=" M ops/status/food-line/latest.json\n", stderr="")
         if command[:2] == ["status", "--porcelain=v1"] and "--ignored=matching" in command:
@@ -3012,9 +3015,10 @@ def test_commit_and_push_does_not_use_cleanup_or_force_push(monkeypatch: pytest.
     assert "clean" not in flattened
     assert "stash" not in flattened
     assert "rebase" not in flattened
-    assert ["git", "push", "origin", "ops/status/food-line-2026-09-10"] in calls
-    assert ["git", "push", "--force", "origin", "ops/status/food-line-2026-09-10"] not in calls
-    assert ["git", "push", "-f", "origin", "ops/status/food-line-2026-09-10"] not in calls
+    assert any(call[-3:] == ["push", "origin", "ops/status/food-line-2026-09-10"] for call in calls)
+    assert not any(call[-5:] == ["push", "--force", "origin", "ops/status/food-line-2026-09-10"] for call in calls)
+    assert not any(call[-5:] == ["push", "-f", "origin", "ops/status/food-line-2026-09-10"] for call in calls)
+    assert all(call[:2] == ["git", "-c"] and call[2].startswith("safe.directory=") for call in calls)
 
 
 def test_commit_and_push_still_rejects_paths_outside_ops_status(tmp_path: Path) -> None:

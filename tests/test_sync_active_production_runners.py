@@ -58,6 +58,13 @@ def test_sync_helper_has_fail_closed_checkout_guards() -> None:
         assert fragment in text
 
 
+def test_sync_helper_reports_local_commits_when_runner_head_is_ahead() -> None:
+    text = _text()
+    assert "LocalAheadCommits = @()" in text
+    assert '@("log", "--oneline", "--no-decorate", "$targetRef..HEAD")' in text
+    assert "runner has local commits after protected head" in text
+
+
 def test_sync_helper_preserves_runtime_state_and_never_uses_destructive_git() -> None:
     text = _text().lower()
     for forbidden in (

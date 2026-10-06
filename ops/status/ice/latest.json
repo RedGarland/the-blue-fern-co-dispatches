@@ -11,7 +11,7 @@
     "unaccounted_count": 0
   },
   "aggregate_status": "SUCCESS",
-  "current_runner_branch": "add/pages-repo-default",
+  "current_runner_branch": "codex/ice-public-pilot-readiness-gate",
   "current_runner_head": "b2da038651892d970b028add261e8736f1a43796",
   "debug_summary": {
     "aggregate_status": "SUCCESS",
@@ -44,7 +44,7 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-10-06T17:35:21.768790Z",
+  "last_exported_at": "2026-10-06T18:34:46.071914Z",
   "last_receipt_at": "2026-10-06T04:16:34.494214Z",
   "latest_runtime_proof_date": "2026-10-06T04:15:12Z",
   "migration_status": "MIGRATED",

@@ -2436,6 +2436,14 @@ def _render_gaza_archive_row(
     return _render_gaza_archive_daily_row(site_root, dispatch, str(value))
 
 
+def _compact_gaza_archive_latest_detail(detail: str, *, limit: int = 220) -> str:
+    compact = re.sub(r"\s+", " ", detail).strip()
+    if len(compact) <= limit:
+        return compact
+    trimmed = compact[: limit + 1].rsplit(" ", 1)[0].rstrip(" ,;:-")
+    return f"{trimmed}..."
+
+
 def _render_gaza_archive_latest_entry(
     site_root: Path,
     dispatch: DispatchConfig,
@@ -2455,7 +2463,7 @@ def _render_gaza_archive_latest_entry(
         presentation = briefing_presentation_for_edition(site_root, dispatch, date)
         title = presentation.title if presentation.title != date else "Daily briefing"
         detail_parts = [presentation.summary, _count_label(presentation), presentation.type_label]
-        detail = " | ".join(part for part in detail_parts if part) or "Daily Gaza briefing"
+        detail = _compact_gaza_archive_latest_detail(" | ".join(part for part in detail_parts if part) or "Daily Gaza briefing")
         link = f'<a class="button" href="editions/{html.escape(date)}/">Read latest</a>'
     return (
         '    <section class="archive-latest" aria-label="Latest archive entry">\n'

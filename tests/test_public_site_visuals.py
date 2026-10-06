@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import json
 import shutil
 from pathlib import Path
 
@@ -401,6 +402,49 @@ def test_gaza_latest_card_after_recent_checks_fails(tmp_path: Path) -> None:
     assert result["ok"] is False
     assert "gaza_latest_card_order" in _issue_checks(result)
 
+
+def test_gaza_archive_long_latest_summary_keeps_rows_in_first_viewport(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    _write(root / "gaza" / "assets" / "site.css", GOOD_CSS)
+    _write_png(root / "gaza" / "assets" / "food-line-logo.png")
+    _write_png(root / "assets" / "bluefern.png")
+    edition = root / "gaza" / "editions" / "2026-10-06"
+    long_summary = " ".join(
+        [
+            "A very long source-backed Gaza archive summary describes the latest briefing in more detail than the archive first viewport can comfortably carry.",
+            "It names the reporting context, the institutional response, the humanitarian stakes, and the evidence chain before the reader reaches the month list.",
+            "The archive page should keep that detail compact here and leave the full prose to the edition page.",
+        ]
+    )
+    _write(edition / "index.html", "<h1>Former UN food agency official claims he was fired for highlighting hunger in Gaza</h1>")
+    _write(
+        edition / "edition_manifest.json",
+        json.dumps(
+            {
+                "public_archive_title": "Former UN food agency official claims he was fired for highlighting hunger in Gaza",
+                "public_archive_subtitle": long_summary,
+                "public_source_count": 4,
+                "public_story_count": 4,
+            }
+        ),
+    )
+    dispatch = generator.DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-06",
+        tagline="Daily Gaza source review",
+        logo="food-line-logo.png",
+        sources=[],
+        stories=[],
+    )
+    _write(root / "gaza" / "archive.html", generator.render_archive_for_dates(dispatch, ["2026-10-06"], root))
+
+    result = validate_public_site_visuals(root, paths=["/gaza/archive.html"])
+
+    assert result["ok"] is True
+    metrics = result["pages"][0]["metrics"]
+    assert metrics["gazaArchiveFirstMonth"]["y"] <= 760
+    assert metrics["gazaArchiveFirstRow"]["y"] <= 860
 
 def test_gaza_archive_logo_splash_or_rows_below_viewport_fails(tmp_path: Path) -> None:
     css = GOOD_CSS + "\n.archive--gaza .hero-logo { width: 540px; height: 360px; }\n.archive-latest { margin-top: 520px; }\n.archive-month { margin-top: 640px; }\n"

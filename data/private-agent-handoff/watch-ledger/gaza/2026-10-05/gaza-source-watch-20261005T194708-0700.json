@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T194708-0700",
+  "scheduled_for": "2026-10-05T19:44:51-07:00",
+  "started_at": "2026-10-05T19:47:08-07:00",
+  "completed_at": "2026-10-05T19:49:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T18:44:51-07:00",
+    "end": "2026-10-05T19:49:30-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first. Latest surfaced Gaza situation report remained the 2 October 2026 report published 5 October 2026; no new in-window development identified beyond material already covered by prior watch runs.",
+    "WHO checked second. No new in-window Gaza/oPt operational health update surfaced.",
+    "Completed 12 additional targeted searches across Reuters, AP, UNRWA, WFP, UNICEF, ICRC, MSF, WAFA, PRCS, Al Jazeera, BBC, and a bounded cross-source medical-evacuation/crossing query.",
+    "BBC search was blocked by robots.txt. Useful coverage remained from other official and established sources, so status is DEGRADED rather than FAILED.",
+    "No new traceable qualifying development established for civilian casualties, displacement, aid access, food/water access, healthcare disruption, hospital/ambulance/transport/fuel/medical evacuation/functioning capacity, infrastructure damage, crossings, detention/hostages, ceasefire/negotiations, or military operations with documented civilian impact.",
+    "Excluded retrospective or recycled material and items outside the hourly window."
+  ]
+}

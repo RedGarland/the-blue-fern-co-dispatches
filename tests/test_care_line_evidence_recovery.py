@@ -490,6 +490,21 @@ def test_recovered_evidence_missing_geography_remains_unresolved(tmp_path: Path,
     assert result["qualified_candidate_count"] == 0
 
 
+def test_packet_raw_item_preserves_source_geography_for_requalification() -> None:
+    source = recovery.CareLineSource.model_validate(_source(source_id="penn-capital-star-health"))
+    row = _packet_record(
+        producer_record_id="care-line-raw-item_bradford",
+        source_id="penn-capital-star-health",
+        url="https://example.org/bradford-pavilion",
+        outcome="PARTIAL_BODY",
+    )
+
+    raw_item = recovery._packet_raw_item(row, source)
+
+    assert raw_item["source_state"] == "PA"
+    assert raw_item["source_geographic_scope"] == "state"
+
+
 def test_deterministic_source_date_resolution_works_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     root = _repo(tmp_path, records=[_packet_record(bucket="deterministic_resolution", outcome="BODY_EXTRACTED")])
     monkeypatch.setattr(recovery, "fetch_url", lambda *args, **kwargs: pytest.fail("deterministic route must not fetch"))

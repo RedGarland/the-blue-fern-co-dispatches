@@ -221,6 +221,7 @@ HEALTHCARE_CONTEXT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("dialysis", re.compile(r"\b(dialysis)\b", re.I)),
     ("pharmacy", re.compile(r"\b(pharmacy)\b", re.I)),
     ("home_health", re.compile(r"\b(home health|home-health|home care)\b", re.I)),
+    ("skilled_nursing", re.compile(r"\b(long-term care|long term care|nursing facility|skilled nursing)\b", re.I)),
     ("ambulance_ems", re.compile(r"\b(ambulance|EMS|emergency medical services)\b", re.I)),
     ("inpatient_care", re.compile(r"\b(inpatient|admissions?)\b", re.I)),
     ("primary_care", re.compile(r"\b(primary care|family medicine)\b", re.I)),
@@ -272,6 +273,7 @@ SERVICE_LINE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("dialysis", re.compile(r"\bdialysis\b", re.I)),
     ("pharmacy", re.compile(r"\bpharmacy\b", re.I)),
     ("home_health", re.compile(r"\b(home health|home-health|home care)\b", re.I)),
+    ("skilled_nursing", re.compile(r"\b(long-term care|long term care|nursing facility|skilled nursing)\b", re.I)),
     ("ambulance_ems", re.compile(r"\b(ambulance|EMS|emergency medical services)\b", re.I)),
     ("inpatient_care", re.compile(r"\b(inpatient|admissions?)\b", re.I)),
     ("primary_care", re.compile(r"\b(primary care|family medicine)\b", re.I)),
@@ -286,6 +288,7 @@ SERVICE_LINE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
 ]
 
 FACILITY_TYPE_HINTS: list[tuple[str, re.Pattern[str]]] = [
+    ("long_term_care", re.compile(r"\b(long-term care|long term care|nursing facility|skilled nursing)\b", re.I)),
     ("hospital", re.compile(r"\b(hospital|medical center)\b", re.I)),
     ("clinic", re.compile(r"\b(clinic|health center)\b", re.I)),
     ("pharmacy", re.compile(r"\bpharmacy\b", re.I)),
@@ -1943,6 +1946,34 @@ def _extract_subject(
         return "", structured_provider, provenance
     title_text = title.strip()
     title_source_field = "article_body" if evidence_text and title_text and title_text == evidence_text.strip() else "title"
+    appositive_closure_pattern = re.compile(
+        r"\b(?P<subject>(?:The\s+)?[A-Z][A-Za-z0-9&'.-]+(?:\s+[A-Z][A-Za-z0-9&'.-]+){0,5})\s*,\s+"
+        r"(?:a|an)\s+(?:long-term care|long term care|nursing|skilled nursing)\s+facility\b"
+        r"(?P<context>.{0,180}?\b(?:will\s+close|close(?:s|d|ing)?|closure|shut(?:ting)?\s+down)\b)",
+        re.I | re.S,
+    )
+    appositive_match = appositive_closure_pattern.search("\n".join(part for part in (passage, evidence_text) if part))
+    if appositive_match:
+        subject = appositive_match.group("subject").strip()
+        if not re.search(r"\b(officials?|spokes(?:person|man|woman)|leaders?|department|board)\b", subject, re.I):
+            support = appositive_match.group(0).strip()
+            provenance["facility_name"] = _make_provenance(
+                subject,
+                source_field="article_body",
+                supporting_text=support[:500],
+                provenance_type="source_explicit",
+                review_status="confirmed",
+                confidence=1.0,
+            )
+            provenance["provider_name"] = _make_provenance(
+                subject,
+                source_field="article_body",
+                supporting_text=support[:500],
+                provenance_type="source_explicit",
+                review_status="confirmed",
+                confidence=1.0,
+            )
+            return subject, subject, provenance
     title_patterns = [
         re.compile(r"^(?P<subject>.+?)\s+(?:will\s+)?(?:close|closing|closes|shut(?:ting)? down|suspend(?:s|ed|ing)?|halt(?:s|ed|ing)?|end(?:s|ed|ing)?|reduce(?:s|d|ing)? hours?|reopen(?:s|ed|ing)?|restore(?:s|d|ing)?)\b", re.I),
         re.compile(r"^(?P<subject>.+?)\s+(?:announced?|plans?|planned)\s+to\s+(?:close|suspend|end|reduce|reopen|restore)\b", re.I),
@@ -2104,6 +2135,24 @@ def _access_consequences_from_text(text: str, event_type: str) -> tuple[list[str
     return [], ""
 
 
+def _service_continuation_caveat(text: str) -> str:
+    for sentence in _sentence_candidates(text):
+        if re.search(r"\b(?:ambulatory|outpatient|adjacent|remaining)\s+services?\b.{0,80}\b(?:continue|remain|still)\b", sentence, re.I) or re.search(
+            r"\b(?:continue|remain|still)\b.{0,80}\b(?:ambulatory|outpatient|adjacent|remaining)\s+services?\b",
+            sentence,
+            re.I,
+        ):
+            return sentence[:300].strip()
+    return ""
+
+
+def _affected_population_note(text: str) -> str:
+    for sentence in _sentence_candidates(text):
+        if re.search(r"\b\d{1,4}\s+(?:current\s+)?(?:residents?|patients?)\b", sentence, re.I):
+            return sentence[:300].strip()
+    return ""
+
+
 def _supporting_passage(text: str, event_type: str, service_line: str) -> str:
     if not text:
         return ""
@@ -2117,6 +2166,7 @@ def _supporting_passage(text: str, event_type: str, service_line: str) -> str:
     ]
     best = ""
     best_score = -1
+    best_index = -1
     for index, sentence in enumerate(sentences):
         score = 0
         for pattern in scoring_terms:
@@ -2136,12 +2186,19 @@ def _supporting_passage(text: str, event_type: str, service_line: str) -> str:
         if score > best_score or (score == best_score and len(sentence) > len(best)):
             best = sentence
             best_score = score
+            best_index = index
             if index + 1 < len(sentences) and best_score >= 2:
                 follow = sentences[index + 1]
                 if any(pattern.search(follow) for _, pattern in ACCESS_CONSEQUENCE_PATTERNS):
                     best = f"{sentence} {follow}".strip()
     if best_score <= 0:
         return ""
+    if best_index >= 0:
+        for follow in sentences[best_index + 1 : best_index + 3]:
+            if follow in best:
+                continue
+            if re.search(r"\b(?:residents?|families|alternative care|ambulatory services?)\b", follow, re.I):
+                best = f"{best} {follow}".strip()
     return best[:500].strip()
 
 
@@ -2165,7 +2222,7 @@ def _supports_review_without_full_article(
     lowered = supporting_passage.casefold()
     return bool(
         re.search(r"\b(close|closing|closed|end|ending|suspend|suspended|halt|halted|cut|reducing|reduce|reopen|reopened|restore|restored|transfer|move|cancel|canceled|cancelled|pause|paused|transition|delayed)\b", lowered)
-        and (re.search(r"\b(hospital|clinic|center|ward|unit|department|service|services)\b", lowered) or service_line)
+        and (re.search(r"\b(hospital|clinic|center|ward|unit|department|service|services|long-term care|nursing facility)\b", lowered) or service_line)
     )
 
 
@@ -2733,7 +2790,36 @@ def _extract_geography(
     if state_code:
         geography["state"] = state_code
         geography["jurisdiction_display"] = JURISDICTIONS_BY_CODE[state_code]["display"]
-        geography["city"] = structured_city
+        inferred_city = structured_city
+        inferred_city_support = structured_location_text or structured_city
+        if not inferred_city:
+            city_candidates: list[tuple[str, str]] = []
+            for sentence in _sentence_candidates(text):
+                if not (
+                    _keyword_hits(sentence, HEALTHCARE_CONTEXT_PATTERNS)
+                    or _keyword_hits(sentence, ACCESS_CONSEQUENCE_PATTERNS)
+                    or re.search(r"\b(hospital|clinic|center|facility|nursing facility|long-term care)\b", sentence, re.I)
+                ):
+                    continue
+                for match in re.finditer(
+                    r"\b(?:hospital|clinic|center|facility|nursing facility|long-term care facility|medical campus)\s+in\s+"
+                    r"(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3})\b",
+                    sentence,
+                    re.I,
+                ):
+                    raw_city = match.group("city").strip()
+                    tokens = raw_city.split()
+                    stop_at = next((idx for idx, token in enumerate(tokens) if token.casefold() in {"will", "close", "closes", "closed", "on", "by", "according"}), len(tokens))
+                    city = " ".join(tokens[:stop_at]).strip().title()
+                    if not city or city.casefold() in {"december", "may", "september", "health", "officials"}:
+                        continue
+                    candidate = (city, sentence)
+                    if candidate not in city_candidates:
+                        city_candidates.append(candidate)
+            distinct_cities = {city.casefold(): (city, support) for city, support in city_candidates}
+            if len(distinct_cities) == 1:
+                inferred_city, inferred_city_support = next(iter(distinct_cities.values()))
+        geography["city"] = inferred_city
         structured_scope_key = structured_scope.casefold()
         if structured_service_region:
             geography["geographic_scope"] = "service_region"
@@ -2746,7 +2832,7 @@ def _extract_geography(
         elif structured_scope_key in {"statewide", "jurisdiction_wide", "national"}:
             geography["geographic_scope"] = structured_scope_key if structured_scope_key != "national" else "statewide"
         else:
-            geography["geographic_scope"] = "city" if structured_city else "statewide"
+            geography["geographic_scope"] = "city" if inferred_city else "statewide"
         geography["service_region"] = structured_service_region
         provenance["state"] = _make_provenance(
             state_code,
@@ -2756,12 +2842,12 @@ def _extract_geography(
             review_status="confirmed",
             confidence=1.0,
         )
-        if structured_city:
+        if inferred_city:
             provenance["city"] = _make_provenance(
-                structured_city,
-                source_field="structured_input",
-                supporting_text=structured_location_text or f"{structured_city}, {geography['jurisdiction_display']}",
-                provenance_type="structured_input",
+                inferred_city,
+                source_field="structured_input" if structured_city else "bounded_body_explicit",
+                supporting_text=inferred_city_support or f"{inferred_city}, {geography['jurisdiction_display']}",
+                provenance_type="structured_input" if structured_city else "source_explicit",
                 review_status="confirmed",
                 confidence=1.0,
             )
@@ -3153,6 +3239,13 @@ def normalize_candidate_record(
     effective_date = _text(currentness, "event_effective_date") or (_text(currentness, "operative_event_date") if _text(currentness, "currentness_class") == "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE" else "")
     text_for_summary = supporting_passage or _text(raw_item, "description") or source_title
     authority_level = _normalize_authority_level(_text(raw_item, "authority_level"))
+    continuation_caveat = _service_continuation_caveat(evidence_blob)
+    affected_population_note = _affected_population_note(evidence_blob)
+    verification_notes = access_exception
+    if affected_population_note:
+        verification_notes = (verification_notes + " " if verification_notes else "") + f"affected_population: {affected_population_note}"
+    if continuation_caveat:
+        verification_notes = (verification_notes + " " if verification_notes else "") + f"adjacent_services_continue: {continuation_caveat}"
     field_provenance = {
         "producer_record_id": _make_provenance(_text(raw_item, "raw_item_id"), source_field="raw_item_id", supporting_text=_text(raw_item, "raw_item_id")),
         "source_url": _make_provenance(source_url, source_field="item_url", supporting_text=source_url),
@@ -3220,7 +3313,7 @@ def normalize_candidate_record(
             "evidence_level": _evidence_level(article_content, raw_item),
             "evidence_provenance_type": "source_explicit",
             "evidence_valid_for_universal_event": qualification_status == "qualified",
-            "verification_notes": access_exception,
+            "verification_notes": verification_notes,
             "field_provenance": field_provenance,
             "metadata": {
                 "pipeline_schema_version": PIPELINE_SCHEMA_VERSION,
@@ -3229,6 +3322,8 @@ def normalize_candidate_record(
                 "qualification_status": qualification_status,
                 "failed_gates": list(failed_gates),
                 "exclusion_reason": exclusion_reason,
+                "affected_population_note": affected_population_note,
+                "service_continuation_caveat": continuation_caveat,
                 "full_article_required": full_article_required,
                 "extraction_confidence": extraction_confidence,
                 "source_record_id": _text(raw_item, "raw_item_id"),

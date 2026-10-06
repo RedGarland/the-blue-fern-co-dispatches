@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T134451-0700",
+  "scheduled_for": "2026-10-06T13:44:51-07:00",
+  "started_at": "2026-10-06T13:47:18-07:00",
+  "completed_at": "2026-10-06T13:49:06-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T12:44:51-07:00",
+    "end": "2026-10-06T13:44:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first. Fresh site-restricted search surfaced no new Gaza operational publication in the hourly window; no qualifying in-window development was established."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second. Fresh site-restricted search surfaced no new Gaza operational health publication in the hourly window; no qualifying in-window development was established."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_sources": [
+      "Reuters",
+      "Associated Press",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "ICRC",
+      "Palestine Red Crescent Society",
+      "MSF",
+      "WAFA",
+      "IDF",
+      "Al Jazeera",
+      "The Guardian"
+    ],
+    "exclusions": [
+      "Older or recycled Gaza reports surfaced by source-restricted searches were excluded.",
+      "UNICEF October 6 El Niño and DR Congo releases were excluded as not Gaza-specific.",
+      "Retrospective and explainer material without a new in-window event was excluded.",
+      "Duplicate background reporting and unsupported claims were excluded."
+    ],
+    "degraded_reasons": [],
+    "conclusion": "No new traceable qualifying development was established in the bounded hourly window."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261006T064237-0700",
+  "scheduled_for": "2026-10-06T06:42:37-07:00",
+  "started_at": "2026-10-06T06:42:37-07:00",
+  "completed_at": "2026-10-06T06:43:52-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-06T05:42:37-07:00",
+    "end": "2026-10-06T06:42:37-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Executed 12 targeted web searches, bounded to the specified high-value Food Line miss classes.",
+    "Prioritized fresh local-news and official/direct-source signals for sole/last/full-service grocery loss, emergency distribution cancellations, pantry/food-bank access reductions, and immediate SNAP/WIC interruptions.",
+    "No new qualifying U.S. food-access disruption was identified in the observation window.",
+    "Fresh surfaced items were non-qualifying or outside scope, including an underground electrical fire with road closures in Tallahassee and routine/non-disruptive grocery or food-aid coverage.",
+    "No approval, publication, schedule change, or production collector change was performed."
+  ]
+}

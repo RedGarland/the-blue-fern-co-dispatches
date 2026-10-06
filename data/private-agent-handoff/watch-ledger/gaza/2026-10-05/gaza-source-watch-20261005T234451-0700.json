@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T234451-0700",
+  "scheduled_for": "2026-10-05T23:44:51-07:00",
+  "started_at": "2026-10-05T23:47:15-07:00",
+  "completed_at": "2026-10-05T23:47:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-05T22:44:51-07:00",
+    "through": "2026-10-05T23:44:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT checked first; WHO checked second; 12 additional targeted searches completed across Reuters, AP, UNRWA, WFP, UNICEF, ICRC, PRCS, MSF, WAFA, Al Jazeera, COGAT, and IDF. No source/search materially failed. OCHA's latest surfaced Gaza report remained the Humanitarian Situation Report | 2 October 2026, published 5 October; WHO surfaced no new in-window operational Gaza update. No new qualifying development was identified in-window; retrospective or previously known material was excluded."
+}

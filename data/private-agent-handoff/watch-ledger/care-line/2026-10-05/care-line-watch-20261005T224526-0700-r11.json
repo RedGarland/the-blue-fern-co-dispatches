@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261005T224526-0700-r11",
+  "scheduled_for": "2026-10-05T22:45:22-07:00",
+  "started_at": "2026-10-05T22:45:26-07:00",
+  "completed_at": "2026-10-05T22:46:20-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-05T21:45:22-07:00",
+    "end": "2026-10-05T22:46:20-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first. The newest CMS entries were the 2026-10-05 rescissions for Compassionate Care Angels LLC and O.M.K Healthcare Services LLC, both already observed in the prior check and therefore treated as duplicates. Twelve additional targeted searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance, air-medical, restoration/reopening, and U.S. territory access changes. No new qualifying development was found in the observation window. No search failure materially reduced coverage."
+}

@@ -21,7 +21,12 @@ if str(SRC) not in sys.path:
 
 from bluefern_dispatches.care_line_release_render import CareLineApprovedReleaseBundle, load_approved_release
 from bluefern_dispatches.generator import public_edition_is_listable
-from scripts.care_line_runtime_paths import CARE_LINE_ALLOWED_DIRTY_CATEGORIES, classify_care_line_runtime_path
+from scripts.care_line_runtime_paths import (
+    CARE_LINE_ALLOWED_DIRTY_CATEGORIES,
+    CARE_LINE_GENERATED_PUBLIC_OUTPUT_RESIDUE_STATUSES,
+    classify_care_line_runtime_path,
+    is_care_line_generated_public_output_path,
+)
 from bluefern_dispatches.operational_health import build_care_line_operational_receipt, write_operational_receipt
 
 PRODUCTION_BRANCH = "add/pages-repo-default"
@@ -106,11 +111,18 @@ def _normalize_status_path(path_text: str) -> str:
     return text[2:] if text.startswith("./") else text
 
 
-def unexpected_dirty_paths(status_output: str, *, allow_care_line_runtime: bool) -> list[str]:
+def unexpected_dirty_paths(
+    status_output: str,
+    *,
+    allow_care_line_runtime: bool,
+    allow_generated_public_output_residue: bool = False,
+) -> list[str]:
     unexpected: list[str] = []
     for raw_line in status_output.splitlines():
         line = raw_line.rstrip()
         if not line or len(line) < 3:
+            continue
+        if line.startswith("## "):
             continue
         status_code = line[:2]
         path = _normalize_status_path(line[3:])
@@ -120,7 +132,12 @@ def unexpected_dirty_paths(status_output: str, *, allow_care_line_runtime: bool)
             and status_code == "??"
             and category in CARE_LINE_ALLOWED_DIRTY_CATEGORIES
         )
-        if path and not allowed:
+        allowed_generated_output = (
+            allow_generated_public_output_residue
+            and status_code in CARE_LINE_GENERATED_PUBLIC_OUTPUT_RESIDUE_STATUSES
+            and is_care_line_generated_public_output_path(path)
+        )
+        if path and not allowed and not allowed_generated_output:
             unexpected.append(path)
     return sorted(dict.fromkeys(unexpected))
 
@@ -131,11 +148,16 @@ def verify_repo(
     branch: str,
     label: str,
     allow_care_line_runtime: bool,
+    allow_generated_public_output_residue: bool = False,
 ) -> dict[str, Any]:
     status = _run(["git", "status", "--porcelain=v1", "--untracked-files=all"], cwd=root)
     if status.returncode != 0:
         raise _command_error(f"{label} git status", status)
-    unexpected = unexpected_dirty_paths(status.stdout or "", allow_care_line_runtime=allow_care_line_runtime)
+    unexpected = unexpected_dirty_paths(
+        status.stdout or "",
+        allow_care_line_runtime=allow_care_line_runtime,
+        allow_generated_public_output_residue=allow_generated_public_output_residue,
+    )
     if unexpected:
         raise PublicationSchedulerError(f"{label} contains risky dirty paths: {', '.join(unexpected)}")
 
@@ -458,6 +480,7 @@ def run_publication_once(
             branch=source_branch,
             label="source repo",
             allow_care_line_runtime=True,
+            allow_generated_public_output_residue=proof_only,
         )
         receipt["source_head_before"] = source_before["head"]
         stage = "pages_state"
@@ -466,6 +489,7 @@ def run_publication_once(
             branch=pages_branch,
             label="Pages repo",
             allow_care_line_runtime=False,
+            allow_generated_public_output_residue=False,
         )
         receipt["pages_head_before"] = pages_before["head"]
         atomic_write_json(receipt_path, receipt)
@@ -583,12 +607,14 @@ def run_publication_once(
             branch=source_branch,
             label="source repo",
             allow_care_line_runtime=True,
+            allow_generated_public_output_residue=False,
         )
         pages_after = verify_repo(
             pages_root,
             branch=pages_branch,
             label="Pages repo",
             allow_care_line_runtime=False,
+            allow_generated_public_output_residue=False,
         )
         receipt.update(
             {

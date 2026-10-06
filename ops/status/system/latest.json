@@ -35,7 +35,7 @@
         "aggregate_status": "DEGRADED",
         "all_current_failures_external": true,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 2,
+        "attention_task_count": 3,
         "attention_tasks": [
           {
             "artifact_id": "20261006T130002Z-27112.json",
@@ -52,10 +52,18 @@
             "failure_stage": "care_line_collection",
             "status": "DEGRADED",
             "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20261006T190002Z-35228.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
           }
         ],
-        "external_access_restriction_count": 4,
-        "failed_source_count": 4,
+        "external_access_restriction_count": 14,
+        "failed_source_count": 14,
         "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
@@ -87,7 +95,7 @@
       "source_failure_summary": {
         "all_current_failures_external": true,
         "all_current_failures_non_actionable": true,
-        "external_access_restriction_count": 4,
+        "external_access_restriction_count": 14,
         "external_restriction_sources": [
           {
             "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
@@ -111,14 +119,74 @@
             "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "coverage_reduced": true,
             "remediation_available": false,
+            "source_id": "nc-health-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "colorado-sun-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "calmatters-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "ct-mirror-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "virginia-mercury-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "ohio-capital-journal-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "missouri-independent-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "florida-phoenix-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "texas-tribune-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "michigan-advance-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
             "source_id": "mayo-clinic-news"
           }
         ],
-        "failed_source_count": 4,
-        "original_failed_source_count": 4,
+        "failed_source_count": 14,
+        "original_failed_source_count": 14,
         "recovered_source_count": 0,
         "recovered_sources": [],
-        "successful_attempt_count": 34,
+        "successful_attempt_count": 24,
         "transient_source_failure_count": 0,
         "transient_sources": [],
         "unclassified_source_failure_count": 0
@@ -183,7 +251,7 @@
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 18,
+        "private_review_max_age_hours": 19,
         "private_review_oldest_pending_date": "2026-10-06",
         "private_review_pending_date_count": 1,
         "private_review_pending_item_count": 5,
@@ -202,7 +270,7 @@
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 18,
+            "age_hours": 19,
             "count_only_gap_count": 0,
             "date": "2026-10-06",
             "dispositioned_item_count": 0,
@@ -327,7 +395,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 18,
+        "max_age_hours": 19,
         "oldest_pending_date": "2026-10-06",
         "pending_date_count": 1,
         "pending_item_count": 5,
@@ -453,7 +521,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-06T18:54:48.553739Z",
+  "exported_at": "2026-10-06T19:15:12.388773Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

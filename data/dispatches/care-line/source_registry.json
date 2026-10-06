@@ -440,7 +440,16 @@
       "allowed_hosts": [
         "northcarolinahealthnews.org",
         "www.northcarolinahealthnews.org"
-      ]
+      ],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-10-05",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "georgia-health-news",
@@ -503,7 +512,16 @@
       "updated_at": "2026-09-28T00:00:00Z",
       "allowed_hosts": [
         "coloradosun.com"
-      ]
+      ],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-10-05",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "calmatters-health",
@@ -534,7 +552,16 @@
       "allowed_hosts": [
         "calmatters.org"
       ],
-      "collection_method": "structured_index_polling"
+      "collection_method": "structured_index_polling",
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-10-05",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "ct-mirror-health",
@@ -565,7 +592,16 @@
       "allowed_hosts": [
         "ctmirror.org"
       ],
-      "collection_method": "structured_index_polling"
+      "collection_method": "structured_index_polling",
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-10-05",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "virginia-mercury-health",
@@ -755,7 +791,16 @@
       "allowed_hosts": [
         "texastribune.org",
         "www.texastribune.org"
-      ]
+      ],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-10-05",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "penn-capital-star-health",

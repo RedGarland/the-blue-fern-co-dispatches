@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T204417-0700",
+  "scheduled_for": "2026-10-05T20:44:17-07:00",
+  "started_at": "2026-10-05T20:44:17-07:00",
+  "completed_at": "2026-10-05T20:46:08-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T19:45:19-07:00",
+    "end": "2026-10-05T20:46:08-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches across the four bounded recall classes: sole/last/full-service grocery loss; emergency food-distribution cancellation from disaster/outage; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/EBT interruption.",
+    "No qualifying U.S. disruption published within the search window was found.",
+    "A Pickens County, South Carolina report on BJ's Gas and Food Mart being destroyed by fire was published at 8:27 PM EDT (5:27 PM PDT), before this hourly search window, and was excluded as not new; the report also described the business as a convenience store rather than establishing sole/last/full-service grocery access.",
+    "A WTHR report about a fire inside an Indianapolis Kroger surfaced again, but direct retrieval returned HTTP 403; available search evidence did not establish a qualifying community-level grocery-access loss.",
+    "Other surfaced results were stale, routine service/expansion coverage, recovery/distribution reporting without a cancellation, or did not meet the bounded high-value disruption criteria."
+  ]
+}

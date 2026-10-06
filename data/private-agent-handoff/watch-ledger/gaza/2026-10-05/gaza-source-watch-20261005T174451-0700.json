@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T174451-0700",
+  "scheduled_for": "2026-10-05T17:44:51-07:00",
+  "started_at": "2026-10-05T17:44:43-07:00",
+  "completed_at": "2026-10-05T17:45:31-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-05T16:44:51-07:00",
+    "end": "2026-10-05T17:45:31-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first. Its latest 5 October publication, Humanitarian Situation Report | 2 October 2026, was already known from the prior watch and reports primarily on 21-27 September; no new in-window development was identified.",
+    "WHO checked second. WHO Gaza/oPt emergency pages and targeted search yielded no new in-window operational update.",
+    "Exactly 12 additional targeted searches were run across Reuters, AP, UNRWA, WFP, UNICEF, ICRC, MSF, Palestine Red Crescent, WAFA, Al Jazeera, BBC, and Times of Israel for the requested high-value miss classes.",
+    "The BBC targeted search was blocked by robots.txt. Useful coverage remained from the other official and established sources, so this run is DEGRADED rather than FAILED.",
+    "No new qualifying civilian-casualty, displacement, aid-access, food/water, healthcare, infrastructure, crossing, detention/hostage, ceasefire/negotiation, or military-operation development was traceably established within this bounded window.",
+    "Opinion, unsupported social claims, recycled items, duplicates, and unsourced claims were excluded.",
+    "No publication, approval, schedule change, or task disablement was performed."
+  ]
+}

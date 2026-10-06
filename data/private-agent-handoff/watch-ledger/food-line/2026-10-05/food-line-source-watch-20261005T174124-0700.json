@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T174124-0700",
+  "scheduled_for": "2026-10-05T17:41:04-07:00",
+  "started_at": "2026-10-05T17:41:04-07:00",
+  "completed_at": "2026-10-05T17:41:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-05T16:46:16-07:00",
+    "end": "2026-10-05T17:41:24-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches focused on the four bounded Food Line recall miss classes.",
+    "Prioritized fresh local-news and official/agency/provider-result patterns; no qualifying U.S. access disruption was identified in the search window.",
+    "Fresh surfaced items were excluded when they reflected routine promotion, stale events, openings/expansions, donation drives, or closures without evidence that the affected store was the only/sole/last/full-service grocery access point for the community.",
+    "Production collection remains authoritative; this supplementary watch made no approval, publication, schedule, or production-state changes."
+  ]
+}

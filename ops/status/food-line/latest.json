@@ -10,35 +10,35 @@
     "state": "HANDOFF_RECEIVED_SUCCESS",
     "unaccounted_count": 0
   },
-  "aggregate_status": "DEGRADED",
+  "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "17bc41121979c27b7dc7ccb4bdce72d9ad63c9e2",
+  "current_runner_head": "441a81534ec19945576302fd7caa42bc444b8df5",
   "debug_summary": {
-    "aggregate_status": "DEGRADED",
+    "aggregate_status": "FAILED",
     "all_current_failures_external": null,
     "all_current_failures_non_actionable": null,
     "attention_task_count": 1,
     "attention_tasks": [
       {
-        "artifact_id": "20261006T211405Z-source-watch.json",
-        "classification": "completed_with_exclusions",
-        "exit_code": 0,
-        "failure_stage": "source_watch",
-        "status": "DEGRADED",
-        "task_key": "food_line_source_watch"
+        "artifact_id": "20261006T214508Z-status-resume.json",
+        "classification": "status_resume_failed",
+        "exit_code": 10,
+        "failure_stage": "status_resume",
+        "status": "FAILED",
+        "task_key": "food_line_source_watch_resume"
       }
     ],
     "external_access_restriction_count": null,
     "failed_source_count": null,
-    "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
-    "primary_classification": "completed_with_exclusions",
-    "primary_failure_stage": "source_watch",
-    "primary_layer": "EDITORIAL_HANDOFF",
-    "primary_task_key": "food_line_source_watch",
-    "primary_task_status": "DEGRADED",
+    "operator_assessment": "FAILED_ACTION_REQUIRED",
+    "primary_classification": "status_resume_failed",
+    "primary_failure_stage": "status_resume",
+    "primary_layer": "TASK",
+    "primary_task_key": "food_line_source_watch_resume",
+    "primary_task_status": "FAILED",
     "private_review_count_only_gap_count": 55,
     "private_review_dispositioned_item_count": 66,
-    "private_review_max_age_hours": 21,
+    "private_review_max_age_hours": 22,
     "private_review_oldest_pending_date": "2026-10-06",
     "private_review_pending_date_count": 1,
     "private_review_pending_item_count": 5,
@@ -46,7 +46,7 @@
     "publication_attempted": false,
     "publication_status": "skipped_not_release_ready",
     "receipt_completeness": "COMPLETE",
-    "recovery_lifecycle": "HEALTHY",
+    "recovery_lifecycle": "INCIDENT_OPEN",
     "stale_observability": false,
     "transient_source_failure_count": null,
     "unaccounted_event_count": null,
@@ -94,54 +94,56 @@
       "task_key": "food_line_daily_publish"
     },
     {
-      "artifact_id": "20261006T211405Z-source-watch.json",
-      "classification": "completed_with_exclusions",
-      "completed_at": "2026-10-06T21:14:05.531936Z",
-      "diagnostics": {
-        "failure": {
-          "collection_health": "completed_with_exclusions",
-          "failure_stage": "source_watch"
-        }
-      },
-      "exit_code": 0,
-      "next_expected_run": null,
-      "public_side_effects": {},
-      "publication_attempted": null,
-      "publication_status": "",
-      "run_id": "food-line-proof-food-care-continuation-20261006T210826Z-23b2502d",
-      "scheduled_for": "2026-10-06",
-      "started_at": "2026-10-06T21:09:12.401730Z",
-      "status": "DEGRADED",
-      "task_key": "food_line_source_watch"
-    },
-    {
-      "artifact_id": "20261006T211413Z-status-resume.json",
-      "classification": "resume_not_required",
-      "completed_at": "2026-10-06T21:14:13.537600Z",
+      "artifact_id": "20261006T214502Z-source-watch.json",
+      "classification": "completed",
+      "completed_at": "2026-10-06T21:45:02.456786Z",
       "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {},
       "publication_attempted": null,
       "publication_status": "",
-      "run_id": "food-line-proof-food-care-continuation-20261006T210826Z-23b2502d",
+      "run_id": "food-line-proof-food-care-continuation-20261006T211826Z-526f53ae",
       "scheduled_for": "2026-10-06",
-      "started_at": "2026-10-06T21:14:10.731862Z",
-      "status": "SAFE_NO_OP",
+      "started_at": "2026-10-06T21:19:12.761281Z",
+      "status": "SUCCESS",
+      "task_key": "food_line_source_watch"
+    },
+    {
+      "artifact_id": "20261006T214508Z-status-resume.json",
+      "classification": "status_resume_failed",
+      "completed_at": "2026-10-06T21:45:08.161476Z",
+      "diagnostics": {
+        "failure": {
+          "collection_health": "status_resume_failed",
+          "failure_stage": "status_resume"
+        }
+      },
+      "exit_code": 10,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-06T21:45:07.638747Z",
+      "status": "FAILED",
       "task_key": "food_line_source_watch_resume"
     }
   ],
-  "incident_reference": null,
-  "last_exported_at": "2026-10-06T21:40:00.050413Z",
-  "last_receipt_at": "2026-10-06T21:14:17.023633Z",
-  "latest_runtime_proof_date": "2026-10-06T21:14:17.023633Z",
+  "incident_reference": {
+    "date": "2026-10-06"
+  },
+  "last_exported_at": "2026-10-06T22:01:48.387862Z",
+  "last_receipt_at": "2026-10-06T21:45:08.161476Z",
+  "latest_runtime_proof_date": "2026-10-06T21:45:02.456786Z",
   "next_expected_run": null,
   "observed_date": "2026-10-06",
   "private_review_backlog": {
     "count_only_gap_count": 55,
     "dates": [
       {
-        "age_hours": 21,
+        "age_hours": 22,
         "count_only_gap_count": 0,
         "date": "2026-10-06",
         "dispositioned_item_count": 0,
@@ -266,7 +268,7 @@
       }
     ],
     "dispositioned_item_count": 66,
-    "max_age_hours": 21,
+    "max_age_hours": 22,
     "oldest_pending_date": "2026-10-06",
     "pending_date_count": 1,
     "pending_item_count": 5,
@@ -279,7 +281,7 @@
   "publication_attempted": false,
   "publication_status": "skipped_not_release_ready",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "HEALTHY",
+  "recovery_lifecycle": "INCIDENT_OPEN",
   "runner_source_head": null,
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_after": "2026-10-06T14:00:00Z",
@@ -1588,6 +1590,22 @@
       "task_key": "food_line_source_watch"
     },
     {
+      "artifact_id": "20261006T214502Z-source-watch.json",
+      "classification": "completed",
+      "completed_at": "2026-10-06T21:45:02.456786Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-proof-food-care-continuation-20261006T211826Z-526f53ae",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-06T21:19:12.761281Z",
+      "status": "SUCCESS",
+      "task_key": "food_line_source_watch"
+    },
+    {
       "artifact_id": "20261006T123003Z-source-watch.json",
       "classification": "blocked_overlapping_run",
       "completed_at": "2026-10-06T12:30:03.117262Z",
@@ -2106,9 +2124,9 @@
       "task_key": "food_line_source_watch_resume"
     },
     {
-      "artifact_id": "20261006T195517Z-status-resume.json",
+      "artifact_id": "20261006T214508Z-status-resume.json",
       "classification": "status_resume_failed",
-      "completed_at": "2026-10-06T19:55:17.873168Z",
+      "completed_at": "2026-10-06T21:45:08.161476Z",
       "diagnostics": {
         "failure": {
           "collection_health": "status_resume_failed",
@@ -2122,7 +2140,7 @@
       "publication_status": "",
       "run_id": "",
       "scheduled_for": "2026-10-06",
-      "started_at": "2026-10-06T19:55:17.422332Z",
+      "started_at": "2026-10-06T21:45:07.638747Z",
       "status": "FAILED",
       "task_key": "food_line_source_watch_resume"
     }

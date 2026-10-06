@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261006T104554-0700",
+  "scheduled_for": "2026-10-06T10:45:54-07:00",
+  "started_at": "2026-10-06T10:48:53-07:00",
+  "completed_at": "2026-10-06T10:50:41-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-06T09:45:54-07:00",
+    "end": "2026-10-06T10:50:41-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches across the four bounded recall classes: sole/last/full-service grocery loss; emergency food-distribution cancellation from disaster/outage; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/EBT interruption.",
+    "No qualifying U.S. food-access disruption was found within the bounded search window.",
+    "A fresh TMJ4 report said the Kenosha County Food Bank plans to dissolve and cease operations by the end of 2026, but the provider homepage displays a public-statement image dated 2026-10-01, placing the underlying announcement before this hourly window; it was excluded as not new.",
+    "Other surfaced results were stale, routine distributions or program information, donation drives, general SNAP policy coverage, or grocery closures without evidence that the store was the only, sole, last, or full-service grocery source for the affected community.",
+    "No material search or source-retrieval failures occurred during this run."
+  ]
+}

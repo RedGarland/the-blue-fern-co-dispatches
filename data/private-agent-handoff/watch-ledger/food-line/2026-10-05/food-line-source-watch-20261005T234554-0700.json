@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T234554-0700",
+  "scheduled_for": "2026-10-05T23:45:54-07:00",
+  "started_at": "2026-10-05T23:48:21-07:00",
+  "completed_at": "2026-10-05T23:49:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "started_at": "2026-10-05T22:45:54-07:00",
+    "ended_at": "2026-10-05T23:45:54-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches covering the four bounded Food Line recall miss classes.",
+    "No new qualifying U.S. food-access disruption was identified within the hourly observation window.",
+    "A San Jose pantry enforcement report dated October 5 described an order to cease operations within 60 days, not an abrupt current service closure or immediate major access reduction.",
+    "A Hawaii notice authorizing replacement SNAP benefits for Molokai households affected by planned outages was published earlier in the day and fell outside this hourly window.",
+    "Other surfaced items were stale, routine distribution schedules, non-U.S., or did not establish sole/last/full-service grocery access loss."
+  ]
+}

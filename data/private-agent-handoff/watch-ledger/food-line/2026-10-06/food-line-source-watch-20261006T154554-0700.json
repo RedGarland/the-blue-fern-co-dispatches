@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261006T154554-0700",
+  "scheduled_for": "2026-10-06T15:45:54-07:00",
+  "started_at": "2026-10-06T15:46:23-07:00",
+  "completed_at": "2026-10-06T15:50:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T14:45:54-07:00",
+    "end": "2026-10-06T15:50:00-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded 12-search supplementary recall sweep completed. No new qualifying U.S. food-access disruption was established in the window. Fresh results were either outside-window, routine service information, historical events, policy background, or lacked evidence of an immediate qualifying access loss."
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261006T114554-0700",
+  "scheduled_for": "2026-10-06T11:45:54-07:00",
+  "started_at": "2026-10-06T11:48:19-07:00",
+  "completed_at": "2026-10-06T11:48:56-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-06T10:50:41-07:00",
+    "end": "2026-10-06T11:48:56-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches across the four bounded recall classes: sole/last/full-service grocery loss; emergency food-distribution cancellation from disaster/outage; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/EBT interruption.",
+    "No qualifying U.S. food-access disruption was found within the bounded search window.",
+    "Fresh search results were dominated by stale closures, routine distributions or pantry calendars, donation/program promotion, general SNAP policy coverage, and non-disruptive food-bank activity.",
+    "A North Kent Connect calendar entry showed the pantry closed on October 6, but the available source did not establish an abrupt disruption, disaster/outage cause, or major access reduction; it was excluded.",
+    "No material search or source-retrieval failures occurred during this run."
+  ]
+}

@@ -10,13 +10,13 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "FAILED",
+  "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "bc4683a34944899ffc94cc5a73c505fd788353d1",
+  "current_runner_head": "5b1428c23f05fd3a78f906bd8497889df38040f0",
   "debug_summary": {
-    "aggregate_status": "FAILED",
-    "all_current_failures_external": false,
-    "all_current_failures_non_actionable": false,
+    "aggregate_status": "DEGRADED",
+    "all_current_failures_external": true,
+    "all_current_failures_non_actionable": true,
     "attention_task_count": 3,
     "attention_tasks": [
       {
@@ -44,12 +44,12 @@
         "task_key": "care_line_collection"
       }
     ],
-    "external_access_restriction_count": 9,
+    "external_access_restriction_count": 14,
     "failed_source_count": 14,
-    "operator_assessment": "FAILED_ACTION_REQUIRED",
+    "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
     "primary_classification": "partial_success",
     "primary_failure_stage": "care_line_collection",
-    "primary_layer": "SOURCE_CLASSIFICATION",
+    "primary_layer": "EXTERNAL_DEPENDENCY",
     "primary_task_key": "care_line_collection",
     "primary_task_status": "DEGRADED",
     "private_review_count_only_gap_count": null,
@@ -62,11 +62,11 @@
     "publication_attempted": false,
     "publication_status": "safe_no_op",
     "receipt_completeness": "COMPLETE",
-    "recovery_lifecycle": "INCIDENT_OPEN",
+    "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": 0,
     "unaccounted_event_count": null,
-    "unclassified_source_failure_count": 5
+    "unclassified_source_failure_count": 0
   },
   "dispatch": "care-line",
   "expected_instances": [
@@ -101,8 +101,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-06T02:24:51.433167Z",
-  "last_receipt_at": "2026-10-06T02:24:47.324127Z",
+  "last_exported_at": "2026-10-06T02:28:20.125204Z",
+  "last_receipt_at": "2026-10-06T02:28:06.049116Z",
   "latest_runtime_proof_date": "2026-10-05T15:30:07Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -114,7 +114,7 @@
   "publication_attempted": false,
   "publication_status": "safe_no_op",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "INCIDENT_OPEN",
+  "recovery_lifecycle": "HEALTHY",
   "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
@@ -124,9 +124,9 @@
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "source_failure_summary": {
-    "all_current_failures_external": false,
-    "all_current_failures_non_actionable": false,
-    "external_access_restriction_count": 9,
+    "all_current_failures_external": true,
+    "all_current_failures_non_actionable": true,
+    "external_access_restriction_count": 14,
     "external_restriction_sources": [
       {
         "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
@@ -145,6 +145,30 @@
         "coverage_reduced": true,
         "remediation_available": false,
         "source_id": "fierce-healthcare"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "nc-health-news"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "colorado-sun-health"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "calmatters-health"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "ct-mirror-health"
       },
       {
         "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
@@ -174,6 +198,12 @@
         "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
         "coverage_reduced": true,
         "remediation_available": false,
+        "source_id": "texas-tribune-health"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
         "source_id": "michigan-advance-health"
       },
       {
@@ -190,7 +220,7 @@
     "successful_attempt_count": 24,
     "transient_source_failure_count": 0,
     "transient_sources": [],
-    "unclassified_source_failure_count": 5
+    "unclassified_source_failure_count": 0
   },
   "stale_observability": false,
   "task_summaries": [
@@ -929,32 +959,44 @@
           },
           {
             "adapter_type": "rss",
+            "coverage_reduced": true,
             "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "nc-health-news",
             "source_name": "North Carolina Health News",
             "transient": false
           },
           {
             "adapter_type": "rss",
+            "coverage_reduced": true,
             "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "colorado-sun-health",
             "source_name": "Colorado Sun Health",
             "transient": false
           },
           {
             "adapter_type": "structured_index",
+            "coverage_reduced": true,
             "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "calmatters-health",
             "source_name": "CalMatters Health",
             "transient": false
           },
           {
             "adapter_type": "structured_index",
+            "coverage_reduced": true,
             "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "ct-mirror-health",
             "source_name": "The Connecticut Mirror Health",
             "transient": false
@@ -1005,8 +1047,11 @@
           },
           {
             "adapter_type": "rss",
+            "coverage_reduced": true,
             "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "texas-tribune-health",
             "source_name": "Texas Tribune Health Care",
             "transient": false
@@ -1248,6 +1293,27 @@
       "run_id": "care-proof-only-food-care-continuation-20261006T021826Z-e9d96e0b",
       "scheduled_for": "2026-10-05",
       "started_at": "2026-10-06T02:24:45Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-classification-20261006T0228Z.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-06T02:28:06Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-classification-20261006T0228Z",
+      "scheduled_for": "2026-10-05",
+      "started_at": "2026-10-06T02:28:01Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
     }

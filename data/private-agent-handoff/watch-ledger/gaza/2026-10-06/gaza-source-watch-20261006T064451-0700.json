@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T064451-0700",
+  "scheduled_for": "2026-10-06T06:44:51-07:00",
+  "started_at": "2026-10-06T06:43:56-07:00",
+  "completed_at": "2026-10-06T06:45:31-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T05:44:51-07:00",
+    "end": "2026-10-06T06:45:31-07:00",
+    "basis": "since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "checked_first",
+        "note": "Latest surfaced Gaza situation report remains Humanitarian Situation Report | 2 October 2026, published 2026-10-05; Gaza reporting period is primarily 2026-09-21 through 2026-09-27, so it does not establish a new development inside this watch window."
+      },
+      {
+        "source": "WHO",
+        "result": "checked_second",
+        "note": "No fresh Gaza/oPt operational health update establishing a new development inside this watch window surfaced."
+      }
+    ],
+    "additional_searches": {
+      "count": 12,
+      "targets": [
+        "Reuters",
+        "Associated Press",
+        "UNRWA",
+        "World Food Programme",
+        "UNICEF",
+        "ICRC",
+        "Palestine Red Crescent Society",
+        "MSF",
+        "WAFA",
+        "IDF",
+        "Al Jazeera",
+        "UN News"
+      ],
+      "degraded_sources": [
+        {
+          "source": "UN News",
+          "failure": "robots.txt blocked",
+          "impact": "Useful coverage remained from the other targeted sources; the run continued and is classified DEGRADED."
+        }
+      ]
+    },
+    "exclusions": [
+      "No new qualifying civilian casualty, displacement, aid-access, food/water, healthcare, infrastructure, crossing, detention/hostage, ceasefire/negotiation, or documented civilian-impact military development was established within the window.",
+      "Standing or undated humanitarian pages, stale reports, unrelated items, opinion, unsupported social claims, recycled reports, duplicates, and unsourced claims were excluded."
+    ]
+  }
+}

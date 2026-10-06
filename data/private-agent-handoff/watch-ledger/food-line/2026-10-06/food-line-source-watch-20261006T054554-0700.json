@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261006T054554-0700",
+  "scheduled_for": "2026-10-06T05:45:54-07:00",
+  "started_at": "2026-10-06T05:49:42-07:00",
+  "completed_at": "2026-10-06T05:50:17-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-06T04:44:43-07:00",
+    "end": "2026-10-06T05:50:17-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Executed 12 targeted web searches focused on the four audited high-value miss classes.",
+    "No new qualifying U.S. food-access disruption was identified in the bounded search window.",
+    "Fresh or surfaced results were either older than the window, outside the United States, routine/non-disruptive program information, or lacked evidence of a qualifying community-level access loss.",
+    "Production collection remains authoritative; this supplementary watch did not approve, publish, alter schedules, or change production state."
+  ]
+}

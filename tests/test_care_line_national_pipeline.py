@@ -923,6 +923,179 @@ def test_care_line_normalizes_bradford_long_term_care_facility_closure(tmp_path:
     assert normalized["metadata"]["service_continuation_caveat"]
 
 
+def test_care_line_normalizes_sensitive_service_cessation_for_private_review(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(
+        source_id="penn-capital-star-health",
+        name="Pennsylvania Capital-Star Health",
+        publisher="Pennsylvania Capital-Star",
+        state="PA",
+        geographic_scope="state",
+        care_line_topics=["specialty care", "pediatrics"],
+    )
+    raw_item = {
+        "raw_item_id": "upmc-gender-affirming-care-cessation",
+        "source_id": "penn-capital-star-health",
+        "source_name": "Pennsylvania Capital-Star Health",
+        "source_state": "PA",
+        "source_geographic_scope": "state",
+        "item_url": "https://penncapital-star.com/health/example-upmc-gender-affirming-care/",
+        "title": "UPMC agrees to end gender-affirming care for minors",
+        "description": "UPMC will cease providing gender-affirming care for minors, including puberty blockers and hormones, at its Pennsylvania facilities.",
+        "content_text": "UPMC will cease providing gender-affirming care for minors, including puberty blockers and hormones, at its Pennsylvania facilities. The article notes UPMC made no admission of wrongdoing.",
+        "source_date_state": "source_dated",
+        "source_publication_date": "2026-09-24",
+        "item_permalink_available": False,
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    monkeypatch.setattr(pipeline, "fetch_url", lambda *args, **kwargs: pytest.fail("feed evidence should be enough"))
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "artifact.json"),
+        run_id="run-upmc",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    normalized = payload["normalized_record"]
+    assert normalized["event_type"] == "service_closure"
+    assert normalized["service_line"] == "gender_affirming_care"
+    assert normalized["provider_name"] == "UPMC"
+    assert normalized["state"] == "PA"
+    assert "LOSS_OF_LOCAL_ACCESS" in normalized["access_consequences"]
+    warnings = payload["qualification_result"]["review_warnings"]
+    assert "sensitive_service_cessation_private_review_required" in warnings
+    assert payload["qualification_result"]["public_eligibility_precheck"] is False
+    assert payload["qualification_result"]["review_transition_owner"] == "human_editorial_review"
+
+
+def test_care_line_normalizes_medicaid_approval_delay_for_private_review(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(
+        source_id="texas-tribune-health",
+        name="Texas Tribune Health",
+        publisher="Texas Tribune",
+        state="TX",
+        geographic_scope="state",
+        care_line_topics=["Medicaid", "health insurance"],
+    )
+    raw_item = {
+        "raw_item_id": "texas-medicaid-delay",
+        "source_id": "texas-tribune-health",
+        "source_name": "Texas Tribune Health",
+        "source_state": "TX",
+        "source_geographic_scope": "state",
+        "item_url": "https://www.texastribune.org/example-medicaid-delay/",
+        "title": "Texans wait months for Medicaid approval as backlog grows",
+        "description": "More than 200,000 Texans are waiting for Medicaid approval, and families describe months-long delays in coverage approval.",
+        "content_text": "More than 200,000 Texans are waiting for Medicaid approval, and families describe months-long delays in coverage approval. A Houston mother said the pending application delayed access to care.",
+        "source_date_state": "source_dated",
+        "source_publication_date": "2026-09-08",
+        "item_permalink_available": False,
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    monkeypatch.setattr(pipeline, "fetch_url", lambda *args, **kwargs: pytest.fail("feed evidence should be enough"))
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "artifact.json"),
+        run_id="run-texas-medicaid",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    normalized = payload["normalized_record"]
+    assert normalized["event_type"] == "coverage_delay"
+    assert normalized["service_line"] == "coverage_access"
+    assert normalized["provider_name"] == "Texas Medicaid"
+    assert normalized["state"] == "TX"
+    assert "DELAYED_CARE_RISK" in normalized["access_consequences"]
+    assert "coverage_access_delay_private_review_required" in payload["qualification_result"]["review_warnings"]
+    assert payload["qualification_result"]["public_eligibility_precheck"] is False
+
+
+def test_care_line_normalizes_aca_marketplace_cancellations_for_editorial_review(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(
+        source_id="beckers-payer",
+        name="Becker's Payer Issues",
+        publisher="Becker's Payer Issues",
+        state="",
+        geographic_scope="national",
+        care_line_topics=["ACA", "health insurance"],
+    )
+    raw_item = {
+        "raw_item_id": "cms-aca-cancellations",
+        "source_id": "beckers-payer",
+        "source_name": "Becker's Payer Issues",
+        "source_geographic_scope": "national",
+        "item_url": "https://www.beckerspayer.com/example-aca-cancellations/",
+        "title": "CMS cancels unauthorized ACA Marketplace enrollments",
+        "description": "CMS canceled approximately 315,000 unauthorized Marketplace enrollments covering more than 760,000 people and froze some broker access.",
+        "content_text": "CMS canceled approximately 315,000 unauthorized Marketplace enrollments covering more than 760,000 people in the ACA Marketplace. The federal agency also froze some broker access while reviewing enrollments.",
+        "source_date_state": "source_dated",
+        "source_publication_date": "2026-09-22",
+        "item_permalink_available": False,
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    monkeypatch.setattr(pipeline, "fetch_url", lambda *args, **kwargs: pytest.fail("feed evidence should be enough"))
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "artifact.json"),
+        run_id="run-cms-aca",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    normalized = payload["normalized_record"]
+    assert normalized["event_type"] == "coverage_cancellation"
+    assert normalized["service_line"] == "coverage_access"
+    assert normalized["provider_name"] == "ACA Marketplace coverage"
+    assert normalized["state"] == "US"
+    assert normalized["geographic_scope"] == "national"
+    assert "LOSS_OF_LOCAL_ACCESS" in normalized["access_consequences"]
+    assert "coverage_cancellation_editorial_framing_required" in payload["qualification_result"]["review_warnings"]
+    assert payload["qualification_result"]["public_eligibility_precheck"] is False
+
+
+def test_care_line_keeps_september_weak_leads_rejected() -> None:
+    kansas_raw_item = {
+        "raw_item_id": "kansas-loan-closets",
+        "source_id": "kcur-health",
+        "source_name": "KCUR Health",
+        "item_url": "https://www.kcur.org/example-loan-closets/",
+        "title": "Kansas loan closets fill gaps for families seeking medical equipment",
+        "description": "Loan closets lend wheelchairs and other medical equipment as families navigate costs, but no clinic, provider service, or coverage program closes or denies access.",
+    }
+    alabama_raw_item = {
+        "raw_item_id": "alabama-asc-approval",
+        "source_id": "alabama-health-news",
+        "source_name": "Alabama Health News",
+        "item_url": "https://example.org/alabama-asc-approval",
+        "title": "Alabama approves new ambulatory surgery center",
+        "description": "State regulators approved a hospital-converted ambulatory surgery center focused on orthopedic cases and expanded surgical access.",
+    }
+
+    kansas_lead = pipeline.event_lead_from_raw_item(kansas_raw_item)
+    alabama_lead = pipeline.event_lead_from_raw_item(alabama_raw_item)
+
+    assert kansas_lead["qualification_status"] == "excluded"
+    assert kansas_lead["exclusion_reason"] in {"non_care_line", "general_healthcare_news"}
+    assert alabama_lead["qualification_status"] == "excluded"
+    assert alabama_lead["exclusion_reason"] == "service_expansion_without_prior_loss_context"
+
+
 def test_care_line_qualifies_it_incident_with_sexual_health_walk_in_cancellation(tmp_path: Path, monkeypatch) -> None:
     source = _care_source(
         source_id="fenway-health",

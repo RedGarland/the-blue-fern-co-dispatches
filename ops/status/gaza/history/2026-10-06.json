@@ -10,23 +10,32 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "UNKNOWN",
+  "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "5b1428c23f05fd3a78f906bd8497889df38040f0",
   "debug_summary": {
-    "aggregate_status": "UNKNOWN",
+    "aggregate_status": "FAILED",
     "all_current_failures_external": null,
     "all_current_failures_non_actionable": null,
-    "attention_task_count": 0,
-    "attention_tasks": [],
+    "attention_task_count": 1,
+    "attention_tasks": [
+      {
+        "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-10-06-20261006T130056783370Z.json",
+        "classification": "failed",
+        "exit_code": 1,
+        "failure_stage": "gaza_daily_dispatch",
+        "status": "FAILED",
+        "task_key": "gaza_daily_dispatch"
+      }
+    ],
     "external_access_restriction_count": null,
     "failed_source_count": null,
     "operator_assessment": "FAILED_ACTION_REQUIRED",
-    "primary_classification": null,
-    "primary_failure_stage": null,
-    "primary_layer": "UNKNOWN",
-    "primary_task_key": null,
-    "primary_task_status": null,
+    "primary_classification": "failed",
+    "primary_failure_stage": "gaza_daily_dispatch",
+    "primary_layer": "TASK",
+    "primary_task_key": "gaza_daily_dispatch",
+    "primary_task_status": "FAILED",
     "private_review_count_only_gap_count": null,
     "private_review_dispositioned_item_count": null,
     "private_review_max_age_hours": null,
@@ -35,9 +44,9 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "NO_PROOF",
-    "recovery_lifecycle": "HEALTHY",
+    "publication_status": "failed",
+    "receipt_completeness": "COMPLETE",
+    "recovery_lifecycle": "INCIDENT_OPEN",
     "stale_observability": false,
     "transient_source_failure_count": null,
     "unaccounted_event_count": null,
@@ -46,8 +55,8 @@
   "dispatch": "gaza",
   "dry_run_recovery_applied": false,
   "dry_run_recovery_proof": null,
-  "last_exported_at": "2026-10-06T07:34:15.228752Z",
-  "last_receipt_at": null,
+  "last_exported_at": "2026-10-06T13:15:30.139636Z",
+  "last_receipt_at": "2026-10-06T13:07:07.324902Z",
   "latest_recovery_proof_at": null,
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
@@ -55,18 +64,44 @@
   "observed_date": "2026-10-06",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "failed"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "NO_PROOF",
-  "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": null,
-  "scheduled_health_authoritative": false,
+  "publication_status": "failed",
+  "receipt_completeness": "COMPLETE",
+  "recovery_lifecycle": "INCIDENT_OPEN",
+  "runner_source_head": "5b1428c23f05fd3a78f906bd8497889df38040f0",
+  "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "gaza_daily_dispatch"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_observability": false,
-  "task_summaries": []
+  "task_summaries": [
+    {
+      "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-10-06-20261006T130056783370Z.json",
+      "classification": "failed",
+      "completed_at": "2026-10-06T13:07:04.655939Z",
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "gaza_daily_dispatch"
+        }
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky": false,
+        "pages": false,
+        "public_output": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failed",
+      "run_id": "gaza-daily-2026-10-06-20261006T130056783370Z",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-06T13:00:56.783370Z",
+      "status": "FAILED",
+      "task_key": "gaza_daily_dispatch"
+    }
+  ]
 }

@@ -863,6 +863,66 @@ def test_care_line_access_blocked_item_can_use_feed_content_text_for_bounded_evi
     assert "emergency department closure announced" in payload["normalized_record"]["supporting_passage"].lower()
 
 
+def test_care_line_normalizes_bradford_long_term_care_facility_closure(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(
+        source_id="penn-capital-star-health",
+        name="Pennsylvania Capital-Star Health",
+        publisher="Pennsylvania Capital-Star",
+        state="PA",
+        geographic_scope="state",
+        care_line_topics=["hospital", "clinic", "long-term care"],
+    )
+    raw_item = {
+        "raw_item_id": "bradford-pavilion-closure",
+        "source_id": "penn-capital-star-health",
+        "source_name": "Pennsylvania Capital-Star Health",
+        "source_state": "PA",
+        "source_geographic_scope": "state",
+        "item_url": "https://penncapital-star.com/health/long-term-care-facility-at-former-bradford-hospital-to-close-by-december-1/",
+        "title": "Long-term care facility at former Bradford hospital to close by December 1",
+        "description": "The Pavilion, a long-term care facility at the former hospital in Bradford will close on or before December 1, according to Kaleida Health officials.",
+        "content_text": (
+            "The Pavilion, a long-term care facility at the former hospital in Bradford will close on or before December 1, "
+            "according to Kaleida Health officials. Kaleida officials say there are currently 45 residents living in The Pavilion, "
+            "and that they will work with families to find alternative care. A Kaleida spokesperson also said they will continue "
+            "to provide ambulatory services."
+        ),
+        "source_date_state": "source_dated",
+        "source_publication_date": "2026-09-23",
+        "item_permalink_available": False,
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    monkeypatch.setattr(pipeline, "fetch_url", lambda *args, **kwargs: pytest.fail("feed evidence should be enough"))
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "artifact.json"),
+        run_id="run-bradford",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    normalized = payload["normalized_record"]
+    assert normalized["facility_name"] == "The Pavilion"
+    assert normalized["provider_name"] == "The Pavilion"
+    assert normalized["city"] == "Bradford"
+    assert normalized["state"] == "PA"
+    assert normalized["geographic_scope"] == "city"
+    assert normalized["event_type"] == "facility_closure"
+    assert normalized["effective_date"] == "2026-12-01"
+    assert normalized["service_line"] == "skilled_nursing"
+    assert normalized["facility_type"] == "long_term_care"
+    assert normalized["access_consequences"] == ["LOSS_OF_LOCAL_ACCESS"]
+    assert "45 residents" in normalized["verification_notes"]
+    assert "ambulatory services" in normalized["verification_notes"]
+    assert normalized["metadata"]["affected_population_note"]
+    assert normalized["metadata"]["service_continuation_caveat"]
+
+
 def test_care_line_qualifies_it_incident_with_sexual_health_walk_in_cancellation(tmp_path: Path, monkeypatch) -> None:
     source = _care_source(
         source_id="fenway-health",

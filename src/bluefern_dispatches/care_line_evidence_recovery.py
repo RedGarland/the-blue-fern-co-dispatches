@@ -182,6 +182,8 @@ def _packet_raw_item(row: Mapping[str, Any], source: CareLineSource) -> dict[str
         "source_type": source.source_type,
         "source_role": source.source_role,
         "authority_level": source.authority_level,
+        "source_state": source.state,
+        "source_geographic_scope": source.geographic_scope,
         "item_url": _canonical_url(row),
         "title": _text(row, "source_title", "title"),
         "description": description,

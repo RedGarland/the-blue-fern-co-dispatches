@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261005T194522-0700-r11",
+  "scheduled_for": "2026-10-05T19:45:22-07:00",
+  "started_at": "2026-10-05T19:49:50-07:00",
+  "completed_at": "2026-10-05T19:51:45-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T18:51:01-07:00",
+    "end": "2026-10-05T19:51:45-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first. The newest current entries remain the 2026-10-05 rescissions for Compassionate Care Angels LLC (TX hospice) and O.M.K Healthcare Services LLC (TX home health), both already surfaced before this search window; no newer CMS access-risk notice was identified.",
+    "Twelve additional targeted searches covered hospital/ED, maternity, behavioral-health, dialysis, oncology, primary-care, rural emergency-service loss, ambulance, air-medical, essential-service restoration, U.S. territories, and official state/government notices.",
+    "No new qualifying U.S. or territory healthcare-access development was identified in the window beginning with the prior durable Care Line heartbeat completion at 2026-10-05T18:51:01-07:00.",
+    "Same-day results concerning Bradford Regional Medical Center described an earlier service loss, and Latitude Air Ambulance reporting described a crash/search suspension rather than a U.S. air-medical service or base closure; both were excluded."
+  ]
+}

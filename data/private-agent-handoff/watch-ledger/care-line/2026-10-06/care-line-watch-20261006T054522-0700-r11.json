@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261006T054522-0700-r11",
+  "scheduled_for": "2026-10-06T05:45:22-07:00",
+  "started_at": "2026-10-06T05:45:16-07:00",
+  "completed_at": "2026-10-06T05:47:16-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-06T04:45:22-07:00",
+    "end": "2026-10-06T05:47:16-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. Newest notices remained the 2026-10-05 rescissions for Compassionate Care Angels LLC (TX hospice) and O.M.K Healthcare Services LLC (TX home health), already observed in the prior watch and treated as duplicates.",
+    "Completed 12 additional targeted searches covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency services, ambulance/air-medical, restoration/reopening, and U.S. territories.",
+    "No new qualifying healthcare-access change was found in the search window.",
+    "Excluded non-U.S. results, older events, proposals without concrete current access effect, business/renovation stories without service loss, and the Latitude Air Ambulance crash/search suspension because it did not establish closure or suspension of a U.S. air-medical service or base."
+  ]
+}

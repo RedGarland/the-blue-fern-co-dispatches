@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T094451-0700",
+  "scheduled_for": "2026-10-06T09:44:51-07:00",
+  "started_at": "2026-10-06T09:46:57-07:00",
+  "completed_at": "2026-10-06T09:47:49-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-06T08:44:51-07:00",
+    "end": "2026-10-06T09:47:49-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; no fresh in-window operational update identified.",
+    "WHO checked second; no fresh in-window operational update identified.",
+    "Exactly twelve additional targeted searches were completed across Reuters, AP, UNRWA, WFP, UNICEF, ICRC, Palestine Red Crescent, MSF, WAFA, IDF, Al Jazeera, and UN News.",
+    "UN News was blocked by robots.txt; remaining coverage was sufficient to complete the watch as DEGRADED.",
+    "No new qualifying in-window development was identified.",
+    "The prior hourly observation boundary was used even though that prior run's heartbeat write failed; this execution does not backfill or create any additional heartbeat."
+  ]
+}

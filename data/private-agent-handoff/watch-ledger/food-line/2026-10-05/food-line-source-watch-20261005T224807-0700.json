@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T224807-0700",
+  "scheduled_for": "2026-10-05T22:48:07-07:00",
+  "started_at": "2026-10-05T22:48:07-07:00",
+  "completed_at": "2026-10-05T22:48:50-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T21:44:46-07:00",
+    "end": "2026-10-05T22:48:50-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed exactly 12 targeted web searches across the four bounded recall classes: sole/last/full-service grocery loss; disaster-related emergency food-distribution cancellation; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/EBT interruption.",
+    "No qualifying new U.S. food-access disruption published within the search window was found.",
+    "A Vashon Island ferry-service suspension surfaced because it delayed grocery deliveries, but it did not establish closure or loss of a sole/last/full-service grocery store and therefore fell outside the bounded miss classes.",
+    "The Watertown, New York Save A Lot closure surfaced again, but it was already known from earlier checks and did not establish loss of the community's sole/last/full-service grocery access. Other results were stale, non-U.S., routine service/program coverage, or outside the bounded disruption classes."
+  ]
+}

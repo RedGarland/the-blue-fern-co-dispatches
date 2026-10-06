@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T214313-0700",
+  "scheduled_for": "2026-10-05T21:43:13-07:00",
+  "started_at": "2026-10-05T21:43:13-07:00",
+  "completed_at": "2026-10-05T21:44:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T20:46:08-07:00",
+    "end": "2026-10-05T21:44:46-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed exactly 12 targeted web searches across the four bounded recall classes: sole/last/full-service grocery loss; emergency food-distribution cancellation from disaster/outage; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/EBT interruption.",
+    "No qualifying new U.S. food-access disruption published within the search window was found.",
+    "A WBKO item reported that a proposed full-service grocery project for food-desert Metcalfe County, Kentucky lost its selected operator, but it did not represent loss or closure of an existing grocery access point and was outside the hourly window.",
+    "A Save A Lot closure in Watertown, New York surfaced again, but it was already known from the prior check and did not establish loss of the community's sole/last/full-service grocery access. Other results were stale, non-U.S., routine program/service coverage, generic policy coverage, or outside the bounded disruption classes."
+  ]
+}

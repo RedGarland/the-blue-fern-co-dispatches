@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261006T094554-0700",
+  "scheduled_for": "2026-10-06T09:45:54-07:00",
+  "started_at": "2026-10-06T09:49:35-07:00",
+  "completed_at": "2026-10-06T09:50:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-06T08:45:54-07:00",
+    "end": "2026-10-06T09:50:44-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches across the four bounded recall classes: sole/last/full-service grocery loss; emergency food-distribution cancellation from disaster/outage; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/food-assistance interruption.",
+    "No new qualifying U.S. food-access disruption was found in the bounded window.",
+    "Fresh search results included a Vashon ferry-service disruption that delayed grocery deliveries, but it did not establish closure/loss of a sole, last, or full-service grocery store and was excluded as outside the specified miss classes.",
+    "Other surfaced results were stale, routine service or program information, non-U.S. items, donation-drive coverage, or store closures without evidence that the location was the community's sole/last/full-service grocery access."
+  ]
+}

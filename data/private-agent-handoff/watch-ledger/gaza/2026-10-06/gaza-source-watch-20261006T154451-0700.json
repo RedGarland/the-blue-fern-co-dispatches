@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T154451-0700",
+  "scheduled_for": "2026-10-06T15:44:51-07:00",
+  "started_at": "2026-10-06T15:47:10-07:00",
+  "completed_at": "2026-10-06T15:49:45-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T14:44:51-07:00",
+    "end": "2026-10-06T15:44:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-06/gaza-source-watch-20261006T144451-0700.json",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first. Fresh site-restricted search surfaced no new Gaza operational publication in the hourly window; the latest surfaced material was older than the window."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second. Fresh site-restricted search surfaced no new Gaza operational health publication in the hourly window."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_sources": [
+      "Reuters",
+      "Associated Press",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "ICRC",
+      "Palestine Red Crescent Society",
+      "MSF",
+      "WAFA",
+      "IDF",
+      "Al Jazeera",
+      "UN News"
+    ],
+    "degraded_reasons": [
+      "UN News was blocked by robots.txt during the bounded search. Useful coverage remained from the other searches."
+    ],
+    "exclusions": [
+      "Reuters' October 6 article on two Palestinians killed in Israeli strikes was published at 10:12 UTC (03:12 PDT), before this hourly search window, and was excluded as not new.",
+      "Reuters' October 6 one-year assessment of the Gaza plan was published at 07:04 UTC and was retrospective rather than a new in-window operational development.",
+      "The MSF October 6 statement on detained Palestinian healthcare workers was already surfaced by an earlier watch and lacked evidence of a new detention event in this hourly window.",
+      "UNICEF's October 6 El Nino material was not Gaza-specific.",
+      "Older, recycled, duplicate, retrospective, opinion, unsupported social, and unsourced material was excluded."
+    ],
+    "conclusion": "No new traceable qualifying development was established in the bounded hourly window."
+  }
+}

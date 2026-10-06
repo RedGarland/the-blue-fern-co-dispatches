@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-10-05",
+  "generated_at": "2026-10-06T06:26:45Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 9,
+  "success_run_count": 9,
+  "degraded_run_count": 0,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 9,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "11",
+    "12",
+    "13",
+    "16",
+    "17",
+    "22"
+  ],
+  "hour_slot_evaluation": {
+    "timezone": "America/Los_Angeles",
+    "evaluated_through_hour": "22",
+    "excluded_from_missing_evaluation": [
+      "23"
+    ]
+  },
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": false,
+    "observation": "No watch findings required matching. Protected source/default contains no 2026-10-05 Care Line candidate/review/public artifact; latest reviewed/public evidence remains 2026-08-20. Direct deployed Care Line retrieval was unavailable during reconciliation."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": [
+    "MATERIAL_HEARTBEAT_ABSENCE"
+  ],
+  "finding_reconciliation_statuses": []
+}

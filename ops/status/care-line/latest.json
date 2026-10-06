@@ -12,12 +12,12 @@
   },
   "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "441a81534ec19945576302fd7caa42bc444b8df5",
+  "current_runner_head": "6121951944b6397df844da057b9be9c47d7d0fa0",
   "debug_summary": {
     "aggregate_status": "DEGRADED",
     "all_current_failures_external": true,
     "all_current_failures_non_actionable": true,
-    "attention_task_count": 6,
+    "attention_task_count": 7,
     "attention_tasks": [
       {
         "artifact_id": "care-proof-only-food-care-continuation-20261006T202826Z-f9ce5b9a.json",
@@ -44,15 +44,15 @@
         "task_key": "care_line_approved_release_publication"
       },
       {
-        "artifact_id": "20261006T130002Z-27112.json",
-        "classification": "partial_success",
-        "exit_code": 0,
-        "failure_stage": "care_line_collection",
-        "status": "DEGRADED",
-        "task_key": "care_line_collection"
+        "artifact_id": "care-proof-output-residue-recovery-20261006T220205Z.json",
+        "classification": "failure",
+        "exit_code": 1,
+        "failure_stage": "approved_release_check",
+        "status": "FAILED",
+        "task_key": "care_line_approved_release_publication"
       },
       {
-        "artifact_id": "care-cleveland-404-recovery-20261006T181200Z.json",
+        "artifact_id": "20261006T130002Z-27112.json",
         "classification": "partial_success",
         "exit_code": 0,
         "failure_stage": "care_line_collection",
@@ -117,8 +117,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-06T22:01:48.387862Z",
-  "last_receipt_at": "2026-10-06T21:40:58.941003Z",
+  "last_exported_at": "2026-10-06T22:13:56.560150Z",
+  "last_receipt_at": "2026-10-06T22:02:32.299026Z",
   "latest_runtime_proof_date": "2026-10-06T15:30:28Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -1497,6 +1497,31 @@
       "run_id": "care-september-normalization-proof-20261006T214100Z",
       "scheduled_for": "2026-10-06",
       "started_at": "2026-10-06T21:40:58Z",
+      "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-output-residue-recovery-20261006T220205Z.json",
+      "classification": "failure",
+      "completed_at": "2026-10-06T22:02:32Z",
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "approved_release_check"
+        }
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failure",
+      "run_id": "care-proof-output-residue-recovery-20261006T220205Z",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-06T22:02:22Z",
       "status": "FAILED",
       "task_key": "care_line_approved_release_publication"
     }

@@ -30,12 +30,12 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "441a81534ec19945576302fd7caa42bc444b8df5",
+      "current_runner_head": "6121951944b6397df844da057b9be9c47d7d0fa0",
       "debug_summary": {
         "aggregate_status": "DEGRADED",
         "all_current_failures_external": true,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 6,
+        "attention_task_count": 7,
         "attention_tasks": [
           {
             "artifact_id": "care-proof-only-food-care-continuation-20261006T202826Z-f9ce5b9a.json",
@@ -62,15 +62,15 @@
             "task_key": "care_line_approved_release_publication"
           },
           {
-            "artifact_id": "20261006T130002Z-27112.json",
-            "classification": "partial_success",
-            "exit_code": 0,
-            "failure_stage": "care_line_collection",
-            "status": "DEGRADED",
-            "task_key": "care_line_collection"
+            "artifact_id": "care-proof-output-residue-recovery-20261006T220205Z.json",
+            "classification": "failure",
+            "exit_code": 1,
+            "failure_stage": "approved_release_check",
+            "status": "FAILED",
+            "task_key": "care_line_approved_release_publication"
           },
           {
-            "artifact_id": "care-cleveland-404-recovery-20261006T181200Z.json",
+            "artifact_id": "20261006T130002Z-27112.json",
             "classification": "partial_success",
             "exit_code": 0,
             "failure_stage": "care_line_collection",
@@ -241,7 +241,7 @@
       },
       "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "441a81534ec19945576302fd7caa42bc444b8df5",
+      "current_runner_head": "6121951944b6397df844da057b9be9c47d7d0fa0",
       "debug_summary": {
         "aggregate_status": "FAILED",
         "all_current_failures_external": null,
@@ -433,7 +433,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "441a81534ec19945576302fd7caa42bc444b8df5",
+      "current_runner_head": "6121951944b6397df844da057b9be9c47d7d0fa0",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -497,7 +497,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "441a81534ec19945576302fd7caa42bc444b8df5",
+      "current_runner_head": "6121951944b6397df844da057b9be9c47d7d0fa0",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -537,7 +537,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-06T22:01:48.387862Z",
+  "exported_at": "2026-10-06T22:13:56.560150Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

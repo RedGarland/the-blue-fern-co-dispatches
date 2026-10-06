@@ -1,0 +1,19 @@
+[
+  {
+    "story_id": "care-line-story-001",
+    "title": "The Pavilion long-term care facility at former Bradford hospital to close by Dec. 1",
+    "summary": "The Pavilion, a long-term care facility at the former Bradford hospital / Bradford Medical Park in Bradford, McKean County, Pennsylvania, is set to close on or before Dec. 1, 2026. Kaleida Health says 45 current residents live in the facility and that it will work with families to find alternative care. Ambulatory services continue, so this release does not describe the full medical campus as closing.",
+    "category": "Hospital / Clinic Operations Signals",
+    "score": 100,
+    "scoring_reasons": [
+      "The Pavilion, a long-term care facility at the former Bradford hospital / Bradford Medical Park in Bradford, McKean County, Pennsylvania, is set to close on or before Dec. 1, 2026. Kaleida Health says 45 current residents live in the facility and that it will work with families to find alternative care. Ambulatory services continue, so this release does not describe the full medical campus as closing."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care-line-private-release-draft-20261006-bradford-pavilion-closure"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

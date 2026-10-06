@@ -197,6 +197,10 @@ POSITIVE_EVENT_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
     ("planned_facility_closure", "closure", re.compile(r"\b(will close|plans? to close|set to close|scheduled to close)\b", re.I)),
     ("temporary_facility_suspension", "suspension", re.compile(r"\b(temp(?:orary|orarily)? (?:close|closure|shut(?:down)?|suspend)|temporarily halt)\b", re.I)),
     ("service_closure", "service", re.compile(r"\b(end(?:ing)?|stop(?:ping)?|discontinu(?:e|ing)|eliminat(?:e|ing)|cancel(?:ed|led|s|ling)?|phase(?:d|s|ing)?\s*out|remove(?:s|d|ing)?\s+(?:clinical care|clinical services|services?|care))\b", re.I)),
+    ("service_closure", "service", re.compile(r"\b(?:cease|ceases|ceased|ceasing)\s+providing\b.{0,120}\b(?:care|services?|interventions?)\b", re.I | re.S)),
+    ("service_closure", "service", re.compile(r"\b(?:end|ends|ended|ending)\b.{0,80}\b(?:care|services?|interventions?)\b", re.I | re.S)),
+    ("coverage_delay", "coverage", re.compile(r"\b(?:waiting|wait(?:ed|ing)?|delays?|backlog|pending)\b.{0,140}\b(?:Medicaid|coverage|enrollment|approval|applications?)\b", re.I | re.S)),
+    ("coverage_cancellation", "coverage", re.compile(r"\b(?:cancel(?:ed|led|s|ling)?|remove(?:d|s)?|disenroll(?:ed|s|ment)?|terminate(?:d|s)?)\b.{0,140}\b(?:ACA|Affordable Care Act|Marketplace|coverage|polic(?:y|ies)|enrollees?|enrollments?)\b", re.I | re.S)),
     ("service_suspension", "service", re.compile(r"\b(suspend(?:ed|ing|s)?|remain(?:s)? suspended|still suspended|halt(?:ed|ing|s)?|pause(?:d|s|ing)? services?|stop admissions|divert(?:ed|ing|s)?)\b", re.I)),
     ("service_suspension", "service", re.compile(r"\b(?:clinic|walk-in|appointments?|clinical services?|services?)\b.{0,120}\b(?:cancel(?:ed|led|s|lation)|closed|unavailable|postponed)\b", re.I | re.S)),
     ("service_suspension", "service", re.compile(r"\b(?:IT|information technology|cyber|systems?|technology|outage|incident)\b.{0,160}\b(?:clinic|walk-in|appointments?|communications?|cancel(?:ed|led|s|lation)|delayed?|unavailable)\b", re.I | re.S)),
@@ -232,6 +236,8 @@ HEALTHCARE_CONTEXT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("surgery", re.compile(r"\bsurgery|surgical\b", re.I)),
     ("substance_use_treatment", re.compile(r"\b(addiction treatment|substance use treatment|MAT|medication-assisted treatment|opioid treatment)\b", re.I)),
     ("clinical_services", re.compile(r"\b(clinical care|clinical services)\b", re.I)),
+    ("gender_affirming_care", re.compile(r"\b(gender-affirming care|gender affirming care|puberty blockers|cross-sex hormones)\b", re.I)),
+    ("coverage_access", re.compile(r"\b(Medicaid|ACA|Affordable Care Act|Marketplace|health insurance|coverage|enrollment|enrollees?)\b", re.I)),
     ("public_health", re.compile(r"\b(public health department|public health clinic|health department)\b", re.I)),
 ]
 
@@ -284,6 +290,8 @@ SERVICE_LINE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("surgery", re.compile(r"\bsurgery|surgical\b", re.I)),
     ("substance_use_treatment", re.compile(r"\b(addiction treatment|substance use treatment|MAT|medication-assisted treatment|opioid treatment)\b", re.I)),
     ("clinical_services", re.compile(r"\b(clinical care|clinical services)\b", re.I)),
+    ("gender_affirming_care", re.compile(r"\b(gender-affirming care|gender affirming care|puberty blockers|cross-sex hormones)\b", re.I)),
+    ("coverage_access", re.compile(r"\b(Medicaid|ACA|Affordable Care Act|Marketplace|health insurance|coverage|enrollment|enrollees?)\b", re.I)),
     ("specialty_care", re.compile(r"\bspecialty care\b", re.I)),
 ]
 
@@ -367,7 +375,7 @@ RETROSPECTIVE_MARKERS = (
 )
 ACTIONABLE_EVENT_PATTERN = re.compile(
     r"\b("
-    r"will close|will end|will suspend|will reduce|will reopen|will restore|plans? to close|set to close|scheduled to close|proposed closure|proposed closing|moving forward|vote to close|vote on closing|stop vote|closed|closing|cancel(?:ed|led|s|lation)|pause(?:d|s|ing)?|transition(?:ed|ing)?|"
+    r"will close|will end|will suspend|will reduce|will reopen|will restore|plans? to close|set to close|scheduled to close|proposed closure|proposed closing|moving forward|vote to close|vote on closing|stop vote|closed|closing|cancel(?:ed|led|s|lation)|disenroll(?:ed|s|ment)?|terminate(?:d|s)?|waiting|delays?|backlog|pending approval|pending applications?|pause(?:d|s|ing)?|transition(?:ed|ing)?|"
     r"remain(?:s)? closed|still closed|reopen(?:ed|ing|s)?|restore(?:d|s|ing)?|resume(?:d|s|ing)?|"
     r"suspend(?:ed|ing|s)?|remain(?:s)? suspended|still suspended|halt(?:ed|ing|s)?|"
     r"reduce(?:d|s|ing)? hours?|cut(?:s|ting)? beds?|shut(?:ting)? down|stop admissions|divert(?:ed|ing|s)?"
@@ -1582,10 +1590,12 @@ def _event_type_from_text(text: str, *, service_line: str) -> str:
     hits = _keyword_hits(text, [(event_type, pattern) for event_type, _, pattern in POSITIVE_EVENT_PATTERNS])
     if not hits:
         return ""
-    for preferred in ("facility_reopening", "service_restoration", "temporary_facility_suspension", "service_suspension", "hours_reduction", "capacity_reduction", "service_reduction"):
+    for preferred in ("facility_reopening", "service_restoration", "temporary_facility_suspension", "service_suspension", "hours_reduction", "capacity_reduction", "coverage_cancellation", "coverage_delay", "service_reduction"):
         if preferred in hits:
             return preferred
     for event_type in hits:
+        if event_type in {"coverage_delay", "coverage_cancellation"}:
+            return event_type
         if event_type in {"service_closure", "service_suspension", "service_reduction", "hours_reduction"} and service_line:
             return event_type
         if event_type in {"facility_closure", "planned_facility_closure", "temporary_facility_suspension", "facility_reopening", "facility_relocation", "facility_conversion"}:
@@ -1626,6 +1636,8 @@ CARE_LINE_PREFILTER_PRIOR_LOSS_EVENT_TYPES = {
     "service_reduction",
     "service_suspension",
     "temporary_facility_suspension",
+    "coverage_delay",
+    "coverage_cancellation",
 }
 CARE_LINE_PREFILTER_ACCESS_TERMS = (
     "access",
@@ -1657,6 +1669,17 @@ CARE_LINE_PREFILTER_ACCESS_TERMS = (
     "restoration",
     "relocat",
     "delay",
+    "delayed",
+    "medicaid",
+    "coverage",
+    "health insurance",
+    "marketplace",
+    "enrollment",
+    "approval",
+    "backlog",
+    "disenrollment",
+    "disenrolled",
+    "enrollees",
     "effective date",
     "effective",
 )
@@ -1975,6 +1998,7 @@ def _extract_subject(
             )
             return subject, subject, provenance
     title_patterns = [
+        re.compile(r"^(?P<subject>.+?)\s+(?:agrees?|agreed|will|plans?)\s+to\s+(?:end|cease|stop|discontinue|withdraw)\b", re.I),
         re.compile(r"^(?P<subject>.+?)\s+(?:will\s+)?(?:close|closing|closes|shut(?:ting)? down|suspend(?:s|ed|ing)?|halt(?:s|ed|ing)?|end(?:s|ed|ing)?|reduce(?:s|d|ing)? hours?|reopen(?:s|ed|ing)?|restore(?:s|d|ing)?)\b", re.I),
         re.compile(r"^(?P<subject>.+?)\s+(?:announced?|plans?|planned)\s+to\s+(?:close|suspend|end|reduce|reopen|restore)\b", re.I),
     ]
@@ -2118,6 +2142,10 @@ def _access_consequences_from_text(text: str, event_type: str) -> tuple[list[str
             consequences.append(value)
     if consequences:
         return consequences, ""
+    if event_type == "coverage_delay":
+        return ["DELAYED_CARE_RISK"], "coverage_access_delay_event"
+    if event_type == "coverage_cancellation":
+        return ["LOSS_OF_LOCAL_ACCESS"], "coverage_cancellation_event"
     if event_type in {"facility_closure", "planned_facility_closure", "service_closure"}:
         return ["LOSS_OF_LOCAL_ACCESS"], "direct_service_loss_event"
     if event_type in {"service_suspension", "temporary_facility_suspension"}:
@@ -2133,6 +2161,108 @@ def _access_consequences_from_text(text: str, event_type: str) -> tuple[list[str
     if event_type in {"facility_reopening", "service_restoration"}:
         return ["SUBSTITUTE_SERVICE_OFFERED"], "restoration_event"
     return [], ""
+
+
+def _coverage_subject_from_text(raw_item: Mapping[str, Any], text: str, event_type: str) -> tuple[str, str, dict[str, FieldProvenance]]:
+    if event_type not in {"coverage_delay", "coverage_cancellation"}:
+        return "", "", {}
+    combined = f"{_text(raw_item, 'title')} {text}"
+    if re.search(r"\b(?:Texas|Texans?)\b.{0,120}\bMedicaid\b|\bMedicaid\b.{0,120}\b(?:Texas|Texans?)\b", combined, re.I | re.S):
+        subject = "Texas Medicaid"
+    elif re.search(r"\bMedicaid\b", combined, re.I):
+        subject = "Medicaid coverage approval system"
+    elif re.search(r"\b(ACA|Affordable Care Act|Marketplace)\b", combined, re.I):
+        subject = "ACA Marketplace coverage"
+    else:
+        subject = "Health coverage access"
+    provenance = {
+        "facility_name": _make_provenance(
+            subject,
+            source_field="coverage_subject",
+            supporting_text=combined[:240],
+            provenance_type="deterministic_extraction",
+            review_status="proposed",
+            confidence=0.85,
+        ),
+        "provider_name": _make_provenance(
+            subject,
+            source_field="coverage_subject",
+            supporting_text=combined[:240],
+            provenance_type="deterministic_extraction",
+            review_status="proposed",
+            confidence=0.85,
+        ),
+    }
+    return subject, subject, provenance
+
+
+def _service_subject_from_text(raw_item: Mapping[str, Any], text: str, event_type: str, service_line: str) -> tuple[str, str, dict[str, FieldProvenance]]:
+    if event_type not in {"service_closure", "service_suspension", "service_reduction"}:
+        return "", "", {}
+    if service_line != "gender_affirming_care":
+        return "", "", {}
+    combined = f"{_text(raw_item, 'title')} {text}"
+    if re.search(r"\bUPMC\b", combined):
+        subject = "UPMC"
+    elif re.search(r"\bNYU Langone\b", combined, re.I):
+        subject = "NYU Langone"
+    else:
+        return "", "", {}
+    provenance = {
+        "provider_name": _make_provenance(
+            subject,
+            source_field="service_subject",
+            supporting_text=combined[:240],
+            provenance_type="deterministic_extraction",
+            review_status="proposed",
+            confidence=0.85,
+        )
+    }
+    return "", subject, provenance
+
+
+def _national_coverage_geography(raw_item: Mapping[str, Any], text: str, event_type: str) -> tuple[dict[str, str], dict[str, FieldProvenance]]:
+    if event_type != "coverage_cancellation":
+        return {}, {}
+    combined = f"{_text(raw_item, 'title')} {text}"
+    if not re.search(r"\b(ACA|Affordable Care Act|Marketplace|CMS|Centers for Medicare)\b", combined, re.I):
+        return {}, {}
+    geography = {
+        "state": "US",
+        "jurisdiction_display": "United States",
+        "service_region": "United States",
+        "geographic_scope": "national",
+    }
+    provenance = {
+        "state": _make_provenance(
+            "US",
+            source_field="coverage_geography",
+            supporting_text=combined[:240],
+            provenance_type="deterministic_extraction",
+            review_status="proposed",
+            confidence=0.85,
+        ),
+        "location_text": _make_provenance(
+            "United States",
+            source_field="coverage_geography",
+            supporting_text=combined[:240],
+            provenance_type="deterministic_extraction",
+            review_status="proposed",
+            confidence=0.85,
+        ),
+    }
+    return geography, provenance
+
+
+def _care_line_private_review_warnings(text: str, event_type: str, service_line: str) -> list[str]:
+    warnings: list[str] = []
+    if service_line == "gender_affirming_care" or re.search(r"\b(gender-affirming care|gender affirming care|puberty blockers|cross-sex hormones|transgender|minors?)\b", text, re.I):
+        warnings.append("sensitive_service_cessation_private_review_required")
+    if event_type == "coverage_delay":
+        warnings.append("coverage_access_delay_private_review_required")
+    if event_type == "coverage_cancellation":
+        warnings.append("coverage_cancellation_editorial_framing_required")
+    return warnings
 
 
 def _service_continuation_caveat(text: str) -> str:
@@ -3242,6 +3372,7 @@ def normalize_candidate_record(
     continuation_caveat = _service_continuation_caveat(evidence_blob)
     affected_population_note = _affected_population_note(evidence_blob)
     verification_notes = access_exception
+    review_warnings = _care_line_private_review_warnings(evidence_blob, event_type, service_line)
     if affected_population_note:
         verification_notes = (verification_notes + " " if verification_notes else "") + f"affected_population: {affected_population_note}"
     if continuation_caveat:
@@ -3329,6 +3460,7 @@ def normalize_candidate_record(
                 "source_record_id": _text(raw_item, "raw_item_id"),
                 "source_evidence_fingerprint": _text(raw_item, "source_evidence_fingerprint", "record_fingerprint"),
                 "currentness": dict(currentness),
+                "private_review_warnings": review_warnings,
             },
         }
     )
@@ -3341,7 +3473,7 @@ def normalize_candidate_record(
         "exclusion_reason": exclusion_reason,
         "extraction_confidence": extraction_confidence,
         "full_article_required": full_article_required,
-        "public_eligibility_precheck": qualification_status == "qualified" and not reviewed.validation_issues(),
+        "public_eligibility_precheck": qualification_status == "qualified" and not reviewed.validation_issues() and not review_warnings,
         "review_priority_recommendation": priority,
         "priority_reason": priority_reason,
         "review_warnings": [
@@ -3349,6 +3481,7 @@ def normalize_candidate_record(
             for warning in (
                 "derived_review_date_from_currentness" if not source_date and announcement_date else "",
                 "missing_source_publication_date" if not source_date else "",
+                *review_warnings,
             )
             if warning
         ],
@@ -3398,7 +3531,8 @@ def _qualified_gate_failures(
         failures.append("missing_source_url")
     if source_date_state != "source_dated":
         failures.append("missing_source_date")
-    if not _text(geography, "state"):
+    geography_present = bool(_text(geography, "state") or _text(geography, "service_region") or _text(geography, "geographic_scope") == "national")
+    if not geography_present:
         failures.append("missing_geography")
     if not subject:
         failures.append("missing_subject")
@@ -3407,7 +3541,7 @@ def _qualified_gate_failures(
     facility_wide = bool(re.search(r"\b(hospital|clinic|center|health center|medical center|emergency department|emergency room|er)\b", subject, re.I))
     healthcare_passage = bool(_keyword_hits(supporting_passage, HEALTHCARE_CONTEXT_PATTERNS)) or bool(service_line)
     subject_invalid = bool(re.search(r"\b(court|ruling|order|law|bill|governor|congress|judge|approvals?)\b", subject, re.I))
-    if event_type in {"service_closure", "service_suspension", "service_reduction", "hours_reduction"} and not service_line and not facility_wide:
+    if event_type in {"service_closure", "service_suspension", "service_reduction", "hours_reduction", "coverage_delay", "coverage_cancellation"} and not service_line and not facility_wide:
         failures.append("missing_service_line_or_facility_scope")
     if subject_invalid:
         failures.append("missing_subject")
@@ -3497,6 +3631,8 @@ def qualify_event_lead(
         passage_source = _text(article_content or {}, "text") or body_source
     service_line = _text(lead, "service_line_hint") or _service_line_from_text(_text(article_content or {}, "text")) or _service_line_from_text(_text(raw_item, "description")) or _service_line_from_text(evidence_blob)
     event_type = _text(lead, "event_type_hint") or _event_type_from_text(_text(article_content or {}, "text") or evidence_blob, service_line=service_line)
+    if event_type in {"coverage_delay", "coverage_cancellation"} and not service_line:
+        service_line = "coverage_access"
     if _text(lead, "event_type_hint") in {"facility_closure", "planned_facility_closure", "service_closure", "service_suspension"} and event_type in {"facility_reopening", "service_restoration"}:
         event_type = _text(lead, "event_type_hint")
     resolved_source_publication_date, resolved_source_publication_date_basis, resolved_source_publication_date_raw = _resolved_source_publication_date(raw_item, article_content)
@@ -3711,6 +3847,10 @@ def qualify_event_lead(
         service_line=service_line,
         event_type=event_type,
     )
+    coverage_geography, coverage_geography_provenance = _national_coverage_geography(raw_item, supporting_passage or evidence_blob, event_type)
+    if coverage_geography and not geography.get("state"):
+        geography.update(coverage_geography)
+        geography_provenance.update(coverage_geography_provenance)
     subject, provider, subject_provenance = _extract_subject(
         raw_item,
         _text(raw_item, "title"),
@@ -3718,6 +3858,18 @@ def qualify_event_lead(
         service_line=service_line,
         evidence_text=evidence_blob,
     )
+    if not subject and not provider:
+        coverage_subject, coverage_provider, coverage_subject_provenance = _coverage_subject_from_text(raw_item, supporting_passage or evidence_blob, event_type)
+        if coverage_subject:
+            subject = coverage_subject
+            provider = coverage_provider
+            subject_provenance.update(coverage_subject_provenance)
+    if not subject and not provider:
+        service_subject, service_provider, service_subject_provenance = _service_subject_from_text(raw_item, supporting_passage or evidence_blob, event_type, service_line)
+        if service_subject or service_provider:
+            subject = service_subject
+            provider = service_provider
+            subject_provenance.update(service_subject_provenance)
     if reviewed_records and not geography.get("state") and (subject or provider):
         geo_history_matches = _care_line_subject_history_matches(
             reviewed_records,

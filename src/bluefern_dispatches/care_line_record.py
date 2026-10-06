@@ -28,6 +28,8 @@ CARE_LINE_EVENT_TYPES = {
     "service_expansion",
     "service_restoration",
     "bankruptcy_service_impact",
+    "coverage_delay",
+    "coverage_cancellation",
 }
 
 SERVICE_LINES = {
@@ -48,6 +50,8 @@ SERVICE_LINES = {
     "pharmacy",
     "ambulance_ems",
     "specialty_care",
+    "gender_affirming_care",
+    "coverage_access",
     "other",
     "unknown",
 }
@@ -69,6 +73,8 @@ SERVICE_EVENT_TYPES = {
     "hours_reduction",
     "service_expansion",
     "service_restoration",
+    "coverage_delay",
+    "coverage_cancellation",
 }
 
 OWNERSHIP_EVENT_TYPES = {"ownership_change", "operator_change"}
@@ -148,6 +154,8 @@ LEGACY_TO_CANONICAL_EVENT_TYPE = {
     "service_expansion": "SERVICE_RESTORATION",
     "service_restoration": "SERVICE_RESTORATION",
     "bankruptcy_service_impact": "BANKRUPTCY_RELATED_SERVICE_LOSS",
+    "coverage_delay": "ACCESS_RESTRICTION",
+    "coverage_cancellation": "ACCESS_RESTRICTION",
 }
 CANONICAL_TO_LEGACY_EVENT_TYPE = {
     "FACILITY_CLOSURE": "facility_closure",
@@ -184,6 +192,9 @@ EVENT_TYPE_ALIASES = {
     "bankruptcy related service loss": "BANKRUPTCY_RELATED_SERVICE_LOSS",
     "ownership transition": "OWNERSHIP_TRANSITION",
     "access restriction": "ACCESS_RESTRICTION",
+    "coverage delay": "ACCESS_RESTRICTION",
+    "coverage cancellation": "ACCESS_RESTRICTION",
+    "coverage disenrollment": "ACCESS_RESTRICTION",
     "reopening": "REOPENING",
     "service restoration": "SERVICE_RESTORATION",
 }
@@ -223,6 +234,8 @@ LEGACY_TO_CANONICAL_SERVICE_LINE = {
     "pharmacy": "PHARMACY",
     "ambulance_ems": "AMBULANCE_EMS",
     "specialty_care": "SPECIALTY_CARE",
+    "gender_affirming_care": "SPECIALTY_CARE",
+    "coverage_access": "MULTIPLE_SERVICES",
     "other": "MULTIPLE_SERVICES",
     "unknown": "ENTIRE_FACILITY",
 }
@@ -279,6 +292,13 @@ SERVICE_LINE_ALIASES = {
     "home-health": "HOME_HEALTH",
     "clinical care": "MULTIPLE_SERVICES",
     "clinical services": "MULTIPLE_SERVICES",
+    "coverage access": "MULTIPLE_SERVICES",
+    "health insurance": "MULTIPLE_SERVICES",
+    "medicaid": "MULTIPLE_SERVICES",
+    "aca marketplace": "MULTIPLE_SERVICES",
+    "marketplace coverage": "MULTIPLE_SERVICES",
+    "gender-affirming care": "SPECIALTY_CARE",
+    "gender affirming care": "SPECIALTY_CARE",
     "surgery": "SURGERY",
     "skilled nursing": "SKILLED_NURSING",
     "substance use treatment": "SUBSTANCE_USE_TREATMENT",
@@ -683,6 +703,8 @@ def normalize_event_type(value: str) -> tuple[str, str]:
         return "", ""
     if text in LEGACY_TO_CANONICAL_EVENT_TYPE:
         canonical = LEGACY_TO_CANONICAL_EVENT_TYPE[text]
+        if text in {"coverage_delay", "coverage_cancellation"}:
+            return text, canonical
         return CANONICAL_TO_LEGACY_EVENT_TYPE.get(canonical, text), canonical
     if text in CANONICAL_TO_LEGACY_EVENT_TYPE:
         return CANONICAL_TO_LEGACY_EVENT_TYPE[text], text

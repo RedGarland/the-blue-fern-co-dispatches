@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-10-07",
+  "generated_at": "2026-10-07T15:03:32.165354Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-10-07.mp3",
+  "audio_url": "/gaza/audio/2026-10-07.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1027,
+  "tts_input_word_count": 165,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1116288,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-10-07T15:03:32.165334Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-10-07-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-07/",
+  "script_text": "This is the Gaza Dispatch audio briefing for October 7, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israeli attacks across Gaza kill at least four Palestinians. Israeli air strike kills Palestinian Civil Defence rescue volunteer in northern Gaza. This was reported by Al Jazeera.\n\n2. Photos: Three years of Israel's war on Gaza as tent cities spread amid ruin. Tent cities in Gaza grow as families mourn the dead, care for the injured, and endure relentless displacement. This was reported by Al Jazeera.\n\n3. The situation in Gaza three years on The BBC's Gaza correspondent Rushdi Abualouf describes the situation in Gaza three years on from the 7 October attack. This was reported by BBC News.\n\n4. US military aid to Israel continues three years into Gaza genocide. US military aid and arms transfer continue unchanged, as US public sentiment shifts. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the October 7, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-10-07-aljazeera-middle-east-ce7f694d5346",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/10/7/israeli-attacks-across-gaza-kill-at-least-four-palestinians?traffic_source=rss",
+      "title": "Israeli attacks across Gaza kill at least four Palestinians"
+    },
+    {
+      "source_record_id": "gaza-2026-10-07-aljazeera-middle-east-203052518431",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/gallery/2026/10/7/photos-three-years-of-israels-war-on-gaza-as-tent-cities-spread-amid-ruin?traffic_source=rss",
+      "title": "Photos: Three years of Israel's war on Gaza as tent cities spread amid ruin"
+    },
+    {
+      "source_record_id": "gaza-2026-10-07-bbc-middle-east-6e763281d00a",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/videos/c6pwgrgd9zpzo?at_medium=RSS&at_campaign=rss",
+      "title": "The situation in Gaza three years on"
+    },
+    {
+      "source_record_id": "gaza-2026-10-07-aljazeera-middle-east-f68e692a0369",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/10/7/how-us-military-aid-to-israel-continues-three-years-into-gaza-genocide?traffic_source=rss",
+      "title": "US military aid to Israel continues three years into Gaza genocide"
+    }
+  ]
+}

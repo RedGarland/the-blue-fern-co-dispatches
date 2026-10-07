@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T174451-0700",
+  "scheduled_for": "2026-10-06T17:44:51-07:00",
+  "started_at": "2026-10-06T17:50:51-07:00",
+  "completed_at": "2026-10-06T18:02:06-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T16:43:19-07:00",
+    "end": "2026-10-06T18:02:06-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-06/gaza-source-watch-20261006T164451-0700.json",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first. Fresh site-restricted search surfaced no new Gaza operational publication in the observation window."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second. Fresh site-restricted search surfaced no new Gaza operational health publication in the observation window."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_sources": [
+      "Reuters",
+      "Associated Press",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "ICRC",
+      "Palestine Red Crescent Society",
+      "MSF",
+      "WAFA",
+      "IDF",
+      "Al Jazeera",
+      "UN News"
+    ],
+    "degraded_reasons": [
+      "UN News was blocked by robots.txt during the bounded search. Useful coverage remained from the other searches."
+    ],
+    "exclusions": [
+      "Reuters' October 6 analysis on the stalled Gaza plan was published at 07:04 UTC (00:04 PDT), before this observation window, and was retrospective rather than a new operational development.",
+      "The Associated Press rolling October 6 Middle East report included two deaths in Gaza City, but the Gaza event was not traceably established as occurring after the prior check and was consistent with earlier-day casualty reporting; it was excluded as not newly established in-window.",
+      "MSF's October 6 call for release of detained Palestinian healthcare workers was already surfaced by an earlier watch and describes continuing detentions rather than a newly occurring detention event in this window.",
+      "Al Jazeera's October 6 report on U.S. lawmakers calling for Dr Hussam Abu Safia's release was a follow-up advocacy development about an existing detention, not a new detention or health-system operational change in Gaza.",
+      "Older, recycled, duplicate, retrospective, opinion, unsupported social, and unsourced material was excluded."
+    ],
+    "conclusion": "No new traceable qualifying development was established in the bounded observation window."
+  }
+}

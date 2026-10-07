@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T074554-0700",
+  "scheduled_for": "2026-10-07T07:45:54-07:00",
+  "started_at": "2026-10-07T07:44:47-07:00",
+  "completed_at": "2026-10-07T07:46:01.723033-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T06:45:43-07:00",
+    "end": "2026-10-07T07:46:01.723033-07:00"
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-20261007-prodisee-stockton-weather-cancel",
+      "canonical_source_url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+      "source_url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+      "publisher": "NBC 15",
+      "source_published_at": "2026-10-07T09:04:00-05:00",
+      "title": "Prodisee Pantry cancels Saturday food distribution due to weather concerns",
+      "exact_supporting_passage": "This Saturday's food distribution in Stockton has been cancelled out of an abundance of caution.",
+      "summary": "Prodisee Pantry canceled its Saturday food distribution in Stockton, Alabama because of developing tropical-weather risk. The report directs Baldwin County families needing food assistance to Tuesday morning distributions in Spanish Fort.",
+      "location": "Stockton, Baldwin County, Alabama",
+      "state": "AL",
+      "scope": "community",
+      "affected_groups": [
+        "Baldwin County families needing food assistance",
+        "people relying on the Stockton food distribution"
+      ],
+      "pressure_type": "emergency_food_distribution_cancellation_weather",
+      "confidence": "high",
+      "source_role": "local_news_report_quoting_provider",
+      "evidence_level": "direct_report_with_provider_statement",
+      "bounded_query_context": {
+        "query": "\"food distribution\" canceled storm October 7 2026",
+        "search_window_start": "2026-10-07T06:45:43-07:00",
+        "search_window_end": "2026-10-07T07:46:01.723033-07:00",
+        "article_time_in_observation_timezone": "2026-10-07T07:04:00-07:00"
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": "Completed 12 targeted web searches across the four bounded recall classes. One new qualifying class-2 signal surfaced: Prodisee Pantry canceled its Saturday Stockton distribution because of developing tropical-weather risk; NBC 15 published the report at 09:04 CDT (07:04 PDT), inside this watch window. Other fresh results were routine/non-disruptive or outside scope. No search call failed."
+}

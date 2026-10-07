@@ -1,0 +1,84 @@
+{
+  "dispatch_name": "The Care Line Dispatch",
+  "dispatch_slug": "care-line",
+  "public_visible": true,
+  "edition_date": "2026-09-10",
+  "generated_at": "2026-10-07T18:04:28.797521+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/care-line/editions/2026-09-10/",
+  "local_output_path": "C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\output\\site\\care-line\\editions\\2026-09-10",
+  "local_backup_path": "output\\tmp-backups-pages\\care-line\\2026-09-10",
+  "template_version": "dispatches-static-v1",
+  "source_count": 1,
+  "story_count": 1,
+  "source_manifest_path": "C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\output\\site\\care-line\\editions\\2026-09-10\\sources_manifest.json",
+  "curation_manifest_path": "C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\output\\site\\care-line\\editions\\2026-09-10\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\output\\site\\care-line\\editions\\2026-09-10\\index.html",
+    "C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\output\\site\\care-line\\editions\\2026-09-10\\sources_manifest.json",
+    "C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\output\\site\\care-line\\editions\\2026-09-10\\curation_manifest.json",
+    "C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\output\\site\\care-line\\editions\\2026-09-10\\source_table.html",
+    "C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\output\\site\\care-line\\editions\\2026-09-10\\claim_ledger.html"
+  ],
+  "paid_or_detail_artifacts": [],
+  "claim_count": 1,
+  "qualified_public_claim_count": 1,
+  "lead_signal_count": 1,
+  "public_signal_count": 1,
+  "public_rendered": true,
+  "stale_current_signal_count": 0,
+  "resource_only_count": 0,
+  "wrapper_candidate_count": 0,
+  "secondary_query_count": 0,
+  "qualified_but_not_public_count": 0,
+  "source_families": [
+    "The Texas Tribune"
+  ],
+  "pressure_source_count_by_family": {
+    "The Texas Tribune": 1
+  },
+  "pressure_source_count_by_state": {
+    "TEXAS STATEWIDE": 1
+  },
+  "exclusion_reason_counts": {},
+  "exclusion_reason_summary": "",
+  "discovery_gap_check": {
+    "source_count": 1,
+    "public_signal_count": 1,
+    "claim_count": 1,
+    "excluded_source_count": 0,
+    "excluded_count": 0,
+    "wrapper_candidate_count": 0,
+    "secondary_query_count": 0,
+    "qualified_but_not_public_count": 0,
+    "stale_count": 0,
+    "weak_count": 0,
+    "not_traceable_count": 0,
+    "source_families": [
+      "The Texas Tribune"
+    ],
+    "pressure_source_count_by_family": {
+      "The Texas Tribune": 1
+    },
+    "pressure_source_count_by_state": {
+      "TEXAS STATEWIDE": 1
+    },
+    "exclusion_reason_counts": {},
+    "exclusion_reason_summary": ""
+  },
+  "public_summary": "The Texas Tribune reported Sept. 10, 2026 that more than 200,000 Texans were waiting for Medicaid approval as application delays continued and enrollment declined. This release frames the development as a statewide Medicaid coverage-access delay and application backlog, with source-visible examples including pregnant applicants waiting for time-sensitive coverage decisions; SNAP is treated only as source context, not the Care Line event.",
+  "public_archive_title": "Limited-source update",
+  "public_archive_subtitle": "The Texas Tribune reported Sept. 10, 2026 that more than 200,000 Texans were waiting for Medicaid approval as application delays continued and enrollment declined. This release frames the development as a statewide Medicaid coverage-access delay and application backlog, with source-visible examples including pregnant applicants waiting for time-sensitive coverage decisions; SNAP is treated only as source context, not the Care Line event.",
+  "source_adequacy_status": "LIMITED_SOURCE_UPDATE",
+  "source_adequacy_label": "Limited-source update",
+  "edition_mode": "current_update",
+  "reviewed_source_count": 1,
+  "excluded_source_count": 0,
+  "source_table_path": "/care-line/editions/2026-09-10/source_table.html",
+  "claim_ledger_path": "/care-line/editions/2026-09-10/claim_ledger.html",
+  "future_paid_fields_todo": [],
+  "detail_artifacts_publicly_exposed": false,
+  "warnings": [
+    "detention watch generation skipped: detention watch input not found: C:\\Users\\willb\\AppData\\Local\\Temp\\CareLineTexasPublishSource_20261007T110340Z\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-06-14.json"
+  ],
+  "errors": []
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261007T014451-0700",
+  "scheduled_for": "2026-10-07T01:44:51-07:00",
+  "started_at": "2026-10-07T01:47:13-07:00",
+  "completed_at": "2026-10-07T01:49:05-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T00:48:29-07:00",
+    "end": "2026-10-07T01:49:05-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_check": "The immediately preceding hourly recall check completed its search but its heartbeat write failed; this run uses that prior check's approximate completion boundary as the start of the search window.",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first via current OCHA OPT homepage and targeted search. The newest listed items were the 6 October 2026 Flash Appeal Response Monitoring for August 2026 and the 5 October posting of the Humanitarian Situation Report dated 2 October 2026; no qualifying new in-window Gaza operational development was established."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second via WHO's current conflict page and targeted search. No new in-window Gaza health-system, hospital, ambulance, fuel, medical-evacuation, or functioning-capacity development was established."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_reasons": [
+      "The targeted UN News search was blocked by robots.txt. Other humanitarian, primary-source, Reuters, AP, UNRWA, WFP, MSF, crossing, casualty, infrastructure, and ceasefire searches remained usable."
+    ],
+    "notable_exclusions": [
+      "Reuters' 7 October anniversary report was published at 05:03 UTC on 7 October (22:03 PDT on 6 October), before this search window, and was contextual rather than a new in-window Gaza development.",
+      "Reuters' report of two Palestinians killed in Gaza City was published 6 October at 10:12 UTC and was already known from earlier watches.",
+      "AP's rolling Middle East report repeated two Gaza City deaths on Tuesday, matching the already-known 6 October casualty event rather than establishing a new event after the prior check.",
+      "AP's 7 October satellite-demolition feature was retrospective, with evidence through September and 6 October, and did not establish a new operational change within this watch window.",
+      "WAFA-targeted results surfaced no newer qualifying Gaza event than 2 October.",
+      "Background, retrospective, duplicate, unsupported, and pre-window items were excluded."
+    ],
+    "conclusion": "No new traceable qualifying development was established since the prior hourly check; useful coverage remained despite one blocked source."
+  }
+}

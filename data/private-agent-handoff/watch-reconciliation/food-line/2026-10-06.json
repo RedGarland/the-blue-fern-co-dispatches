@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-10-06",
+  "generated_at": "2026-10-07T07:13:59Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 21,
+  "success_run_count": 21,
+  "degraded_run_count": 0,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 21,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": ["04", "13", "23"],
+  "hour_slot_evaluation": {
+    "timezone": "America/Los_Angeles",
+    "evaluated_through_hour": "23",
+    "excluded_from_missing_evaluation": []
+  },
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": true,
+    "observation": "No watch findings required matching. Protected source/default contains no 2026-10-06 Food Line candidate/review/public artifact in the inspected production paths; the current protected review snapshot is dated 2026-08-24. Deployed Food Line public state remains latest at the 2026-10-04 briefing."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": ["MATERIAL_HEARTBEAT_ABSENCE"],
+  "finding_reconciliation_statuses": []
+}

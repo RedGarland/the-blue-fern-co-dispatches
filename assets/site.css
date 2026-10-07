@@ -814,6 +814,105 @@ h3 {
   background: rgba(255, 255, 255, 0.82);
 }
 
+.archive--gaza .archive-latest {
+  max-width: 760px;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.95rem 1.05rem;
+  border-left-width: 3px;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 8px 18px rgba(30, 63, 79, 0.055);
+}
+
+.archive--gaza .archive-latest h2 {
+  font-size: clamp(1.16rem, 1.55vw, 1.42rem);
+}
+
+.archive--gaza .archive-month {
+  margin: 1.25rem 0;
+}
+
+.archive--gaza .archive-list {
+  gap: 0;
+  border-top: 1px solid rgba(30, 63, 79, 0.14);
+}
+
+.archive--gaza .archive-list .archive-row {
+  grid-template-columns: minmax(6.8rem, auto) minmax(0, 1fr) auto;
+  padding: 0.72rem 0;
+  border: 0;
+  border-bottom: 1px solid rgba(30, 63, 79, 0.12);
+  border-left: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.archive--gaza .archive-row--catchup {
+  padding-left: 0.7rem;
+  border-left: 3px solid rgba(30, 63, 79, 0.28);
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.archive--gaza .archive-row--no-update {
+  padding-top: 0.52rem;
+  padding-bottom: 0.52rem;
+  background: transparent;
+  color: var(--bf-accent-blue-grey);
+}
+
+.archive--gaza .archive-row-badge.topic-badge {
+  padding: 0.24rem 0.48rem;
+  background: rgba(30, 63, 79, 0.07);
+}
+
+.archive--gaza .briefing-row-cta {
+  padding: 0.22rem 0.62rem;
+  border-color: rgba(30, 63, 79, 0.2);
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+.home--care-line .archive-month {
+  margin: 1rem 0;
+}
+
+.home--care-line .archive-month h2 {
+  margin-bottom: 0.45rem;
+  font-size: 1.02rem;
+}
+
+.home--care-line .archive-list {
+  gap: 0;
+  border-top: 1px solid rgba(30, 63, 79, 0.13);
+}
+
+.home--care-line .archive-list .archive-row {
+  padding: 0.7rem 0;
+  border: 0;
+  border-bottom: 1px solid rgba(30, 63, 79, 0.11);
+  border-left: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.home--care-line .archive-row--no-update {
+  color: var(--bf-accent-blue-grey);
+}
+
+.home--care-line .archive-row-badge.topic-badge {
+  padding: 0.24rem 0.5rem;
+  background: rgba(30, 63, 79, 0.07);
+}
+
+.home--care-line .briefing-row-cta {
+  padding: 0.22rem 0.62rem;
+  border-color: rgba(30, 63, 79, 0.2);
+  background: rgba(255, 255, 255, 0.48);
+  box-shadow: none;
+}
+
 .no-update-label {
   font-weight: 800;
 }

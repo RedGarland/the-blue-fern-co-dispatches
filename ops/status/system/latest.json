@@ -28,14 +28,14 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "98766a223f6916f8e7c385320074244797b54408",
       "debug_summary": {
-        "aggregate_status": "FAILED",
-        "all_current_failures_external": false,
-        "all_current_failures_non_actionable": false,
-        "attention_task_count": 2,
+        "aggregate_status": "DEGRADED",
+        "all_current_failures_external": true,
+        "all_current_failures_non_actionable": true,
+        "attention_task_count": 3,
         "attention_tasks": [
           {
             "artifact_id": "20261007T153001Z-31036.json",
@@ -52,14 +52,22 @@
             "failure_stage": "verify_checkout",
             "status": "FAILED",
             "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "care-collection-recovery-20261007T1620Z.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
           }
         ],
-        "external_access_restriction_count": 0,
-        "failed_source_count": 0,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
+        "external_access_restriction_count": 4,
+        "failed_source_count": 4,
+        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
         "primary_classification": "failure",
         "primary_failure_stage": "source_state",
-        "primary_layer": "SOURCE",
+        "primary_layer": "EXTERNAL_DEPENDENCY",
         "primary_task_key": "care_line_approved_release_publication",
         "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": null,
@@ -72,7 +80,7 @@
         "publication_attempted": false,
         "publication_status": "safe_no_op",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "INCIDENT_OPEN",
+        "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "transient_source_failure_count": 0,
         "unaccounted_event_count": null,
@@ -82,18 +90,43 @@
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-07",
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "INCIDENT_OPEN",
+      "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "source_failure_summary": {
-        "all_current_failures_external": false,
-        "all_current_failures_non_actionable": false,
-        "external_access_restriction_count": 0,
-        "external_restriction_sources": [],
-        "failed_source_count": 0,
-        "original_failed_source_count": 0,
+        "all_current_failures_external": true,
+        "all_current_failures_non_actionable": true,
+        "external_access_restriction_count": 4,
+        "external_restriction_sources": [
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "hhs-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "hrsa-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "fierce-healthcare"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "mayo-clinic-news"
+          }
+        ],
+        "failed_source_count": 4,
+        "original_failed_source_count": 4,
         "recovered_source_count": 0,
         "recovered_sources": [],
-        "successful_attempt_count": null,
+        "successful_attempt_count": 34,
         "transient_source_failure_count": 0,
         "transient_sources": [],
         "unclassified_source_failure_count": 0
@@ -409,7 +442,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-07T16:11:47.921145Z",
+  "exported_at": "2026-10-07T16:24:15.988528Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

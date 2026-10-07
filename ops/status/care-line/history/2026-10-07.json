@@ -10,64 +10,32 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "FAILED",
+  "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "631ae08e6ac2c32913766bdd534640f530fdc6d6",
+  "current_runner_head": "76078ee1a846241d73e1e1a8ce52dac004eac57b",
   "debug_summary": {
-    "aggregate_status": "FAILED",
-    "all_current_failures_external": false,
-    "all_current_failures_non_actionable": false,
-    "attention_task_count": 6,
+    "aggregate_status": "DEGRADED",
+    "all_current_failures_external": true,
+    "all_current_failures_non_actionable": true,
+    "attention_task_count": 1,
     "attention_tasks": [
       {
-        "artifact_id": "20261007T153001Z-31036.json",
-        "classification": "failure",
-        "exit_code": 1,
-        "failure_stage": "source_state",
-        "status": "FAILED",
-        "task_key": "care_line_approved_release_publication"
-      },
-      {
-        "artifact_id": "care-proof-only-food-care-continuation-20261007T175826Z-f20f9862.json",
-        "classification": "failure",
-        "exit_code": 1,
-        "failure_stage": "source_state",
-        "status": "FAILED",
-        "task_key": "care_line_approved_release_publication"
-      },
-      {
-        "artifact_id": "care-proof-only-food-care-continuation-20261007T182826Z-3dc87c59.json",
-        "classification": "failure",
-        "exit_code": 1,
-        "failure_stage": "source_state",
-        "status": "FAILED",
-        "task_key": "care_line_approved_release_publication"
-      },
-      {
-        "artifact_id": "20261007T130001Z-40348.json",
-        "classification": "failure",
-        "exit_code": 1,
-        "failure_stage": "verify_checkout",
-        "status": "FAILED",
-        "task_key": "care_line_collection"
-      },
-      {
-        "artifact_id": "20261007T190001Z-36272.json",
-        "classification": "failure",
-        "exit_code": 1,
-        "failure_stage": "verify_checkout",
-        "status": "FAILED",
+        "artifact_id": "care-collection-recovery-20261007T1620Z.json",
+        "classification": "partial_success",
+        "exit_code": 0,
+        "failure_stage": "care_line_collection",
+        "status": "DEGRADED",
         "task_key": "care_line_collection"
       }
     ],
-    "external_access_restriction_count": 0,
-    "failed_source_count": 0,
-    "operator_assessment": "FAILED_ACTION_REQUIRED",
-    "primary_classification": "failure",
-    "primary_failure_stage": "source_state",
-    "primary_layer": "SOURCE",
-    "primary_task_key": "care_line_approved_release_publication",
-    "primary_task_status": "FAILED",
+    "external_access_restriction_count": 4,
+    "failed_source_count": 4,
+    "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
+    "primary_classification": "partial_success",
+    "primary_failure_stage": "care_line_collection",
+    "primary_layer": "EXTERNAL_DEPENDENCY",
+    "primary_task_key": "care_line_collection",
+    "primary_task_status": "DEGRADED",
     "private_review_count_only_gap_count": null,
     "private_review_dispositioned_item_count": null,
     "private_review_max_age_hours": null,
@@ -78,13 +46,924 @@
     "publication_attempted": false,
     "publication_status": "safe_no_op",
     "receipt_completeness": "COMPLETE",
-    "recovery_lifecycle": "INCIDENT_OPEN",
+    "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": 0,
     "unaccounted_event_count": null,
     "unclassified_source_failure_count": 0
   },
   "dispatch": "care-line",
+  "effective_task_summaries": [
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T072826Z-74e4b400.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T07:33:58Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T072826Z-74e4b400",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T07:33:50Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T073826Z-9082121a.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T08:04:44Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T073826Z-9082121a",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T08:04:41Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T080826Z-a60b1688.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T08:35:51Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T080826Z-a60b1688",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T08:35:48Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T083826Z-22319ab8.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T09:04:34Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T083826Z-22319ab8",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T09:04:23Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T090826Z-fa53f349.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T09:35:19Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T090826Z-fa53f349",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T09:35:18Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T093826Z-c5382aca.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T09:46:30Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T093826Z-c5382aca",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T09:46:27Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T094826Z-e5041334.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T10:14:19Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T094826Z-e5041334",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T10:14:12Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T101825Z-2ea9feec.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T10:45:00Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T101825Z-2ea9feec",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T10:44:46Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T104825Z-2a0569ea.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T11:14:39Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T104825Z-2a0569ea",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T11:14:30Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T111825Z-228d0285.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T11:45:11Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T111825Z-228d0285",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T11:45:02Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T114825Z-5002870f.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T11:54:13Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T114825Z-5002870f",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T11:54:12Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T115825Z-4e2b36b3.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T12:25:07Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T115825Z-4e2b36b3",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T12:25:04Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T122825Z-f7b3d672.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T12:54:36Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T122825Z-f7b3d672",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T12:54:26Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20261007T130001Z-40348.json",
+      "classification": "superseded_checkout_failure",
+      "completed_at": "2026-10-07T13:00:04Z",
+      "diagnostics": {
+        "active_review_queue_count": null,
+        "failed_source_count": null,
+        "failed_sources": [],
+        "manual_review_count": null,
+        "skipped_source_count": null,
+        "successful_attempt_count": null
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20261007T130001Z-40348",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T13:00:02Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T125825Z-98bc519d.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T13:25:59Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T125825Z-98bc519d",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T13:25:37Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T132825Z-9002fba4.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T13:56:11Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T132825Z-9002fba4",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T13:56:04Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T135825Z-d2251d44.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T14:05:16Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T135825Z-d2251d44",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T14:05:14Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T140825Z-5e21aeab.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T14:35:03Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T140825Z-5e21aeab",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T14:34:42Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20261007T150007Z-46c73153.json",
+      "classification": "nothing_to_publish",
+      "completed_at": "2026-10-07T15:00:07.698366Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "bluesky_publication": false,
+        "pages_sync": false,
+        "publication": false,
+        "queue_mutation": true
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20261007T150007Z-46c73153",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T15:00:07.693137Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_reviewed_event_queue"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T143825Z-413e6d6c.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T15:06:38Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T143825Z-413e6d6c",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T15:06:14Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20261007T153001Z-31036.json",
+      "classification": "superseded_checkout_failure",
+      "completed_at": "2026-10-07T15:30:06Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failure",
+      "run_id": "20261007T153001Z-31036",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T15:30:03Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T150825Z-e80696ad.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T15:36:10Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T150825Z-e80696ad",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T15:36:09Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-runner-recovery-proof-20261007T1610Z.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T16:11:33Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-runner-recovery-proof-20261007T1610Z",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T16:11:28Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-collection-recovery-20261007T1620Z.json",
+      "classification": "partial_success",
+      "completed_at": "2026-10-07T16:23:56Z",
+      "diagnostics": {
+        "active_review_queue_count": 1,
+        "failed_source_count": 4,
+        "failed_sources": [
+          {
+            "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "hhs-news",
+            "source_name": "U.S. Department of Health and Human Services News",
+            "transient": false
+          },
+          {
+            "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "hrsa-news",
+            "source_name": "Health Resources and Services Administration News",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "fierce-healthcare",
+            "source_name": "Fierce Healthcare",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "mayo-clinic-news",
+            "source_name": "Mayo Clinic News Network",
+            "transient": false
+          }
+        ],
+        "failure": {
+          "child_stdout_tail": [
+            "    ],",
+            "    \"stale_candidate_count\": 0,",
+            "    \"started_at\": \"2026-10-07T16:19:36Z\",",
+            "    \"status\": \"partial_success\",",
+            "    \"successful_attempt_count\": 34,",
+            "    \"superseded_candidate_count\": 0,",
+            "    \"zero_findings_distinct_from_source_failures\": true",
+            "  },",
+            "  \"schema_version\": \"bluefern.care_line.national_pipeline.v2\"",
+            "}"
+          ],
+          "collection_health": "partial_success",
+          "failed_source_count": 4,
+          "failure_stage": "care_line_collection",
+          "manual_review_count": 51,
+          "pipeline_run_id": "20261007-ae9a1a79d819-01",
+          "skipped_source_count": 0,
+          "successful_attempt_count": 34
+        },
+        "manual_review_count": 51,
+        "skipped_source_count": 0,
+        "successful_attempt_count": 34
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "care-collection-recovery-20261007T1620Z",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T16:19:30Z",
+      "status": "DEGRADED",
+      "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T161825Z-79c6854a.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T16:25:24Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T161825Z-79c6854a",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T16:25:23Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T162825Z-153c76de.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T16:55:01Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T162825Z-153c76de",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T16:54:57Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T165825Z-2a42dad4.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T17:24:42Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T165825Z-2a42dad4",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T17:24:30Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T172825Z-77780299.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T17:54:28Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T172825Z-77780299",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T17:54:26Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T175826Z-f20f9862.json",
+      "classification": "superseded_checkout_failure",
+      "completed_at": "2026-10-07T18:24:14Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failure",
+      "run_id": "care-proof-only-food-care-continuation-20261007T175826Z-f20f9862",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T18:24:14Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T182826Z-3dc87c59.json",
+      "classification": "superseded_checkout_failure",
+      "completed_at": "2026-10-07T18:35:10Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failure",
+      "run_id": "care-proof-only-food-care-continuation-20261007T182826Z-3dc87c59",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T18:35:09Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-visual-residue-recovery-20261007T1836Z.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T18:35:59Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-visual-residue-recovery-20261007T1836Z",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T18:35:52Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20261007T190001Z-36272.json",
+      "classification": "superseded_checkout_failure",
+      "completed_at": "2026-10-07T19:00:02Z",
+      "diagnostics": {
+        "active_review_queue_count": null,
+        "failed_source_count": null,
+        "failed_sources": [],
+        "manual_review_count": null,
+        "skipped_source_count": null,
+        "successful_attempt_count": null
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20261007T190001Z-36272",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T19:00:02Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T183826Z-f152a63d.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T19:04:57Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T183826Z-f152a63d",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T19:04:54Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T190826Z-e6e9553f.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T19:35:16Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T190826Z-e6e9553f",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T19:35:10Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T193826Z-589f5b1c.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T20:04:56Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T193826Z-589f5b1c",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T20:04:47Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T200826Z-7aba1079.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T20:36:55Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T200826Z-7aba1079",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T20:36:53Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T203826Z-d9671e56.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T20:45:05Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T203826Z-d9671e56",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T20:45:03Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T204826Z-205d0c29.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T21:15:26Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T204826Z-205d0c29",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T21:15:23Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    }
+  ],
   "expected_instances": [
     {
       "schedule_source": "windows_task_scheduler",
@@ -117,11 +996,53 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-07T20:20:51.034169Z",
-  "last_receipt_at": "2026-10-07T20:04:56.147041Z",
-  "latest_runtime_proof_date": "2026-10-07T15:00:07.698366Z",
+  "last_exported_at": "2026-10-07T21:37:36.630757Z",
+  "last_receipt_at": "2026-10-07T21:15:26.033079Z",
+  "latest_runtime_proof_date": "2026-10-07T19:00:02Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
+  "non_authoritative_receipts": [
+    {
+      "classification": "failure",
+      "completed_at": "2026-10-07T13:00:04Z",
+      "reason": "superseded_checkout_or_source_state_failure",
+      "run_id": "20261007T130001Z-40348",
+      "status": "FAILED",
+      "task_key": "care_line_collection"
+    },
+    {
+      "classification": "failure",
+      "completed_at": "2026-10-07T15:30:06Z",
+      "reason": "superseded_checkout_or_source_state_failure",
+      "run_id": "20261007T153001Z-31036",
+      "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "classification": "failure",
+      "completed_at": "2026-10-07T18:24:14Z",
+      "reason": "superseded_checkout_or_source_state_failure",
+      "run_id": "care-proof-only-food-care-continuation-20261007T175826Z-f20f9862",
+      "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "classification": "failure",
+      "completed_at": "2026-10-07T18:35:10Z",
+      "reason": "superseded_checkout_or_source_state_failure",
+      "run_id": "care-proof-only-food-care-continuation-20261007T182826Z-3dc87c59",
+      "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "classification": "failure",
+      "completed_at": "2026-10-07T19:00:02Z",
+      "reason": "superseded_checkout_or_source_state_failure",
+      "run_id": "20261007T190001Z-36272",
+      "status": "FAILED",
+      "task_key": "care_line_collection"
+    }
+  ],
   "observed_date": "2026-10-07",
   "public_side_effects": {
     "publication_attempted": false,
@@ -130,7 +1051,7 @@
   "publication_attempted": false,
   "publication_status": "safe_no_op",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "INCIDENT_OPEN",
+  "recovery_lifecycle": "HEALTHY",
   "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
@@ -140,15 +1061,40 @@
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "source_failure_summary": {
-    "all_current_failures_external": false,
-    "all_current_failures_non_actionable": false,
-    "external_access_restriction_count": 0,
-    "external_restriction_sources": [],
-    "failed_source_count": 0,
-    "original_failed_source_count": 0,
+    "all_current_failures_external": true,
+    "all_current_failures_non_actionable": true,
+    "external_access_restriction_count": 4,
+    "external_restriction_sources": [
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "hhs-news"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "hrsa-news"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "fierce-healthcare"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "mayo-clinic-news"
+      }
+    ],
+    "failed_source_count": 4,
+    "original_failed_source_count": 4,
     "recovered_source_count": 0,
     "recovered_sources": [],
-    "successful_attempt_count": null,
+    "successful_attempt_count": 34,
     "transient_source_failure_count": 0,
     "transient_sources": [],
     "unclassified_source_failure_count": 0
@@ -1020,6 +1966,69 @@
       "run_id": "care-proof-only-food-care-continuation-20261007T193826Z-589f5b1c",
       "scheduled_for": "2026-10-07",
       "started_at": "2026-10-07T20:04:47Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T200826Z-7aba1079.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T20:36:55Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T200826Z-7aba1079",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T20:36:53Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T203826Z-d9671e56.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T20:45:05Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T203826Z-d9671e56",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T20:45:03Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T204826Z-205d0c29.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T21:15:26Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261007T204826Z-205d0c29",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T21:15:23Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
     }

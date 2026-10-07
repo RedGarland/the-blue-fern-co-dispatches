@@ -1570,6 +1570,63 @@ def test_gaza_same_day_no_update_receipt_remains_current_after_grace_window(tmp_
     assert status["publication_status"] == "no_update_published"
 
 
+def test_gaza_public_success_stays_authoritative_after_later_no_effect_failure(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="SUCCESS", classification="published_and_posted")
+    receipt_root = source / "status" / "operational-health" / "gaza" / DATE / "runs"
+    success_path = receipt_root / "gaza_daily_dispatch-gaza-run-1.json"
+    success = json.loads(success_path.read_text(encoding="utf-8"))
+    success["details"] = {
+        **success.get("details", {}),
+        "live_verify_status": "LIVE_OK",
+        "validation_ok": True,
+    }
+    success_path.write_text(json.dumps(success), encoding="utf-8")
+
+    failed_path = receipt_root / "gaza_daily_dispatch-gaza-run-2.json"
+    failed = build_operational_receipt(
+        dispatch="gaza",
+        task_key="gaza_daily_dispatch",
+        task_name="Daily - Dispatches From Gaza",
+        scheduled_for=DATE,
+        started_at=f"{DATE}T15:17:00Z",
+        completed_at=f"{DATE}T15:19:00Z",
+        observed_at=f"{DATE}T15:19:00Z",
+        exit_code=1,
+        status="FAILED",
+        classification="audio_failed",
+        run_id="gaza-run-2",
+        runner_path=r"C:\BlueFernRunner\GazaDispatchesCurrent6",
+        branch="add/pages-repo-default",
+        source_head="500c2115919bfa8273c56ef3c3fd59532cfe8efe",
+        artifact_refs={"task_receipt": str(failed_path)},
+        public_side_effects={"audio": False, "bluesky": False, "pages": False, "public_output": False},
+        publication_attempted=False,
+        publication_status="audio_failed",
+        details={"generation_ok": True, "public_story_count": 4},
+    )
+    failed_path.write_text(json.dumps(failed), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["publication_attempted"] is True
+    assert status["publication_status"] == "published_and_posted"
+    assert status["last_receipt_at"] == success["receipt_created_at"]
+    assert status["latest_runtime_proof_date"] == "2026-09-10T13:05:00Z"
+    assert status["observed_receipt_count"] == 2
+    assert status["effective_receipt_count"] == 1
+    assert status["non_authoritative_receipt_count"] == 1
+    assert status["non_authoritative_receipts"][0]["run_id"] == "gaza-run-2"
+    assert status["non_authoritative_receipts"][0]["reason"] == "superseded_by_same_day_public_success"
+    assert status["task_summaries"][0]["run_id"] == "gaza-run-1"
+    assert status["task_summaries"][0]["publication_status"] == "published_and_posted"
+
+
 def test_gaza_dry_run_recovery_proof_supersedes_audio_failed_receipt_without_public_success(tmp_path: Path) -> None:
     source = _write_gaza_day(tmp_path, status="FAILED", classification="audio_failed")
     proof = _write_gaza_dry_run_log(source)

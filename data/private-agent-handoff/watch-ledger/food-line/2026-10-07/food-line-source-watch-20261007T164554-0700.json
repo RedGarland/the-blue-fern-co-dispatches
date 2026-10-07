@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T164554-0700",
+  "scheduled_for": "2026-10-07T16:45:54-07:00",
+  "started_at": "2026-10-07T16:48:11-07:00",
+  "completed_at": "2026-10-07T16:48:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T15:50:15-07:00",
+    "end": "2026-10-07T16:48:53-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted web searches across sole/last/full-service grocery loss, disaster-driven emergency food distribution cancellation, abrupt pantry/food-bank loss, and official SNAP/WIC/EBT interruptions. No newly corroborated qualifying U.S. food-access disruption in the observation window. Searches returned mostly older events, unrelated retail news, routine pantry/WIC notices, general benefits calendars, and nonofficial benefits pages. Prodisee Pantry's Oct. 10 Stockton, Alabama weather cancellation is a duplicate of the earlier captured Oct. 7 signal; a second WALA article published at 13:45 PT did not establish a distinct event. San Bernardino County's upcoming Rancho Cucamonga WIC office closure effective Oct. 16 has unknown original posting time and alternative locations, with no demonstrated immediate access interruption inside this window; excluded. All 12 searches returned results, though topical freshness/coverage is limited by indexing. Previous durable heartbeat at 15:45 run (completed 15:50:15 PT) was verified on ops/watch-ledger; production collector remains authoritative. No approval, publication, schedule, or automation state changes."
+}

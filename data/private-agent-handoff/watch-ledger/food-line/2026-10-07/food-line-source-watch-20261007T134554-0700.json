@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T134554-0700",
+  "scheduled_for": "2026-10-07T13:45:54-07:00",
+  "started_at": "2026-10-07T13:49:48-07:00",
+  "completed_at": "2026-10-07T13:50:19-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T12:48:18-07:00",
+    "end": "2026-10-07T13:50:19-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Twelve targeted web searches covered grocery loss, weather-related distribution cancellations, sudden pantry or food-bank service reductions, and official SNAP/WIC interruptions. No new supported qualifying signal found. Duplicate Prodisee Pantry cancellation excluded. No search errors. Missing previous 11:45 and 12:45 GitHub heartbeats noted. Production collection remains authoritative."
+}

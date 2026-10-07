@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T194451-0700",
+  "scheduled_for": "2026-10-06T19:44:51-07:00",
+  "started_at": "2026-10-06T19:42:07-07:00",
+  "completed_at": "2026-10-06T19:43:03-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T18:45:49-07:00",
+    "end": "2026-10-06T19:43:03-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-06/gaza-source-watch-20261006T184451-0700.json",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first; no new qualifying in-window operational update was established. The site surfaced the 6 October Flash Appeal Response Monitoring item for August 2026 and the 5 October Humanitarian Situation Report dated 2 October, neither establishing a new event in this watch window."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second; no new qualifying in-window Gaza operational update was established."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_reasons": [],
+    "notable_exclusions": [
+      "An ICRC statement dated 6 October 2026 was retrospective, marking three years of conflict and summarizing cumulative humanitarian activity; it did not establish a new operational development within the watch window.",
+      "Searches surfaced earlier or recycled Gaza reporting, but no source established a new qualifying event after the prior heartbeat completed."
+    ],
+    "conclusion": "No new traceable qualifying development was established since the prior watch."
+  }
+}

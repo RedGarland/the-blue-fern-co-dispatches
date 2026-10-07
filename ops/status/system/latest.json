@@ -35,16 +35,25 @@
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": false,
         "all_current_failures_non_actionable": false,
-        "attention_task_count": 0,
-        "attention_tasks": [],
+        "attention_task_count": 1,
+        "attention_tasks": [
+          {
+            "artifact_id": "20261007T130001Z-40348.json",
+            "classification": "failure",
+            "exit_code": 1,
+            "failure_stage": "verify_checkout",
+            "status": "FAILED",
+            "task_key": "care_line_collection"
+          }
+        ],
         "external_access_restriction_count": 0,
         "failed_source_count": 0,
         "operator_assessment": "HEALTHY",
-        "primary_classification": null,
-        "primary_failure_stage": null,
-        "primary_layer": "NONE",
-        "primary_task_key": null,
-        "primary_task_status": null,
+        "primary_classification": "failure",
+        "primary_failure_stage": "verify_checkout",
+        "primary_layer": "TASK",
+        "primary_task_key": "care_line_collection",
+        "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": null,
         "private_review_dispositioned_item_count": null,
         "private_review_max_age_hours": null,
@@ -113,23 +122,32 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "SUCCESS",
+      "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "6121951944b6397df844da057b9be9c47d7d0fa0",
       "debug_summary": {
-        "aggregate_status": "SUCCESS",
+        "aggregate_status": "FAILED",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 0,
-        "attention_tasks": [],
+        "attention_task_count": 1,
+        "attention_tasks": [
+          {
+            "artifact_id": "20261007T131503Z-current-intake.json",
+            "classification": "current_intake_failed",
+            "exit_code": 10,
+            "failure_stage": "current_intake",
+            "status": "FAILED",
+            "task_key": "food_line_current_intake"
+          }
+        ],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "HEALTHY",
-        "primary_classification": null,
-        "primary_failure_stage": null,
-        "primary_layer": "NONE",
-        "primary_task_key": null,
-        "primary_task_status": null,
+        "operator_assessment": "FAILED_ACTION_REQUIRED",
+        "primary_classification": "current_intake_failed",
+        "primary_failure_stage": "current_intake",
+        "primary_layer": "HANDOFF",
+        "primary_task_key": "food_line_current_intake",
+        "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
         "private_review_max_age_hours": 0,
@@ -140,7 +158,7 @@
         "publication_attempted": false,
         "publication_status": null,
         "receipt_completeness": "PARTIAL",
-        "recovery_lifecycle": "HEALTHY",
+        "recovery_lifecycle": "INCIDENT_OPEN",
         "stale_observability": false,
         "transient_source_failure_count": null,
         "unaccounted_event_count": null,
@@ -272,7 +290,7 @@
         "pending_item_count": 0,
         "unresolved_item_count": 0
       },
-      "recovery_lifecycle": "HEALTHY"
+      "recovery_lifecycle": "INCIDENT_OPEN"
     },
     "gaza": {
       "agent_handoff": {
@@ -383,8 +401,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-07T12:54:40.309773Z",
+  "exported_at": "2026-10-07T13:15:19.411211Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "UNKNOWN"
+  "system_status": "FAILED"
 }

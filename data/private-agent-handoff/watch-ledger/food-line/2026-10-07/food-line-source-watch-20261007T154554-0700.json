@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T154554-0700",
+  "scheduled_for": "2026-10-07T15:45:54-07:00",
+  "started_at": "2026-10-07T15:49:54-07:00",
+  "completed_at": "2026-10-07T15:50:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T14:45:28-07:00",
+    "end": "2026-10-07T15:50:15-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted web searches (freshness <=1 day) across (1) sole/last/full-service grocery loss, (2) weather/disaster-related emergency distribution cancellation, (3) abrupt pantry/food-bank service loss, and (4) official SNAP/WIC/EBT interruptions. No new event within this bounded watch window corroborated. Previously recorded Prodisee Pantry Stockton weather cancellation excluded as duplicate; San Jose Lighthouse Food Rescue threatened closure predates this interval and is not a newly verified suspension; routine distributions, event cancellations unrelated to food aid, and irrelevant/stale results excluded. Searches completed without material tool errors. Prior 2026-10-07 14:45 heartbeat remained unpersisted; last readable earlier heartbeat was 13:45. Production collection remains authoritative. No approval, publication, production, or schedule change."
+}

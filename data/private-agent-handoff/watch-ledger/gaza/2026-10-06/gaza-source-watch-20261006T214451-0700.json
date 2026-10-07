@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T214451-0700",
+  "scheduled_for": "2026-10-06T21:44:51-07:00",
+  "started_at": "2026-10-06T21:48:35-07:00",
+  "completed_at": "2026-10-06T21:49:43-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T20:51:23-07:00",
+    "end": "2026-10-06T21:49:43-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-06/gaza-source-watch-20261006T204451-0700.json",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first. Current index remained unchanged for purposes of this bounded window; no qualifying new Gaza development was established."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second. Current emergency pages surfaced no qualifying new Gaza operational update in the bounded window."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_reasons": [
+      "One secondary page used for MSF-targeted verification returned HTTP 429; other coverage remained usable."
+    ],
+    "notable_exclusions": [
+      "Reuters Gaza casualty reporting surfaced by the search was published well before the prior heartbeat completed.",
+      "A Reuters retrospective and an MSF advocacy item were background or follow-up material rather than new in-window operational developments.",
+      "Other humanitarian, crossing, health-capacity, aid, and ceasefire/hostage searches did not establish a new qualifying development."
+    ],
+    "conclusion": "No new traceable qualifying development was established since the prior watch; useful coverage remained despite one rate-limited secondary source."
+  }
+}

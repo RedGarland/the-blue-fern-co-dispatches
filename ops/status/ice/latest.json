@@ -44,9 +44,9 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-10-07T02:53:56.113629Z",
-  "last_receipt_at": "2026-10-06T04:16:34.494214Z",
-  "latest_runtime_proof_date": "2026-10-06T04:15:12Z",
+  "last_exported_at": "2026-10-07T04:25:12.194000Z",
+  "last_receipt_at": "2026-10-07T04:16:29.017919Z",
+  "latest_runtime_proof_date": "2026-10-07T04:15:09Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-10-06",
@@ -58,7 +58,7 @@
   "publication_status": "not_authorized_monitor_only",
   "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": "5b1428c23f05fd3a78f906bd8497889df38040f0",
+  "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "ice_monitor"
@@ -85,6 +85,28 @@
       "run_id": "ice-monitor-20261006T041501Z-feefb233",
       "scheduled_for": "2026-10-05",
       "started_at": "2026-10-06T04:15:12Z",
+      "status": "SUCCESS",
+      "task_key": "ice_monitor"
+    },
+    {
+      "artifact_id": "monitor_receipt.json",
+      "classification": "healthy",
+      "completed_at": "2026-10-07T04:16:28Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "pages": false,
+        "publication": false,
+        "rss": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "not_authorized_monitor_only",
+      "run_id": "ice-monitor-20261007T041502Z-848ef82c",
+      "scheduled_for": "2026-10-06",
+      "started_at": "2026-10-07T04:15:09Z",
       "status": "SUCCESS",
       "task_key": "ice_monitor"
     }

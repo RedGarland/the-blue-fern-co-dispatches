@@ -10,14 +10,14 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "FAILED",
+  "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "98766a223f6916f8e7c385320074244797b54408",
+  "current_runner_head": "631ae08e6ac2c32913766bdd534640f530fdc6d6",
   "debug_summary": {
-    "aggregate_status": "FAILED",
+    "aggregate_status": "DEGRADED",
     "all_current_failures_external": true,
     "all_current_failures_non_actionable": true,
-    "attention_task_count": 4,
+    "attention_task_count": 5,
     "attention_tasks": [
       {
         "artifact_id": "20261007T153001Z-31036.json",
@@ -29,6 +29,14 @@
       },
       {
         "artifact_id": "care-proof-only-food-care-continuation-20261007T175826Z-f20f9862.json",
+        "classification": "failure",
+        "exit_code": 1,
+        "failure_stage": "source_state",
+        "status": "FAILED",
+        "task_key": "care_line_approved_release_publication"
+      },
+      {
+        "artifact_id": "care-proof-only-food-care-continuation-20261007T182826Z-3dc87c59.json",
         "classification": "failure",
         "exit_code": 1,
         "failure_stage": "source_state",
@@ -54,7 +62,7 @@
     ],
     "external_access_restriction_count": 4,
     "failed_source_count": 4,
-    "operator_assessment": "FAILED_ACTION_REQUIRED",
+    "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
     "primary_classification": "failure",
     "primary_failure_stage": "source_state",
     "primary_layer": "EXTERNAL_DEPENDENCY",
@@ -68,9 +76,9 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": "failure",
+    "publication_status": "safe_no_op",
     "receipt_completeness": "COMPLETE",
-    "recovery_lifecycle": "INCIDENT_OPEN",
+    "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": 0,
     "unaccounted_event_count": null,
@@ -109,20 +117,20 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-07T18:24:44.010195Z",
-  "last_receipt_at": "2026-10-07T18:24:14.166870Z",
+  "last_exported_at": "2026-10-07T18:36:54.307851Z",
+  "last_receipt_at": "2026-10-07T18:35:59.471729Z",
   "latest_runtime_proof_date": "2026-10-07T15:00:07.698366Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-10-07",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": "failure"
+    "publication_status": "safe_no_op"
   },
   "publication_attempted": false,
-  "publication_status": "failure",
+  "publication_status": "safe_no_op",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "INCIDENT_OPEN",
+  "recovery_lifecycle": "HEALTHY",
   "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
@@ -888,6 +896,52 @@
       "scheduled_for": "2026-10-07",
       "started_at": "2026-10-07T18:24:14Z",
       "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261007T182826Z-3dc87c59.json",
+      "classification": "failure",
+      "completed_at": "2026-10-07T18:35:10Z",
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "source_state"
+        }
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failure",
+      "run_id": "care-proof-only-food-care-continuation-20261007T182826Z-3dc87c59",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T18:35:09Z",
+      "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-visual-residue-recovery-20261007T1836Z.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-07T18:35:59Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-visual-residue-recovery-20261007T1836Z",
+      "scheduled_for": "2026-10-07",
+      "started_at": "2026-10-07T18:35:52Z",
+      "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
     }
   ]

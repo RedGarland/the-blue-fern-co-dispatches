@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T234451-0700",
+  "scheduled_for": "2026-10-06T23:44:51-07:00",
+  "started_at": "2026-10-06T23:49:12-07:00",
+  "completed_at": "2026-10-06T23:49:41-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T22:50:43-07:00",
+    "end": "2026-10-06T23:49:41-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-06/gaza-source-watch-20261006T224451-0700.json",
+    "primary_checks": [
+      {"source": "OCHA OPT", "result": "Checked first. No qualifying new Gaza operational development was established in the bounded window."},
+      {"source": "WHO", "result": "Checked second. No qualifying new Gaza health-system, medical-evacuation, hospital, ambulance, fuel, or functioning-capacity development was established in the bounded window."}
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_reasons": [],
+    "notable_exclusions": [
+      "Reuters and AP searches did not establish a new qualifying in-window casualty, ceasefire, crossing, infrastructure, displacement, or healthcare development.",
+      "UNRWA, UNICEF, WFP, ICRC, and MSF searches surfaced older or background material rather than new in-window operational developments.",
+      "Background, retrospective, duplicated, unsupported, and pre-window items were excluded."
+    ],
+    "conclusion": "No new traceable qualifying development was established since the prior watch."
+  }
+}

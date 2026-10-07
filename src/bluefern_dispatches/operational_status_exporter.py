@@ -739,6 +739,89 @@ def _gaza_effective_receipts(receipts: list[dict[str, Any]]) -> tuple[list[dict[
     return effective, non_authoritative
 
 
+def _receipt_has_public_side_effect(receipt: dict[str, Any]) -> bool:
+    if receipt.get("publication_attempted") is True:
+        return True
+    effects = receipt.get("public_side_effects")
+    return isinstance(effects, dict) and any(value is True for value in effects.values())
+
+
+def _care_checkout_or_source_state_failure(receipt: dict[str, Any]) -> bool:
+    if str(receipt.get("status") or "") != OperationalStatus.FAILED.value:
+        return False
+    if _receipt_has_public_side_effect(receipt):
+        return False
+    details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
+    markers = {
+        str(receipt.get("failure_stage") or "").strip().lower(),
+        str(details.get("failure_stage") or "").strip().lower(),
+        str(receipt.get("collection_health") or "").strip().lower(),
+        str(receipt.get("classification") or "").strip().lower(),
+    }
+    if markers.intersection({"source_state", "verify_checkout", "source_state_blocked", "checkout_dirty"}):
+        return True
+    wrapper_message = str(details.get("wrapper_exception_message") or "").lower()
+    if "checkout is dirty" in wrapper_message or "runner checkout is dirty" in wrapper_message:
+        return True
+    return False
+
+
+def _care_non_public_clean_proof(receipt: dict[str, Any]) -> bool:
+    if _receipt_has_public_side_effect(receipt):
+        return False
+    if receipt.get("exit_code") not in (None, 0):
+        return False
+    return str(receipt.get("status") or "") in {
+        OperationalStatus.SUCCESS.value,
+        OperationalStatus.SAFE_NO_OP.value,
+        OperationalStatus.DEGRADED.value,
+    }
+
+
+def _care_superseded_checkout_receipt(receipt: dict[str, Any]) -> dict[str, Any]:
+    effective = dict(receipt)
+    details = dict(effective.get("details") or {}) if isinstance(effective.get("details"), dict) else {}
+    details["superseded_status_export_only"] = True
+    details["original_status"] = receipt.get("status")
+    details["original_classification"] = receipt.get("classification")
+    effective["status"] = OperationalStatus.SAFE_NO_OP.value
+    effective["classification"] = "superseded_checkout_failure"
+    effective["failure_stage"] = None
+    effective["exit_code"] = 0
+    effective["details"] = details
+    return effective
+
+
+def _care_effective_receipts(receipts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    clean_proofs = [receipt for receipt in receipts if _care_non_public_clean_proof(receipt)]
+    if not clean_proofs:
+        return receipts, []
+    clean_proof_times = [_receipt_sort_time(receipt) for receipt in clean_proofs]
+    latest_clean_proof_time = max(clean_proof_times)
+    clean_proofs_by_task: dict[str, list[datetime]] = {}
+    for receipt in clean_proofs:
+        clean_proofs_by_task.setdefault(str(receipt.get("task_key") or ""), []).append(_receipt_sort_time(receipt))
+
+    effective: list[dict[str, Any]] = []
+    non_authoritative: list[dict[str, Any]] = []
+    for receipt in receipts:
+        if not _care_checkout_or_source_state_failure(receipt):
+            effective.append(receipt)
+            continue
+        receipt_time = _receipt_sort_time(receipt)
+        task_key = str(receipt.get("task_key") or "")
+        same_task_proofs = clean_proofs_by_task.get(task_key, [])
+        same_task_later = any(proof_time > receipt_time for proof_time in same_task_proofs)
+        same_task_proven = bool(same_task_proofs)
+        later_checkout_proof = latest_clean_proof_time > receipt_time
+        if same_task_later or (same_task_proven and later_checkout_proof):
+            non_authoritative.append(receipt)
+            effective.append(_care_superseded_checkout_receipt(receipt))
+            continue
+        effective.append(receipt)
+    return effective, non_authoritative
+
+
 def _food_source_watch_durably_ready(
     latest_by_task: dict[str, dict[str, Any]],
     *,
@@ -1757,18 +1840,23 @@ def build_care_line_status(
         receipts, source_root=source_root, expectations=CARE_LINE_TASK_EXPECTATIONS
     )
     source_failure_policies = _load_care_line_source_failure_policies(source_root)
-    collection_receipts = [receipt for receipt in receipts if receipt.get("task_key") == "care_line_collection"]
+    effective_receipts, non_authoritative_receipts = _care_effective_receipts(receipts)
+    collection_receipts = [
+        receipt for receipt in effective_receipts
+        if receipt.get("task_key") == "care_line_collection"
+        and str(receipt.get("classification") or "") != "superseded_checkout_failure"
+    ]
     latest_collection = max(collection_receipts, key=_receipt_sort_time, default=None)
     replay_receipts = load_care_line_source_replay_receipts(source_root, receipt_dates)
     source_failure_summary = _care_source_failure_summary(latest_collection, source_failure_policies, replay_receipts)
     aggregate = evaluate_dispatch_health(
         dispatch="care-line",
-        receipts=receipts,
+        receipts=effective_receipts,
         expectations=CARE_LINE_TASK_EXPECTATIONS,
         evaluated_at=evaluated_at,
         expected_instances=instance_rows,
         recovery=recovery,
-    ) if receipts or instance_rows is not None else {
+    ) if effective_receipts or instance_rows is not None else {
         "overall_health": OperationalStatus.UNKNOWN.value,
         "recovery_state": RecoveryState.HEALTHY.value,
         "expected_tasks": [item.task_key for item in CARE_LINE_TASK_EXPECTATIONS],
@@ -1804,6 +1892,21 @@ def build_care_line_status(
         "latest_runtime_proof_date": aggregate.get("latest_success_at"),
         "receipt_completeness": completeness if receipts else "NO_PROOF",
         "task_summaries": [_task_summary(receipt, linkage, source_failure_policies, replay_receipts) for receipt in receipts],
+        "effective_task_summaries": [
+            _task_summary(receipt, linkage, source_failure_policies, replay_receipts)
+            for receipt in effective_receipts
+        ],
+        "non_authoritative_receipts": [
+            {
+                "task_key": receipt.get("task_key"),
+                "run_id": receipt.get("run_id"),
+                "status": receipt.get("status"),
+                "classification": receipt.get("classification"),
+                "completed_at": receipt.get("completed_at"),
+                "reason": "superseded_checkout_or_source_state_failure",
+            }
+            for receipt in non_authoritative_receipts
+        ],
         "source_failure_summary": source_failure_summary,
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,

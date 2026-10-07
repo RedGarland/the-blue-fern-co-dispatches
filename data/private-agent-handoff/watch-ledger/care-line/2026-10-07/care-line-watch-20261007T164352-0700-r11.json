@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261007T164352-0700-r11",
+  "scheduled_for": "2026-10-07T16:43:52-07:00",
+  "started_at": "2026-10-07T16:43:57-07:00",
+  "completed_at": "2026-10-07T16:44:42-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T15:44:58-07:00",
+    "end": "2026-10-07T16:44:42-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; production Care Line collection remains authoritative.",
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date_observed": "2026-10-05",
+    "cms_observation": "Newest notices: rescissions for Compassionate Care Angels LLC and O.M.K Healthcare Services LLC (Texas), dated 2026-10-05. No new CMS notice observed.",
+    "additional_targeted_searches": 12,
+    "search_failures": [],
+    "search_categories": [
+      "hospital/ED closure",
+      "maternity closure",
+      "rural emergency service loss",
+      "behavioral-health shutdown",
+      "dialysis closure",
+      "oncology suspension",
+      "primary-care clinic closure",
+      "EMS/ambulance station loss",
+      "air-medical base closure",
+      "essential-service restoration",
+      "government closure notices",
+      "US territories"
+    ],
+    "exclusions": [
+      "Cambridge Health Alliance Birth Center secondary report dated 2026-10-07: delivery resumption not confirmed as announced or effective during hourly window, underlying original report not established.",
+      "Embark Behavioral Health Rockville-to-Germantown relocation announced 2026-10-07 15:05 EDT, outside hourly window; programming planned to continue through transition.",
+      "Carl R. Darnall Army Medical Center federal-holiday modified outpatient hours: routine advance holiday schedule; emergency and inpatient services remain open.",
+      "WHYY retrospective Pennsylvania rural hospital financial model coverage: no newly effective service loss.",
+      "Guam National Guard hospital facility support extension: no confirmed healthcare service change.",
+      "Proposals, financial/ownership stories without concrete service effect, opinions, Canadian/non-US changes, and older developments excluded."
+    ],
+    "summary": "No newly verified qualifying US or territory essential-healthcare loss or concrete restoration during the prior hourly interval. No approval, publication or schedule changes performed."
+  }
+}

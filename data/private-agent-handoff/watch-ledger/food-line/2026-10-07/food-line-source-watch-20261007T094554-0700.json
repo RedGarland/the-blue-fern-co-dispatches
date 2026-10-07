@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T094554-0700",
+  "scheduled_for": "2026-10-07T09:45:54-07:00",
+  "started_at": "2026-10-07T09:47:56-07:00",
+  "completed_at": "2026-10-07T09:48:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-07T08:45:54-07:00",
+    "end": "2026-10-07T09:48:30-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 bounded targeted web searches across the four high-value miss classes. No new qualifying U.S. food-access disruption was identified in the observation window. Fresh results reviewed included Gulf Coast tropical-weather coverage and older/non-qualifying items; no surfaced source established a sole/last/full-service grocery loss, weather-caused cancellation or suspension of an emergency food distribution, abrupt pantry/food-bank access reduction, or immediate official SNAP/WIC/EBT interruption. No search failure materially reduced coverage."
+}

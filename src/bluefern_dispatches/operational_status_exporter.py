@@ -687,6 +687,58 @@ def _latest_receipts_by_task(receipts: list[dict[str, Any]]) -> list[dict[str, A
     return [latest[key] for key in sorted(latest)]
 
 
+def _gaza_receipt_has_public_success_proof(receipt: dict[str, Any]) -> bool:
+    if str(receipt.get("status") or "") != OperationalStatus.SUCCESS.value:
+        return False
+    if str(receipt.get("publication_status") or receipt.get("classification") or "") != "published_and_posted":
+        return False
+    if receipt.get("publication_attempted") is not True:
+        return False
+    effects = receipt.get("public_side_effects")
+    if not isinstance(effects, dict) or effects.get("pages") is not True:
+        return False
+    details = receipt.get("details")
+    if not isinstance(details, dict):
+        return False
+    return details.get("live_verify_status") == "LIVE_OK" or details.get("validation_ok") is True
+
+
+def _gaza_receipt_failed_before_public_side_effect(receipt: dict[str, Any]) -> bool:
+    if str(receipt.get("status") or "") != OperationalStatus.FAILED.value:
+        return False
+    if receipt.get("publication_attempted") is True:
+        return False
+    effects = receipt.get("public_side_effects")
+    if isinstance(effects, dict) and any(value is True for value in effects.values()):
+        return False
+    return True
+
+
+def _gaza_effective_receipts(receipts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    public_successes = [
+        receipt for receipt in receipts
+        if str(receipt.get("task_key") or "") == "gaza_daily_dispatch"
+        and _gaza_receipt_has_public_success_proof(receipt)
+    ]
+    if not public_successes:
+        return receipts, []
+    authoritative = max(public_successes, key=_receipt_sort_time)
+    authoritative_time = _receipt_sort_time(authoritative)
+    effective: list[dict[str, Any]] = []
+    non_authoritative: list[dict[str, Any]] = []
+    for receipt in receipts:
+        if (
+            receipt is not authoritative
+            and str(receipt.get("task_key") or "") == "gaza_daily_dispatch"
+            and _gaza_receipt_failed_before_public_side_effect(receipt)
+            and _receipt_sort_time(receipt) >= authoritative_time
+        ):
+            non_authoritative.append(receipt)
+            continue
+        effective.append(receipt)
+    return effective, non_authoritative
+
+
 def _food_source_watch_durably_ready(
     latest_by_task: dict[str, dict[str, Any]],
     *,
@@ -1803,11 +1855,12 @@ def build_gaza_status(
     recovery: RecoveryContext | None = None,
 ) -> dict[str, Any]:
     receipts = load_gaza_receipts(source_root, date)
+    effective_receipts, non_authoritative_receipts = _gaza_effective_receipts(receipts)
     runner_identity = _runner_git_identity(source_root)
     completeness, linkage = receipt_completeness(
-        receipts, source_root=source_root, expectations=GAZA_TASK_EXPECTATIONS
+        effective_receipts, source_root=source_root, expectations=GAZA_TASK_EXPECTATIONS
     )
-    expected_instances = None if receipts else [
+    expected_instances = None if effective_receipts else [
         {
             "task_key": "gaza_daily_dispatch",
             "scheduled_for": _iso(_expected_run(date, "06:00", "America/Los_Angeles")),
@@ -1815,7 +1868,7 @@ def build_gaza_status(
     ]
     aggregate = evaluate_dispatch_health(
         dispatch="gaza",
-        receipts=receipts,
+        receipts=effective_receipts,
         expectations=GAZA_TASK_EXPECTATIONS,
         evaluated_at=evaluated_at,
         recovery=recovery,
@@ -1825,10 +1878,10 @@ def build_gaza_status(
     stale_observability = bool(aggregate.get("stale_observability"))
     dry_run_recovery_proof = _latest_gaza_dry_run_recovery_proof(source_root, date)
     dry_run_recovery_applied = False
-    if _monitor_success_overrides_stale(aggregate, receipts, task_key="gaza_daily_dispatch"):
+    if _monitor_success_overrides_stale(aggregate, effective_receipts, task_key="gaza_daily_dispatch"):
         aggregate_status = OperationalStatus.SUCCESS.value
         stale_observability = False
-    if not receipts and aggregate_status == OperationalStatus.SUCCESS.value:
+    if not effective_receipts and aggregate_status == OperationalStatus.SUCCESS.value:
         aggregate_status = OperationalStatus.UNKNOWN.value
     if (
         dry_run_recovery_proof
@@ -1843,10 +1896,10 @@ def build_gaza_status(
         aggregate_status = OperationalStatus.DEGRADED.value
         stale_observability = False
         dry_run_recovery_applied = True
-    source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
+    source_heads = {_safe_head(receipt.get("source_head")) for receipt in effective_receipts}
     source_heads.discard(None)
-    publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
-    publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
+    publication_attempted = any(receipt.get("publication_attempted") is True for receipt in effective_receipts)
+    publication_statuses = [receipt.get("publication_status") for receipt in effective_receipts if receipt.get("publication_status")]
     return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "gaza",
@@ -1861,8 +1914,24 @@ def build_gaza_status(
         "latest_recovery_proof_at": dry_run_recovery_proof.get("completed_at") if dry_run_recovery_proof else None,
         "dry_run_recovery_proof": dry_run_recovery_proof,
         "dry_run_recovery_applied": dry_run_recovery_applied,
-        "receipt_completeness": completeness if receipts else "NO_PROOF",
-        "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
+        "receipt_completeness": completeness if effective_receipts else "NO_PROOF",
+        "task_summaries": [_task_summary(receipt, linkage) for receipt in effective_receipts],
+        "observed_receipt_count": len(receipts),
+        "effective_receipt_count": len(effective_receipts),
+        "non_authoritative_receipt_count": len(non_authoritative_receipts),
+        "non_authoritative_receipts": [
+            {
+                "task_key": receipt.get("task_key"),
+                "status": receipt.get("status") if receipt.get("status") in SUPPORTED_TASK_STATUSES else "UNKNOWN",
+                "classification": str(receipt.get("classification") or "unknown"),
+                "run_id": receipt.get("run_id"),
+                "completed_at": receipt.get("completed_at"),
+                "publication_attempted": receipt.get("publication_attempted"),
+                "publication_status": receipt.get("publication_status"),
+                "reason": "superseded_by_same_day_public_success",
+            }
+            for receipt in non_authoritative_receipts
+        ],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,
         "publication_attempted": publication_attempted,
@@ -1872,9 +1941,9 @@ def build_gaza_status(
             "publication_status": publication_statuses[-1] if publication_statuses else None,
         },
         "stale_observability": stale_observability,
-        "last_receipt_at": max((_handoff_time(item) for item in receipts), default=None).isoformat().replace("+00:00", "Z") if receipts else None,
+        "last_receipt_at": max((_handoff_time(item) for item in effective_receipts), default=None).isoformat().replace("+00:00", "Z") if effective_receipts else None,
         "last_exported_at": exported_at,
-        "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
+        "next_expected_run": next((item.get("next_expected_run") for item in effective_receipts if item.get("next_expected_run")), None),
         "agent_handoff": {
             "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
             "last_attempt_at": None,

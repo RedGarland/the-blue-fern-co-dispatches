@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T184451-0700",
+  "scheduled_for": "2026-10-06T18:44:51-07:00",
+  "started_at": "2026-10-06T18:44:30-07:00",
+  "completed_at": "2026-10-06T18:45:49-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T18:02:06-07:00",
+    "end": "2026-10-06T18:45:49-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-06/gaza-source-watch-20261006T174451-0700.json",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first; no new qualifying in-window operational update was established."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second; no new qualifying in-window operational update was established."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_reasons": [
+      "UN News was blocked by robots.txt.",
+      "A direct WHO EMRO index fetch returned an internal retrieval error; other WHO search coverage remained available."
+    ],
+    "conclusion": "No new traceable qualifying development was established since the prior watch."
+  }
+}

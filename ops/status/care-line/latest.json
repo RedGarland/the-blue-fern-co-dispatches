@@ -10,11 +10,11 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "DEGRADED",
+  "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "6121951944b6397df844da057b9be9c47d7d0fa0",
   "debug_summary": {
-    "aggregate_status": "DEGRADED",
+    "aggregate_status": "FAILED",
     "all_current_failures_external": false,
     "all_current_failures_non_actionable": false,
     "attention_task_count": 8,
@@ -62,7 +62,7 @@
     ],
     "external_access_restriction_count": 0,
     "failed_source_count": 0,
-    "operator_assessment": "DEGRADED_ACTION_RECOMMENDED",
+    "operator_assessment": "FAILED_ACTION_REQUIRED",
     "primary_classification": "failure",
     "primary_failure_stage": "source_state",
     "primary_layer": "SOURCE",
@@ -78,7 +78,7 @@
     "publication_attempted": false,
     "publication_status": "safe_no_op",
     "receipt_completeness": "COMPLETE",
-    "recovery_lifecycle": "HEALTHY",
+    "recovery_lifecycle": "INCIDENT_OPEN",
     "stale_observability": false,
     "transient_source_failure_count": 0,
     "unaccounted_event_count": null,
@@ -117,7 +117,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-07T02:53:56.113629Z",
+  "last_exported_at": "2026-10-07T03:15:07.825061Z",
   "last_receipt_at": "2026-10-07T02:53:52.960685Z",
   "latest_runtime_proof_date": "2026-10-06T15:30:28Z",
   "migration_status": "MIGRATED",
@@ -130,7 +130,7 @@
   "publication_attempted": false,
   "publication_status": "safe_no_op",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "HEALTHY",
+  "recovery_lifecycle": "INCIDENT_OPEN",
   "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [

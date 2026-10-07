@@ -38,7 +38,7 @@
     "primary_task_status": "DEGRADED",
     "private_review_count_only_gap_count": 57,
     "private_review_dispositioned_item_count": 66,
-    "private_review_max_age_hours": 26,
+    "private_review_max_age_hours": 27,
     "private_review_oldest_pending_date": "2026-10-06",
     "private_review_pending_date_count": 1,
     "private_review_pending_item_count": 6,
@@ -132,7 +132,7 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-10-07T02:53:56.113629Z",
+  "last_exported_at": "2026-10-07T03:15:07.825061Z",
   "last_receipt_at": "2026-10-07T02:53:50.348649Z",
   "latest_runtime_proof_date": "2026-10-07T02:53:50.348649Z",
   "next_expected_run": null,
@@ -141,7 +141,7 @@
     "count_only_gap_count": 57,
     "dates": [
       {
-        "age_hours": 26,
+        "age_hours": 27,
         "count_only_gap_count": 2,
         "date": "2026-10-06",
         "dispositioned_item_count": 0,
@@ -266,7 +266,7 @@
       }
     ],
     "dispositioned_item_count": 66,
-    "max_age_hours": 26,
+    "max_age_hours": 27,
     "oldest_pending_date": "2026-10-06",
     "pending_date_count": 1,
     "pending_item_count": 6,

@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261007T154340-0700-r11",
+  "scheduled_for": "2026-10-07T15:43:40-07:00",
+  "started_at": "2026-10-07T15:43:40-07:00",
+  "completed_at": "2026-10-07T15:44:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T14:49:00-07:00",
+    "end": "2026-10-07T15:44:58-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date_observed": "2026-10-05",
+    "additional_targeted_searches": 12,
+    "search_failures": [],
+    "write_recovery": "Contents API creation was blocked; Git data fallback attempted.",
+    "prior_hourly_check_end": "2026-10-07T14:49:00-07:00",
+    "exclusions": "Older Chicago obstetric closures; opinion pieces; Canadian closure; non-effective clinic relocation.",
+    "summary": "No newly verified U.S. or territory loss or concrete restoration of essential healthcare access in this hourly window. Production Care Line collection remains authoritative."
+  }
+}

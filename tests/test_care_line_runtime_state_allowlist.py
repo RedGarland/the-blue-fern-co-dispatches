@@ -224,6 +224,8 @@ def test_care_line_publication_proof_only_allows_generated_output_residue_but_no
             " M output/site/care-line/index.html",
             " D output/site/care-line/old.html",
             "?? output/dispatches/care-line/editions/2026-10-06/index.html",
+            "?? output/review/public-site-visuals/care-line.png",
+            "?? output/review/public-site-visuals/root.png",
             "?? output/site/care-line/editions/2026-10-06/sources_manifest.json",
             "?? logs/care-line/publication-scheduler/2026-10-06/proof.log",
             "?? status/care-line/publication-scheduler-runs/2026-10-06/proof.json",
@@ -243,6 +245,8 @@ def test_care_line_publication_proof_only_allows_generated_output_residue_but_no
         allow_generated_public_output_residue=False,
     ) == [
         "output/dispatches/care-line/editions/2026-10-06/index.html",
+        "output/review/public-site-visuals/care-line.png",
+        "output/review/public-site-visuals/root.png",
         "output/site/assets/site.css",
         "output/site/care-line/editions/2026-10-06/sources_manifest.json",
         "output/site/care-line/index.html",

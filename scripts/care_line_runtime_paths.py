@@ -16,6 +16,7 @@ CARE_LINE_OPERATOR_RUN_EVIDENCE_RE = re.compile(
     r"^ops/operator/runs/\d{4}-\d{2}-\d{2}/[A-Za-z0-9][A-Za-z0-9_.-]{0,239}(?:/[A-Za-z0-9][A-Za-z0-9_.-]{0,239})*$"
 )
 CARE_LINE_GENERATED_PUBLIC_OUTPUT_RE = re.compile(r"^output/(?:site|dispatches)(?:/.*)?$")
+CARE_LINE_PUBLIC_SITE_VISUAL_REVIEW_RE = re.compile(r"^output/review/public-site-visuals(?:[-_/].*)?$")
 
 CARE_LINE_RUNTIME_CATEGORIES = {
     "logs",
@@ -68,7 +69,7 @@ def classify_care_line_runtime_path(path_text: str) -> str | None:
 
 def is_care_line_generated_public_output_path(path_text: str) -> bool:
     path = normalize_status_path(path_text).lower()
-    return bool(CARE_LINE_GENERATED_PUBLIC_OUTPUT_RE.match(path))
+    return bool(CARE_LINE_GENERATED_PUBLIC_OUTPUT_RE.match(path) or CARE_LINE_PUBLIC_SITE_VISUAL_REVIEW_RE.match(path))
 
 
 def care_line_runtime_paths() -> list[str]:
@@ -84,4 +85,5 @@ def care_line_runtime_paths() -> list[str]:
         "status/care-line/publication-scheduler-runs/",
         "status/care-line/effective-date-follow-up-state.json",
         "ops/operator/runs/",
+        "output/review/public-site-visuals",
     ]

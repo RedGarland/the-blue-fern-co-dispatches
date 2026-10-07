@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T204451-0700",
+  "scheduled_for": "2026-10-06T20:44:51-07:00",
+  "started_at": "2026-10-06T20:49:57-07:00",
+  "completed_at": "2026-10-06T20:51:23-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T19:43:03-07:00",
+    "end": "2026-10-06T20:51:23-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-06/gaza-source-watch-20261006T194451-0700.json",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first. OCHA's current news index still topped out at the 6 October Flash Appeal Response Monitoring item for August 2026 and the 5 October Humanitarian Situation Report dated 2 October; no new qualifying event was established inside this watch window."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second. Search surfaced no new in-window Gaza operational update. A direct WHO EMRO oPt news-index follow-up returned HTTP 502, so WHO coverage was partially degraded."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_reasons": [
+      "WHO EMRO oPt news-index direct fetch returned HTTP 502.",
+      "UN News targeted search was blocked by robots.txt.",
+      "BBC targeted search was blocked by robots.txt."
+    ],
+    "notable_exclusions": [
+      "Searches surfaced older or recycled Gaza humanitarian and conflict reporting, including UNRWA, UNICEF, ICRC and Times of Israel items, but none established a new qualifying development after the prior heartbeat completed.",
+      "No source established a new in-window casualty, displacement, aid-access, food/water, health-system, infrastructure, crossing, detention/hostage, ceasefire, or civilian-impact military development."
+    ],
+    "conclusion": "No new traceable qualifying development was established since the prior watch; useful coverage remained despite the source-access failures."
+  }
+}

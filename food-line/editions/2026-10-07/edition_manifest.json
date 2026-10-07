@@ -1,0 +1,71 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-10-07",
+  "generated_at": "2026-10-07T20:08:37.085995+00:00",
+  "generator_source_commit": "c105fdf14d081c5a13a95c4481686022ac6bcc1c",
+  "generation_mode": "approved_current_review_proposal",
+  "source_count": 2,
+  "story_count": 2,
+  "source_adequacy": {
+    "status": "limited",
+    "label": "Limited / sparse source day",
+    "source_count": 2,
+    "source_families": [
+      "local_news"
+    ],
+    "local_signal_count": 2,
+    "state_signal_count": 1,
+    "national_context_count": 1
+  },
+  "lead_source_record_id": "food_line_source_9eb6f051c171d982",
+  "lead_source_canonical_url": "https://nypost.com/2026/10/07/lifestyle/states-scramble-to-fill-gap-as-millions-lose-food-aid-amid-new-snap-requirements",
+  "previous_edition_date": "2026-09-12",
+  "primary_signal_status": "new_primary",
+  "public_rendered": true,
+  "public_signal_count": 2,
+  "qualified_primary_count": 1,
+  "claim_count": 2,
+  "claim_ledger_path": "/food-line/editions/2026-10-07/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-10-07/source_table.html",
+  "edition_mode": "current_update",
+  "validation_status": "ok",
+  "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-10-07.json",
+  "approved_proposal_sha256": "c004f4015257bebc07d7d49715ab803115a1361c6bbf9c98153ae8d2d3b9d658",
+  "review_queue_path": "status/food-line/runtime/current-signal-review.json",
+  "review_queue_sha256": "02693ed9ea4b5ac1cbb0097a3ee31ee04e8deabebe4fbd1c4d200f6a9c4f6d39",
+  "approved_item_provenance": [
+    {
+      "review_item_id": "finding_285788655d91834329f3ef0f",
+      "finding_id": "finding_285788655d91834329f3ef0f",
+      "editorial_decision": "approve_with_edit",
+      "decision_operator": "codex_publication_approval_2026-10-07",
+      "decision_timestamp": "2026-10-07T20:03:31.623905Z",
+      "source_url": "https://nypost.com/2026/10/07/lifestyle/states-scramble-to-fill-gap-as-millions-lose-food-aid-amid-new-snap-requirements",
+      "canonical_source_url": "https://nypost.com/2026/10/07/lifestyle/states-scramble-to-fill-gap-as-millions-lose-food-aid-amid-new-snap-requirements",
+      "source_published_at": "2026-10-07"
+    },
+    {
+      "review_item_id": "finding_3f22c54679776e133cdf51d2",
+      "finding_id": "finding_3f22c54679776e133cdf51d2",
+      "editorial_decision": "approve_with_edit",
+      "decision_operator": "codex_publication_approval_2026-10-07",
+      "decision_timestamp": "2026-10-07T20:03:31.623905Z",
+      "source_url": "https://blockclubchicago.org/2026/10/07/irving-park-food-pantry-moving-to-new-home-as-demand-spikes",
+      "canonical_source_url": "https://blockclubchicago.org/2026/10/07/irving-park-food-pantry-moving-to-new-home-as-demand-spikes",
+      "source_published_at": "2026-10-07"
+    }
+  ],
+  "publication_status": "unpublished",
+  "publication_approval": false,
+  "publication_eligible": false,
+  "pages_status": "not_synced",
+  "bluesky_status": "not_posted",
+  "audio_status": "not_generated",
+  "map_status": "not_published",
+  "podcast_status": "not_generated",
+  "schedule_status": "not_changed",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-10-07/",
+  "bluesky_post_text": null,
+  "bluesky_post_ready": false
+}

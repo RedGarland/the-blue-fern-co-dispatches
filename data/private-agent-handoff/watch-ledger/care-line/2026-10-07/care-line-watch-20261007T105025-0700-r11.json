@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261007T105025-0700-r11",
+  "scheduled_for": "2026-10-07T10:45:22-07:00",
+  "started_at": "2026-10-07T10:50:25-07:00",
+  "completed_at": "2026-10-07T10:51:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T09:45:22-07:00",
+    "end": "2026-10-07T10:50:25-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_latest_notice_date_observed": "2026-10-05",
+    "additional_targeted_searches": 12,
+    "search_failures": [],
+    "summary": "No new qualifying U.S. or territory healthcare-access change was established in the bounded recall window. Searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency service loss, ambulance, air-medical, restorations/reopenings, territories, and general access-loss reporting. Stale, proposed, non-U.S., business-only, and duplicate items were excluded."
+  }
+}

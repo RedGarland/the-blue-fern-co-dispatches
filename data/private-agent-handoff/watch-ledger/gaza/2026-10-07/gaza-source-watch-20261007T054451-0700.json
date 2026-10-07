@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261007T054451-0700",
+  "scheduled_for": "2026-10-07T05:44:51-07:00",
+  "started_at": "2026-10-07T05:45:01-07:00",
+  "completed_at": "2026-10-07T05:46:02.917301-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T04:44:51-07:00",
+    "end": "2026-10-07T05:46:02.917301-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first: no new in-window Gaza operational update found.",
+      "WHO checked second: no new in-window Gaza operational update found."
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_reasons": [
+      "BBC targeted retrieval was blocked by robots.txt; remaining coverage was usable."
+    ],
+    "bounded_discovery_context": "Window begins at the prior hourly check boundary. Previously surfaced reporting from that earlier check was treated as known.",
+    "conclusion": "No new qualifying development established in the bounded window."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261007T124147-0700-r11",
+  "scheduled_for": "2026-10-07T12:41:40-07:00",
+  "started_at": "2026-10-07T12:41:47-07:00",
+  "completed_at": "2026-10-07T12:42:34-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T10:51:00-07:00",
+    "end": "2026-10-07T12:42:34-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date_observed": "2026-10-05",
+    "additional_targeted_searches": 12,
+    "search_failures": [],
+    "previous_confirmed_ledger_run_id": "care-line-watch-20261007T105025-0700-r11",
+    "observation_note": "Window starts at the last confirmed durable heartbeat completion and includes any intervening interval not independently verifiable from retrieved ledger history.",
+    "excluded_leads": [
+      {
+        "title": "KidsPeace to End Operations in Georgia",
+        "reason": "Official announcement dated 2026-08-24; not a new Oct 7 access change."
+      },
+      {
+        "title": "Guam Guard orders extended at Guam Memorial Hospital",
+        "reason": "Facility improvements and operations continuity, no loss of access."
+      },
+      {
+        "title": "Kula Hospital to be restored",
+        "reason": "2026-09-22 funding decision; ED remains closed with reopening date not yet specified."
+      },
+      {
+        "title": "Connecticut Solnit South pediatric psychiatric hospital capacity restrictions",
+        "reason": "Reporting on ongoing staffing and capped admissions, no newly effective restriction established in observation window."
+      }
+    ],
+    "summary": "CMS Public Notices canonical index remains topped by 2026-10-05 rescissions; targeted recall searches covered U.S. and territory hospital/ED, rural/emergency, maternity, psychiatric, dialysis, oncology, primary care, EMS, air medical, concrete reopenings, and official access notices. No new qualifying effective access change could be verified. Primary production Care Line collection remains authoritative."
+  }
+}

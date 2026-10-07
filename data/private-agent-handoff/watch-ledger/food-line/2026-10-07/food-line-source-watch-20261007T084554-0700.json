@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T084554-0700",
+  "scheduled_for": "2026-10-07T08:45:54-07:00",
+  "started_at": "2026-10-07T08:47:27-07:00",
+  "completed_at": "2026-10-07T08:48:06-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T07:46:01.723033-07:00",
+    "end": "2026-10-07T08:48:06-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches across the four bounded recall classes. No new qualifying signal surfaced inside the search window. The Prodisee Pantry Stockton weather cancellation was a duplicate from the prior watch and its source publication time preceded this window. A Bountiful Food Pantry calendar showed a canceled Valley View mobile pantry event for October 7, but no storm, flood, fire, outage, facility-damage, or other qualifying cause was established, so it was excluded. A Southeast Ohio pantry flood-recovery report was published before this window and described recovery rather than a newly imposed access disruption. No search call failed."
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261006T224554-0700",
+  "scheduled_for": "2026-10-06T22:45:54-07:00",
+  "started_at": "2026-10-06T22:41:56-07:00",
+  "completed_at": "2026-10-06T22:42:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-06T21:46:30-07:00",
+    "end": "2026-10-06T22:41:56-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "search_failures": 0,
+    "focus_classes": [
+      "only/sole/last/full-service grocery loss or closure",
+      "storm/flood/fire/outage cancellation of emergency food distribution",
+      "abrupt pantry or food-bank closure/access reduction",
+      "official SNAP/WIC/food-assistance interruption"
+    ],
+    "source_priority": "fresh local news, official agency/provider notices, direct source pages",
+    "notable_nonqualifying_results": [
+      "Food Bank RGV October 7 produce distribution was routine program promotion, not a disruption.",
+      "October 6 grocery-access results surfaced openings, historic/older closures, or non-U.S. events outside the observation window.",
+      "SNAP/WIC/EBT searches returned policy/background or routine schedule items rather than a new immediate access interruption."
+    ],
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates",
+      "items outside the observation window"
+    ],
+    "result": "No new qualifying signal was identified in the bounded observation window."
+  }
+}

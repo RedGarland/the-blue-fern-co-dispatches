@@ -2039,6 +2039,7 @@ def test_care_external_access_restriction_proof_clears_stale_publication_failure
         completed_at="2026-09-10T15:02:30Z",
         exit_code=1,
         publication_status="failure",
+        details={"failure_stage": "source_state"},
     )
     _write_care_custom_receipt(
         care_source,
@@ -2066,6 +2067,129 @@ def test_care_external_access_restriction_proof_clears_stale_publication_failure
     assert status["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
     assert status["debug_summary"]["failed_source_count"] == 2
     assert status["debug_summary"]["all_current_failures_external"] is True
+    effective_publication = [
+        row for row in status["effective_task_summaries"]
+        if row["task_key"] == "care_line_approved_release_publication"
+    ]
+    assert all(row["status"] != "FAILED" for row in effective_publication)
+    assert status["non_authoritative_receipts"] == [
+        {
+            "task_key": "care_line_approved_release_publication",
+            "run_id": "old-publication-failed",
+            "status": "FAILED",
+            "classification": "failed",
+            "completed_at": "2026-09-10T15:02:30Z",
+            "reason": "superseded_checkout_or_source_state_failure",
+        }
+    ]
+
+
+def test_care_collection_checkout_failures_are_superseded_by_recovery_proofs(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_source_registry(care_source, classified_sources=("hhs-news", "hrsa-news"))
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="old-verify-checkout-failed",
+        task_status="failed",
+        scheduled_for="2026-09-10T15:00:00Z",
+        started_at="2026-09-10T15:00:00Z",
+        completed_at="2026-09-10T15:00:30Z",
+        exit_code=1,
+        details={
+            "failure_stage": "verify_checkout",
+            "wrapper_exception_message": "collection runner checkout is dirty",
+        },
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="external-recovery-proof",
+        task_status="partial_success",
+        scheduled_for="2026-09-10T15:00:00Z",
+        started_at="2026-09-10T16:00:00Z",
+        completed_at="2026-09-10T16:03:00Z",
+        details=_external_failure_details(("hhs-news", "hrsa-news")),
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_reviewed_event_queue",
+        run_id="queue",
+        task_status="nothing_to_publish",
+        scheduled_for="2026-09-10T15:01:00Z",
+        started_at="2026-09-10T16:03:00Z",
+        completed_at="2026-09-10T16:03:30Z",
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_approved_release_publication",
+        run_id="publication-proof",
+        task_status="safe_no_op",
+        publication_status="safe_no_op",
+        scheduled_for="2026-09-10T15:02:00Z",
+        started_at="2026-09-10T16:04:00Z",
+        completed_at="2026-09-10T16:04:30Z",
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="later-verify-checkout-failed",
+        task_status="failed",
+        scheduled_for="2026-09-10T17:00:00Z",
+        started_at="2026-09-10T17:00:00Z",
+        completed_at="2026-09-10T17:00:30Z",
+        exit_code=1,
+        details={
+            "failure_stage": "verify_checkout",
+            "wrapper_exception_message": "collection runner checkout is dirty",
+        },
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_approved_release_publication",
+        run_id="later-publication-proof",
+        task_status="safe_no_op",
+        publication_status="safe_no_op",
+        scheduled_for="2026-09-10T17:01:00Z",
+        started_at="2026-09-10T17:01:00Z",
+        completed_at="2026-09-10T17:01:30Z",
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date=DATE,
+        evaluated_at="2026-09-10T18:00:00Z",
+        exported_at="2026-09-10T18:01:00Z",
+        expected_instances=[
+            {"task_key": "care_line_collection", "scheduled_for": "2026-09-10T15:00:00Z"},
+            {"task_key": "care_line_reviewed_event_queue", "scheduled_for": "2026-09-10T15:01:00Z"},
+            {"task_key": "care_line_approved_release_publication", "scheduled_for": "2026-09-10T15:02:00Z"},
+            {"task_key": "care_line_collection", "scheduled_for": "2026-09-10T17:00:00Z"},
+            {"task_key": "care_line_approved_release_publication", "scheduled_for": "2026-09-10T17:01:00Z"},
+        ],
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["recovery_lifecycle"] == "HEALTHY"
+    assert status["receipt_completeness"] == "COMPLETE"
+    assert status["source_failure_summary"]["external_access_restriction_count"] == 2
+    assert status["source_failure_summary"]["unclassified_source_failure_count"] == 0
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
+    assert status["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
+    assert [row["run_id"] for row in status["non_authoritative_receipts"]] == [
+        "old-verify-checkout-failed",
+        "later-verify-checkout-failed",
+    ]
+    effective_collection = [
+        row for row in status["effective_task_summaries"]
+        if row["task_key"] == "care_line_collection"
+    ]
+    assert all(row["status"] != "FAILED" for row in effective_collection)
+    raw_collection = [
+        row for row in status["task_summaries"]
+        if row["task_key"] == "care_line_collection"
+    ]
+    assert any(row["status"] == "FAILED" for row in raw_collection)
 
 
 def test_care_source_replay_receipt_reconciles_latest_collection_failure(tmp_path: Path) -> None:

@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T224451-0700",
+  "scheduled_for": "2026-10-06T22:44:51-07:00",
+  "started_at": "2026-10-06T22:49:44-07:00",
+  "completed_at": "2026-10-06T22:50:43-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T21:49:43-07:00",
+    "end": "2026-10-06T22:50:43-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-06/gaza-source-watch-20261006T214451-0700.json",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "Checked first. No qualifying new Gaza operational development was established in the bounded window."
+      },
+      {
+        "source": "WHO",
+        "result": "Checked second. No qualifying new Gaza health-system, medical-evacuation, hospital, ambulance, fuel, or functioning-capacity development was established in the bounded window."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_reasons": [
+      "The targeted UN News search was blocked by robots.txt. Other humanitarian and established-reporting coverage remained usable."
+    ],
+    "notable_exclusions": [
+      "The MSF item dated 6 October on detained Palestinian medics was already known from earlier watches and described continuing detention rather than a new in-window detention event.",
+      "Searches for Reuters, AP, UNRWA, WFP, UNICEF, ICRC, MSF, Palestine Red Crescent, crossings/fuel, ceasefire/hostages, and military operations with civilian impact did not establish a new qualifying development after the prior heartbeat.",
+      "Background, retrospective, duplicated, unsupported, and pre-window items were excluded."
+    ],
+    "conclusion": "No new traceable qualifying development was established since the prior watch; coverage was materially usable despite one blocked source."
+  }
+}

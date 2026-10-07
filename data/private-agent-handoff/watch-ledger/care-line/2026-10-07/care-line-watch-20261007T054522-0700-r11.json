@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261007T054522-0700-r11",
+  "scheduled_for": "2026-10-07T05:45:22-07:00",
+  "started_at": "2026-10-07T05:49:14-07:00",
+  "completed_at": "2026-10-07T05:50:47-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-07T04:45:22-07:00",
+    "end": "2026-10-07T05:45:22-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; no notice newer than 2026-10-05 was identified.",
+    "Completed exactly 12 additional targeted searches across the requested high-value healthcare-access miss classes.",
+    "No new qualifying U.S. or territory healthcare-access development was established within the hourly search window.",
+    "Returned items were outside the hourly window, outside scope, or previously known. No search call materially failed."
+  ]
+}

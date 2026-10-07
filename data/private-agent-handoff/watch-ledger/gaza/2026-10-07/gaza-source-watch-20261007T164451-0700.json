@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261007T164451-0700",
+  "scheduled_for": "2026-10-07T16:44:51-07:00",
+  "started_at": "2026-10-07T16:49:48-07:00",
+  "completed_at": "2026-10-07T16:50:33-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-07T15:47:00-07:00",
+    "end": "2026-10-07T16:50:33-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO checked first. OCHA OPT's latest indexed update was dated 2026-10-06; WHO's 2026-10-07 Director-General briefing reiterated existing Gaza health needs without a verified new in-window operational development. Exactly 12 additional targeted web searches addressed Gaza casualties, displacement, aid/crossings, water/food, health and medical transport, infrastructure, detentions/hostages, ceasefire and military operations with documented civilian impact. Prior October 7 strike reports and anniversary retrospectives excluded as previously known or not time-verified; no newly verified qualifying development since prior hourly check. Direct WHO emergency URL returned HTTP 404, but official WHO news/remarks remained accessible; classified DEGRADED, not FAILED. Prior hourly heartbeat for the immediately preceding run was not persisted; window start is approximate from last reported completion at 15:47 PDT. Search results are discovery only; no publication or approval performed."
+}

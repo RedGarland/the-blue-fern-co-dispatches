@@ -56,16 +56,19 @@
       "source_published_at": "2026-10-07"
     }
   ],
-  "publication_status": "unpublished",
-  "publication_approval": false,
-  "publication_eligible": false,
-  "pages_status": "not_synced",
-  "bluesky_status": "not_posted",
+  "publication_status": "published_pending_live_verification",
+  "publication_approval": true,
+  "publication_eligible": true,
+  "pages_status": "published",
+  "bluesky_status": "approved_pending_post",
   "audio_status": "not_generated",
   "map_status": "not_published",
   "podcast_status": "not_generated",
   "schedule_status": "not_changed",
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-10-07/",
   "bluesky_post_text": null,
-  "bluesky_post_ready": false
+  "bluesky_post_ready": false,
+  "source_freshness_status": "passed",
+  "freshness_window_days": 3,
+  "published_at": "2026-10-07T20:17:04Z"
 }

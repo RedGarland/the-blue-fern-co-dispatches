@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261008T104936-0700-r11",
+  "scheduled_for": "2026-10-08T10:45:22-07:00",
+  "started_at": "2026-10-08T10:49:36-07:00",
+  "completed_at": "2026-10-08T10:51:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-08T08:50:25-07:00",
+    "end": "2026-10-08T10:51:04-07:00",
+    "basis": "Since latest prior check visible in available execution history; conservative overlapping window because an intervening hourly run could not be established."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": "Checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; latest notice dated 2026-10-05 (two rescissions); none new in window.",
+    "additional_targeted_searches": 12,
+    "search_coverage": "U.S. and territories; hospital/ED/maternity/behavioral health/dialysis/oncology/primary care, emergency/rural, ground/air ambulance, CMS regulatory notices and effective reopenings. Bounded supplementary recall coverage, not exhaustive.",
+    "excluded_leads": [
+      "Fitzgibbon Hospital (Marshall, MO): report published Oct 8 describes labor/delivery discontinued at end of September after announcement in September, not a new change in this observation window. https://thebeaconnews.org/stories/2026/10/08/fitzgibbon-ama-bankruptcy-labor-and-delivery-marshall-mo-2026/",
+      "Newman Memorial Hospital (Shattuck, OK): Oct 8 report describes a planned 2027 return of labor/delivery, not an effective reopening. https://www.kgou.org/health/2026-10-08/a-rural-northwest-oklahoma-hospital-is-bringing-back-maternity-care-can-it-survive-healthcare-cuts"
+    ],
+    "authority": "Supplementary recall watch only; production Care Line collection remains authoritative.",
+    "side_effects": "No approval, publication, automation schedule change or task disable."
+  }
+}

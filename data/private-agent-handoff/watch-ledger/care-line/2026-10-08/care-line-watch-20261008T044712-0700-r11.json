@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261008T044712-0700-r11",
+  "scheduled_for": "2026-10-08T04:45:22-07:00",
+  "started_at": "2026-10-08T04:47:12-07:00",
+  "completed_at": "2026-10-08T04:48:42-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-08T03:42:50-07:00",
+    "end_at": "2026-10-08T04:47:12-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall only; production national collector remains authoritative. CMS Public Notices verified first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; latest notices dated 2026-10-05 (two TX rescissions), no new October 8 notice. Exactly 12 additional targeted searches across hospital/ED, maternity, behavioral health, dialysis/oncology/primary care, rural and emergency services, ambulance, air medical, reopenings, territories and official state notices. No concrete newly announced qualifying U.S. or territorial healthcare-access change confirmed within observation window. Excluded out-of-scope Canadian obstetrics suspension, Australian ED closure, Michigan new psychiatric facility (not reopening a lost service), previously reported Puerto Rico restoration and unrelated/older stories. No approvals, publication or schedule changes."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261008T024256-0700",
+  "scheduled_for": "2026-10-08T01:45:54-07:00",
+  "started_at": "2026-10-08T02:41:41-07:00",
+  "completed_at": "2026-10-08T02:42:56.547-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-08T00:49:05-07:00",
+    "end": "2026-10-08T02:42:56.547-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches across the four high-value miss classes, using America/Los_Angeles observation window since the previous documented check at 00:49:05 PDT. No new qualifying in-window signal with verified timing surfaced. Previously identified NorthEscambia.com October 8 Reimagine Equestrian Center weather-related food distribution cancellation is not counted as new; the prior run already documented it provisionally (prior heartbeat was not committed). Separate September 4 reporting confirms the scheduled Reimagine event advertised a free food giveaway of 20,000 lb; however its October 8 closure notice lacks publication hour. Prodisee Pantry Stockton Alabama cancellation is a prior October 7 watch finding and duplicate. Older Spencer NY grocery fire, September food-bank weather interruption, planned October 7 Florida MyACCESS maintenance, and routine/holiday food-bank hours were excluded. No targeted web search failed. Supplementary watch only; production collection authoritative. No review, approval, publication, schedule or task changes."
+}

@@ -61,25 +61,41 @@ def _draw_leaf_medallion(draw: Any) -> None:
     draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill="#102a31", outline="#8bb4ad", width=2)
     draw.ellipse((cx - 37, cy - 37, cx + 37, cy + 37), outline="#d8c086", width=1)
     stem = "#d8c086"
-    leaf = "#b7d8ce"
-    vein = "#edf7f2"
-    draw.line((cx - 11, cy + 29, cx + 9, cy - 30), fill=stem, width=2)
-    leaflets = [
-        (-7, 21, -22, 16),
-        (-4, 13, 13, 7),
-        (-2, 5, -20, 1),
-        (1, -3, 20, -9),
-        (4, -11, -14, -17),
-        (6, -19, 15, -26),
-        (-9, 26, -18, 25),
-        (8, -25, 12, -34),
-    ]
-    for base_dx, base_dy, tip_dx, tip_dy in leaflets:
-        base = (cx + base_dx, cy + base_dy)
-        tip = (cx + tip_dx, cy + tip_dy)
+    leaf = "#c7e4dc"
+    vein = "#f1f5e9"
+
+    stem_points = [(cx - 2, cy + 31), (cx - 2, cy + 17), (cx + 1, cy + 3), (cx + 4, cy - 12), (cx + 5, cy - 30)]
+    draw.line(stem_points, fill=stem, width=2)
+
+    def leaflet(base: tuple[int, int], tip: tuple[int, int], spread: int = 5) -> None:
+        bx, by = base
+        tx, ty = tip
+        dx, dy = tx - bx, ty - by
+        length = max((dx * dx + dy * dy) ** 0.5, 1)
+        px, py = -dy / length, dx / length
+        points = [
+            (bx + px * 1.4, by + py * 1.4),
+            (bx + px * spread, by + py * spread),
+            (tx, ty),
+            (bx - px * spread, by - py * spread),
+            (bx - px * 1.4, by - py * 1.4),
+        ]
+        draw.polygon(points, fill=leaf)
         draw.line((base, tip), fill=vein, width=1)
-        radius_x = 5 if abs(tip_dx - base_dx) > 8 else 3
-        draw.ellipse((tip[0] - radius_x, tip[1] - 3, tip[0] + radius_x, tip[1] + 3), fill=leaf)
+
+    for base_dx, base_dy, tip_dx, tip_dy, spread in (
+        (-3, 23, -24, 12, 5),
+        (-2, 18, 21, 8, 5),
+        (-1, 12, -27, 0, 5),
+        (0, 6, 24, -5, 5),
+        (2, 0, -21, -13, 4),
+        (3, -7, 21, -20, 4),
+        (4, -15, -14, -27, 4),
+        (5, -23, 13, -36, 3),
+    ):
+        leaflet((cx + base_dx, cy + base_dy), (cx + tip_dx, cy + tip_dy), spread)
+    leaflet((cx - 2, cy + 30), (cx - 18, cy + 27), 3)
+    leaflet((cx + 5, cy - 30), (cx + 6, cy - 42), 3)
 
 
 def _draw_background(draw: Any) -> None:
@@ -101,28 +117,45 @@ def _draw_background(draw: Any) -> None:
 def _draw_access_motif(draw: Any) -> None:
     base_y = 505
     outline = "#426f76"
-    deep = "#102d35"
-    soft = "#163943"
+    deep = "#0d2830"
+    soft = "#143943"
     window = "#2b5962"
     accent = "#8bb4ad"
 
-    left, top, right = 82, base_y - 122, 318
-    draw.rectangle((left, top + 24, right, base_y), fill=soft, outline=outline, width=2)
-    draw.polygon(((left + 20, top + 24), ((left + right) // 2, top - 26), (right - 20, top + 24)), fill=deep, outline=outline)
-    draw.line((left + 46, top + 24, right - 46, top + 24), fill="#6f9c96", width=1)
-    for x in (118, 162, 236, 280):
-        draw.rounded_rectangle((x, top + 48, x + 18, top + 66), radius=2, fill=window)
-        draw.rounded_rectangle((x, top + 84, x + 18, top + 102), radius=2, fill=window)
-    draw.rounded_rectangle((192, top + 62, 226, base_y), radius=16, fill="#0a242b", outline="#6f9c96", width=1)
-    draw.line((209, top + 62, 209, base_y), fill="#1d4850", width=1)
-    for x in (146, 252):
-        draw.line((x, top + 38, x, base_y - 8), fill="#6f9c96", width=2)
-        draw.line((x - 10, base_y - 8, x + 10, base_y - 8), fill="#6f9c96", width=1)
-    draw.line((left - 14, base_y, right + 26, base_y), fill=outline, width=2)
+    left, right = 74, 334
+    wing_top = base_y - 84
+    lobby_left, lobby_right = 164, 236
+    lobby_top = base_y - 128
 
-    path = [(336, base_y - 24), (368, base_y - 34), (400, base_y - 50), (432, base_y - 72)]
+    draw.rounded_rectangle((left, wing_top, right, base_y), radius=3, fill=soft, outline=outline, width=2)
+    draw.rounded_rectangle((lobby_left, lobby_top, lobby_right, base_y), radius=4, fill="#173f49", outline="#6f9c96", width=2)
+    draw.rectangle((left + 10, wing_top - 10, lobby_left + 2, wing_top), fill=deep, outline=outline)
+    draw.rectangle((lobby_right - 2, wing_top - 10, right - 10, wing_top), fill=deep, outline=outline)
+    draw.line((left - 10, base_y, right + 28, base_y), fill=outline, width=2)
+
+    for x in (96, 126, 270, 300):
+        draw.rounded_rectangle((x, wing_top + 20, x + 16, wing_top + 38), radius=2, fill=window)
+        draw.rounded_rectangle((x, wing_top + 52, x + 16, wing_top + 70), radius=2, fill=window)
+    for x in (178, 208):
+        draw.rounded_rectangle((x, lobby_top + 20, x + 17, lobby_top + 39), radius=2, fill="#315f67")
+
+    cross_box = (184, lobby_top + 50, 216, lobby_top + 82)
+    draw.rounded_rectangle(cross_box, radius=3, fill="#224e57", outline="#7fb0aa", width=1)
+    cx = (cross_box[0] + cross_box[2]) // 2
+    cy = (cross_box[1] + cross_box[3]) // 2
+    draw.line((cx - 9, cy, cx + 9, cy), fill="#bdd9d0", width=3)
+    draw.line((cx, cy - 9, cx, cy + 9), fill="#bdd9d0", width=3)
+
+    draw.rounded_rectangle((172, base_y - 44, 228, base_y - 4), radius=13, fill="#0a242b", outline="#6f9c96", width=1)
+    draw.line((200, base_y - 44, 200, base_y - 4), fill="#1d4850", width=1)
+    draw.rounded_rectangle((158, base_y - 58, 242, base_y - 46), radius=3, fill="#725f3b", outline="#a79055", width=1)
+    draw.line((238, base_y - 24, 312, base_y - 10), fill="#7ea59f", width=3)
+    draw.line((238, base_y - 34, 312, base_y - 20), fill="#507d7b", width=1)
+    draw.line((245, base_y - 28, 303, base_y - 17), fill="#a5c3bd", width=1)
+
+    path = [(326, base_y - 17), (365, base_y - 28), (397, base_y - 47), (430, base_y - 69)]
     draw.line(path, fill="#5f8f8c", width=2, joint="curve")
-    for x, y, r in ((336, base_y - 24, 5), (400, base_y - 50, 6), (432, base_y - 72, 5)):
+    for x, y, r in ((326, base_y - 17, 4), (430, base_y - 69, 5)):
         draw.ellipse((x - r, y - r, x + r, y + r), fill=accent)
 
 

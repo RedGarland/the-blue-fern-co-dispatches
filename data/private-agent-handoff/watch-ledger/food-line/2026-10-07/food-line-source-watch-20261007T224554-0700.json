@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T224554-0700",
+  "scheduled_for": "2026-10-07T22:45:54-07:00",
+  "started_at": "2026-10-07T22:46:48-07:00",
+  "completed_at": "2026-10-07T22:47:47.073-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T21:45:00-07:00",
+    "end": "2026-10-07T22:47:47.073-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted fresh web searches across four recall miss classes; no new qualifying U.S. food-access disruption since previous check ~21:45 PDT. Prodisee Pantry Stockton AL cancellation excluded as already captured. Hurricane Isaias preparedness without food access cancellation and historical/general SNAP coverage excluded. No material search failures. Previous 21:45 heartbeat not persisted; latest verified 20:44 PDT. Supplementary watch only; primary production collector remains authoritative. No approvals, publication, schedule, or task changes."
+}

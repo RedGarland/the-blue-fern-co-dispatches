@@ -1,0 +1,61 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261008T154357-0700-6e2b9f",
+  "scheduled_for": "2026-10-08T14:45:54-07:00",
+  "started_at": "2026-10-08T15:43:57-07:00",
+  "completed_at": "2026-10-08T15:44:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-08T14:42:10-07:00",
+    "end_at": "2026-10-08T15:44:40-07:00",
+    "scope": "Bounded U.S. food-access disruption recall since prior persisted hourly watch; production nationwide collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "searches": [
+      "\"only grocery store\" closed fire October 8 2026 town",
+      "\"sole grocery store\" shut down October 8 2026 storm",
+      "\"last grocery store\" closed October 8 2026 community",
+      "\"full service grocery store\" fire closure October 8 2026",
+      "\"food distribution\" cancelled October 8 2026 storm hurricane",
+      "\"food distribution\" canceled October 8 2026 flooding outage",
+      "\"food bank\" distribution suspended October 8 2026 hurricane",
+      "\"food pantry\" suddenly closed October 8 2026 fire flood",
+      "\"food bank\" temporarily closed October 8 2026 emergency",
+      "SNAP EBT benefits system outage October 8 2026 state agency",
+      "WIC benefits suspended October 8 2026 official state",
+      "\"food assistance\" service disruption benefits October 8 2026 emergency"
+    ],
+    "classes_checked": [
+      "Loss of sole/only/last/full-service grocery store",
+      "Storm/flood/fire/outage/facility-damage cancellations of emergency food distributions",
+      "Abrupt pantry or food-bank service closure or major reduction",
+      "Official SNAP/WIC/food-assistance interruption causing immediate access loss"
+    ],
+    "retrieval_status": "completed; no material failures; search indexing limits exact hour attribution",
+    "outcome_detail": "No newly published, reliably time-attributable qualifying food-access disruption identified during this observation window.",
+    "excluded_duplicates": [
+      "Reimagine Equestrian Center Saturday distribution cancellation (Escambia County, FL; previously identified)",
+      "Prodisee Pantry Saturday distribution cancellation (Baldwin County, AL; previously identified)",
+      "Warrington Emergency Aid Center Friday storm closure (Pensacola, FL; previously identified)"
+    ],
+    "excluded_nonqualifying": [
+      "October 8 Louisiana SNAP enrollment decline analysis is not a newly announced official interruption",
+      "Older grocery-store losses and pantry closures outside the search window",
+      "Kauaʻi emergency food distributions are proceeding, not canceled; SNAP replacement eligibility information is not an outage",
+      "Donation drives, guides, routine promotions, older SNAP policy, unrelated storm cancellations"
+    ],
+    "direct_sources_checked": [
+      "https://www.northescambia.com/2026/10/north-escambia-list-weather-cancellations-closures",
+      "https://mynbc15.com/news/local/isaias-weather-closures-and-cancellations",
+      "https://kauainownews.com/2026/10/08/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+    ],
+    "evidence_boundary": "Search results and source-page update dates often lack precise first-publication times; do not infer new-since-prior-hour status from date-only articles.",
+    "production_authority": "The primary Food Line collector remains authoritative; no approval/publication/schedule changes made."
+  }
+}

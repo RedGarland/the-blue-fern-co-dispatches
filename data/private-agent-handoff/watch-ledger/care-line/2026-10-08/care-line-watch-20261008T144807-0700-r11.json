@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261008T144807-0700-r11",
+  "scheduled_for": "2026-10-08T14:45:22-07:00",
+  "started_at": "2026-10-08T14:48:07-07:00",
+  "completed_at": "2026-10-08T21:49:07.487Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-08T13:52:00-07:00",
+    "end_at": "2026-10-08T21:49:07.487Z",
+    "scope": "Bounded supplementary U.S. and territory healthcare-access recall since prior hourly check; primary national production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date": "2026-10-05",
+    "targeted_searches_count": 12,
+    "search_status": "completed",
+    "classes_checked": [
+      "hospital, emergency department, maternity and behavioral-health closure/suspension",
+      "dialysis, oncology and primary-care service loss",
+      "rural and emergency service closure",
+      "ground and air ambulance/base closure/suspension",
+      "CMS terminations, rescissions, CLIA sanctions",
+      "effective restoration of previously lost essential services"
+    ],
+    "scope_exclusions": [
+      "Non-U.S./territory disruptions (Canada and Australia)",
+      "older previously announced closures",
+      "planned repairs or proposed reopening without a concrete effective restoration",
+      "new psychiatric hospital capacity not reopening of lost service",
+      "national hospital closure trend without new named access change",
+      "weather/business notices with no verified contemporaneous service impact"
+    ],
+    "review_note": "No time-confirmed qualifying new access change found in this bounded interval. Search indexing lag may omit some provider notices. Production collection remains authoritative.",
+    "source_refs": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+    ]
+  }
+}

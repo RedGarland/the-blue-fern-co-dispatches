@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261007T184658-0700-r11",
+  "scheduled_for": "2026-10-07T18:45:22-07:00",
+  "started_at": "2026-10-07T18:46:58-07:00",
+  "completed_at": "2026-10-07T18:47:48-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T17:48:00-07:00",
+    "end": "2026-10-07T18:47:48-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; production Care Line collection remains authoritative.",
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date_observed": "2026-10-05",
+    "cms_observation": "No CMS Public Notice newer than 2026-10-05 observed. Most recent notices remain rescissions for Compassionate Care Angels LLC (TX hospice) and O.M.K Healthcare Services LLC (TX home health agency).",
+    "additional_targeted_searches": 12,
+    "search_failures": [],
+    "search_categories": [
+      "hospital and emergency-department closures",
+      "maternity/labor and delivery closures",
+      "ambulance/EMS and air medical closures",
+      "behavioral health and residential service closures",
+      "dialysis and oncology service suspensions",
+      "primary-care clinic closure/reopening",
+      "new emergency service loss",
+      "ambulance service suspension",
+      "essential service reopening/resumption",
+      "government facility and emergency service notices",
+      "US territory healthcare access losses",
+      "new closure announcements"
+    ],
+    "exclusions": [
+      "October 7 Pennsylvania maternity-access coverage documents historical closures rather than a new service loss within the hourly window.",
+      "California proposal for a Patterson emergency stabilization unit was vetoed; proposed capacity did not become an operating service, so no new service loss.",
+      "Unconfirmed Santa Fe Planned Parenthood abortion-services interruption was reported as an unsupported rumor, not a verified access change.",
+      "October 2 Behavioral Health Business closure coverage predates the observation window.",
+      "Australia, Jamaica, Turks and Caicos and other non-US/non-US-territory healthcare developments excluded.",
+      "Older incidents, ownership/business stories without service change, opinion and unsupported social claims excluded."
+    ],
+    "summary": "CMS Public Notices checked first, followed by 12 targeted searches. No newly verified qualifying US or territory healthcare-access loss or concrete restoration identified during the prior hourly interval. No approval, publication, schedule or production collector changes made."
+  }
+}

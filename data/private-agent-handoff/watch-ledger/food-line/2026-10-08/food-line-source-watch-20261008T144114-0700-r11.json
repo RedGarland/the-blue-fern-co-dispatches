@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261008T144114-0700-r11",
+  "scheduled_for": "2026-10-08T13:45:54-07:00",
+  "started_at": "2026-10-08T14:41:14-07:00",
+  "completed_at": "2026-10-08T21:42:10.986Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-08T12:46:07-07:00",
+    "end_at": "2026-10-08T14:41:14-07:00",
+    "scope": "Supplementary recall watch: new U.S. disruptions since prior completed check; production nationwide collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "retrieval_status": "completed; no material failures",
+    "classes_checked": [
+      "only/sole/last/full-service grocery store closure or disaster loss",
+      "storm/flood/fire/outage/facility-damage cancellation of emergency food distributions",
+      "abrupt food pantry/food-bank closures or substantial reductions",
+      "official SNAP/WIC/food-assistance interruptions with immediate consequences"
+    ],
+    "source_priority": "local news, provider and agency notices, direct-source pages",
+    "results": "No newly qualifying, time-confirmed signals in this bounded search.",
+    "known_duplicates_excluded": [
+      "Prodisee Pantry cancelled Saturday distribution, Baldwin County, Alabama (previously surfaced)",
+      "Reimagine event food distribution cancelled at Equestrian Center, Escambia County, Florida (previously surfaced)",
+      "Warrington Emergency Aid Center Friday pantry closure, Pensacola, Florida (previously surfaced)"
+    ],
+    "exclusions": "Older closures, general SNAP COLA changes, promotion, guides, donation drives, generic inflation, and non-service weather closures omitted.",
+    "checked_sources": [
+      "https://mynbc15.com/news/local/isaias-weather-closures-and-cancellations",
+      "https://www.northescambia.com/2026/10/north-escambia-list-weather-cancellations-closures"
+    ],
+    "note": "Search engines may miss newly published provider notices; this watch is a recall supplement, not comprehensive production intake."
+  }
+}

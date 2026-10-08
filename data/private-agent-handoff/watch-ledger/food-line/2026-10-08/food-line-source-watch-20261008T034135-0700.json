@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261008T034135-0700",
+  "scheduled_for": "2026-10-08T02:45:54-07:00",
+  "started_at": "2026-10-08T03:41:35-07:00",
+  "completed_at": "2026-10-08T03:42:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-08T02:42:56.547-07:00",
+    "end": "2026-10-08T03:42:24-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches on 2026-10-08 covering sole/last full-service grocery loss, storm/disaster canceled emergency distributions, abrupt pantry/food-bank closure, and official SNAP/WIC/food-assistance interruption. Focused on the observation window since the prior verified ops/watch-ledger Food Line heartbeat completed 2026-10-08 02:42:56.547 PDT. No newly published, qualifying, source-timestamp-verified food access interruption was identified in the bounded window. Existing Prodisee Pantry Stockton Alabama cancellation and previously surfaced NorthEscambia/Reimagine food-distribution cancellation treated as prior signals, not new findings. Retrieved routine pantry schedules/announced closure days (including CCM mobile distribution and Grove Christian weekly closed Thursdays), dated prior closures, unrelated local events, and general Hurricane Isaias warnings/preparations were excluded. No material web retrieval error was observed. Supplementary recall only; production nationwide collector remains authoritative. No approval, publication, schedule or task modification."
+}

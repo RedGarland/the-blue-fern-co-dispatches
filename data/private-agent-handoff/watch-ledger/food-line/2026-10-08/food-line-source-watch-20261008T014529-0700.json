@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261008T014529-0700",
+  "scheduled_for": "2026-10-08T01:45:54-07:00",
+  "started_at": "2026-10-08T01:45:29-07:00",
+  "completed_at": "2026-10-08T01:46:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-08T00:47:22-07:00",
+    "end": "2026-10-08T01:46:43-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "12 bounded targeted web searches (8 first pass, 4 follow-up) on sole/last grocery-store loss, storm/disaster food-distribution cancellation, abrupt pantry/food-bank service reduction, and official SNAP/WIC interruption; recency=1 day with explicit 2026-10-08 terms. No newly verified qualifying U.S. food-access disruption reported in the hourly observation window. NBC 15 Prodisee Pantry Stockton, AL cancellation, previously captured on Oct 7, excluded as duplicate. NorthEscambia/Reimagine Equestrian Center cancellation was already flagged provisionally by the prior Oct 8 00:47 watch and not counted as new. William Temple House pantry closure effective Sep 25 (announced earlier), Latta SC and Eastport ME sole-grocer closures, and assorted 2025/older sources excluded as stale. Search responses returned without material retrieval failures; fresh local-news indexing may lag. This is a supplementary recall check only; nationwide production collector remains authoritative. No approval, publication or schedule changes."
+}

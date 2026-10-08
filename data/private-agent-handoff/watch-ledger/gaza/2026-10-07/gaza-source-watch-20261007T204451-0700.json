@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261007T204451-0700",
+  "scheduled_for": "2026-10-07T20:44:51-07:00",
+  "started_at": "2026-10-07T20:45:03-07:00",
+  "completed_at": "2026-10-07T20:47:00-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-07T19:46:06.453-07:00",
+    "end": "2026-10-07T20:47:00-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO checked first, followed by 12 targeted searches. No newly verified qualifying development. WHO direct access failed (HTTP 502/404), while other coverage remained usable. Historic and previously reported material excluded. No publication or schedule changes."
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-20261008T164326-0700-63bd4e",
+  "scheduled_for": "2026-10-08T16:43:26-07:00",
+  "started_at": "2026-10-08T16:43:26-07:00",
+  "completed_at": "2026-10-08T16:44:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-08T15:52:00-07:00",
+    "until": "2026-10-08T16:44:28-07:00",
+    "since_precision": "minute_rounded_from_prior_run_summary"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "supplementary recall only; production national collector remains authoritative",
+    "cms_public_notices": {
+      "checked_first": true,
+      "latest_notice_date": "2026-10-05",
+      "new_qualifying_notices": 0,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+    },
+    "additional_targeted_searches": 10,
+    "query_areas": [
+      "hospital/ED and rural closure",
+      "maternity closure",
+      "ambulance and air medical suspensions",
+      "dialysis",
+      "behavioral health",
+      "oncology",
+      "primary care",
+      "essential service reopening",
+      "US territories"
+    ],
+    "search_result_exclusions": [
+      "Oct 8 reporting on Fitzgibbon Hospital maternity unit ending Sept 30: duplicate of existing Care Line historical event care-line-2026-09-30-fitzgibbon-inpatient-labor-delivery-closure",
+      "Oct 8 Richards Landing, Ontario emergency department closure: outside US/territories",
+      "stale prior-date notices, proposals without active service change, unrelated ownership reports"
+    ],
+    "coverage_limitations": [
+      "search engine date filtering returned some stale/non-US results",
+      "prior hourly end time only minute-precise in available execution summary"
+    ]
+  }
+}

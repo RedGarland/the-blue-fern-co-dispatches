@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261008T134401-0700-7c94a2",
+  "scheduled_for": "2026-10-08T13:45:54-07:00",
+  "started_at": "2026-10-08T13:44:01-07:00",
+  "completed_at": "2026-10-08T13:44:41-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-08T12:46:07-07:00",
+    "end_at": "2026-10-08T13:44:41-07:00",
+    "definition": "Since previous hourly supplementary recall check; fresh local news and official/provider notices, not the primary nationwide collector.",
+    "targeted_web_search_count": 12,
+    "queries": [
+      "\"only grocery store\" closed fire October 8 2026 community",
+      "\"sole grocery store\" closure October 2026 flood fire",
+      "\"last grocery store\" shuts down October 8 2026",
+      "\"only full-service grocery\" closure October 2026",
+      "\"food distribution\" canceled storm October 8 2026 pantry",
+      "\"food distribution\" cancelled hurricane October 8 2026",
+      "\"food bank\" \"distribution\" canceled October 8 2026",
+      "\"food pantry\" \"closed\" flooding October 8 2026",
+      "\"food pantry\" \"suspend\" operations October 2026",
+      "SNAP benefits EBT outage October 8 2026 state official interruption",
+      "WIC benefits outage interruption October 8 2026 agency",
+      "\"food assistance\" benefits suspended October 8 2026 state"
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches across last/sole/full-service grocery loss; weather-canceled distributions; abrupt pantry/food-bank closures; and immediate SNAP/WIC assistance interruption.",
+    "Reviewed hurricane Isaias closures and cancellations in Escambia County, Florida, and Mobile/Baldwin County, Alabama; Reimagine distribution cancellation and Prodisee Pantry cancellation were previously identified and excluded as duplicates.",
+    "Previously identified Warrington Emergency Aid Center closure excluded as a duplicate.",
+    "Kaua‘i hurricane recovery report describes planned emergency distributions and possible SNAP replacement benefits, not a new interruption.",
+    "Search matches for grocery closures, program reductions, and SNAP cuts were stale or outside the bounded observation window; routine distributions, resource guides, and unrelated closures excluded.",
+    "No new qualifying signal confirmed within the bounded observation window. News/index publication timestamps may not prove event discovery to the minute. Production collection remains authoritative."
+  ]
+}

@@ -3,16 +3,19 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import struct
 
 import pytest
 
 from bluefern_dispatches import care_line_bluesky as bluesky
+from bluefern_dispatches import care_line_bluesky_approval as approval
+from bluefern_dispatches.care_line_social_cards import social_card_spec_for_edition
 
 
 EDITION = "2026-08-09"
 
 
-def _write_release_fixture(root: Path, *, item_count: int = 2) -> None:
+def _write_release_fixture(root: Path, *, item_count: int = 2, summary: str | None = None) -> None:
     review_root = root / "data" / "dispatches" / "care-line" / "review"
     proposal_dir = review_root / "proposed-editions"
     snapshot_dir = review_root / "signal-reviews"
@@ -21,13 +24,15 @@ def _write_release_fixture(root: Path, *, item_count: int = 2) -> None:
     snapshot_dir.mkdir(parents=True, exist_ok=True)
     edition_dir.mkdir(parents=True, exist_ok=True)
     (root / "assets").mkdir(parents=True, exist_ok=True)
-    asset = Path(__file__).resolve().parents[1] / "assets" / "care-line-dispatch-social.png"
-    (root / "assets" / "care-line-dispatch-social.png").write_bytes(asset.read_bytes())
+    asset = Path(__file__).resolve().parents[1] / "assets" / "bluefern.png"
+    (root / "assets" / "bluefern.png").write_bytes(asset.read_bytes())
+    lead_summary = summary or "Approved healthcare access summary 1."
     items = []
     approved_ids = []
     for index in range(item_count):
         candidate_id = f"care-line-candidate-{index + 1:03d}"
         approved_ids.append(candidate_id)
+        item_summary = lead_summary if index == 0 else f"Approved healthcare access summary {index + 1}."
         items.append(
             {
                 "candidate_id": candidate_id,
@@ -38,8 +43,8 @@ def _write_release_fixture(root: Path, *, item_count: int = 2) -> None:
                 "source_date": EDITION,
                 "reviewed_at": "2026-08-09T00:00:00Z",
                 "approved_geography": "Example State",
-                "approved_public_claim": f"Approved healthcare access claim {index + 1}.",
-                "bounded_public_summary": f"Approved healthcare access summary {index + 1}.",
+                "approved_public_claim": item_summary,
+                "bounded_public_summary": item_summary,
                 "approved_service_line": "care_access",
                 "approved_event_type": "service_line_closure",
                 "approved_access_consequence": "reduced_access",
@@ -52,7 +57,7 @@ def _write_release_fixture(root: Path, *, item_count: int = 2) -> None:
         "schema_version": "bluefern.care_line.proposed_edition.v1",
         "edition_date": EDITION,
         "headline": "Care Line limited-source update",
-        "edition_summary": "Approved healthcare access summary 1.",
+        "edition_summary": lead_summary,
         "source_adequacy_status": "LIMITED_SOURCE_UPDATE",
         "source_adequacy_label": "Limited-source update",
         "approved_signal_ids": approved_ids,
@@ -79,17 +84,33 @@ def _write_release_fixture(root: Path, *, item_count: int = 2) -> None:
     (edition_dir / "edition_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
-def test_preview_uses_care_line_asset_and_distinct_family(tmp_path: Path) -> None:
+def test_preview_uses_private_care_line_card_and_distinct_family(tmp_path: Path) -> None:
     _write_release_fixture(tmp_path)
     preview = bluesky.build_care_line_bluesky_preview(tmp_path, EDITION)
-    asset = tmp_path / "assets" / "care-line-dispatch-social.png"
+    asset = tmp_path / "data" / "dispatches" / "care-line" / "review" / "bluesky-preview" / EDITION / "care-line-social-card.png"
+    assert preview["schema_version"] == 2
     assert preview["dispatch_slug"] == "care-line"
-    assert preview["card_image_path"] == "assets/care-line-dispatch-social.png"
+    assert preview["account"] == {"display_name": "The Blue Fern Co.", "handle": "@thebluefernco.com", "avatar_path": "assets/bluefern.png"}
+    assert preview["card_image_path"] == f"data/dispatches/care-line/review/bluesky-preview/{EDITION}/care-line-social-card.png"
     assert preview["card_image_sha256"] == hashlib.sha256(asset.read_bytes()).hexdigest()
-    assert preview["card_title"] == "Care Line — August 9, 2026"
+    assert preview["card_title"].startswith("Care Line")
     assert preview["card_description"] == "Read the source-backed U.S. healthcare access dispatch from The Blue Fern Co."
+    assert preview["card_domain"] == "dispatches.thebluefernco.com"
     assert "Care Line Dispatch" in preview["post_text"]
+    assert preview["post_text_within_limit"] is True
+    assert len(preview["post_text"]) <= bluesky.BLUESKY_MAX_POST_LENGTH
     assert preview["public_url"] == bluesky.public_url_for_edition(EDITION)
+    width, height = struct.unpack(">II", asset.read_bytes()[16:24])
+    assert (width, height) == (1200, 630)
+
+
+def test_card_spec_contains_requested_title_date_brand_and_label() -> None:
+    spec = social_card_spec_for_edition(edition_date=EDITION, public_url=bluesky.public_url_for_edition(EDITION))
+    assert spec["title"] == "The Care Line Dispatch"
+    assert spec["subtitle"] == "Source-backed briefing on U.S. health-care access"
+    assert spec["display_date"] == "AUGUST 9, 2026"
+    assert spec["footer"] == "The Blue Fern Co."
+    assert spec["label"] == "Care Line"
 
 
 def test_preview_includes_also_covered_for_multiple_items(tmp_path: Path) -> None:
@@ -100,12 +121,71 @@ def test_preview_includes_also_covered_for_multiple_items(tmp_path: Path) -> Non
     assert "Approved healthcare access summary 2." in preview["post_text"]
 
 
-def test_preview_write_is_deterministic(tmp_path: Path) -> None:
+def test_preview_write_is_deterministic_and_writes_feed_preview(tmp_path: Path) -> None:
     _write_release_fixture(tmp_path)
     first = bluesky.write_care_line_bluesky_preview(tmp_path, EDITION)
     second = bluesky.write_care_line_bluesky_preview(tmp_path, EDITION)
     assert first["json_path"].read_text(encoding="utf-8") == second["json_path"].read_text(encoding="utf-8")
     assert first["preview"]["content_sha256"] == second["preview"]["content_sha256"]
+    assert first["card_path"].exists()
+    assert first["in_feed_html_path"].exists()
+    assert first["in_feed_png_path"].exists()
+    assert first["in_feed_png_path"].read_bytes()[:8] == b"\x89PNG\r\n\x1a\n"
+    html = first["in_feed_html_path"].read_text(encoding="utf-8")
+    assert "Private Care Line in-feed preview only" in html
+    assert "The Blue Fern Co." in html
+
+
+def test_pending_social_approval_is_false_by_default(tmp_path: Path) -> None:
+    _write_release_fixture(tmp_path)
+    payload = approval.build_pending_approval(tmp_path, EDITION)
+    assert payload["approval_type"] == "care_line_bluesky_private_preview"
+    assert payload["approved"] is False
+    assert payload["social_authorized"] is False
+    assert payload["preview_content_hash"]
+
+
+def test_missing_social_approval_blocks_real_post(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _write_release_fixture(tmp_path)
+    public_url = bluesky.public_url_for_edition(EDITION)
+    monkeypatch.setenv("BLUESKY_HANDLE", "handle")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "password")
+    monkeypatch.setattr(bluesky.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+    result = bluesky.maybe_post_care_line_dispatch_to_bluesky(
+        edition_date=EDITION,
+        public_url=public_url,
+        post_text="Care Line Dispatch - August 9, 2026",
+        run_succeeded=True,
+        public_rendered=True,
+        public_signal_count=1,
+        post_requested=True,
+        project_root=tmp_path,
+    )
+    assert result["status"] == "blocked"
+    assert result["reason"] == "approval_missing"
+    assert not (tmp_path / "data" / "dispatches" / "care-line" / "editions" / EDITION / "bluesky_post.json").exists()
+
+
+def test_unapproved_social_artifact_still_blocks_post(tmp_path: Path) -> None:
+    _write_release_fixture(tmp_path)
+    payload = approval.build_pending_approval(tmp_path, EDITION)
+    approval.write_approval(tmp_path, payload)
+    assert approval.verify_approval(tmp_path, EDITION)["reason"] == "approval_not_granted"
+
+
+def test_sensitive_upmc_preview_stays_neutral_and_under_limit(tmp_path: Path) -> None:
+    _write_release_fixture(
+        tmp_path,
+        item_count=1,
+        summary="UPMC ended pediatric gender-affirming care for minors after federal pressure, while saying it would not admit wrongdoing.",
+    )
+    preview = bluesky.build_care_line_bluesky_preview(tmp_path, EDITION)
+    text = preview["post_text"]
+    assert len(text) <= bluesky.BLUESKY_MAX_POST_LENGTH
+    assert "UPMC ended pediatric gender-affirming care for minors" in text
+    assert "would not admit wrongdoing" in text
+    assert "ban" not in text.lower()
+    assert "attack" not in text.lower()
 
 
 def test_duplicate_receipt_blocks_post(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -120,7 +200,7 @@ def test_duplicate_receipt_blocks_post(tmp_path: Path, monkeypatch: pytest.Monke
     result = bluesky.maybe_post_care_line_dispatch_to_bluesky(
         edition_date=EDITION,
         public_url=public_url,
-        post_text="Care Line Dispatch — August 9, 2026",
+        post_text="Care Line Dispatch - August 9, 2026",
         run_succeeded=True,
         public_rendered=True,
         public_signal_count=1,
@@ -139,7 +219,7 @@ def test_dry_run_writes_no_network_or_receipt(tmp_path: Path, monkeypatch: pytes
     result = bluesky.maybe_post_care_line_dispatch_to_bluesky(
         edition_date=EDITION,
         public_url=public_url,
-        post_text="Care Line Dispatch — August 9, 2026",
+        post_text="Care Line Dispatch - August 9, 2026",
         run_succeeded=True,
         public_rendered=True,
         public_signal_count=1,
@@ -161,7 +241,7 @@ def test_no_public_signals_blocks_post_without_network(tmp_path: Path, monkeypat
     result = bluesky.maybe_post_care_line_dispatch_to_bluesky(
         edition_date=EDITION,
         public_url=public_url,
-        post_text="Care Line Dispatch — August 9, 2026",
+        post_text="Care Line Dispatch - August 9, 2026",
         run_succeeded=True,
         public_rendered=True,
         public_signal_count=0,

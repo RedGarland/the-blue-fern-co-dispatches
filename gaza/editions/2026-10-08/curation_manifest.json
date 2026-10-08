@@ -1,0 +1,161 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-08-003",
+    "title": "'Neither war nor peace': Palestinians in Gaza on existing amid disease, despair and ruins",
+    "summary": "People tell of lives changed beyond recognition after the 7 October attacks by Hamas three years ago and the subsequent Israeli offensive Ahmed Ishtaiwi has six chairs. They are cheap and plastic and battered, but they are among the 43-year-old driver and mechanic's most valuable possessions.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-08-guardian-world-ed7e786a6d58"
+    ],
+    "source_ids": [
+      "gaza-2026-10-08-guardian-world-ed7e786a6d58"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/oct/07/palestinians-gaza-existing-amid-disease-despair-ruins"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-08-guardian-world-ed7e786a6d58",
+        "title": "'Neither war nor peace': Palestinians in Gaza on existing amid disease, despair and ruins",
+        "url": "https://www.theguardian.com/world/2026/oct/07/palestinians-gaza-existing-amid-disease-despair-ruins",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "People tell of lives changed beyond recognition after the 7 October attacks by Hamas three years ago and the subsequent Israeli offensive Ahmed Ishtaiwi has six chairs. They are cheap and plastic and battered, but they are among the 43-year-old driver and mechanic's most valuable possessions.",
+        "event_date": "2026-10-07T21:00:01+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-08T13:03:50.982041+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-07T21:00:01+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-08-001",
+    "title": "Israelis mourn 7 October attack victims three years after deadly Hamas raid",
+    "summary": "Memorial events have taken place in Israel on the third anniversary of the Hamas-led attack that sparked the devastating Gaza war.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 47,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-08-bbc-middle-east-5c61bf6b8420"
+    ],
+    "source_ids": [
+      "gaza-2026-10-08-bbc-middle-east-5c61bf6b8420"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cwkgj0g30m5jo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-08-bbc-middle-east-5c61bf6b8420",
+        "title": "Israelis mourn 7 October attack victims three years after deadly Hamas raid",
+        "url": "https://www.bbc.co.uk/news/articles/cwkgj0g30m5jo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Memorial events have taken place in Israel on the third anniversary of the Hamas-led attack that sparked the devastating Gaza war.",
+        "event_date": "2026-10-07T20:27:03+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-08T13:03:50.982041+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 47,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-07T20:27:03+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-10-07-001",
+    "prior_edition_date": "2026-10-07",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

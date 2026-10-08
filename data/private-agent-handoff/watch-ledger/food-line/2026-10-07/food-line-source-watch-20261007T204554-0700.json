@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T204554-0700",
+  "scheduled_for": "2026-10-07T20:45:54-07:00",
+  "started_at": "2026-10-07T20:43:51-07:00",
+  "completed_at": "2026-10-07T20:44:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T19:48:00-07:00",
+    "end": "2026-10-07T20:44:43-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted searches completed; no new qualifying food-access disruptions in the bounded window. Previously recorded Prodisee Pantry Stockton cancellation excluded as a duplicate. Older grocery/pantry closures, routine distribution calendars, storm forecasts absent an actual food-access cancellation, non-official benefit speculation, and resource content were excluded. No search failed. Prior 19:45 run's heartbeat was not found (404); temporal boundary derived from its described end at ~19:48 PT. Supplementary recall only; production collection remains authoritative."
+}

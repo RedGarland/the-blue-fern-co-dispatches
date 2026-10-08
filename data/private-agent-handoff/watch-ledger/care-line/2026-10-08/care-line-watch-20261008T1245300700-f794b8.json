@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261008T1245300700-f794b8",
+  "scheduled_for": "2026-10-08T12:45:22-07:00",
+  "started_at": "2026-10-08T12:44:17-07:00",
+  "completed_at": "2026-10-08T12:45:30.741-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-08T11:46:22-07:00",
+    "end": "2026-10-08T12:45:30.741-07:00",
+    "basis": "Prior hourly supplementary watch terminal recovery receipt; no later verified successful heartbeat known."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "status": "checked_first",
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_date": "2026-10-05",
+      "observation": "No new provider, rescission or CLIA notices since prior hourly window."
+    },
+    "additional_targeted_searches": 12,
+    "coverage": "Bounded US and territory search: hospital/ED/obstetric/psychiatric/dialysis/oncology/primary care, rural emergency loss, ambulance and air-medical, official notices, effective reopening.",
+    "excluded_leads": [
+      "Fitzgibbon Hospital (Marshall, Missouri): labor and delivery ended September 2026, resurfaced in October 8 report; older known loss, not a new hourly change.",
+      "Florida DOH Escambia and Santa Rosa weather-driven county-office closure notices dated October 8 lack confirmed qualifying clinical service-line impact or hourly publication time; not promoted.",
+      "Michigan Southeast Michigan Psychiatric Hospital opened as new capacity, not abrupt restoration of a previously lost essential service.",
+      "Newman Memorial Hospital (Oklahoma) proposed maternity restoration without an effective reopening; excluded.",
+      "Canadian ED disruptions outside U.S. and territories excluded."
+    ],
+    "authority": "Supplementary recall watch; production Care Line collection remains authoritative.",
+    "side_effects": "No approval, publication, schedule changes, or automation disabling."
+  }
+}

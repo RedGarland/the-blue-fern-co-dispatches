@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261007T234520-0700-4f9c11",
+  "scheduled_for": "2026-10-07T23:45:20-07:00",
+  "started_at": "2026-10-07T23:45:20-07:00",
+  "completed_at": "2026-10-08T06:46:01Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-07T22:42:00-07:00",
+    "end": "2026-10-07T23:46:01-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch; production collection remains authoritative.",
+    "CMS Public Notices reviewed first: latest entry October 5, 2026, two rescissions.",
+    "12 additional targeted searches covered hospital and emergency department closures, maternity, behavioral health, dialysis, oncology, primary care, rural service loss, ambulance and air medical closures, restorations, and US territories.",
+    "No independently verified new qualifying access change within the hourly observation window. Previously identified Louisiana Lane Regional Medical Center maternity closure announced earlier October 7 excluded as already surfaced.",
+    "Initial CMS URL lookup error recovered using official CMS Public Notices page. No approval, publication or schedule changes."
+  ]
+}

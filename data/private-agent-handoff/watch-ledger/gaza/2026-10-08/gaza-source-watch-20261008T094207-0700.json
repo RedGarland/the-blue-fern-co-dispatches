@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261008T094207-0700",
+  "scheduled_for": "2026-10-08T09:44:51-07:00",
+  "started_at": "2026-10-08T09:42:07-07:00",
+  "completed_at": "2026-10-08T09:44:34-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-08T08:49:50-07:00",
+    "end": "2026-10-08T09:44:34-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch only; production remains authoritative. Last confirmed GitHub watch-ledger heartbeat completed 2026-10-08 08:49:50 PDT (used as start boundary). Checked OCHA OPT first: homepage latest listed release 6 October 2026, no in-window update. Checked WHO global Israel/oPt emergency page second: accessible, no in-window operational news. Conducted exactly 12 additional targeted searches covering UNRWA, WFP, UNICEF, ICRC, MSF, PRCS, Reuters, AP, AFP, UN News, crossings, and Gaza health ministry/casualties. news.un.org search retrieval blocked by robots.txt; partial coverage maintained, status DEGRADED. Source follow-up via WAFA direct links found Oct 8 17:20 Gaza-local vehicle-strike report (two reportedly killed and others injured near Jordanian field hospital), equivalent 07:20 PDT, and Oct 8 08:09 Gaza-local artillery death report, equivalent Oct 7 22:09 PDT; both predate prior completed heartbeat window and are excluded as out of scope, not treated as new findings. Other retrospective/out-of-window claims excluded. No verified qualifying developments published or occurring in 08:49:50-to-completion PDT window. No approvals, publication, schedule, or task changes."
+}

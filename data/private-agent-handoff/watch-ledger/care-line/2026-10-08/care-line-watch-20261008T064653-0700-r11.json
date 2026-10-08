@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261008T064653-0700-r11",
+  "scheduled_for": "2026-10-08T06:45:22-07:00",
+  "started_at": "2026-10-08T06:46:53-07:00",
+  "completed_at": "2026-10-08T06:48:45.388-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-08T05:42:45.401-07:00",
+    "end_at": "2026-10-08T06:48:45.388-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall only; production national Care Line collector remains authoritative. CMS Public Notices was checked first (https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices): most recent notices dated 2026-10-05, no new notices within observation window. Exactly 12 additional targeted web searches, covering hospital/ED/maternity, behavioral health, dialysis, oncology, primary care, rural/emergency access, ground and air ambulance, restoration, temporary loss and U.S. territories. No newly announced/effective qualifying changes within the hourly interval were verified. Excluded Oct 8 Beacon report on Fitzgibbon Hospital maternity unit: shutdown was already announced and implemented in September; report adds no new access change. Excluded Oct 8 KUNC/Aspen Public Radio report on Glenwood Springs Planned Parenthood reopening effective Oct 5: known earlier, outside hourly window. Unrelated planning, business ownership, and foreign items excluded. Search indices have publication-time lag; no coverage guarantee. No approvals, publications, or schedule alterations."
+}

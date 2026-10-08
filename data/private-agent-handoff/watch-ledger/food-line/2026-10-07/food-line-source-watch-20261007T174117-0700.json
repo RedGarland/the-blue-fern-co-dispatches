@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T174117-0700",
+  "scheduled_for": "2026-10-07T17:45:54-07:00",
+  "started_at": "2026-10-07T17:41:17-07:00",
+  "completed_at": "2026-10-07T17:42:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T16:48:53-07:00",
+    "end": "2026-10-07T17:42:11-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted searches, four bounded miss classes. All searches returned results; no new qualifying food-access disruption. Prodisee Pantry weather cancellation duplicate of prior captured signal. Unrelated historical grocery fires, old food bank damage, routine distributions and independent EBT schedule guides excluded. Production collector remains authoritative. Prior verified heartbeat completed 16:48:53 PT; no publication, approval, schedule, or task changes."
+}

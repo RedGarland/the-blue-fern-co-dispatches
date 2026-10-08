@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261008T094425-0700-a91d7b",
+  "scheduled_for": "2026-10-08T09:45:22-07:00",
+  "started_at": "2026-10-08T09:44:25-07:00",
+  "completed_at": "2026-10-08T09:45:17-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "started_at": "2026-10-08T08:50:00-07:00",
+    "ended_at": "2026-10-08T09:45:17-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; primary Care Line production collector remains authoritative.",
+    "CMS Public Notices checked first on 2026-10-08; latest listed notices dated 2026-10-05 (two rescissions in Texas); no newer CMS notices identified.",
+    "12 additional targeted web searches examined US and territories for hospital, ED, obstetric, behavioral, dialysis, oncology, primary care, rural emergency, ambulance/air medical closure and concrete reopening.",
+    "October 8 Fitzgibbon/Marshall Missouri labor-delivery report concerns a late-September closure announced in September; excluded as not new in hourly window.",
+    "October 8 Southeast Michigan psychiatric-hospital report concerns a future opening, not an effective abrupt restoration; excluded.",
+    "Canadian Richards Landing ED temporary closure excluded (outside US/territories).",
+    "No newly announced and concretely effective qualifying access change confirmed within the observation window. Search indexing and publication-time precision may limit detection."
+  ]
+}

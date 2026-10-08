@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261008T074047-0700-r11",
+  "scheduled_for": "2026-10-08T07:40:47-07:00",
+  "started_at": "2026-10-08T07:40:47-07:00",
+  "completed_at": "2026-10-08T07:42:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-08T05:42:00-07:00",
+    "end": "2026-10-08T07:42:23-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first: latest notices October 5, 2026. Twelve additional targeted searches completed for acute services, maternity, behavioral health, dialysis, oncology, primary care, rural ED, ambulance/air medical, reopening and termination notices. No fresh qualifying changes. Excluded September Fitzgibbon labor and delivery closure (October 8 retrospective story), October 5 Glenwood Springs clinic reopening, and unimplemented Michigan psychiatric hospital opening. Supplementary watch only, production collector authoritative."
+}

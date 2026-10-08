@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261008T014451-0700",
+  "scheduled_for": "2026-10-08T01:44:51-07:00",
+  "started_at": "2026-10-08T01:40:17-07:00",
+  "completed_at": "2026-10-08T01:42:10.093-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-08T00:50:17-07:00",
+    "end": "2026-10-08T01:42:10.093-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall only; production publisher remains authoritative. OCHA OPT updates index and WHO crisis/EMRO sources checked first. OCHA's latest listed public releases dated 2026-10-06; WHO canonical crisis page had no new in-window Gaza health development. Exactly 12 additional targeted web searches were executed covering Gaza casualties, displaced people, aid, water/food, health facilities/medevac, infrastructure, crossings, ceasefire/hostages and military operations. No newly published/verified in-window qualifying development found; 2026-10-07 civilian casualty/rescue-worker reporting was excluded as outside observation interval, and historical/retrospective reporting excluded. The initial outdated WHO URL returned HTTP 404, but WHO coverage was recovered via the canonical crisis page (https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt); classed DEGRADED due to that source-request error, without material loss of coverage. Sources: https://www.ochaopt.org/updates ; https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt ; https://www.aljazeera.com/news/2026/10/7/israeli-attacks-across-gaza-kill-at-least-four-palestinians. No publication, approval or schedule mutations."
+}

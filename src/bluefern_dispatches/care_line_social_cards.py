@@ -11,6 +11,8 @@ CARD_WIDTH = 1200
 CARD_HEIGHT = 630
 PRIVATE_CARD_FILENAME = "care-line-social-card.png"
 BASE_URL = "https://dispatches.thebluefernco.com"
+CARE_LINE_FOREGROUND_ASSET = Path("assets") / "care-line" / "care-line-foreground-paperwork-v1.png"
+CARE_LINE_FACILITY_ASSET = Path("assets") / "care-line" / "care-line-facility-v1.png"
 
 
 def care_line_private_card_relative_path(edition_date: str) -> Path:
@@ -56,54 +58,100 @@ def _centered_text(draw: Any, y: int, text: str, *, font: Any, fill: str, shadow
     draw.text((x, y), text, font=font, fill=fill)
 
 
+def _draw_fern_frond(
+    draw: Any,
+    *,
+    root: tuple[float, float],
+    height: float,
+    color: str,
+    vein: str,
+    width: int = 2,
+    lean: float = 0.0,
+    alpha_shape: bool = False,
+) -> None:
+    rx, ry = root
+    stem: list[tuple[float, float]] = []
+    steps = 16
+    for index in range(steps + 1):
+        t = index / steps
+        x = rx + lean * t + 6 * (t - 0.5) * (t - 0.5) - 2 * t * (1 - t)
+        y = ry - height * t
+        stem.append((x, y))
+    draw.line(stem, fill=vein, width=width, joint="curve")
+
+    for index in range(2, steps):
+        t = index / steps
+        bx, by = stem[index]
+        length = (34 * (1 - abs(t - 0.44) * 1.55) + 4) * (height / 92)
+        spread = max(1.8, 4.3 * (1 - t) * (height / 92))
+        for side in (-1, 1):
+            if index > steps - 3 and side < 0:
+                continue
+            angle_x = side * length * (0.9 + 0.08 * (index % 2))
+            angle_y = -length * (0.22 + t * 0.24)
+            tip = (bx + angle_x, by + angle_y + side * 0.8)
+            px, py = -angle_y, angle_x
+            norm = max((px * px + py * py) ** 0.5, 1)
+            px, py = px / norm, py / norm
+            base = (bx + side * 2.0, by)
+            points = [
+                (base[0] + px * 0.9, base[1] + py * 0.9),
+                (base[0] + px * spread, base[1] + py * spread),
+                (tip[0] - side * 2.2, tip[1] + 1.6),
+                tip,
+                (tip[0] - side * 1.4, tip[1] - 2.0),
+                (base[0] - px * spread, base[1] - py * spread),
+                (base[0] - px * 0.9, base[1] - py * 0.9),
+            ]
+            draw.polygon(points, fill=color)
+            if not alpha_shape:
+                draw.line((base, tip), fill=vein, width=1)
+    draw.polygon(
+        [
+            (stem[-1][0] - 3, stem[-1][1] + 5),
+            (stem[-1][0] + 3, stem[-1][1] + 5),
+            (stem[-1][0] + lean * 0.08, stem[-1][1] - 11),
+        ],
+        fill=color,
+    )
+
+
 def _draw_leaf_medallion(draw: Any) -> None:
-    cx, cy, r = CARD_WIDTH // 2, 116, 48
-    draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill="#102a31", outline="#8bb4ad", width=2)
-    draw.ellipse((cx - 37, cy - 37, cx + 37, cy + 37), outline="#d8c086", width=1)
-    stem = "#d8c086"
-    leaf = "#c7e4dc"
-    vein = "#f1f5e9"
-
-    stem_points = [(cx - 2, cy + 31), (cx - 2, cy + 17), (cx + 1, cy + 3), (cx + 4, cy - 12), (cx + 5, cy - 30)]
-    draw.line(stem_points, fill=stem, width=2)
-
-    def leaflet(base: tuple[int, int], tip: tuple[int, int], spread: int = 5) -> None:
-        bx, by = base
-        tx, ty = tip
-        dx, dy = tx - bx, ty - by
-        length = max((dx * dx + dy * dy) ** 0.5, 1)
-        px, py = -dy / length, dx / length
-        points = [
-            (bx + px * 1.4, by + py * 1.4),
-            (bx + px * spread, by + py * spread),
-            (tx, ty),
-            (bx - px * spread, by - py * spread),
-            (bx - px * 1.4, by - py * 1.4),
-        ]
-        draw.polygon(points, fill=leaf)
-        draw.line((base, tip), fill=vein, width=1)
-
-    for base_dx, base_dy, tip_dx, tip_dy, spread in (
-        (-3, 23, -24, 12, 5),
-        (-2, 18, 21, 8, 5),
-        (-1, 12, -27, 0, 5),
-        (0, 6, 24, -5, 5),
-        (2, 0, -21, -13, 4),
-        (3, -7, 21, -20, 4),
-        (4, -15, -14, -27, 4),
-        (5, -23, 13, -36, 3),
-    ):
-        leaflet((cx + base_dx, cy + base_dy), (cx + tip_dx, cy + tip_dy), spread)
-    leaflet((cx - 2, cy + 30), (cx - 18, cy + 27), 3)
-    leaflet((cx + 5, cy - 30), (cx + 6, cy - 42), 3)
+    cx, cy, r = CARD_WIDTH // 2, 111, 52
+    draw.line((218, cy + 1, cx - 88, cy + 1), fill="#d6d3bd", width=1)
+    draw.line((cx + 88, cy + 1, 982, cy + 1), fill="#d6d3bd", width=1)
+    draw.line((218, cy + 5, cx - 88, cy + 5), fill="#6f9c96", width=1)
+    draw.line((cx + 88, cy + 5, 982, cy + 5), fill="#6f9c96", width=1)
+    draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill="#082129", outline="#d6bd7a", width=2)
+    draw.arc((cx - 58, cy - 58, cx + 58, cy + 58), start=104, end=260, fill="#f3e8d0", width=2)
+    draw.arc((cx - 58, cy - 58, cx + 58, cy + 58), start=285, end=77, fill="#d6bd7a", width=2)
+    _draw_fern_frond(
+        draw,
+        root=(cx - 12, cy + 37),
+        height=74,
+        color="#87b3ac",
+        vein="#cde1da",
+        width=1,
+        lean=-12,
+        alpha_shape=True,
+    )
+    _draw_fern_frond(
+        draw,
+        root=(cx - 1, cy + 38),
+        height=88,
+        color="#efe8d5",
+        vein="#f4ead6",
+        width=2,
+        lean=7,
+    )
 
 
 def _draw_background(draw: Any) -> None:
     for y in range(CARD_HEIGHT):
         blend = y / CARD_HEIGHT
-        red = int(8 + 10 * blend)
-        green = int(26 + 24 * blend)
-        blue = int(34 + 22 * blend)
+        red = int(6 + 10 * blend)
+        green = int(24 + 21 * blend)
+        blue = int(28 + 18 * blend)
         draw.line((0, y, CARD_WIDTH, y), fill=(red, green, blue))
     for x in range(0, CARD_WIDTH, 7):
         y = (x * 37) % CARD_HEIGHT
@@ -114,49 +162,75 @@ def _draw_background(draw: Any) -> None:
         draw.point((x, y), fill=(30, 54, 61))
 
 
-def _draw_access_motif(draw: Any) -> None:
-    base_y = 505
-    outline = "#426f76"
-    deep = "#0d2830"
-    soft = "#143943"
-    window = "#2b5962"
-    accent = "#8bb4ad"
+def _foreground_asset_path() -> Path:
+    return Path(__file__).resolve().parents[2] / CARE_LINE_FOREGROUND_ASSET
 
-    left, right = 74, 334
-    wing_top = base_y - 84
-    lobby_left, lobby_right = 164, 236
-    lobby_top = base_y - 128
 
-    draw.rounded_rectangle((left, wing_top, right, base_y), radius=3, fill=soft, outline=outline, width=2)
-    draw.rounded_rectangle((lobby_left, lobby_top, lobby_right, base_y), radius=4, fill="#173f49", outline="#6f9c96", width=2)
-    draw.rectangle((left + 10, wing_top - 10, lobby_left + 2, wing_top), fill=deep, outline=outline)
-    draw.rectangle((lobby_right - 2, wing_top - 10, right - 10, wing_top), fill=deep, outline=outline)
-    draw.line((left - 10, base_y, right + 28, base_y), fill=outline, width=2)
+def _facility_asset_path() -> Path:
+    return Path(__file__).resolve().parents[2] / CARE_LINE_FACILITY_ASSET
 
-    for x in (96, 126, 270, 300):
-        draw.rounded_rectangle((x, wing_top + 20, x + 16, wing_top + 38), radius=2, fill=window)
-        draw.rounded_rectangle((x, wing_top + 52, x + 16, wing_top + 70), radius=2, fill=window)
-    for x in (178, 208):
-        draw.rounded_rectangle((x, lobby_top + 20, x + 17, lobby_top + 39), radius=2, fill="#315f67")
 
-    cross_box = (184, lobby_top + 50, 216, lobby_top + 82)
-    draw.rounded_rectangle(cross_box, radius=3, fill="#224e57", outline="#7fb0aa", width=1)
-    cx = (cross_box[0] + cross_box[2]) // 2
-    cy = (cross_box[1] + cross_box[3]) // 2
-    draw.line((cx - 9, cy, cx + 9, cy), fill="#bdd9d0", width=3)
-    draw.line((cx, cy - 9, cx, cy + 9), fill="#bdd9d0", width=3)
+def _fit_asset(asset_path: Path, target_width: int) -> Any:
+    from PIL import Image  # type: ignore
 
-    draw.rounded_rectangle((172, base_y - 44, 228, base_y - 4), radius=13, fill="#0a242b", outline="#6f9c96", width=1)
-    draw.line((200, base_y - 44, 200, base_y - 4), fill="#1d4850", width=1)
-    draw.rounded_rectangle((158, base_y - 58, 242, base_y - 46), radius=3, fill="#725f3b", outline="#a79055", width=1)
-    draw.line((238, base_y - 24, 312, base_y - 10), fill="#7ea59f", width=3)
-    draw.line((238, base_y - 34, 312, base_y - 20), fill="#507d7b", width=1)
-    draw.line((245, base_y - 28, 303, base_y - 17), fill="#a5c3bd", width=1)
+    if not asset_path.exists():
+        return None
+    layer = Image.open(asset_path).convert("RGBA")
+    bbox = layer.getchannel("A").getbbox()
+    if bbox:
+        layer = layer.crop(bbox)
+    ratio = target_width / layer.width
+    return layer.resize((target_width, int(layer.height * ratio)), Image.Resampling.LANCZOS)
 
-    path = [(326, base_y - 17), (365, base_y - 28), (397, base_y - 47), (430, base_y - 69)]
-    draw.line(path, fill="#5f8f8c", width=2, joint="curve")
-    for x, y, r in ((326, base_y - 17, 4), (430, base_y - 69, 5)):
-        draw.ellipse((x - r, y - r, x + r, y + r), fill=accent)
+
+def _paste_care_foreground(image: Any) -> None:
+    foreground = _fit_asset(_foreground_asset_path(), 600)
+    if foreground is None:
+        return
+    alpha = foreground.getchannel("A").point(lambda value: int(value * 0.98))
+    image.paste(foreground.convert("RGB"), (-72, 74), alpha)
+
+
+def _paste_facility_background(image: Any) -> None:
+    from PIL import ImageEnhance  # type: ignore
+
+    facility = _fit_asset(_facility_asset_path(), 560)
+    if facility is None:
+        return
+    alpha = facility.getchannel("A")
+    muted = facility.convert("RGB")
+    muted = ImageEnhance.Color(muted).enhance(0.48)
+    muted = ImageEnhance.Brightness(muted).enhance(0.58)
+    muted = ImageEnhance.Contrast(muted).enhance(0.82)
+    alpha = alpha.point(lambda value: int(value * 0.5))
+    image.paste(muted, (766, 138), alpha)
+
+
+def _draw_text_field(image: Any) -> None:
+    from PIL import Image, ImageDraw, ImageFilter  # type: ignore
+
+    mask = Image.new("L", (CARD_WIDTH, CARD_HEIGHT), 0)
+    mask_draw = ImageDraw.Draw(mask)
+    mask_draw.rounded_rectangle((208, 152, 1006, 510), radius=24, fill=222)
+    mask = mask.filter(ImageFilter.GaussianBlur(34))
+    field = Image.new("RGBA", (CARD_WIDTH, CARD_HEIGHT), "#082329")
+    field.putalpha(mask)
+    image.paste(field.convert("RGB"), (0, 0), field.getchannel("A"))
+
+    inner_mask = Image.new("L", (CARD_WIDTH, CARD_HEIGHT), 0)
+    inner_draw = ImageDraw.Draw(inner_mask)
+    inner_draw.rounded_rectangle((254, 184, 958, 476), radius=18, fill=110)
+    inner_mask = inner_mask.filter(ImageFilter.GaussianBlur(10))
+    inner_field = Image.new("RGBA", (CARD_WIDTH, CARD_HEIGHT), "#082329")
+    inner_field.putalpha(inner_mask)
+    image.paste(inner_field.convert("RGB"), (0, 0), inner_field.getchannel("A"))
+
+
+def _draw_access_motif(image: Any, draw: Any) -> None:
+    _paste_facility_background(image)
+    draw.ellipse((-54, 548, 448, 630), fill="#06171d")
+    _paste_care_foreground(image)
+    _draw_text_field(image)
 
 
 def social_card_spec_for_edition(
@@ -181,13 +255,48 @@ def social_card_spec_for_edition(
     }
 
 
+def social_card_spec_for_event(
+    *,
+    event_id: str,
+    title: str,
+    facility_name: str,
+    city: str,
+    state: str,
+    public_label: str,
+    effective_date: str,
+) -> dict[str, Any]:
+    date_label = str(effective_date or "").strip()
+    try:
+        date_label = _display_date(date_label)
+    except ValueError:
+        date_label = date_label.upper()
+    location = ", ".join(part for part in (str(facility_name or "").strip(), str(city or "").strip(), str(state or "").strip()) if part)
+    return {
+        "event_id": event_id,
+        "headline": str(title or "").strip(),
+        "location": location,
+        "event_type_label": str(public_label or "Care access update").strip(),
+        "date_label": date_label,
+        "brand_name": "The Blue Fern Co.",
+        "section_label": "CARE LINE",
+        "title": "The Care Line Dispatch",
+        "subtitle": str(title or "Source-backed briefing on U.S. health-care access").strip(),
+        "display_date": date_label,
+        "footer": "The Blue Fern Co.",
+        "label": "Care Line",
+        "public_url": f"{BASE_URL}/events/{event_id}/",
+        "alt_text": f"The Blue Fern Co. Care Line social card for {str(title or event_id).strip()}",
+        "image_url": f"{BASE_URL}/events/{event_id}/social-card.png",
+    }
+
+
 def render_social_card_png_bytes(spec: dict[str, Any]) -> bytes:
     from PIL import Image, ImageDraw  # type: ignore
 
     image = Image.new("RGB", (CARD_WIDTH, CARD_HEIGHT), "#071c24")
     draw = ImageDraw.Draw(image)
     _draw_background(draw)
-    _draw_access_motif(draw)
+    _draw_access_motif(image, draw)
     draw.rectangle((38, 38, CARD_WIDTH - 38, CARD_HEIGHT - 38), outline="#d1b66f", width=2)
     draw.rectangle((52, 52, CARD_WIDTH - 52, CARD_HEIGHT - 52), outline="#3f7176", width=1)
     _draw_leaf_medallion(draw)
@@ -197,7 +306,7 @@ def render_social_card_png_bytes(spec: dict[str, Any]) -> bytes:
         draw,
         232,
         str(spec.get("title") or "The Care Line Dispatch"),
-        font=_font(66, serif=True, bold=True),
+        font=_font(60, serif=True, bold=True),
         fill="#f7efe2",
         shadow="#06151b",
     )

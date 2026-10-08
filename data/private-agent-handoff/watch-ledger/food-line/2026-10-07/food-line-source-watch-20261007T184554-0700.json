@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261007T184554-0700",
+  "scheduled_for": "2026-10-07T18:45:54-07:00",
+  "started_at": "2026-10-07T18:48:51-07:00",
+  "completed_at": "2026-10-07T18:49:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-07T17:42:11-07:00",
+    "end": "2026-10-07T18:49:29-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed exactly 12 targeted web searches (recency <=1 day) spanning (1) sole/last/full-service grocery loss/fire/closure, (2) storm/disaster-driven emergency food distribution cancellation, (3) abrupt pantry or food-bank closure/major access reduction, and (4) official SNAP/WIC/EBT interruption. No new verified qualifying U.S. food-access disruption in the observation window. NBC 15/WALA Oct. 7 Isaias closure roundup repeated the previously recorded Prodisee Pantry Stockton, AL cancellation and was excluded as a duplicate. House of Mercy's Oct. 7 article described storage/thrift floor losses without a reported food-pantry distribution closure and was excluded; other results were historical, routine schedules, or 2025 SNAP disruption coverage. All searches returned results; hour-level local-news indexing completeness cannot be guaranteed. Production nationwide collection remains authoritative. Prior ops/watch-ledger heartbeat completed 2026-10-07 17:42:11 PT. No approval, publication, schedule, or automation-state change."
+}

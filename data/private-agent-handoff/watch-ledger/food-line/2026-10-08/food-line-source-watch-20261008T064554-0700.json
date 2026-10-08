@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261008T064554-0700",
+  "scheduled_for": "2026-10-08T06:45:54-07:00",
+  "started_at": "2026-10-08T06:50:04-07:00",
+  "completed_at": "2026-10-08T06:50:58-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-08T05:45:54-07:00",
+    "end": "2026-10-08T06:50:58-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 11 targeted searches across four bounded recall classes. No new qualifying report established for this hourly window. Excluded duplicate Prodisee Pantry cancellation (October 7), older Spencer, NY sole-grocery fire, older El Paso food-bank storm interruption, earlier sole-grocery closures, and a Laredo hotel fire where the food bank provided relief rather than suspending services. Kauai's Hurricane Lowell updates announced new distributions, not cancellations. No searches failed. Supplementary recall only; production collector remains authoritative."
+}

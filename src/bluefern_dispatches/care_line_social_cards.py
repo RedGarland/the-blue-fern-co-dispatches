@@ -59,19 +59,27 @@ def _centered_text(draw: Any, y: int, text: str, *, font: Any, fill: str, shadow
 def _draw_leaf_medallion(draw: Any) -> None:
     cx, cy, r = CARD_WIDTH // 2, 116, 48
     draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill="#102a31", outline="#8bb4ad", width=2)
-    draw.ellipse((cx - 38, cy - 38, cx + 38, cy + 38), outline="#d8c086", width=1)
-    leaf_fill = "#9ec8bb"
+    draw.ellipse((cx - 37, cy - 37, cx + 37, cy + 37), outline="#d8c086", width=1)
     stem = "#d8c086"
-    draw.line((cx, cy + 26, cx, cy - 24), fill=stem, width=3)
-    for offset, width, height, side in ((-18, 42, 20, -1), (-3, 50, 24, 1), (15, 38, 18, -1)):
-        y = cy + offset
-        if side < 0:
-            box = (cx - width, y - height // 2, cx + 4, y + height // 2)
-            start, end = 205, 25
-        else:
-            box = (cx - 4, y - height // 2, cx + width, y + height // 2)
-            start, end = 155, 335
-        draw.pieslice(box, start=start, end=end, fill=leaf_fill, outline="#d7eee8")
+    leaf = "#b7d8ce"
+    vein = "#edf7f2"
+    draw.line((cx - 11, cy + 29, cx + 9, cy - 30), fill=stem, width=2)
+    leaflets = [
+        (-7, 21, -22, 16),
+        (-4, 13, 13, 7),
+        (-2, 5, -20, 1),
+        (1, -3, 20, -9),
+        (4, -11, -14, -17),
+        (6, -19, 15, -26),
+        (-9, 26, -18, 25),
+        (8, -25, 12, -34),
+    ]
+    for base_dx, base_dy, tip_dx, tip_dy in leaflets:
+        base = (cx + base_dx, cy + base_dy)
+        tip = (cx + tip_dx, cy + tip_dy)
+        draw.line((base, tip), fill=vein, width=1)
+        radius_x = 5 if abs(tip_dx - base_dx) > 8 else 3
+        draw.ellipse((tip[0] - radius_x, tip[1] - 3, tip[0] + radius_x, tip[1] + 3), fill=leaf)
 
 
 def _draw_background(draw: Any) -> None:
@@ -92,19 +100,30 @@ def _draw_background(draw: Any) -> None:
 
 def _draw_access_motif(draw: Any) -> None:
     base_y = 505
-    fill = "#12333b"
-    outline = "#315963"
-    draw.rectangle((92, base_y - 122, 320, base_y), fill=fill, outline=outline, width=2)
-    draw.rectangle((128, base_y - 174, 284, base_y - 122), fill="#102c35", outline=outline, width=2)
-    for x in range(122, 292, 38):
-        for y in range(base_y - 96, base_y - 18, 34):
-            draw.rectangle((x, y, x + 14, y + 17), fill="#234b53")
-    draw.rectangle((194, base_y - 46, 222, base_y), fill="#0b222a")
-    draw.line((360, base_y - 94, 496, base_y - 126), fill="#294f58", width=3)
-    draw.line((360, base_y - 58, 510, base_y - 82), fill="#294f58", width=2)
-    draw.line((380, base_y - 22, 472, base_y - 38), fill="#294f58", width=2)
-    for x, y, r in ((402, base_y - 100, 9), (468, base_y - 82, 7), (438, base_y - 37, 6)):
-        draw.ellipse((x - r, y - r, x + r, y + r), fill="#8bb4ad")
+    outline = "#426f76"
+    deep = "#102d35"
+    soft = "#163943"
+    window = "#2b5962"
+    accent = "#8bb4ad"
+
+    left, top, right = 82, base_y - 122, 318
+    draw.rectangle((left, top + 24, right, base_y), fill=soft, outline=outline, width=2)
+    draw.polygon(((left + 20, top + 24), ((left + right) // 2, top - 26), (right - 20, top + 24)), fill=deep, outline=outline)
+    draw.line((left + 46, top + 24, right - 46, top + 24), fill="#6f9c96", width=1)
+    for x in (118, 162, 236, 280):
+        draw.rounded_rectangle((x, top + 48, x + 18, top + 66), radius=2, fill=window)
+        draw.rounded_rectangle((x, top + 84, x + 18, top + 102), radius=2, fill=window)
+    draw.rounded_rectangle((192, top + 62, 226, base_y), radius=16, fill="#0a242b", outline="#6f9c96", width=1)
+    draw.line((209, top + 62, 209, base_y), fill="#1d4850", width=1)
+    for x in (146, 252):
+        draw.line((x, top + 38, x, base_y - 8), fill="#6f9c96", width=2)
+        draw.line((x - 10, base_y - 8, x + 10, base_y - 8), fill="#6f9c96", width=1)
+    draw.line((left - 14, base_y, right + 26, base_y), fill=outline, width=2)
+
+    path = [(336, base_y - 24), (368, base_y - 34), (400, base_y - 50), (432, base_y - 72)]
+    draw.line(path, fill="#5f8f8c", width=2, joint="curve")
+    for x, y, r in ((336, base_y - 24, 5), (400, base_y - 50, 6), (432, base_y - 72, 5)):
+        draw.ellipse((x - r, y - r, x + r, y + r), fill=accent)
 
 
 def social_card_spec_for_edition(

@@ -28,32 +28,64 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "DEGRADED",
+      "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "76078ee1a846241d73e1e1a8ce52dac004eac57b",
       "debug_summary": {
-        "aggregate_status": "DEGRADED",
-        "all_current_failures_external": true,
-        "all_current_failures_non_actionable": true,
-        "attention_task_count": 1,
+        "aggregate_status": "FAILED",
+        "all_current_failures_external": false,
+        "all_current_failures_non_actionable": false,
+        "attention_task_count": 49,
         "attention_tasks": [
           {
-            "artifact_id": "care-collection-recovery-20261007T1620Z.json",
-            "classification": "partial_success",
-            "exit_code": 0,
-            "failure_stage": "care_line_collection",
-            "status": "DEGRADED",
-            "task_key": "care_line_collection"
+            "artifact_id": "care-proof-only-food-care-continuation-20261008T072826Z-46ab6a28.json",
+            "classification": "failure",
+            "exit_code": 1,
+            "failure_stage": "source_state",
+            "status": "FAILED",
+            "task_key": "care_line_approved_release_publication"
+          },
+          {
+            "artifact_id": "care-proof-only-food-care-continuation-20261008T073826Z-f598a687.json",
+            "classification": "failure",
+            "exit_code": 1,
+            "failure_stage": "source_state",
+            "status": "FAILED",
+            "task_key": "care_line_approved_release_publication"
+          },
+          {
+            "artifact_id": "care-proof-only-food-care-continuation-20261008T080826Z-98e18e0b.json",
+            "classification": "failure",
+            "exit_code": 1,
+            "failure_stage": "source_state",
+            "status": "FAILED",
+            "task_key": "care_line_approved_release_publication"
+          },
+          {
+            "artifact_id": "care-proof-only-food-care-continuation-20261008T083825Z-778d91cd.json",
+            "classification": "failure",
+            "exit_code": 1,
+            "failure_stage": "source_state",
+            "status": "FAILED",
+            "task_key": "care_line_approved_release_publication"
+          },
+          {
+            "artifact_id": "care-proof-only-food-care-continuation-20261008T090825Z-c4158cf8.json",
+            "classification": "failure",
+            "exit_code": 1,
+            "failure_stage": "source_state",
+            "status": "FAILED",
+            "task_key": "care_line_approved_release_publication"
           }
         ],
-        "external_access_restriction_count": 4,
-        "failed_source_count": 4,
-        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
-        "primary_classification": "partial_success",
-        "primary_failure_stage": "care_line_collection",
-        "primary_layer": "EXTERNAL_DEPENDENCY",
-        "primary_task_key": "care_line_collection",
-        "primary_task_status": "DEGRADED",
+        "external_access_restriction_count": 0,
+        "failed_source_count": 0,
+        "operator_assessment": "FAILED_ACTION_REQUIRED",
+        "primary_classification": "failure",
+        "primary_failure_stage": "source_state",
+        "primary_layer": "SOURCE",
+        "primary_task_key": "care_line_approved_release_publication",
+        "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": null,
         "private_review_dispositioned_item_count": null,
         "private_review_max_age_hours": null,
@@ -62,55 +94,30 @@
         "private_review_pending_item_count": null,
         "private_review_unresolved_item_count": null,
         "publication_attempted": false,
-        "publication_status": "safe_no_op",
+        "publication_status": "failure",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "HEALTHY",
+        "recovery_lifecycle": "INCIDENT_OPEN",
         "stale_observability": false,
         "transient_source_failure_count": 0,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": 0
       },
-      "latest_runtime_proof_date": "2026-10-07T19:00:02Z",
+      "latest_runtime_proof_date": "2026-10-08T15:00:04.482068Z",
       "migration_status": "MIGRATED",
-      "observed_date": "2026-10-07",
+      "observed_date": "2026-10-08",
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "HEALTHY",
+      "recovery_lifecycle": "INCIDENT_OPEN",
       "scheduled_health_available": true,
       "source_failure_summary": {
-        "all_current_failures_external": true,
-        "all_current_failures_non_actionable": true,
-        "external_access_restriction_count": 4,
-        "external_restriction_sources": [
-          {
-            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-            "coverage_reduced": true,
-            "remediation_available": false,
-            "source_id": "hhs-news"
-          },
-          {
-            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-            "coverage_reduced": true,
-            "remediation_available": false,
-            "source_id": "hrsa-news"
-          },
-          {
-            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-            "coverage_reduced": true,
-            "remediation_available": false,
-            "source_id": "fierce-healthcare"
-          },
-          {
-            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-            "coverage_reduced": true,
-            "remediation_available": false,
-            "source_id": "mayo-clinic-news"
-          }
-        ],
-        "failed_source_count": 4,
-        "original_failed_source_count": 4,
+        "all_current_failures_external": false,
+        "all_current_failures_non_actionable": false,
+        "external_access_restriction_count": 0,
+        "external_restriction_sources": [],
+        "failed_source_count": 0,
+        "original_failed_source_count": 0,
         "recovered_source_count": 0,
         "recovered_sources": [],
-        "successful_attempt_count": 34,
+        "successful_attempt_count": null,
         "transient_source_failure_count": 0,
         "transient_sources": [],
         "unclassified_source_failure_count": 0
@@ -149,7 +156,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "76078ee1a846241d73e1e1a8ce52dac004eac57b",
+      "current_runner_head": "a696d47bf23de6e4be1cb8a0a681577fee5f1ad9",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -158,19 +165,19 @@
         "attention_tasks": [],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "HEALTHY",
+        "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
         "primary_classification": null,
         "primary_failure_stage": null,
-        "primary_layer": "NONE",
+        "primary_layer": "EDITORIAL_HANDOFF",
         "primary_task_key": null,
         "primary_task_status": null,
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 0,
-        "private_review_oldest_pending_date": null,
-        "private_review_pending_date_count": 0,
-        "private_review_pending_item_count": 0,
-        "private_review_unresolved_item_count": 0,
+        "private_review_max_age_hours": 15,
+        "private_review_oldest_pending_date": "2026-10-09",
+        "private_review_pending_date_count": 1,
+        "private_review_pending_item_count": 5,
+        "private_review_unresolved_item_count": 5,
         "publication_attempted": false,
         "publication_status": "skipped_not_release_ready",
         "receipt_completeness": "COMPLETE",
@@ -183,7 +190,17 @@
       "migration_status": "MIGRATED",
       "private_review_backlog": {
         "count_only_gap_count": 55,
-        "dates": [],
+        "dates": [
+          {
+            "age_hours": 15,
+            "count_only_gap_count": 0,
+            "date": "2026-10-09",
+            "dispositioned_item_count": 0,
+            "pending_item_count": 5,
+            "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-09.json",
+            "unresolved_item_count": 5
+          }
+        ],
         "disposition_diagnostics": {
           "duplicate_entry_count": 0,
           "malformed_entry_count": 0,
@@ -318,11 +335,11 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 0,
-        "oldest_pending_date": null,
-        "pending_date_count": 0,
-        "pending_item_count": 0,
-        "unresolved_item_count": 0
+        "max_age_hours": 15,
+        "oldest_pending_date": "2026-10-09",
+        "pending_date_count": 1,
+        "pending_item_count": 5,
+        "unresolved_item_count": 5
       },
       "recovery_lifecycle": "HEALTHY"
     },
@@ -340,7 +357,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "76078ee1a846241d73e1e1a8ce52dac004eac57b",
+      "current_runner_head": "0b870a7a1f3b5f983aafeae4a96ac5d14756790c",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -373,9 +390,9 @@
       },
       "dry_run_recovery_applied": false,
       "latest_recovery_proof_at": null,
-      "latest_runtime_proof_date": "2026-10-07T15:05:11.720316Z",
+      "latest_runtime_proof_date": "2026-10-08T13:11:10.075652Z",
       "migration_status": "MIGRATED",
-      "observed_date": "2026-10-07",
+      "observed_date": "2026-10-08",
       "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
@@ -395,7 +412,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "76078ee1a846241d73e1e1a8ce52dac004eac57b",
+      "current_runner_head": "0b870a7a1f3b5f983aafeae4a96ac5d14756790c",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -426,17 +443,17 @@
         "unaccounted_event_count": 0,
         "unclassified_source_failure_count": null
       },
-      "latest_runtime_proof_date": "2026-10-07T04:15:09Z",
+      "latest_runtime_proof_date": "2026-10-09T04:15:06Z",
       "migration_status": "MIGRATED",
-      "observed_date": "2026-10-07",
+      "observed_date": "2026-10-08",
       "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-07T23:41:13.684674Z",
+  "exported_at": "2026-10-09T15:25:38.421400Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "DEGRADED"
+  "system_status": "FAILED"
 }

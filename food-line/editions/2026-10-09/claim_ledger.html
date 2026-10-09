@@ -1,0 +1,282 @@
+<style>
+:root {
+  --bf-dark-blue: #1E3F4F;
+  --bf-background-cream: #EFE7DA;
+  --bf-accent-blue-grey: #4E6B79;
+  --bf-soft-steel-grey: #9BAEB5;
+  --bf-pale-beige: #D9CEC0;
+  --bf-white: #FFFFFF;
+  --bf-text: #1E3F4F;
+  --ink: #1E3F4F;
+  --navy: #1E3F4F;
+  --blue-fern: #4E6B79;
+  --soft-blue: #EFE7DA;
+  --fern-green: #4E6B79;
+  --paper: #EFE7DA;
+  --border: #D9CEC0;
+  --panel: #FFFFFF;
+  --muted: #4E6B79;
+}
+.food-line-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+.food-line-hero {
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  text-align: center;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.food-line-hero .eyebrow,
+.food-line-hero p {
+  margin: 0;
+}
+.food-line-logo {
+  display: block;
+  height: auto;
+  max-width: 90vw;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.food-line-logo--home {
+  width: min(260px, 72vw);
+}
+.food-line-logo--edition {
+  width: min(240px, 68vw);
+}
+.food-line-logo--map {
+  width: min(520px, 90vw);
+}
+.food-line-logo--audio {
+  width: min(360px, 90vw);
+}
+.food-line-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: clamp(18px, 3vw, 28px);
+  box-shadow: 0 18px 42px rgba(30, 63, 79, 0.08);
+}
+.food-line-panel h2:first-child,
+.food-line-panel h3:first-child {
+  margin-top: 0;
+}
+.briefing .food-line-hero {
+  gap: 0.45rem;
+  padding-bottom: 0.9rem;
+}
+.briefing .food-line-logo--edition {
+  width: min(220px, 60vw);
+}
+.briefing .food-line-hero h1 {
+  margin: 0.15rem 0 0.35rem;
+  font-size: clamp(1.9rem, 3.6vw, 2.85rem);
+}
+.food-line-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+.food-line-actions a {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+.food-line-briefing-meta,
+.food-line-note,
+.food-line-edition-meta {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.food-line-note {
+  border-left: 4px solid var(--fern-green);
+  margin: 0.9rem 0 1rem;
+  padding: 0.7rem 0 0.7rem 0.9rem;
+  background: var(--paper);
+}
+.food-line-story-list,
+.food-line-recent-list {
+  display: grid;
+  gap: 0.85rem;
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+.food-line-story-list li,
+.food-line-recent-list li {
+  border-top: 1px solid var(--border);
+  padding-top: 0.85rem;
+}
+.food-line-story-list li:first-child,
+.food-line-recent-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.food-line-story-list a,
+.food-line-recent-title {
+  font-weight: 700;
+}
+.food-line-recent-title {
+  display: block;
+  margin-top: 0.15rem;
+}
+.food-line-open-archive {
+  margin-top: 1rem;
+}
+.food-line-source-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.food-line-source-table th,
+.food-line-source-table td {
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  padding: 0.65rem 0.55rem;
+}
+.food-line-source-table th {
+  text-align: left;
+  color: var(--navy);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+}
+.food-line-source-table td:nth-child(9),
+.food-line-source-table td:nth-child(14) {
+  min-width: 16rem;
+}
+.food-line-source-table td:nth-child(10),
+.food-line-source-table td:nth-child(17) {
+  min-width: 10rem;
+}
+.food-line-map-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-map {
+  height: min(70vh, 640px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.food-line-map-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: 1rem 1.1rem;
+}
+.food-line-map-panel ul {
+  margin-top: 0.8rem;
+}
+.food-line-map-panel .fl-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.food-line-map-panel .fl-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.food-line-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  border: 1px solid var(--ink);
+  display: inline-block;
+}
+.food-line-map-popup {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 24rem;
+}
+.food-line-map-popup a {
+  word-break: break-word;
+}
+.food-line-audio-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-audio-list {
+  display: grid;
+  gap: 0.8rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.food-line-audio-list li {
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+}
+.food-line-audio-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.food-line-source-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem 1rem 0.9rem;
+  background: var(--panel);
+  box-shadow: 0 10px 24px rgba(30, 63, 79, 0.06);
+}
+.food-line-source-card h3 {
+  margin-top: 0;
+}
+.food-line-source-card p {
+  margin: 0.35rem 0;
+}
+@media (max-width: 640px) {
+  .food-line-logo--edition,
+  .food-line-logo--map,
+  .food-line-logo--audio,
+  .food-line-logo--home {
+    width: min(72vw, 260px);
+  }
+  .food-line-source-table {
+    font-size: 0.9rem;
+  }
+}
+</style>
+  <header class="site-header">
+    <a class="brand" href="../../index.html">Food Line Dispatch</a>
+    <nav><a href="/">Dispatches Home</a><a href="/food-line/">Food Line Dispatch</a><a href="../../archive.html">Archive</a><a href="../../rss.xml">RSS</a></nav>
+  </header>
+<main class="container briefing food-line-shell">
+  <section class="hero food-line-hero">
+    <img class="hero-logo food-line-logo food-line-logo--edition" src="../../assets/food-line-logo.png" alt="The Food Line Dispatch">
+    <p class="eyebrow">October 9, 2026</p>
+    <h1>Food Line Claim Ledger</h1>
+    <p>What exactly did each public Food Line source support?</p>
+  </section>
+  <section class="food-line-panel">
+    <p>This ledger records 2 public claims supported by source-backed Food Line signals for October 9, 2026.</p><p>Records reviewed: 2. Public claims: 2. Excluded records: 0.</p>
+    <table class="food-line-source-table">
+      <tr>
+        <th>Claim</th><th>Interpretation / why it matters</th><th>Supporting source</th><th>Publisher</th><th>Source URL</th><th>Published date</th><th>Retrieved date</th><th>Evidence level</th><th>Confidence</th><th>Freshness role</th><th>Location scope</th><th>Limitation</th>
+      </tr>
+      <tr><td>In national, Yale Daily News Yale Daily News Yale Daily News New Haven residents and leaders in Connecticut’s food assistance programs said they’ve struggled to adjust to federal SNAP cuts, which have increased demand at local food pantries and soup kitchens. | Yale Daily News Advertisement s Newsletters | Donate | Print Edition | Programming | Archive | About More Donate Print Edition Programming Archive About VOL. CXLIX | New Haven, Connecticut | Friday, October 9, 2026 | 48 °F.</td><td>This is a national policy-pressure signal related to food assistance access.</td><td>SNAP changes continue to strain New Haven food assistance network</td><td>Yale Daily News</td><td><a href="https://yaledailynews.com/articles/snap-changes-continue-to-strain-new-haven-food-assistance-network" target="_blank" rel="noopener noreferrer">https://yaledailynews.com/articles/snap-changes-continue-to-strain-new-haven-food-assistance-network</a></td><td>2026-10-09</td><td>2026-10-09T16:47:06.147995+00:00</td><td>official notice</td><td>moderate</td><td>current</td><td>local</td><td>Review wording must remain limited to the traceable supporting evidence.</td></tr><tr><td>The Trump administration’s cuts and changes to federal food benefits are driving record need in many communities, dozens of food banks told NBC News in a survey.</td><td>This is a national policy-pressure signal related to food assistance access.</td><td>Overwhelmed food banks face ‘heartbreaking’ choices amid rising hunger</td><td>NBC News</td><td><a href="https://www.nbcnews.com/news/us-news/overwhelmed-food-banks-heartbreaking-choices-trump-rising-hunger-rcna601639" target="_blank" rel="noopener noreferrer">https://www.nbcnews.com/news/us-news/overwhelmed-food-banks-heartbreaking-choices-trump-rising-hunger-rcna601639</a></td><td>2026-10-09</td><td>2026-10-09T16:47:12.620166+00:00</td><td>background context</td><td>low</td><td>current</td><td>local</td><td>Review wording must remain limited to the traceable supporting evidence.</td></tr>
+    </table>
+    <h2>Diagnostics</h2>
+    <ul>
+      <li>Records reviewed: 2</li><li>Qualified current records: 2</li><li>Excluded stale: 0</li><li>Excluded duplicate: 0</li><li>Excluded resource-only / no pressure signal: 0</li><li>Excluded weak pressure signal: 0</li><li>Excluded insufficient source traceability: 0</li>
+    </ul>
+    <p><a href="./source_table.html">Open the public source table</a></p>
+    <p><a href="./">Return to the edition</a></p>
+  </section>
+</main>
+  <footer class="site-footer">
+    <div class="publisher">
+      <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="/assets/bluefern.png" alt="The Blue Fern Co."></a>
+      <p class="publisher-label">Published by <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer">The Blue Fern Company</a></p>
+    </div>
+  </footer>

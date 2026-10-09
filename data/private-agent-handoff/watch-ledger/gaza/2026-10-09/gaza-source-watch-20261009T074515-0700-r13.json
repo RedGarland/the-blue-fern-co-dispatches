@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T074515-0700-r13",
+  "scheduled_for": "2026-10-09T07:44:51-07:00",
+  "started_at": "2026-10-09T07:45:15-07:00",
+  "completed_at": "2026-10-09T07:46:23-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T06:46:15-07:00",
+    "end": "2026-10-09T07:46:23-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "checks": "OCHA OPT and WHO checked first; 10 additional targeted web searches (maximum 12). Covered civilian casualty/operations, ceasefire and hostages, shelter/displacement, aid/food/water, medical capacity and evacuation, infrastructure and crossings, and detention. No newly published, sourced, qualifying Gaza development found within observation window.",
+    "primary_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest indexed Gaza-focused update dated 6 October 2026; no new item in window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-remarks-at-the-unga-side-event--humanitarian-access-and-health-in-gaza---ministerial-roundtable---24-september-2026",
+        "result": "Global WHO primary reporting accessible; no fresh Gaza operational change identified."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Direct regional situation-report endpoint returned HTTP 502. Regional health collection incomplete."
+      }
+    ],
+    "deduplication": "Reuters IOM October 9 winter-shelter assessment published 11:35 UTC (04:35 PDT) was identified before preceding hourly window, and is excluded as a duplicate. Older October 8 casualty coverage and older ceasefire reporting excluded. Commentary and West Bank-only items excluded.",
+    "searches_run": 10,
+    "source_issues": [
+      "WHO EMRO region-specific situation-report page returned HTTP 502; alternative WHO global page and established reporting accessible."
+    ],
+    "collection_scope": "Supplementary recall watch only. No production collection, approval, publication or schedule changes.",
+    "production_changes": false,
+    "approval_changes": false,
+    "publication_changes": false,
+    "schedule_changes": false
+  }
+}

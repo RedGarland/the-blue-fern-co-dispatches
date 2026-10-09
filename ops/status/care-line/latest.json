@@ -10,31 +10,31 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "FAILED",
+  "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "76078ee1a846241d73e1e1a8ce52dac004eac57b",
+  "current_runner_head": "a696d47bf23de6e4be1cb8a0a681577fee5f1ad9",
   "debug_summary": {
-    "aggregate_status": "FAILED",
+    "aggregate_status": "SUCCESS",
     "all_current_failures_external": false,
     "all_current_failures_non_actionable": false,
     "attention_task_count": 1,
     "attention_tasks": [
       {
-        "artifact_id": "20261009T130001Z-30380.json",
+        "artifact_id": "20261009T153001Z-44840.json",
         "classification": "failure",
         "exit_code": 1,
-        "failure_stage": "verify_checkout",
+        "failure_stage": "source_state",
         "status": "FAILED",
-        "task_key": "care_line_collection"
+        "task_key": "care_line_approved_release_publication"
       }
     ],
     "external_access_restriction_count": 0,
     "failed_source_count": 0,
-    "operator_assessment": "FAILED_ACTION_REQUIRED",
+    "operator_assessment": "HEALTHY",
     "primary_classification": "failure",
-    "primary_failure_stage": "verify_checkout",
-    "primary_layer": "TASK",
-    "primary_task_key": "care_line_collection",
+    "primary_failure_stage": "source_state",
+    "primary_layer": "SOURCE",
+    "primary_task_key": "care_line_approved_release_publication",
     "primary_task_status": "FAILED",
     "private_review_count_only_gap_count": null,
     "private_review_dispositioned_item_count": null,
@@ -44,9 +44,9 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "PARTIAL",
-    "recovery_lifecycle": "INCIDENT_OPEN",
+    "publication_status": "failure",
+    "receipt_completeness": "INCONSISTENT",
+    "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": 0,
     "unaccounted_event_count": null,
@@ -56,22 +56,17 @@
   "effective_task_summaries": [
     {
       "artifact_id": "20261009T130001Z-30380.json",
-      "classification": "failure",
+      "classification": "superseded_checkout_failure",
       "completed_at": "2026-10-09T13:00:02Z",
       "diagnostics": {
         "active_review_queue_count": null,
         "failed_source_count": null,
         "failed_sources": [],
-        "failure": {
-          "failure_stage": "verify_checkout",
-          "wrapper_exception_message": "are-line/editions/2026-09-18/source_table.html, output/site/care-line/editions/2026-09-18/sources_manifest.json, output/site/care-line/editions/2026-10-06/claim_ledger.html, output/site/care-line/editions/2026-10-06/curation_manifest.json, output/site/care-line/editions/2026-10-06/edition_manifest.json, output/site/care-line/editions/2026-10-06/index.html, output/site/care-line/editions/2026-10-06/source_table.html, output/site/care-line/editions/2026-10-06/sources_manifest.json, output/site/care-line/index.html, output/site/care-line/rss.xml, output/site/cascadia/editions/2026-05-03/index.html, output/site/cascadia/editions/2026-05-04/index.html, output/site/cascadia/editions/2026-05-05/index.html, output/site/food-line/assets/food-line-dispatch-social.png, output/site/food-line/assets/food-line-logo.png, output/site/gaza/audio/2026-06-20-transcript.html, output/site/gaza/audio/index.html, output/site/gaza/editions/2026-05-03/index.html, output/site/gaza/editions/2026-05-04/index.html",
-          "wrapper_exception_type": "SchedulerError"
-        },
         "manual_review_count": null,
         "skipped_source_count": null,
         "successful_attempt_count": null
       },
-      "exit_code": 1,
+      "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {
         "audio": false,
@@ -92,7 +87,7 @@
       "run_id": "20261009T130001Z-30380",
       "scheduled_for": "2026-10-09",
       "started_at": "2026-10-09T13:00:02Z",
-      "status": "FAILED",
+      "status": "SAFE_NO_OP",
       "task_key": "care_line_collection"
     },
     {
@@ -115,6 +110,67 @@
       "started_at": "2026-10-09T15:00:02.706597Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_reviewed_event_queue"
+    },
+    {
+      "artifact_id": "20261009T153001Z-44840.json",
+      "classification": "failure",
+      "completed_at": "2026-10-09T15:30:01Z",
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "source_state"
+        }
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failure",
+      "run_id": "20261009T153001Z-44840",
+      "scheduled_for": "2026-10-09",
+      "started_at": "2026-10-09T15:30:01Z",
+      "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-checkout-recovery-smoke-20261009T1540Z.json",
+      "classification": "success",
+      "completed_at": "2026-10-09T15:42:24Z",
+      "diagnostics": {
+        "active_review_queue_count": 0,
+        "failed_source_count": 0,
+        "failed_sources": [],
+        "manual_review_count": 0,
+        "skipped_source_count": 0,
+        "successful_attempt_count": 1
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "care-checkout-recovery-smoke-20261009T1540Z",
+      "scheduled_for": "2026-10-09",
+      "started_at": "2026-10-09T15:42:22Z",
+      "status": "SUCCESS",
+      "task_key": "care_line_collection"
     }
   ],
   "expected_instances": [
@@ -149,22 +205,31 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-09T15:25:51.556776Z",
-  "last_receipt_at": "2026-10-09T15:00:02.717608Z",
-  "latest_runtime_proof_date": null,
+  "last_exported_at": "2026-10-09T15:43:44.689391Z",
+  "last_receipt_at": "2026-10-09T15:42:24.268062Z",
+  "latest_runtime_proof_date": "2026-10-09T13:00:02Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
-  "non_authoritative_receipts": [],
+  "non_authoritative_receipts": [
+    {
+      "classification": "failure",
+      "completed_at": "2026-10-09T13:00:02Z",
+      "reason": "superseded_checkout_or_source_state_failure",
+      "run_id": "20261009T130001Z-30380",
+      "status": "FAILED",
+      "task_key": "care_line_collection"
+    }
+  ],
   "observed_date": "2026-10-09",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "failure"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "PARTIAL",
-  "recovery_lifecycle": "INCIDENT_OPEN",
-  "runner_source_head": null,
+  "publication_status": "failure",
+  "receipt_completeness": "INCONSISTENT",
+  "recovery_lifecycle": "HEALTHY",
+  "runner_source_head": "a696d47bf23de6e4be1cb8a0a681577fee5f1ad9",
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "care_line_collection",
@@ -181,7 +246,7 @@
     "original_failed_source_count": 0,
     "recovered_source_count": 0,
     "recovered_sources": [],
-    "successful_attempt_count": null,
+    "successful_attempt_count": 1,
     "transient_source_failure_count": 0,
     "transient_sources": [],
     "unclassified_source_failure_count": 0
@@ -249,6 +314,67 @@
       "started_at": "2026-10-09T15:00:02.706597Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_reviewed_event_queue"
+    },
+    {
+      "artifact_id": "20261009T153001Z-44840.json",
+      "classification": "failure",
+      "completed_at": "2026-10-09T15:30:01Z",
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "source_state"
+        }
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "failure",
+      "run_id": "20261009T153001Z-44840",
+      "scheduled_for": "2026-10-09",
+      "started_at": "2026-10-09T15:30:01Z",
+      "status": "FAILED",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-checkout-recovery-smoke-20261009T1540Z.json",
+      "classification": "success",
+      "completed_at": "2026-10-09T15:42:24Z",
+      "diagnostics": {
+        "active_review_queue_count": 0,
+        "failed_source_count": 0,
+        "failed_sources": [],
+        "manual_review_count": 0,
+        "skipped_source_count": 0,
+        "successful_attempt_count": 1
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "care-checkout-recovery-smoke-20261009T1540Z",
+      "scheduled_for": "2026-10-09",
+      "started_at": "2026-10-09T15:42:22Z",
+      "status": "SUCCESS",
+      "task_key": "care_line_collection"
     }
   ]
 }

@@ -234,8 +234,8 @@ def test_pilot_metadata_and_shared_image_metadata_are_preserved() -> None:
         html = (Path("output/site/food-line/editions") / date / "index.html").read_text(encoding="utf-8")
         assert 'property="og:title" content="Food Line Dispatch —' in html
         assert 'name="twitter:title" content="Food Line Dispatch —' in html
-        assert 'property="og:image" content="https://dispatches.thebluefernco.com/food-line/assets/food-line-dispatch-social.png"' in html
-        assert 'name="twitter:image" content="https://dispatches.thebluefernco.com/food-line/assets/food-line-dispatch-social.png"' in html
+        assert 'property="og:image" content="https://dispatches.thebluefernco.com/food-line/assets/food-line-dispatch-social.jpg"' in html
+        assert 'name="twitter:image" content="https://dispatches.thebluefernco.com/food-line/assets/food-line-dispatch-social.jpg"' in html
         assert 'name="twitter:card" content="summary_large_image"' in html
 
 

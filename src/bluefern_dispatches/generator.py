@@ -3814,6 +3814,7 @@ def build_site(
     for asset in PUBLIC_SITE_ASSETS:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
     copy_asset(root / "assets" / "food-line-logo.png", site_root / "food-line" / "assets" / "food-line-logo.png", dry_run, wrote, warnings)
+    copy_asset(root / "assets" / "food-line-dispatch-social.jpg", site_root / "food-line" / "assets" / "food-line-dispatch-social.jpg", dry_run, wrote, warnings)
     copy_asset(root / "assets" / "food-line-dispatch-social.png", site_root / "food-line" / "assets" / "food-line-dispatch-social.png", dry_run, wrote, warnings)
     copy_asset(root / "assets" / "care-line-logo.png", site_root / "care-line" / "assets" / "care-line-logo.png", dry_run, wrote, warnings)
     copy_asset(root / "assets" / "care-line-dispatch-social.png", site_root / "care-line" / "assets" / "care-line-dispatch-social.png", dry_run, wrote, warnings)

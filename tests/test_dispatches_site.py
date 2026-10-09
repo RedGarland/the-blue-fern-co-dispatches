@@ -3151,6 +3151,7 @@ def test_pages_publish_copies_food_line_audio_map_and_feed_artifacts(built_site)
     assert (pages_repo / "food-line" / "audio" / "podcast.xml").exists()
     assert (pages_repo / "food-line" / "podcast.xml").exists()
     assert (pages_repo / "food-line" / "assets" / "food-line-logo.png").exists()
+    assert (pages_repo / "food-line" / "assets" / "food-line-dispatch-social.jpg").exists()
     assert (pages_repo / "food-line" / "assets" / "food-line-dispatch-social.png").exists()
 
 

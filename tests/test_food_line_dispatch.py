@@ -48,6 +48,7 @@ def _ensure_assets(root: Path) -> None:
     for asset_name in (
         "bluefern.png",
         "food-line-logo.png",
+        "food-line-dispatch-social.jpg",
         "food-line-dispatch-social.png",
         "site.css",
         "favicon.ico",

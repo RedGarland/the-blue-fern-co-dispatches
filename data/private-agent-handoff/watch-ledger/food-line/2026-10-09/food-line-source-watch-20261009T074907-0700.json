@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T074907-0700",
+  "scheduled_for": "2026-10-09T07:49:07-07:00",
+  "started_at": "2026-10-09T07:49:07-07:00",
+  "completed_at": "2026-10-09T07:51:45-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "start": "2026-10-09T06:49:07-07:00",
+    "end": "2026-10-09T07:51:45-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-20261009-fl-pensacola-weac-isaias-closure",
+      "canonical_source_url": "https://www.weacpensacola.org/",
+      "source_url": "https://www.weacpensacola.org/",
+      "publisher": "Warrington Emergency Aid Center",
+      "source_published_at": null,
+      "title": "Office Closure Notice",
+      "exact_supporting_passage": "We will be closed on Friday, October 9, due to Hurricane Isaias.",
+      "summary": "Warrington Emergency Aid Center, an emergency food pantry in Pensacola, Florida, states that it will be closed Friday, October 9, 2026 due to Hurricane Isaias. Friday normally is an operating day (10 a.m. to 1 p.m.). The organization plans to resume normal hours the following week. This is one confirmed scheduled pantry service-day cancellation; affected household counts and the date the notice was posted are not provided.",
+      "location_name": "Warrington Emergency Aid Center",
+      "state": "Florida",
+      "location_scope": "Pensacola, Escambia County, Florida",
+      "affected_groups": [
+        "Households relying on Warrington Emergency Aid Center for emergency groceries"
+      ],
+      "pressure_type": "disaster_related_food_pantry_service_cancellation",
+      "confidence": "high",
+      "source_role": "first_party_provider_notice",
+      "evidence_level": "direct_provider_notice_of_confirmed_scheduled_service_day_cancellation",
+      "agent_query_context": {
+        "watch_focus": "Supplementary audit of high-value missed food-access disruptions: sole grocery loss, disaster-canceled distributions, abrupt pantry closures, and immediate official SNAP/WIC disruptions.",
+        "discovery_query": "food pantry closed Isaias October 9 2026 Alabama Florida Mississippi",
+        "observed_at": "2026-10-09T07:51:45-07:00",
+        "event_date": "2026-10-09",
+        "corroborating_storm_source_url": "https://www.floridadisaster.org/news-media/news/20261008-icymi-governor-ron-desantis-issues-updates-on-state-preparedness-efforts-for-hurricane-isaias/",
+        "deduplication_note": "New to this supplementary discovery run; source has no publication timestamp, so first appearance since the previous hourly check cannot independently be established.",
+        "extent_limit": "The number of people affected, availability of substitutes, and exact reopening date are not established.",
+        "other_provider_services_limit": "The provider announces closure for Friday and expected return the next week; no permanent closure is claimed."
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": "12 targeted web searches completed, focused on only/sole/last full-service grocery closure, storm/fire/outage cancellations of emergency food distribution, abrupt major pantry access loss, and immediate official SNAP/WIC benefit disruption. Verified one first-party cancellation for October 9 in Pensacola. Florida's October 8 state emergency update corroborates the regional hurricane threat but does not establish additional canceled food distributions. Excluded historical Eastport/Latta/Butler/Immokalee grocery closures, historical pantry closures, unrelated storm readiness and non-food closures, an October 2 Texas mobile distribution cancellation outside the hourly window, donation/resource material, and generic policy commentary. Source publication timestamp is unknown; no claim is made that the closure notice was first posted within this search window. No publishing, approval, or production changes."
+}

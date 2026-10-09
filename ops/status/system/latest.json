@@ -28,11 +28,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "SUCCESS",
+      "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "a696d47bf23de6e4be1cb8a0a681577fee5f1ad9",
       "debug_summary": {
-        "aggregate_status": "SUCCESS",
+        "aggregate_status": "FAILED",
         "all_current_failures_external": false,
         "all_current_failures_non_actionable": false,
         "attention_task_count": 1,
@@ -48,7 +48,7 @@
         ],
         "external_access_restriction_count": 0,
         "failed_source_count": 0,
-        "operator_assessment": "HEALTHY",
+        "operator_assessment": "FAILED_ACTION_REQUIRED",
         "primary_classification": "failure",
         "primary_failure_stage": "source_state",
         "primary_layer": "SOURCE",
@@ -64,7 +64,7 @@
         "publication_attempted": false,
         "publication_status": "failure",
         "receipt_completeness": "INCONSISTENT",
-        "recovery_lifecycle": "HEALTHY",
+        "recovery_lifecycle": "INCIDENT_OPEN",
         "stale_observability": false,
         "transient_source_failure_count": 0,
         "unaccounted_event_count": null,
@@ -74,7 +74,7 @@
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-09",
       "receipt_completeness": "INCONSISTENT",
-      "recovery_lifecycle": "HEALTHY",
+      "recovery_lifecycle": "INCIDENT_OPEN",
       "scheduled_health_available": true,
       "source_failure_summary": {
         "all_current_failures_external": false,
@@ -428,8 +428,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-09T17:15:03.449806Z",
+  "exported_at": "2026-10-09T18:15:03.996813Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "DEGRADED"
+  "system_status": "FAILED"
 }

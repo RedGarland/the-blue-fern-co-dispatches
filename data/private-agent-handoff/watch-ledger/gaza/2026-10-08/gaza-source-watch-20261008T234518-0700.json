@@ -1,0 +1,20 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261008T234518-0700",
+  "scheduled_for": "2026-10-08T23:44:51-07:00",
+  "started_at": "2026-10-08T23:45:18-07:00",
+  "completed_at": "2026-10-09T06:46:44.827Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-08T22:52:16-07:00",
+    "end": "2026-10-09T06:46:44.827Z",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall only; production authoritative. OCHA OPT updates and WHO regional information resources checked first, plus WHO global emergency page after regional 502 error. OCHA updates latest listed October 6. WHO global page showed no verified in-window Gaza update. Twelve additional targeted searches total covered OCHA follow-ups, WHO, UNRWA, UNICEF, WFP, ICRC, Reuters, AP, AFP, Gaza crossings/fuel/transport/medical evacuation, MSF health capacity and UN News. No independently verified new event or material new status within observation window. Duplicate October 8 AP/AFP casualty reports excluded; October 9 multi-organization ceasefire-anniversary statement excluded as retrospective material citing older published datasets rather than a newly occurring event. Coverage degraded: WHO regional endpoint returned HTTP 502 and ReliefWeb October 8 report returned HTTP 403; alternative WHO global source and other sources were accessible. Search results may have publication-lag limitations. No primary publication, approval, operational schedule or production change.",
+  "intended_github_branch": "ops/watch-ledger",
+  "intended_github_path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-08/gaza-source-watch-20261008T234518-0700.json"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T134655-0700-r11-4db6a9",
+  "scheduled_for": "2026-10-09T13:45:54-07:00",
+  "started_at": "2026-10-09T13:46:55-07:00",
+  "completed_at": "2026-10-09T13:47:52-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T12:48:37-07:00",
+    "end": "2026-10-09T13:47:52-07:00",
+    "timezone": "America/Los_Angeles",
+    "prior_heartbeat": "food-line-source-watch-20261009T124554-0700-8ad4e1"
+  },
+  "findings": [],
+  "coverage_notes": "Twelve targeted web searches across sole/last/full-service grocery store loss, disaster-canceled food distributions, abrupt major pantry/food-bank access loss, and official SNAP/WIC interruption. No new qualifying source-supported disruption since the previous hourly check. Duplicates excluded: Hurricane Isaias Gulf Coast WIC closures, Prodisee Pantry canceled October 10 Stockton distribution (announced October 7). Older grocery closures, routine schedules, non-food-service closures, guides and historic SNAP shutdown reports excluded. General Oct. 9 Gulf Coast weather-cancellation article updated 11:51 AM CDT but disclosed no new distinct food-access signal. No material search failures. Supplemental/non-exhaustive; production collection authoritative. No review, approval, publication or schedule changes."
+}

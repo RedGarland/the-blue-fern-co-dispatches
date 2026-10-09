@@ -1,0 +1,38 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-20261009T064236-0700-r11-39bd62",
+  "scheduled_for": "2026-10-09T05:45:22-07:00",
+  "started_at": "2026-10-09T06:42:36-07:00",
+  "completed_at": "2026-10-09T06:44:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T03:45:22-07:00",
+    "end": "2026-10-09T06:42:36-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Overlap since last confirmed watch check at approximately 03:45 PDT; current run executed with delayed schedule."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_collector": "Supplementary recall watch; production Care Line national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-05",
+      "new_notice_in_window": false
+    },
+    "targeted_searches_completed": 12,
+    "search_scope": "U.S. states and territories; hospital/ED/maternity/behavioral/dialysis/oncology/primary-care access changes; rural emergency care, ground and air ambulance service, CMS provider actions, restorations.",
+    "excluded": "Prior-watch duplicates (Fitzgibbon, Gulf Coast storm-related VA closures); October 7 Townsend clinic closure predates this window and is not verified new since the prior check; prospective non-effective changes; out-of-country stories.",
+    "research_result": "No newly announced qualifying access changes substantiated within the observation window. Dates of search indexing are not treated as event announcement dates.",
+    "searches_failed": 0,
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://helenair.com/news/local/business/health-care/article_21f52717-87fb-44b6-8047-f922498a6a27.html"
+    ],
+    "exclusions_are_not_production_dedupe_proof": true,
+    "no_publication_or_approval_or_schedule_changes": true
+  }
+}

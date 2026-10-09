@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-20261009T044255-0700-cms12-r11",
+  "scheduled_for": "2026-10-09T04:45:22-07:00",
+  "started_at": "2026-10-09T04:42:55-07:00",
+  "completed_at": "2026-10-09T04:44:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T03:45:22-07:00",
+    "end": "2026-10-09T04:42:55-07:00",
+    "kind": "since_prior_hourly_check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "supplementary recall only; production collector authoritative",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-05",
+      "new_since_prior_check": false
+    },
+    "targeted_searches": 12,
+    "categories": [
+      "hospital/ED/maternity/behavioral/dialysis/oncology/primary care closure or suspension",
+      "emergency and rural service loss",
+      "ambulance/air medical/base service loss",
+      "CMS termination/rescission/CLIA actions",
+      "concrete essential-service restoration"
+    ],
+    "results": "No newly announced, verified qualifying U.S. or territory service changes in the observation interval.",
+    "excluded_examples": [
+      "2026-10-08 Florida Baptist storm closure previously identified in earlier watch",
+      "2026-10-01 Chicago-area obstetrics shutdown reported before interval",
+      "2026-10-08 planned Michigan psychiatric hospital future opening is not an effective service restoration",
+      "Canada ER temporary closure outside U.S. and territories"
+    ],
+    "limitations": [
+      "Search results included stale/out-of-geography material; index lag possible",
+      "Production-collector deduplication was not independently revalidated"
+    ],
+    "actions": "No approval, publication, production modifications, or schedule changes."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261009T094408-0700-r11",
+  "scheduled_for": "2026-10-09T09:45:22-07:00",
+  "started_at": "2026-10-09T09:44:08-07:00",
+  "completed_at": "2026-10-09T09:45:15.912-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T08:53:00-07:00",
+    "end": "2026-10-09T09:45:15.912-07:00",
+    "basis": "Previous visible Care Line watch completed at approximately 08:53 PDT; no earlier primary collector data was used to claim completeness."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "sources_checked": [
+      "CMS Public Notices (current notices through 2026-10-05)",
+      "12 additional targeted web searches across hospital/ED, maternity, rural, behavioral health, dialysis/oncology, primary care, ambulance/air-medical, reopening, Florida/Alabama hurricane closures, territories, public health office disruptions"
+    ],
+    "additional_searches_count": 12,
+    "cms_public_notices_latest_notice_date": "2026-10-05",
+    "result": "No qualifying newly announced healthcare-access loss or concrete restoration within the observation window confirmed.",
+    "exclusions": [
+      "2026-10-08 Hurricane Isaias preparations and previously announced service interruptions excluded from new hourly findings.",
+      "2026-10-09 report about Martin County NC hospital restoration funding excluded: no concrete reinstatement/effective service date.",
+      "St. Peter's Health Townsend clinic closure report from 2026-10-05 excluded: outside watch interval.",
+      "Proposed Maine maternity closure excluded: no concrete access effect."
+    ],
+    "caveats": [
+      "Bounded supplementary recall, not national production collection.",
+      "Search indexing and publication lag can delay detection.",
+      "Canonical CMS Public Notices page accessible; outdated legacy CMS URL unavailable."
+    ]
+  }
+}

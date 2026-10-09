@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-20261009T104457-0700-r11",
+  "scheduled_for": "2026-10-09T10:45:22-07:00",
+  "started_at": "2026-10-09T10:44:57-07:00",
+  "completed_at": "2026-10-09T10:46:25-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-09T08:53:00-07:00",
+    "end_at": "2026-10-09T10:46:25-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first: latest 2026-10-05. Twelve additional targeted searches completed. No verified new access changes; previous Ascension hurricane closures not duplicated. Supplementary recall only; production collector authoritative."
+}

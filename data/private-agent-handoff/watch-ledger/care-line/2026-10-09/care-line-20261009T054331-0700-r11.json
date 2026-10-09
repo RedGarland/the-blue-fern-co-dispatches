@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-20261009T054331-0700-r11",
+  "scheduled_for": "2026-10-09T05:45:22-07:00",
+  "started_at": "2026-10-09T05:43:31-07:00",
+  "completed_at": "2026-10-09T05:44:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T03:45:22-07:00",
+    "end": "2026-10-09T05:44:40-07:00",
+    "timezone": "America/Los_Angeles",
+    "window_basis": "Prior documented watch completion through this execution; allow recall of late-discovered announcements."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_collector_authoritative": true,
+    "purpose": "bounded supplementary national and territory healthcare-access recall",
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "latest_cms_notice_date_observed": "2026-10-05",
+    "additional_targeted_search_count": 12,
+    "source_focus": [
+      "hospital/ED/maternity",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "primary care",
+      "rural emergency",
+      "ambulance",
+      "air medical",
+      "reopening",
+      "storm disruptions",
+      "official notices"
+    ],
+    "search_result": "No newly confirmed qualifying U.S. or territory access-change announcements in the observation window.",
+    "exclusions": [
+      "Historical or out-of-window announcements without newly discovered qualifying access effect",
+      "Canadian ED closure outside geographic scope",
+      "Proposals, ownership-only stories, broad closure-trend coverage",
+      "Previous watch hurricane closure findings"
+    ],
+    "source_limitations": "Search results include dated/historical or unrelated content; zero qualifying results does not establish that no unindexed changes occurred.",
+    "production_deduplication": "No new candidate requiring production-record deduplication."
+  }
+}

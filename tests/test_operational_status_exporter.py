@@ -1286,6 +1286,28 @@ def test_food_line_source_watch_direct_fetch_failures_stay_degraded(tmp_path: Pa
     assert status["aggregate_status"] == "DEGRADED"
     assert status["source_watch_exclusion_summary"]["all_exclusions_non_actionable"] is False
     assert status["debug_summary"]["operator_assessment"] == "DEGRADED_ACTION_RECOMMENDED"
+def test_food_line_failed_resume_is_nonactionable_with_durable_source_watch(tmp_path: Path) -> None:
+    source = _write_food_sep23_recovery_sequence(tmp_path)
+    receipt_path = source / "status" / "operational-health" / "food-line" / "2026-09-23" / "runs" / "z-resume-blocked.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["status"] = "FAILED"
+    receipt["classification"] = "status_resume_failed"
+    receipt["failure_stage"] = "status_resume"
+    receipt["exit_code"] = 10
+    receipt["completed_at"] = "2026-09-23T15:50:00Z"
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    status = build_food_line_status(
+        source_root=source,
+        date="2026-09-23",
+        evaluated_at="2026-09-23T16:00:00Z",
+        exported_at="2026-09-23T16:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "SUCCESS"
+    effective = {row["task_key"]: row for row in status["effective_task_summaries"]}
+    assert effective["food_line_source_watch_resume"]["status"] == "FAILED"
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_SOURCE_EXCLUSIONS"
 
 def test_food_line_resume_remains_effective_when_later_source_watch_is_not_durable(tmp_path: Path) -> None:
     source = _write_food_sep23_recovery_sequence(tmp_path, durable_source_watch=False)

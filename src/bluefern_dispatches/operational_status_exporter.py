@@ -1883,6 +1883,9 @@ def build_food_line_status(
         source_root=source_root,
         date=date,
     )
+    source_watch_resume_nonactionable = source_watch_durably_ready or str(
+        latest_by_task.get("food_line_source_watch", {}).get("status") or ""
+    ) == OperationalStatus.SUCCESS.value
     effective_receipts = _food_effective_receipts(
         source_root=source_root,
         date=date,
@@ -1901,9 +1904,13 @@ def build_food_line_status(
         evaluated_at=evaluated_at,
         recovery=recovery,
     )
+    actionable_failed = [
+        task for task in aggregate["failed_tasks"]
+        if not (source_watch_resume_nonactionable and str(task).split(":", 1)[0] == "food_line_source_watch_resume")
+    ]
     actionable_missed = [
         task for task in aggregate["missed_tasks"]
-        if not (source_watch_durably_ready and task == "food_line_source_watch_resume")
+        if not (source_watch_resume_nonactionable and str(task).split(":", 1)[0] == "food_line_source_watch_resume")
     ]
     source_watch_exclusion_summary = _food_line_source_watch_exclusion_summary(
         source_root=source_root,
@@ -1912,7 +1919,7 @@ def build_food_line_status(
     )
     if stale_observability:
         aggregate_status = OperationalStatus.STALE_OBSERVABILITY.value
-    elif aggregate["failed_tasks"]:
+    elif actionable_failed:
         aggregate_status = OperationalStatus.FAILED.value
     elif actionable_missed:
         aggregate_status = OperationalStatus.MISSED.value

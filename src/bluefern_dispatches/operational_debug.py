@@ -113,6 +113,7 @@ def _operator_assessment(
     source_summary: dict[str, Any],
     private_review_backlog: dict[str, Any],
     stale_observability: bool,
+    source_watch_exclusion_summary: dict[str, Any],
 ) -> str:
     if stale_observability or aggregate_status == "STALE_OBSERVABILITY":
         return "ACTION_REQUIRED_OBSERVABILITY"
@@ -121,6 +122,8 @@ def _operator_assessment(
     if _private_review_pending_item_count(private_review_backlog):
         return "ACTION_REQUIRED_PENDING_REVIEW"
     if aggregate_status in {"SUCCESS", "SAFE_NO_OP"}:
+        if source_watch_exclusion_summary.get("all_exclusions_non_actionable") is True:
+            return "HEALTHY_WITH_SOURCE_EXCLUSIONS"
         return "HEALTHY"
     if aggregate_status != "DEGRADED":
         return "ACTION_REQUIRED"
@@ -135,7 +138,8 @@ def _operator_assessment(
         if primary and primary.get("task_key") == "food_line_source_watch":
             classification = (_text(primary.get("classification")) or "").lower()
             if classification in {"completed_with_exclusions", "success_with_exclusions"}:
-                return "HEALTHY_WITH_SOURCE_EXCLUSIONS"
+                if not source_watch_exclusion_summary or source_watch_exclusion_summary.get("all_exclusions_non_actionable") is True:
+                    return "HEALTHY_WITH_SOURCE_EXCLUSIONS"
     return "DEGRADED_ACTION_RECOMMENDED"
 
 
@@ -153,6 +157,9 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
     source_summary = status.get("source_failure_summary")
     if not isinstance(source_summary, dict):
         source_summary = {}
+    source_watch_exclusion_summary = status.get("source_watch_exclusion_summary")
+    if not isinstance(source_watch_exclusion_summary, dict):
+        source_watch_exclusion_summary = {}
     private_review_backlog = _private_review_backlog(status)
     unaccounted_count = _int(status.get("unaccounted_event_count"))
     primary_layer = _failure_layer(
@@ -181,6 +188,7 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
             source_summary=source_summary,
             private_review_backlog=private_review_backlog,
             stale_observability=stale_observability,
+            source_watch_exclusion_summary=source_watch_exclusion_summary,
         ),
         "primary_layer": primary_layer,
         "primary_task_key": primary.get("task_key") if primary else None,

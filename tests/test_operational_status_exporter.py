@@ -193,6 +193,28 @@ def _write_food_sep23_recovery_sequence(
             ),
             encoding="utf-8",
         )
+        _write_json(
+            source / "output" / "review" / "food-line" / date / "discovery_audit.json",
+            {
+                "status": "completed_with_exclusions",
+                "ok": True,
+                "queries_completed": 200,
+                "queries_failed": 0,
+                "queries_timed_out": 0,
+                "early_exclusion_count": 160,
+                "early_exclusion_reasons": {
+                    "outside_backfill_date_window": 129,
+                    "no_current_pressure_evidence": 25,
+                    "social_watchlist_only": 6,
+                },
+                "duplicate_count": 30,
+                "blocked_fetch_count": 14,
+                "direct_source_fetch_failure_count": 0,
+                "google_news_resolution_failure_count": 21,
+                "candidate_count": 88,
+                "public_eligible_candidate_count": 12,
+            },
+        )
 
     rows = []
     if include_resume:
@@ -1225,8 +1247,11 @@ def test_food_line_recovered_source_watch_sequence_uses_effective_timestamp_stat
     )
 
     assert status["receipt_completeness"] == "COMPLETE"
-    assert status["aggregate_status"] == "DEGRADED"
+    assert status["aggregate_status"] == "SUCCESS"
     assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_SOURCE_EXCLUSIONS"
+    assert status["source_watch_exclusion_summary"]["all_exclusions_non_actionable"] is True
+    assert status["source_watch_exclusion_summary"]["persistent_external_access_restriction_count"] == 14
+    assert status["source_watch_exclusion_summary"]["benign_rejected_news_count"] == 160
     assert len(status["task_summaries"]) == 5
     assert any(row["classification"] == "source_watch_not_initialized" for row in status["task_summaries"])
     effective = {row["task_key"]: row for row in status["effective_task_summaries"]}
@@ -1244,6 +1269,23 @@ def test_food_line_recovered_source_watch_sequence_uses_effective_timestamp_stat
         "success": "b-current-intake-recovered.json",
     }
 
+def test_food_line_source_watch_direct_fetch_failures_stay_degraded(tmp_path: Path) -> None:
+    source = _write_food_sep23_recovery_sequence(tmp_path)
+    audit_path = source / "output" / "review" / "food-line" / "2026-09-23" / "discovery_audit.json"
+    audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    audit["direct_source_fetch_failure_count"] = 1
+    audit_path.write_text(json.dumps(audit), encoding="utf-8")
+
+    status = build_food_line_status(
+        source_root=source,
+        date="2026-09-23",
+        evaluated_at="2026-09-23T16:00:00Z",
+        exported_at="2026-09-23T16:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["source_watch_exclusion_summary"]["all_exclusions_non_actionable"] is False
+    assert status["debug_summary"]["operator_assessment"] == "DEGRADED_ACTION_RECOMMENDED"
 
 def test_food_line_resume_remains_effective_when_later_source_watch_is_not_durable(tmp_path: Path) -> None:
     source = _write_food_sep23_recovery_sequence(tmp_path, durable_source_watch=False)
@@ -1273,7 +1315,7 @@ def test_food_line_missing_resume_is_nonactionable_only_with_durable_source_watc
         exported_at="2026-09-23T16:01:00Z",
     )
 
-    assert status["aggregate_status"] == "DEGRADED"
+    assert status["aggregate_status"] == "SUCCESS"
     assert {row["task_key"] for row in status["effective_task_summaries"]} == {
         "food_line_source_watch",
         "food_line_current_intake",

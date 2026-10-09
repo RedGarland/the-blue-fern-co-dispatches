@@ -1143,6 +1143,133 @@ def _care_collection_diagnostics(
     }
 
 
+def _artifact_json(receipt: dict[str, Any], source_root: Path) -> dict[str, Any]:
+    refs = receipt.get("artifact_refs") if isinstance(receipt.get("artifact_refs"), dict) else {}
+    artifact = refs.get("task_receipt")
+    if not isinstance(artifact, str) or not artifact:
+        return {}
+    path = Path(artifact)
+    if not path.is_absolute():
+        path = source_root / path
+    payload = _load_json_object(path)
+    return payload or {}
+
+
+def _count_from(*values: Any) -> int | None:
+    for value in values:
+        parsed = _safe_nonnegative_int(value)
+        if parsed is not None:
+            return parsed
+    return None
+
+
+def _float_from(*values: Any) -> float | None:
+    for value in values:
+        try:
+            parsed = float(value)
+        except (TypeError, ValueError):
+            continue
+        if parsed >= 0:
+            return parsed
+    return None
+
+
+def _reason_counts(value: Any) -> dict[str, int]:
+    if not isinstance(value, dict):
+        return {}
+    result: dict[str, int] = {}
+    for raw_key, raw_value in value.items():
+        key = str(raw_key or "").strip().lower().replace(" ", "_").replace("-", "_")
+        if not SAFE_KEY_RE.fullmatch(key):
+            continue
+        count = _safe_nonnegative_int(raw_value)
+        if count is not None:
+            result[key] = count
+    return result
+
+
+def _food_line_source_watch_exclusion_summary(
+    *,
+    source_root: Path,
+    date: str,
+    effective_receipts: Iterable[dict[str, Any]],
+) -> dict[str, Any]:
+    source_watch_receipts = [
+        receipt
+        for receipt in effective_receipts
+        if receipt.get("dispatch") == "food-line" and receipt.get("task_key") == "food_line_source_watch"
+    ]
+    if not source_watch_receipts:
+        return {}
+    receipt = max(source_watch_receipts, key=_receipt_sort_time)
+    classification = str(receipt.get("classification") or "")
+    if classification not in {"completed_with_exclusions", "success_with_exclusions"}:
+        return {}
+    details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
+    task_payload = _artifact_json(receipt, source_root)
+    run_id = str(receipt.get("run_id") or task_payload.get("run_id") or "").strip()
+    run_state = _load_json_object(
+        source_root / "data" / "dispatches" / "food-line" / "discovery-runs" / date / run_id / "run-state.json"
+    ) if run_id else None
+    run_state = run_state or {}
+    coverage = run_state.get("coverage") if isinstance(run_state.get("coverage"), dict) else {}
+    audit = _load_json_object(source_root / "output" / "review" / "food-line" / date / "discovery_audit.json") or {}
+
+    queries_failed = _count_from(audit.get("queries_failed"), run_state.get("queries_failed"), task_payload.get("queries_failed")) or 0
+    queries_timed_out = _count_from(
+        audit.get("queries_timed_out"),
+        run_state.get("queries_timed_out"),
+        task_payload.get("queries_timed_out"),
+    ) or 0
+    direct_source_failures = _count_from(audit.get("direct_source_fetch_failure_count")) or 0
+    blocked_fetches = _count_from(audit.get("blocked_fetch_count")) or 0
+    google_news_resolution_failures = _count_from(audit.get("google_news_resolution_failure_count")) or 0
+    early_exclusions = _count_from(audit.get("early_exclusion_count")) or 0
+    duplicates = _count_from(audit.get("duplicate_count")) or 0
+    direct_source_coverage = _float_from(
+        task_payload.get("direct_source_coverage"),
+        coverage.get("direct_success_ratio"),
+    )
+    required_query_coverage = _float_from(
+        task_payload.get("required_query_coverage"),
+        coverage.get("required_success_ratio"),
+    )
+    actionable_source_failure_count = queries_failed + queries_timed_out + direct_source_failures
+    all_exclusions_non_actionable = (
+        actionable_source_failure_count == 0
+        and (direct_source_coverage is None or direct_source_coverage >= 0.75)
+        and (required_query_coverage is None or required_query_coverage >= 0.9)
+    )
+    return {
+        "classification": classification,
+        "source_status": str(details.get("source_status") or task_payload.get("final_status") or classification),
+        "source_export_status": str(details.get("source_export_status") or task_payload.get("export_status") or ""),
+        "all_exclusions_non_actionable": all_exclusions_non_actionable,
+        "actionable_source_failure_count": actionable_source_failure_count,
+        "queries_failed": queries_failed,
+        "queries_timed_out": queries_timed_out,
+        "direct_source_fetch_failure_count": direct_source_failures,
+        "persistent_external_access_restriction_count": blocked_fetches,
+        "google_news_resolution_failure_count": google_news_resolution_failures,
+        "benign_rejected_news_count": early_exclusions,
+        "duplicate_candidate_count": duplicates,
+        "early_exclusion_reasons": _reason_counts(audit.get("early_exclusion_reasons")),
+        "candidate_count": _count_from(audit.get("candidate_count"), task_payload.get("candidate_count"), run_state.get("candidates_discovered")),
+        "raw_candidate_count": _count_from(audit.get("raw_candidate_count")),
+        "public_eligible_candidate_count": _count_from(audit.get("public_eligible_candidate_count")),
+        "qualified_pressure_signal_count": _count_from(audit.get("qualified_pressure_signals")),
+        "direct_source_fetch_attempt_count": _count_from(audit.get("direct_source_fetch_attempt_count")),
+        "direct_source_fetch_success_count": _count_from(audit.get("direct_source_fetch_success_count")),
+        "queries_completed": _count_from(audit.get("queries_completed"), run_state.get("queries_completed"), task_payload.get("queries_completed")),
+        "queries_total": _count_from(run_state.get("queries_total"), task_payload.get("queries_planned"), audit.get("queries_total")),
+        "direct_source_coverage": direct_source_coverage,
+        "required_query_coverage": required_query_coverage,
+    }
+
+
+def _food_line_source_watch_exclusions_non_actionable(summary: dict[str, Any]) -> bool:
+    return bool(summary and summary.get("all_exclusions_non_actionable") is True)
+
 def _task_summary(
     receipt: dict[str, Any],
     linkage: dict[str, str],
@@ -1778,6 +1905,11 @@ def build_food_line_status(
         task for task in aggregate["missed_tasks"]
         if not (source_watch_durably_ready and task == "food_line_source_watch_resume")
     ]
+    source_watch_exclusion_summary = _food_line_source_watch_exclusion_summary(
+        source_root=source_root,
+        date=date,
+        effective_receipts=effective_receipts,
+    )
     if stale_observability:
         aggregate_status = OperationalStatus.STALE_OBSERVABILITY.value
     elif aggregate["failed_tasks"]:
@@ -1785,7 +1917,12 @@ def build_food_line_status(
     elif actionable_missed:
         aggregate_status = OperationalStatus.MISSED.value
     elif aggregate["degraded_tasks"] or aggregate["upstream_blocked_tasks"]:
-        aggregate_status = OperationalStatus.DEGRADED.value
+        non_source_watch_degraded = [task for task in aggregate["degraded_tasks"] if task != "food_line_source_watch"]
+        aggregate_status = OperationalStatus.SUCCESS.value if (
+            _food_line_source_watch_exclusions_non_actionable(source_watch_exclusion_summary)
+            and not non_source_watch_degraded
+            and not aggregate["upstream_blocked_tasks"]
+        ) else OperationalStatus.DEGRADED.value
     else:
         aggregate_status = OperationalStatus.SUCCESS.value
     source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
@@ -1805,6 +1942,7 @@ def build_food_line_status(
         "receipt_completeness": completeness,
         "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
         "effective_task_summaries": [_task_summary(receipt, linkage) for receipt in effective_receipts],
+        "source_watch_exclusion_summary": source_watch_exclusion_summary,
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,
         "publication_attempted": publication_attempted,

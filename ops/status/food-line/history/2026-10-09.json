@@ -10,11 +10,11 @@
     "state": "HANDOFF_RECEIVED_SUCCESS",
     "unaccounted_count": 0
   },
-  "aggregate_status": "FAILED",
+  "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "54e4755f031dddf42bd68f3ef9c2cd6be2ae9d21",
+  "current_runner_head": "79aaaa4374885aa37b6309c34c743cdc3ca120f3",
   "debug_summary": {
-    "aggregate_status": "FAILED",
+    "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
     "all_current_failures_non_actionable": null,
     "attention_task_count": 1,
@@ -30,7 +30,7 @@
     ],
     "external_access_restriction_count": null,
     "failed_source_count": null,
-    "operator_assessment": "FAILED_ACTION_REQUIRED",
+    "operator_assessment": "HEALTHY",
     "primary_classification": "status_resume_failed",
     "primary_failure_stage": "status_resume",
     "primary_layer": "TASK",
@@ -46,7 +46,7 @@
     "publication_attempted": false,
     "publication_status": "skipped_not_release_ready",
     "receipt_completeness": "COMPLETE",
-    "recovery_lifecycle": "INCIDENT_OPEN",
+    "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": null,
     "unaccounted_event_count": null,
@@ -131,10 +131,8 @@
       "task_key": "food_line_source_watch_resume"
     }
   ],
-  "incident_reference": {
-    "date": "2026-10-09"
-  },
-  "last_exported_at": "2026-10-09T20:30:17.188761Z",
+  "incident_reference": null,
+  "last_exported_at": "2026-10-09T20:41:14.083936Z",
   "last_receipt_at": "2026-10-09T20:24:35.126515Z",
   "latest_runtime_proof_date": "2026-10-09T20:24:33.005957Z",
   "next_expected_run": null,
@@ -298,7 +296,7 @@
   "publication_attempted": false,
   "publication_status": "skipped_not_release_ready",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "INCIDENT_OPEN",
+  "recovery_lifecycle": "HEALTHY",
   "runner_source_head": null,
   "schema_version": "bluefern_external_operational_status_v1",
   "source_watch_exclusion_summary": {},

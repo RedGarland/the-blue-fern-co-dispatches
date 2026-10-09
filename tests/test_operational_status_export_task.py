@@ -1,5 +1,6 @@
 from pathlib import Path
 import subprocess
+from datetime import datetime, timezone
 from types import SimpleNamespace
 
 import pytest
@@ -61,6 +62,40 @@ def test_git_head_uses_inline_safe_directory(monkeypatch: pytest.MonkeyPatch, tm
 
     assert task._git_head(tmp_path) == "abc123"
     assert calls == [["git", "-c", f"safe.directory={tmp_path.resolve().as_posix()}", "rev-parse", "HEAD"]]
+
+
+def test_default_export_date_uses_runner_local_day_even_without_food_receipt_dirs(tmp_path: Path) -> None:
+    assert task._default_date(
+        tmp_path,
+        now=datetime(2026, 10, 9, 6, 15, tzinfo=timezone.utc),
+    ) == "2026-10-08"
+
+
+def test_python_wrapper_records_effective_export_date(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    status = tmp_path / "status"
+    source.mkdir()
+    status.mkdir()
+    received: dict[str, object] = {}
+
+    monkeypatch.setattr(task, "_git_head", lambda _root: "HEAD")
+    monkeypatch.setattr(task, "_default_date", lambda _source_root: "2026-10-08")
+    monkeypatch.setattr(task, "prepare_status_checkout", lambda *_args, **_kwargs: None)
+    _patch_clean_status_state(monkeypatch)
+    monkeypatch.setattr(task, "load_recovery_context", lambda _path: None)
+
+    def fake_export_status(**kwargs: object) -> dict[str, object]:
+        received.update(kwargs)
+        return {"paths": []}
+
+    monkeypatch.setattr(task, "export_status", fake_export_status)
+
+    result = task.main(["--source-root", str(source), "--status-checkout", str(status), "--no-push"])
+
+    assert result == 0
+    assert received["date"] == "2026-10-08"
+    receipt = next((source / "logs" / "operational-status-exporter").glob("*.json"))
+    assert '"export_date": "2026-10-08"' in receipt.read_text(encoding="utf-8")
 
 
 def test_care_expected_instances_are_read_from_task_scheduler_xml(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -62,12 +62,12 @@ def _file_hashes(root: Path, paths: list[str]) -> dict[str, str | None]:
     return result
 
 
-def _default_date(source_root: Path) -> str:
-    root = source_root / "status" / "operational-health" / "food-line"
-    dates = sorted(path.name for path in root.iterdir() if path.is_dir() and len(path.name) == 10) if root.exists() else []
-    if not dates:
-        raise ExportError("no Food Line operational-health date directories found")
-    return dates[-1]
+def _default_date(source_root: Path, *, now: datetime | None = None) -> str:
+    del source_root
+    current = now or datetime.now(CARE_SCHEDULER_TIMEZONE)
+    if current.tzinfo is None:
+        current = current.replace(tzinfo=CARE_SCHEDULER_TIMEZONE)
+    return current.astimezone(CARE_SCHEDULER_TIMEZONE).date().isoformat()
 
 
 def _write_local_receipt(source_root: Path, run_id: str, payload: dict[str, Any]) -> Path:
@@ -203,6 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     }
     try:
         date = args.date or _default_date(args.source_root)
+        record["export_date"] = date
         prepare_status_checkout(
             args.status_checkout,
             branch=args.prepare_branch,

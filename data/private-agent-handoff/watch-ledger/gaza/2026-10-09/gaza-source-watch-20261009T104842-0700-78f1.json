@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T104842-0700-78f1",
+  "scheduled_for": "2026-10-09T10:44:51-07:00",
+  "started_at": "2026-10-09T10:48:42-07:00",
+  "completed_at": "2026-10-09T10:50:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T09:43:25-07:00",
+    "end": "2026-10-09T10:50:30-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; primary Gaza collector and publisher remain authoritative.",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; newest homepage updates dated 6 October 2026; no new qualifying content within window."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Global page accessible; WHO EMRO oPt and emergency situation-report endpoints returned HTTP 502."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "OCHA targeted Gaza",
+      "WHO health/medical",
+      "UNICEF and UNRWA displacement/water",
+      "WFP food access",
+      "ICRC civilians/medical",
+      "Reuters incidents/ceasefire",
+      "AP casualties",
+      "UN News crossings",
+      "Rafah/Kerem Shalom",
+      "casualties and hospitals",
+      "IOM winter shelter",
+      "hostages and ceasefire"
+    ],
+    "source_access_issues": [
+      "WHO EMRO oPt and emergency situation-report endpoints: HTTP 502",
+      "UN News: robots.txt restriction",
+      "IOM direct release: HTTP 403",
+      "WAFA accessible via Palestinian news agency; other alternate report pages partially inaccessible (timeout/429)"
+    ],
+    "excluded_or_unverified": [
+      "IOM Gaza winter shelter assessment dated 9 October was reported by a prior watch; duplicate.",
+      "WAFA report on one person killed east of al-Masdar/Maghazi-Bureij shows 9 October 10:38 Palestine local time (~00:38 PDT), predating this window.",
+      "Anadolu video distributed through Reuters Connect records five Palestinians injured by an airstrike on an Al-Mawasi tent on 9 October, but available page lacks publication hour; first-seen time cannot establish that the development is new since prior check.",
+      "Other 8 October Gaza casualty claims and historical aggregate counts excluded as recycled or outside window."
+    ],
+    "verification_limitations": "No independently timestamped, nonduplicative source publication within the observation window was established. This does not establish that no qualifying event occurred.",
+    "production_changes": false,
+    "schedule_changes": false,
+    "approved_or_published": false
+  }
+}

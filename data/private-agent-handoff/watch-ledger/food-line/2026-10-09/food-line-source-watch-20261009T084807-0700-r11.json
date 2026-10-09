@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T084807-0700-r11",
+  "scheduled_for": "2026-10-09T08:45:54-07:00",
+  "started_at": "2026-10-09T08:48:07-07:00",
+  "completed_at": "2026-10-09T08:49:34-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T07:51:45-07:00",
+    "end": "2026-10-09T08:49:34-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted searches; four high-value miss classes covered (sole grocery store loss; disaster-canceled emergency distributions; abrupt pantry or food bank closure; official SNAP/WIC interruptions). No new supported findings. Previously noted Gulf Coast WIC office closures and Pensacola pantry closure excluded as duplicates; earlier Texas cancellation excluded as old. Routine distributions, fundraising, historic grocery shutdowns and generic food-cost stories excluded. No retrieval failures. Production collection remains authoritative; no approval/publication/schedule changes."
+}

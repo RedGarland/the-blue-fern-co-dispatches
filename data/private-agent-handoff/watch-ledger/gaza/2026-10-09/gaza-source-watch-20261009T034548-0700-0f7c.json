@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T034548-0700-0f7c",
+  "scheduled_for": "2026-10-09T03:44:51-07:00",
+  "started_at": "2026-10-09T03:45:48-07:00",
+  "completed_at": "2026-10-09T03:47:35-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T01:50:44-07:00",
+    "end": "2026-10-09T03:47:35-07:00",
+    "start_basis": "Most recent confirmed completed ledger checkpoint available to this run; conservative overlap allowed to avoid missing an intervening check."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; not the primary publisher or collector.",
+    "order": "OCHA OPT and WHO checked first, followed by exactly 12 targeted web searches.",
+    "official_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest visible update dated 2026-10-06. No new qualifying item."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated Gaza-specific operational development verified."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Indexed historical reports; no newly dated report verified."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "topics_checked": [
+      "civilian casualties",
+      "displacement",
+      "aid/crossings",
+      "food and water",
+      "hospital capacity, ambulances and transport",
+      "fuel and medical evacuation",
+      "infrastructure damage",
+      "detention and hostages",
+      "ceasefire/negotiations",
+      "operations with documented civilian impact"
+    ],
+    "deduplication": "2026-10-08 seven-death Gaza report previously identified in prior recall; excluded. Older reports, opinion/analysis and education-surveillance proposal excluded as non-qualifying.",
+    "new_findings_verified": 0,
+    "source_issues": [],
+    "unresolved": "Prior 02:45 checkpoint could not be enumerated with available file-only GitHub interface; searched conservatively from last confirmed heartbeat at 01:50:44 PDT.",
+    "publication_approval_production_schedule_changes": false
+  }
+}

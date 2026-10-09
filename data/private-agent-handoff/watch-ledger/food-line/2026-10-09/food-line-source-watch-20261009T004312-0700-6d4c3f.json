@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T004312-0700-6d4c3f",
+  "scheduled_for": "2026-10-08T23:45:54-07:00",
+  "started_at": "2026-10-09T00:43:12-07:00",
+  "completed_at": "2026-10-09T00:45:22.199-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-08T22:47:00-07:00",
+    "end": "2026-10-09T00:45:22.199-07:00"
+  },
+  "findings": [
+    {
+      "finding_id": "FL-20261009-FL-WALTON-WIC-STORM-OFFICES",
+      "canonical_source_url": "https://walton.floridahealth.gov/2026/10/08/doh-walton-offices-close-in-response-to-severe-weather-impacts-2/",
+      "source_url": "https://walton.floridahealth.gov/2026/10/08/doh-walton-offices-close-in-response-to-severe-weather-impacts-2/",
+      "publisher": "Florida Department of Health in Walton County",
+      "source_published_at": null,
+      "source_published_date": "2026-10-08",
+      "title": "DOH-Walton Offices Close in Response to Severe Weather Impacts",
+      "exact_supporting_passage": "All DOH-Walton offices will close Thursday, October 8, in response to the severe weather impacts. Offices will remain closed until further notice.",
+      "summary": "The Florida Department of Health in Walton County states all county health offices closed October 8 until further notice because of severe weather. The county health department provides WIC services, so in-person WIC appointments and benefit issuance may be interrupted October 8-9. The notice does not establish an outage for existing WIC EBT purchases. This signal is newly found in the supplementary watch, but the notice is dated October 8 and its publication hour is unknown; it cannot be certified as first published during the observation window.",
+      "location": "Walton County",
+      "state": "FL",
+      "scope": "county",
+      "affected_groups": [
+        "WIC participants requiring in-person services",
+        "WIC applicants needing in-person eligibility/benefit services"
+      ],
+      "pressure_type": "official_wic_service_access_interruption",
+      "confidence": "medium",
+      "source_role": "official_primary_notice",
+      "evidence_level": "county_health_department_closure_notice_and_WIC_program_page",
+      "bounded_query_context": {
+        "query": "\"WIC\" \"closed\" \"October 9\" \"2026\" health department storm",
+        "query_class": "official_snap_wic_interruption",
+        "window_start": "2026-10-08T22:47:00-07:00",
+        "window_end": "2026-10-09T00:45:22.199-07:00",
+        "temporal_qualification": "Newly discovered during this recall watch, not proved newly posted or newly effective within the hourly search window."
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "searches_performed": 12,
+    "search_limit": 12,
+    "search_retrieval_failures": [],
+    "classes_checked": [
+      "sole/last/full-service grocery loss or closure",
+      "storm/disaster-canceled emergency food distribution",
+      "abrupt food pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC immediate service interruption"
+    ],
+    "duplicates_excluded": [
+      "Prodisee Pantry storm cancellation",
+      "Reimagine storm cancellation",
+      "Warrington Emergency Aid Center disruption",
+      "previously signaled Escambia, Santa Rosa, Okaloosa, Bay, Washington (Florida) and George/Jackson (Mississippi) WIC office closures"
+    ],
+    "stale_results_excluded": [
+      "Spencer NY September grocery-store fire",
+      "El Paso TX September food-bank storm closure",
+      "Akron OH May grocery fire",
+      "San Jose CA threatened Lighthouse Food Rescue closure (no confirmed new immediate service cessation)"
+    ],
+    "observation_limitations": [
+      "Latest prior completed watch end only known to approximately 22:47 PT October 8; this run started at 00:43 PT October 9.",
+      "Walton County notice is dated October 8 without published hour; this is a newly discovered missed signal, not a confirmed new event within the hourly observation window.",
+      "No reported WIC EBT purchase outage. In-person impact inferred from all-offices closure and confirmed WIC service listing."
+    ],
+    "production_collection_authoritative": true,
+    "persistence_status": "PERSISTED_IF_READBACK_SUCCEEDS",
+    "intended_repository": "RedGarland/the-blue-fern-co-dispatches",
+    "intended_branch": "ops/watch-ledger",
+    "intended_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-09/food-line-source-watch-20261009T004312-0700-6d4c3f.json"
+  }
+}

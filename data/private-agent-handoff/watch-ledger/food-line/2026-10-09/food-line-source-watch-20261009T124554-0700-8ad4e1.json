@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T124554-0700-8ad4e1",
+  "scheduled_for": "2026-10-09T12:45:54-07:00",
+  "started_at": "2026-10-09T12:47:19-07:00",
+  "completed_at": "2026-10-09T12:48:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T11:45:54-07:00",
+    "end": "2026-10-09T12:48:37-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted web searches covered only/last full-service grocery loss, disaster cancellations of emergency food distribution, abrupt major pantry/food-bank service loss, and official SNAP/WIC interruptions. No new qualifying signal established within this hourly window. Exclusions: previously reported Prodisee Pantry cancellation and Gulf Coast WIC closures, older Spencer NY sole grocery fire, non-service Feeding the Gulf Coast storm office closures, and longstanding Helping Hands appointment-only pantry access. No material search failures. Production collection remains authoritative. No review, approval, publishing, production, or schedule actions."
+}

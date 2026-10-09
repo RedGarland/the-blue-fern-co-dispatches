@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T024455-0700-r13",
+  "scheduled_for": "2026-10-09T02:44:51-07:00",
+  "started_at": "2026-10-09T02:44:55-07:00",
+  "completed_at": "2026-10-09T02:46:32-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T01:50:44-07:00",
+    "end": "2026-10-09T02:46:32-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "checks": "OCHA OPT homepage checked first (most recent listed publication Oct 6); WHO EMRO OPT and situation reports checked next but returned HTTP 502; WHO global crisis page unavailable (DisabledError). Conducted exactly 12 additional targeted searches (8 fast, 4 deep) across casualties, aid, food/water, crossings, displacement, hospitals/medical evacuation, detention/hostages, military operations, ceasefire, and civilian infrastructure.",
+    "source_issues": [
+      "WHO EMRO OPT homepage returned HTTP 502",
+      "WHO EMRO OPT reports endpoint returned HTTP 502",
+      "WHO global crisis page returned DisabledError"
+    ],
+    "exclusions": "Oct 9 IFJ journalist-casualty roster update contained older documented incidents without a verified new casualty; Oct 9 Amnesty-led annual ceasefire review and historical statistics did not establish a post-check event; Reuters Connect medical-evacuation footage was labelled recent without verified observation date and expressly not independently verified by Reuters; previously known Oct 8 Gaza casualties excluded. No temporally verifiable new/follow-up event since previous 01:50:44 PDT check.",
+    "findings_basis": "Published/updated date alone is insufficient: only material new event or operational change supported within window qualifies. No eligible report met freshness and traceability criteria.",
+    "source_urls": [
+      "https://www.ochaopt.org/",
+      "https://www.emro.who.int/opt/",
+      "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+      "https://www.ifj.org/es/sala-de-prensa/noticias/detalle/category/comunicados-de-prensa/article/palestine-at-least-203-journalists-and-media-workers-killed-in-gaza",
+      "https://www.amnesty.org.au/gaza-ceasefire-exists-in-name-only-say-more-than-100-organizations/"
+    ],
+    "primary_publisher_authoritative": true,
+    "production_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false,
+    "notification_reason": "Persistent WHO regional access issue already reported in previous run; no newly material degradation or new qualifying development."
+  }
+}

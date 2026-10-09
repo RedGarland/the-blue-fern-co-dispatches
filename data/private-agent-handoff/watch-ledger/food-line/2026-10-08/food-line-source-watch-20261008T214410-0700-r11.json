@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261008T214410-0700-r11",
+  "scheduled_for": "2026-10-08T21:45:54-07:00",
+  "started_at": "2026-10-08T21:44:10-07:00",
+  "completed_at": "2026-10-08T21:45:19-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-08T20:45:10-07:00",
+    "end": "2026-10-08T21:45:19-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_failures": 0,
+    "scope": "Supplementary, not production",
+    "new_qualifying_signals": 0,
+    "excluded_duplicates": [
+      "Prodisee Pantry cancellation",
+      "Reimagine cancellation",
+      "Gulf Coast WIC closures previously identified"
+    ],
+    "limitation": "No exact publication-hour evidence for same-day pages; all new-on-window claims withheld."
+  }
+}

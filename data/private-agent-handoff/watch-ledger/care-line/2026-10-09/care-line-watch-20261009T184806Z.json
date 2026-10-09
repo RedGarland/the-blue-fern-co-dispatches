@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261009T184806Z",
+  "scheduled_for": "2026-10-09T11:45:22-07:00",
+  "started_at": "2026-10-09T11:48:06-07:00",
+  "completed_at": "2026-10-09T11:54:00-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "date_from": "2026-10-09",
+    "date_to": "2026-10-09",
+    "edition_date": "2026-10-09"
+  },
+  "findings": [
+    {
+      "finding_id": "care-ca-tender-home-health-cms-termination-20261009",
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "title": "CMS Medicare termination notice: Tender Home Health",
+      "publisher": "CMS",
+      "exact_supporting_passage": "2026-10-09 | Tender Home Health | Termination Notice | 059525 | Home Health Agency (HHA) | CA",
+      "source_published_date": "2026-10-09",
+      "state": "California",
+      "city": null,
+      "county": null,
+      "territory": null,
+      "event_type": "medicare_termination_notice",
+      "service_line": "home health",
+      "access_consequences": [
+        "CMS lists a Medicare termination notice; impact on patients and effective date require review."
+      ],
+      "affected_population": null,
+      "effective_date": null,
+      "announcement_date": "2026-10-09",
+      "confidence": "high_for_notice",
+      "source_role": "cms_primary_regulatory_index",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": "CMS Public Notices reviewed first; 12 additional targeted searches completed. Individual CMS notice link unavailable, so effective date and patient-level impact are not verified. Prior-hour deduplication against the repository ledger was unavailable. No publishing or approval."
+}

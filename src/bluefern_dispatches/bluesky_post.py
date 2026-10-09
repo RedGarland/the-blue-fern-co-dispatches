@@ -31,8 +31,8 @@ BLUESKY_GAZA_POST_FALLBACK = "The latest Gaza briefing is live.\n\nFull briefing
 FOOD_LINE_DISPATCH_SLUG = "food-line"
 FOOD_LINE_BLUESKY_POST_FALLBACK = "The latest Food Line briefing is live.\n\nFull briefing:"
 FOOD_LINE_BLUESKY_POST_STATE_FILENAME = "bluesky_post.json"
-FOOD_LINE_SOCIAL_IMAGE_PATH = "assets/food-line-dispatch-social.png"
-FOOD_LINE_SOCIAL_IMAGE_URL = f"{BASE_URL}/food-line/assets/food-line-dispatch-social.png"
+FOOD_LINE_SOCIAL_IMAGE_PATH = "assets/food-line-dispatch-social.jpg"
+FOOD_LINE_SOCIAL_IMAGE_URL = f"{BASE_URL}/food-line/assets/food-line-dispatch-social.jpg"
 FOOD_LINE_SOCIAL_IMAGE_ALT = "The Food Line Dispatch social card from The Blue Fern Co., with wheat, a U.S. map outline, and the subtitle Source-backed daily food-pressure briefing."
 BLUESKY_STALE_SYNTHETIC_PHRASES: tuple[str, ...] = (
     "satellite imagery showing changes on the ground",

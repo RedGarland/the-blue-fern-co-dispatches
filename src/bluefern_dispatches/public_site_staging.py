@@ -141,7 +141,13 @@ def _copy_current_assets(source_root: Path, stage_root: Path) -> None:
         _copy_required_asset(source_root / "assets" / "site.css", stage_root / dispatch / "assets" / "site.css")
         _copy_required_asset(source_root / "assets" / logo, stage_root / dispatch / "assets" / logo)
         _copy_required_asset(source_root / "assets" / logo, stage_root / "assets" / logo)
-    for asset in ("bluefern.png", "care-line-mark.png", "food-line-dispatch-social.png", "care-line-dispatch-social.png"):
+    for asset in (
+        "bluefern.png",
+        "care-line-mark.png",
+        "food-line-dispatch-social.jpg",
+        "food-line-dispatch-social.png",
+        "care-line-dispatch-social.png",
+    ):
         source = source_root / "assets" / asset
         if source.exists():
             shutil.copy2(source, stage_root / "assets" / asset)

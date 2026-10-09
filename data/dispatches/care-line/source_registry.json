@@ -37,10 +37,22 @@
         "vpn_on_403",
         "vpn_off_403",
         "official_alternatives_inaccessible",
-        "no_safe_migration"
+        "no_safe_migration",
+        "runner_probe_2026-10-09_all_official_alternates_403"
       ],
       "coverage_reduced": true,
-      "remediation_available": false
+      "remediation_available": false,
+      "external_access_restriction_review": {
+        "reviewed_on": "2026-10-09",
+        "reviewed_urls": [
+          "https://www.hhs.gov/press-room/index.html",
+          "https://www.hhs.gov/press-room/index.html?page=0",
+          "https://www.hhs.gov/rss/news.xml"
+        ],
+        "runner_probe_status": "blocked_http_403",
+        "remediation": "no_reliable_official_alternate_endpoint"
+      },
+      "collection_method": "structured_index_polling"
     },
     {
       "source_id": "cms-newsroom",
@@ -146,10 +158,22 @@
         "vpn_on_403",
         "vpn_off_403",
         "official_alternatives_inaccessible",
-        "no_safe_migration"
+        "no_safe_migration",
+        "runner_probe_2026-10-09_all_official_alternates_403"
       ],
       "coverage_reduced": true,
-      "remediation_available": false
+      "remediation_available": false,
+      "external_access_restriction_review": {
+        "reviewed_on": "2026-10-09",
+        "reviewed_urls": [
+          "https://www.hrsa.gov/about/news/press-releases",
+          "https://www.hrsa.gov/about/news/press-releases?page=0",
+          "https://www.hrsa.gov/about/news/press-releases?page=1"
+        ],
+        "runner_probe_status": "blocked_http_403",
+        "remediation": "no_reliable_official_alternate_endpoint"
+      },
+      "collection_method": "structured_index_polling"
     },
     {
       "source_id": "samhsa-newsroom",
@@ -343,10 +367,22 @@
         "vpn_on_403",
         "vpn_off_403",
         "official_alternatives_inaccessible",
-        "no_safe_migration"
+        "no_safe_migration",
+        "runner_probe_2026-10-09_all_official_alternates_403"
       ],
       "coverage_reduced": true,
-      "remediation_available": false
+      "remediation_available": false,
+      "external_access_restriction_review": {
+        "reviewed_on": "2026-10-09",
+        "reviewed_urls": [
+          "https://www.fiercehealthcare.com/rss/xml",
+          "https://www.fiercehealthcare.com/feed",
+          "https://www.fiercehealthcare.com/rss.xml"
+        ],
+        "runner_probe_status": "blocked_http_403",
+        "remediation": "no_reliable_official_alternate_endpoint"
+      },
+      "collection_method": "feed_polling"
     },
     {
       "source_id": "medcity-news",
@@ -441,15 +477,25 @@
         "northcarolinahealthnews.org",
         "www.northcarolinahealthnews.org"
       ],
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-10-05",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://www.northcarolinahealthnews.org/feed/",
+        "previous_adapter_type": "rss",
+        "previous_collection_method": "",
+        "remediation": "current_official_feed_revalidated_from_runner_no_endpoint_change_required",
+        "remediated_feed_url": "https://www.northcarolinahealthnews.org/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-10-05"
+      }
     },
     {
       "source_id": "georgia-health-news",
@@ -513,22 +559,32 @@
       "allowed_hosts": [
         "coloradosun.com"
       ],
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-10-05",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://coloradosun.com/category/news/health/feed/",
+        "previous_adapter_type": "rss",
+        "previous_collection_method": "",
+        "remediation": "current_official_category_feed_revalidated_from_runner_no_endpoint_change_required",
+        "remediated_feed_url": "https://coloradosun.com/category/news/health/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-10-05"
+      }
     },
     {
       "source_id": "calmatters-health",
       "name": "CalMatters Health",
       "publisher": "CalMatters",
       "source_type": "regional_publisher",
-      "feed_url": "https://calmatters.org/category/health/",
+      "feed_url": "https://calmatters.org/feed/",
       "homepage_url": "https://calmatters.org/category/health/",
       "state": "CA",
       "geographic_scope": "state",
@@ -542,7 +598,7 @@
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
-      "adapter_type": "structured_index",
+      "adapter_type": "rss",
       "requires_html_followup": false,
       "source_role": "state_health_access_reporting",
       "historical_depth": "current feed",
@@ -552,23 +608,33 @@
       "allowed_hosts": [
         "calmatters.org"
       ],
-      "collection_method": "structured_index_polling",
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-10-05",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "collection_method": "feed_polling",
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://calmatters.org/category/health/",
+        "previous_adapter_type": "structured_index",
+        "previous_collection_method": "structured_index_polling",
+        "remediation": "switched_to_official_site_rss_after_health_category_feed_and_structured_index_were_not_reliably_parseable",
+        "remediated_feed_url": "https://calmatters.org/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-10-05"
+      }
     },
     {
       "source_id": "ct-mirror-health",
       "name": "The Connecticut Mirror Health",
       "publisher": "The Connecticut Mirror",
       "source_type": "regional_publisher",
-      "feed_url": "https://ctmirror.org/health/",
+      "feed_url": "https://ctmirror.org/feed/",
       "homepage_url": "https://ctmirror.org/health/",
       "state": "CT",
       "geographic_scope": "state",
@@ -582,7 +648,7 @@
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
-      "adapter_type": "structured_index",
+      "adapter_type": "rss",
       "requires_html_followup": false,
       "source_role": "state_health_access_reporting",
       "historical_depth": "current feed",
@@ -592,16 +658,26 @@
       "allowed_hosts": [
         "ctmirror.org"
       ],
-      "collection_method": "structured_index_polling",
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-10-05",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "collection_method": "feed_polling",
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://ctmirror.org/health/",
+        "previous_adapter_type": "structured_index",
+        "previous_collection_method": "structured_index_polling",
+        "remediation": "switched_to_official_site_rss_after_health_category_feed_and_structured_index_were_not_reliably_parseable",
+        "remediated_feed_url": "https://ctmirror.org/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-10-05"
+      }
     },
     {
       "source_id": "virginia-mercury-health",
@@ -633,22 +709,32 @@
         "virginiamercury.com",
         "www.virginiamercury.com"
       ],
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-09-27",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://www.virginiamercury.com/category/health/feed/",
+        "previous_adapter_type": "rss",
+        "previous_collection_method": "",
+        "remediation": "current_official_category_feed_revalidated_from_runner_no_endpoint_change_required",
+        "remediated_feed_url": "https://www.virginiamercury.com/category/health/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-09-27"
+      }
     },
     {
       "source_id": "ohio-capital-journal-health",
       "name": "Ohio Capital Journal Health",
       "publisher": "Ohio Capital Journal",
       "source_type": "regional_publisher",
-      "feed_url": "https://ohiocapitaljournal.com/category/health-care/",
+      "feed_url": "https://ohiocapitaljournal.com/category/health-care/feed/",
       "homepage_url": "https://ohiocapitaljournal.com/category/health-care/",
       "state": "OH",
       "geographic_scope": "state",
@@ -662,7 +748,7 @@
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
-      "adapter_type": "structured_index",
+      "adapter_type": "rss",
       "requires_html_followup": false,
       "source_role": "state_health_access_reporting",
       "historical_depth": "current feed",
@@ -672,23 +758,33 @@
       "allowed_hosts": [
         "ohiocapitaljournal.com"
       ],
-      "collection_method": "structured_index_polling",
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-09-27",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "collection_method": "feed_polling",
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://ohiocapitaljournal.com/category/health-care/",
+        "previous_adapter_type": "structured_index",
+        "previous_collection_method": "structured_index_polling",
+        "remediation": "switched_to_official_category_rss",
+        "remediated_feed_url": "https://ohiocapitaljournal.com/category/health-care/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-09-27"
+      }
     },
     {
       "source_id": "missouri-independent-health",
       "name": "Missouri Independent Health",
       "publisher": "Missouri Independent",
       "source_type": "regional_publisher",
-      "feed_url": "https://missouriindependent.com/category/health-care/",
+      "feed_url": "https://missouriindependent.com/category/health-care/feed/",
       "homepage_url": "https://missouriindependent.com/category/health-care/",
       "state": "MO",
       "geographic_scope": "state",
@@ -702,7 +798,7 @@
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
-      "adapter_type": "structured_index",
+      "adapter_type": "rss",
       "requires_html_followup": false,
       "source_role": "state_health_access_reporting",
       "historical_depth": "current feed",
@@ -712,16 +808,26 @@
       "allowed_hosts": [
         "missouriindependent.com"
       ],
-      "collection_method": "structured_index_polling",
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-09-27",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "collection_method": "feed_polling",
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://missouriindependent.com/category/health-care/",
+        "previous_adapter_type": "structured_index",
+        "previous_collection_method": "structured_index_polling",
+        "remediation": "switched_to_official_category_rss",
+        "remediated_feed_url": "https://missouriindependent.com/category/health-care/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-09-27"
+      }
     },
     {
       "source_id": "florida-phoenix-health",
@@ -752,15 +858,25 @@
       "allowed_hosts": [
         "floridaphoenix.com"
       ],
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-09-27",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://floridaphoenix.com/category/health/feed/",
+        "previous_adapter_type": "rss",
+        "previous_collection_method": "",
+        "remediation": "current_official_category_feed_revalidated_from_runner_no_endpoint_change_required",
+        "remediated_feed_url": "https://floridaphoenix.com/category/health/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-09-27"
+      }
     },
     {
       "source_id": "texas-tribune-health",
@@ -792,15 +908,25 @@
         "texastribune.org",
         "www.texastribune.org"
       ],
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-10-05",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://www.texastribune.org/topics/health-care/feed/",
+        "previous_adapter_type": "rss",
+        "previous_collection_method": "",
+        "remediation": "current_official_topic_feed_revalidated_from_runner_no_endpoint_change_required",
+        "remediated_feed_url": "https://www.texastribune.org/topics/health-care/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-10-05"
+      }
     },
     {
       "source_id": "penn-capital-star-health",
@@ -837,7 +963,7 @@
       "name": "Michigan Advance Health",
       "publisher": "Michigan Advance",
       "source_type": "regional_publisher",
-      "feed_url": "https://michiganadvance.com/category/health-care/",
+      "feed_url": "https://michiganadvance.com/category/health-care/feed/",
       "homepage_url": "https://michiganadvance.com/category/health-care/",
       "state": "MI",
       "geographic_scope": "state",
@@ -851,7 +977,7 @@
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
-      "adapter_type": "structured_index",
+      "adapter_type": "rss",
       "requires_html_followup": false,
       "source_role": "state_health_access_reporting",
       "historical_depth": "current feed",
@@ -861,16 +987,26 @@
       "allowed_hosts": [
         "michiganadvance.com"
       ],
-      "collection_method": "structured_index_polling",
-      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-      "operational_failure_classified_at": "2026-09-27",
-      "operational_failure_evidence": [
-        "production_scheduler_http_error",
-        "repeat_non_transient_http_error",
-        "no_safe_migration"
-      ],
-      "coverage_reduced": true,
-      "remediation_available": false
+      "collection_method": "feed_polling",
+      "external_access_restriction_remediation": {
+        "reviewed_on": "2026-10-09",
+        "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "previous_coverage_reduced": true,
+        "previous_remediation_available": false,
+        "previous_evidence": [
+          "production_scheduler_http_error",
+          "repeat_non_transient_http_error",
+          "no_safe_migration"
+        ],
+        "previous_feed_url": "https://michiganadvance.com/category/health-care/",
+        "previous_adapter_type": "structured_index",
+        "previous_collection_method": "structured_index_polling",
+        "remediation": "switched_to_official_category_rss",
+        "remediated_feed_url": "https://michiganadvance.com/category/health-care/feed/",
+        "remediated_adapter_type": "rss",
+        "runner_probe_status": "ok",
+        "previous_classified_at": "2026-09-27"
+      }
     },
     {
       "source_id": "kaiser-permanente-news",
@@ -937,10 +1073,23 @@
         "vpn_on_403",
         "vpn_off_403",
         "official_alternatives_inaccessible",
-        "no_safe_migration"
+        "no_safe_migration",
+        "runner_probe_2026-10-09_all_official_alternates_403"
       ],
       "coverage_reduced": true,
-      "remediation_available": false
+      "remediation_available": false,
+      "external_access_restriction_review": {
+        "reviewed_on": "2026-10-09",
+        "reviewed_urls": [
+          "https://newsnetwork.mayoclinic.org/category/news-cycle/feed/",
+          "https://newsnetwork.mayoclinic.org/feed/",
+          "https://newsnetwork.mayoclinic.org/category/news-cycle/",
+          "https://newsnetwork.mayoclinic.org/category/news-cycle/?pg=1"
+        ],
+        "runner_probe_status": "blocked_http_403",
+        "remediation": "no_reliable_official_alternate_endpoint"
+      },
+      "collection_method": "feed_polling"
     },
     {
       "source_id": "cleveland-clinic-newsroom",

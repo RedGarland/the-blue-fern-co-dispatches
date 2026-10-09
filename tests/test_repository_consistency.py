@@ -62,13 +62,13 @@ def test_care_registry_is_the_persisted_runtime_source_of_truth() -> None:
             "https://www.federalregister.gov/api/v1/documents.rss?conditions%5Bagencies%5D%5B%5D=health-and-human-services-department",
             "rss",
         ),
-        "calmatters-health": ("https://calmatters.org/category/health/", "structured_index"),
-        "ct-mirror-health": ("https://ctmirror.org/health/", "structured_index"),
+        "calmatters-health": ("https://calmatters.org/feed/", "rss"),
+        "ct-mirror-health": ("https://ctmirror.org/feed/", "rss"),
         "georgia-health-news": ("https://www.georgiahealthnews.com/feed/", "rss"),
         "colorado-sun-health": ("https://coloradosun.com/category/news/health/feed/", "rss"),
-        "ohio-capital-journal-health": ("https://ohiocapitaljournal.com/category/health-care/", "structured_index"),
-        "missouri-independent-health": ("https://missouriindependent.com/category/health-care/", "structured_index"),
-        "michigan-advance-health": ("https://michiganadvance.com/category/health-care/", "structured_index"),
+        "ohio-capital-journal-health": ("https://ohiocapitaljournal.com/category/health-care/feed/", "rss"),
+        "missouri-independent-health": ("https://missouriindependent.com/category/health-care/feed/", "rss"),
+        "michigan-advance-health": ("https://michiganadvance.com/category/health-care/feed/", "rss"),
         "kaiser-permanente-news": ("https://about.kaiserpermanente.org/rss-feeds/main-rss", "rss"),
         "mayo-clinic-news": ("https://newsnetwork.mayoclinic.org/category/news-cycle/?pg=1", "rss"),
         "cleveland-clinic-newsroom": ("https://newsroom.clevelandclinic.org/news-releases", "structured_index"),
@@ -96,6 +96,10 @@ def test_care_registry_classifies_runtime_external_access_restrictions() -> None
         "hhs-news",
         "hrsa-news",
         "fierce-healthcare",
+        "mayo-clinic-news",
+    }
+
+    remediated_sources = {
         "nc-health-news",
         "colorado-sun-health",
         "calmatters-health",
@@ -106,7 +110,6 @@ def test_care_registry_classifies_runtime_external_access_restrictions() -> None
         "florida-phoenix-health",
         "texas-tribune-health",
         "michigan-advance-health",
-        "mayo-clinic-news",
     }
 
     for source_id in restricted_sources:
@@ -115,6 +118,18 @@ def test_care_registry_classifies_runtime_external_access_restrictions() -> None
         assert row["operational_failure_classification"] == "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
         assert row["coverage_reduced"] is True
         assert row["remediation_available"] is False
+        assert row["external_access_restriction_review"]["remediation"] == "no_reliable_official_alternate_endpoint"
+
+    for source_id in remediated_sources:
+        row = raw_by_id[source_id]
+        assert row["enabled"] is True
+        assert "operational_failure_classification" not in row
+        assert "coverage_reduced" not in row
+        assert "remediation_available" not in row
+        remediation = row["external_access_restriction_remediation"]
+        assert remediation["reviewed_on"] == "2026-10-09"
+        assert remediation["previous_classification"] == "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
+        assert remediation["runner_probe_status"] == "ok"
 
 
 def test_operational_status_branch_has_dispatch_neutral_name_everywhere() -> None:

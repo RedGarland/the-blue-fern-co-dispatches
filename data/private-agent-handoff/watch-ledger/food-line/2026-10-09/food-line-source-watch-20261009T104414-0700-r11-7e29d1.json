@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T104414-0700-r11-7e29d1",
+  "scheduled_for": "2026-10-09T10:45:54-07:00",
+  "started_at": "2026-10-09T10:44:14-07:00",
+  "completed_at": "2026-10-09T17:45:33.508+00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T09:47:11-07:00",
+    "end": "2026-10-09T10:45:11-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_executed": 12,
+    "search_failures": 0,
+    "purpose": "Bounded supplementary recall watch, not primary collection; production collection authoritative.",
+    "classes": [
+      "only/sole/last/full-service grocery loss, closure, fire or disaster",
+      "storm/flood/fire/outage/damage-caused emergency food distribution cancellation",
+      "abrupt pantry or food-bank closure or major service loss",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "exclusions": [
+      "Gulf Coast Florida WIC county-office closures previously identified in prior watches (Escambia, Santa Rosa, Okaloosa, Bay, Washington, Walton, Holmes)",
+      "previously reported Prodisee Pantry, Reimagine, and Warrington Emergency Aid Center weather cancellations",
+      "Latta SC grocery closure: earlier report; Spencer NY grocery fire: September 2026",
+      "routine food pantry calendars, food bank promotion, non-access event cancellations, and historical items"
+    ],
+    "observations": "No verified nonduplicate report first reported within the observed hour. Search-engine indexing and notice publication timestamps are insufficient to establish exhaustive coverage; no finding promoted without source and novelty support.",
+    "queries": [
+      "\"only grocery store\" closed fire October 9 2026 community",
+      "\"sole grocery store\" fire closed October 2026",
+      "\"last grocery store\" closing community October 9 2026",
+      "\"food distribution\" canceled storm Friday October 9 2026 food bank",
+      "\"mobile pantry\" canceled due to weather October 9 2026",
+      "\"food pantry\" \"closed\" \"October 9, 2026\" storm",
+      "site:floridahealth.gov \"October 9, 2026\" WIC closed office weather",
+      "site:*.gov SNAP WIC services suspended October 9 2026 storm power outage",
+      "\"October 9, 2026\" \"food pantry\" \"closed\" hurricane",
+      "\"October 9\" \"food distribution\" canceled \"Isaias\"",
+      "\"October 9, 2026\" \"WIC\" \"closed\" \"until further notice\" official",
+      "\"Oct. 9, 2026\" SNAP EBT outage benefits delayed storm office closure"
+    ],
+    "changes_to_production": false,
+    "publication_attempted": false,
+    "approval_attempted": false,
+    "schedule_changed": false
+  }
+}

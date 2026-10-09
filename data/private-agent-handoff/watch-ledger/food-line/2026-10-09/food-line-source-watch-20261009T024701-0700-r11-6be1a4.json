@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T024701-0700-r11-6be1a4",
+  "scheduled_for": "2026-10-09T01:45:54-07:00",
+  "started_at": "2026-10-09T02:47:01-07:00",
+  "completed_at": "2026-10-09T02:48:17-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T01:46:20.696-07:00",
+    "end": "2026-10-09T02:48:17-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_performed": 12,
+    "search_limit": 12,
+    "search_retrieval_failures": [],
+    "classes_checked": [
+      "sole/only/last/full-service grocery closure or disaster",
+      "emergency food distribution storm/disaster cancellation",
+      "abrupt pantry/food bank closure or major reduction",
+      "official immediate SNAP/WIC/food assistance service interruption"
+    ],
+    "queries": [
+      "site:gov October 9 2026 WIC county health department closed storm Friday food assistance",
+      "October 9 2026 only grocery store closes fire town residents food access",
+      "October 9 2026 food pantry closed suddenly no longer serving residents",
+      "October 9 2026 canceled food distribution weather storm food bank",
+      "October 9 2026 SNAP WIC outage benefits interruption state emergency",
+      "October 8 2026 overnight food distribution canceled severe weather Florida Mississippi Alabama",
+      "\"October 9, 2026\" \"food pantry\" \"closed\" hurricane Isaias",
+      "\"October 9\" \"food distribution\" \"canceled\" \"Isaias\"",
+      "\"October 9, 2026\" \"WIC\" \"offices\" \"closed\" hurricane Alabama",
+      "\"October 9, 2026\" \"food bank\" \"distribution\" \"cancelled\" hurricane Florida",
+      "\"October 9, 2026\" \"grocery store\" \"only\" \"closed\" fire",
+      "\"October 9, 2026\" SNAP EBT WIC benefits suspended service outage state"
+    ],
+    "duplicates_excluded": [
+      "Prodisee Pantry October 10 Stockton AL distribution cancellation already flagged",
+      "Previously noted Reimagine and Warrington Emergency Aid Center disruptions",
+      "Oct 8-9 WIC offices closed in Escambia, Santa Rosa, Okaloosa, Bay, Washington and Walton FL counties (direct Bay and Washington program notices found, both already flagged)",
+      "George and Jackson counties MS weather-related WIC closures already flagged"
+    ],
+    "excluded_other": [
+      "Florida food-safety advisory council meeting cancellation (not emergency food distribution)",
+      "October 12 Bountiful Pantry routine holiday closure, outside window",
+      "2025 SNAP shutdown coverage returned as stale search hits",
+      "Weather forecasts and general school closures without verified new food-access impacts"
+    ],
+    "source_urls": [
+      "https://bay.floridahealth.gov/location/wic-beach-clinic/",
+      "https://washington.floridahealth.gov/programs-services/clinical-and-nutrition-services/wic/",
+      "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+      "https://www.fdacs.gov/About-Us/Advisory-Councils-and-Committees/Florida-Food-Safety-and-Food-Defense-Advisory-Council"
+    ],
+    "temporal_assessment": "No independently verified material new qualifying access loss or interruption since prior completed watch 2026-10-09T01:46:20.696-07:00. Search-index freshness alone does not establish a new event.",
+    "production_collector_authoritative": true,
+    "approval_changes": false,
+    "publication_changes": false,
+    "schedule_changes": false,
+    "intended_repository": "RedGarland/the-blue-fern-co-dispatches",
+    "intended_branch": "ops/watch-ledger",
+    "intended_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-09/food-line-source-watch-20261009T024701-0700-r11-6be1a4.json"
+  }
+}

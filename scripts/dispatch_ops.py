@@ -34,15 +34,135 @@ ACTIVE_ALERT_DISPATCHES = frozenset(SUPPORTED_DISPATCHES)
 ALERTABLE_OPERATOR_ASSESSMENTS = {
     "FAILED_ACTION_REQUIRED",
     "DEGRADED_ACTION_RECOMMENDED",
+    "DEGRADED_WITH_SOURCE_EXCLUSIONS",
     "ACTION_REQUIRED_OBSERVABILITY",
     "ACTION_REQUIRED_PENDING_REVIEW",
 }
 NON_FAILURE_OPERATOR_ASSESSMENTS = {
     "HEALTHY",
+    "SUCCESS_WITH_BENIGN_EXCLUSIONS",
     "HEALTHY_WITH_SOURCE_EXCLUSIONS",
     "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
     "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES",
 }
+
+
+def _assessment_display(
+    *,
+    aggregate_status: str,
+    operator_assessment: str,
+    debug_summary: dict[str, Any],
+) -> dict[str, str]:
+    failed_sources = _coerce_int(debug_summary.get("failed_source_count"))
+    external_restrictions = _coerce_int(debug_summary.get("external_access_restriction_count"))
+    unclassified_failures = _coerce_int(debug_summary.get("unclassified_source_failure_count"))
+    transient_failures = _coerce_int(debug_summary.get("transient_source_failure_count"))
+    if (
+        operator_assessment == "HEALTHY"
+        and external_restrictions
+        and not unclassified_failures
+    ):
+        suffix = f" ({external_restrictions} known restricted sources)."
+        return {
+            "label": "Healthy with source coverage caveat",
+            "summary": f"Operationally healthy; source coverage is reduced by known external restrictions{suffix}",
+        }
+    if operator_assessment == "HEALTHY" and aggregate_status == "SUCCESS":
+        return {
+            "label": "Healthy",
+            "summary": "All expected operational checks healthy.",
+        }
+    if operator_assessment == "SUCCESS_WITH_BENIGN_EXCLUSIONS":
+        return {
+            "label": "Healthy with benign exclusions",
+            "summary": (
+                "Completed successfully; exclusions are rejected, duplicate, stale, "
+                "or otherwise non-actionable candidates."
+            ),
+        }
+    if operator_assessment == "HEALTHY_WITH_SOURCE_EXCLUSIONS" and aggregate_status == "SUCCESS":
+        return {
+            "label": "Healthy with benign exclusions",
+            "summary": (
+                "Completed successfully; exclusions are rejected, duplicate, stale, "
+                "or otherwise non-actionable candidates."
+            ),
+        }
+    if operator_assessment in {"HEALTHY_WITH_SOURCE_EXCLUSIONS", "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"}:
+        count = external_restrictions or failed_sources
+        suffix = f" ({count} known restricted sources)." if count else "."
+        return {
+            "label": "Healthy with source coverage caveat",
+            "summary": f"Operationally healthy; source coverage is reduced by known external restrictions{suffix}",
+        }
+    if operator_assessment == "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES":
+        count = transient_failures or failed_sources
+        suffix = f" ({count} transient source failures preserved in evidence)." if count else "."
+        return {
+            "label": "Healthy with transient source caveat",
+            "summary": f"Operationally healthy; transient source failures are preserved as evidence{suffix}",
+        }
+    if operator_assessment == "DEGRADED_WITH_SOURCE_EXCLUSIONS" or (
+        operator_assessment == "DEGRADED_ACTION_RECOMMENDED"
+        and (failed_sources or external_restrictions or unclassified_failures)
+    ):
+        return {
+            "label": "Degraded source coverage",
+            "summary": "Operationally running, but material source coverage loss remains.",
+        }
+    if operator_assessment == "FAILED_ACTION_REQUIRED" or aggregate_status in {"FAILED", "MISSED"}:
+        return {
+            "label": "Incident",
+            "summary": "Runner, pipeline, or publication failure requiring action.",
+        }
+    if operator_assessment == "ACTION_REQUIRED_PENDING_REVIEW":
+        return {
+            "label": "Review required",
+            "summary": "Operational checks ran, but private review items need an operator decision.",
+        }
+    if operator_assessment == "ACTION_REQUIRED_OBSERVABILITY":
+        return {
+            "label": "Observability action required",
+            "summary": "Status evidence is stale or incomplete enough to require operator attention.",
+        }
+    return {
+        "label": operator_assessment.replace("_", " ").title() if operator_assessment else "Unknown",
+        "summary": "Raw status evidence is preserved; operator assessment is not recognized by this dashboard.",
+    }
+
+
+def _coerce_int(value: Any) -> int:
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    try:
+        return int(str(value))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _preserved_evidence_note(
+    *,
+    dispatch: str,
+    aggregate_status: str,
+    debug_summary: dict[str, Any],
+) -> str | None:
+    task = str(debug_summary.get("primary_task_key") or "")
+    status = str(debug_summary.get("primary_task_status") or "")
+    if (
+        dispatch == "food-line"
+        and aggregate_status in {"SUCCESS", "SAFE_NO_OP"}
+        and task == "food_line_source_watch_resume"
+        and status in {"FAILED", "DEGRADED", "UPSTREAM_BLOCKED"}
+    ):
+        return (
+            "Preserved resume receipt evidence; same-day source-watch success is authoritative, "
+            "so this is not a current incident."
+        )
+    if aggregate_status in {"SUCCESS", "SAFE_NO_OP"} and status in {"FAILED", "DEGRADED", "UPSTREAM_BLOCKED"}:
+        return "Preserved task evidence; later successful proof makes it non-current."
+    return None
 
 
 
@@ -235,6 +355,16 @@ def render_system_text(snapshot: dict[str, Any]) -> str:
             aggregate = state.get("aggregate_status") or "UNKNOWN"
             lifecycle = state.get("recovery_lifecycle") or "UNKNOWN"
             assessment = debug.get("operator_assessment") or "UNKNOWN"
+            display = _assessment_display(
+                aggregate_status=str(aggregate),
+                operator_assessment=str(assessment),
+                debug_summary=debug,
+            )
+            evidence_note = _preserved_evidence_note(
+                dispatch=dispatch,
+                aggregate_status=str(aggregate),
+                debug_summary=debug,
+            )
             layer = debug.get("primary_layer") or "UNKNOWN"
             task = debug.get("primary_task_key") or "none"
             backlog = state.get("private_review_backlog") if isinstance(state.get("private_review_backlog"), dict) else {}
@@ -242,6 +372,10 @@ def render_system_text(snapshot: dict[str, Any]) -> str:
                 f"- {label}: {aggregate} / {lifecycle}; assessment={assessment}; "
                 f"layer={layer}; task={task}"
             )
+            if dispatch in ACTIVE_ALERT_DISPATCHES or assessment != "UNKNOWN":
+                lines.append(f"  {display['label']}: {display['summary']}")
+            if evidence_note:
+                lines.append(f"  Evidence note: {evidence_note}")
             if backlog.get("pending_item_count"):
                 lines.append(
                     "  private_review_backlog="
@@ -283,12 +417,25 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
         debug = state.get("debug_summary") if isinstance(state.get("debug_summary"), dict) else {}
         backlog = state.get("private_review_backlog") if isinstance(state.get("private_review_backlog"), dict) else {}
         assessment = str(debug.get("operator_assessment") or "UNKNOWN")
+        display = _assessment_display(
+            aggregate_status=str(state.get("aggregate_status") or "UNKNOWN"),
+            operator_assessment=assessment,
+            debug_summary=debug,
+        )
+        evidence_note = _preserved_evidence_note(
+            dispatch=dispatch,
+            aggregate_status=str(state.get("aggregate_status") or "UNKNOWN"),
+            debug_summary=debug,
+        )
         row = {
             "dispatch": dispatch,
             "migration_status": state.get("migration_status") or "UNKNOWN",
             "aggregate_status": state.get("aggregate_status") or "UNKNOWN",
             "recovery_lifecycle": state.get("recovery_lifecycle") or "UNKNOWN",
             "operator_assessment": assessment,
+            "operator_assessment_label": display["label"],
+            "operator_assessment_summary": display["summary"],
+            "evidence_note": evidence_note,
             "primary_layer": debug.get("primary_layer") or "UNKNOWN",
             "primary_task_key": debug.get("primary_task_key"),
             "failed_source_count": debug.get("failed_source_count"),
@@ -1410,11 +1557,24 @@ def render_text(status: DispatchStatus) -> str:
     ]
     debug_summary = status.details.get("debug_summary") if isinstance(status.details, dict) else None
     if isinstance(debug_summary, dict) and debug_summary:
+        aggregate = str(status.details.get("aggregate_status") or debug_summary.get("aggregate_status") or "UNKNOWN")
+        assessment = str(debug_summary.get("operator_assessment") or "UNKNOWN")
+        display = _assessment_display(
+            aggregate_status=aggregate,
+            operator_assessment=assessment,
+            debug_summary=debug_summary,
+        )
+        evidence_note = _preserved_evidence_note(
+            dispatch=status.dispatch,
+            aggregate_status=aggregate,
+            debug_summary=debug_summary,
+        )
         lines.extend(
             [
                 "",
                 "Debug summary:",
-                f"- Assessment: {debug_summary.get('operator_assessment') or 'UNKNOWN'}",
+                f"- Assessment: {assessment}",
+                f"- Operator note: {display['label']}: {display['summary']}",
                 f"- Primary layer: {debug_summary.get('primary_layer') or 'UNKNOWN'}",
                 f"- Primary task: {debug_summary.get('primary_task_key') or 'none'}",
                 f"- Primary status: {debug_summary.get('primary_task_status') or 'none'}",
@@ -1422,6 +1582,8 @@ def render_text(status: DispatchStatus) -> str:
                 f"- Failure stage: {debug_summary.get('primary_failure_stage') or 'none'}",
             ]
         )
+        if evidence_note:
+            lines.append(f"- Evidence note: {evidence_note}")
         for key, label in (
             ("failed_source_count", "Failed sources"),
             ("external_access_restriction_count", "External restrictions"),

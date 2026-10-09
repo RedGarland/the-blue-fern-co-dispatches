@@ -424,15 +424,105 @@ def test_system_command_renders_dispatch_debug_summary(tmp_path: Path, capsys: p
 
     assert result == 1
     assert "System status: STALE_OBSERVABILITY" in output
+    assert "Food Line: SUCCESS / HEALTHY; assessment=HEALTHY; layer=NONE; task=none" in output
+    assert "Healthy: All expected operational checks healthy." in output
     assert (
         "Care Line: DEGRADED / HEALTHY; assessment=HEALTHY_WITH_EXTERNAL_RESTRICTIONS; "
         "layer=EXTERNAL_DEPENDENCY; task=care_line_collection"
     ) in output
+    assert "Healthy with source coverage caveat: Operationally healthy; source coverage is reduced by known external restrictions (9 known restricted sources)." in output
     assert "failed_sources=9" in output
     assert (
         "Gaza: STALE_OBSERVABILITY / INCIDENT_OPEN; assessment=ACTION_REQUIRED_OBSERVABILITY; "
         "layer=OBSERVABILITY; task=gaza_daily_dispatch"
     ) in output
+    assert "Observability action required: Status evidence is stale or incomplete enough to require operator attention." in output
+
+
+def test_system_command_marks_food_resume_failure_as_preserved_evidence(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _write_json(
+        tmp_path / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-10-09T20:41:13Z",
+            "system_status": "SUCCESS",
+            "dispatches": {
+                "food-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "SUCCESS",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "aggregate_status": "SUCCESS",
+                        "operator_assessment": "HEALTHY_WITH_SOURCE_EXCLUSIONS",
+                        "primary_layer": "SOURCE",
+                        "primary_task_key": "food_line_source_watch_resume",
+                        "primary_task_status": "FAILED",
+                        "primary_classification": "status_resume_failed",
+                        "primary_failure_stage": "status_resume",
+                    },
+                },
+            },
+        },
+    )
+
+    result = main(["system", "--root", str(tmp_path)])
+    output = capsys.readouterr().out
+
+    assert result == 0
+    assert "assessment=HEALTHY_WITH_SOURCE_EXCLUSIONS" in output
+    assert (
+        "Healthy with benign exclusions: Completed successfully; exclusions are rejected, "
+        "duplicate, stale, or otherwise non-actionable candidates."
+    ) in output
+    assert (
+        "Evidence note: Preserved resume receipt evidence; same-day source-watch success is authoritative, "
+        "so this is not a current incident."
+    ) in output
+
+
+def test_system_command_marks_successful_care_external_restrictions_as_coverage_caveat(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _write_json(
+        tmp_path / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-10-09T20:41:13Z",
+            "system_status": "SUCCESS",
+            "dispatches": {
+                "care-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "SUCCESS",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "aggregate_status": "SUCCESS",
+                        "operator_assessment": "HEALTHY",
+                        "primary_layer": "EXTERNAL_DEPENDENCY",
+                        "primary_task_key": "care_line_collection",
+                        "primary_task_status": "DEGRADED",
+                        "failed_source_count": 4,
+                        "external_access_restriction_count": 4,
+                        "unclassified_source_failure_count": 0,
+                    },
+                },
+            },
+        },
+    )
+
+    result = main(["system", "--root", str(tmp_path)])
+    output = capsys.readouterr().out
+
+    assert result == 0
+    assert "assessment=HEALTHY" in output
+    assert (
+        "Healthy with source coverage caveat: Operationally healthy; source coverage is reduced "
+        "by known external restrictions (4 known restricted sources)."
+    ) in output
+    assert "Runner, pipeline, or publication failure requiring action" not in output
 
 
 def test_system_command_json_is_deterministic(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -457,10 +547,14 @@ def test_system_alerts_gate_on_operator_assessment(tmp_path: Path, capsys: pytes
     assert payload["alert_required"] is True
     assert [row["dispatch"] for row in payload["alert_dispatches"]] == ["gaza"]
     assert payload["alert_dispatches"][0]["operator_assessment"] == "ACTION_REQUIRED_OBSERVABILITY"
+    assert payload["alert_dispatches"][0]["operator_assessment_label"] == "Observability action required"
     assert [row["dispatch"] for row in payload["suppressed_dispatches"]] == ["care-line", "food-line"]
     assert {
         row["operator_assessment"] for row in payload["suppressed_dispatches"]
     } == {"HEALTHY", "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"}
+    assert {
+        row["operator_assessment_label"] for row in payload["suppressed_dispatches"]
+    } == {"Healthy", "Healthy with source coverage caveat"}
 
 
 def test_system_alerts_do_not_notify_for_external_only_degradation(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -494,6 +588,10 @@ def test_system_alerts_do_not_notify_for_external_only_degradation(tmp_path: Pat
     assert payload["alert_required"] is False
     assert payload["alert_dispatches"] == []
     assert payload["suppressed_dispatches"][0]["dispatch"] == "care-line"
+    assert payload["suppressed_dispatches"][0]["operator_assessment_label"] == "Healthy with source coverage caveat"
+    assert payload["suppressed_dispatches"][0]["operator_assessment_summary"] == (
+        "Operationally healthy; source coverage is reduced by known external restrictions (4 known restricted sources)."
+    )
 
 
 def test_system_alerts_do_not_notify_for_transient_source_degradation(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -586,6 +684,9 @@ def test_system_alerts_notify_for_food_private_review_backlog(tmp_path: Path, ca
             "aggregate_status": "SUCCESS",
             "recovery_lifecycle": "HEALTHY",
             "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
+            "operator_assessment_label": "Review required",
+            "operator_assessment_summary": "Operational checks ran, but private review items need an operator decision.",
+            "evidence_note": None,
             "primary_layer": "EDITORIAL_HANDOFF",
             "primary_task_key": None,
             "failed_source_count": None,
@@ -601,6 +702,58 @@ def test_system_alerts_notify_for_food_private_review_backlog(tmp_path: Path, ca
     ]
     assert [row["dispatch"] for row in payload["suppressed_dispatches"]] == ["care-line"]
     assert "ACTION_REQUIRED_PENDING_REVIEW" in payload["policy"]["alertable_operator_assessments"]
+
+
+def test_system_alerts_support_benign_and_material_source_exclusion_language(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _write_json(
+        tmp_path / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-10-09T21:10:00Z",
+            "system_status": "DEGRADED",
+            "dispatches": {
+                "food-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "SUCCESS",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "operator_assessment": "SUCCESS_WITH_BENIGN_EXCLUSIONS",
+                        "primary_layer": "SOURCE",
+                    },
+                },
+                "care-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "DEGRADED",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "operator_assessment": "DEGRADED_WITH_SOURCE_EXCLUSIONS",
+                        "primary_layer": "SOURCE",
+                        "failed_source_count": 6,
+                        "external_access_restriction_count": 3,
+                        "unclassified_source_failure_count": 3,
+                    },
+                },
+            },
+        },
+    )
+
+    result = main(["system", "--alerts-json", "--root", str(tmp_path)])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 1
+    assert payload["suppressed_dispatches"][0]["dispatch"] == "food-line"
+    assert payload["suppressed_dispatches"][0]["operator_assessment_label"] == "Healthy with benign exclusions"
+    assert payload["suppressed_dispatches"][0]["operator_assessment_summary"] == (
+        "Completed successfully; exclusions are rejected, duplicate, stale, or otherwise non-actionable candidates."
+    )
+    assert payload["alert_dispatches"][0]["dispatch"] == "care-line"
+    assert payload["alert_dispatches"][0]["operator_assessment_label"] == "Degraded source coverage"
+    assert payload["alert_dispatches"][0]["operator_assessment_summary"] == (
+        "Operationally running, but material source coverage loss remains."
+    )
 
 
 def test_system_alerts_ignore_unsupported_unknown_dispatches(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:

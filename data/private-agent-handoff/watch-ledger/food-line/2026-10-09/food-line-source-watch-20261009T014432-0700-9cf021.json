@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T014432-0700-9cf021",
+  "scheduled_for": "2026-10-09T00:45:54-07:00",
+  "started_at": "2026-10-09T01:44:32-07:00",
+  "completed_at": "2026-10-09T01:46:20.696-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T00:45:22.199-07:00",
+    "end": "2026-10-09T01:46:20.696-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_performed": 12,
+    "search_limit": 12,
+    "search_retrieval_failures": [],
+    "classes_checked": [
+      "sole/only/last/full-service grocery closure or fire",
+      "disaster-canceled emergency food distributions",
+      "abrupt pantry or food-bank closure or major reduction",
+      "official SNAP/WIC access interruption"
+    ],
+    "duplicates_excluded": [
+      "Previously flagged Escambia, Santa Rosa, Okaloosa, Bay, Washington, Walton FL WIC closures",
+      "Previously flagged George and Jackson MS WIC closures",
+      "Previously flagged Prodisee Pantry storm cancellation"
+    ],
+    "exclusions": [
+      "Latta SC grocery closure reported prior to observation window",
+      "Spencer NY September 2026 only grocery store fire",
+      "HCCM October 2 distribution cancellation, no new event or cause supported",
+      "routine resources and scheduled distributions"
+    ],
+    "limitations": [
+      "Search-only supplementary recall, production collector remains authoritative",
+      "No independently verified newly qualifying disruption within observation window"
+    ],
+    "query_context": {
+      "timezone": "America/Los_Angeles",
+      "searches_performed": 12,
+      "query_types": [
+        "only grocery store fire",
+        "sole grocery store loss",
+        "full service grocery disaster closure",
+        "storm canceled distribution",
+        "pantry indefinite closure",
+        "flood food bank cancellation",
+        "WIC office closures",
+        "SNAP immediate benefits interruption",
+        "food bank cancellation official provider",
+        "Isaias food distribution cancellation",
+        "Oct9 storm pantry closure",
+        "official WIC office Oct9 closure"
+      ]
+    },
+    "production_collection_authoritative": true,
+    "intended_repository": "RedGarland/the-blue-fern-co-dispatches",
+    "intended_branch": "ops/watch-ledger",
+    "intended_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-09/food-line-source-watch-20261009T014432-0700-9cf021.json"
+  }
+}

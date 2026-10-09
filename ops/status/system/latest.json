@@ -28,11 +28,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "SUCCESS",
+      "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "54e4755f031dddf42bd68f3ef9c2cd6be2ae9d21",
+      "current_runner_head": "79aaaa4374885aa37b6309c34c743cdc3ca120f3",
       "debug_summary": {
-        "aggregate_status": "SUCCESS",
+        "aggregate_status": "DEGRADED",
         "all_current_failures_external": true,
         "all_current_failures_non_actionable": true,
         "attention_task_count": 2,
@@ -56,7 +56,7 @@
         ],
         "external_access_restriction_count": 4,
         "failed_source_count": 4,
-        "operator_assessment": "HEALTHY",
+        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
         "primary_layer": "EXTERNAL_DEPENDENCY",
@@ -156,8 +156,8 @@
         "unaccounted_count": 0
       },
       "aggregate_status": "SUCCESS",
-      "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "79aaaa4374885aa37b6309c34c743cdc3ca120f3",
+      "current_runner_branch": "dashboard-wording-hardening",
+      "current_runner_head": "1b2a4e769977a0de077e79b00a5fc620e78318d8",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -366,7 +366,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "54e4755f031dddf42bd68f3ef9c2cd6be2ae9d21",
+      "current_runner_head": "79aaaa4374885aa37b6309c34c743cdc3ca120f3",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -421,7 +421,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "54e4755f031dddf42bd68f3ef9c2cd6be2ae9d21",
+      "current_runner_head": "79aaaa4374885aa37b6309c34c743cdc3ca120f3",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -461,8 +461,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-09T20:41:14.083936Z",
+  "exported_at": "2026-10-09T21:15:03.179716Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "SUCCESS"
+  "system_status": "DEGRADED"
 }

@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T154249-0700-r11",
+  "scheduled_for": "2026-10-09T15:44:51-07:00",
+  "started_at": "2026-10-09T15:42:49-07:00",
+  "completed_at": "2026-10-09T15:44:20.412-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T14:50:11-07:00",
+    "end": "2026-10-09T15:44:20.412-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_protocol": "OCHA OPT and WHO explicitly checked before exactly 12 additional targeted search queries; supplemented by source-page opens and two direct follow-up fetches.",
+    "priority_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "latest_listed_update": "2026-10-06"
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "accessible",
+        "latest_relevant_global_speech": "2026-09-24"
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "http_502"
+      }
+    ],
+    "other_source_limitations": [
+      "WAFA source article pages HTTP 403 during follow-up, though indexed excerpts were available",
+      "One Palestine Chronicle article HTTP 429",
+      "CNN investigation link inaccessible to tool"
+    ],
+    "qualification": "No new nonduplicate, source-traceable Gaza ground development verified with available timestamps after prior check. October 9 IOM winter-shelter assessment and previously circulating October 8-9 Gaza casualty incidents excluded as duplicates or previously reported. October 9 joint NGO ceasefire assessment and retrospective CNN investigation excluded as non-new ground developments; October 9 WAFA incident was reported in the morning before the prior watch ended. Claims without fresh verified event timestamps not admitted.",
+    "search_counts": {
+      "initial_priority_queries": 2,
+      "additional_targeted_queries": 12
+    },
+    "previous_watch_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-09/gaza-source-watch-20261009T144840-0700-6e52.json",
+    "production_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false,
+    "publication_changes": false
+  }
+}

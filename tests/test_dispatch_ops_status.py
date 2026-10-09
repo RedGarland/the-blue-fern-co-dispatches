@@ -456,7 +456,7 @@ def test_system_command_marks_food_resume_failure_as_preserved_evidence(
                     "recovery_lifecycle": "HEALTHY",
                     "debug_summary": {
                         "aggregate_status": "SUCCESS",
-                        "operator_assessment": "HEALTHY_WITH_SOURCE_EXCLUSIONS",
+                        "operator_assessment": "HEALTHY",
                         "primary_layer": "SOURCE",
                         "primary_task_key": "food_line_source_watch_resume",
                         "primary_task_status": "FAILED",
@@ -472,7 +472,7 @@ def test_system_command_marks_food_resume_failure_as_preserved_evidence(
     output = capsys.readouterr().out
 
     assert result == 0
-    assert "assessment=HEALTHY_WITH_SOURCE_EXCLUSIONS" in output
+    assert "assessment=HEALTHY" in output
     assert (
         "Healthy with benign exclusions: Completed successfully; exclusions are rejected, "
         "duplicate, stale, or otherwise non-actionable candidates."

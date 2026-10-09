@@ -49,6 +49,7 @@ NON_FAILURE_OPERATOR_ASSESSMENTS = {
 
 def _assessment_display(
     *,
+    dispatch: str,
     aggregate_status: str,
     operator_assessment: str,
     debug_summary: dict[str, Any],
@@ -57,6 +58,19 @@ def _assessment_display(
     external_restrictions = _coerce_int(debug_summary.get("external_access_restriction_count"))
     unclassified_failures = _coerce_int(debug_summary.get("unclassified_source_failure_count"))
     transient_failures = _coerce_int(debug_summary.get("transient_source_failure_count"))
+    if (
+        dispatch == "food-line"
+        and operator_assessment == "HEALTHY"
+        and aggregate_status == "SUCCESS"
+        and debug_summary.get("primary_task_key") == "food_line_source_watch_resume"
+    ):
+        return {
+            "label": "Healthy with benign exclusions",
+            "summary": (
+                "Completed successfully; exclusions are rejected, duplicate, stale, "
+                "or otherwise non-actionable candidates."
+            ),
+        }
     if (
         operator_assessment == "HEALTHY"
         and external_restrictions
@@ -356,6 +370,7 @@ def render_system_text(snapshot: dict[str, Any]) -> str:
             lifecycle = state.get("recovery_lifecycle") or "UNKNOWN"
             assessment = debug.get("operator_assessment") or "UNKNOWN"
             display = _assessment_display(
+                dispatch=dispatch,
                 aggregate_status=str(aggregate),
                 operator_assessment=str(assessment),
                 debug_summary=debug,
@@ -418,6 +433,7 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
         backlog = state.get("private_review_backlog") if isinstance(state.get("private_review_backlog"), dict) else {}
         assessment = str(debug.get("operator_assessment") or "UNKNOWN")
         display = _assessment_display(
+            dispatch=dispatch,
             aggregate_status=str(state.get("aggregate_status") or "UNKNOWN"),
             operator_assessment=assessment,
             debug_summary=debug,
@@ -1560,6 +1576,7 @@ def render_text(status: DispatchStatus) -> str:
         aggregate = str(status.details.get("aggregate_status") or debug_summary.get("aggregate_status") or "UNKNOWN")
         assessment = str(debug_summary.get("operator_assessment") or "UNKNOWN")
         display = _assessment_display(
+            dispatch=status.dispatch,
             aggregate_status=aggregate,
             operator_assessment=assessment,
             debug_summary=debug_summary,

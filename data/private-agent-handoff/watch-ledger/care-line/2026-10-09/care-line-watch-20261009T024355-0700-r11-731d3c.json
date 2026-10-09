@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261009T024355-0700-r11-731d3c",
+  "scheduled_for": "2026-10-09T02:43:55-07:00",
+  "started_at": "2026-10-09T02:43:55-07:00",
+  "completed_at": "2026-10-09T02:45:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T01:46:00-07:00",
+    "end": "2026-10-09T02:45:30-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "source_priority": "CMS Public Notices explicitly checked first, then 12 additional targeted searches.",
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date": "2026-10-05",
+    "additional_targeted_searches": 12,
+    "coverage": [
+      "Hospital and ED loss/restoration",
+      "Maternity and rural emergency service loss",
+      "Behavioral health",
+      "Dialysis and oncology",
+      "Primary care",
+      "Ambulance and air medical bases",
+      "CMS terminations, rescissions, CLIA restrictions",
+      "US territories",
+      "Hurricane-related temporary closures"
+    ],
+    "exclusions": [
+      "Fitzgibbon Hospital, Marshall MO: prior September 30 maternity closure previously identified; October 8 follow-up is duplicate.",
+      "October 8 storm-related healthcare closures in Florida and Alabama: previously surfaced in prior watch, no newly announced changes verified in this hourly window.",
+      "St. Peter's Health Townsend MT clinic closure: October 7 local-reporting snippet outside this observation window; direct full-page retrieval restricted and production dedupe unverified, not counted as new hourly development.",
+      "Canada emergency department closure result excluded as outside U.S. and territories."
+    ],
+    "result": "No independently confirmed new qualifying healthcare-access change first reported in the observation window. Production collection remains authoritative; supplemental search is not exhaustive.",
+    "production_publication_unchanged": true,
+    "approvals_or_schedule_unchanged": true
+  }
+}

@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Thu, 08 Oct 2026 13:04:04 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 09 Oct 2026 13:01:00 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for October 9, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-09-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-10-09-transcript.html</guid>
+    <pubDate>Fri, 09 Oct 2026 00:00:00 +0000</pubDate>
+    <description>ICJ judge Navi Pillay wins Nobel peace prize for promoting international law. Committee recognises work of South African who chaired UN commission that concluded. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-10-09.mp3" length="602496" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for October 8, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-08-transcript.html</link>

@@ -1,0 +1,241 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-09-005",
+    "title": "Israeli Strikes Kill Three Palestinian Militants in Gaza, IDF Says - Haaretz",
+    "summary": "Israeli Strikes Kill Three Palestinian Militants in Gaza, IDF Says Haaretz.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-09-haaretz-gaza-query-84aa035b7d38"
+    ],
+    "source_ids": [
+      "gaza-2026-10-09-haaretz-gaza-query-84aa035b7d38"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMi9AFBVV95cUxPMGpGY2lzSGFTd3lBUVFpOEZNNkt3MUJ6SEpzWmlJMjI3RXQ5dmZBTDZnbW9pOHJxU3BoNjVaQUhqaTgzZGZSSmtfSXBWb0tGX3lYTWVEVDh2SUZFVENuSi1JdXpTQUhEcDlBRUNjNl9ac1lBU0x6Smt5VjliUHZkclcyYkpxNFhEN1JBRTRidDBtWkx2YVRRcFN1TDJCVGZqdVlUVnhLdVJocUZvU2RrY3RFTWtCLXh1Rzh5Yld2MlB0dEtCZERmQUozemo5UTBoY3loOHJDcUtyVGpBamNKUnlBLWs0UjFNTVJLTWE4bEtmSXk5?oc=5"
+    ],
+    "publisher_names": [
+      "Haaretz"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-09-haaretz-gaza-query-84aa035b7d38",
+        "title": "Israeli Strikes Kill Three Palestinian Militants in Gaza, IDF Says - Haaretz",
+        "url": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxPMGpGY2lzSGFTd3lBUVFpOEZNNkt3MUJ6SEpzWmlJMjI3RXQ5dmZBTDZnbW9pOHJxU3BoNjVaQUhqaTgzZGZSSmtfSXBWb0tGX3lYTWVEVDh2SUZFVENuSi1JdXpTQUhEcDlBRUNjNl9ac1lBU0x6Smt5VjliUHZkclcyYkpxNFhEN1JBRTRidDBtWkx2YVRRcFN1TDJCVGZqdVlUVnhLdVJocUZvU2RrY3RFTWtCLXh1Rzh5Yld2MlB0dEtCZERmQUozemo5UTBoY3loOHJDcUtyVGpBamNKUnlBLWs0UjFNTVJLTWE4bEtmSXk5?oc=5",
+        "publisher": "Haaretz",
+        "summary_or_snippet": "Israeli Strikes Kill Three Palestinian Militants in Gaza, IDF Says Haaretz",
+        "event_date": "2026-10-09T12:06:00+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Haaretz",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-09T13:00:51.004114+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-09T12:06:00+00:00",
+    "attribution": "Haaretz",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-10-07-005",
+    "prior_edition_date": "2026-10-07",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "same_topic",
+      "new_source_or_summary_detail",
+      "non_material_continuation"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-10-09-003",
+    "title": "ICJ judge Navi Pillay wins Nobel peace prize for promoting international law",
+    "summary": "Committee recognises work of South African who chaired UN commission that concluded. Israel was guilty of genocide in Gaza Nobel peace prize - latest updates. The Nobel Peace Prize has been awarded to Navi Pillay, the South African former UN human rights chief who chaired the UN commission that concluded. Israel was guilty of genocide in Gaza . The Norwegian Nobel committee said Pillay, who is serving as a judge at the International Court of Justice (ICJ), has \"shown that legal measures can help prevent acts of war and violence\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 51,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-09-guardian-world-beb182bf89fe"
+    ],
+    "source_ids": [
+      "gaza-2026-10-09-guardian-world-beb182bf89fe"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/oct/09/navanethem-navi-pillay-wins-nobel-peace-prize"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-09-guardian-world-beb182bf89fe",
+        "title": "ICJ judge Navi Pillay wins Nobel peace prize for promoting international law",
+        "url": "https://www.theguardian.com/world/2026/oct/09/navanethem-navi-pillay-wins-nobel-peace-prize",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Committee recognises work of South African who chaired UN commission that concluded Israel was guilty of genocide in Gaza Nobel peace prize - latest updates The Nobel Peace Prize has been awarded to Navi Pillay, the South African former UN human rights chief who chaired the UN commission that concluded Israel was guilty of genocide in Gaza . The Norwegian Nobel committee said Pillay, who is serving as a judge at the International Court of Justice (ICJ), has \"shown that legal measures can help prevent acts of war and violence\".",
+        "event_date": "2026-10-09T11:24:10+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-09T13:00:51.004114+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 51,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-09T11:24:10+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-09-004",
+    "title": "The girls in the Gaza school photograph",
+    "summary": "Just before the genocide, 15 Gaza schoolgirls posed for a photograph. Three years on, Al Jazeera went looking for them.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-09-aljazeera-middle-east-70007fddf0b5"
+    ],
+    "source_ids": [
+      "gaza-2026-10-09-aljazeera-middle-east-70007fddf0b5"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/longform/2026/10/9/the-girls-in-the-gaza-school-photograph?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-09-aljazeera-middle-east-70007fddf0b5",
+        "title": "The girls in the Gaza school photograph",
+        "url": "https://www.aljazeera.com/features/longform/2026/10/9/the-girls-in-the-gaza-school-photograph?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Just before the genocide, 15 Gaza schoolgirls posed for a photograph. Three years on, Al Jazeera went looking for them.",
+        "event_date": "2026-10-09T10:23:42+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-09T13:00:51.004114+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-09T10:23:42+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

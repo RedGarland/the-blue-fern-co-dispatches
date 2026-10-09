@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T164353-0700-3f18",
+  "scheduled_for": "2026-10-09T16:44:51-07:00",
+  "started_at": "2026-10-09T16:43:53-07:00",
+  "completed_at": "2026-10-09T16:45:37-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T14:50:11-07:00",
+    "end": "2026-10-09T16:45:37-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_scope": "OCHA OPT and WHO checked first; 12 additional targeted searches covering casualties, aid, food, water, health, medical evacuation, displacement, shelter, military operations, crossings, detention and negotiations.",
+    "targeted_search_count": 12,
+    "ocha_opt": {
+      "result": "accessible",
+      "most_recent_homepage_update": "2026-10-06",
+      "new_qualifying_report_in_window": false,
+      "url": "https://www.ochaopt.org/"
+    },
+    "who": {
+      "global_reporting": "accessible; most relevant verified item was dated 2026-09-24",
+      "regional_situation_reports": "unavailable (internal error)",
+      "regional_url": "https://www.emro.who.int/opt/information-resources/situation-reports.html"
+    },
+    "other_source_limitations": [
+      "ReliefWeb UNRWA report link HTTP 403",
+      "Palestine Chronicle article HTTP 429"
+    ],
+    "exclusions": [
+      "October 9 IOM shelter assessment was established by an earlier watch, not new.",
+      "October 9 al-Sabra residential-strike imagery refers to an incident previously considered; Reuters Connect attributes it to a third-party supplier and explicitly does not verify it, so no new independently verified, nonduplicative fact was established.",
+      "Older OCHA, WHO and UNRWA situation reports and previously reported incidents excluded."
+    ],
+    "qualification": "No newly verified, nonduplicative in-Gaza development established for this observation window.",
+    "note": "Observation window begins at the last verified persisted heartbeat completion; intervening hourly checkpoint not independently established.",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

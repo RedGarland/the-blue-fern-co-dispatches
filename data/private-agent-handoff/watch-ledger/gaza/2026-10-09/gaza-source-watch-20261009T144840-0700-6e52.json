@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T144840-0700-6e52",
+  "scheduled_for": "2026-10-09T14:44:51-07:00",
+  "started_at": "2026-10-09T14:48:40-07:00",
+  "completed_at": "2026-10-09T14:50:11-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T13:50:35-07:00",
+    "end": "2026-10-09T14:50:11-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches": "OCHA OPT and WHO checked first, followed by 12 targeted searches.",
+    "source_status": "OCHA and WHO global pages accessible; WHO regional page HTTP 502 and UN News blocked.",
+    "qualification": "No qualifying new nonduplicate developments established. Earlier IOM shelter study and previously reported incidents excluded.",
+    "production_changes": false,
+    "schedule_changes": false
+  }
+}

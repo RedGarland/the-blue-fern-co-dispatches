@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T114748-0700-6f1b8a",
+  "scheduled_for": "2026-10-09T11:45:54-07:00",
+  "started_at": "2026-10-09T11:47:48-07:00",
+  "completed_at": "2026-10-09T11:48:58-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T10:45:54-07:00",
+    "end": "2026-10-09T11:48:58-07:00",
+    "timezone": "America/Los_Angeles",
+    "note": "Bounded approximately one-hour recall interval based on the hourly schedule. Search indexing may lag; publication-time verification required for any later discovery."
+  },
+  "findings": [],
+  "coverage_notes": "Completed exactly 12 targeted web searches on 2026-10-09, covering the four high-value miss classes: sole/last/full-service grocery loss; disaster-canceled food distributions; abrupt food pantry/bank closure or major service reductions; and immediately consequential official SNAP/WIC interruptions. No new qualifying, verifiably fresh signal identified. Excluded older grocery fires/closures (Spencer, NY, 2026-09-11; Akron, OH, 2026-05-30), routine open pantry schedules, and unrelated retail closures. Official severe-weather WIC/health-office closures in Mississippi and Florida appeared again but were previously identified in earlier recall checks (Jackson County, MS; Bay and Washington Counties, FL) and were not counted twice. Search results did not substantiate a newly announced SNAP benefit outage or new canceled emergency-food distribution in this bounded interval. Public search indexing and publication timestamps are imperfect; no claim of exhaustive nationwide coverage. Primary production collection remains authoritative. No approvals, publications, schedule changes, or production actions."
+}

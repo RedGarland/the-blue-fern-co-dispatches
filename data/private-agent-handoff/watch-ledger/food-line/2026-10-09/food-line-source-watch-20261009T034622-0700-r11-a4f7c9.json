@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T034622-0700-r11-a4f7c9",
+  "scheduled_for": "2026-10-09T02:45:54-07:00",
+  "started_at": "2026-10-09T03:46:22-07:00",
+  "completed_at": "2026-10-09T03:47:43.720-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T02:48:17-07:00",
+    "end": "2026-10-09T03:47:43.720-07:00",
+    "observation_date": "2026-10-09",
+    "basis": "Previous completed GitHub watch heartbeat through this run's completion; new qualifying evidence must be discovered and temporally assessed, not merely freshly indexed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_performed": 12,
+    "search_limit": 12,
+    "search_retrieval_failures": [],
+    "queries": [
+      "\"October 9, 2026\" \"only grocery store\" closed fire",
+      "\"October 9, 2026\" \"sole grocery store\" closed fire",
+      "\"October 9, 2026\" \"last grocery store\" closing food desert",
+      "\"October 9, 2026\" \"food distribution\" \"canceled\" storm",
+      "\"October 9, 2026\" \"food bank\" \"distribution\" \"cancelled\" weather",
+      "\"October 9, 2026\" \"food pantry\" \"closed\" \"storm\"",
+      "WIC office closed October 9 2026 severe weather Alabama Florida Mississippi",
+      "SNAP EBT system outage October 9 2026 state agency benefits",
+      "emergency food distribution cancelled October 9 2026 storm flooding fire",
+      "food pantry services suspended indefinitely October 8 9 2026",
+      "\"only grocery store\" fire closed October 8 2026 community",
+      "site:floridahealth.gov \"October 9, 2026\" \"WIC\" \"closed\""
+    ],
+    "classes_checked": [
+      "only/sole/last/full-service community grocery closure or fire/disaster loss",
+      "emergency distribution cancellations due to storm/flood/fire/outage/facility damage",
+      "abrupt food pantry/food bank closure or material service reduction",
+      "new official SNAP/WIC/food assistance interruption with immediate food-access consequences"
+    ],
+    "duplicates_excluded": [
+      "Previously signaled Mississippi WIC health department closures in George and Jackson counties: official Oct 9 notice unchanged",
+      "Previously signaled Florida WIC office storm closures in Escambia, Santa Rosa, Okaloosa, Bay, Washington, and Walton counties",
+      "Previously signaled Prodisee Pantry, Reimagine, and Warrington Emergency Aid Center cancellations/disruptions"
+    ],
+    "other_exclusions": [
+      "Previously documented Spencer NY sole grocery store fire dated September 11, not new",
+      "HCCM canceled October 2 distribution is prior to observation window and cause not established",
+      "Routine future food distribution schedules and food bank public information contain no new cancellation",
+      "Gulf hurricane forecasts and general facility disruptions do not establish additional verified food assistance access loss",
+      "October 7 news on broad SNAP eligibility changes does not establish a new official hourly interruption"
+    ],
+    "source_urls_checked": [
+      "https://msdh.ms.gov/page/23,29629,341.html",
+      "https://bay.floridahealth.gov/location/main-location-ullman-building/",
+      "https://washington.floridahealth.gov/location/florida-department-of-health-in-washington-county/",
+      "https://walton.floridahealth.gov/",
+      "https://hccm.org/get-help/fresh-food-for-all.html",
+      "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/"
+    ],
+    "assessment": "No independently verified new in-window qualifying disruption found. Searches were bounded supplementary recall, not exhaustive primary production collection. Official Gulf Coast WIC closures were already recorded in earlier watches.",
+    "production_collector_authoritative": true,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false,
+    "intended_repository": "RedGarland/the-blue-fern-co-dispatches",
+    "intended_branch": "ops/watch-ledger",
+    "intended_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-09/food-line-source-watch-20261009T034622-0700-r11-a4f7c9.json"
+  }
+}

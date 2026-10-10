@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T064907-0700-r11",
+  "scheduled_for": "2026-10-10T06:45:54-07:00",
+  "started_at": "2026-10-10T06:49:07-07:00",
+  "completed_at": "2026-10-10T06:50:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T05:45:54-07:00",
+    "end": "2026-10-10T06:50:46-07:00",
+    "timezone": "America/Los_Angeles",
+    "start_basis": "Previous scheduled hourly checkpoint; previous actual completion time not independently verified."
+  },
+  "findings": [],
+  "coverage_notes": "12 bounded targeted web searches. No new source-confirmed qualifying sole grocery loss, emergency distribution cancellation, abrupt pantry access reduction, or SNAP/WIC immediate interruption discovered. Gulf Coast hurricane outages and weather reports do not confirm additional specific food-service shutdowns beyond previously reported events. Routine holiday pantry closings, historical grocery losses, generic food guides, schedules, and unrelated storm items excluded. No search failures. Search-index freshness constrains coverage. Supplementary watch only; production collection authoritative. No publication, approval, or schedule changes."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261010T164353Z-r11-9f2a",
+  "scheduled_for": "2026-10-10T09:45:22-07:00",
+  "started_at": "2026-10-10T09:43:53-07:00",
+  "completed_at": "2026-10-10T16:47:40.080Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T08:49:00-07:00",
+    "end": "2026-10-10T09:43:53-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first: latest notice Oct 9 Tender Home Health already seen. Exactly 12 additional targeted searches completed. Florida governor's Oct 10 update repeats existing VA clinic closures and a previously reported hospital evacuation; Oct 13 VA reopening is scheduled but not yet effective. No new independently qualifying development found. No production collector, publication or review changes."
+}

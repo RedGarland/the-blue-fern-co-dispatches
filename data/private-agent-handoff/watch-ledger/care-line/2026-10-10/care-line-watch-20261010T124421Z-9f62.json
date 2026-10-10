@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261010T124421Z-9f62",
+  "scheduled_for": "2026-10-10T05:45:22-07:00",
+  "started_at": "2026-10-10T05:44:21-07:00",
+  "completed_at": "2026-10-10T05:46:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "from": "2026-10-10T04:47:48-07:00",
+    "to": "2026-10-10T05:46:11-07:00",
+    "prior_check_basis": "Previous run reported completed 2026-10-10T04:47:48-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "research_result": "Bounded supplementary recall check identified no newly confirmed qualifying U.S. or territory healthcare-access change since the prior check; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "result": "No notice newer than the previously reported October 9 Tender Home Health termination."
+    },
+    "additional_targeted_searches": 12,
+    "search_coverage": [
+      "hospital/ED/rural emergency service closure",
+      "maternity",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "primary care",
+      "ground EMS",
+      "air medical bases",
+      "official closures and restorations",
+      "U.S. territories"
+    ],
+    "excluded": [
+      "Previously reported CMS Tender Home Health termination.",
+      "October 9 reporting about planned Oklahoma maternity service restoration in 2027: no effective restoration.",
+      "Southeast Michigan psychiatric hospital opening report: definitive new patient admission date not established in the observation window.",
+      "Older temporary closures and unrelated foreign events."
+    ],
+    "limitations": "Search-index publication timestamps may lag local announcements; no claim of exhaustive national coverage.",
+    "downstream_actions": "None. No approvals, publication, or schedule changes."
+  }
+}

@@ -15,9 +15,9 @@
   "current_runner_head": "e51fe611cd0b55b9e1444570e382435c3346be51",
   "debug_summary": {
     "aggregate_status": "DEGRADED",
-    "all_current_failures_external": true,
-    "all_current_failures_non_actionable": true,
-    "attention_task_count": 2,
+    "all_current_failures_external": false,
+    "all_current_failures_non_actionable": false,
+    "attention_task_count": 3,
     "attention_tasks": [
       {
         "artifact_id": "20261009T190001Z-15696.json",
@@ -34,14 +34,22 @@
         "failure_stage": "care_line_collection",
         "status": "DEGRADED",
         "task_key": "care_line_collection"
+      },
+      {
+        "artifact_id": "20261010T010001Z-18948.json",
+        "classification": "partial_success",
+        "exit_code": 0,
+        "failure_stage": "care_line_collection",
+        "status": "DEGRADED",
+        "task_key": "care_line_collection"
       }
     ],
     "external_access_restriction_count": 4,
-    "failed_source_count": 4,
-    "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
+    "failed_source_count": 11,
+    "operator_assessment": "DEGRADED_ACTION_RECOMMENDED",
     "primary_classification": "partial_success",
     "primary_failure_stage": "care_line_collection",
-    "primary_layer": "EXTERNAL_DEPENDENCY",
+    "primary_layer": "SOURCE_CLASSIFICATION",
     "primary_task_key": "care_line_collection",
     "primary_task_status": "DEGRADED",
     "private_review_count_only_gap_count": null,
@@ -58,7 +66,7 @@
     "stale_observability": false,
     "transient_source_failure_count": 0,
     "unaccounted_event_count": null,
-    "unclassified_source_failure_count": 0
+    "unclassified_source_failure_count": 7
   },
   "dispatch": "care-line",
   "effective_task_summaries": [
@@ -774,6 +782,185 @@
       "started_at": "2026-10-10T00:53:50Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20261010T010001Z-18948.json",
+      "classification": "partial_success",
+      "completed_at": "2026-10-10T01:02:21Z",
+      "diagnostics": {
+        "active_review_queue_count": 1,
+        "failed_source_count": 11,
+        "failed_sources": [
+          {
+            "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "hhs-news",
+            "source_name": "U.S. Department of Health and Human Services News",
+            "transient": false
+          },
+          {
+            "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "hrsa-news",
+            "source_name": "Health Resources and Services Administration News",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "fierce-healthcare",
+            "source_name": "Fierce Healthcare",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "nc-health-news",
+            "source_name": "North Carolina Health News",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "colorado-sun-health",
+            "source_name": "Colorado Sun Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "calmatters-health",
+            "source_name": "CalMatters Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "ct-mirror-health",
+            "source_name": "The Connecticut Mirror Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "virginia-mercury-health",
+            "source_name": "Virginia Mercury Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "florida-phoenix-health",
+            "source_name": "Florida Phoenix Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "texas-tribune-health",
+            "source_name": "Texas Tribune Health Care",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "mayo-clinic-news",
+            "source_name": "Mayo Clinic News Network",
+            "transient": false
+          }
+        ],
+        "failure": {
+          "child_stdout_tail": [
+            "    ],",
+            "    \"stale_candidate_count\": 1,",
+            "    \"started_at\": \"2026-10-10T01:00:02Z\",",
+            "    \"status\": \"partial_success\",",
+            "    \"successful_attempt_count\": 27,",
+            "    \"superseded_candidate_count\": 0,",
+            "    \"zero_findings_distinct_from_source_failures\": true",
+            "  },",
+            "  \"schema_version\": \"bluefern.care_line.national_pipeline.v2\"",
+            "}"
+          ],
+          "collection_health": "partial_success",
+          "failed_source_count": 11,
+          "failure_stage": "care_line_collection",
+          "manual_review_count": 22,
+          "pipeline_run_id": "20261009-798a73436a2c-03",
+          "skipped_source_count": 0,
+          "successful_attempt_count": 27
+        },
+        "manual_review_count": 22,
+        "skipped_source_count": 0,
+        "successful_attempt_count": 27
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20261010T010001Z-18948",
+      "scheduled_for": "2026-10-09",
+      "started_at": "2026-10-10T01:00:01Z",
+      "status": "DEGRADED",
+      "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261010T005826Z-16cd5984.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-10T01:04:59Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261010T005826Z-16cd5984",
+      "scheduled_for": "2026-10-09",
+      "started_at": "2026-10-10T01:04:58Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
     }
   ],
   "expected_instances": [
@@ -808,8 +995,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-10T00:53:53.988674Z",
-  "last_receipt_at": "2026-10-10T00:53:51.500335Z",
+  "last_exported_at": "2026-10-10T01:05:01.890722Z",
+  "last_receipt_at": "2026-10-10T01:04:59.820028Z",
   "latest_runtime_proof_date": "2026-10-09T15:30:01Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -857,8 +1044,8 @@
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "source_failure_summary": {
-    "all_current_failures_external": true,
-    "all_current_failures_non_actionable": true,
+    "all_current_failures_external": false,
+    "all_current_failures_non_actionable": false,
     "external_access_restriction_count": 4,
     "external_restriction_sources": [
       {
@@ -886,14 +1073,14 @@
         "source_id": "mayo-clinic-news"
       }
     ],
-    "failed_source_count": 4,
-    "original_failed_source_count": 4,
+    "failed_source_count": 11,
+    "original_failed_source_count": 11,
     "recovered_source_count": 0,
     "recovered_sources": [],
-    "successful_attempt_count": 34,
+    "successful_attempt_count": 27,
     "transient_source_failure_count": 0,
     "transient_sources": [],
-    "unclassified_source_failure_count": 0
+    "unclassified_source_failure_count": 7
   },
   "stale_observability": false,
   "task_summaries": [
@@ -1620,6 +1807,185 @@
       "run_id": "care-proof-only-food-care-continuation-20261010T004826Z-dd36577e",
       "scheduled_for": "2026-10-09",
       "started_at": "2026-10-10T00:53:50Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20261010T010001Z-18948.json",
+      "classification": "partial_success",
+      "completed_at": "2026-10-10T01:02:21Z",
+      "diagnostics": {
+        "active_review_queue_count": 1,
+        "failed_source_count": 11,
+        "failed_sources": [
+          {
+            "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "hhs-news",
+            "source_name": "U.S. Department of Health and Human Services News",
+            "transient": false
+          },
+          {
+            "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "hrsa-news",
+            "source_name": "Health Resources and Services Administration News",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "fierce-healthcare",
+            "source_name": "Fierce Healthcare",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "nc-health-news",
+            "source_name": "North Carolina Health News",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "colorado-sun-health",
+            "source_name": "Colorado Sun Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "calmatters-health",
+            "source_name": "CalMatters Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "ct-mirror-health",
+            "source_name": "The Connecticut Mirror Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "virginia-mercury-health",
+            "source_name": "Virginia Mercury Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "florida-phoenix-health",
+            "source_name": "Florida Phoenix Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "texas-tribune-health",
+            "source_name": "Texas Tribune Health Care",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "mayo-clinic-news",
+            "source_name": "Mayo Clinic News Network",
+            "transient": false
+          }
+        ],
+        "failure": {
+          "child_stdout_tail": [
+            "    ],",
+            "    \"stale_candidate_count\": 1,",
+            "    \"started_at\": \"2026-10-10T01:00:02Z\",",
+            "    \"status\": \"partial_success\",",
+            "    \"successful_attempt_count\": 27,",
+            "    \"superseded_candidate_count\": 0,",
+            "    \"zero_findings_distinct_from_source_failures\": true",
+            "  },",
+            "  \"schema_version\": \"bluefern.care_line.national_pipeline.v2\"",
+            "}"
+          ],
+          "collection_health": "partial_success",
+          "failed_source_count": 11,
+          "failure_stage": "care_line_collection",
+          "manual_review_count": 22,
+          "pipeline_run_id": "20261009-798a73436a2c-03",
+          "skipped_source_count": 0,
+          "successful_attempt_count": 27
+        },
+        "manual_review_count": 22,
+        "skipped_source_count": 0,
+        "successful_attempt_count": 27
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20261010T010001Z-18948",
+      "scheduled_for": "2026-10-09",
+      "started_at": "2026-10-10T01:00:01Z",
+      "status": "DEGRADED",
+      "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261010T005826Z-16cd5984.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-10T01:04:59Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261010T005826Z-16cd5984",
+      "scheduled_for": "2026-10-09",
+      "started_at": "2026-10-10T01:04:58Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
     }

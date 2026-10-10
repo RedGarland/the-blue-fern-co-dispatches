@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T214624-0700-23d8c8",
+  "scheduled_for": "2026-10-09T21:44:51-07:00",
+  "started_at": "2026-10-09T21:44:55-07:00",
+  "completed_at": "2026-10-09T21:46:24-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T20:45:51.273-07:00",
+    "end": "2026-10-09T21:46:24-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches": "OCHA OPT and WHO checked first, followed by 12 targeted searches.",
+    "sources": "OCHA OPT and WHO main pages accessible; WHO EMRO endpoint failed and one ReliefWeb page returned 403.",
+    "qualification": "No new qualifying, traceable, nonduplicate development verified for the observation window.",
+    "exclusions": "Earlier shelter information, existing health-service interruptions, retrospective statements and unverified civilian-impact claims.",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

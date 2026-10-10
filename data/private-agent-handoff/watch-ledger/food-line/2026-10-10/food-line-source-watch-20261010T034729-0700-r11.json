@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T034729-0700-r11",
+  "scheduled_for": "2026-10-10T03:45:54-07:00",
+  "started_at": "2026-10-10T03:47:29-07:00",
+  "completed_at": "2026-10-10T03:48:13-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T02:45:34-07:00",
+    "end": "2026-10-10T03:48:13-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch only; nationwide Food Line production collector remains authoritative. Ran exactly 12 targeted web searches (recency 2–7 days) on sole/last/full-service grocery closures/disaster, weather-related canceled emergency food distribution, abrupt pantry/food-bank service loss, and official SNAP/WIC interruption. No newly verifiable qualifying U.S. food-access disruption identified since the preceding watch completed at 2026-10-10T02:45:34-07:00. Excluded previously recorded Oct 7 Prodisee Pantry Stockton Oct 10 distribution cancellation, prior Florida/Mississippi WIC storm-office closures, Warrington pantry closure, and older Spencer NY sole-grocery fire (Sept 11) and Latta SC store closure. A San Bernardino County WIC Rancho Cucamonga office closure announced for Oct 16 had no verified new publication in this hourly window and is not an immediate interruption; no positive finding. Other results were routine resource/program posts, unrelated cancellations, or historical coverage. Search crawl recency is not evidence of recent publication. All targeted searches returned usable coverage; no material retrieval failures. No approvals, publication, schedule changes, or changes to the production collector."
+}

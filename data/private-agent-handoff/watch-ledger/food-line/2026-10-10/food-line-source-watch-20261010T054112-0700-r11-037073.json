@@ -1,0 +1,42 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T054112-0700-r11-037073",
+  "scheduled_for": "2026-10-10T05:41:12-07:00",
+  "started_at": "2026-10-10T05:41:12-07:00",
+  "completed_at": "2026-10-10T05:42:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T04:41:34-07:00",
+    "end": "2026-10-10T05:42:46-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "source_retrieval_failures": 0,
+    "focus_classes": [
+      "sole_or_last_full_service_grocery_store_loss",
+      "disaster_related_emergency_distribution_cancellation",
+      "abrupt_pantry_food_bank_service_closure",
+      "official_snap_wic_food_assistance_interruption"
+    ],
+    "excluded": [
+      "Prodisee Pantry weather-related Stockton distribution cancellation was announced October 7, 2026, before the prior hourly window; NBC 15 first published October 7, and the distribution date is October 10; not a newly announced signal.",
+      "Share of McLean and St. Peter’s Chelsea preplanned October 10 holiday closings are routine, not abrupt access disruptions.",
+      "Historical 2024-2025 store fires and SNAP/WIC shutdown news are outside the observation window."
+    ],
+    "limitations": [
+      "Publication timestamps on some indexed pages are absent. Results predominantly identified older notices; no evidence establishing a new qualifying disruption since the previous hourly check.",
+      "Supplementary watch only; production collection authoritative."
+    ],
+    "web_source_urls": [
+      "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+      "https://www.shareofmclean.org/",
+      "https://www.stpeterschelsea.org/foodpantry.html"
+    ]
+  }
+}

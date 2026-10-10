@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T234445-0700-a11",
+  "scheduled_for": "2026-10-09T23:44:51-07:00",
+  "started_at": "2026-10-09T23:42:59-07:00",
+  "completed_at": "2026-10-09T23:44:45-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T22:44:42-07:00",
+    "end": "2026-10-09T23:44:45-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "previous_run_id": "gaza-source-watch-20261009T2244420700-71ae6dfd",
+    "role": "Supplementary recall watch only; primary daily Gaza production remains authoritative.",
+    "priority_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "mode": "priority search then source open",
+        "latest_retrieved": "Humanitarian Situation Report | 2 October 2026 (published 5 October)",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-2-october-2026",
+        "limitation": "OCHA homepage direct fetch timed out; search-indexed report retrieved."
+      },
+      {
+        "publisher": "WHO",
+        "mode": "priority search then source open",
+        "latest_retrieved": "WHO Director-General Gaza health/humanitarian access remarks 24 September 2026; WHO EMRO Palestine news index accessible",
+        "url": "https://www.emro.who.int/opt/news/",
+        "limitation": "WHO global Gaza emergency route returned DisabledError; regional news listing stale/crawled six months ago."
+      }
+    ],
+    "targeted_additional_searches": 12,
+    "search_topics": [
+      "UNRWA aid/shelter",
+      "UNICEF water/children",
+      "WFP food access",
+      "ICRC ambulances/hospitals",
+      "MSF medical care",
+      "IOM shelter/displacement",
+      "Reuters civilian casualties/ceasefire",
+      "Associated Press hostage/aid/ceasefire",
+      "UN humanitarian news",
+      "hospital evacuation fuel crossing",
+      "airstrikes and civilian casualties",
+      "WHO/UN Palestine emergency medical capacity"
+    ],
+    "verified_new_developments": 0,
+    "excluded": [
+      "IOM winter shelter/flooding assessment reported earlier on October 9; duplicate of preceding watches.",
+      "AP/Reuters ceasefire anniversary explainers retrospective and outside the new hourly window.",
+      "Earlier casualty, hospital and generator shortage articles without verified new incident in this hourly window.",
+      "Military strike reports lacking documented civilian impact in the hourly window."
+    ],
+    "coverage_limitations": [
+      "Direct OCHA homepage timed out; cached OCHA report remained available.",
+      "WHO main emergency route inaccessible; WHO EMRO listing accessible but stale.",
+      "Search results largely earlier than observation window; cannot rule out unpublished late local incidents."
+    ],
+    "outcome_reason": "No newly verifiable, source-traceable, nonduplicative Gaza civilian-impact development established after previous ledger close.",
+    "source_urls": [
+      "https://www.ochaopt.org/content/humanitarian-situation-report-2-october-2026",
+      "https://www.who.int/news-room/speeches/item/who-director-general-s-remarks-at-the-unga-side-event--humanitarian-access-and-health-in-gaza---ministerial-roundtable---24-september-2026",
+      "https://www.emro.who.int/opt/news/",
+      "https://www.reuters.com/business/environment/almost-all-gaza-residents-need-shelter-el-nio-threatens-flooding-un-agency-says-2026-10-09/",
+      "https://apnews.com/article/f6c105e8f72d8b478d78312142d888ed"
+    ],
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

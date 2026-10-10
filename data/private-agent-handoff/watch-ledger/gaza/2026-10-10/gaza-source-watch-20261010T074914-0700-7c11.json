@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T074914-0700-7c11",
+  "scheduled_for": "2026-10-10T07:44:51-07:00",
+  "started_at": "2026-10-10T07:49:14-07:00",
+  "completed_at": "2026-10-10T07:50:56.699-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T06:43:18.564-07:00",
+    "end": "2026-10-10T07:50:56.699-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first; current latest listing dated October 6.",
+    "who": "Checked first; primary URL 404, regional index inaccessible.",
+    "targeted_additional_searches": 12,
+    "excluded_as_duplicates": "Previously reported AP October 10 five deaths; historical recap not new.",
+    "unverified": "Second short report returned 429; occurrence time and uniqueness could not be established.",
+    "prior_run_id": "gaza-source-watch-20261010T064013-0700-f281",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

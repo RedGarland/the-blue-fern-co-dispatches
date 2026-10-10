@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261009T194452-0700-r11-5c9d",
+  "scheduled_for": "2026-10-09T19:45:22-07:00",
+  "started_at": "2026-10-09T19:44:52-07:00",
+  "completed_at": "2026-10-09T19:46:27-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T18:46:02-07:00",
+    "end": "2026-10-09T19:46:27-07:00",
+    "date_from": "2026-10-09",
+    "date_to": "2026-10-09",
+    "edition_date": "2026-10-09"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall watch, not the authoritative production collector. CMS Public Notices checked first (https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices); latest entry on 2026-10-09 is Tender Home Health, CA, CCN 059525, previously identified and excluded as duplicate. Exactly 12 additional targeted web searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency access, air medical, ambulance services, restoration/reopening, official health department closures and local closure reporting. No newly confirmed qualifying access change attributable to this hourly window. Fitzgibbon Hospital maternity-loss story dated 2026-10-08 describes a preexisting closure and was excluded from this hourly result. Proposals, future openings, unrelated results and previously reported storm closures excluded. Branch ledger was readable but missing some intervening prior-hour heartbeats; cross-checked against prior watch reports. Primary production collector was not changed, approval and publication were not attempted."
+}

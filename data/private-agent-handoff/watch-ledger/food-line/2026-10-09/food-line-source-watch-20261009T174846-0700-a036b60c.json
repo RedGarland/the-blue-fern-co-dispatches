@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T174846-0700-a036b60c",
+  "scheduled_for": "2026-10-09T17:45:54-07:00",
+  "started_at": "2026-10-09T17:48:46-07:00",
+  "completed_at": "2026-10-09T17:49:50-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T16:48:51-07:00",
+    "end": "2026-10-09T17:49:50-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "12 bounded targeted web searches across loss of the only/full-service community grocery, storm/disaster cancellation of food distributions, emergency pantry/food-bank access reductions, and official SNAP/WIC interruptions. No independently supported newly disclosed qualifying event within the hourly observation window. Previously noted Florida and Mississippi coastal WIC office closures and Pensacola pantry closures were excluded as duplicates; a September sole-grocery fire was historical. The San Bernardino County Rancho Cucamonga WIC closure notice concerns future October 16 service and has no verified first publication time or immediate access consequence in this window. Other results were routine openings, general closures without sole-provider evidence, resource information, or speculative weather impacts. No material search failures. Supplementary watch only; production nationwide collection remains authoritative. No approvals, publication, schedule changes, or task disablement."
+}

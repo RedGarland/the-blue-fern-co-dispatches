@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T024422-0700-r11",
+  "scheduled_for": "2026-10-10T02:45:54-07:00",
+  "started_at": "2026-10-10T02:44:22-07:00",
+  "completed_at": "2026-10-10T02:45:34-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T01:42:59-07:00",
+    "end": "2026-10-10T02:45:34-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary watch, not the authoritative production nationwide collector. Exactly 12 targeted web searches (recency 2-7 days) covered sole/last/full-service grocery closure or disaster, canceled emergency distributions from storms/flood/fire/outage, abrupt pantry/food-bank access loss, and official SNAP/WIC benefit or in-person access interruption. No newly verified qualifying signal since prior hourly check completed 2026-10-10T01:42:59-07:00. Excluded older already-known Latta SC grocery closure, 2025 Nederland CO grocery fire, 2025 St. Pete Beach Publix fire, previous Gulf Coast weather/WIC closures, unrelated news, standard USDA hurricane preparedness resource notices, and generic SNAP reporting. North Escambia October 2026 weather cancellation list direct page retrieval returned HTTP 403; search snippet contained no uniquely verifiable new food-access interruption. Searches returned usable results but the source access issue makes status DEGRADED; no evidence warrants a new positive finding. Search crawl recency does not establish new publication. No approvals, publication, scheduling, or primary collector changes."
+}

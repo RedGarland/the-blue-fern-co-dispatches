@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T074926-0700-r11-b6381f",
+  "scheduled_for": "2026-10-10T07:45:54-07:00",
+  "started_at": "2026-10-10T07:49:26-07:00",
+  "completed_at": "2026-10-10T07:50:39-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T06:45:54-07:00",
+    "end": "2026-10-10T07:50:39-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall check only; production nationwide collector remains authoritative. Exactly 12 targeted web searches completed successfully across only/sole/last full-service grocery loss, disaster-canceled food distributions, abrupt significant pantry closure/access reductions, and official immediate SNAP/WIC interruptions. No new source with confirmed qualifying disruption newly published in the hourly search window was identified. Excluded pre-existing October 7 report about Prodisee Pantry's October 10 Stockton, AL canceled distribution; previously reported Gulf Coast storm-related WIC and pantry closures; older Spencer, NY and Latta, SC sole-grocery closures; October 10 Richlands, VA Grants Supermarket closure because it is one of two grocery stores and closure was announced days earlier; routine holiday closure at Share of McLean; old federal SNAP funding articles; and unrelated events and program promotion. Source search availability was usable; no direct-source retrieval outage encountered in this run. Search engines cannot prove exhaustive national coverage or precise first-publication time for undated notices. No approval, publication, production collection, schedule, or task changes."
+}

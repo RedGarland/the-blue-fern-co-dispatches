@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T034922-0700-e0d3",
+  "scheduled_for": "2026-10-10T03:44:51-07:00",
+  "started_at": "2026-10-10T03:49:22-07:00",
+  "completed_at": "2026-10-10T03:50:51-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T02:42:56-07:00",
+    "end": "2026-10-10T03:50:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "previous_run_id": "gaza-source-watch-20261010T024036-0700-6b81",
+    "role": "Bounded supplementary recall watch only. Production collector/publisher remains authoritative.",
+    "priority_checks": {
+      "OCHA OPT": {
+        "status": "accessible",
+        "url": "https://www.ochaopt.org/",
+        "latest_listed_update_date": "2026-10-06",
+        "notes": "Homepage and 2 October humanitarian situation report accessible; no new reporting in search window."
+      },
+      "WHO": {
+        "status": "degraded",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+          "https://www.emro.who.int/opt/news/index.html",
+          "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---7-october-2026"
+        ],
+        "notes": "WHO emergency situation and regional news endpoints returned internal errors. Indexed WHO material found but no timely new healthcare update verified."
+      }
+    },
+    "targeted_additional_searches": 12,
+    "targeted_search_scope": [
+      "overnight civilian deaths and injury Reuters/AP",
+      "humanitarian aid access UNRWA/OCHA",
+      "hospital ambulance fuel capacity WHO/health cluster",
+      "medical evacuation Rafah WHO",
+      "food kitchens water WFP/UNICEF",
+      "displacement flooding shelters IOM/UNRWA",
+      "crossings cargo Kerem Shalom Rafah COGAT/UN",
+      "MSF hospitals supplies",
+      "ICRC detentions hostage transfers",
+      "ceasefire negotiations Reuters",
+      "military operations civilian impact Reuters/AP/AFP",
+      "UN News humanitarian aid"
+    ],
+    "exclusions": [
+      "OCHA report issued October 5 and October 6 impact snapshot predate interval.",
+      "October 8 medical evacuation and crossing reports predate interval.",
+      "October 10 anniversary opinion is excluded.",
+      "Older casualty reports, shelter assessments, ceasefire retrospectives and duplicates excluded."
+    ],
+    "verified_new_developments": 0,
+    "coverage_limitations": [
+      "Two WHO endpoints inaccessible; alternative indexed WHO and established reporting checked.",
+      "Recency queries mostly returned older results; no verified new finding does not imply no new event."
+    ],
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

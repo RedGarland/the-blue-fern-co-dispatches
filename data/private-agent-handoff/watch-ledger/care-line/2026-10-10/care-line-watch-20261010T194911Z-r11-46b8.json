@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261010T194911Z-r11-46b8",
+  "scheduled_for": "2026-10-10T12:45:22-07:00",
+  "started_at": "2026-10-10T12:49:11-07:00",
+  "completed_at": "2026-10-10T12:50:08-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "started_at": "2026-10-10T11:44:00-07:00",
+    "ended_at": "2026-10-10T12:50:08-07:00",
+    "description": "Since previous hourly Care Line Watch completion at approximately 11:44 PDT, with a short lookback for delayed reports."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production national collection remains authoritative. No approval or publication attempted.",
+    "CMS Public Notices checked first (https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices); latest listed notice dated 2026-10-09: Tender Home Health termination, previously reported.",
+    "Exactly 12 additional targeted web searches completed across hospital/ED/maternity/rural/behavioral-health/dialysis/oncology/primary care/ambulance and hurricane-affected areas/territories.",
+    "2026-10-10 Florida government recovery report (https://www.flgov.com/eog/news/press/2026/governor-ron-desantis-issues-updates-state-response-and-recovery-efforts-hurricane) confirms 1 hospital evacuation involving 12 patients and VA outpatient clinic closures, but these had been examined during prior watch; excluded as no independently verified new change in this interval.",
+    "Ascension Sacred Heart outpatient/oncology closures were first announced 2026-10-08 (https://about.ascension.org/news/2026/10/flpen-hurricane-alert-for-ascension-sacred-heart-pensacola-emerald-coast-bay-and-gulf) and are not new to this window.",
+    "No fresh, previously unreported concrete access change established in interval. Source result noise included historical events, proposals and events outside U.S./territories; excluded."
+  ]
+}

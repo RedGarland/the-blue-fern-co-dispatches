@@ -1,0 +1,42 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261010T144109-0700-r11-4f2c",
+  "scheduled_for": "2026-10-10T14:41:09-07:00",
+  "started_at": "2026-10-10T14:41:09-07:00",
+  "completed_at": "2026-10-10T14:42:03-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T11:44:00-07:00",
+    "end": "2026-10-10T14:42:03-07:00",
+    "window_basis": "Previous reported Care Line hourly check ended at approximately 11:44 a.m. PDT October 10; this is supplementary recall, not authoritative production intake."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date": "2026-10-09",
+    "cms_latest_notice": "Tender Home Health termination (previously reported, excluded)",
+    "additional_targeted_search_count": 12,
+    "sources_prioritized": "CMS official notices, provider and state-government releases, strong local reporting",
+    "high_value_classes_checked": [
+      "hospital and emergency-department closure/suspension",
+      "maternity/behavioral health/dialysis/oncology/primary care",
+      "rural emergency services",
+      "ground/air ambulance bases",
+      "official provider terminations/CLIA enforcement",
+      "concrete essential-service restorations"
+    ],
+    "screened_exclusions": [
+      "Florida October 10 hurricane-recovery update and VA outpatient-clinic closures: previously observed storm-related closures; not established as newly announced since the previous hourly check.",
+      "Florida report of unnamed hospital evacuation of 12 patients: earlier check already reviewed; unnamed facility and no independently established new service loss in this window.",
+      "Fitzgibbon Memorial Hospital labor-and-delivery closure: published October 8, outside current recall interval.",
+      "Canada/United Kingdom/Australia service closures, proposals, historical closures, and unconfirmed reporting: outside scope or non-qualifying."
+    ],
+    "outcome_limitations": "Date-only publication times and source indexing cannot rule out unobserved changes during the window. Production Care Line collection and deduplication remain authoritative.",
+    "mutation_scope": "Only this private operational heartbeat; no publication, approval, schedule, or production edits."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T154451-0700-r11",
+  "scheduled_for": "2026-10-10T15:44:51-07:00",
+  "started_at": "2026-10-10T15:49:09-07:00",
+  "completed_at": "2026-10-10T15:49:54-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T14:42:19-07:00",
+    "end": "2026-10-10T15:49:54-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first; accessible; latest index item October 6.",
+    "who": "Checked first; global page accessible; regional endpoint returned 502.",
+    "targeted_searches": 12,
+    "summary": "No qualifying new information verified; older reports and duplicate results excluded.",
+    "production_authoritative": true
+  }
+}

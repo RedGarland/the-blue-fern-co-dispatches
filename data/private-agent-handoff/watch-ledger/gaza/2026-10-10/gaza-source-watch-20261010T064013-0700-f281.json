@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T064013-0700-f281",
+  "scheduled_for": "2026-10-10T06:44:51-07:00",
+  "started_at": "2026-10-10T06:40:13-07:00",
+  "completed_at": "2026-10-10T06:43:18.564-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T05:50:08-07:00",
+    "end": "2026-10-10T06:43:18.564-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first. Homepage accessible; latest listing 2026-10-06.",
+    "who": "Checked first. Emergency endpoints 404/disabled; regional situation reports 502. Coverage degraded.",
+    "targeted_additional_searches": 12,
+    "additional_search_conclusion": "No verifiable nonduplicate change within the hourly observation window. AP report duplicated prior execution; other reports predate the window or lack confirmation.",
+    "prior_run_id": "gaza-source-watch-20261010T054451-0700-r11",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

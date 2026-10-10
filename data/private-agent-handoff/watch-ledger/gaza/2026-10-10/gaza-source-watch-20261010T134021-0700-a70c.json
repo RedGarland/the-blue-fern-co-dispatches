@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T134021-0700-a70c",
+  "scheduled_for": "2026-10-10T13:44:51-07:00",
+  "started_at": "2026-10-10T13:40:21-07:00",
+  "completed_at": "2026-10-10T13:41:19-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T11:45:00-07:00",
+    "end": "2026-10-10T13:41:19-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Accessible. Latest listing October 6.",
+    "who": "Global emergency page accessible. EMRO endpoint returned 502.",
+    "additional_searches": 12,
+    "other_coverage": "WAFA homepage returned 403. Al Jazeera topic index was stale.",
+    "assessment": "No new verified nonduplicative development.",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T104207-0700-93e2",
+  "scheduled_for": "2026-10-10T10:44:51-07:00",
+  "started_at": "2026-10-10T10:42:07-07:00",
+  "completed_at": "2026-10-10T10:44:38.363-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T09:48:00-07:00",
+    "end": "2026-10-10T10:44:38.363-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "First check succeeded; latest listed publication October 6.",
+    "who": "First check succeeded; no fresh healthcare update.",
+    "additional_targeted_searches": 12,
+    "result": "No qualifying nonduplicate development since prior check. Prior eight-death report excluded.",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

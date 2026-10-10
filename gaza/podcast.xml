@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 09 Oct 2026 13:01:00 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 10 Oct 2026 13:03:07 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for October 10, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-10-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-10-10-transcript.html</guid>
+    <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+    <description>Child among seven killed by Israel in Gaza on 'ceasefire' anniversary. At least 1,481 Palestinians killed in Israeli attacks since last year's 'ceasefire', Gaza's Health Ministry says. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-10-10.mp3" length="728832" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for October 9, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-09-transcript.html</link>

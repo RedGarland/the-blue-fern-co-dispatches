@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T174119-0700-8e21",
+  "scheduled_for": "2026-10-09T17:44:51-07:00",
+  "started_at": "2026-10-09T17:41:19-07:00",
+  "completed_at": "2026-10-09T17:42:14-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T16:45:37-07:00",
+    "end": "2026-10-09T17:42:14-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "protocol": "OCHA OPT updates and WHO global and regional emergency pages were explicitly checked first, followed by 12 targeted search queries (no additional queries).",
+    "priority_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "latest_listed_update": "2026-10-06",
+        "new_in_window": false
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "accessible",
+        "new_in_window": false
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP 502"
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "covered_classes": [
+      "civilian casualties",
+      "displacement and shelter",
+      "aid access",
+      "food and water",
+      "healthcare and hospitals",
+      "ambulances and fuel",
+      "medical evacuations",
+      "infrastructure damage",
+      "crossings",
+      "detention and hostages",
+      "ceasefire and negotiation developments",
+      "military operations with civilian impact"
+    ],
+    "candidate_review": "Arab News/WAFA/AFP October 9 casualty roundup described Thursday-Friday incidents, not a newly verified event since the previous watch; prior October 9 IOM shelter assessment, October 8-9 casualties, and October 8 healthcare retrospective excluded. No precise new incident/publication timestamp demonstrated a qualifying nonduplicate post-window development.",
+    "other_source_limitations": [
+      "ReliefWeb UNRWA Situation Report #236 page returned HTTP 403"
+    ],
+    "qualification": "No new, source-traceable, nonduplicative in-Gaza development verified since last persisted hourly watch completion.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-09/gaza-source-watch-20261009T164353-0700-3f18.json",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

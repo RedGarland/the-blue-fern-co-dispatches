@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261010T084906Z-r11",
+  "scheduled_for": "2026-10-10T01:45:22-07:00",
+  "started_at": "2026-10-10T01:49:06-07:00",
+  "completed_at": "2026-10-10T01:49:56-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T23:50:00-07:00",
+    "end": "2026-10-10T01:49:56-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "additional_targeted_searches": 12,
+    "findings": "No new qualifying changes within observation window; older previously reported and newly indexed historical developments excluded.",
+    "persistence_state": "Awaiting commit; prior contents-API attempt rejected by connector safety checks.",
+    "primary_collector": "Production remains authoritative."
+  }
+}

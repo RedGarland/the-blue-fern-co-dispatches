@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T014840-0700-b6c1",
+  "scheduled_for": "2026-10-10T01:44:51-07:00",
+  "started_at": "2026-10-10T01:47:13-07:00",
+  "completed_at": "2026-10-10T01:48:40-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T00:46:37-07:00",
+    "end": "2026-10-10T01:48:40-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "previous_run_id": "gaza-source-watch-20261010T004637-0700-r11",
+    "role": "Bounded supplementary recall watch only; production collector/publisher remains authoritative.",
+    "priority_checks": {
+      "OCHA OPT": {
+        "status": "accessible",
+        "url": "https://www.ochaopt.org/",
+        "latest_listed_update_date": "2026-10-06",
+        "additional_read": "https://www.ochaopt.org/content/humanitarian-situation-report-2-october-2026",
+        "notes": "No OCHA reporting identified that was newly published in the observation window."
+      },
+      "WHO": {
+        "status": "unavailable",
+        "urls": [
+          "https://www.who.int/emergencies/situations/israel-and-occupied-palestinian-territory",
+          "https://www.emro.who.int/opt/information-resources/situation-reports.html"
+        ],
+        "notes": "Direct WHO emergency and regional situation-report endpoints returned internal errors. WHO site-search index yielded older material but could not restore timely official coverage."
+      }
+    },
+    "targeted_additional_searches": 12,
+    "targeted_searches_scope": "civilian casualties, ambulance and hospital capacity, medical evacuations, displacement and shelter, WASH, food, aid crossings, detention/hostages, ceasefire negotiations and military operations with documented civilian impact",
+    "secondary_access_limitations": {
+      "ReliefWeb": "UNRWA Situation Report #236 returned HTTP 403 on direct open; search indexed October 7 publication.",
+      "IOM": "October 9 shelter release returned HTTP 403 on direct open; metadata corroborated by Reuters but historical relative to the window.",
+      "TeleSUR": "Hospital-shutdown page returned HTTP 413; accessible secondary report showed the referenced Al-Wafa and Kuwait hospital reductions were Monday/Sunday (October 5/4), not new."
+    },
+    "exclusions": [
+      "IOM October 9 shelter risk/17 percent winter-needs coverage was identified in prior hourly checks.",
+      "October 8 Gaza City attacks and casualties (including Tal al-Hawa and Al-Tawam) predate the search window; not independently established as a new follow-up.",
+      "October 8 Physicians for Human Rights-Israel assessment of non-fully-functional Gaza hospitals is outside the observation window.",
+      "October 3 Gaza City apartment-strike casualties are historical and previously surfaced.",
+      "No newly documented civilian-impact event or verified operational change inside this hour."
+    ],
+    "verified_new_developments": 0,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

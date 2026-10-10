@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T024036-0700-6b81",
+  "scheduled_for": "2026-10-10T02:44:51-07:00",
+  "started_at": "2026-10-10T02:40:36-07:00",
+  "completed_at": "2026-10-10T02:42:56-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T01:48:40-07:00",
+    "end": "2026-10-10T02:42:56-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "previous_run_id": "gaza-source-watch-20261010T014840-0700-b6c1",
+    "role": "Supplementary bounded recall watch only; production collector/publisher remains authoritative.",
+    "priority_checks": {
+      "OCHA OPT": {
+        "status": "accessible",
+        "url": "https://www.ochaopt.org/",
+        "latest_listed_update_date": "2026-10-06",
+        "notes": "Homepage and 2 October situation report accessible; no new published update within observation window."
+      },
+      "WHO": {
+        "status": "degraded",
+        "urls": [
+          "https://www.who.int/emergencies/situations/israel-and-occupied-palestinian-territory",
+          "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+          "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---7-october-2026"
+        ],
+        "notes": "WHO emergency situation endpoint returned DisabledError and regional situation-reports endpoint timed out. WHO 7 October remarks accessible but outside this observation window; unable to restore timely primary WHO source coverage."
+      }
+    },
+    "targeted_additional_searches": 12,
+    "targeted_search_scope": [
+      "UNRWA displacement and aid",
+      "ICRC detention and access",
+      "UNICEF water and children",
+      "WFP food",
+      "MSF healthcare and fuel",
+      "Palestine Red Crescent ambulance",
+      "Reuters civilian casualties",
+      "AP ceasefire and civilian impact",
+      "Gaza crossings and aid access",
+      "UN News humanitarian",
+      "medical evacuation and hospital shutdown",
+      "overnight military operations with civilian impact"
+    ],
+    "secondary_access_limitations": {
+      "UN News": "Targeted search blocked by robots.txt.",
+      "TeleSUR": "Potential Al-Awda hospital-shutdown article could not be opened (HTTP 413); insufficient evidence to date a new operational change."
+    },
+    "exclusions": [
+      "Reuters/IOM 9 October shelter and flood-risk reporting was already identified by the prior watch; duplicate.",
+      "Al-Wafa and Kuwait Specialised Hospital service reductions reported for 5 and 4 October; old events, not a new shutdown in this window.",
+      "AP 10 October ceasefire-anniversary report summarizes prior developments but establishes no new hour-specific civilian-impact event.",
+      "Reports of attacks and health-system conditions from earlier October dates were not demonstrated to be newly verified follow-ups.",
+      "Advocacy group statements and retrospective ceasefire coverage lacked a newly verified on-the-ground change within the window."
+    ],
+    "verified_new_developments": 0,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

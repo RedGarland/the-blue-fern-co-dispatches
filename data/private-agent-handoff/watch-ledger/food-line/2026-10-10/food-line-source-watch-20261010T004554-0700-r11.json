@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T004554-0700-r11",
+  "scheduled_for": "2026-10-10T00:45:54-07:00",
+  "started_at": "2026-10-10T00:46:02-07:00",
+  "completed_at": "2026-10-10T00:47:35-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T23:45:54-07:00",
+    "end": "2026-10-10T00:47:35-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch only; production nationwide collection remains authoritative. Completed exactly 12 targeted web searches (10 fast and 2 deeper), covering only/sole/last/full-service grocery closures and fire/disaster loss; canceled storm/flood/fire/outage/damage emergency food distributions; abrupt pantry/food-bank closure or major service reduction; and new official SNAP/WIC immediate-access interruptions. No newly verifiable qualifying disruption within this hourly observation window. Excluded: October 3 Mio, Michigan creamery fire (not established sole/full-service grocery and outside window); October 10 Watertown, New York Save A Lot closing (reported October 5, not sole store); stale 2024-2025 store and food aid reports, routine food distribution announcements, resource guides, unrelated benefit/policy items, and duplicates of prior Gulf Coast WIC/pantry closures. Potential lead: St. Lucy food distribution closure for October 9 (Working To End Poverty Facebook notice); cause and publication time unverified and therefore not promoted to a finding. Direct-source fetch of that Facebook notice was throttled, making source retrieval DEGRADED despite otherwise usable search coverage. Search results' crawl dates do not establish source publication in the hourly window. No approval, publication, collector, schedule, or task changes."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T184223-0700-r11",
+  "scheduled_for": "2026-10-09T17:45:54-07:00",
+  "started_at": "2026-10-09T18:42:23-07:00",
+  "completed_at": "2026-10-09T18:43:38.554-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T16:48:51-07:00",
+    "end": "2026-10-09T18:43:38.555-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall watch only; primary Food Line production nationwide collection remains authoritative. Completed 12 targeted web searches across four audited miss classes: sole/only/last/full-service grocery losses, disaster-canceled emergency food distributions, abrupt major pantry/food-bank access reductions, and immediate official SNAP/WIC interruptions. No newly reported, independently verifiable qualifying event was found within the observation window. Excluded previously identified Hurricane Isaias Gulf Coast Florida WIC closures (Escambia, Santa Rosa, Okaloosa, Bay, Washington, Walton, Holmes), Warrington Emergency Aid Center's October 9 cancellation, Mississippi coastal WIC closures, and historical September 11-14 Spencer NY only-grocery-store fire. Bay County's October 9 WIC closure is now visible on first-party clinic pages, but was already flagged as a candidate in an earlier watch and has no established publication hour within the present window; not counted anew. Excluded unrelated storm news, generic food and retail stories, resource guides, and routine program promotion. Search retrieval generated usable results; no material tool failures, although absence of findings is not proof of comprehensive nationwide coverage. No production, review approval, publishing, task schedule, or task enablement changes."
+}

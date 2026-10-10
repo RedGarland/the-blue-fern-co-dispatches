@@ -1,0 +1,38 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261010T134822Z-a897d090",
+  "scheduled_for": "2026-10-10T06:45:22-07:00",
+  "started_at": "2026-10-10T06:48:22-07:00",
+  "completed_at": "2026-10-10T06:50:31-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T04:47:00-07:00",
+    "end": "2026-10-10T06:50:31-07:00",
+    "basis": "Last visible completed check ended approximately 04:47 PDT; no intervening successful heartbeat verified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_authority": "Supplementary recall watch only; production collector authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "new_relevant_notices": 0,
+      "duplicate": "Tender Home Health, California, October 9 termination notice already reported."
+    },
+    "additional_targeted_searches": 12,
+    "searches_completed": true,
+    "exclusions": [
+      "Fitzgibbon Hospital (Marshall, MO) labor and delivery service closure reported October 8 was already captured in the production Care Line historical event care-line-2026-09-30-fitzgibbon-inpatient-labor-delivery-closure.",
+      "Michigan psychiatric hospital announcement does not provide a concrete newly effective restoration within this observation window.",
+      "Martin County hospital restoration funding is preparatory, not an operational service reopening.",
+      "Out-of-country emergency department interruptions, proposed changes, unrelated stories, and previously noted hurricane-related closures excluded."
+    ],
+    "result": "No newly verified qualifying access changes in the observation window; no pending-review findings added.",
+    "cms_legacy_link_note": "An outdated CMS URL returned inaccessible; canonical CMS Public Notices was successfully checked."
+  }
+}

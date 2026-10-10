@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T014121-0700-r11",
+  "scheduled_for": "2026-10-10T01:45:54-07:00",
+  "started_at": "2026-10-10T01:41:21-07:00",
+  "completed_at": "2026-10-10T01:42:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T00:47:35-07:00",
+    "end": "2026-10-10T01:42:59-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary bounded recall watch only; production nationwide collection remains authoritative. Completed exactly 12 targeted web searches (all returned results) for: community-only/sole/last/full-service grocery store closure or disaster; storm/flood/fire/outage/damage emergency food-distribution cancellations; abrupt pantry/food-bank closure or major service reduction; and newly announced official SNAP/WIC food-assistance interruption with immediate access consequences. No newly verified qualifying signal surfaced since the preceding completed hourly check at 2026-10-10T00:47:35-07:00. Explicitly excluded already-known Oct 7 Prodisee Pantry cancellation of Oct 10 Stockton distribution, previous Gulf Coast WIC service closures and Warrington emergency pantry closure; older Latta SC sole-grocer story, 2025 Nederland store fire and unrelated 2025 St. Pete Publix fire; generic SNAP benefit-change reporting, promotional/resource pieces, and ordinary holiday pantry closures. Search-engine recency/crawl labels are not proof of new publication. Searches completed without material tool errors; remaining source freshness uncertainty is normal bounded coverage, not a failure. The task schedule, primary collector, publication, and approvals were not changed."
+}

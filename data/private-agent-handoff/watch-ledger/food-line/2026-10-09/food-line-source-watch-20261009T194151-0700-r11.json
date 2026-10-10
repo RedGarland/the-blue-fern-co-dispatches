@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T194151-0700-r11",
+  "scheduled_for": "2026-10-09T18:45:54-07:00",
+  "started_at": "2026-10-09T19:41:51-07:00",
+  "completed_at": "2026-10-09T19:42:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T18:43:38.554-07:00",
+    "end": "2026-10-09T19:42:53-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted web searches across four scoped miss classes; no new qualifying signals verified in the observed window. Earlier WIC and pantry closures excluded as duplicates. The primary production collector remains authoritative; no publication, approval or scheduling changes."
+}

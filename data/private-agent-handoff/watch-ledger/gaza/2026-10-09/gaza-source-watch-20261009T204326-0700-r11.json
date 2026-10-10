@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261009T204326-0700-r11",
+  "scheduled_for": "2026-10-09T20:44:51-07:00",
+  "started_at": "2026-10-09T20:43:26-07:00",
+  "completed_at": "2026-10-09T20:45:51.273-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-09T19:45:00-07:00",
+    "end": "2026-10-09T20:45:51.273-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary bounded recall only; primary daily Gaza collector and publisher remain authoritative.",
+    "method": "Checked OCHA OPT updates and WHO Gaza emergency reporting first; then executed exactly 12 additional targeted web searches across UN agencies, established press, Gaza casualties, aid, shelter, WASH, hospitals, evacuations, fuel, crossings, detainees, negotiations and documented civilian impact.",
+    "authoritative_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest listed items 6 October 2026, no post-window update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no verified new time-scoped update."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "result": "HTTP 502; regional situation-report verification unavailable."
+      }
+    ],
+    "degraded_retrievals": [
+      {
+        "source": "WHO EMRO situation reports",
+        "status": "HTTP 502"
+      },
+      {
+        "source": "Anadolu direct article",
+        "status": "Timed out on open; indexed dated article available"
+      },
+      {
+        "source": "WAFA direct article",
+        "status": "HTTP 403 on open; indexed dated article available"
+      }
+    ],
+    "excluded_candidates": [
+      {
+        "source": "Reuters/IOM 2026-10-09 winter shelter assessment",
+        "reason": "Already identified in prior recall watch; duplicate."
+      },
+      {
+        "source": "AFP 2026-10-09 eight deaths across Thursday and Friday",
+        "reason": "Retrospective aggregation of previously covered October 8 incidents and October 9 central-Gaza shooting."
+      },
+      {
+        "source": "WAFA/Anadolu October 9 central Gaza fatal shooting",
+        "reason": "Reported earlier on October 9, preceding observation window; not a newly discovered event."
+      },
+      {
+        "source": "Anadolu updated October 9 injuries count (3 to 6)",
+        "reason": "Update hour unverified; cannot establish that new information arose since prior check."
+      },
+      {
+        "source": "NGO ceasefire anniversary statement and retrospective casualty totals",
+        "reason": "Commentary/retrospective statements, not separately established new ground development within window."
+      },
+      {
+        "source": "Reports of militant-only targeted strikes",
+        "reason": "No sourced civilian impact or new verified development in observation window."
+      }
+    ],
+    "qualification": "No fresh, source-traceable, nonduplicative qualifying Gaza development demonstrably emerged in the interval. Do not treat an absence of verified findings as evidence no events occurred.",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

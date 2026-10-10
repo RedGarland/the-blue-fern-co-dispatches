@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T124844-0700-58bf",
+  "scheduled_for": "2026-10-10T12:44:51-07:00",
+  "started_at": "2026-10-10T12:48:44-07:00",
+  "completed_at": "2026-10-10T12:50:26.853-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T11:45:00-07:00",
+    "end": "2026-10-10T12:50:26.853-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first, homepage available; latest displayed Gaza-related updates dated 2026-10-06 or earlier. https://www.ochaopt.org/",
+    "who": "Checked second, WHO global conflict emergency page returned HTTP 404: https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory . WHO Eastern Mediterranean reporting was searched as a fallback, but no current Gaza health update was verified; source coverage degraded.",
+    "targeted_additional_searches": 12,
+    "additional_search_conclusion": "No independently traceable new or newly updated nonduplicate Gaza development with verified timing in the 2026-10-10 11:45-12:50 PDT window. Reuters/AP five-death report was covered by earlier checks. WAFA Nuseirat electric-bicycle strike dated October 10 17:23 Gaza local time was identified in an earlier watch. Other coverage was retrospective or outside the verified window.",
+    "reviewed_examples": [
+      "https://www.reuters.com/world/middle-east/israeli-strikes-kill-five-people-gaza-medics-say-2026-10-10/",
+      "https://english.wafa.ps/Pages/Details/175705",
+      "https://www.nextcenturyfoundation.org/gaza-information-index-10-october-2026/"
+    ],
+    "prior_observation_end": "2026-10-10T11:45:00-07:00",
+    "prior_run_id": "gaza-source-watch-20261010T114351-0700-r11",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

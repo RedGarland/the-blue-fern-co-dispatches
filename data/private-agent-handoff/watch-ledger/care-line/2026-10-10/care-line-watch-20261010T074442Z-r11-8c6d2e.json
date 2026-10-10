@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261010T074442Z-r11-8c6d2e",
+  "scheduled_for": "2026-10-10T00:45:22-07:00",
+  "started_at": "2026-10-10T00:44:42-07:00",
+  "completed_at": "2026-10-10T00:46:18-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T23:50:00-07:00",
+    "end": "2026-10-10T00:46:18-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "prior hourly Care Line Watch completion reported at approximately 23:50 PDT; current run's end time"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall-only watch; production collection remains authoritative. Findings do not authorize approval or publication.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; latest displayed notice dated 2026-10-09 for Tender Home Health, already reported in prior checks; no newly posted notice detected.",
+    "Exactly 12 additional targeted web searches covering hospital/emergency/maternity closures, rural emergency disruptions, behavioral-health care, ambulance/air-medical bases, dialysis and oncology, official clinic closures, and service restoration/reopening.",
+    "No new qualifying healthcare-access change could be verified as announced or becoming effective during 2026-10-09 23:50–2026-10-10 00:46 PDT.",
+    "Excluded previously reported Tender Home Health CMS termination; October 8 Fitzgibbon Hospital maternity loss as pre-window; older or proposed maternity changes; out-of-US closures; non-clinical shelters, business and opinion coverage; news with insufficient timing or direct service impact.",
+    "Search engines returned numerous out-of-window/non-US results, but no material individual search failure was identified. Publication timestamp and production-ledger deduplication cannot be established for all out-of-window candidates; none elevated to pending_review."
+  ]
+}

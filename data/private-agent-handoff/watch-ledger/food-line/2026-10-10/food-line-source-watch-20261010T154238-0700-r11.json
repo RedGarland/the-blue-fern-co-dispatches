@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T154238-0700-r11",
+  "scheduled_for": "2026-10-10T14:45:54-07:00",
+  "started_at": "2026-10-10T15:42:38-07:00",
+  "completed_at": "2026-10-10T15:43:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T14:42:38-07:00",
+    "end": "2026-10-10T15:43:24-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary targeted recall watch only; production nationwide Food Line collection remains authoritative. Exactly 12 targeted web searches across sole/last/full-service grocery loss, disaster or outage canceled food distributions, abrupt pantry/food-bank closures, and immediate official SNAP/WIC interruptions. No new qualifying disruptions corroborated within the hourly Pacific observation window. Excluded older September grocery fire and food-bank storm closures, October 7-8 Stockton, Alabama distribution cancellations already outside the window, routine WIC office listings, future Rancho Cucamonga WIC location closure without evidence of an announcement in this hour or immediate cessation, generic SNAP issuance tables, Virginia phased EBT card migration without a new immediate outage, resource listings, donations and generic news. Search results usable; no confirmed source retrieval failures. Earlier reported events were not re-added; publication timestamps for many listings cannot prove appearance in the observation window. No approval, publication, collection, or schedule changes."
+}

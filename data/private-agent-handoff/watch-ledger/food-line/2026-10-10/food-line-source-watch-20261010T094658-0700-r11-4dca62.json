@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T094658-0700-r11-4dca62",
+  "scheduled_for": "2026-10-10T09:45:54-07:00",
+  "started_at": "2026-10-10T09:46:58-07:00",
+  "completed_at": "2026-10-10T09:47:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T08:49:00-07:00",
+    "end": "2026-10-10T09:47:59-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall only; primary Food Line production nationwide collection remains authoritative. Completed exactly 12 targeted web searches (recency 1-2 days) seeking community only/sole/last/full-service grocery store disaster closures, weather-canceled emergency food distributions, abrupt significant pantry/food-bank access losses, and immediate official SNAP/WIC service interruptions. No newly verified qualifying disruption first reported since the preceding hourly check. Excluded previously reported Oct 7 Prodisee Pantry Oct 10 Stockton AL storm distribution cancellation and prior Gulf Coast WIC/pantry closures, Sep Spencer NY sole-grocery store fire, planned holiday pantry closure, unrelated weather/event closures, older SNAP interruptions, and resource/promotional articles. Recent Oct 9-10 Isaias coverage confirms widespread storm impacts but does not directly establish a new qualified pantry/grocery/SNAP/WIC disruption in this window. Direct source pages were retrievable; no targeted search failures. Discovery cannot guarantee exhaustive recall or exact first-publication timing for undated notices. No review decisions, publication, task, schedule, or production changes."
+}

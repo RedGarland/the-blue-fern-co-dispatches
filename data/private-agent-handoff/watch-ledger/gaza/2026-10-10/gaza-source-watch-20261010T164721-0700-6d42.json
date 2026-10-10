@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T164721-0700-6d42",
+  "scheduled_for": "2026-10-10T16:44:51-07:00",
+  "started_at": "2026-10-10T16:47:21-07:00",
+  "completed_at": "2026-10-10T16:48:21-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T14:42:19-07:00",
+    "end": "2026-10-10T16:48:21-07:00",
+    "anchor": "Previous successfully persisted watch heartbeat completed at 14:42:19 PDT; searched new/late-discovered developments without re-reporting established incidents."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first. Official https://www.ochaopt.org/updates loaded successfully; latest listed updates were dated 2026-10-06, none newly posted within search window.",
+    "who": "Checked first. WHO oPt emergency page https://www.who.int/emergencies/situations/occupied-palestinian-territory returned HTTP 404; WHO EMRO situation reports https://www.emro.who.int/opt/information-resources/situation-reports.html returned HTTP 502. WHO-specific targeted search found no new October 10 healthcare reporting. Health-source coverage degraded.",
+    "targeted_additional_searches": 12,
+    "targeted_areas": [
+      "WAFA Gaza casualty reports",
+      "Reuters Gaza strikes/ceasefire",
+      "AP Gaza casualties and displacement",
+      "UNRWA shelter and displacement",
+      "WFP food/aid deliveries",
+      "UNICEF children and water",
+      "ICRC medical access and detainees",
+      "MSF hospitals, fuel and ambulances",
+      "ReliefWeb humanitarian reporting",
+      "WHO health/medical evacuation alternate discovery",
+      "OCHA Gaza emergency developments alternate discovery",
+      "Rafah/Kerem Shalom crossings and negotiations"
+    ],
+    "source_review": {
+      "ocha_updates": "https://www.ochaopt.org/updates",
+      "who_primary": "https://www.who.int/emergencies/situations/occupied-palestinian-territory",
+      "who_regional_reports": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+      "wafa_oct10_casualty_tally": "https://english.wafa.ps/Pages/Details/175697",
+      "wafa_oct10_nuseirat": "https://english.wafa.ps/Pages/Details/175705",
+      "wafa_oct10_al_daraj": "https://english.wafa.ps/Pages/Details/175701",
+      "wafa_oct10_khan_younis": "https://english.wafa.ps/Pages/Details/175714",
+      "reuters_oct10_gaza_city": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-five-people-gaza-medics-say-2026-10-10/"
+    },
+    "previously_reported_or_out_of_window": [
+      "October 10 five Gaza City fatalities (Reuters/AP), previously reported",
+      "October 10 Nuseirat electric-bicycle fatality and al-Daraj injuries (WAFA), previously reported",
+      "WAFA October 10 aggregate tally and Gaza City child fatality published before interval",
+      "WAFA October 10 20:58 Gaza-local Khan Younis shooting report corresponds to 10:58 PDT, before interval; no verified newly published post-window update",
+      "October 9 IOM shelter report and one-year ceasefire retrospective items, older/non-new"
+    ],
+    "result": "No traceable, nonduplicate, new qualifying developments verified in the checked window. Negative recall result is coverage-limited, not proof no new events occurred.",
+    "source_access_limitations": [
+      "WHO oPt emergency endpoint 404",
+      "WHO EMRO situation reports endpoint 502"
+    ],
+    "supplementary_only": true,
+    "production_is_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

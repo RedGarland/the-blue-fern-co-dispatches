@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261010T204637Z-r11",
+  "scheduled_for": "2026-10-10T13:45:22-07:00",
+  "started_at": "2026-10-10T13:46:37-07:00",
+  "completed_at": "2026-10-10T13:47:48-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T11:44:00-07:00",
+    "end": "2026-10-10T13:47:48-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first; no new notice beyond October 9. Twelve further targeted searches completed. No new qualifying healthcare service-access development confirmed; previously reported Florida disruptions and older Maryland reopening excluded. Supplementary watch only; production collector authoritative."
+}

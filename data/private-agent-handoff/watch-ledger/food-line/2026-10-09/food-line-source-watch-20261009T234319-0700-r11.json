@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261009T234319-0700-r11",
+  "scheduled_for": "2026-10-09T23:45:54-07:00",
+  "started_at": "2026-10-09T23:43:19-07:00",
+  "completed_at": "2026-10-09T23:44:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-09T22:49:07-07:00",
+    "end": "2026-10-09T23:44:29-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch; production nationwide Food Line collection remains authoritative. Exactly 12 targeted fresh web searches: four sole/last/full-service grocery-store losses, four storm/fire/outage/facility-related emergency food distribution cancellations, two abrupt pantry/food-bank access reductions, and two official SNAP/WIC food-assistance interruptions. No newly published, direct-source-supported qualifying disruption established since the prior completed hourly check (2026-10-09 22:49:07 PDT). Previously reported Prodisee Pantry Stockton cancellation (published October 7) and Gulf Coast WIC/pantry weather closures excluded as duplicates; non-U.S., stale, background, unrelated retail violence, aid distribution additions, and generic policy/need coverage excluded. Zero material search failures. Search indexing and publication timestamps cannot guarantee comprehensive real-time coverage. No approval, publication, production, scheduling, or task-state changes."
+}

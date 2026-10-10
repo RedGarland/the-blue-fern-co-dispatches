@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T144047-0700-c44f33",
+  "scheduled_for": "2026-10-10T14:44:51-07:00",
+  "started_at": "2026-10-10T14:40:47-07:00",
+  "completed_at": "2026-10-10T14:42:19-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T11:45:00-07:00",
+    "end": "2026-10-10T14:42:19-07:00",
+    "anchor": "Prior Gaza Source Watch completed at approximately 11:45 PDT; late-discovered older incidents excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first: https://www.ochaopt.org/ accessible; latest news item dated 2026-10-06, no new listed report in observation window. Detailed snapshot link oversized for retrieval.",
+    "who": "Checked first: https://www.emro.who.int/opt/ failed HTTP 502; regional situation reports timed out. WHO global page https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt accessible, but shows no new Gaza-specific news in this interval. WHO regional primary healthcare coverage degraded.",
+    "targeted_additional_searches": 12,
+    "targeted_areas": [
+      "OCHA aid and crossings",
+      "WHO health/fuel/medical evacuation",
+      "Reuters/AP/AFP casualties",
+      "UNRWA shelter/displacement",
+      "UNICEF water/children",
+      "WFP food access",
+      "ceasefire/hostages/negotiations",
+      "ReliefWeb infrastructure",
+      "WAFA recent Gaza incidents",
+      "ICRC health/hostages",
+      "MSF hospital access",
+      "Gaza local civilian-impact and access"
+    ],
+    "result": "No new traceable, nonduplicate qualifying development confirmed from available sources in the checked observation interval. Search results primarily historical or already reported; this is a coverage-limited negative finding, not proof of no events.",
+    "supplementary_only": true,
+    "production_is_authoritative": true,
+    "source_access_limitations": [
+      "WHO regional 502/timeout",
+      "WAFA homepage HTTP 403",
+      "OCHA detailed snapshot too large"
+    ],
+    "prior_reported_items_excluded": [
+      "October 10 Gaza City fatalities and aggregate increases",
+      "Nuseirat electric-bicycle strike",
+      "al-Daraj drone injuries"
+    ],
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

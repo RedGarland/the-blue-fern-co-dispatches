@@ -418,11 +418,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "STALE_OBSERVABILITY",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "a61766369affa6a16d3a7895488916a395c52e4d",
       "debug_summary": {
-        "aggregate_status": "STALE_OBSERVABILITY",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
         "attention_task_count": 1,
@@ -438,10 +438,10 @@
         ],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "ACTION_REQUIRED_OBSERVABILITY",
+        "operator_assessment": "HEALTHY",
         "primary_classification": "limited_source_update",
         "primary_failure_stage": "collection",
-        "primary_layer": "OBSERVABILITY",
+        "primary_layer": "SOURCE",
         "primary_task_key": "ice_monitor",
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": null,
@@ -454,25 +454,23 @@
         "publication_attempted": false,
         "publication_status": "not_authorized_monitor_only",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "INCIDENT_OPEN",
-        "stale_observability": true,
+        "recovery_lifecycle": "HEALTHY",
+        "stale_observability": false,
         "transient_source_failure_count": null,
         "unaccounted_event_count": 0,
         "unclassified_source_failure_count": null
       },
-      "latest_runtime_proof_date": null,
+      "latest_runtime_proof_date": "2026-10-11T21:41:51Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-11",
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "INCIDENT_OPEN",
+      "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
-      "stale_observability": true
+      "stale_observability": false
     }
   },
-  "exported_at": "2026-10-11T21:26:50.631075Z",
+  "exported_at": "2026-10-11T21:43:24.496412Z",
   "schema_version": "bluefern_external_system_status_v1",
-  "stale_observability": [
-    "ice"
-  ],
-  "system_status": "STALE_OBSERVABILITY"
+  "stale_observability": [],
+  "system_status": "DEGRADED"
 }

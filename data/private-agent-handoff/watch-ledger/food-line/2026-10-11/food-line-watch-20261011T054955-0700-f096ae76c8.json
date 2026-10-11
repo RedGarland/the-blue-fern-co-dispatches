@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-watch-20261011T054955-0700-f096ae76c8",
+  "scheduled_for": "2026-10-11T05:45:54-07:00",
+  "started_at": "2026-10-11T05:49:55-07:00",
+  "completed_at": "2026-10-11T05:51:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-11T04:46:00-07:00",
+    "end_at": "2026-10-11T05:51:23-07:00",
+    "start_basis": "Approximate completion of prior hourly supplemental check; not a claim of exhaustive source publication coverage",
+    "mode": "supplementary_hourly_recall"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "search_queries": [
+      "October 11 2026 sole only grocery store closed fire community US",
+      "October 10 2026 last full service grocery store closed disaster town",
+      "October 2026 only grocery store fire closure rural town food access",
+      "food bank emergency distribution canceled storm flooding October 11 2026",
+      "food pantry distribution suspended cancelled power outage flood October 10 2026",
+      "site:facebook.com food pantry closed \"October 11\" \"2026\"",
+      "food pantry permanently closed immediately Oct 10 2026 community",
+      "site:gov \"SNAP\" \"interruption\" \"October 11, 2026\"",
+      "site:gov \"WIC\" \"closed\" \"October 10\" \"2026\" services",
+      "\"EBT\" \"outage\" \"October 11\" \"2026\" benefits",
+      "\"food distribution\" (\"cancelled\" OR \"canceled\" OR \"postponed\") \"October 11, 2026\" storm",
+      "\"only grocery store\" (\"closed\" OR \"fire\" OR \"shut\") \"October 2026\" United States"
+    ],
+    "scopes": [
+      "sole/last/full-service community grocery store loss",
+      "weather/disaster-canceled emergency food distributions",
+      "abrupt pantry/food-bank shutdown or major access reduction",
+      "official SNAP/WIC/food-assistance interruption"
+    ],
+    "selection": "No newly published and directly supported incident within the bounded window qualified for pending review.",
+    "excluded": "Irrelevant restaurant closures, routine food drives, resource guides, ordinary relief distributions, previous-year SNAP coverage, and dated/duplicate stories.",
+    "nonqualifying_context": [
+      {
+        "publisher": "NorthEscambia.com",
+        "url": "https://www.northescambia.com/?p=..",
+        "observed": "October 11 reporting describes food distributions occurring after Hurricane Isaias, not their cancellation."
+      }
+    ],
+    "limitations": "Targeted search engine results are not exhaustive and may lag local/agency publication. Primary nationwide collector remains authoritative.",
+    "write_target": {
+      "repo": "RedGarland/the-blue-fern-co-dispatches",
+      "branch": "ops/watch-ledger",
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-11/food-line-watch-20261011T054955-0700-f096ae76c8.json"
+    }
+  }
+}

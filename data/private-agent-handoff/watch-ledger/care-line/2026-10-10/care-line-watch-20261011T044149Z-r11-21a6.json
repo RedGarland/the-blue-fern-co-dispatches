@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261011T044149Z-r11-21a6",
+  "scheduled_for": "2026-10-10T20:45:22-07:00",
+  "started_at": "2026-10-10T21:41:49-07:00",
+  "completed_at": "2026-10-10T21:42:49-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T20:51:00-07:00",
+    "end": "2026-10-10T21:42:49-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; latest was previously reported October 9 Tender Home Health termination.",
+    "12 targeted searches; no qualifying new changes.",
+    "One local news retrieval was blocked (HTTP 403), with otherwise useful coverage.",
+    "Production national collector is authoritative."
+  ]
+}

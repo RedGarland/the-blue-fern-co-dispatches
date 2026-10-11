@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T024216-0700-r11-4f62c8",
+  "scheduled_for": "2026-10-11T02:45:54-07:00",
+  "started_at": "2026-10-11T02:42:16-07:00",
+  "completed_at": "2026-10-11T02:43:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-11T01:48:47-07:00",
+    "end_at": "2026-10-11T02:43:01-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_searches": 12,
+    "search_errors": 0,
+    "new_qualifying_findings": 0,
+    "focus_classes": [
+      "sole/last grocery closure",
+      "storm-related food distribution cancellation",
+      "abrupt pantry closure",
+      "official SNAP/WIC interruption"
+    ],
+    "exclusions": "Older news and duplicates including Prodisee Pantry cancellation first reported October 7.",
+    "note": "No newly verified signal in indexed sources; production collection authoritative."
+  }
+}

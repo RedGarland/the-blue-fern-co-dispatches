@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261011T184652Z-r11-41ac",
+  "scheduled_for": "2026-10-11T11:45:22-07:00",
+  "started_at": "2026-10-11T11:46:52-07:00",
+  "completed_at": "2026-10-11T11:48:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-11",
+    "start_at": "2026-10-11T08:51:15-07:00",
+    "end_at": "2026-10-11T11:48:01-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary, bounded recall watch only. Production Care Line national collector remains authoritative.",
+    "CMS Public Notices explicitly checked first: newest dated notice 2026-10-09 for Tender Home Health (California) termination; previously observed, no new notice in the observation window. https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "Exactly 12 further targeted searches performed for hospital/ED, maternity, behavioral health, dialysis, oncology, rural/emergency, ambulance/air medical, primary care, restorations, official notices and territory/storm disruptions.",
+    "October 11 Cowboy State Daily Wyoming maternity coverage describes historical 2022-2025 service closures; excluded as no new qualifying in-window event. https://cowboystatedaily.com/2026/10/11/as-maternity-wards-close-wyoming-moms-arent-always-making-it-to-delivery-rooms/",
+    "October 11 maternity policy aggregation describes earlier announced closures and future risks; excluded for lack of new concrete change during window. https://enmnews.com/2026/10/11/medicaid-squeeze-starts-closing-maternity-wards",
+    "No new, specific, source-supported in-window healthcare access change confirmed. Search silence is not evidence that none occurred.",
+    "No review approval, publication, production collector intervention, or schedule modification attempted."
+  ]
+}

@@ -184,13 +184,18 @@ def build_ice_public_pilot_readiness_report(
 
     event_fingerprints = _as_tuple(manifest.get("event_fingerprints") or [])
     ready = not blockers
+    blocker = "missing explicit ICE public pilot approval artifact" if ready else blockers[0]
     return {
         "schema_version": READINESS_REPORT_SCHEMA,
         "dispatch": "ice",
         "report_type": "ice_public_pilot_readiness",
         "status": "ready_for_human_approval" if ready else "blocked",
+        "ok": ready,
         "ready_for_human_approval": ready,
+        "ready_for_approval": ready,
+        "gate_validated": False,
         "approval_required": True,
+        "blocker": blocker,
         "publication_authorized": False,
         "pages_authorized": False,
         "social_authorized": False,

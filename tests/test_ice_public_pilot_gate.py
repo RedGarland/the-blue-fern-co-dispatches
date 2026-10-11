@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -208,8 +210,12 @@ def test_readiness_report_prepares_human_review_without_authorizing_publication(
 
     assert report["schema_version"] == "bluefern.ice.public_pilot_readiness_report.v1"
     assert report["status"] == "ready_for_human_approval"
+    assert report["ok"] is True
     assert report["ready_for_human_approval"] is True
+    assert report["ready_for_approval"] is True
+    assert report["gate_validated"] is False
     assert report["approval_required"] is True
+    assert report["blocker"] == "missing explicit ICE public pilot approval artifact"
     assert report["publication_authorized"] is False
     assert report["pages_authorized"] is False
     assert report["social_authorized"] is False
@@ -242,9 +248,49 @@ def test_readiness_report_blocks_unbounded_public_output_without_authorizing(tmp
     )
 
     assert report["status"] == "blocked"
+    assert report["ok"] is False
     assert report["ready_for_human_approval"] is False
+    assert report["ready_for_approval"] is False
+    assert report["gate_validated"] is False
     assert report["publication_authorized"] is False
     assert report["pages_authorized"] is False
     assert report["social_authorized"] is False
+    assert report["blocker"] == report["blockers"][0]
+    assert "scope is not bounded" in report["blocker"]
     assert any("scope is not bounded" in blocker for blocker in report["blockers"])
+
+def test_readiness_cli_emits_operator_contract_fields(tmp_path: Path) -> None:
+    bundle_path, staging, _approval_path = _repo(tmp_path)
+    repo = Path(__file__).resolve().parents[1]
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(repo / "scripts" / "prepare_ice_public_pilot_readiness.py"),
+            "--repo-root",
+            str(tmp_path),
+            "--bundle-manifest",
+            str(bundle_path),
+            "--staging-root",
+            str(staging),
+            "--source-head",
+            SOURCE_HEAD,
+        ],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode == 0
+    report = json.loads(completed.stdout)
+    assert report["ok"] is True
+    assert report["ready_for_human_approval"] is True
+    assert report["ready_for_approval"] is True
+    assert report["gate_validated"] is False
+    assert report["blocker"] == "missing explicit ICE public pilot approval artifact"
+    assert report["blockers"] == []
+    assert report["publication_authorized"] is False
+    assert report["pages_authorized"] is False
+    assert report["social_authorized"] is False
 

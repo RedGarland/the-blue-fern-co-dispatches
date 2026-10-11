@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T084451-0700-r11",
+  "scheduled_for": "2026-10-11T08:44:51-07:00",
+  "started_at": "2026-10-11T08:48:00-07:00",
+  "completed_at": "2026-10-11T08:49:24-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T07:49:00-07:00",
+    "end": "2026-10-11T08:49:24-07:00",
+    "scope": "Newly traceable in-Gaza developments since prior hourly check, including late-discovered items; exclude previously identified reporting."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": {
+      "url": "https://www.ochaopt.org/",
+      "result": "Accessible on 2026-10-11; most recent listed Gaza item dated 2026-10-06, no qualifying new update in this window."
+    },
+    "who": {
+      "global_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "global_result": "Accessible, no new Gaza-specific reporting in the observation window.",
+      "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+      "regional_result": "HTTP 502 Bad Gateway; oPt regional landing page also returned HTTP 502. Primary regional healthcare and medical evacuation coverage remains reduced."
+    },
+    "targeted_additional_searches": 12,
+    "targeted_sources": [
+      "WAFA",
+      "OCHA OPT",
+      "WHO",
+      "UNRWA",
+      "UNICEF",
+      "Reuters",
+      "Associated Press",
+      "Al Jazeera",
+      "Palestine Chronicle",
+      "ReliefWeb",
+      "ICRC",
+      "cross-publisher targeted Gaza civilian-impact news"
+    ],
+    "bounded_source_checks": {
+      "wafa": "WAFA report page accessible with recent news index; Gaza-specific latest listed news was previously identified (Oct 11, 14:01 Gaza time); newer index items were West Bank or otherwise out of scope. WAFA homepage timed out.",
+      "reuters": "Oct 11 ceasefire-anniversary retrospective repeats previously known conditions; no independently new event verified.",
+      "humanitarian": "No fresh qualifying in-window OCHA or WHO global updates; WHO EMRO regional access restriction noted.",
+      "other": "Older/out-of-window reports rejected and recurring events excluded."
+    },
+    "previously_identified_excluded": [
+      "WAFA 2026-10-11 eight gunshot injuries including pregnant woman, and Shuja'iyya displacement",
+      "WAFA 2026-10-11 daily Gaza casualty aggregate 74,377 killed / 175,398 injured",
+      "WAFA 2026-10-11 child Jihad al-Ghandour death following Oct 10 shooting",
+      "Reuters 2026-10-10 five deaths in Gaza airstrikes"
+    ],
+    "limitation": "No new, source-traceable, nonduplicative Gaza development verified in the bounded check; persistent WHO regional HTTP 502 and WAFA homepage timeout reduce coverage. No-new-result is not proof of no events.",
+    "supplementary_only": true,
+    "production_is_authoritative": true,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

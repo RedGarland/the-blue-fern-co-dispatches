@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T174124-0700-ae71",
+  "scheduled_for": "2026-10-10T17:44:51-07:00",
+  "started_at": "2026-10-10T17:41:24-07:00",
+  "completed_at": "2026-10-10T17:42:37-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T16:48:21-07:00",
+    "end": "2026-10-10T17:42:37-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked official updates, accessible; latest listed October 6.",
+    "who": "WHO EMRO page timed out; WHO global page accessible, no new update.",
+    "targeted_searches": 12,
+    "summary": "No newly verified, nonduplicate qualifying development in this window; older items excluded.",
+    "supplementary_only": true,
+    "production_authoritative": true,
+    "source_access_limitations": [
+      "WHO EMRO timeout",
+      "WAFA incident page inaccessible",
+      "IMEMC HTTP 429"
+    ]
+  }
+}

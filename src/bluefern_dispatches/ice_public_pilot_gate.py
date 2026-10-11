@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 APPROVAL_SCHEMA = "bluefern.ice.public_pilot_approval.v1"
+READINESS_REPORT_SCHEMA = "bluefern.ice.public_pilot_readiness_report.v1"
 ALLOWED_ROOT_FILES = {"index.html", "archive.html", "rss.xml", "archive_entries.json"}
 ALLOWED_EDITION_FILES = {"index.html", "manifest.json", "map_payload.json"}
 
@@ -147,4 +148,64 @@ def validate_ice_public_pilot_gate(
         publication_authorized=True,
         pages_authorized=True,
     )
+
+
+def build_ice_public_pilot_readiness_report(
+    *,
+    repo_root: Path,
+    bundle_manifest_path: Path,
+    staging_root: Path,
+    source_head: str | None = None,
+) -> dict[str, Any]:
+    root = repo_root.resolve()
+    manifest = _load_json(bundle_manifest_path)
+    blockers: list[str] = []
+    bundle_id = str(manifest.get("bundle_id") or "")
+    edition_date = str(manifest.get("edition_date") or "")
+    expected_paths = _expected_public_paths(edition_date) if edition_date else ()
+    staged = _staged_paths(staging_root.resolve(), edition_date) if edition_date else ()
+
+    try:
+        _validate_bundle_and_candidates(root, manifest)
+    except IcePublicPilotGateError as exc:
+        blockers.append(str(exc))
+
+    if not edition_date:
+        blockers.append("ICE bundle missing edition_date")
+    if edition_date:
+        if not staged:
+            blockers.append("ICE staging root has no staged files")
+        unexpected = sorted(set(staged) - set(expected_paths))
+        missing = sorted(set(expected_paths) - set(staged))
+        if unexpected:
+            blockers.append("ICE public output scope is not bounded: " + ", ".join(unexpected))
+        if missing:
+            blockers.append("ICE staging output is incomplete: " + ", ".join(missing))
+
+    event_fingerprints = _as_tuple(manifest.get("event_fingerprints") or [])
+    ready = not blockers
+    return {
+        "schema_version": READINESS_REPORT_SCHEMA,
+        "dispatch": "ice",
+        "report_type": "ice_public_pilot_readiness",
+        "status": "ready_for_human_approval" if ready else "blocked",
+        "ready_for_human_approval": ready,
+        "approval_required": True,
+        "publication_authorized": False,
+        "pages_authorized": False,
+        "social_authorized": False,
+        "authorization": {
+            "publication_authorized": False,
+            "pages_authorized": False,
+            "social_authorized": False,
+        },
+        "bundle_id": bundle_id,
+        "edition_date": edition_date,
+        "source_head": source_head,
+        "event_count": len(event_fingerprints),
+        "event_fingerprints": list(event_fingerprints),
+        "allowed_public_paths": list(expected_paths),
+        "staged_public_paths": list(staged),
+        "blockers": blockers,
+    }
 

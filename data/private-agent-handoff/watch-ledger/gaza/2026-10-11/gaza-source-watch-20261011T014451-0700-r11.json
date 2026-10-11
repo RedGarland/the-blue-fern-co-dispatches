@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T014451-0700-r11",
+  "scheduled_for": "2026-10-11T01:44:51-07:00",
+  "started_at": "2026-10-11T01:49:48-07:00",
+  "completed_at": "2026-10-11T01:51:36-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T00:51:00-07:00",
+    "end": "2026-10-11T01:51:36-07:00",
+    "anchor": "Prior hourly recall check ended approximately 2026-10-11T00:51 PDT. Its GitHub heartbeat write was previously reported unsuccessful; that earlier finding is a deduplication reference, not this run's discovery."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": {
+      "url": "https://www.ochaopt.org/",
+      "result": "Accessible. Latest listed Gaza-relevant index entry dated 2026-10-06; no new qualifying item in observation window."
+    },
+    "who": {
+      "global_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "global_result": "Accessible, no new Gaza-specific material in observation window.",
+      "regional_url": "https://www.emro.who.int/opt/",
+      "regional_result": "HTTP 502 Bad Gateway; emergency situation reports link also HTTP 502. Primary regional healthcare and medical evacuation coverage reduced.",
+      "legacy_global_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+      "legacy_result": "HTTP 404; valid global source retrieved via alternate URL."
+    },
+    "targeted_additional_searches": 12,
+    "targeted_areas": [
+      "OCHA humanitarian/crossings/displacement",
+      "WHO hospitals/ambulances/medical evacuation/fuel",
+      "Reuters casualties/ceasefire/aid",
+      "AP civilian impact",
+      "WAFA casualty and injury reports",
+      "UNRWA shelter/displacement",
+      "WFP food/crossings",
+      "UNICEF water/children",
+      "ICRC hostages/detention",
+      "MSF hospitals/fuel",
+      "Rafah/Kerem Shalom crossings and negotiations",
+      "October 11 morning civilian-impact military operations"
+    ],
+    "secondary_access_limits": [
+      "WAFA English homepage returned HTTP 403",
+      "UNRWA newsroom returned HTTP 403"
+    ],
+    "screened_existing_not_qualifying": [
+      "2026-10-10 Reuters report on five Gaza fatalities, previously covered",
+      "2026-10-11 WAFA report about eight injured including pregnant woman, identified in prior hourly check",
+      "Other October 10 civilian-casualty reports and October 9 IOM shelter data; older than window or prior discoveries"
+    ],
+    "conclusion": "No new traceable, independently distinguishable development verified in the bounded observation window. Negative result does not demonstrate that no events occurred, especially with WHO regional and secondary access restrictions.",
+    "supplementary_only": true,
+    "production_is_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

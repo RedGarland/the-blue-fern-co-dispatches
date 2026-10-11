@@ -1,0 +1,67 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T145020-0700-r11-12q",
+  "scheduled_for": "2026-10-11T14:45:54-07:00",
+  "started_at": "2026-10-11T14:50:20-07:00",
+  "completed_at": "2026-10-11T14:51:07-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-11",
+    "start": "2026-10-11T13:49:03-07:00",
+    "end": "2026-10-11T14:50:20-07:00",
+    "start_basis": "Prior hourly search window end; prior heartbeat persistence not verified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "production_collection_authoritative": true,
+    "supplementary_recall_only": true,
+    "search_limit": 12,
+    "targeted_searches": 12,
+    "search_failures": 0,
+    "qualifying_findings": 0,
+    "searched_classes": [
+      "Only/sole/last/full-service grocery closure, fire or disaster",
+      "Emergency food distribution cancellations from storm, flood, fire, outage or damage",
+      "Abrupt food pantry/food bank closure or substantial service reduction",
+      "New official SNAP/WIC/food-assistance disruption with immediate consequences"
+    ],
+    "bounded_queries": [
+      "\"only grocery store\" closed fire \"October 11\" 2026 US",
+      "\"sole grocery store\" \"Oct 11\" 2026 closure fire",
+      "\"food distribution\" canceled \"October 11\" 2026 storm",
+      "\"food pantry\" \"closed\" \"October 11\" 2026 damage",
+      "\"food bank\" \"suspend\" distribution storm \"October 11\" 2026",
+      "\"SNAP\" \"benefits\" suspended interrupted \"October 11\" 2026 agency",
+      "\"WIC\" office closed outage \"October 11\" 2026",
+      "\"last grocery store\" closed October 2026 community",
+      "October 11 2026 \"food distribution\" \"canceled\" flood storm USA",
+      "October 11 2026 grocery store fire community only supermarket",
+      "October 11 2026 food pantry temporarily closed power outage building fire",
+      "October 11 2026 SNAP WIC EBT system outage benefits suspended state notice"
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.pressherald.com/2026/09/09/passamaquoddy-nation-will-not-buy-eastport-grocery-store/",
+        "reason": "September closure; outside window"
+      },
+      {
+        "url": "https://karentyrell.com/blog/the-lyons-mall-stop-and-shop-is-closing-and-basking-ridge-is-about-to-lose-its-last-supermarket-inside-town-lines",
+        "reason": "September 24 notice; outside window and not newly confirmed"
+      },
+      {
+        "url": "https://bucksco.today/2026/10/new-britain-food-pantry-warrington-mill-creek-school/",
+        "reason": "Facility relocation with continued service; not abrupt service loss"
+      },
+      {
+        "url": "https://www.lmtonline.com/local/article/south-texas-food-bank-helps-after-doubletree-fire-22467545.php",
+        "reason": "Food-bank relief assistance, not service interruption"
+      }
+    ],
+    "search_assessment": "No qualifying new incident verified during the bounded window. Web results were mostly older or unrelated; absence of indexed reports does not prove nationwide absence.",
+    "publication_or_schedule_changed": false
+  }
+}

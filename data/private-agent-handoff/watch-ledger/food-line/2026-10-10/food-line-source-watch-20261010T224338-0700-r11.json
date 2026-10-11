@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261010T224338-0700-r11",
+  "scheduled_for": "2026-10-10T22:45:54-07:00",
+  "started_at": "2026-10-10T22:43:38-07:00",
+  "completed_at": "2026-10-10T22:44:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-10T21:46:37-07:00",
+    "end": "2026-10-10T22:44:46-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary bounded recall watch, not the production nationwide collector. Twelve targeted searches across sole/last/full-service grocery closure or fire, disaster-related food-distribution cancellations, abrupt pantry/food-bank access reduction, and official immediate SNAP/WIC/EBT service interruptions; searches returned usable coverage. No new qualifying U.S. disruption verifiable as first reported within the observed hourly window. Excluded older Latta SC grocery-store closure; Oct 7 Prodisee Pantry Stockton AL Oct 10 weather cancellation (outside window and previously discoverable); general Oct 10 Hurricane Isaias impacts without evidence of newly canceled food provision; routine food calendars, promotion, unrelated results, and duplicates. Web result indexes have limited minute-level freshness; zero results means none verified, not nationwide absence. No approval, publication, production-collector or scheduling modifications."
+}

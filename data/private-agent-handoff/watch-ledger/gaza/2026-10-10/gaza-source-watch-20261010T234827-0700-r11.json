@@ -1,0 +1,62 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T234827-0700-r11",
+  "scheduled_for": "2026-10-10T23:44:51-07:00",
+  "started_at": "2026-10-10T23:48:27-07:00",
+  "completed_at": "2026-10-10T23:49:57-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T22:49:00-07:00",
+    "end": "2026-10-10T23:49:57-07:00",
+    "anchor": "The preceding Gaza Source Watch completed approximately 2026-10-10T22:49 PDT, according to its prior run report. This is a bounded supplementary recall watch, including screening for late-discovered reporting; publication/event time is not presumed to fall inside the search window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": {
+      "url": "https://www.ochaopt.org/",
+      "result": "Accessible. Index still lists the 2026-10-06 Gaza impact snapshot and 2026-10-05 publication of the 2026-10-02 humanitarian situation report; no new index entry for the window."
+    },
+    "who": {
+      "global_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "global_result": "Accessible; no new Gaza-specific report or change verified in the observation window.",
+      "regional_url": "https://www.emro.who.int/opt/",
+      "regional_situation_reports_url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+      "regional_result": "Both regional pages returned HTTP 502 Bad Gateway. Detailed primary regional healthcare coverage was unavailable, so the overall run is DEGRADED."
+    },
+    "targeted_additional_searches": 12,
+    "targeted_areas": [
+      "WHO medical capacity, evacuations and fuel",
+      "OCHA Gaza humanitarian situation, displacement, aid",
+      "Reuters casualties, ceasefire and aid",
+      "AP civilian impact and ceasefire",
+      "WAFA casualty incidents and crossings",
+      "UNRWA displacement, shelter and health",
+      "WFP food convoys and access",
+      "UNICEF water, children and infrastructure",
+      "ICRC detention, hostages, healthcare and transport",
+      "MSF hospital, ambulance and medical evacuation capacity",
+      "Crossings, ceasefire negotiations, hostages and detainees",
+      "Gaza health ministry, civil defense and military operations"
+    ],
+    "previously_identified_excluded": [
+      "October 10 Reuters/AP Gaza City fatality reports, including five deaths",
+      "Al Jazeera October 10 aggregate report of eight fatalities, including al-Najjar and the Khan Younis death",
+      "Previously identified October 10 northern Gaza fatality update",
+      "Nuseirat electric-bicycle strike and al-Daraj injuries previously identified",
+      "Previously reported humanitarian access and healthcare context"
+    ],
+    "search_limit_note": "OCHA OPT and WHO primary direct page checks conducted first, followed by 12 targeted web searches. Article opens and additional direct WHO page checks were not additional targeted searches.",
+    "source_results_note": "Search returns were dominated by older source material. No clearly newly published, independently traceable and nonduplicate qualifying development was established during the observation window.",
+    "conclusion": "No new qualifying, nonduplicate Gaza development verified. This negative result is limited by WHO regional endpoint failures and search-index coverage, and does not establish that no relevant events occurred.",
+    "supplementary_only": true,
+    "production_is_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

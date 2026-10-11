@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261011T014921Z-c11-f49",
+  "scheduled_for": "2026-10-10T18:45:22-07:00",
+  "started_at": "2026-10-10T18:49:21-07:00",
+  "completed_at": "2026-10-11T01:50:13.821Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T16:49:00-07:00",
+    "end": "2026-10-10T18:50:13.821-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only. Production Care Line national collector remains authoritative.",
+    "CMS Public Notices reviewed first: most recent listed notice was 2026-10-09 Tender Home Health termination, previously reported; no new CMS actions in the observation window.",
+    "Exactly 12 additional targeted searches across U.S. and territories covering hospital/ED/maternity, behavioral health, dialysis/oncology/primary care, rural service loss, ambulance/air medical, storm-related closures and reopenings.",
+    "No new event with a verifiable announcement/effective time within the observation window. Older closures, previously observed hurricane facility interruptions, proposals, and non-U.S. results excluded.",
+    "Sources checked: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; https://www.usahealthsystem.com/weather ; https://www.wuwf.org/live-updates/tropical-storm-isaias-updates ; https://flgov.com/eog/news/press/2026/governor-ron-desantis-issues-updates-state-response-and-recovery-efforts-hurricane .",
+    "Search engines may index reports with publication-date delays; absence of confirmed new findings does not establish absence of all access changes."
+  ]
+}

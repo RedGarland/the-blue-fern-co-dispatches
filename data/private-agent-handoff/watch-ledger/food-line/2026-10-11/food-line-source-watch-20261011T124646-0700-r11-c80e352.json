@@ -1,0 +1,66 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T124646-0700-r11-c80e352",
+  "scheduled_for": "2026-10-11T12:45:54-07:00",
+  "started_at": "2026-10-11T12:44:59-07:00",
+  "completed_at": "2026-10-11T12:46:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-11T11:48:20-07:00",
+    "end_at": "2026-10-11T12:46:46-07:00",
+    "start_basis": "Completed_at of most recent persisted Food Line Source Watch heartbeat on ops/watch-ledger",
+    "mode": "supplementary_hourly_recall"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Bounded supplementary U.S. high-value food-access disruption recall; production nationwide collection remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "scoped_miss_classes": [
+      "Only/sole/last/full-service grocery store closure, fire, or disaster loss",
+      "Emergency food distribution canceled or suspended because of storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "queries": [
+      "\"only grocery store\" \"closed\" OR \"fire\" October 11 2026 town",
+      "\"last grocery store\" \"fire\" OR \"closing\" October 2026 town",
+      "\"sole grocery store\" \"closed\" OR \"destroyed\" October 2026",
+      "\"food distribution\" canceled storm flood October 11 2026",
+      "\"food bank\" \"distribution\" canceled weather October 11 2026",
+      "\"mobile food pantry\" cancelled October 11 2026 storm",
+      "\"food pantry\" \"closed\" \"October 11\" \"2026\"",
+      "\"food bank\" \"suspended operations\" October 2026 community",
+      "\"food pantry\" \"closed\" \"power outage\" October 2026",
+      "SNAP EBT system outage October 11 2026 state agency beneficiaries",
+      "WIC benefits interruption October 11 2026 agency notice",
+      "SNAP benefits suspended delayed October 11 2026 department human services"
+    ],
+    "disposition": "No temporally qualifying new U.S. food-access disruption verified during the observed hourly interval. Results skewed toward older incidents and nonqualifying items.",
+    "excluded_examples": [
+      {
+        "url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "October 7 Alabama distribution cancellation previously reported; duplicate outside current hourly window."
+      },
+      {
+        "url": "https://bucksco.today/2026/10/new-britain-food-pantry-warrington-mill-creek-school/",
+        "reason": "October 11 report of pantry relocation into larger location; services continue, not a new loss or major reduction."
+      },
+      {
+        "url": "https://wlos.com/news/local/snap-medicaid-federal-changes-county-assistance-north-carolina-western-nc-wnc-pisgah-legal-services-noncitizens-community",
+        "reason": "Earlier October 1 policy change, no new immediate official interruption documented in this hourly window."
+      }
+    ],
+    "limitations": "A search-limited supplementary watch cannot rule out unindexed provider notices, unpublished local interruptions, or indexing lag.",
+    "persistence_target": {
+      "repository": "RedGarland/the-blue-fern-co-dispatches",
+      "branch": "ops/watch-ledger",
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-11/food-line-source-watch-20261011T124646-0700-r11-c80e352.json"
+    },
+    "modifications": "No approval, publication, schedule changes, or task disabling."
+  }
+}

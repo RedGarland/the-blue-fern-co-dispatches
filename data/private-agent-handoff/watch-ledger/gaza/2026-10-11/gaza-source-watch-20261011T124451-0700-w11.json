@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T124451-0700-w11",
+  "scheduled_for": "2026-10-11T12:44:51-07:00",
+  "started_at": "2026-10-11T12:48:11-07:00",
+  "completed_at": "2026-10-11T12:49:06-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T11:46:15-07:00",
+    "end": "2026-10-11T12:49:06-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Accessible; most recent item Oct 6",
+    "who": "WHO EMRO 502; WHO main emergency page inaccessible",
+    "additional_targeted_searches": 12,
+    "qualifying_new_findings": 0,
+    "production_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

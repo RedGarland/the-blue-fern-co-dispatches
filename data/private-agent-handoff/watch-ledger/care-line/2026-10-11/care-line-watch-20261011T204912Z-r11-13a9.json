@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261011T204912Z-r11-13a9",
+  "scheduled_for": "2026-10-11T13:45:22-07:00",
+  "started_at": "2026-10-11T13:49:12-07:00",
+  "completed_at": "2026-10-11T13:50:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-11",
+    "start_at": "2026-10-11T12:48:00-07:00",
+    "end_at": "2026-10-11T13:50:23-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary only; national production Care Line collector remains authoritative.",
+    "CMS Public Notices checked first: latest notice October 9 Tender Home Health termination CA, previously known.",
+    "Eleven additional targeted searches completed across high-value closure, suspension, medical transport, restoration and territories categories.",
+    "October 11 maternity-ward policy articles concern previous closures/future risk; excluded as not new in hourly window.",
+    "October 10 report of Community Health Northwest Florida Sunday closures predated the window; excluded as previously known.",
+    "No new qualifying concrete healthcare service change confirmed.",
+    "No approval, publication, or schedule changes."
+  ]
+}

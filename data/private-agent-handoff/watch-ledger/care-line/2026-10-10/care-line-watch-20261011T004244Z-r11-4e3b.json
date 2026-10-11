@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261011T004244Z-r11-4e3b",
+  "scheduled_for": "2026-10-10T17:45:22-07:00",
+  "started_at": "2026-10-10T17:42:44-07:00",
+  "completed_at": "2026-10-11T00:44:05.749Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T16:49:31-07:00",
+    "end": "2026-10-11T00:44:05.749Z",
+    "basis": "Prior supplementary Care Line run observation cutoff through this run."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production national Care Line collector remains authoritative.",
+    "CMS Public Notices checked first: most recent notice dated October 9, 2026, for Tender Home Health (CA), already covered in prior watches; no later notice. https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "Exactly 12 additional targeted web searches across hospital/ED, maternity, behavioral health, dialysis/oncology, primary care, rural emergency care, ambulance/air-medical, U.S. territories, restorations, and Hurricane Isaias clinical interruptions.",
+    "Florida's October 10 official Hurricane Isaias update confirms already announced VA outpatient clinic closures (Pensacola, Eglin AFB, Panama City, Marianna, Tallahassee), temporary county health department closures, and one hospital evacuation; these were previously available before the observation window, with no new effective change verified. https://www.flgov.com/eog/news/press/2026/governor-ron-desantis-issues-updates-state-response-and-recovery-efforts-hurricane",
+    "Excluded past incidents, already reported CMS notice, foreign/Canadian events, planned but not yet effective restoration, non-clinical disruption, and unsubstantiated claims.",
+    "No newly verified, qualifying U.S. or territory healthcare-access change during this observation window. Searches were usable; none required downgrade.",
+    "No approval, publication, schedule change, or disable action."
+  ]
+}

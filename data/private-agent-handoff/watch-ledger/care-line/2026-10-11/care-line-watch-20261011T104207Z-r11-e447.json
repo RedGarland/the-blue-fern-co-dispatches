@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261011T104207Z-r11-e447",
+  "scheduled_for": "2026-10-11T02:45:22-07:00",
+  "started_at": "2026-10-11T03:42:07-07:00",
+  "completed_at": "2026-10-11T03:43:44.425-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-11",
+    "start_at": "2026-10-11T02:43:28-07:00",
+    "end_at": "2026-10-11T03:43:44.425-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; no new notices after 2026-10-09 Tender Home Health.",
+    "Exactly 12 targeted supplemental searches; no newly confirmed qualifying healthcare-access developments.",
+    "Previously reported storm service impacts excluded; production collection authoritative.",
+    "No approvals, publication, or scheduling changes."
+  ]
+}

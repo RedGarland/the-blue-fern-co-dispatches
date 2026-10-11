@@ -1,0 +1,20 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T085035-0700-r11-67b1a4",
+  "scheduled_for": "2026-10-11T08:45:54-07:00",
+  "started_at": "2026-10-11T08:50:35-07:00",
+  "completed_at": "2026-10-11T15:52:26.397Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-11T07:48:00-07:00",
+    "date_to": "2026-10-11T15:52:26.397Z",
+    "edition_date": "2026-10-11",
+    "timezone": "America/Los_Angeles",
+    "scope": "U.S. food-access disruptions newly reported since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch only; production Food Line collection remains authoritative. Completed 12 targeted fresh web searches across sole/last/full-service grocery losses, disaster-related emergency-food distribution cancellations, abrupt pantry/food-bank service closures, and official SNAP/WIC interruptions. Zero search/tool failures. No newly published qualifying report from the 2026-10-11 07:48 PT onward window was verified. Excluded prior-known Oct. 7 Prodisee Pantry/Stockton AL Oct. 10 weather cancellation (WALA, fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/) and old/out-of-window stories. Search indexing limits mean absence of confirmed signals is not proof of no disruptions. No approval, publication, or schedule changes."
+}

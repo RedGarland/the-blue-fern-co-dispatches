@@ -1,0 +1,66 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T104200-0700-r11-d812b4",
+  "scheduled_for": "2026-10-11T10:45:54-07:00",
+  "started_at": "2026-10-11T10:42:00-07:00",
+  "completed_at": "2026-10-11T10:43:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-11T09:52:06.018-07:00",
+    "end_at": "2026-10-11T10:43:37-07:00",
+    "start_basis": "Last persisted watch completed_at",
+    "mode": "supplementary_hourly_recall"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary U.S. food-access recall watch; production collection remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "scoped_miss_classes": [
+      "Only/sole/last/full-service community grocery store closure or disaster loss",
+      "Weather, outage, or facility-damage cancellation of emergency food distributions",
+      "Abrupt food pantry/bank closure or major service reduction",
+      "Official SNAP/WIC/food-assistance interruptions with immediate access consequences"
+    ],
+    "queries": [
+      "\"only grocery store\" closes fire flood storm October 11 2026",
+      "\"sole grocery store\" destroyed closed October 2026 town",
+      "\"last grocery store\" closes \"October 11\" 2026 rural",
+      "\"emergency food distribution\" canceled storm flood outage \"October 11\" 2026",
+      "\"food bank\" \"distribution canceled\" hurricane storm October 2026",
+      "\"food distribution\" postponed \"power outage\" October 11 2026",
+      "\"food pantry\" \"temporarily closed\" fire flood October 11 2026",
+      "\"food bank\" \"suspend operations\" October 2026",
+      "\"pantry\" \"closed indefinitely\" October 2026 food",
+      "site:gov \"SNAP\" \"benefits\" \"interruption\" October 11 2026",
+      "site:gov \"WIC\" \"outage\" \"October\" \"2026\" benefits",
+      "\"EBT\" \"system outage\" \"October 11, 2026\" SNAP"
+    ],
+    "disposition": "No new qualifying primary source or fresh local report in the specified window. Older storm cancellations and stale assistance notices excluded.",
+    "excluded_examples": [
+      {
+        "url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "Published October 7, duplicate of previously reported interruption."
+      },
+      {
+        "url": "https://mynbc15.com/news/local/isaias-weather-closures-and-cancellations",
+        "reason": "Updated October 9, repeats previously known October 10 cancellation."
+      },
+      {
+        "url": "https://kauainownews.com/2026/10/10/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Ongoing September hurricane recovery and resource information, not new service loss."
+      }
+    ],
+    "limitations": "Bounded search; local provider indexing can lag. Not an exhaustive nationwide assessment.",
+    "persistence_target": {
+      "repository": "RedGarland/the-blue-fern-co-dispatches",
+      "branch": "ops/watch-ledger",
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-11/food-line-source-watch-20261011T104200-0700-r11-d812b4.json"
+    },
+    "modifications": "No approval, publication, schedule change or disabling."
+  }
+}

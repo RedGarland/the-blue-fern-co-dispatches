@@ -370,6 +370,16 @@ def _bounded_failure_diagnostics(manifest: dict[str, Any] | None, *, limit: int 
                 "source_name": str(row.get("source_name") or "")[:200],
                 "adapter_type": str(row.get("adapter_type") or "")[:80],
                 "failure_class": str(row.get("failure_class") or "Unknown")[:80],
+                **(
+                    {"http_status": int(row["http_status"])}
+                    if isinstance(row.get("http_status"), int) and int(row["http_status"]) > 0
+                    else {}
+                ),
+                **(
+                    {"failure_status_class": str(row.get("failure_status_class") or "")[:80]}
+                    if str(row.get("failure_status_class") or "").strip()
+                    else {}
+                ),
                 "transient": bool(row.get("transient")),
             }
         )

@@ -1279,6 +1279,29 @@ def test_persistent_http_source_failure_is_not_retried(tmp_path: Path, monkeypat
     assert result["failure_diagnostic"]["retry_attempted"] is False
 
 
+def test_source_failure_payload_preserves_http_status_classification(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(source_id="blocked", name="Blocked Source")
+
+    def blocked_fetch(_source, timeout=20, allow_insecure_tls=False):  # noqa: ANN001
+        raise urllib.error.HTTPError("https://example.org/feed.xml", 403, "Forbidden", {}, None)
+
+    monkeypatch.setattr(pipeline, "fetch_source", blocked_fetch)
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-10-10",
+        run_id="run-blocked",
+        source_row={"source": source},
+        fetch_timeout=1,
+    )
+
+    diagnostic = result["failure_diagnostic"]
+    assert diagnostic["failure_class"] == "HTTPError"
+    assert diagnostic["http_status"] == 403
+    assert diagnostic["failure_status_class"] == "external_access_restriction"
+    assert diagnostic["transient"] is False
+
+
 def test_partial_success_manifest_separates_source_failures_from_zero_findings(tmp_path: Path, monkeypatch) -> None:
     source = _care_source(source_id="failed-source", name="Failed Source")
     failure_diagnostic = {

@@ -4602,6 +4602,37 @@ def _source_failure_transient(failure: str, failure_class: str) -> bool:
     return False
 
 
+def _source_failure_http_status(failure: str) -> int | None:
+    if _source_failure_class(failure) != "HTTPError":
+        return None
+    match = re.search(r"\bHTTP Error\s+(\d{3})\b", str(failure or ""))
+    if not match:
+        match = re.search(r"\bHTTPError\b.*\b(\d{3})\b", str(failure or ""))
+    if not match:
+        return None
+    try:
+        return int(match.group(1))
+    except (TypeError, ValueError):
+        return None
+
+
+def _source_failure_status_class(failure: str, failure_class: str) -> str:
+    http_status = _source_failure_http_status(failure)
+    if http_status in {401, 403, 451}:
+        return "external_access_restriction"
+    if http_status in {408, 429} or (http_status is not None and 500 <= http_status <= 599):
+        return "transient_http_failure"
+    if http_status is not None and 400 <= http_status <= 499:
+        return "http_client_error"
+    if failure_class in {"TimeoutError", "URLError"}:
+        return "transient_network_failure"
+    if failure_class == "ParseError":
+        return "parse_failure"
+    if failure_class == "ValueError":
+        return "parser_failure"
+    return "unclassified_failure"
+
+
 def _source_failure_payload(
     source: CareLineSource,
     failure: str,
@@ -4614,6 +4645,7 @@ def _source_failure_payload(
     source_url = str(source.feed_url or source.homepage_url or "")
     domain = urlparse(source_url).netloc.lower()
     failure_class = _source_failure_class(failure)
+    http_status = _source_failure_http_status(failure)
     payload = {
         "schema_version": f"{PIPELINE_SCHEMA_VERSION}.source_failure",
         "source_id": source.source_id,
@@ -4626,6 +4658,7 @@ def _source_failure_payload(
         "feed_url": str(source.feed_url or ""),
         "homepage_url": str(source.homepage_url or ""),
         "failure_class": failure_class,
+        "failure_status_class": _source_failure_status_class(failure, failure_class),
         "failure_reason": failure,
         "transient": _source_failure_transient(failure, failure_class),
         "retry_attempted": bool(retry_attempted),
@@ -4633,6 +4666,8 @@ def _source_failure_payload(
         "retry_state": retry_state,
         "alternate_discovery_coverage": "not_evaluated_in_collection_attempt",
     }
+    if http_status is not None:
+        payload["http_status"] = http_status
     if first_failure_reason:
         payload["first_failure_reason"] = first_failure_reason
     return payload

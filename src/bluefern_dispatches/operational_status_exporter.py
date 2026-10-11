@@ -1118,9 +1118,13 @@ def _care_collection_diagnostics(
             "source_name": str(row.get("source_name") or "")[:200] or None,
             "adapter_type": _safe_identifier(row.get("adapter_type")),
             "failure_class": _safe_identifier(row.get("failure_class")),
+            "failure_status_class": _safe_identifier(row.get("failure_status_class")),
             "transient": bool(row.get("transient")),
             "effective_source_state": "recovered" if source_id in recovered else "failed",
         }
+        http_status = _safe_nonnegative_int(row.get("http_status"))
+        if http_status is not None:
+            failure["http_status"] = http_status
         policy = policies.get(source_id or "")
         if policy:
             failure["external_classification"] = policy["classification"]

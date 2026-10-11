@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T154436-0700-8c41d0",
+  "scheduled_for": "2026-10-11T15:45:54-07:00",
+  "started_at": "2026-10-11T15:44:36-07:00",
+  "completed_at": "2026-10-11T15:45:54.937-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-11",
+    "start": "2026-10-11T14:45:54-07:00",
+    "end": "2026-10-11T15:45:54.937-07:00",
+    "start_basis": "Prior scheduled hourly check; preceding completion time unavailable"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "production_collection_authoritative": true,
+    "supplementary_recall_only": true,
+    "targeted_searches": 12,
+    "search_failures": 0,
+    "new_qualifying_signals": 0,
+    "searched_classes": 4,
+    "queries": [
+      "only grocery store closure/fire",
+      "sole/last grocery closure",
+      "full-service grocery disaster",
+      "storm/flood distribution cancellation",
+      "power-outage distribution suspension",
+      "pantry fire/flood closure",
+      "food bank distribution cancellation",
+      "SNAP benefit delays official",
+      "WIC outages official",
+      "abrupt pantry service reduction",
+      "emergency food distribution weather cancellation",
+      "SNAP EBT outages"
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "Previously reported October 7 item; not a new hourly signal."
+      }
+    ],
+    "search_assessment": "No qualifying new food-access disruptions verified in 12 targeted searches; coverage bounded, not exhaustive.",
+    "publication_or_schedule_changed": false
+  }
+}

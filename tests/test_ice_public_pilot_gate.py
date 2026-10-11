@@ -7,6 +7,7 @@ import pytest
 
 from bluefern_dispatches.ice_public_pilot_gate import (
     IcePublicPilotGateError,
+    build_ice_public_pilot_readiness_report,
     validate_ice_public_pilot_gate,
 )
 
@@ -193,4 +194,57 @@ def test_social_post_requires_separate_social_authorization(tmp_path: Path) -> N
             source_head=SOURCE_HEAD,
             social_requested=True,
         )
+
+
+def test_readiness_report_prepares_human_review_without_authorizing_publication(tmp_path: Path) -> None:
+    bundle_path, staging, _approval_path = _repo(tmp_path)
+
+    report = build_ice_public_pilot_readiness_report(
+        repo_root=tmp_path,
+        bundle_manifest_path=bundle_path,
+        staging_root=staging,
+        source_head=SOURCE_HEAD,
+    )
+
+    assert report["schema_version"] == "bluefern.ice.public_pilot_readiness_report.v1"
+    assert report["status"] == "ready_for_human_approval"
+    assert report["ready_for_human_approval"] is True
+    assert report["approval_required"] is True
+    assert report["publication_authorized"] is False
+    assert report["pages_authorized"] is False
+    assert report["social_authorized"] is False
+    assert report["authorization"] == {
+        "publication_authorized": False,
+        "pages_authorized": False,
+        "social_authorized": False,
+    }
+    assert report["blockers"] == []
+    assert set(report["allowed_public_paths"]) == {
+        "ice/archive.html",
+        "ice/archive_entries.json",
+        "ice/editions/2026-10-06/index.html",
+        "ice/editions/2026-10-06/manifest.json",
+        "ice/editions/2026-10-06/map_payload.json",
+        "ice/index.html",
+        "ice/rss.xml",
+    }
+
+
+def test_readiness_report_blocks_unbounded_public_output_without_authorizing(tmp_path: Path) -> None:
+    bundle_path, staging, _approval_path = _repo(tmp_path)
+    _write(staging / "ice" / "unexpected.html", "<html></html>")
+
+    report = build_ice_public_pilot_readiness_report(
+        repo_root=tmp_path,
+        bundle_manifest_path=bundle_path,
+        staging_root=staging,
+        source_head=SOURCE_HEAD,
+    )
+
+    assert report["status"] == "blocked"
+    assert report["ready_for_human_approval"] is False
+    assert report["publication_authorized"] is False
+    assert report["pages_authorized"] is False
+    assert report["social_authorized"] is False
+    assert any("scope is not bounded" in blocker for blocker in report["blockers"])
 

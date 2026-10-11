@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T154451-0700-a11",
+  "scheduled_for": "2026-10-11T15:44:51-07:00",
+  "started_at": "2026-10-11T15:42:15-07:00",
+  "completed_at": "2026-10-11T15:43:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T14:50:13-07:00",
+    "end": "2026-10-11T15:43:30-07:00",
+    "basis": "Latest completed heartbeat on ops/watch-ledger (2026-10-11T14:50:13-07:00); supplementary recall, not authoritative production collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "checks_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; homepage latest news dated October 6, 2026; no newer qualifying Gaza update."
+      },
+      {
+        "source": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; direct regional healthcare reporting unavailable."
+      },
+      {
+        "source": "WHO global emergency situation",
+        "url": "https://www.who.int/emergencies/situations/occupied-palestinian-territory",
+        "result": "HTTP 404 Not Found; supplemental WHO endpoint unavailable."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "additional_search_categories": [
+      "WAFA late October 11 Gaza casualties",
+      "WAFA October 12 Gaza incidents",
+      "Reuters Gaza strikes/ceasefire",
+      "AP Gaza civilians",
+      "Palestine Red Crescent ambulance/hospital",
+      "UNRWA aid/water/displacement",
+      "UNICEF food/water/nutrition",
+      "WHO hospital/evacuation/fuel",
+      "WFP food/crossing access",
+      "MSF medical service interruptions",
+      "ICRC detention/hostages",
+      "Rafah/Kerem Shalom crossings"
+    ],
+    "direct_source_rechecks": [
+      {
+        "source": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; latest listed Gaza casualty report was published October 11 at 20:58 Gaza local time (10:58 PDT) and recorded in prior 11:44 watch."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-five-people-gaza-medics-say-2026-10-10/",
+        "result": "Older October 10 incident; no new window-qualified casualty report."
+      }
+    ],
+    "exclusions": [
+      "October 11 four killed at charging point west of Khan Yunis already recorded in prior watch; not recounted.",
+      "Earlier October 11 shooting injuries, Shuja'iyya displacement, and child death at Jabalia already identified; not recounted.",
+      "Historical humanitarian statements, West Bank-only developments, analysis, and unverified search snippets were excluded."
+    ],
+    "healthcare_coverage_degraded": true,
+    "qualifying_new_findings": 0,
+    "production_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

@@ -419,7 +419,7 @@
       "stale_observability": true
     }
   },
-  "exported_at": "2026-10-11T11:34:20.608186Z",
+  "exported_at": "2026-10-11T12:34:38.081616Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "ice"

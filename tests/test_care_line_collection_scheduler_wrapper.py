@@ -74,6 +74,8 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
                         "source_name": "CMS Public Notices",
                         "adapter_type": "structured_index",
                         "failure_class": "HTTPError",
+                        "http_status": 503,
+                        "failure_status_class": "transient_http_failure",
                         "failure_reason": "HTTPError: 503 temporary",
                         "source_url": "https://example.invalid/private-proof",
                         "transient": True,
@@ -135,6 +137,8 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
             "source_name": "CMS Public Notices",
             "adapter_type": "structured_index",
             "failure_class": "HTTPError",
+            "http_status": 503,
+            "failure_status_class": "transient_http_failure",
             "transient": True,
         }
     ]

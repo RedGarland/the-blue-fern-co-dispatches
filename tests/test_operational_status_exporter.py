@@ -359,6 +359,8 @@ def _write_care_day(tmp_path: Path, *, include_older_collection: bool = False) -
                                 "source_name": "CMS Public Notices",
                                 "adapter_type": "structured_index",
                                 "failure_class": "HTTPError",
+                                "http_status": 403,
+                                "failure_status_class": "external_access_restriction",
                                 "transient": True,
                                 "failure_reason": "private failure detail",
                                 "source_url": "https://example.invalid/private",
@@ -1882,8 +1884,10 @@ def test_care_export_exposes_bounded_collection_diagnostics_without_private_deta
             "source_name": "CMS Public Notices",
             "adapter_type": "structured_index",
             "failure_class": "HTTPError",
+            "failure_status_class": "external_access_restriction",
             "transient": True,
             "effective_source_state": "failed",
+            "http_status": 403,
         }
     ]
     rendered = json.dumps(result)

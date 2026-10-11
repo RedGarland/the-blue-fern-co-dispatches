@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T095053-0700-r11-9d8a21",
+  "scheduled_for": "2026-10-11T09:45:54-07:00",
+  "started_at": "2026-10-11T09:50:53.677-07:00",
+  "completed_at": "2026-10-11T09:52:06.018-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-11T08:45:54-07:00",
+    "end_at": "2026-10-11T09:52:06.018-07:00",
+    "start_basis": "Prior nominal hourly watch checkpoint; prior completed persisted heartbeat for this interval was not visible, and prior 07:45 run reported persistence failure.",
+    "mode": "supplementary_hourly_recall"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary high-value U.S. food-access recall watch. Production nationwide collection remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "scoped_miss_classes": [
+      "only/sole/last/full-service grocery store closure, loss, fire or disaster",
+      "emergency food distribution canceled/suspended by storm, flood, fire, outage or facility damage",
+      "abrupt food pantry/food bank closure or major reduction in access",
+      "official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "queries": [
+      "(\"only grocery store\" OR \"sole grocery store\" OR \"last grocery store\") (closed OR fire OR storm OR flood) October 11 2026",
+      "(\"only full-service grocery\" OR \"only supermarket\" OR \"last supermarket\") closes fire disaster October 2026 US",
+      "(\"food distribution\" canceled OR cancelled OR suspended) (storm OR flood OR fire OR outage) \"October 11\" 2026",
+      "\"food bank\" \"distribution canceled\" storm flood October 2026",
+      "\"food pantry\" \"closed\" (fire OR flood OR power outage OR building damage) October 2026",
+      "(\"food bank\" OR \"food pantry\") \"suspending services\" OR \"temporarily closed\" October 11 2026",
+      "site:gov SNAP benefits \"interruption\" OR \"outage\" October 11 2026",
+      "site:gov WIC \"closed\" OR \"interrupted\" OR \"unable to issue benefits\" October 2026",
+      "October 11 2026 \"food pantry\" \"temporarily closed\" storm flood",
+      "October 11 2026 \"food distribution\" \"cancelled\" \"weather\"",
+      "October 11 2026 \"grocery store\" \"only\" \"closed\" rural",
+      "October 11 2026 SNAP WIC EBT outage benefits delayed state agency"
+    ],
+    "disposition": "No newly reported, directly supported qualifying incident in the bounded hourly window. Index returned older grocery closures (including September events), October 2025 SNAP/WIC material, unrelated event cancellations and routine information; excluded as stale, nonqualifying or outside window.",
+    "notes": [
+      "News result on Oct 10 Save A Lot closure in Watertown NY did not substantiate sole/only grocery-store status and was reported earlier; excluded.",
+      "Reported sole grocery store loss in Battlement Mesa CO predates window by weeks; excluded.",
+      "Potential storm festival cancellation was not an emergency-food distribution; excluded.",
+      "Search engine indexing lag may leave fresh local provider notices undiscovered. This is not an exhaustive national collection."
+    ],
+    "persistence_target": {
+      "repository": "RedGarland/the-blue-fern-co-dispatches",
+      "branch": "ops/watch-ledger",
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-11/food-line-source-watch-20261011T095053-0700-r11-9d8a21.json"
+    },
+    "modifications": "No approval, publication, schedule change or disabling."
+  }
+}

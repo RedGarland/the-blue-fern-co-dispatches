@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T184049-0700-7c2e19",
+  "scheduled_for": "2026-10-10T18:44:51-07:00",
+  "started_at": "2026-10-10T18:40:49-07:00",
+  "completed_at": "2026-10-10T18:42:23-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-10",
+    "start": "2026-10-10T14:42:19-07:00",
+    "end": "2026-10-10T18:42:23-07:00",
+    "anchor": "Last verified Gaza Source Watch ledger heartbeat completed 2026-10-10T14:42:19-07:00; sources may publish older events later."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "supplementary_only": true,
+    "production_is_authoritative": true,
+    "primary_sources_checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "access": "accessible",
+        "latest_visible_news": "2026-10-06",
+        "qualifying_update_in_window": false
+      },
+      {
+        "source": "WHO occupied Palestinian territory emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "access": "accessible",
+        "qualifying_update_in_window": false
+      },
+      {
+        "source": "WHO Eastern Mediterranean situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "access": "HTTP 502",
+        "qualifying_update_in_window": null
+      }
+    ],
+    "source_access_limitations": [
+      "WHO alternate/obsolete occupied Palestinian territory emergency URLs returned HTTP 404.",
+      "WHO Eastern Mediterranean situation-report URL returned HTTP 502; regional health capacity, medical evacuation and facility reporting may have coverage gaps."
+    ],
+    "targeted_additional_searches": 12,
+    "targeted_areas": [
+      "OCHA new humanitarian reporting and crossings",
+      "WHO hospital access and medical evacuation",
+      "Reuters/AP/AFP October 10-11 casualty reports",
+      "UNRWA displacement/shelter",
+      "WFP food and crossings",
+      "UNICEF water/sanitation",
+      "WAFA fresh Gaza civilian impact",
+      "Al Jazeera October 11 breaking Gaza casualties",
+      "AP Gaza hospital/casualty updates",
+      "PRCS/MSF/ICRC crossing, ambulance and medevac access",
+      "Gaza ceasefire/hostage/negotiation developments",
+      "ReliefWeb infrastructure/water/fuel/hospital updates"
+    ],
+    "traceable_sources_reviewed": [
+      "https://www.ochaopt.org/",
+      "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "https://www.reuters.com/world/middle-east/israeli-strikes-kill-five-people-gaza-medics-say-2026-10-10/",
+      "https://www.aljazeera.com/news/2026/10/10/israeli-forces-kill-six-in-gaza-including-a-child",
+      "https://apnews.com/article/lebanon-flights-saudi-sudan-october-10-2026-a5f40b5e0ab08ae8128db5ed749114d8"
+    ],
+    "previous_items_excluded_as_duplicates": [
+      "October 10 five fatalities reported by Reuters/AP near Panda Mall and Tuffah",
+      "October 10 Al Jazeera cumulative eight deaths including Shahd al-Najjar, northern Gaza fatality, and Khan Younis later death",
+      "Previously identified Nuseirat electric-bicycle strike and Gaza City al-Daraj injuries"
+    ],
+    "excluded_as_not_new": [
+      "Historical humanitarian and WHO situation reports",
+      "October 10 AP Gaza five-death summary of known incidents",
+      "October 10 ceasefire one-year anniversary retrospectives without new implementation changes",
+      "Gaza Ministry of Health rolling totals in Al Jazeera without separable new incidents"
+    ],
+    "result": "No fresh, source-traceable, nonduplicate qualifying Gaza civilian-impact or humanitarian-access development established for the observation interval. This negative finding is coverage-limited, not evidence that no events occurred.",
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

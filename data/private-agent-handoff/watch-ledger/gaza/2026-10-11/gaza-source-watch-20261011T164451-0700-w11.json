@@ -1,0 +1,67 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T164451-0700-w11",
+  "scheduled_for": "2026-10-11T16:44:51-07:00",
+  "started_at": "2026-10-11T16:49:06-07:00",
+  "completed_at": "2026-10-11T16:50:24-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T14:50:13-07:00",
+    "end": "2026-10-11T16:50:24-07:00",
+    "basis": "Latest independently verified persisted prior heartbeat was 14:50:13 PDT; a 15:49 heartbeat was not found at the expected run_id, so continuity of a strictly prior-hour window cannot be confirmed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "checks_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "accessible; latest homepage Gaza-related reporting dated 2026-10-06; no new event-level update"
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502; direct regional health verification restricted"
+      },
+      {
+        "source": "WHO global fallback",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "accessible; no newly dated Gaza health development"
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "additional_search_categories": [
+      "WAFA October 12 casualties/displacement",
+      "WAFA October 11 incidents",
+      "Reuters ceasefire/civilian impacts",
+      "AP strikes/humanitarian developments",
+      "OCHA access/displacement",
+      "WHO health/evacuation/fuel",
+      "UNICEF food/water",
+      "UNRWA shelters/aid",
+      "ICRC healthcare/detention",
+      "UN News ceasefire/crossings",
+      "MSF medical access",
+      "WFP food/crossings"
+    ],
+    "source_access_caveats": [
+      "WHO Eastern Mediterranean regional endpoint returned HTTP 502",
+      "UN News search path blocked by robots.txt"
+    ],
+    "direct_wafa_check": "Homepage latest qualifying Gaza item was the October 11 20:58 Gaza-time Khan Yunis four-death report, already identified in earlier recall watch; subsequent listed items concern the West Bank or politics.",
+    "exclusions": [
+      "Repeated October 11 Khan Yunis four-death report and earlier Gaza casualties/displacement were excluded",
+      "Historical OCHA/WHO/agency reports and unsupported or stale snippets were not counted"
+    ],
+    "qualifying_new_findings": 0,
+    "production_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T064216-0700-a4c1e7",
+  "scheduled_for": "2026-10-11T05:45:54-07:00",
+  "started_at": "2026-10-11T06:42:16-07:00",
+  "completed_at": "2026-10-11T06:44:05.403-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-11T05:45:54-07:00",
+    "end_at": "2026-10-11T06:44:05.403-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary high-value U.S. food-access recall watch; production collection remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "missed_event_classes": [
+      "only/sole/last/full-service grocery store losses",
+      "emergency food distribution cancellations due to storm, flood, fire, outage, or damage",
+      "abrupt pantry/food-bank closures or material service reductions",
+      "official SNAP/WIC/food-assistance interruptions with immediate access consequences"
+    ],
+    "discovery_result": "No newly verifiable qualifying food-access disruption reported within the bounded hourly observation interval. Search results were dominated by older items, routine resource guides, storm relief provision, and historical program information. Reporting/indexing lags and local publication gaps remain possible.",
+    "excluded_known_examples": [
+      {
+        "title": "Prodisee Pantry cancels Stockton, Alabama October 10 food distribution",
+        "published_at": "2026-10-07",
+        "source_url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "Predates hourly window; repeat finding."
+      }
+    ],
+    "program_notice_note": "Florida October 10 DCF notice monitored possible post-Isaias SNAP response options; it did not announce an interruption of existing benefits.",
+    "search_window_basis": "Previous nominal hourly checkpoint 2026-10-11T05:45:54-07:00; no contemporaneous ledger receipt independently verified.",
+    "modifications": "No approvals, publications, schedule modifications, or task disabling."
+  }
+}

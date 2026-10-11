@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T144451-0700-w11",
+  "scheduled_for": "2026-10-11T14:44:51-07:00",
+  "started_at": "2026-10-11T14:49:08-07:00",
+  "completed_at": "2026-10-11T14:50:13-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T12:49:06-07:00",
+    "end": "2026-10-11T14:50:13-07:00",
+    "basis": "Latest verified prior watch heartbeat; continuous one-hour coverage cannot be independently confirmed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "checks_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "accessible; latest homepage updates dated 2026-10-06; no new qualifying item"
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "timeout; direct regional healthcare verification degraded"
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "additional_search_categories": [
+      "WHO health infrastructure/evacuations",
+      "OCHA displacement/aid",
+      "WAFA incident-level casualties",
+      "Reuters military/civilian impacts",
+      "AP civilian impacts",
+      "UNICEF food/water",
+      "late Gaza incidents",
+      "WAFA Gaza article recency",
+      "late civilian casualties",
+      "UN Palestine humanitarian",
+      "UNRWA aid",
+      "MSF medical services"
+    ],
+    "other_access_notes": [
+      "WHO global emergency URL returned 404",
+      "WAFA homepage timed out, although indexed WAFA article snippets were available"
+    ],
+    "exclusions": [
+      "Prior October 11 reports about four people killed west of Khan Yunis, eight gunshot injuries, displacement in Shuja'iyya, and a child's death in Jabalia were not counted again.",
+      "Historical humanitarian situation reporting and analysis were not counted as new events.",
+      "Search result snippets without sufficient event-level verification were excluded."
+    ],
+    "sources_consulted": [
+      "https://www.ochaopt.org/",
+      "https://www.emro.who.int/opt/",
+      "https://english.wafa.ps/",
+      "https://www.reuters.com/world/middle-east/"
+    ],
+    "qualifying_new_findings": 0,
+    "production_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

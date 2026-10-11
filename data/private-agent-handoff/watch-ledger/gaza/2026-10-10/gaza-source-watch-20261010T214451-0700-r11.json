@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261010T214451-0700-r11",
+  "scheduled_for": "2026-10-10T21:44:51-07:00",
+  "started_at": "2026-10-10T21:46:03-07:00",
+  "completed_at": "2026-10-10T21:47:09-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-10T20:50:00-07:00",
+    "end": "2026-10-10T21:47:09-07:00",
+    "anchor": "Prior Gaza Source Watch completed approximately 2026-10-10T20:50:00-07:00; recall scan also screened late-discovered but previously recorded incidents."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": {
+      "url": "https://www.ochaopt.org/",
+      "result": "Accessible; latest listed Gaza-relevant report/snapshot dated 2026-10-06. No new index entry during observation window."
+    },
+    "who": {
+      "global_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "global_result": "Accessible; no Gaza-specific new item in the observation window.",
+      "regional_url": "https://www.emro.who.int/opt/",
+      "regional_result": "HTTP 502 Bad Gateway; detailed situation reports endpoint also returned HTTP 502. A legacy WHO situation URL returned HTTP 404. Reduced primary regional healthcare coverage."
+    },
+    "targeted_additional_searches": 12,
+    "targeted_areas": [
+      "OCHA Gaza humanitarian/crossings",
+      "WHO hospitals/medical evacuation/fuel",
+      "Reuters Gaza casualties/ceasefire/aid",
+      "AP Gaza civilian impact",
+      "WAFA recent casualty reports",
+      "UNRWA displacement/shelter",
+      "WFP food access",
+      "UNICEF water/children",
+      "ICRC hostages/detention/medical care",
+      "MSF healthcare access",
+      "ceasefire/negotiations/crossings",
+      "Gaza overnight military impacts"
+    ],
+    "secondary_access_limits": [
+      "WAFA homepage HTTP 403",
+      "Al Jazeera guessed October 11 liveblog URL not accessible; not treated as evidence of publication"
+    ],
+    "prior_reported_items_excluded": [
+      "Reuters 2026-10-10 five Gaza City fatalities (previously identified)",
+      "October 10 Gaza City aggregate fatality updates and al-Najjar/Khan Younis reports",
+      "Nuseirat bicycle strike and al-Daraj injuries",
+      "October 9 IOM shelter risk coverage",
+      "AP retrospective October 10 ceasefire-anniversary analysis"
+    ],
+    "conclusion": "No newly verified, traceable, nonduplicate qualifying Gaza development identified between prior watch and current run. This is a coverage-limited negative result, not proof that no events occurred.",
+    "supplementary_only": true,
+    "production_is_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

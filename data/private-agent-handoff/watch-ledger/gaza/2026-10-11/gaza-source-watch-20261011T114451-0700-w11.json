@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T114451-0700-w11",
+  "scheduled_for": "2026-10-11T11:44:51-07:00",
+  "started_at": "2026-10-11T11:44:37-07:00",
+  "completed_at": "2026-10-11T11:46:15-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T09:45:00-07:00",
+    "end": "2026-10-11T11:46:15-07:00"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-2026-10-11-khan-yunis-al-buraq-charging-point-strike-4-killed",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/175743",
+      "title": "Four Palestinians killed, several others injured in Israeli airstrike west of Khan Yunis",
+      "publisher": "WAFA",
+      "source_date": "2026-10-11",
+      "publication_date": "2026-10-11",
+      "event_date": "2026-10-11",
+      "location": "Al-Buraq area, west Khan Yunis, Gaza Strip",
+      "affected_population_system": "People at a charging point; four reported fatalities and several injuries",
+      "supporting_passage": "Four Palestinians were killed and several others injured on Sunday evening in an Israeli airstrike targeting a charging point",
+      "source_type": "Palestinian national news agency",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "article_time": "20:58 on October 11, Gaza local time",
+        "prior_duplicate": false,
+        "corroboration": "Search-index article text available; direct page failed; independent corroboration not found. Do not add to historical totals without reconciliation."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "ocha_opt": "Checked first; accessible. Last listed October 6, no new item.",
+    "who": "Checked second; global accessible, WHO EMRO situation reports returned 502.",
+    "additional_targeted_searches": 12,
+    "secondary_access": "WAFA article direct page returned DisabledError.",
+    "excluded_prior": "October 10 and earlier October 11 casualty/displacement reports",
+    "supplementary_only": true,
+    "production_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

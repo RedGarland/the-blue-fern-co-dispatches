@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T074554-0700-d4b7e2",
+  "scheduled_for": "2026-10-12T07:45:54-07:00",
+  "started_at": "2026-10-12T07:50:17-07:00",
+  "completed_at": "2026-10-12T07:51:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T06:45:54-07:00",
+    "end_at": "2026-10-12T07:51:37-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly scheduled check as lower-bound proxy; latest completed checkpoint not independently retrieved."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary bounded high-value missed-signal recall watch; production nationwide collection remains authoritative.",
+    "targeted_web_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "classes_checked": [
+      "Only, sole, last, or full-service grocery loss or closure affecting food access",
+      "Canceled or suspended emergency food distributions due to weather/disaster/outage/damage",
+      "Abrupt food pantry or food-bank closure or major service reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "window_result": "No newly published, nonduplicate qualifying U.S. food-access disruptions verified within the bounded hourly observation window.",
+    "exclusions": "Older grocery-store closures, Alabama October 9 storm cancellation, prior unconfirmed Helping Hands candidate, routine storm relief distribution announcements, historical 2025 SNAP shutdown articles, holiday office closures, guides, fundraising and generic program information excluded.",
+    "source_limitations": "Fresh search indexes may lag direct notices. Prior-check exact completion time could not be verified; start time conservatively anchored to prior hourly schedule.",
+    "disposition": "No review item emitted. No approval, publication, or schedule modification."
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T014554-0700-a7d1c0",
+  "scheduled_for": "2026-10-12T01:45:54-07:00",
+  "started_at": "2026-10-12T01:46:39-07:00",
+  "completed_at": "2026-10-12T01:49:17.201-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T00:51:23-07:00",
+    "end_at": "2026-10-12T01:49:17.201-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last reported previous hourly check at approximately 00:51:23 Pacific. New developments only; brief recall overlap allowed for newly discovered, unreported events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary high-value recall watch only; primary nationwide production collector remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Only/sole/last/full-service grocery store loss",
+      "Storm/disaster-related emergency food distribution cancellation or suspension",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "Official immediate SNAP/WIC/food assistance interruption"
+    ],
+    "search_queries": [
+      "\"only grocery store\" fire closed October 11 2026 local community",
+      "\"sole grocery store\" destroyed fire October 2026 town",
+      "\"last grocery store\" closure October 11 2026 residents",
+      "\"full service grocery store\" closed fire flood October 2026 town",
+      "\"food distribution\" \"canceled\" storm October 11 2026",
+      "\"food pantry\" \"distribution\" \"canceled\" hurricane October 11 2026",
+      "\"food bank\" \"closed\" \"power outage\" October 11 2026",
+      "\"food pantry\" \"services suspended\" flood storm October 2026",
+      "site:gov \"SNAP\" \"outage\" \"October 11, 2026\" benefits interrupted",
+      "site:gov \"WIC\" \"closed\" \"October 12, 2026\" storm",
+      "\"food pantry\" \"permanently closing\" OR \"suspended services\" \"October 11\" \"2026\"",
+      "\"food distribution\" \"cancelled\" OR \"postponed\" \"October 12, 2026\" storm flood"
+    ],
+    "discovery_summary": "No fresh, nonduplicate qualifying U.S. food-access disruption was corroborated within the bounded hourly observation window. Many indexed search results were older or irrelevant.",
+    "excluded": [
+      "Stockton, Alabama Prodisee Pantry October 10 distribution cancellation (announced October 7) — previously observed duplicate.",
+      "Spencer, New York Shurfine Food Mart fire (September 11-14) — older incident outside hourly window.",
+      "Previous October 11 Helping Hands pantry storm/power indexed lead — already recorded pending review; no fresh independent corroboration found.",
+      "Older 2025 SNAP/WIC shutdown reports, routine closures, unrelated local events, donation/resource/feature articles."
+    ],
+    "limitations": "Web indexing delays and sparse matching local notices mean absence of results does not prove absence of nationwide disruptions. No approval, publication, production collection, or schedule changes."
+  }
+}

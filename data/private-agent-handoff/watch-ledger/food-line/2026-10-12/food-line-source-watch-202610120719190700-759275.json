@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-202610120719190700-759275",
+  "scheduled_for": "2026-10-12T06:45:54-07:00",
+  "started_at": "2026-10-12T07:16:53-07:00",
+  "completed_at": "2026-10-12T07:19:19-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T05:45:54-07:00",
+    "end_at": "2026-10-12T07:19:19-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Preceding scheduled hourly boundary; prior observed completion time not independently verified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall; production collector authoritative",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "sole/only/last/full-service grocery-store disaster or closure",
+      "storm/flood/fire/outage canceled emergency distribution",
+      "abrupt pantry or food-bank closure/major access reduction",
+      "new official immediate SNAP/WIC interruption"
+    ],
+    "search_queries": [
+      "October 12 2026 only grocery store closed fire town food desert",
+      "October 12 2026 \"sole grocery store\" closed fire disaster",
+      "October 12 2026 \"last grocery store\" shuts fire",
+      "October 12 2026 \"full-service grocery\" closed storm",
+      "October 12 2026 food bank distribution canceled storm flooding",
+      "October 12 2026 emergency food distribution suspended power outage",
+      "October 12 2026 food pantry abruptly closed due to building damage",
+      "October 12 2026 food bank closing services immediately",
+      "site:gov October 12 2026 SNAP EBT outage interruption benefits",
+      "site:gov October 12 2026 WIC clinic suspended services power outage",
+      "October 12 2026 storm flood food pantry closure emergency distribution local news",
+      "October 12 2026 grocery store fire only supermarket local news"
+    ],
+    "excluded": [
+      "October 12 New Orleans fire near Richard Food Store: no substantiated store closure or sole-store status",
+      "October 6 Virginia supermarket closure: older news without sole-grocery evidence",
+      "Routine holiday closures, older pantry and policy stories"
+    ],
+    "limitations": "Search index freshness and local reporting latency; no qualifying newly published disruption verified. No approvals, publications or scheduling changes."
+  }
+}

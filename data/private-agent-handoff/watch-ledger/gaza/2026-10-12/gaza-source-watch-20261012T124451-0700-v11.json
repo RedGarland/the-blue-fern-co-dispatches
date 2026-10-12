@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261012T124451-0700-v11",
+  "scheduled_for": "2026-10-12T12:44:51-07:00",
+  "started_at": "2026-10-12T12:46:21-07:00",
+  "completed_at": "2026-10-12T12:47:57-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-12",
+    "start": "2026-10-12T11:48:45-07:00",
+    "end": "2026-10-12T12:47:57-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "available, no new publication; last listed Oct 6"
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "WHO global accessible, regional endpoint inaccessible"
+      },
+      {
+        "source": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Gaza reports preceding observation window or duplicates"
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "excluded_duplicates": "Oct 12 Reuters casualties, WAFA deaths tally, Karm Abu Salem detention",
+    "uncertainty": "WHO EMRO regional endpoint inaccessible; incomplete healthcare coverage",
+    "no_production_changes": true
+  }
+}

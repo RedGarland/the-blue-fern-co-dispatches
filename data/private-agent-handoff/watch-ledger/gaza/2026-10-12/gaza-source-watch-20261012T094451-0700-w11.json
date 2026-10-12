@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261012T094451-0700-w11",
+  "scheduled_for": "2026-10-12T09:44:51-07:00",
+  "started_at": "2026-10-12T09:47:33-07:00",
+  "completed_at": "2026-10-12T09:49:12-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-12T08:50:02-07:00",
+    "end": "2026-10-12T09:49:12-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": {
+      "source_url": "https://www.ochaopt.org/",
+      "result": "Checked first; homepage reachable; newest listed update dated 2026-10-06. No new qualifying Gaza update found."
+    },
+    "who": {
+      "regional_url": "https://www.emro.who.int/opt/information-resources/",
+      "result": "HTTP 502 Bad Gateway; regional healthcare verification incomplete",
+      "global_url": "https://www.who.int/emergencies/situations/emergency-situation-in-gaza",
+      "global_result": "HTTP 404 Not Found; WHO search-index result for 2026-09-24 director-general remarks not within window."
+    },
+    "additional_targeted_searches": 12,
+    "search_result": "No qualifying developments verified as newly reported during the observation window, across casualties, displacement, food/water/aid access, healthcare, crossings, ceasefire, detention and military operations with civilian impact.",
+    "excluded_as_duplicate_or_outside_window": [
+      "Reuters 2026-10-12 06:43 UTC: two fatalities in southern Gaza and three in Al-Mawasi on Sunday; report identified in preceding watch.",
+      "WAFA 2026-10-12 13:00 Asia/Jerusalem: hospital toll 74,382 killed, 175,416 injured; previously identified.",
+      "WAFA 2026-10-12 11:13 Asia/Jerusalem: Khaled Abdel-Fattah Jaber death and Khan Younis gunshot injury; outside observation window.",
+      "WAFA 2026-10-12 14:37 Asia/Jerusalem: secondary reporting of Haaretz soldier testimonies concerning historical strikes, not a new ground event."
+    ],
+    "source_coverage": "Primary OCHA OPT and WHO checked first; 12 further targeted searches queried Reuters, AP, WAFA, UNRWA, WFP, UNICEF, ICRC/PRCS, MSF, crossings, healthcare, ceasefire, and displacement.",
+    "production_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

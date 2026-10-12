@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T094748-0700-r11-f8c2a7",
+  "scheduled_for": "2026-10-12T09:45:54-07:00",
+  "started_at": "2026-10-12T09:47:48-07:00",
+  "completed_at": "2026-10-12T09:50:05-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T08:52:32.872-07:00",
+    "end_at": "2026-10-12T09:50:05-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_failures": 0,
+    "source_access_failures": 1,
+    "classes_checked": [
+      "only/sole/last/full-service grocery closure",
+      "emergency distribution cancellation",
+      "pantry/food-bank access loss",
+      "SNAP/WIC service interruption"
+    ],
+    "degradation": "One October 12 FloridaJobs.gov storm-recovery page returned HTTP 403; alternative official governor source and WUWF updates accessible.",
+    "excluded": "Older Spencer sole-store fire, previously reported Prodisee Pantry weather cancellation, storm-relief distributions, routine holiday closures, historical articles and non-U.S. results.",
+    "assessment": "No new, nonduplicate, corroborated food-access interruption. Bounded supplementary recall only; production collector authoritative. No approval, publication, or schedule changes."
+  }
+}

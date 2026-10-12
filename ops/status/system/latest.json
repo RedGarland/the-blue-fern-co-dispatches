@@ -30,7 +30,7 @@
       },
       "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "d26df717293c8fa944eabfa68fd795ef9c4e6012",
+      "current_runner_head": "e1ef10f111a97c996e77fcdc61bf91c9d719d6a9",
       "debug_summary": {
         "aggregate_status": "FAILED",
         "all_current_failures_external": false,
@@ -165,7 +165,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "d26df717293c8fa944eabfa68fd795ef9c4e6012",
+      "current_runner_head": "e1ef10f111a97c996e77fcdc61bf91c9d719d6a9",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -403,32 +403,23 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "STALE_OBSERVABILITY",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": null,
       "current_runner_head": "f7d3db27934e3135df0747b6b1e929ac96d66a9b",
       "debug_summary": {
-        "aggregate_status": "STALE_OBSERVABILITY",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 1,
-        "attention_tasks": [
-          {
-            "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-10-12-20261012T130038848012Z.json",
-            "classification": "failed",
-            "exit_code": 1,
-            "failure_stage": "gaza_daily_dispatch",
-            "status": "FAILED",
-            "task_key": "gaza_daily_dispatch"
-          }
-        ],
+        "attention_task_count": 0,
+        "attention_tasks": [],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "ACTION_REQUIRED_OBSERVABILITY",
-        "primary_classification": "failed",
-        "primary_failure_stage": "gaza_daily_dispatch",
-        "primary_layer": "OBSERVABILITY",
-        "primary_task_key": "gaza_daily_dispatch",
-        "primary_task_status": "FAILED",
+        "operator_assessment": "HEALTHY",
+        "primary_classification": null,
+        "primary_failure_stage": null,
+        "primary_layer": "NONE",
+        "primary_task_key": null,
+        "primary_task_status": null,
         "private_review_count_only_gap_count": null,
         "private_review_dispositioned_item_count": null,
         "private_review_max_age_hours": null,
@@ -436,24 +427,46 @@
         "private_review_pending_date_count": null,
         "private_review_pending_item_count": null,
         "private_review_unresolved_item_count": null,
-        "publication_attempted": false,
-        "publication_status": "failed",
+        "publication_attempted": true,
+        "publication_status": "pages_only_published",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "INCIDENT_OPEN",
-        "stale_observability": true,
+        "recovery_lifecycle": "HEALTHY",
+        "stale_observability": false,
         "transient_source_failure_count": null,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
       },
       "dry_run_recovery_applied": false,
       "latest_recovery_proof_at": null,
-      "latest_runtime_proof_date": null,
+      "latest_runtime_proof_date": "2026-10-12T22:20:02Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-12",
+      "publication_recovery_applied": true,
+      "publication_recovery_evidence": {
+        "audio_generated": false,
+        "bluesky_reason": "disabled_by_config",
+        "bluesky_status": "skipped",
+        "completed_at": "2026-10-12T22:20:02Z",
+        "pages_commit_sha": "b29b4bd",
+        "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\editions\\2026-10-12\\run_manifest.json",
+        "path_relative": "data/dispatches/gaza/editions/2026-10-12/run_manifest.json",
+        "public_story_count": 3,
+        "publisher_count": 1,
+        "release_workflow_attempted": false,
+        "source_adequacy_status": "limited_source_update",
+        "source_count": 3,
+        "warnings": [
+          "This is a limited-source update generated from 3 saved source records from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+          "All rendered public stories in this edition rely on sources from Al Jazeera.",
+          "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\sources\\2026-10-12\\manual_sources.template.json",
+          "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories",
+          "audio not generated in daily run; follow-up: python scripts/run_gaza_audio.py --date 2026-10-12 --tts-provider none"
+        ]
+      },
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "INCIDENT_OPEN",
+      "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
-      "stale_observability": true
+      "stale_observability": false
     },
     "ice": {
       "agent_handoff": {
@@ -509,10 +522,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-12T22:22:50.992408Z",
+  "exported_at": "2026-10-12T22:54:48.032254Z",
   "schema_version": "bluefern_external_system_status_v1",
-  "stale_observability": [
-    "gaza"
-  ],
+  "stale_observability": [],
   "system_status": "FAILED"
 }

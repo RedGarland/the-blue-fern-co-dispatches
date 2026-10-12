@@ -12,7 +12,7 @@
   },
   "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "d26df717293c8fa944eabfa68fd795ef9c4e6012",
+  "current_runner_head": "e1ef10f111a97c996e77fcdc61bf91c9d719d6a9",
   "debug_summary": {
     "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
@@ -133,7 +133,7 @@
   ],
   "human_action_required": true,
   "incident_reference": null,
-  "last_exported_at": "2026-10-12T22:15:03.960431Z",
+  "last_exported_at": "2026-10-12T22:54:48.032254Z",
   "last_receipt_at": "2026-10-12T16:52:13.622770Z",
   "latest_receipt_path": "logs/food-line/current-intake/2026-10-12/20261012T165202Z-current-intake.json",
   "latest_runtime_proof_date": "2026-10-12T16:52:13.622770Z",

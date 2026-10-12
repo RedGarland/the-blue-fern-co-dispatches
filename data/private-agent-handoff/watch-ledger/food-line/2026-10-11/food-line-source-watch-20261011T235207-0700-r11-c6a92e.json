@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T235207-0700-r11-c6a92e",
+  "scheduled_for": "2026-10-11T23:45:54-07:00",
+  "started_at": "2026-10-11T23:52:07-07:00",
+  "completed_at": "2026-10-11T23:54:10.912-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-11T22:50:00-07:00",
+    "end_at": "2026-10-11T23:54:10.912-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous hourly check ended approximately 22:50 PDT; prior heartbeat write failed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 10,
+    "search_failure_count": 0,
+    "collector_role": "Supplementary recall only; production collector authoritative.",
+    "priority_classes": [
+      "sole/last/full-service grocery store loss",
+      "emergency distribution cancellation from severe weather",
+      "abrupt food pantry/food bank access closure",
+      "official SNAP/WIC interruption"
+    ],
+    "assessment": "No new nonduplicate qualifying event verified. Older prior-report examples excluded: Prodisee Pantry, Helping Hands Food Pantry, Latta IGA and Eastport IGA. Source results were primarily stale or irrelevant.",
+    "restrictions": "No approval, publishing or schedule change."
+  }
+}

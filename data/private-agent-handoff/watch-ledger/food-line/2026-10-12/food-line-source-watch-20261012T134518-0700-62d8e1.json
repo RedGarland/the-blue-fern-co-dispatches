@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T134518-0700-62d8e1",
+  "scheduled_for": "2026-10-12T13:45:54-07:00",
+  "started_at": "2026-10-12T13:44:37-07:00",
+  "completed_at": "2026-10-12T13:45:18-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T12:45:54-07:00",
+    "end_at": "2026-10-12T13:45:18-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous expected hourly boundary; preceding completed timestamp unverified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary only; production collection authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "classes_checked": [
+      "only/sole/full-service grocery-store loss",
+      "disaster-related food distribution cancellation",
+      "pantry/food bank access suspension",
+      "official immediate SNAP/WIC interruptions"
+    ],
+    "exclusions": "No new verified qualifying signal. Old closures, old benefit disruptions, and unrelated food drives and weather events excluded.",
+    "limitations": "Search results included many stale sources. No production, editorial, or schedule changes."
+  }
+}

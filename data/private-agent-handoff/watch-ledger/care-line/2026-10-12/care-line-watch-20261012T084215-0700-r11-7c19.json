@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T084215-0700-r11-7c19",
+  "scheduled_for": "2026-10-12T08:42:15-07:00",
+  "started_at": "2026-10-12T08:42:15-07:00",
+  "completed_at": "2026-10-12T08:44:36-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-12T07:45:42-07:00",
+    "end": "2026-10-12T08:44:36-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior completed hourly recall watch"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_notice_provider": "Tender Home Health",
+      "new_notices": 0
+    },
+    "additional_targeted_searches": 12,
+    "search_failures": 0,
+    "coverage": "Targeted official/local reporting for hospital and ED closures, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance/air-medical shutdown, essential-service restorations, and U.S. territories.",
+    "exclusions": "Older or duplicate changes (including Roseland maternity announcement), future proposals without concrete access effect, ownership-only stories, opinion and foreign/nonqualifying reports.",
+    "observation": "No newly confirmed qualifying development in the bounded observation window; web indexing may lag local notices.",
+    "production_authoritative": true,
+    "approval_changes": false,
+    "publication_changes": false,
+    "schedule_changes": false
+  }
+}

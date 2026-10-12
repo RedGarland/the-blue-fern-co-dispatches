@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261011T205023-0700-4c8b",
+  "scheduled_for": "2026-10-11T20:45:22-07:00",
+  "started_at": "2026-10-11T20:50:23-07:00",
+  "completed_at": "2026-10-11T20:51:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-11T19:44:00-07:00",
+    "end": "2026-10-11T20:51:15-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_scope": "Supplementary recall only; production national collector authoritative",
+    "cms_public_notices": "Checked first: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Newest listed notice remains 2026-10-09 Tender Home Health (CA) termination; no new notice in window.",
+    "additional_targeted_searches": 12,
+    "themes": "Hospitals/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency services, ground/air ambulance, provider enforcement, and restorations across U.S. states and territories.",
+    "exclusions": "Existing Fitzgibbon Hospital (MO) maternity closure reporting (Oct 11 04:00 CDT, before this window); previously identified Oct 12 Escambia County Fairfield clinic closure; previously reported Nevada and Hawaii service changes; planned service changes, broad closure trend reporting, and routine Oct 12 holiday closures.",
+    "limitations": "Search results predominantly older reporting and advance holiday notices; no independent evidence of a newly announced qualifying service access change in the requested interval."
+  }
+}

@@ -79,6 +79,19 @@ FAILURE_DIAGNOSTIC_TEXT_LIMIT = 1000
 NON_MIGRATED_DISPATCHES = ("gaza", "ice", "american-pressure")
 INTENTIONALLY_INACTIVE_DISPATCHES = ("cascadia",)
 ICE_TASK_EXPECTATIONS = MIGRATION_TASK_EXPECTATIONS["ice"]
+ICE_PUBLIC_PILOT_APPROVAL_SCHEMA = "bluefern.ice.public_pilot_approval.v1"
+ICE_PUBLIC_PILOT_REHEARSAL_SCHEMA = "bluefern.ice.public_pilot_launch_rehearsal_manifest.v1"
+ICE_PUBLIC_PILOT_APPROVAL_RELATIVE = Path("approvals") / "ice"
+ICE_PUBLIC_PILOT_REHEARSAL_MANIFEST_ENV = "BLUEFERN_ICE_PUBLIC_PILOT_REHEARSAL_MANIFEST"
+ICE_PUBLIC_PILOT_EXPECTED_PATHS = (
+    "ice/archive.html",
+    "ice/archive_entries.json",
+    "ice/editions/2026-10-11/index.html",
+    "ice/editions/2026-10-11/manifest.json",
+    "ice/editions/2026-10-11/map_payload.json",
+    "ice/index.html",
+    "ice/rss.xml",
+)
 HANDOFF_STATES = {
     "NO_EXTERNAL_HANDOFF_EXPECTED",
     "HANDOFF_RECEIVED_SUCCESS",
@@ -2211,6 +2224,176 @@ def build_gaza_status(
     })
 
 
+
+
+def _sha256_file(path: Path) -> str | None:
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _git_head_for_checkout(path: Path) -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except (FileNotFoundError, NotADirectoryError):
+        return None
+    return _safe_head(result.stdout.strip()) if result.returncode == 0 else None
+
+
+def _git_contains_source_head(repo: Path, ancestor: str, current: str) -> bool:
+    if ancestor == current:
+        return True
+    if not (_safe_head(ancestor) and _safe_head(current)):
+        return False
+    try:
+        result = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", ancestor, current],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except (FileNotFoundError, NotADirectoryError):
+        return False
+    return result.returncode == 0
+
+
+def _candidate_ice_public_pilot_rehearsal_manifests(source_root: Path) -> list[Path]:
+    candidates: list[Path] = []
+    env_path = os.getenv(ICE_PUBLIC_PILOT_REHEARSAL_MANIFEST_ENV)
+    if env_path:
+        candidates.append(Path(env_path))
+    local_root = source_root / "data" / "dispatches" / "ice" / "monitor" / "public-pilot"
+    if local_root.exists():
+        candidates.extend(local_root.rglob("*launch-rehearsal-manifest*.json"))
+    for temp_root in (Path(os.getenv("TEMP", "")), Path(os.getenv("TMP", "")), Path("C:/tmp"), Path("/tmp")):
+        if temp_root and temp_root.exists():
+            candidates.extend(temp_root.glob("ice-public-pilot-stage-*/_receipts/ice/*launch-rehearsal-manifest*.json"))
+    unique: dict[str, Path] = {}
+    for candidate in candidates:
+        try:
+            unique[str(candidate.resolve())] = candidate.resolve()
+        except OSError:
+            unique[str(candidate)] = candidate
+    return sorted(unique.values(), key=lambda item: item.stat().st_mtime if item.exists() else 0, reverse=True)
+
+
+def _load_ice_public_pilot_approval(source_root: Path, manifest: dict[str, Any]) -> tuple[Path | None, dict[str, Any] | None]:
+    paths: list[Path] = []
+    artifact = manifest.get("approval_artifact")
+    if isinstance(artifact, str) and artifact.strip():
+        paths.append(Path(artifact))
+    approval_root = source_root / ICE_PUBLIC_PILOT_APPROVAL_RELATIVE
+    if approval_root.exists():
+        paths.extend(sorted(approval_root.glob("ice-public-pilot-*-approval-*.json")))
+    seen: set[str] = set()
+    for path in paths:
+        try:
+            resolved = path.resolve()
+        except OSError:
+            resolved = path
+        key = str(resolved)
+        if key in seen:
+            continue
+        seen.add(key)
+        payload = _load_json_object(resolved)
+        if payload and payload.get("schema_version") == ICE_PUBLIC_PILOT_APPROVAL_SCHEMA:
+            return resolved, payload
+    return None, None
+
+
+def _ice_public_pilot_live_evidence(source_root: Path, runner_identity: dict[str, str | None]) -> dict[str, Any] | None:
+    current_head = runner_identity.get("current_runner_head")
+    if not current_head:
+        return None
+    expected_paths = set(ICE_PUBLIC_PILOT_EXPECTED_PATHS)
+    for manifest_path in _candidate_ice_public_pilot_rehearsal_manifests(source_root):
+        manifest = _load_json_object(manifest_path)
+        if not manifest or manifest.get("schema_version") != ICE_PUBLIC_PILOT_REHEARSAL_SCHEMA:
+            continue
+        if manifest.get("source_head") != current_head:
+            continue
+        if manifest.get("public_mutation_performed") is not False:
+            continue
+        if manifest.get("pages_sync_performed") is not False:
+            continue
+        if manifest.get("commit_performed") is not False:
+            continue
+        if manifest.get("push_performed") is not False:
+            continue
+        if manifest.get("social_authorized") is not False:
+            continue
+        if manifest.get("non_ice_paths") != []:
+            continue
+        gate = manifest.get("gate_validation") if isinstance(manifest.get("gate_validation"), dict) else {}
+        if gate.get("ok") is not True or gate.get("social_authorized") is not False:
+            continue
+        if set(str(item) for item in gate.get("allowed_public_paths") or []) != expected_paths:
+            continue
+        operations = manifest.get("planned_operations")
+        if not isinstance(operations, list) or len(operations) != len(expected_paths):
+            continue
+        op_by_path = {str(item.get("path")): item for item in operations if isinstance(item, dict)}
+        if set(op_by_path) != expected_paths:
+            continue
+        if any(str(item.get("action")) not in {"add", "unchanged"} for item in op_by_path.values()):
+            continue
+        approval_path, approval = _load_ice_public_pilot_approval(source_root, manifest)
+        if not approval_path or not approval:
+            continue
+        if approval.get("publication_authorized") is not True:
+            continue
+        if approval.get("pages_authorized") is not True:
+            continue
+        if approval.get("social_authorized") is not False:
+            continue
+        if approval.get("source_head") != manifest.get("approval_source_head"):
+            continue
+        if not _git_contains_source_head(source_root, str(approval.get("source_head") or ""), current_head):
+            continue
+        if approval.get("bundle_id") != gate.get("bundle_id"):
+            continue
+        edition_date = str(gate.get("edition_date") or approval.get("edition_date") or "")
+        if not DATE_RE.fullmatch(edition_date):
+            continue
+        pages_checkout_text = str(manifest.get("gh_pages_checkout") or "").strip()
+        if not pages_checkout_text:
+            continue
+        pages_checkout = Path(pages_checkout_text)
+        pages_head = _git_head_for_checkout(pages_checkout)
+        if not pages_head:
+            continue
+        live_files = sorted(path.relative_to(pages_checkout).as_posix() for path in (pages_checkout / "ice").rglob("*") if path.is_file()) if (pages_checkout / "ice").exists() else []
+        if set(live_files) != expected_paths:
+            continue
+        mismatched = [
+            rel_path
+            for rel_path, item in op_by_path.items()
+            if item.get("staged_sha256") != _sha256_file(pages_checkout / rel_path)
+        ]
+        if mismatched:
+            continue
+        return {
+            "publication_status": "public_pilot_live",
+            "public_pilot_status": "live",
+            "public_pilot_edition_date": edition_date,
+            "public_pilot_pages_commit": pages_head,
+            "public_pilot_file_count": len(expected_paths),
+            "public_pilot_live_paths": sorted(expected_paths),
+            "social_authorized": False,
+            "social_attempted": False,
+            "audio_attempted": False,
+            "release_workflow_attempted": False,
+        }
+    return None
+
 def build_ice_status(
     *,
     source_root: Path,
@@ -2256,7 +2439,25 @@ def build_ice_status(
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
     publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
-    return _with_debug_summary({
+    public_pilot = _ice_public_pilot_live_evidence(source_root, runner_identity)
+    publication_status = (
+        public_pilot["publication_status"]
+        if public_pilot is not None
+        else publication_statuses[-1] if publication_statuses else None
+    )
+    public_side_effects = {
+        "publication_attempted": publication_attempted,
+        "publication_status": publication_status,
+    }
+    if public_pilot is not None:
+        public_side_effects.update({
+            "pages": True,
+            "rss": True,
+            "audio": False,
+            "social": False,
+            "release_workflow": False,
+        })
+    payload = {
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "ice",
         "migration_status": "MIGRATED",
@@ -2270,12 +2471,9 @@ def build_ice_status(
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,
         "publication_attempted": publication_attempted,
-        "publication_status": publication_statuses[-1] if publication_statuses else None,
+        "publication_status": publication_status,
         "unaccounted_event_count": unaccounted_event_count,
-        "public_side_effects": {
-            "publication_attempted": publication_attempted,
-            "publication_status": publication_statuses[-1] if publication_statuses else None,
-        },
+        "public_side_effects": public_side_effects,
         "stale_observability": stale_observability,
         "last_receipt_at": max((_handoff_time(item) for item in receipts), default=None).isoformat().replace("+00:00", "Z") if receipts else None,
         "last_exported_at": exported_at,
@@ -2292,7 +2490,10 @@ def build_ice_status(
             "stale": False,
         },
         "scheduled_task_keys": [item.task_key for item in ICE_TASK_EXPECTATIONS],
-    })
+    }
+    if public_pilot is not None:
+        payload.update(public_pilot)
+    return _with_debug_summary(payload)
 
 
 def _system_status(states: dict[str, dict[str, Any]]) -> str:

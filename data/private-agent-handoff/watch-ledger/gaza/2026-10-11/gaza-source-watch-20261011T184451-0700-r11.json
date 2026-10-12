@@ -1,0 +1,66 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T184451-0700-r11",
+  "scheduled_for": "2026-10-11T18:44:51-07:00",
+  "started_at": "2026-10-11T18:46:17-07:00",
+  "completed_at": "2026-10-11T18:47:15-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T17:53:00-07:00",
+    "end": "2026-10-11T18:47:15-07:00",
+    "start_basis": "End of prior reported hourly watch (minute precision only); prior heartbeat not persisted."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": {
+      "status": "ACCESSIBLE",
+      "checked_url": "https://www.ochaopt.org/",
+      "latest_update": "2026-10-06",
+      "new_qualifying_updates": 0
+    },
+    "who": {
+      "status": "UNAVAILABLE",
+      "checked_urls": [
+        "https://www.emro.who.int/opt/information-resources/index.html",
+        "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "https://www.who.int/emergencies/situations/occupied-palestinian-territory"
+      ],
+      "errors": [
+        "WHO EMRO 502 Bad Gateway",
+        "WHO global candidate endpoint 404 Not Found",
+        "WHO alternative candidate endpoint 404 Not Found"
+      ],
+      "note": "WHO regional healthcare verification unavailable; no WHO update can be reliably excluded."
+    },
+    "additional_targeted_searches": 12,
+    "additional_search_topics": [
+      "Gaza late casualty reports",
+      "WAFA 12 October",
+      "Reuters ceasefire and crossings",
+      "AP casualties and aid",
+      "WAFA October 12 exact-date",
+      "UNRWA displacement and services",
+      "WFP food access",
+      "UNICEF children and WASH",
+      "Gaza October 12 casualty search",
+      "Al Jazeera Gaza",
+      "MSF healthcare",
+      "ICRC ambulance/hostages/aid"
+    ],
+    "supplementary_direct_checks": [
+      "https://english.wafa.ps/",
+      "https://english.wafa.ps/Pages/Details/175743"
+    ],
+    "previous_known_duplicate": "WAFA October 11 20:58 Gaza-time Khan Yunis Al-Buraq charging-point strike (four killed) was reported in an earlier hourly watch; excluded.",
+    "result_limitations": "Search results and accessible WAFA latest list revealed no verifiable new Gaza development first reported within the observation window. Indexing and restricted WHO access may conceal updates.",
+    "production_authoritative": true,
+    "production_changes": false,
+    "publication_changes": false,
+    "approval_changes": false,
+    "schedule_changes": false
+  }
+}

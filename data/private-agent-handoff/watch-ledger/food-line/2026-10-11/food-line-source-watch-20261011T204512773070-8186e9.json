@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T204512773070-8186e9",
+  "scheduled_for": "2026-10-11T20:45:54-07:00",
+  "started_at": "2026-10-11T20:42:45-07:00",
+  "completed_at": "2026-10-11T20:45:12.773-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-10-11T19:47:54-07:00",
+    "end_at": "2026-10-11T20:45:12.773-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior observed completed check at 19:47:54 Pacific; supplementary recall discovery can surface older unreported disruptions."
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-20261011-beulah-helping-hands-pantry-storm-power",
+      "canonical_source_url": "https://beulahfirstbaptist.org/after-the-storm",
+      "source_url": "https://beulahfirstbaptist.org/after-the-storm",
+      "publisher": "Beulah First Baptist Church",
+      "source_published_at": "2026-10-11T16:30:00-05:00",
+      "title": "Hurricane power outage delays Helping Hands Food Pantry reopening",
+      "exact_supporting_passage": "We will provide more information on the Helping Hands Food Pantry reopening once power is restored",
+      "summary": "The provider's search-indexed October 11, 4:30 p.m. update says Helping Hands Food Pantry reopening depends on power restoration and an assessment of food distribution capacity. The directly opened provider page displayed an earlier storm update without this passage; current suspension is a plausible access loss requiring human source recheck, not independently reconfirmed. The source update predates this search window but was not in the previous check's reported findings.",
+      "location": "Fort Walton Beach, Okaloosa County",
+      "state": "FL",
+      "scope": "local",
+      "affected_groups": "Local households relying on Helping Hands Food Pantry; number affected unknown",
+      "pressure_type": "emergency_food_pantry_service_suspension_storm_power_outage",
+      "confidence": "medium",
+      "source_role": "direct_provider_notice_search_index",
+      "evidence_level": "indexed_direct_source_excerpt_live_page_mismatch",
+      "bounded_query_context": {
+        "query": "\"food pantry\" \"closed\" \"October 11, 2026\" storm flooding",
+        "first_observed_at": "2026-10-11T20:45:12.773-07:00",
+        "search_window": {
+          "start_at": "2026-10-11T19:47:54-07:00",
+          "end_at": "2026-10-11T20:45:12.773-07:00",
+          "timezone": "America/Los_Angeles",
+          "basis": "Prior observed completed check at 19:47:54 Pacific; supplementary recall discovery can surface older unreported disruptions."
+        },
+        "source_publication_before_window": true,
+        "verification_note": "Search-indexed provider update not present in opened provider-page snapshot."
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only; production collector remains authoritative.",
+    "discovery_status": "DEGRADED",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Only/sole/last/full-service grocery store loss",
+      "Disaster-related emergency food distribution suspension",
+      "Abrupt pantry/food-bank access reduction",
+      "Official immediate SNAP/WIC interruption"
+    ],
+    "source_validation_caveat": "Provider search-indexed update (Oct 11 4:30pm Central) contained Helping Hands Pantry reopening dependency, but direct page open omitted the update. Finding is pending review, not publication-ready.",
+    "temporal_caveat": "Provider update predates 19:47:54 Pacific window, but newly surfaced as previously unreported recall lead.",
+    "excluded": [
+      "October 7 Prodisee Pantry storm cancellation in Stockton, Alabama — duplicate of prior recall watches.",
+      "Routine holiday closures, pantry relocations, old grocery-store fires and general SNAP policy analysis."
+    ],
+    "search_queries": [
+      "\"only grocery store\" fire closes October 11 2026 town",
+      "\"sole grocery store\" closure fire October 2026 local news",
+      "\"last grocery store\" closed community October 11 2026",
+      "food pantry closes abruptly October 11 2026 access families",
+      "food bank suspended services October 11 2026 facility storm flood",
+      "food distribution canceled storm October 11 2026 county",
+      "food pantry distribution cancelled due to power outage October 11 2026",
+      "SNAP benefits interrupted outage October 11 2026 state agency notice",
+      "WIC services suspended October 11 2026 state official notice",
+      "October 11 2026 food assistance offices closed emergency disruption benefits",
+      "\"food distribution\" \"canceled\" \"October 11, 2026\" hurricane pantry",
+      "\"food pantry\" \"closed\" \"October 11, 2026\" storm flooding"
+    ],
+    "limitations": "No publication, approval, schedule changes, or production collection changes."
+  }
+}

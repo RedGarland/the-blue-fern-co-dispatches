@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T085020-0700-r11",
+  "scheduled_for": "2026-10-12T08:45:54-07:00",
+  "started_at": "2026-10-12T08:50:20-07:00",
+  "completed_at": "2026-10-12T08:52:32.872-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T07:45:54-07:00",
+    "end_at": "2026-10-12T08:52:32.872-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Nominal prior hourly observation at 07:45:54 Pacific; previous actual completion not independently confirmed. Targeted recall also considers recently indexed older events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only; authoritative nationwide collection remains the production collector.",
+    "discovery_status": "SUCCESS",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Loss, closure, fire, or disaster affecting a community's only/sole/last/full-service grocery store",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or major reduction in access",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire community October 12 2026",
+      "\"last grocery store\" closes fire town October 2026",
+      "\"only full-service grocery store\" closed fire October 2026",
+      "food pantry closed unexpectedly today October 12 2026",
+      "food bank temporary closure services suspended October 12 2026",
+      "food distribution canceled storm flood October 12 2026",
+      "emergency food distribution canceled power outage October 12 2026",
+      "SNAP EBT system outage benefits unavailable October 12 2026 state official",
+      "WIC appointments benefits suspended closure October 12 2026 official notice",
+      "food assistance interrupted emergency October 12 2026 agency announcement",
+      "church food pantry closed flood fire October 12 2026",
+      "community supermarket shutdown \"only\" October 11 12 2026"
+    ],
+    "direct_sources_reviewed": [
+      "https://www.flgov.com/eog/news/press/2026/governor-ron-desantis-issues-updates-state-response-and-recovery-efforts-hurricane",
+      "https://www.flgov.com/eog/news/press/2026/governor-ron-desantis-issues-updates-state-preparedness-efforts-hurricane-isaias",
+      "https://kauainownews.com/2026/10/10/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+    ],
+    "excluded": [
+      "Previously observed Oct 11 Beulah/Helping Hands pantry reopening/power lead: duplicate, unverified direct-page passage.",
+      "September 14 Spencer, NY only-grocery-store fire: predates this recall window and previously discoverable.",
+      "Florida's Oct 10 general hurricane recovery/SNAP contingency discussion: no confirmed new SNAP benefit interruption.",
+      "Kaua‘i storm recovery and replacement-SNAP guidance: older event; does not establish a new immediate SNAP/WIC interruption.",
+      "Donation drives, general guides, routine assistance announcements, old events, non-U.S. articles and broad inflation stories."
+    ],
+    "limitations": "Bounded targeted search is not exhaustive; web indexing may lag real-world provider changes. No new qualifying nonduplicate incident corroborated in this observation window.",
+    "action_boundaries": "No source approval, publication, production collector change or schedule modification."
+  }
+}

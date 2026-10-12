@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261011T224146-0700-3c91",
+  "scheduled_for": "2026-10-11T22:44:51-07:00",
+  "started_at": "2026-10-11T22:41:46-07:00",
+  "completed_at": "2026-10-11T22:43:23-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-11T21:52:00-07:00",
+    "end": "2026-10-11T22:43:23-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT accessible, no new developments found.",
+    "WHO OPT returned HTTP 502. UNRWA homepage returned HTTP 403.",
+    "12 targeted searches of established reporting and humanitarian agencies found no verified new, nonduplicate qualifying events.",
+    "Existing October 11 casualty and displacement reports excluded as duplicates. Production remains authoritative."
+  ]
+}

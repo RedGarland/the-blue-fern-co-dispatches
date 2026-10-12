@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T155014-0700-r11-ae81cf",
+  "scheduled_for": "2026-10-12T15:45:54-07:00",
+  "started_at": "2026-10-12T15:50:14-07:00",
+  "completed_at": "2026-10-12T15:51:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-12T14:50:58-07:00",
+    "end_at": "2026-10-12T15:51:11-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches": 12,
+    "search_failures": 0,
+    "classes_checked": 4,
+    "categories": [
+      "sole/last/full-service grocery store lost or closed",
+      "emergency food distribution cancellation from storm/flood/fire/outage",
+      "abrupt pantry or food-bank closure or major reduction",
+      "new official SNAP/WIC/food assistance benefit interruption"
+    ],
+    "summary": "Bounded supplementary targeted web watch. No new qualifying, credible, nonduplicate U.S. food-access interruption found in the interval. Search results contained older events, unrelated closures, generic preparedness/weather stories, or prior-known incidents. This watch does not supersede production collection.",
+    "examples_excluded": [
+      {
+        "url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "October 7 event, previously reported; not newly within interval"
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 14 publication; not a new disruption"
+      },
+      {
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "September 25 event; already outside prior check window"
+      }
+    ],
+    "queries": [
+      "October 12 2026 only grocery store fire closed community",
+      "October 12 2026 sole grocery store closed burned access",
+      "October 12 2026 last grocery store shut down town",
+      "October 12 2026 food distribution canceled storm weather",
+      "2026 October 12 food pantry distribution cancelled power outage flooding fire",
+      "October 12 2026 food bank distribution suspended storm flood damage",
+      "Oct 12 2026 food pantry closed indefinitely fire damage power hurricane Isaias",
+      "October 12, 2026 food bank pantry closed services",
+      "food pantry announces sudden closure Monday October 12 2026 food access",
+      "October 12 2026 SNAP EBT outage benefits not loaded official notice state",
+      "October 12 2026 WIC benefits paused system outage department",
+      "site:gov October 12 2026 SNAP interruption OR outage OR delayed"
+    ]
+  }
+}

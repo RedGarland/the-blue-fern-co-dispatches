@@ -691,6 +691,14 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
             "published": False,
         },
     )
+    (source / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / "2026-09-10.md").write_text(
+        "# Food Line review packet\n",
+        encoding="utf-8",
+    )
+    _write_json(
+        source / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-09-10" / "current-intake.json",
+        {"schema_version": "food_line_current_intake_report_v1", "edition_date": "2026-09-10"},
+    )
     _write_food_proposal(source, "2026-09-08", {"pending_item_count": 4, "published": True})
     _write_food_proposal(source, "2026-09-07", {"pending_item_count": 3})
     _write_food_release_readiness(source, "2026-09-07")
@@ -732,9 +740,28 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
     assert status["debug_summary"]["private_review_unresolved_item_count"] == 2
     assert status["debug_summary"]["private_review_count_only_gap_count"] == 2
     assert status["debug_summary"]["private_review_oldest_pending_date"] == "2026-09-10"
+    assert status["human_action_required"] is True
+    assert status["review_pending"] is True
+    assert status["review_date"] == "2026-09-10"
+    assert status["review_item_count"] == 2
+    assert status["next_human_action"] == "Review 2 Food Line items for 2026-09-10."
+    assert status["review_material_path"] == "data/dispatches/food-line/review/proposed-editions/2026-09-10.json"
+    assert status["review_material_paths"] == [
+        "data/dispatches/food-line/review/proposed-editions/2026-09-10.json",
+        "data/dispatches/food-line/review/proposed-editions/2026-09-10.md",
+        "data/dispatches/food-line/review/reports/2026-09-10/current-intake.json",
+    ]
+    assert status["latest_receipt_path"] == "legacy/food_line_daily_publish.json"
 
     system = build_system_status(status, source_root=source, exported_at=EVALUATED)
     assert system["dispatches"]["food-line"]["private_review_backlog"]["pending_item_count"] == 2
+    assert system["dispatches"]["food-line"]["human_action_required"] is True
+    assert system["dispatches"]["food-line"]["next_human_action"] == "Review 2 Food Line items for 2026-09-10."
+    assert system["dispatches"]["food-line"]["review_material_paths"] == [
+        "data/dispatches/food-line/review/proposed-editions/2026-09-10.json",
+        "data/dispatches/food-line/review/proposed-editions/2026-09-10.md",
+        "data/dispatches/food-line/review/reports/2026-09-10/current-intake.json",
+    ]
     assert (
         system["dispatches"]["food-line"]["debug_summary"]["operator_assessment"]
         == "ACTION_REQUIRED_PENDING_REVIEW"

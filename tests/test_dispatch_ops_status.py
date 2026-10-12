@@ -16,6 +16,7 @@ from scripts.dispatch_ops import (
     build_system_snapshot,
     evaluate_system_alerts,
     main,
+    render_system_text,
 )
 
 
@@ -653,6 +654,17 @@ def test_system_alerts_notify_for_food_private_review_backlog(tmp_path: Path, ca
                         "max_age_hours": 368,
                         "dates": [],
                     },
+                    "human_action_required": True,
+                    "next_human_action": "Review 4 Food Line items for 2026-09-14.",
+                    "review_pending": True,
+                    "review_date": "2026-09-14",
+                    "review_item_count": 4,
+                    "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-09-14.json",
+                    "review_material_paths": [
+                        "data/dispatches/food-line/review/proposed-editions/2026-09-14.json",
+                        "data/dispatches/food-line/review/reports/2026-09-14/current-intake.json",
+                    ],
+                    "latest_receipt_path": "status/operational-health/food-line/2026-09-29/runs/current-intake.json",
                     "debug_summary": {
                         "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
                         "primary_layer": "EDITORIAL_HANDOFF",
@@ -698,10 +710,29 @@ def test_system_alerts_notify_for_food_private_review_backlog(tmp_path: Path, ca
             "private_review_unresolved_item_count": 4,
             "private_review_count_only_gap_count": 1,
             "private_review_oldest_pending_date": "2026-09-14",
+            "human_action_required": True,
+            "next_human_action": "Review 4 Food Line items for 2026-09-14.",
+            "review_pending": True,
+            "review_date": "2026-09-14",
+            "review_item_count": 4,
+            "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-09-14.json",
+            "review_material_paths": [
+                "data/dispatches/food-line/review/proposed-editions/2026-09-14.json",
+                "data/dispatches/food-line/review/reports/2026-09-14/current-intake.json",
+            ],
+            "latest_receipt_path": "status/operational-health/food-line/2026-09-29/runs/current-intake.json",
         }
     ]
     assert [row["dispatch"] for row in payload["suppressed_dispatches"]] == ["care-line"]
     assert "ACTION_REQUIRED_PENDING_REVIEW" in payload["policy"]["alertable_operator_assessments"]
+    rendered = render_system_text(build_system_snapshot(root=tmp_path))
+    assert "Review required: Operational checks ran, but private review items need an operator decision." in rendered
+    assert "Human action: Review 4 Food Line items for 2026-09-14." in rendered
+    assert (
+        "Review material: data/dispatches/food-line/review/proposed-editions/2026-09-14.json, "
+        "data/dispatches/food-line/review/reports/2026-09-14/current-intake.json"
+    ) in rendered
+    assert "Latest receipt: status/operational-health/food-line/2026-09-29/runs/current-intake.json" in rendered
 
 
 def test_system_alerts_support_benign_and_material_source_exclusion_language(

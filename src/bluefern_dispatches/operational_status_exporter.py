@@ -267,6 +267,33 @@ def _symbolic_artifact(value: Any) -> str | None:
     return name if SAFE_KEY_RE.fullmatch(name) else None
 
 
+def _repo_relative_artifact_path(source_root: Path, value: Any) -> str | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    path = Path(value)
+    if not path.is_absolute():
+        text = path.as_posix().lstrip("/")
+        if ".." in Path(text).parts:
+            return None
+        return text
+    try:
+        return path.resolve().relative_to(source_root.resolve()).as_posix()
+    except (OSError, ValueError):
+        return None
+
+
+def _receipt_artifact_path(source_root: Path, receipt: dict[str, Any]) -> str | None:
+    refs = receipt.get("artifact_refs", {}) if isinstance(receipt.get("artifact_refs"), dict) else {}
+    artifact = refs.get("task_receipt")
+    if (
+        not artifact
+        and receipt.get("dispatch") == "ice"
+        and receipt.get("task_key") == "ice_monitor"
+    ):
+        artifact = refs.get("monitor_receipt")
+    return _repo_relative_artifact_path(source_root, artifact)
+
+
 def _sanitize_value(value: Any, *, key: str = "") -> Any:
     if PRIVATE_KEY_RE.search(key):
         return None
@@ -1784,6 +1811,61 @@ def food_line_private_review_backlog(*, source_root: Path, evaluated_at: str) ->
     }
 
 
+def _food_line_review_material_paths(source_root: Path, review_date: str, proposal_artifact: str | None) -> list[str]:
+    candidates: list[Path] = []
+    if proposal_artifact:
+        candidates.append(Path(proposal_artifact))
+        if proposal_artifact.endswith(".json"):
+            candidates.append(Path(proposal_artifact).with_suffix(".md"))
+    candidates.append(Path("data") / "dispatches" / "food-line" / "review" / "reports" / review_date / "current-intake.json")
+    paths: list[str] = []
+    for candidate in candidates:
+        rel = candidate.as_posix()
+        if rel in paths:
+            continue
+        if (source_root / candidate).exists():
+            paths.append(rel)
+    return paths
+
+
+def _food_line_review_action_summary(
+    *,
+    source_root: Path,
+    private_review_backlog: dict[str, Any],
+    latest_receipts: list[dict[str, Any]],
+) -> dict[str, Any]:
+    latest_receipt = max(latest_receipts, key=_receipt_sort_time, default=None)
+    latest_receipt_path = _receipt_artifact_path(source_root, latest_receipt) if latest_receipt else None
+    pending_item_count = _safe_nonnegative_int(private_review_backlog.get("pending_item_count")) or 0
+    rows = private_review_backlog.get("dates") if isinstance(private_review_backlog.get("dates"), list) else []
+    rows = [row for row in rows if isinstance(row, dict)]
+    first = rows[0] if rows else {}
+    review_date = str(first.get("date") or private_review_backlog.get("oldest_pending_date") or "").strip() or None
+    proposal_artifact = str(first.get("proposal_artifact") or "").strip() or None
+    material_paths = _food_line_review_material_paths(source_root, review_date, proposal_artifact) if review_date else []
+    review_pending = pending_item_count > 0
+    next_human_action = (
+        f"Review {pending_item_count} Food Line item"
+        f"{'' if pending_item_count == 1 else 's'} for {review_date or 'the current pending date'}."
+        if review_pending
+        else "No human review pending."
+    )
+    payload: dict[str, Any] = {
+        "human_action_required": review_pending,
+        "next_human_action": next_human_action,
+        "review_pending": review_pending,
+        "review_item_count": pending_item_count,
+    }
+    if review_date:
+        payload["review_date"] = review_date
+    if material_paths:
+        payload["review_material_paths"] = material_paths
+        payload["review_material_path"] = material_paths[0]
+    if latest_receipt_path:
+        payload["latest_receipt_path"] = latest_receipt_path
+    return payload
+
+
 def _with_debug_summary(payload: dict[str, Any]) -> dict[str, Any]:
     payload["debug_summary"] = build_debug_summary(payload)
     return payload
@@ -1955,6 +2037,11 @@ def build_food_line_status(
     publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
     agent_handoff = load_agent_handoff_status(source_root, "food-line")
     private_review_backlog = food_line_private_review_backlog(source_root=source_root, evaluated_at=evaluated_at)
+    review_action_summary = _food_line_review_action_summary(
+        source_root=source_root,
+        private_review_backlog=private_review_backlog,
+        latest_receipts=latest_receipts,
+    )
     return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "food-line",
@@ -1982,6 +2069,7 @@ def build_food_line_status(
         "stale_after": stale_after,
         "agent_handoff": agent_handoff,
         "private_review_backlog": private_review_backlog,
+        **review_action_summary,
     })
 
 
@@ -2537,6 +2625,14 @@ def build_system_status(
             "debug_summary": food_line_status.get("debug_summary"),
             "agent_handoff": food_line_status["agent_handoff"],
             "private_review_backlog": food_line_status.get("private_review_backlog"),
+            "human_action_required": food_line_status.get("human_action_required"),
+            "next_human_action": food_line_status.get("next_human_action"),
+            "review_pending": food_line_status.get("review_pending"),
+            "review_date": food_line_status.get("review_date"),
+            "review_item_count": food_line_status.get("review_item_count"),
+            "review_material_path": food_line_status.get("review_material_path"),
+            "review_material_paths": food_line_status.get("review_material_paths"),
+            "latest_receipt_path": food_line_status.get("latest_receipt_path"),
         }
     }
     for dispatch in NON_MIGRATED_DISPATCHES:

@@ -391,6 +391,15 @@ def render_system_text(snapshot: dict[str, Any]) -> str:
                 lines.append(f"  {display['label']}: {display['summary']}")
             if evidence_note:
                 lines.append(f"  Evidence note: {evidence_note}")
+            if state.get("human_action_required") is True:
+                lines.append(f"  Human action: {state.get('next_human_action') or 'Review required.'}")
+                material_paths = state.get("review_material_paths")
+                if not isinstance(material_paths, list):
+                    material_paths = [state.get("review_material_path")] if state.get("review_material_path") else []
+                if material_paths:
+                    lines.append("  Review material: " + ", ".join(str(path) for path in material_paths if path))
+                if state.get("latest_receipt_path"):
+                    lines.append(f"  Latest receipt: {state.get('latest_receipt_path')}")
             if backlog.get("pending_item_count"):
                 lines.append(
                     "  private_review_backlog="
@@ -463,6 +472,14 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
             "private_review_unresolved_item_count": backlog.get("unresolved_item_count"),
             "private_review_count_only_gap_count": backlog.get("count_only_gap_count"),
             "private_review_oldest_pending_date": backlog.get("oldest_pending_date"),
+            "human_action_required": state.get("human_action_required"),
+            "next_human_action": state.get("next_human_action"),
+            "review_pending": state.get("review_pending"),
+            "review_date": state.get("review_date"),
+            "review_item_count": state.get("review_item_count"),
+            "review_material_path": state.get("review_material_path"),
+            "review_material_paths": state.get("review_material_paths"),
+            "latest_receipt_path": state.get("latest_receipt_path"),
         }
         if dispatch not in ACTIVE_ALERT_DISPATCHES:
             row["ignored_reason"] = "outside_active_alert_scope"

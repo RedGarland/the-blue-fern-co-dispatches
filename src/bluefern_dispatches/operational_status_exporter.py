@@ -1833,20 +1833,32 @@ def _food_line_review_action_summary(
     source_root: Path,
     private_review_backlog: dict[str, Any],
     latest_receipts: list[dict[str, Any]],
+    review_date_hint: str | None,
 ) -> dict[str, Any]:
-    latest_receipt = max(latest_receipts, key=_receipt_sort_time, default=None)
-    latest_receipt_path = _receipt_artifact_path(source_root, latest_receipt) if latest_receipt else None
-    pending_item_count = _safe_nonnegative_int(private_review_backlog.get("pending_item_count")) or 0
+    total_pending_item_count = _safe_nonnegative_int(private_review_backlog.get("pending_item_count")) or 0
     rows = private_review_backlog.get("dates") if isinstance(private_review_backlog.get("dates"), list) else []
     rows = [row for row in rows if isinstance(row, dict)]
-    first = rows[0] if rows else {}
-    review_date = str(first.get("date") or private_review_backlog.get("oldest_pending_date") or "").strip() or None
-    proposal_artifact = str(first.get("proposal_artifact") or "").strip() or None
+    selected = next(
+        (
+            row
+            for row in rows
+            if review_date_hint
+            and str(row.get("date") or "").strip() == review_date_hint
+            and (_safe_nonnegative_int(row.get("pending_item_count")) or 0) > 0
+        ),
+        None,
+    )
+    if selected is None:
+        selected = rows[0] if rows else {}
+    review_date = str(selected.get("date") or private_review_backlog.get("oldest_pending_date") or "").strip() or None
+    proposal_artifact = str(selected.get("proposal_artifact") or "").strip() or None
     material_paths = _food_line_review_material_paths(source_root, review_date, proposal_artifact) if review_date else []
-    review_pending = pending_item_count > 0
+    review_item_count = _safe_nonnegative_int(selected.get("pending_item_count")) or total_pending_item_count
+    review_pending = total_pending_item_count > 0
+    latest_receipt_path = _food_line_review_receipt_path(source_root, latest_receipts, review_date)
     next_human_action = (
-        f"Review {pending_item_count} Food Line item"
-        f"{'' if pending_item_count == 1 else 's'} for {review_date or 'the current pending date'}."
+        f"Review {review_item_count} Food Line item"
+        f"{'' if review_item_count == 1 else 's'} for {review_date or 'the current pending date'}."
         if review_pending
         else "No human review pending."
     )
@@ -1854,7 +1866,7 @@ def _food_line_review_action_summary(
         "human_action_required": review_pending,
         "next_human_action": next_human_action,
         "review_pending": review_pending,
-        "review_item_count": pending_item_count,
+        "review_item_count": review_item_count,
     }
     if review_date:
         payload["review_date"] = review_date
@@ -1864,6 +1876,29 @@ def _food_line_review_action_summary(
     if latest_receipt_path:
         payload["latest_receipt_path"] = latest_receipt_path
     return payload
+
+
+def _food_line_review_receipt_path(
+    source_root: Path,
+    latest_receipts: list[dict[str, Any]],
+    review_date: str | None,
+) -> str | None:
+    if review_date:
+        for task_key in (
+            "food_line_current_intake",
+            "food_line_source_watch",
+            "food_line_source_watch_resume",
+        ):
+            candidates = [
+                receipt
+                for receipt in latest_receipts
+                if receipt.get("task_key") == task_key
+                and str(receipt.get("scheduled_for") or "")[:10] == review_date
+            ]
+            if candidates:
+                return _receipt_artifact_path(source_root, max(candidates, key=_receipt_sort_time))
+    latest_receipt = max(latest_receipts, key=_receipt_sort_time, default=None)
+    return _receipt_artifact_path(source_root, latest_receipt) if latest_receipt else None
 
 
 def _with_debug_summary(payload: dict[str, Any]) -> dict[str, Any]:
@@ -2041,6 +2076,7 @@ def build_food_line_status(
         source_root=source_root,
         private_review_backlog=private_review_backlog,
         latest_receipts=latest_receipts,
+        review_date_hint=date,
     )
     return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,

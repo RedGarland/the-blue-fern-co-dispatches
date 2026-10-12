@@ -751,7 +751,7 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
         "data/dispatches/food-line/review/proposed-editions/2026-09-10.md",
         "data/dispatches/food-line/review/reports/2026-09-10/current-intake.json",
     ]
-    assert status["latest_receipt_path"] == "legacy/food_line_daily_publish.json"
+    assert status["latest_receipt_path"] == "legacy/food_line_current_intake.json"
 
     system = build_system_status(status, source_root=source, exported_at=EVALUATED)
     assert system["dispatches"]["food-line"]["private_review_backlog"]["pending_item_count"] == 2
@@ -766,6 +766,53 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
         system["dispatches"]["food-line"]["debug_summary"]["operator_assessment"]
         == "ACTION_REQUIRED_PENDING_REVIEW"
     )
+
+
+def test_food_line_review_action_summary_prefers_export_date_packet(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-09",
+        {
+            "items": [
+                {"headline": "Older pending item", "review_status": "pending_editorial_review"},
+                {"headline": "Second older pending item", "review_status": "review_required"},
+            ],
+            "published": False,
+        },
+    )
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "items": [
+                {"headline": "Current intake item", "review_status": "pending_editorial_review"},
+                {"headline": "Second current intake item", "review_status": "review_required"},
+                {"headline": "Third current intake item", "review_status": "pending_editorial_review"},
+            ],
+            "published": False,
+        },
+    )
+    _write_json(
+        source / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-09-10" / "current-intake.json",
+        {"schema_version": "food_line_current_intake_report_v1", "edition_date": "2026-09-10"},
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    assert status["private_review_backlog"]["oldest_pending_date"] == "2026-09-09"
+    assert status["private_review_backlog"]["pending_item_count"] == 5
+    assert status["human_action_required"] is True
+    assert status["review_pending"] is True
+    assert status["review_date"] == "2026-09-10"
+    assert status["review_item_count"] == 3
+    assert status["next_human_action"] == "Review 3 Food Line items for 2026-09-10."
+    assert status["review_material_paths"] == [
+        "data/dispatches/food-line/review/proposed-editions/2026-09-10.json",
+        "data/dispatches/food-line/review/reports/2026-09-10/current-intake.json",
+    ]
+    assert status["latest_receipt_path"] == "legacy/food_line_current_intake.json"
 
 
 def test_food_line_private_review_backlog_subtracts_published_publication_approval_items(

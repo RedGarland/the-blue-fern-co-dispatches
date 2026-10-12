@@ -2911,6 +2911,10 @@ def test_ice_approved_bounded_pages_evidence_exports_public_pilot_live(tmp_path:
     assert status["public_pilot_file_count"] == 7
     assert status["public_pilot_live_paths"] == sorted(ICE_PUBLIC_PILOT_PATHS)
     assert status["public_pilot_pages_commit"]
+    assert status["public_update_policy"] == "manual_review_only"
+    assert status["automatic_future_publication_authorized"] is False
+    assert status["monitor_output_publication_authorized"] is False
+    assert status["public_pilot_no_new_edition_ok"] is True
     assert status["social_authorized"] is False
     assert status["social_attempted"] is False
     assert status["audio_attempted"] is False

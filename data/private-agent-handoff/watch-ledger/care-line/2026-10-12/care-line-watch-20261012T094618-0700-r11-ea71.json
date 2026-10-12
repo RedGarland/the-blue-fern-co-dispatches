@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T094618-0700-r11-ea71",
+  "scheduled_for": "2026-10-12T09:45:22-07:00",
+  "started_at": "2026-10-12T09:46:18-07:00",
+  "completed_at": "2026-10-12T09:47:44-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-12T08:44:36-07:00",
+    "end": "2026-10-12T09:47:44-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last confirmed completed watch heartbeat on ops/watch-ledger"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_notice_provider": "Tender Home Health",
+      "new_notices": 0
+    },
+    "additional_targeted_searches": 12,
+    "search_failures": 1,
+    "search_failure_detail": "Initial obsolete CMS Public Notices URL was inaccessible and returned no usable results. Official current CMS Public Notices was subsequently found, opened, and verified successfully; CMS coverage restored.",
+    "coverage": "U.S. and territories: hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency services, ambulance and air medical, provider enforcement and restored essential care. 12 targeted last-day searches; indexed reporting can lag local announcements.",
+    "exclusions": "Older and previously reported closures including Missouri Fitzgibbon labor/delivery, aggregate maternity-ward trend articles and speculative future shutdowns; Michigan psychiatric facility announced before window and not yet accepting patients; foreign results, unrelated ownership/policy/commentary, routine holiday closures.",
+    "observation": "No independently confirmed new qualifying healthcare-access developments in the bounded window. Partial degradation limited to recovered obsolete CMS URL failure.",
+    "production_authoritative": true,
+    "approval_changes": false,
+    "publication_changes": false,
+    "schedule_changes": false
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T034105-0700-4fc91b",
+  "scheduled_for": "2026-10-12T03:45:54-07:00",
+  "started_at": "2026-10-12T03:41:05-07:00",
+  "completed_at": "2026-10-12T03:42:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T02:44:18.093-07:00",
+    "end_at": "2026-10-12T03:42:00-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous committed supplemental hourly heartbeat completed October 12 at 02:44:18 Pacific. Allow limited indexed lookback solely to catch late-discovered novel events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only; primary nationwide production collection remains authoritative.",
+    "discovery_status": "SUCCESS",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Loss, closure, fire or disaster affecting only, sole, last or full-service grocery store",
+      "Emergency food distributions canceled or suspended by storm, flood, fire, power outage or facility damage",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_queries": [
+      "\"only grocery store\" fire closure October 12 2026 town United States",
+      "\"sole grocery store\" burned closed October 2026 community",
+      "\"last grocery store\" shut down October 12 2026 residents",
+      "\"food bank\" \"distribution canceled\" \"storm\" October 12 2026",
+      "\"food distribution\" \"cancelled\" flood outage October 12 2026",
+      "\"food pantry\" \"closed\" \"power outage\" October 12 2026",
+      "\"food bank\" operations suspended October 12 2026 United States",
+      "site:gov \"SNAP\" \"WIC\" \"outage\" \"October 12, 2026\"",
+      "Florida hurricane Isaias food bank pantry closed canceled distribution October 12 2026",
+      "Florida food pantry hurricane Isaias food distribution suspended October 12 2026",
+      "site:gov \"SNAP\" \"unavailable\" \"October 12, 2026\" benefits",
+      "site:gov \"WIC\" \"service interruption\" \"October 2026\""
+    ],
+    "no_findings_basis": "No new, source-verifiable, nonduplicate U.S. food-access disruption meeting the four defined miss classes appeared in this 12-query bounded window.",
+    "examined_context": [
+      "October 10-12 Hurricane Isaias produced documented power outages and other disruptions across Florida and Alabama, but sampled sources did not independently verify a newly canceled emergency food distribution, abrupt pantry closure or official benefit interruption in this observation window.",
+      "Previously recorded Helping Hands Fort Walton Beach hurricane/power lead remains a prior watch finding, not a new one; it was not newly corroborated.",
+      "Older sole-grocery-store loss stories, old 2025 benefit-shutdown reports, ordinary closures, feature articles, fundraising and food bank aid provision were excluded."
+    ],
+    "temporal_caveat": "Search indexing can lag local provider notices; zero findings is not proof that no disruption occurred nationally.",
+    "limitations": "No approvals, publications, production collector changes, or schedule changes were made."
+  }
+}

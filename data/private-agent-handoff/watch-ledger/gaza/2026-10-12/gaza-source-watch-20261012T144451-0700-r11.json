@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261012T144451-0700-r11",
+  "scheduled_for": "2026-10-12T14:44:51-07:00",
+  "started_at": "2026-10-12T14:48:17-07:00",
+  "completed_at": "2026-10-12T14:49:04-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-12T13:47:00-07:00",
+    "end": "2026-10-12T14:49:04-07:00",
+    "start_precision": "minute; prior hourly check ended around 13:47 PDT",
+    "observation_date": "2026-10-12"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only; production remains authoritative. In-Gaza changes only; no publication or approval attempted.",
+    "checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "accessible; latest displayed Gaza-related news dated 2026-10-06; no new qualifying item in observation window"
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "direct page returned HTTP 502; WHO targeted search yielded no newly dated qualifying update"
+      },
+      {
+        "source": "WHO global emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "result": "direct page unavailable (DisabledError)"
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/",
+        "result": "targeted search domain blocked by robots.txt"
+      },
+      {
+        "source": "Other",
+        "result": "12 additional targeted queries covering OCHA, WHO, UNRWA, WFP, UNICEF, ICRC, WAFA, Reuters, AP, PRCS, UN News, and Gaza-wide operations; no publication verified to be newly relevant in window"
+      }
+    ],
+    "searches_performed": {
+      "initial_primary_queries": 2,
+      "additional_targeted_queries": 12,
+      "additional_search_limit": 12
+    },
+    "exclusions": "Older OCHA humanitarian update, earlier Reuters southern Gaza strike/Mawasi tent strike, WAFA previously reported crossing detentions and cumulative casualty updates were excluded as stale, duplicate, or not verified as published in the window. Opinion and unsupported claims excluded.",
+    "coverage_caveat": "WHO regional and global access failures limit direct verification of medical-evacuation, hospital-capacity, ambulance and fuel changes; UN News access limited. Remaining official and established-source searches completed.",
+    "reference_urls": [
+      "https://www.ochaopt.org/",
+      "https://www.ochaopt.org/content/humanitarian-situation-report-2-october-2026",
+      "https://www.reuters.com/world/middle-east/israeli-fire-kills-two-people-gaza-medics-say-2026-10-12/"
+    ]
+  }
+}

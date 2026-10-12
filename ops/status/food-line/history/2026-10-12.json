@@ -12,7 +12,7 @@
   },
   "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "f7d3db27934e3135df0747b6b1e929ac96d66a9b",
+  "current_runner_head": "503ac59c5b6c89a39343f45df0891133058d88f1",
   "debug_summary": {
     "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
@@ -131,11 +131,14 @@
       "task_key": "food_line_source_watch_resume"
     }
   ],
+  "human_action_required": true,
   "incident_reference": null,
-  "last_exported_at": "2026-10-12T18:15:04.309748Z",
+  "last_exported_at": "2026-10-12T18:30:06.587497Z",
   "last_receipt_at": "2026-10-12T16:52:13.622770Z",
+  "latest_receipt_path": "logs/food-line/source-watch/2026-10-12/20261012T165213Z-status-resume.json",
   "latest_runtime_proof_date": "2026-10-12T16:52:13.622770Z",
   "next_expected_run": null,
+  "next_human_action": "Review 8 Food Line items for 2026-10-11.",
   "observed_date": "2026-10-12",
   "private_review_backlog": {
     "count_only_gap_count": 55,
@@ -316,6 +319,15 @@
   "publication_status": "skipped_not_release_ready",
   "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
+  "review_date": "2026-10-11",
+  "review_item_count": 8,
+  "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-10-11.json",
+  "review_material_paths": [
+    "data/dispatches/food-line/review/proposed-editions/2026-10-11.json",
+    "data/dispatches/food-line/review/proposed-editions/2026-10-11.md",
+    "data/dispatches/food-line/review/reports/2026-10-11/current-intake.json"
+  ],
+  "review_pending": true,
   "runner_source_head": null,
   "schema_version": "bluefern_external_operational_status_v1",
   "source_watch_exclusion_summary": {

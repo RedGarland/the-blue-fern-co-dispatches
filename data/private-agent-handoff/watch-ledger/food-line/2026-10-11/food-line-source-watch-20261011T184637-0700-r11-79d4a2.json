@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T184637-0700-r11-79d4a2",
+  "scheduled_for": "2026-10-11T18:45:54-07:00",
+  "started_at": "2026-10-11T18:46:37-07:00",
+  "completed_at": "2026-10-12T01:47:59.871Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-11T17:45:54-07:00",
+    "end_at": "2026-10-12T01:47:59.871Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly check assumed at the preceding scheduled :45:54 slot; fresh indexing may lag."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary high-value recall watch; production nationwide collector remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Only/sole/last/full-service grocery store closure, loss, fire, or disaster",
+      "Emergency food distribution cancelled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank closure or material access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "discovery_result": "No new qualifying U.S. food-access disruption verified in the bounded observation window. Search results were dominated by older reporting, 2025 SNAP shutdown material, unrelated weather events and general program coverage.",
+    "examined_exclusions": [
+      {
+        "url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "Published October 7; previously reported Stockton, Alabama distribution cancellation; not new."
+      },
+      {
+        "url": "https://www.weacpensacola.org/",
+        "reason": "Provider notice for October 9 weather closure; earlier than watch interval."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17097265/save-a-lot-grocery-store-closing/",
+        "reason": "October 10 Watertown store closure; no confirmation it is the sole/last/full-service grocery store and predates the window."
+      }
+    ],
+    "limitations": "Search indexing delay and incomplete local/agency indexing can hide very recent disruptions; no negative claim about exhaustive nationwide coverage.",
+    "modifications": "None: no approvals, publications, task schedule edits, or task disabling."
+  }
+}

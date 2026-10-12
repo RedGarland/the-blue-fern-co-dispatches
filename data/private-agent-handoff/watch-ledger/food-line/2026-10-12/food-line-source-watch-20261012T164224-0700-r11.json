@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T164224-0700-r11",
+  "scheduled_for": "2026-10-12T16:45:54-07:00",
+  "started_at": "2026-10-12T16:41:21-07:00",
+  "completed_at": "2026-10-12T16:43:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T15:51:11-07:00",
+    "end_at": "2026-10-12T16:43:11-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last durably recorded prior run completion on ops/watch-ledger."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Bounded supplementary recall; production nationwide collector authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "priority_classes": [
+      "only/sole/last/full-service grocery loss",
+      "storm/disaster emergency food distribution cancellation",
+      "abrupt food pantry or food bank access reduction",
+      "official immediate SNAP/WIC/food assistance interruption"
+    ],
+    "assessment": "No verified new, qualifying, nonduplicate food-access disruption found.",
+    "excluded": [
+      "Oct 7 Prodisee Pantry cancellation in Stockton, Alabama: previously reported duplicate.",
+      "Sep 14 Spencer, NY only-grocery-store fire: old item.",
+      "Apr 1 Ruby's Pantry regional closure: old item.",
+      "Oct 12 Hurricane Isaias general power outages: no specific new qualifying food-access impact identified.",
+      "Oct 11 Helping Hands Pantry indexed provider notice: prior pending-review lead, direct page mismatch."
+    ],
+    "bounded_query_context": "12 targeted web searches across all four classes, with Oct 12, 2026 and October 11-12 freshness focus; national and storm-affected Gulf Coast source coverage.",
+    "caveat": "Search results are not exhaustive; no approvals, publications, schedule, or production-collector changes."
+  }
+}

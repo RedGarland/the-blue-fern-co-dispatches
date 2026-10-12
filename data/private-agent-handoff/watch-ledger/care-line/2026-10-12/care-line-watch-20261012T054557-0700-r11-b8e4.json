@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T054557-0700-r11-b8e4",
+  "scheduled_for": "2026-10-12T05:45:22-07:00",
+  "started_at": "2026-10-12T05:45:57-07:00",
+  "completed_at": "2026-10-12T05:47:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-12T04:43:00-07:00",
+    "end": "2026-10-12T05:47:12-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only; primary Care Line national production collector remains authoritative.",
+    "CMS Public Notices checked first: latest dated 2026-10-09 (Tender Home Health CA termination); no later notices identified. https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "12 additional targeted web searches across hospital, emergency, rural, maternity, behavioral, dialysis, oncology, primary care, EMS, air medical, territories, service restoration; no qualifying new verified access change in window.",
+    "2026-10-11 Wyoming maternity article documents earlier losses, not a new window event; 2026-10-10 Michigan psychiatric hospital article anticipates later patient acceptance, not confirmed effective restoration/opening.",
+    "Excluded older reports, planning-only actions, foreign incidents, ownership stories and duplicates. No approval or publication."
+  ]
+}

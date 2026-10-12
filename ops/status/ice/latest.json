@@ -11,9 +11,8 @@
     "unaccounted_count": 0
   },
   "aggregate_status": "SUCCESS",
-  "audio_attempted": false,
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "32bc88d5f6d4755878c621256934139bc8d499d5",
+  "current_runner_head": "42e5dd3ff4d41520455c822d21a5478a1b732168",
   "debug_summary": {
     "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
@@ -45,7 +44,7 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": "public_pilot_live",
+    "publication_status": "not_authorized_monitor_only",
     "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
@@ -54,47 +53,26 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-10-12T01:42:12.953041Z",
+  "last_exported_at": "2026-10-12T02:24:50.198687Z",
   "last_receipt_at": "2026-10-11T21:43:00.124388Z",
   "latest_runtime_proof_date": "2026-10-11T21:41:51Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-10-11",
-  "public_pilot_edition_date": "2026-10-11",
-  "public_pilot_file_count": 7,
-  "public_pilot_live_paths": [
-    "ice/archive.html",
-    "ice/archive_entries.json",
-    "ice/editions/2026-10-11/index.html",
-    "ice/editions/2026-10-11/manifest.json",
-    "ice/editions/2026-10-11/map_payload.json",
-    "ice/index.html",
-    "ice/rss.xml"
-  ],
-  "public_pilot_pages_commit": "f76421745448739058b8f9fadcf8bce556971c06",
-  "public_pilot_status": "live",
   "public_side_effects": {
-    "audio": false,
-    "pages": true,
     "publication_attempted": false,
-    "publication_status": "public_pilot_live",
-    "release_workflow": false,
-    "rss": true,
-    "social": false
+    "publication_status": "not_authorized_monitor_only"
   },
   "publication_attempted": false,
-  "publication_status": "public_pilot_live",
+  "publication_status": "not_authorized_monitor_only",
   "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
-  "release_workflow_attempted": false,
   "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "ice_monitor"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
-  "social_attempted": false,
-  "social_authorized": false,
   "stale_observability": false,
   "task_summaries": [
     {

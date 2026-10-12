@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from datetime import datetime, timedelta, timezone
@@ -2732,6 +2733,133 @@ def test_ice_source_root_exports_migrated_status(tmp_path: Path, status: str, cl
     assert "BlueFernRunner" not in exported
 
 
+
+ICE_PUBLIC_PILOT_PATHS = (
+    "ice/archive.html",
+    "ice/archive_entries.json",
+    "ice/editions/2026-10-11/index.html",
+    "ice/editions/2026-10-11/manifest.json",
+    "ice/editions/2026-10-11/map_payload.json",
+    "ice/index.html",
+    "ice/rss.xml",
+)
+
+
+def _git(repo: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip()
+
+
+def _init_git_repo(repo: Path, *, branch: str = "add/pages-repo-default") -> str:
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "tests@example.invalid")
+    _git(repo, "config", "user.name", "Tests")
+    if branch != "master":
+        _git(repo, "checkout", "-b", branch)
+    marker = repo / ".gitkeep"
+    marker.write_text("git anchor\n", encoding="utf-8")
+    _git(repo, "add", ".gitkeep")
+    _git(repo, "commit", "-m", "Initialize test repo")
+    return _git(repo, "rev-parse", "HEAD")
+
+
+def _write_ice_public_pilot_evidence(
+    source: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    source_head: str,
+    missing_path: str | None = None,
+    non_ice_paths: list[str] | None = None,
+) -> Path:
+    approval_path = source / "approvals" / "ice" / "ice-public-pilot-2026-10-11-approval-v1.json"
+    approval_path.parent.mkdir(parents=True, exist_ok=True)
+    approval_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "bluefern.ice.public_pilot_approval.v1",
+                "approval_type": "ice_public_pilot",
+                "dispatch": "ice",
+                "bundle_id": "ice-release-bundle-test",
+                "edition_date": "2026-10-11",
+                "queue_sha256": "q" * 64,
+                "reviewed_events_sha256": "r" * 64,
+                "event_fingerprints": ["ice-test"],
+                "source_head": source_head,
+                "publication_authorized": True,
+                "pages_authorized": True,
+                "social_authorized": False,
+            }
+        ),
+        encoding="utf-8",
+    )
+    pages = tmp_path / "pages"
+    pages.mkdir()
+    _git(pages, "init")
+    _git(pages, "config", "user.email", "tests@example.invalid")
+    _git(pages, "config", "user.name", "Tests")
+    _git(pages, "checkout", "-b", "gh-pages")
+    operations = []
+    for rel_path in ICE_PUBLIC_PILOT_PATHS:
+        target = pages / rel_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(f"{rel_path}\n", encoding="utf-8")
+        operations.append(
+            {
+                "action": "add",
+                "path": rel_path,
+                "staged_sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
+            }
+        )
+    if missing_path:
+        (pages / missing_path).unlink()
+    _git(pages, "add", ".")
+    _git(pages, "commit", "-m", "Launch ICE public pilot")
+    manifest = tmp_path / "ice-public-pilot-stage-20261011" / "_receipts" / "ice" / "2026-10-11-launch-rehearsal-manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "bluefern.ice.public_pilot_launch_rehearsal_manifest.v1",
+                "source_head": source_head,
+                "approval_source_head": source_head,
+                "approval_artifact": str(approval_path),
+                "bundle_manifest": str(source / "bundle.json"),
+                "staging_root": str(tmp_path / "ice-public-pilot-stage-20261011"),
+                "gh_pages_checkout": str(pages),
+                "gh_pages_head": _git(pages, "rev-parse", "HEAD"),
+                "gate_validation": {
+                    "ok": True,
+                    "bundle_id": "ice-release-bundle-test",
+                    "edition_date": "2026-10-11",
+                    "approved_event_count": 1,
+                    "allowed_public_paths": list(ICE_PUBLIC_PILOT_PATHS),
+                    "publication_authorized": True,
+                    "pages_authorized": True,
+                    "social_authorized": False,
+                },
+                "planned_operations": operations,
+                "planned_file_count": len(operations),
+                "non_ice_paths": non_ice_paths or [],
+                "social_authorized": False,
+                "public_mutation_performed": False,
+                "pages_sync_performed": False,
+                "commit_performed": False,
+                "push_performed": False,
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("BLUEFERN_ICE_PUBLIC_PILOT_REHEARSAL_MANIFEST", str(manifest))
+    return manifest
+
+
 def test_ice_terminal_unaccounted_cannot_be_silently_healthy(tmp_path: Path) -> None:
     status = build_ice_status(
         source_root=_write_ice_day(tmp_path, unaccounted=1),
@@ -2745,6 +2873,101 @@ def test_ice_terminal_unaccounted_cannot_be_silently_healthy(tmp_path: Path) -> 
     assert status["debug_summary"]["aggregate_status"] == "FAILED"
     assert status["debug_summary"]["primary_layer"] == "HANDOFF"
     assert status["debug_summary"]["unaccounted_event_count"] == 1
+
+
+
+
+def test_ice_monitor_only_remains_not_authorized_monitor_only(tmp_path: Path) -> None:
+    source = _write_ice_day(tmp_path)
+    _init_git_repo(source)
+
+    status = build_ice_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+
+    assert status["publication_status"] == "not_authorized_monitor_only"
+    assert "public_pilot_status" not in status
+    assert status["public_side_effects"]["publication_attempted"] is False
+
+
+def test_ice_approved_bounded_pages_evidence_exports_public_pilot_live(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _write_ice_day(tmp_path)
+    source_head = _init_git_repo(source)
+    _write_ice_public_pilot_evidence(source, tmp_path, monkeypatch, source_head=source_head)
+
+    status = build_ice_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+
+    assert status["publication_status"] == "public_pilot_live"
+    assert status["public_pilot_status"] == "live"
+    assert status["public_pilot_edition_date"] == "2026-10-11"
+    assert status["public_pilot_file_count"] == 7
+    assert status["public_pilot_live_paths"] == sorted(ICE_PUBLIC_PILOT_PATHS)
+    assert status["public_pilot_pages_commit"]
+    assert status["social_authorized"] is False
+    assert status["social_attempted"] is False
+    assert status["audio_attempted"] is False
+    assert status["release_workflow_attempted"] is False
+    assert status["public_side_effects"] == {
+        "publication_attempted": False,
+        "publication_status": "public_pilot_live",
+        "pages": True,
+        "rss": True,
+        "audio": False,
+        "social": False,
+        "release_workflow": False,
+    }
+
+
+def test_ice_incomplete_pages_evidence_does_not_claim_public_pilot_live(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _write_ice_day(tmp_path)
+    source_head = _init_git_repo(source)
+    _write_ice_public_pilot_evidence(
+        source,
+        tmp_path,
+        monkeypatch,
+        source_head=source_head,
+        missing_path="ice/rss.xml",
+    )
+
+    status = build_ice_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+
+    assert status["publication_status"] == "not_authorized_monitor_only"
+    assert "public_pilot_status" not in status
+
+
+def test_ice_non_ice_launch_evidence_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _write_ice_day(tmp_path)
+    source_head = _init_git_repo(source)
+    _write_ice_public_pilot_evidence(
+        source,
+        tmp_path,
+        monkeypatch,
+        source_head=source_head,
+        non_ice_paths=["index.html"],
+    )
+
+    status = build_ice_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+
+    assert status["publication_status"] == "not_authorized_monitor_only"
+    assert "public_pilot_status" not in status
 
 
 def test_ice_legacy_monitor_receipt_linkage_is_complete_when_file_exists(tmp_path: Path) -> None:

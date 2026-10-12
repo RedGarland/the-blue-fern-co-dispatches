@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T024418-a11",
+  "scheduled_for": "2026-10-12T02:45:54-07:00",
+  "started_at": "2026-10-12T02:42:31-07:00",
+  "completed_at": "2026-10-12T02:44:18.093-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T01:45:54-07:00",
+    "end_at": "2026-10-12T02:44:18.093-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous scheduled hourly check boundary (actual prior completed heartbeat not independently established); supplemental searches also screened older indexed items for novel, unduplicated access disruptions."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only. Primary nationwide production collection remains authoritative.",
+    "discovery_status": "SUCCESS",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Only/sole/last/full-service grocery store closure, fire, or disaster",
+      "Storm/flood/fire/outage/facility-damage cancellation of emergency food distribution",
+      "Abrupt food-pantry or food-bank closure or major access reduction",
+      "New official immediate SNAP/WIC/food-assistance interruption"
+    ],
+    "no_findings_basis": "No independently verified new, nonduplicate access disruption matching the four priority classes surfaced in these targeted searches during the bounded check.",
+    "excluded": [
+      "Prodisee Pantry's October 10 Stockton, Alabama distribution cancellation, reported October 7: previously seen duplicate.",
+      "El Pasoans Fighting Hunger September 2026 storm-related closure: older event.",
+      "September 2026 loss of Spencer, NY's sole grocery store and other older grocery-store closure stories: outside new observation window.",
+      "Santa Fe County October 12 holiday-related senior meal site closure: routine planned holiday, extra meals distributed in advance.",
+      "Canadian food-bank donation appeal, historical reports, resource listings, general food-access guides, and routine distribution schedules."
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire October 12 2026 USA",
+      "\"sole grocery store\" destroyed closed storm October 2026",
+      "\"last grocery store\" closing emergency October 2026 town",
+      "\"food distribution\" canceled storm October 12 2026 food bank",
+      "\"food distribution\" suspended flooding power outage October 2026",
+      "\"food pantry\" \"closed\" \"power outage\" October 12 2026",
+      "\"food bank\" \"suspended\" operations October 2026",
+      "\"SNAP\" \"benefits\" \"interruption\" October 12 2026 state agency",
+      "site:gov \"WIC\" \"services unavailable\" \"October\" \"2026\"",
+      "site:gov \"SNAP\" \"system outage\" \"October 2026\"",
+      "\"food pantry\" \"closed indefinitely\" October 2026",
+      "\"only grocery store\" closes \"October 2026\" community"
+    ],
+    "temporal_caveat": "Search indexes may surface older incidents and may lag newly published local/provider notices; zero findings means no confirmed new lead in this bounded pass, not proof no disruptions occurred.",
+    "limitations": "No approvals, publication, collection configuration, or schedule changes."
+  }
+}

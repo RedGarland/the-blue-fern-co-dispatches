@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261011T235145-0700-r11-6c21",
+  "scheduled_for": "2026-10-11T22:45:22-07:00",
+  "started_at": "2026-10-11T23:51:45-07:00",
+  "completed_at": "2026-10-12T06:54:16.888Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-11",
+    "date_from": "2026-10-11T22:47:42.519-07:00",
+    "date_to": "2026-10-12T06:54:16.888Z"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall only; production Care Line collection remains authoritative. CMS Public Notices checked first: newest notice was Tender Home Health (CA) dated 2026-10-09, previously identified. Exactly 12 additional targeted web searches covering hospital/ED/maternity/behavioral health, primary care, dialysis, oncology, rural emergencies, EMS/air medical, and reopening/service restoration yielded no new verifiable, nonduplicate developments within this observation window. The October 11 KCUR/Fitzgibbon labor-and-delivery report describes a late-September closure and was published 4:00 a.m. CDT, before the prior check; excluded. A WGRZ/Kaleida child psychiatry clinic consolidation result could not be verified because source retrieval returned HTTP 403; unclear date/effective service consequence, not promoted to a finding. DEGRADED marks that source-access restriction. No approval, publication, schedule adjustment, or task disable performed."
+}

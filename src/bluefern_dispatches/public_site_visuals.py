@@ -535,6 +535,7 @@ def _visual_checks_with_playwright(
                                 if (text.includes('gaza')) return 'gaza';
                                 if (text.includes('food line')) return 'food-line';
                                 if (text.includes('care line')) return 'care-line';
+                                if (text.includes('ice dispatch') || text === 'ice') return 'ice';
                                 return '';
                               })
                               .filter(Boolean),
@@ -671,8 +672,8 @@ def _visual_checks_with_playwright(
                             issues.append(VisualIssue(path, "active_dispatch_action_links", "active dispatch card action cluster was not found"))
                         elif float(gap) < 10:
                             issues.append(VisualIssue(path, "active_dispatch_action_links", f"active dispatch action link gap is too tight: {gap}px"))
-                    if path == "/dispatches/" and int(metrics.get("activeCardCount") or 0) != 3:
-                        issues.append(VisualIssue(path, "active_dispatch_cards", "dispatch directory must render exactly three active public desk cards"))
+                    if path == "/dispatches/" and int(metrics.get("activeCardCount") or 0) < 3:
+                        issues.append(VisualIssue(path, "active_dispatch_cards", "dispatch directory must render at least three active public desk cards"))
                     if path == "/food-line/":
                         hero = metrics.get("foodHero") or metrics.get("hero") or {}
                         logo = metrics.get("productLogo") or metrics.get("foodLogo") or {}

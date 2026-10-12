@@ -581,6 +581,61 @@ def _write_gaza_dry_run_json_log(source: Path, *, date: str = DATE) -> Path:
     return path
 
 
+def _write_gaza_success_run_manifest(
+    source: Path,
+    *,
+    date: str = DATE,
+    actual_run_local_time: str = "2026-09-10T09:20:02-07:00",
+    bluesky_status: str = "skipped",
+    bluesky_reason: str = "disabled_by_config",
+    planned_actions: list[str] | None = None,
+    public_story_count: int = 3,
+) -> Path:
+    path = source / "data" / "dispatches" / "gaza" / "editions" / date / "run_manifest.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "ok": True,
+        "date": date,
+        "mode": "publish-local",
+        "source_mode": "manual",
+        "source_count": 3,
+        "source_adequacy_status": "limited_source_update",
+        "publisher_count": 1,
+        "publishers": ["Al Jazeera"],
+        "generation_ok": True,
+        "generated": True,
+        "tests_ok": True,
+        "validation_ok": True,
+        "pipeline_ok": True,
+        "publish_ok": True,
+        "pages_repo_updated": True,
+        "local_pages_copy_ok": True,
+        "pages_commit_ok": True,
+        "pages_push_ok": True,
+        "remote_tree_verify_ok": True,
+        "live_http_ok": True,
+        "public_story_count": public_story_count,
+        "pages_commit_sha": "b29b4bdf5795857f1e569269f3945b6e9eefee16",
+        "bluesky_status": bluesky_status,
+        "bluesky_reason": bluesky_reason,
+        "actual_run_local_time": actual_run_local_time,
+        "warnings": [
+            "This is a limited-source update generated from 3 saved source records from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+            "All rendered public stories in this edition rely on sources from Al Jazeera.",
+            "audio not generated in daily run; follow-up: python scripts/run_gaza_audio.py --date 2026-09-10 --tts-provider none",
+        ],
+        "planned_actions": planned_actions
+        if planned_actions is not None
+        else [
+            "python scripts/run_gaza_dispatch.py --date 2026-09-10 --historical --from-manual-sources --all",
+            "python scripts/publish_github_pages.py --expect-dispatch gaza --only-dispatch gaza --commit --no-push",
+            "git push origin gh-pages",
+        ],
+    }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    return path
+
+
 def _write_ice_day(
     tmp_path: Path,
     *,
@@ -1766,6 +1821,111 @@ def test_gaza_public_success_stays_authoritative_after_later_no_effect_failure(t
     assert status["non_authoritative_receipts"][0]["reason"] == "superseded_by_same_day_public_success"
     assert status["task_summaries"][0]["run_id"] == "gaza-run-1"
     assert status["task_summaries"][0]["publication_status"] == "published_and_posted"
+
+
+def test_gaza_success_manifest_recovers_older_failed_receipt(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="visual_validation_failed")
+    manifest = _write_gaza_success_run_manifest(source)
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["recovery_lifecycle"] == "HEALTHY"
+    assert status["stale_observability"] is False
+    assert status["publication_attempted"] is True
+    assert status["publication_status"] == "pages_only_published"
+    assert status["publication_recovery_applied"] is True
+    assert status["publication_recovery_evidence"]["path"] == str(manifest)
+    assert status["publication_recovery_evidence"]["path_relative"] == (
+        "data/dispatches/gaza/editions/2026-09-10/run_manifest.json"
+    )
+    assert status["publication_recovery_evidence"]["source_adequacy_status"] == "limited_source_update"
+    assert status["publication_recovery_evidence"]["public_story_count"] == 3
+    assert status["publication_recovery_evidence"]["audio_generated"] is False
+    assert status["publication_recovery_evidence"]["release_workflow_attempted"] is False
+    assert any("limited-source update" in item for item in status["publication_recovery_evidence"]["warnings"])
+    assert status["effective_receipt_count"] == 1
+    assert status["non_authoritative_receipt_count"] == 1
+    assert status["non_authoritative_receipts"][0]["reason"] == "superseded_by_same_day_publication_manifest"
+    assert status["task_summaries"][0]["status"] == "SUCCESS"
+    assert status["task_summaries"][0]["publication_status"] == "pages_only_published"
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY"
+    assert status["debug_summary"]["attention_task_count"] == 0
+
+
+def test_gaza_failed_receipt_without_success_manifest_remains_failed(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="visual_validation_failed")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["recovery_lifecycle"] == "INCIDENT_OPEN"
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_OBSERVABILITY"
+
+
+def test_gaza_pages_only_manifest_accepts_skipped_bluesky_and_audio(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="audio_failed")
+    _write_gaza_success_run_manifest(
+        source,
+        bluesky_status="skipped",
+        bluesky_reason="disabled_by_config",
+        planned_actions=[
+            "python scripts/run_gaza_dispatch.py --date 2026-09-10 --historical --from-manual-sources --all",
+            "python scripts/publish_github_pages.py --expect-dispatch gaza --only-dispatch gaza --commit --no-push",
+            "git push origin gh-pages",
+        ],
+    )
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["publication_recovery_applied"] is True
+    assert status["public_side_effects"] == {
+        "publication_attempted": True,
+        "publication_status": "pages_only_published",
+    }
+    details = status["task_summaries"][0]["diagnostics"]
+    assert details is None or "failure" not in details
+    assert status["task_summaries"][0]["public_side_effects"] == {
+        "audio": False,
+        "bluesky": False,
+        "pages": True,
+        "public_output": True,
+        "release_workflow": False,
+    }
+
+
+def test_gaza_success_manifest_does_not_recover_later_failed_receipt(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="visual_validation_failed")
+    _write_gaza_success_run_manifest(source, actual_run_local_time="2026-09-10T05:20:02-07:00")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["publication_recovery_applied"] is False
+    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_OBSERVABILITY"
 
 
 def test_gaza_dry_run_recovery_proof_supersedes_audio_failed_receipt_without_public_success(tmp_path: Path) -> None:

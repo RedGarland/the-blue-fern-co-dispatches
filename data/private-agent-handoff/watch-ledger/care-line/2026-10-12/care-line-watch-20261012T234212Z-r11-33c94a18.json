@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T234212Z-r11-33c94a18",
+  "scheduled_for": "2026-10-12T16:40:57-07:00",
+  "started_at": "2026-10-12T16:40:57-07:00",
+  "completed_at": "2026-10-12T16:42:12.346-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-12T14:45:00-07:00",
+    "end": "2026-10-12T16:42:12.346-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_collector_authoritative": true,
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "latest_cms_notice": "2026-10-09 Tender Home Health termination; no October 12 notice as of this check.",
+    "additional_targeted_searches": 12,
+    "coverage_classes": [
+      "hospital/ED closure or suspension",
+      "maternity",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "primary care",
+      "rural and emergency services",
+      "ambulance and air-medical base loss",
+      "CMS termination, rescission, CLIA sanction",
+      "concrete restoration or reopening",
+      "U.S. territories"
+    ],
+    "excluded": [
+      "older or previously reported changes",
+      "proposals without concrete access change",
+      "ownership or business changes without clinical service loss",
+      "unsupported claims",
+      "non-U.S. events",
+      "duplicates"
+    ],
+    "limitations": [
+      "Search-index coverage and publication delays can cause omissions; this supplementary recall watch is not the primary national collector."
+    ],
+    "findings_count": 0
+  }
+}

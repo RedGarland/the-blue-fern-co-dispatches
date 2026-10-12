@@ -1,8 +1,8 @@
-﻿# ICE Dispatch Phase 1 production contract
+# ICE Dispatch Phase 1 production contract
 
 ## Mission
 
-The ICE Dispatch tracks material, source-backed developments involving U.S. Immigration and Customs Enforcement activity in the United States and U.S. territories. Phase 1 is non-public: it establishes durable schemas, source policy, collection diagnostics, evidence preservation, dedupe semantics, collection-health reporting, and map-ready event serialization. It does not publish an ICE page, create a scheduler, generate audio, post to Bluesky, or modify existing dispatch behavior.
+The ICE Dispatch tracks material, source-backed developments involving U.S. Immigration and Customs Enforcement activity in the United States and U.S. territories. The public pilot is live, but new public ICE updates remain manual-review-only: monitor output can refresh evidence and review queues, but it cannot authorize publication, social posting, audio, or release workflows by itself.
 
 ## Scope and geography
 
@@ -136,6 +136,21 @@ Corrections preserve original evidence, correction evidence, date of correction,
 
 Durable runtime evidence belongs under `data/dispatches/ice/runtime/` when an operator explicitly requests output. Tests use temporary directories and fixture-sized records; they must not create persistent `output/test-runs` or nested Pages clones. Phase 1 collection diagnostics are non-public and do not mutate Pages.
 
-## Phase 1 publication-disabled state
+## Public-pilot operating contract
 
-ICE is not added to homepage navigation, public `/ice/`, public archive, public RSS, audio, Bluesky, site remodel, public map, or any scheduler in this phase.
+The ICE public pilot may remain live even when no new edition is authorized. A live pilot is not a standing authorization for future editions.
+
+Allowed scheduled behavior:
+
+- the ICE monitor may run on schedule through `scripts/windows/run_ice_monitor.ps1` and `scripts/run_ice_monitor.py`;
+- monitor runs may collect source-backed candidates, update the non-public review queue, and write operational-health receipts;
+- monitor receipts must continue to record no public side effects.
+
+Manual-review-only behavior:
+
+- monitor output is never publication authorization;
+- a new public ICE update requires a reviewed release bundle, explicit approval artifact, and gate validation for the bounded public paths;
+- no automatic publication may be triggered from the monitor, source queue, or operational status alone;
+- no Pages sync, social post, audio generation, or release workflow is authorized unless separately and explicitly approved.
+
+Current pilot status may be represented as `public_pilot_live` when durable evidence shows the approved bounded `/ice/` files are live. That status preserves the historical launch evidence; it does not authorize the next public update. Social and audio remain false unless an approval artifact for a future action explicitly authorizes them.

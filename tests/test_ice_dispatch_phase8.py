@@ -403,11 +403,23 @@ def test_scheduler_scripts_contain_no_publication_flags() -> None:
     combined = f"{wrapper}\n{register}"
     assert "run_ice_monitor.py" in wrapper
     assert "--enforce-production-preflight" in wrapper
-    assert "run_ice_staging_publication" not in combined
-    assert "run_ice_edition_candidate" not in combined
-    assert "--publish" not in combined
-    assert "--post-bluesky" not in combined
+    forbidden_fragments = [
+        "run_ice_staging_publication",
+        "run_ice_edition_candidate",
+        "build_ice_reviewed_release_bundle",
+        "prepare_ice_public_pilot_readiness",
+        "validate_ice_public_pilot_gate",
+        "--publish",
+        "--push",
+        "--post-bluesky",
+        "--force-bluesky",
+        "--allow-bluesky-text-only",
+        "--social-requested",
+    ]
+    for fragment in forbidden_fragments:
+        assert fragment not in combined
     assert "audio" not in combined.lower()
+    assert "release" not in combined.lower()
     assert "WorkingDirectory" in register
     assert "-WindowHours 168" in register
     assert "IgnoreNew" in register

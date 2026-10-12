@@ -29,7 +29,7 @@
     "primary_task_status": null,
     "private_review_count_only_gap_count": 55,
     "private_review_dispositioned_item_count": 66,
-    "private_review_max_age_hours": 31,
+    "private_review_max_age_hours": 32,
     "private_review_oldest_pending_date": "2026-10-11",
     "private_review_pending_date_count": 1,
     "private_review_pending_item_count": 2,
@@ -46,7 +46,7 @@
   "dispatch": "food-line",
   "effective_task_summaries": [],
   "incident_reference": null,
-  "last_exported_at": "2026-10-12T07:15:03.598034Z",
+  "last_exported_at": "2026-10-12T08:15:03.590616Z",
   "last_receipt_at": null,
   "latest_runtime_proof_date": null,
   "next_expected_run": null,
@@ -55,7 +55,7 @@
     "count_only_gap_count": 55,
     "dates": [
       {
-        "age_hours": 31,
+        "age_hours": 32,
         "count_only_gap_count": 0,
         "date": "2026-10-11",
         "dispositioned_item_count": 0,
@@ -207,7 +207,7 @@
       }
     ],
     "dispositioned_item_count": 66,
-    "max_age_hours": 31,
+    "max_age_hours": 32,
     "oldest_pending_date": "2026-10-11",
     "pending_date_count": 1,
     "pending_item_count": 2,

@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261012T154451-0700-r11",
+  "scheduled_for": "2026-10-12T15:44:51-07:00",
+  "started_at": "2026-10-12T15:44:59-07:00",
+  "completed_at": "2026-10-12T15:46:30.014-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-12T13:47:33.080-07:00",
+    "end": "2026-10-12T15:46:30.014-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since previous reported completion"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only. Production authoritative; no approvals, publishing, scheduling changes.",
+    "OCHA OPT checked first. Latest public updates shown October 6, 2026. https://www.ochaopt.org/",
+    "WHO checked second. Global health emergency page available; WHO regional oPt endpoint failed. https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+    "Exactly 12 additional targeted searches covering civilian casualties, movement, crossing, aid, healthcare, food/water, military operations, negotiations. No verified new in-window unique development.",
+    "Prior Reuters southern Gaza two-fatality October 12 strike excluded as previously reported. https://www.reuters.com/world/middle-east/israeli-fire-kills-two-people-gaza-medics-say-2026-10-12/",
+    "IMEMC article about four Palestinians including a child was rate-limited HTTP 429; timestamp and overlap could not be verified. Excluded. https://imemc.org/article/israeli-forces-kill-four-palestinians-including-a-child-in-gaza-2/",
+    "Previously reported WAFA casualty figures and crossing detentions excluded.",
+    "Coverage DEGRADED due WHO regional failure and a 429 source failure."
+  ]
+}

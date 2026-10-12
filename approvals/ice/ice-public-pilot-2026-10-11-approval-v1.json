@@ -1,0 +1,21 @@
+{
+  "approval_note": "Human approval for ICE public-pilot gate validation only; no publication, Pages sync, social post, release workflow, or audio workflow authorized in this step.",
+  "approval_type": "ice_public_pilot",
+  "approved_at": "2026-10-12T00:11:41Z",
+  "approved_by": "William Patton",
+  "bundle_id": "ice-release-bundle-598227f50869f8af",
+  "dispatch": "ice",
+  "edition_date": "2026-10-11",
+  "event_fingerprints": [
+    "ice-096462b6c85abb439579",
+    "ice-25461dff5a55a0e91efa",
+    "ice-797575b662808ca8b6e2"
+  ],
+  "pages_authorized": true,
+  "publication_authorized": true,
+  "queue_sha256": "9f3eda27813817da3a36d8125f2e87d68229058612f5ab4b59f222696d1753f8",
+  "reviewed_events_sha256": "e84decf11b2e3bc2453492da488e3907558aee9e30886ecb4052e1dd60821ec8",
+  "schema_version": "bluefern.ice.public_pilot_approval.v1",
+  "social_authorized": false,
+  "source_head": "eddfa6cbfa32b9d1c436d2fbbc95eb9ab473f9d1"
+}

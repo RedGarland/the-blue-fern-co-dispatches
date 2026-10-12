@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T184347Z-r11-e9a3a052",
+  "scheduled_for": "2026-10-12T11:42:33-07:00",
+  "started_at": "2026-10-12T11:42:33-07:00",
+  "completed_at": "2026-10-12T11:43:47.108-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-12T10:43:00-07:00",
+    "end": "2026-10-12T11:43:47.108-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_collector_authoritative": true,
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "latest_cms_notice": "2026-10-09 Tender Home Health termination; no newly posted October 12 notice visible",
+    "additional_targeted_searches": 12,
+    "coverage_classes": [
+      "hospital ED and inpatient service closure",
+      "maternity",
+      "dialysis and oncology",
+      "rural/emergency services",
+      "behavioral health",
+      "ambulance and air-medical",
+      "primary care",
+      "concrete reopening",
+      "U.S. territories",
+      "official government notices"
+    ],
+    "excluded": [
+      "older already reported closures",
+      "Medicaid policy projections without new concrete loss",
+      "ownership changes without loss of services",
+      "non-US services",
+      "duplicates"
+    ],
+    "limitations": [
+      "Search-index recency may omit newly published local notices; this is supplementary recall, not exhaustive production collection."
+    ],
+    "findings_count": 0
+  }
+}

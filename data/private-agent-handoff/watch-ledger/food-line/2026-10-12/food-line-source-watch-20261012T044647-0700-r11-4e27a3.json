@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T044647-0700-r11-4e27a3",
+  "scheduled_for": "2026-10-12T04:45:54-07:00",
+  "started_at": "2026-10-12T04:46:47-07:00",
+  "completed_at": "2026-10-12T04:48:43.589-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T03:45:54-07:00",
+    "end_at": "2026-10-12T04:48:43.589-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior nominal hourly check at 03:45:54 Pacific; exact preceding GitHub heartbeat was not individually verified. Recall queries may return pre-window reports, excluded unless newly surfaced and qualifying."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Bounded supplementary recall watch only; production nationwide collector remains authoritative.",
+    "discovery_status": "SUCCESS",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Loss of only/sole/last/full-service grocery store",
+      "Disaster-related emergency food distribution cancellation",
+      "Abrupt food pantry/food-bank service suspension or major access reduction",
+      "Immediate official SNAP/WIC interruption"
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire community October 12 2026 OR October 11 2026",
+      "\"sole grocery store\" \"fire\" \"closed\" October 2026",
+      "food bank emergency distribution canceled storm October 12 2026 11",
+      "food pantry closed suddenly power outage storm October 11 2026 October 12",
+      "site:myflfamilies.com October 11 2026 SNAP EBT service outage hurricane Isaias access",
+      "site:fns.usda.gov October 2026 WIC SNAP disruption replacement disaster benefits October 11 12",
+      "\"food distribution\" \"canceled\" \"Isaias\" October 11 2026 food bank",
+      "\"food pantry\" \"closed\" \"Isaias\" \"October 11\" 2026",
+      "\"October 12, 2026\" \"food pantry\" \"closed\" hurricane",
+      "\"October 12, 2026\" \"food distribution\" canceled storm",
+      "\"October 11, 2026\" \"food bank\" \"suspended\" \"power\" Isaias",
+      "\"October 12, 2026\" \"SNAP\" \"outage\" OR \"WIC\" \"interrupted\" food benefits"
+    ],
+    "excluded": [
+      "Prodisee Pantry Stockton, Alabama, Oct 7 weather-related Oct 10 distribution cancellation: previously surfaced, duplicate.",
+      "Spencer, New York, Sept 11 sole grocery fire: prior event, not new in this observation window.",
+      "Routine Oct 12 federal/Indigenous Peoples' Day pantry closures: scheduled holiday closures, not abrupt food-access disruptions.",
+      "Weather/power outage coverage without confirmed specific food service loss; generic disaster preparation, resource guides, pantry hours, reopening/history, unrelated international results.",
+      "Previously surfaced Oct 11 Helping Hands Food Pantry, Florida, storm/power reopening lead: no new independently verified development."
+    ],
+    "caveats": [
+      "Fresh index has uneven coverage at 04:46–04:49 Pacific; absence of indexed hits does not prove absence of disruptions.",
+      "Search results not equivalent to an exhaustive nationwide collection; only specific verified qualifying events would be reported."
+    ],
+    "publication_or_schedule_changes": "None; no approvals or production changes."
+  }
+}

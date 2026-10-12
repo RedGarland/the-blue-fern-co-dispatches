@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261011T214450-0700-r11-8a0f56",
+  "scheduled_for": "2026-10-11T21:45:54-07:00",
+  "started_at": "2026-10-11T21:43:36-07:00",
+  "completed_at": "2026-10-11T21:44:50-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-11T20:45:12.773-07:00",
+    "end_at": "2026-10-11T21:44:50-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior committed watch completed at 20:45:12.773 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only; production collection remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "source_fetch_failure_count": 1,
+    "priority_classes": [
+      "Loss of only/sole/last/full-service grocer",
+      "Disaster-caused emergency food distribution cancellation",
+      "Abrupt food pantry or food-bank service reduction",
+      "Official immediate SNAP/WIC interruption"
+    ],
+    "query_context": [
+      "\"only grocery store\" fire closed town October 11 2026",
+      "\"sole grocery store\" closed fire October 2026",
+      "\"only full-service grocery\" closure October 2026",
+      "\"food distribution\" \"canceled\" storm October 11 2026",
+      "\"food pantry\" \"closed\" \"power outage\" October 2026",
+      "\"food bank\" emergency distribution canceled flooding October 2026",
+      "SNAP EBT benefit interruption outage October 11 2026 state agency",
+      "WIC benefits temporarily unavailable October 2026 official notice",
+      "October 11 2026 pantry food bank closed suddenly food access storm US",
+      "October 11 2026 grocery store only store fire town closed US",
+      "October 11 2026 canceled food pantry distribution hurricane power local news",
+      "October 11 2026 SNAP WIC state benefits outage service disrupted official"
+    ],
+    "fetch_failure": "WCNC Charlotte shopping-center fire result (Oct 11), linked page returned HTTP 403. No corroboration of sole grocery involvement; excluded, but retrieval coverage reduced.",
+    "excluded": [
+      "Prodisee Pantry October 7 storm-related cancellation already known",
+      "Helping Hands Food Pantry Oct 11 power-outage reopening lead recorded pending_review in previous watch",
+      "Older closures, generic SNAP changes, routine promotion, and storm news without identified eligible food disruption"
+    ],
+    "assessment": "No newly verified, nonduplicate priority disruption. One tangential source was inaccessible; partial search coverage otherwise useful.",
+    "restrictions": "No approvals, publication, production collection or schedule changes."
+  }
+}

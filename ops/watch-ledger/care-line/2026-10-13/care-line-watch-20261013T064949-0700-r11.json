@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T064949-0700-r11",
+  "scheduled_for": "2026-10-13T06:45:22-07:00",
+  "started_at": "2026-10-13T06:49:49-07:00",
+  "completed_at": "2026-10-13T13:52:14.798Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-13T05:50:00-07:00",
+    "date_to": "2026-10-13T13:52:14.798Z",
+    "edition_date": "2026-10-13",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall watch only; production national collection remains authoritative. CMS Public Notices explicitly reviewed first (latest listed notice: 2026-10-09 Tender Home Health termination; no notice posted for 2026-10-13 at check). Exactly 12 additional targeted web searches across U.S. and territories covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural care, EMS/air medical, and concrete reopenings. No new qualifying access change confirmed within this observation window. Excluded historical/duplicate closure coverage, proposals, out-of-U.S. incidents, anticipated but not yet verified October 13 restorations, and the October 14 New Orleans clinic reopening (not yet effective). Source discovery is index-lag limited and not exhaustive."
+}

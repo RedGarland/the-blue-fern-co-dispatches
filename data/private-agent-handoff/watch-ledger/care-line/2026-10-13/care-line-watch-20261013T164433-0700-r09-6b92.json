@@ -1,0 +1,59 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T164433-0700-r09-6b92",
+  "scheduled_for": "2026-10-13T16:45:22-07:00",
+  "started_at": "2026-10-13T16:44:33-07:00",
+  "completed_at": "2026-10-13T23:46:25.871Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T15:46:08-07:00",
+    "end": "2026-10-13T23:46:25.871Z",
+    "basis": "Most recent persisted Care Line watch heartbeat on ops/watch-ledger completed at 2026-10-13T15:46:08 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Bounded supplementary recall watch; production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_notice_provider": "Tender Home Health",
+      "new_notices_in_window": 0
+    },
+    "additional_targeted_searches": 12,
+    "failed_searches": 0,
+    "searched_categories": [
+      "hospital, ED and rural emergency-service loss",
+      "maternity and delivery",
+      "behavioral and psychiatric",
+      "dialysis",
+      "oncology",
+      "primary care",
+      "ambulance and EMS services",
+      "air-medical bases",
+      "essential service restorations and reopenings",
+      "territories including Puerto Rico and Guam",
+      "state licensing actions",
+      "long-term and assisted living closures"
+    ],
+    "exclusions": [
+      "Roseland Community Hospital labor/delivery suspension follow-up published October 12 at 21:27 PDT; outside observation window, not a new hourly development.",
+      "Fitzgibbon Hospital labor and delivery closure occurred in September; October 13 article published at 07:00 PDT, before the prior watch.",
+      "Planned Parenthood New Orleans planned reopening effective October 14; not reopened by the end of this observation window.",
+      "Flatwater Free Press Nebraska assisted-living report published October 13, prior to this observation window; Cambridge Court closed in September, Hickory Villa announced for October 16; no new action in the current hourly window. This may identify broader production collector coverage gaps for assisted-living closures.",
+      "Other results were older closures, planned expansions, ownership-only stories, non-US cases, opinion, or duplicates."
+    ],
+    "source_evidence": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://abc7chicago.com/amp/post/roseland-chicago-news-today-community-hospital-labor-delivery-suspension-draws-calls-state-action/19933758/",
+      "https://www.newsfromthestates.com/article/new-owner-took-over-central-missouri-hospital-9-days-later-it-cut-labor-and-delivery",
+      "https://www.axios.com/local/new-orleans/2026/10/13/planned-parenthood-reopens-appointments-health",
+      "https://flatwaterfreepress.org/two-nebraska-senior-living-centers-close-sending-almost-100-people-scrambling-for-a-place-to-live/"
+    ],
+    "side_effects": "No approvals, publication, schedule changes, or disabling."
+  }
+}

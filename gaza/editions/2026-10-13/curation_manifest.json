@@ -1,0 +1,242 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-13-001",
+    "title": "Palestine weekly: Gaza marks year of 'ceasefire' with more Israeli killing",
+    "summary": "Al Jazeera reported continued Gaza casualties, health-system strain, no patient evacuations through Rafah in the past week, and fresh displacement around the Yellow Line one year into the ceasefire.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 92,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-13-manual-aljazeera-c20d5188f489"
+    ],
+    "source_ids": [
+      "gaza-2026-10-13-manual-aljazeera-c20d5188f489"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/10/13/palestine-weekly-gaza-marks-year-of-ceasefire-with-more-israeli-killing"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-13-manual-aljazeera-c20d5188f489",
+        "title": "Palestine weekly: Gaza marks year of 'ceasefire' with more Israeli killing",
+        "url": "https://www.aljazeera.com/news/2026/10/13/palestine-weekly-gaza-marks-year-of-ceasefire-with-more-israeli-killing",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera reported continued Gaza casualties, health-system strain, no patient evacuations through Rafah in the past week, and fresh displacement around the Yellow Line one year into the ceasefire.",
+        "event_date": "2026-10-13T00:00:00+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "humanitarian",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-13T18:51:15.319659+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "rafah"
+    ],
+    "top_story_relevance_score": 92,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "humanitarian",
+    "location": "Gaza",
+    "event_date": "2026-10-13T00:00:00+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-13-003",
+    "title": "Death toll from the aggression on Gaza rises to 74,389 fatalities and 175,423 injured",
+    "summary": "WAFA, citing medical sources, reported the Gaza death toll since October 7, 2023 rose to 74,389 killed and 175,423 injured, with seven fatalities and seven injuries recorded in the prior 24 hours.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 58,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-13-manual-wafa-b280cc6a7293"
+    ],
+    "source_ids": [
+      "gaza-2026-10-13-manual-wafa-b280cc6a7293"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/175851"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-13-manual-wafa-b280cc6a7293",
+        "title": "Death toll from the aggression on Gaza rises to 74,389 fatalities and 175,423 injured",
+        "url": "https://english.wafa.ps/Pages/Details/175851",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA, citing medical sources, reported the Gaza death toll since October 7, 2023 rose to 74,389 killed and 175,423 injured, with seven fatalities and seven injuries recorded in the prior 24 hours.",
+        "event_date": "2026-10-13T13:39:00+03:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "humanitarian",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-13T18:51:15.319659+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 58,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "humanitarian",
+    "location": "Gaza",
+    "event_date": "2026-10-13T13:39:00+03:00",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-13-002",
+    "title": "Two injured by occupation bullets in Gaza's Khan Yunis",
+    "summary": "WAFA reported two people injured by Israeli fire in the Al-Amal neighborhood and near Hamad Town, north of Khan Yunis in southern Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-13-manual-wafa-679ed087443d"
+    ],
+    "source_ids": [
+      "gaza-2026-10-13-manual-wafa-679ed087443d"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/175816"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-13-manual-wafa-679ed087443d",
+        "title": "Two injured by occupation bullets in Gaza's Khan Yunis",
+        "url": "https://english.wafa.ps/Pages/Details/175816",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reported two people injured by Israeli fire in the Al-Amal neighborhood and near Hamad Town, north of Khan Yunis in southern Gaza.",
+        "event_date": "2026-10-13T09:42:00+03:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-13T18:51:15.319659+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-13T09:42:00+03:00",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T154452-0700-r11-e16d",
+  "scheduled_for": "2026-10-13T15:45:22-07:00",
+  "started_at": "2026-10-13T15:44:52-07:00",
+  "completed_at": "2026-10-13T22:46:08.779Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T14:48:09-07:00",
+    "end": "2026-10-13T15:46:08-07:00",
+    "basis": "Previous supplementary Care Line watch ended October 13 at approximately 14:48 PDT; lookback bounded to this watch run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; production national Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_notice_provider": "Tender Home Health",
+      "new_notices_in_window": 0
+    },
+    "additional_targeted_searches": 12,
+    "failed_searches": 0,
+    "coverage": [
+      "hospital/ED/rural emergency",
+      "maternity",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "primary care",
+      "ambulance",
+      "air-medical bases",
+      "reopening or restoration",
+      "U.S. territories",
+      "state agency notices"
+    ],
+    "exclusions": "Search results were older already-reported closures/suspensions, proposals, unrelated expansion/ownership coverage, or non-U.S. services; no new, date-confirmed qualifying change found since the previous hourly check. Search indexing may lag actual publication.",
+    "conclusion": "No new qualifying development confirmed in bounded window.",
+    "source_evidence": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+    ],
+    "side_effects": "No approval, publication, schedule change, or disabling."
+  }
+}

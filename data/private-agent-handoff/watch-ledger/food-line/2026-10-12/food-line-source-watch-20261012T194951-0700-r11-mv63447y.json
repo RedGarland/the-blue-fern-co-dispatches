@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T194951-0700-r11-mv63447y",
+  "scheduled_for": "2026-10-12T19:45:54-07:00",
+  "started_at": "2026-10-12T19:49:51-07:00",
+  "completed_at": "2026-10-12T19:51:30.526-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T18:43:04.191-07:00",
+    "end_at": "2026-10-12T19:51:30.526-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since most recent verified prior heartbeat completion (2026-10-12 18:43:04.191 PT). Discovery queries broadened to current-day publication to capture indexing lag; older material screened out."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Bounded supplementary recall; production nationwide collector is authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "discovery_status": "SUCCESS",
+    "priority_classes": [
+      "Sole/last/full-service grocery-store loss",
+      "Emergency food-distribution cancellation due to hazards",
+      "Abrupt pantry/food-bank shutdown or major access reduction",
+      "Official immediate SNAP/WIC benefits interruption"
+    ],
+    "search_queries": [
+      "\"only grocery store\" \"October 12, 2026\" fire closed town",
+      "\"sole grocery store\" \"October 12\" 2026 destroyed closed",
+      "\"last grocery store\" October 12 2026 closure food desert",
+      "\"food distribution\" canceled October 12 2026 storm outage flood",
+      "\"food bank\" \"distribution\" postponed October 12 2026 weather",
+      "\"food pantry\" emergency closure \"October 12\" 2026",
+      "October 12 2026 food pantry temporarily closed today building outage families local news",
+      "October 12 2026 food bank suspends services distribution fire damage county",
+      "October 12 2026 site:facebook.com food pantry \"closed\" \"power\"",
+      "October 12 2026 SNAP EBT outage delayed benefits state department notice",
+      "October 12 2026 WIC system outage benefits unavailable state agency notice",
+      "October 12 2026 SNAP disruption benefit interruption county office shutdown"
+    ],
+    "exclusions": [
+      "Aug 13, 2026 North Charleston Save A Lot closure predates window.",
+      "Oct 12, 2026 Wheatsville Co-op future one-site closing has remaining nearby store and was already excluded in prior heartbeat.",
+      "2025 government-shutdown SNAP interruption articles and older storm closures are outside observation window.",
+      "Donation drive, fundraising, routine promotion, non-U.S. incidents, and general power outages without demonstrated food-access impact."
+    ],
+    "assessment": "No independently verified new qualifying U.S. disruption discovered; date-specific searches retrieved mostly stale, unrelated, or previously screened items. Web indexing lag remains a limitation.",
+    "actions": "No approvals, publication, production collector, or schedule changes."
+  }
+}

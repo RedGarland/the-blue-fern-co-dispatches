@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T035031-0700-r11-a8c62f",
+  "scheduled_for": "2026-10-13T03:45:54-07:00",
+  "started_at": "2026-10-13T03:50:31-07:00",
+  "completed_at": "2026-10-13T03:52:13.458-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-13T02:45:54-07:00",
+    "end_at": "2026-10-13T03:52:13.458-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous scheduled hourly boundary, with overlapping search recency because preceding execution heartbeat was not persisted."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "classes_checked": [
+      "only/sole/last/full-service grocery fire/closure",
+      "weather/damage-related cancellation of food distribution",
+      "abrupt pantry or food-bank service closure/reduction",
+      "new immediate official SNAP/WIC interruption"
+    ],
+    "query_topics": [
+      "only grocery store fire October 12 2026",
+      "sole grocery store closure October 12 2026",
+      "only full-service grocery fire October 2026",
+      "pantry closure storm flood power outage October 12",
+      "food distribution canceled storm October 13",
+      "food bank distribution canceled power outage October 12",
+      "food pantry temporarily closed October 12",
+      "SNAP EBT outage October 13 official",
+      "WIC services suspended October 12 storm",
+      "SNAP benefits interrupted official October 13",
+      "Isaias food distribution canceled Oct 13 Alabama Florida",
+      "Isaias food pantry closure Oct 13"
+    ],
+    "excluded_candidates": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September incident, outside incremental window"
+      },
+      {
+        "source_url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "October 7 cancellation of October 10 distribution; old/duplicate"
+      },
+      {
+        "source_url": "https://www.thv11.com/article/news/local/concerns-mcdermott-elementary-food-pantry/91-ded2d6ea-1296-4f17-971a-8c580e0aafdd",
+        "reason": "Only prospective school closure, no immediate pantry closure"
+      },
+      {
+        "source_url": "https://www.thecharlotteledger.com/p/federal-cuts-strain-charlotte-s-food-pantries",
+        "reason": "General pressure, not documented abrupt closure"
+      },
+      {
+        "source_url": "https://www.aol.com/articles/evergreen-food-pantry-providing-disaster-203922000.html",
+        "reason": "New relief distribution, no disruption"
+      }
+    ],
+    "assessment": "Twelve usable searches; no new verified, nonduplicate qualifying U.S. food-access disruption in the incremental window. Search recency/indexing is incomplete.",
+    "collector_role": "Supplementary recall; production is authoritative.",
+    "publication_changed": false,
+    "approvals_changed": false,
+    "schedule_changed": false
+  }
+}

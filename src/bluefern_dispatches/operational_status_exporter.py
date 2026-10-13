@@ -3010,6 +3010,8 @@ def build_system_status(
             "receipt_completeness": care_line_status.get("receipt_completeness"),
             "stale_observability": care_line_status.get("stale_observability"),
             "source_failure_summary": care_line_status.get("source_failure_summary"),
+            "coverage_caveat_only": care_line_status.get("coverage_caveat_only"),
+            "aggregate_degradation_required": care_line_status.get("aggregate_degradation_required"),
             "current_runner_head": care_line_status.get("current_runner_head"),
             "current_runner_branch": care_line_status.get("current_runner_branch"),
             "debug_summary": care_line_status.get("debug_summary"),

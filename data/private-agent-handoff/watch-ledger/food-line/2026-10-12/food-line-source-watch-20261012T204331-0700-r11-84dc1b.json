@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T204331-0700-r11-84dc1b",
+  "scheduled_for": "2026-10-12T20:45:54-07:00",
+  "started_at": "2026-10-12T20:43:31-07:00",
+  "completed_at": "2026-10-12T20:45:00.531-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T19:51:30.526-07:00",
+    "end_at": "2026-10-12T20:45:00.531-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since the last verified prior heartbeat completion at 19:51:30.526 PDT; October 12 and recent coverage also searched to accommodate local-news indexing lag. Older events and repeat coverage excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only; production nationwide collection remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Loss of only, sole, last or full-service grocery store",
+      "Hazard-related cancellation of emergency food distribution",
+      "Abrupt pantry or food-bank closure or severe reduction in access",
+      "New official SNAP/WIC/food-assistance interruption affecting immediate access"
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire town \"October 12\" 2026",
+      "\"sole grocery store\" fire closure \"October 12\" 2026",
+      "\"last grocery store\" closing flood power outage October 2026",
+      "\"food distribution\" canceled storm \"October 12\" 2026",
+      "\"food distribution\" cancelled flood hurricane power October 12 2026",
+      "\"food pantry\" \"closed\" \"October 12\" 2026 emergency",
+      "\"food bank\" suspends distribution service October 12 2026",
+      "SNAP EBT benefits system outage October 12 2026 state agency notice",
+      "WIC clinic benefits interruption suspension October 12 2026 state official",
+      "October 12 2026 emergency food assistance halted suspended fire flooding pantry local news",
+      "Florida Panhandle Alabama Georgia Isaias October 12 2026 food pantry \"closed\" \"distribution\" canceled",
+      "Nevada Arizona California Rachel floods October 12 2026 food bank distribution cancellation closed"
+    ],
+    "source_review": [
+      "October 12 Austin Wheatsville Guadalupe store closure report is not a sole or last grocery-access loss; remaining South Lamar location and prior hourly heartbeat already excluded it.",
+      "October 12 Florida Hurricane Isaias official response reports new food-and-water distribution locations and restoration, not newly cancelled services.",
+      "October 12 WUWF Isaias live updates show emergency food availability and old/general facility closures, not a new qualifying food-provider suspension.",
+      "October 12 Rachel flooding reports describe roads, beaches and other property impacts without verified food-distribution stoppages.",
+      "Search results for SNAP and WIC interruptions returned 2025 government-shutdown and generic EBT information rather than new official October 12 immediate-access outages.",
+      "Older pantry closures, foreign food-bank incidents, donation drives, resource guides, routine program promotion and generic inflation excluded."
+    ],
+    "assessment": "No fresh, independently verified, nonduplicate high-value U.S. food-access disruption found in the bounded search window. News indexing latency may leave gaps; not a substitute for production collection.",
+    "actions": "No approval, publication, production collector, task-schedule or automation changes."
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T014641-0700-r11-8f46ac",
+  "scheduled_for": "2026-10-13T01:45:54-07:00",
+  "started_at": "2026-10-13T01:46:41-07:00",
+  "completed_at": "2026-10-13T01:49:03.957-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-13T00:45:54-07:00",
+    "end_at": "2026-10-13T01:49:03.957-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous scheduled hourly boundary; deliberate overlap with prior attempted check, which finished at approximately 00:47 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "classes_checked": [
+      "closure/fire/disaster of only, sole, last or full-service community grocery store",
+      "storm/flood/fire/outage/damage-caused cancellation of emergency food distribution",
+      "abrupt food pantry or food bank closure or major access reduction",
+      "new official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "query_topics": [
+      "only grocery store fire October 12-13 2026",
+      "last grocery store closure October 2026",
+      "food distribution canceled storm October 12-13 2026",
+      "food pantry closed indefinitely flood fire power outage October 2026",
+      "food bank distributions suspended October 12 storm",
+      "SNAP benefits unavailable outage October 12 official",
+      "WIC clinic service interruption October 12 official",
+      "emergency food pantry operations suspended October 13",
+      "October 12 food pantry closed suspended canceled",
+      "October 13 grocery only store closure or fire",
+      "October 12 SNAP suspended official government notice",
+      "October 13 food distribution canceled or postponed"
+    ],
+    "excluded_candidates": [
+      {
+        "title": "Spencer NY sole grocery fire",
+        "reason": "September 14 report, outside incremental window",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/"
+      },
+      {
+        "title": "Prodisee Pantry weather-related distribution cancellation",
+        "reason": "October 7 announcement, previously known and outside incremental window",
+        "url": "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-saturday-food-distribution-stockton-ahead-isaias/"
+      },
+      {
+        "title": "Bountiful Food Pantry October 12 closure",
+        "reason": "Routine holiday closure, not a material abrupt disruption",
+        "url": "https://bountifulfoodpantry.org/get-help"
+      },
+      {
+        "title": "Wheatsville Austin Guadalupe announced closure",
+        "reason": "Not community's sole/last grocery; alternate stores remain; not an immediate new disruption",
+        "url": "https://www.chron.com/food/article/wheatsville-coop-austin-texas-closing-22473858.php"
+      }
+    ],
+    "assessment": "Twelve targeted searches returned usable responses; no new verified qualifying nonduplicate U.S. food-access disruption was identified in the observation window. Indexed discovery cannot establish exhaustive coverage.",
+    "collector_role": "Bounded supplementary recall; authoritative nationwide collection is production.",
+    "publication_changed": false,
+    "approvals_changed": false,
+    "schedule_changed": false
+  }
+}

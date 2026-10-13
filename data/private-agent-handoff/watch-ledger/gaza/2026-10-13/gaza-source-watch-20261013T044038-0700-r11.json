@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T044038-0700-r11",
+  "scheduled_for": "2026-10-13T04:44:51-07:00",
+  "started_at": "2026-10-13T04:40:38-07:00",
+  "completed_at": "2026-10-13T11:42:16.753+00:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T03:47:40-07:00",
+    "end": "2026-10-13T11:42:16.753+00:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary hourly recall only; production publisher/collector authoritative. No publish, approval, schedule, or public-site changes.",
+    "OCHA OPT was checked first: website accessible; latest visible update dated 2026-10-09, referring to 2026-10-07 Gaza impact snapshot (https://www.ochaopt.org/). No new source-dated qualifying item in this window.",
+    "WHO EMRO oPt was checked second: https://www.emro.who.int/opt/ returned HTTP 502. WHO global news room accessible (https://www.who.int/news-room) with 2026-10-13 headlines unrelated to Gaza; health-region coverage incomplete.",
+    "Exactly 12 additional targeted searches covered WHO, OCHA, WAFA casualties and medical access, Reuters, AP, UNRWA/WFP, PRCS, UNICEF, ceasefire/hostages, crossings, and MSF. No newly traceable nonduplicate event published/verified after prior check identified.",
+    "Direct WAFA English site timed out; specific earlier casualty records 175848 and 175851 inaccessible this run. Prior watch already recorded Al-Tuffah vehicle strike and 24h Gaza hospital intake; these were excluded as duplicates, not counted again.",
+    "UN News Gaza direct page blocked by robots.txt. OCHA snapshot article payload exceeded retrieval size; OCHA listing accessible. Relevant official/reporting source limitations materially narrow completeness.",
+    "Search window based on previous completed recall watch at 2026-10-13T03:47:40-07:00 and run completion. Search results may be indexed late; zero findings does not prove zero underlying events."
+  ]
+}

@@ -551,7 +551,10 @@ def parse_source_date(value: str) -> tuple[str, str]:
     return "", "unparseable"
 
 
-def fetch_url(url: str, *, timeout: int = 20, allow_insecure_tls: bool = False, user_agent: str = "BlueFernCareLineNationalPipeline/2.0") -> tuple[bytes, dict[str, Any]]:
+CARE_LINE_USER_AGENT = "BlueFernCareLineNationalPipeline/2.0"
+
+
+def fetch_url(url: str, *, timeout: int = 20, allow_insecure_tls: bool = False, user_agent: str = CARE_LINE_USER_AGENT) -> tuple[bytes, dict[str, Any]]:
     request = urllib.request.Request(url, headers={"User-Agent": user_agent})
     if allow_insecure_tls:
         context = ssl._create_unverified_context()  # noqa: SLF001
@@ -609,9 +612,29 @@ def _exception_failure_reason(exc: BaseException) -> str:
     return f"{type(exc).__name__}: {exc}"
 
 
-def _is_transient_source_exception(exc: BaseException) -> bool:
+def _source_has_revalidated_external_access(source: CareLineSource | None) -> bool:
+    remediation = getattr(source, "external_access_restriction_remediation", None)
+    if not isinstance(remediation, dict):
+        return False
+    return (
+        str(remediation.get("previous_classification") or "") == "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
+        and str(remediation.get("runner_probe_status") or "").casefold() == "ok"
+    )
+
+
+def _is_revalidated_external_403(source: CareLineSource | None, failure: str, failure_class: str) -> bool:
+    return (
+        failure_class == "HTTPError"
+        and _source_failure_http_status(failure) == 403
+        and _source_has_revalidated_external_access(source)
+    )
+
+
+def _is_transient_source_exception(exc: BaseException, *, source: CareLineSource | None = None) -> bool:
     failure = _exception_failure_reason(exc)
     failure_class = _source_failure_class(failure)
+    if _is_revalidated_external_403(source, failure, failure_class):
+        return True
     return _source_failure_transient(failure, failure_class)
 
 
@@ -625,7 +648,7 @@ def _fetch_source_with_transient_retry(
     try:
         payload, meta = fetch_source(source, timeout=timeout, allow_insecure_tls=allow_insecure_tls)
     except Exception as first_exc:  # noqa: BLE001
-        if max_retries <= 0 or not _is_transient_source_exception(first_exc):
+        if max_retries <= 0 or not _is_transient_source_exception(first_exc, source=source):
             raise
         first_failure = _exception_failure_reason(first_exc)
         try:
@@ -4593,7 +4616,9 @@ def _source_failure_class(failure: str) -> str:
     return "Unknown"
 
 
-def _source_failure_transient(failure: str, failure_class: str) -> bool:
+def _source_failure_transient(failure: str, failure_class: str, *, source: CareLineSource | None = None) -> bool:
+    if _is_revalidated_external_403(source, failure, failure_class):
+        return True
     text = str(failure or "").casefold()
     if failure_class in {"TimeoutError", "URLError"}:
         return True
@@ -4616,8 +4641,10 @@ def _source_failure_http_status(failure: str) -> int | None:
         return None
 
 
-def _source_failure_status_class(failure: str, failure_class: str) -> str:
+def _source_failure_status_class(failure: str, failure_class: str, *, source: CareLineSource | None = None) -> str:
     http_status = _source_failure_http_status(failure)
+    if _is_revalidated_external_403(source, failure, failure_class):
+        return "transient_external_access_restriction"
     if http_status in {401, 403, 451}:
         return "external_access_restriction"
     if http_status in {408, 429} or (http_status is not None and 500 <= http_status <= 599):
@@ -4658,12 +4685,14 @@ def _source_failure_payload(
         "feed_url": str(source.feed_url or ""),
         "homepage_url": str(source.homepage_url or ""),
         "failure_class": failure_class,
-        "failure_status_class": _source_failure_status_class(failure, failure_class),
+        "failure_status_class": _source_failure_status_class(failure, failure_class, source=source),
         "failure_reason": failure,
-        "transient": _source_failure_transient(failure, failure_class),
+        "transient": _source_failure_transient(failure, failure_class, source=source),
         "retry_attempted": bool(retry_attempted),
         "retry_count": int(retry_count),
         "retry_state": retry_state,
+        "request_mode": "urllib",
+        "user_agent": CARE_LINE_USER_AGENT,
         "alternate_discovery_coverage": "not_evaluated_in_collection_attempt",
     }
     if http_status is not None:

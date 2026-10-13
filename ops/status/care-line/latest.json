@@ -12,8 +12,9 @@
   },
   "aggregate_degradation_required": false,
   "aggregate_status": "SUCCESS",
+  "coverage_caveat_only": true,
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "6cbcc0c0e688aa90d56c8ad76a5f505b92a3a6b8",
+  "current_runner_head": "84f837283b2dcd45aac6f230b91e33fc35dbd83d",
   "debug_summary": {
     "aggregate_degradation_required": false,
     "aggregate_status": "SUCCESS",
@@ -46,6 +47,7 @@
         "task_key": "care_line_collection"
       }
     ],
+    "coverage_caveat_only": true,
     "external_access_restriction_count": 4,
     "failed_source_count": 12,
     "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
@@ -627,7 +629,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-13T22:36:00.913287Z",
+  "last_exported_at": "2026-10-13T22:57:07.130404Z",
   "last_receipt_at": "2026-10-13T19:02:36.810142Z",
   "latest_runtime_proof_date": "2026-10-13T15:30:03Z",
   "migration_status": "MIGRATED",
@@ -654,6 +656,7 @@
     "aggregate_degradation_required": false,
     "all_current_failures_external": false,
     "all_current_failures_non_actionable": true,
+    "coverage_caveat_only": true,
     "external_access_restriction_count": 4,
     "external_restriction_sources": [
       {

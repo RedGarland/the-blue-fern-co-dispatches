@@ -20,6 +20,7 @@
     "all_current_failures_non_actionable": null,
     "attention_task_count": 0,
     "attention_tasks": [],
+    "coverage_caveat_only": null,
     "external_access_restriction_count": null,
     "failed_source_count": null,
     "operator_assessment": "HEALTHY",
@@ -45,7 +46,7 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-10-13T22:36:00.913287Z",
+  "last_exported_at": "2026-10-13T22:57:07.130404Z",
   "last_receipt_at": "2026-10-13T20:56:03.052044Z",
   "latest_runtime_proof_date": "2026-10-14T04:16:00Z",
   "migration_status": "MIGRATED",

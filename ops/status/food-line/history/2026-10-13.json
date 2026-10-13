@@ -12,7 +12,7 @@
   },
   "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "84f837283b2dcd45aac6f230b91e33fc35dbd83d",
+  "current_runner_head": "f4a841bd19f95145c02c93a10b4b9e72cd223c91",
   "debug_summary": {
     "aggregate_degradation_required": null,
     "aggregate_status": "SUCCESS",
@@ -29,6 +29,7 @@
         "task_key": "food_line_source_watch"
       }
     ],
+    "coverage_caveat_only": null,
     "external_access_restriction_count": null,
     "failed_source_count": null,
     "operator_assessment": "HEALTHY_WITH_SOURCE_EXCLUSIONS",
@@ -134,7 +135,7 @@
   ],
   "human_action_required": false,
   "incident_reference": null,
-  "last_exported_at": "2026-10-13T22:36:00.913287Z",
+  "last_exported_at": "2026-10-13T22:57:07.130404Z",
   "last_receipt_at": "2026-10-13T15:54:55.028299Z",
   "latest_receipt_path": "logs/food-line/current-intake/2026-10-13/20261013T155455Z-current-intake.json",
   "latest_runtime_proof_date": "2026-10-13T15:54:55.028299Z",

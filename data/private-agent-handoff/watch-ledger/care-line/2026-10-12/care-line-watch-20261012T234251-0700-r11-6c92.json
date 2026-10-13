@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T234251-0700-r11-6c92",
+  "scheduled_for": "2026-10-12T23:42:51-07:00",
+  "started_at": "2026-10-12T23:42:51-07:00",
+  "completed_at": "2026-10-12T23:44:24.959-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T21:42:00-07:00",
+    "end_at": "2026-10-12T23:44:24.959-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; production national collector remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest displayed notice dated 2026-10-09 (Tender Home Health, CA); no newly dated CMS notices within this search window.",
+    "Exactly 12 additional targeted searches performed, covering hospital/ED/maternity, behavioral health, dialysis/oncology, rural/emergency care, ground EMS, air-medical bases, primary care, concrete reopenings, US territories, state notices, and abrupt patient intake loss. Search recency constrained to 2 days.",
+    "No new qualifying, independently source-traceable event discovered within the observation window. Search results surfaced historical closures, proposals, policy commentary, or non-US developments; none qualified.",
+    "Search-index latency and incomplete coverage remain possible; absence of findings is not evidence of no real-world changes.",
+    "No approvals, publications, production collection, schedule, or monitoring configuration changed."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T084029-0700-r11-9e2b42",
+  "scheduled_for": "2026-10-13T08:44:51-07:00",
+  "started_at": "2026-10-13T08:40:29-07:00",
+  "completed_at": "2026-10-13T15:44:27.832Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T06:44:00-07:00",
+    "end": "2026-10-13T15:44:27.832Z",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only. The primary Gaza publisher/collector remains authoritative. No production, publishing, approval, schedule, or public-site changes were made.",
+    "Search start conservatively includes the last explicitly reported completed check at approximately 06:44 PDT. No newer Gaza heartbeat was confirmed; the expanded window avoids assuming the intervening hourly check ran.",
+    "OCHA OPT checked first: https://www.ochaopt.org/ accessible; newest listed update dated 2026-10-09 (reported impact snapshot for 2026-10-07). No qualifying new post within this window.",
+    "WHO EMRO oPt checked second: https://www.emro.who.int/opt/ returned HTTP 502. WHO alternate EMRO news endpoint also returned 502. WHO global emergency URL used as fallback returned 404; targeted WHO-indexed results were older. Gaza health coverage is therefore incomplete.",
+    "Exactly 12 additional targeted web searches: WHO health capacity/medical evacuation/fuel; OCHA crossings/aid; WAFA injuries/hospital casualties; Reuters strikes/ceasefire; UNICEF water/child displacement; UNRWA aid; multiwire casualties; medical/ambulance/access; WAFA October 13 reports; Al Jazeera; UN humanitarian/crossings; ReliefWeb health/food/water.",
+    "Direct WAFA English home page accessible: https://english.wafa.ps/. Gaza-specific reports on October 13 currently visible (Al-Tuffah drone strike and Gaza 24-hour casualty update at 12:48 and 13:39 Palestine time, respectively) were already recorded in a previous watch and predate this observation window. Excluded as duplicates; West Bank items excluded as out of scope.",
+    "October 13 UN Women cumulative three-year casualty/injury estimate located by ReliefWeb search but not counted: historical aggregate, not a newly established in-Gaza incident. Direct ReliefWeb article returned HTTP 403.",
+    "No new source-verified and nonduplicate change in civilian casualties, displacement, aid and crossings, food/water, medical capacity, infrastructure, detention/hostages, negotiations, or operations with documented civilian impact was established. Search-engine indexing delays and blocked WHO coverage mean this is not proof that no event occurred."
+  ]
+}

@@ -210,6 +210,9 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
         "external_access_restriction_count": _int(source_summary.get("external_access_restriction_count")),
         "transient_source_failure_count": _int(source_summary.get("transient_source_failure_count")),
         "unclassified_source_failure_count": _int(source_summary.get("unclassified_source_failure_count")),
+        "coverage_caveat_only": source_summary.get("coverage_caveat_only")
+        if "coverage_caveat_only" in source_summary
+        else None,
         "aggregate_degradation_required": source_summary.get("aggregate_degradation_required")
         if "aggregate_degradation_required" in source_summary
         else None,

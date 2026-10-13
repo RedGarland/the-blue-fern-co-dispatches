@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261012T184451-0700",
+  "scheduled_for": "2026-10-12T18:44:51-07:00",
+  "started_at": "2026-10-12T18:44:55-07:00",
+  "completed_at": "2026-10-12T18:46:09-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-12T17:48:13-07:00",
+    "end": "2026-10-12T18:46:09-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest homepage update listed 2026-10-06; no newly published qualifying Gaza update found in the observation window."
+      },
+      {
+        "source": "WHO regional oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502; healthcare verification coverage reduced."
+      },
+      {
+        "source": "WHO global fallback",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-israel-and-occupied-palestinian-territory",
+        "result": "HTTP 404. WHO-directed targeted search surfaced only older WHO content, not a verified new development."
+      }
+    ],
+    "targeted_searches_total": 12,
+    "targeted_source_groups": [
+      "WHO",
+      "OCHA OPT",
+      "Reuters",
+      "Associated Press",
+      "WAFA",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "ICRC",
+      "UN News",
+      "Kerem Shalom crossing and detention",
+      "Ceasefire and hostage negotiations"
+    ],
+    "access_limitations": [
+      "WHO oPt regional source returned 502",
+      "UN News was blocked by robots.txt"
+    ],
+    "excluded": [
+      "Reuters Gaza casualty story dated 2026-10-12 06:43 UTC predated the 17:48 PDT observation boundary and prior searches: https://www.reuters.com/world/middle-east/israeli-fire-kills-two-people-gaza-medics-say-2026-10-12/",
+      "WFP Gaza emergency overview has no verified new publication/event time in the observation window.",
+      "UNICEF 2026-08-28 infrastructure and child-casualty release was outside the window.",
+      "Previously identified 2026-10-12 WAFA casualty update and detention of three drivers were excluded as duplicates."
+    ],
+    "new_qualifying_developments_verified": 0,
+    "verification_basis": "Publication/event time must be within the observation window or clearly describe a newly verified development; older, undated, duplicate, opinion, and uncorroborated claims excluded.",
+    "production_authoritative": true,
+    "publication_side_effects": false
+  }
+}

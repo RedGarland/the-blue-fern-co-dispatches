@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T164701-0700-r11",
+  "scheduled_for": "2026-10-13T16:44:51-07:00",
+  "started_at": "2026-10-13T16:47:01-07:00",
+  "completed_at": "2026-10-13T16:48:22.495-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T14:50:00-07:00",
+    "end": "2026-10-13T16:48:22.495-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first: accessible; latest reported update 2026-10-09.",
+    "WHO regional checked second: HTTP 502, global newsroom accessible.",
+    "Twelve additional bounded targeted searches completed: no new verified nonduplicate ground event.",
+    "WAFA October 13 casualty figures and earlier strikes excluded as duplicates; WFP September period report excluded as stale.",
+    "Production unaffected; no approvals, publication, schedule changes, or task disabling."
+  ]
+}

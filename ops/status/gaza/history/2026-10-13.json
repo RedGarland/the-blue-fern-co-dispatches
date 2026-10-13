@@ -16,6 +16,7 @@
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "6cbcc0c0e688aa90d56c8ad76a5f505b92a3a6b8",
   "debug_summary": {
+    "aggregate_degradation_required": null,
     "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
     "all_current_failures_non_actionable": null,
@@ -49,7 +50,7 @@
   "dry_run_recovery_applied": false,
   "dry_run_recovery_proof": null,
   "effective_receipt_count": 1,
-  "last_exported_at": "2026-10-13T22:15:06.711349Z",
+  "last_exported_at": "2026-10-13T22:36:00.913287Z",
   "last_receipt_at": "2026-10-13T18:51:14Z",
   "latest_recovery_proof_at": null,
   "latest_runtime_proof_date": "2026-10-13T18:51:14Z",

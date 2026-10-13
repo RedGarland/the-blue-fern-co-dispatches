@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T194720-0700-r11",
+  "scheduled_for": "2026-10-12T19:45:22-07:00",
+  "started_at": "2026-10-12T19:47:20-07:00",
+  "completed_at": "2026-10-12T19:49:17-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-12T14:45:22-07:00",
+    "date_to": "2026-10-12T19:49:17-07:00",
+    "edition_date": "2026-10-12",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices reviewed first (https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices); latest dated entry remained 2026-10-09 Tender Home Health termination, so there was no new CMS notice in the observation window. Twelve further targeted web searches checked hospital and ED, maternity, rural/emergency, behavioral health, dialysis, oncology, primary care, ambulance and air medical services, restorations, and U.S. territories. No new and independently confirmed qualifying access change was found. October 12 articles recounting older maternity closures and hurricane-related closures were excluded as repeats; clinic routine holiday closures and proposed consolidations without a concrete effective service change were excluded. October 12 Ascension Sacred Heart operational update described continuing Florida storm recovery, but lacked a precisely timed new qualifying service transition and could not establish novelty versus previous storm coverage (https://healthcare.ascension.org/pages/flpen-weather-updates). Last prior search end visible to this run was 2026-10-12 14:45 PDT; an intermediate ledger heartbeat was not verified, so the search was conservatively widened back to that known check. This is supplementary recall coverage, not the authoritative production national collector. No approval, publication, or schedule actions taken."
+}

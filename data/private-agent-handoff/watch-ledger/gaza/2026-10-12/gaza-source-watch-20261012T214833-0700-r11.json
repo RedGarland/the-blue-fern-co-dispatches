@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261012T214833-0700-r11",
+  "scheduled_for": "2026-10-12T21:44:51-07:00",
+  "started_at": "2026-10-12T21:48:33-07:00",
+  "completed_at": "2026-10-12T21:49:39-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-12T20:46:00-07:00",
+    "end": "2026-10-12T21:49:39-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT homepage checked first and accessible; most recent listing dated 2026-10-06 (https://www.ochaopt.org/).",
+    "WHO global Gaza page returned 404; WHO EMRO OPT pages returned 502, leaving health coverage incomplete.",
+    "Exactly 12 additional targeted searches. UN News blocked by robots.txt. No new source-confirmed qualifying developments in window.",
+    "Reuters Oct 12 Gaza strike story predates this hourly window; excluded as previously reported (https://www.reuters.com/world/middle-east/israeli-fire-kills-two-people-gaza-medics-say-2026-10-12/).",
+    "Supplementary watch only. No production/publication/schedule changes."
+  ]
+}

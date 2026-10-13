@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T075051-0700-r11-6bf184",
+  "scheduled_for": "2026-10-13T07:45:54-07:00",
+  "started_at": "2026-10-13T07:50:51-07:00",
+  "completed_at": "2026-10-13T07:52:05-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-13T06:53:00-07:00",
+    "end_at": "2026-10-13T07:52:05-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly check ended approximately 06:53 Pacific; bounded recall searches span elapsed interval. Earlier sources considered only for possible newly surfaced high-value leads."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall, not primary nationwide production collector; production remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "only/sole/last/full-service grocery-store closure, fire or disaster",
+      "emergency food distribution suspension due to storms, floods, fires, outages or facility damage",
+      "abrupt food pantry/food bank service closure or major access reduction",
+      "new official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new verified, nonduplicate, class-matching U.S. food-access disruption found in the bounded search.",
+    "exclusions": [
+      "October 12 Austin Wheatsville Guadalupe closure: longstanding plan and not the only community grocery; other stores remain.",
+      "October 13 Reuters hurricane summary: severe outages and storm damage, but no specific new pantry, grocery or official benefit interruption reported.",
+      "September Spencer NY only grocery-store fire and older Eastport ME closure: prior-month events, not newly surfaced in this hourly interval.",
+      "Earlier Helping Hands pantry storm/power indexed notice: already flagged in October 11 heartbeat; not a new signal.",
+      "Donation efforts, resource guides, opinion, routine program announcements, generalized SNAP policy and irrelevant non-U.S. incidents excluded."
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire October 13 2026 United States",
+      "\"sole grocery store\" \"October 13, 2026\" closed",
+      "\"last grocery store\" closing fire October 2026 town",
+      "\"full-service grocery store\" closed fire October 13 2026",
+      "food bank distribution canceled storm flooding October 13 2026 today",
+      "food pantry distribution canceled October 13 2026 power outage",
+      "food pantry closed abruptly October 13 2026 emergency",
+      "food bank service suspended October 13 2026 storm disaster",
+      "site:gov \"SNAP\" \"October 13, 2026\" \"interruption\" OR \"outage\" OR \"delay\"",
+      "site:gov \"WIC\" \"October 13, 2026\" \"closed\" OR \"interruption\"",
+      "October 13 2026 food assistance benefits service outage EBT nationwide state",
+      "food pantry October 13 2026 emergency closure food distribution cancelled local"
+    ],
+    "source_verification": "Inspected current Reuters hurricane report and Austin closure report directly; neither meets narrow eligibility. Search results were predominantly older, generic, or irrelevant.",
+    "limitations": "Search-engine indexing can lag new local provider notices; absence of findings is not proof of absence. No approvals, publications, schedule edits or production collection changes."
+  }
+}

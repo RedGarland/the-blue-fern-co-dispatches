@@ -33,9 +33,9 @@
       "current_runner_head": "64017babe7e558d106f47244961b036d57c11c77",
       "debug_summary": {
         "aggregate_status": "DEGRADED",
-        "all_current_failures_external": true,
+        "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 2,
+        "attention_task_count": 3,
         "attention_tasks": [
           {
             "artifact_id": "20261013T130002Z-37048.json",
@@ -52,14 +52,22 @@
             "failure_stage": "care_line_collection",
             "status": "DEGRADED",
             "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20261013T190002Z-19384.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
           }
         ],
         "external_access_restriction_count": 4,
-        "failed_source_count": 4,
-        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
+        "failed_source_count": 12,
+        "operator_assessment": "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
-        "primary_layer": "EXTERNAL_DEPENDENCY",
+        "primary_layer": "SOURCE",
         "primary_task_key": "care_line_collection",
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": null,
@@ -74,7 +82,7 @@
         "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
-        "transient_source_failure_count": 0,
+        "transient_source_failure_count": 8,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": 0
       },
@@ -85,7 +93,7 @@
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "source_failure_summary": {
-        "all_current_failures_external": true,
+        "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
         "external_access_restriction_count": 4,
         "external_restriction_sources": [
@@ -114,13 +122,54 @@
             "source_id": "mayo-clinic-news"
           }
         ],
-        "failed_source_count": 4,
-        "original_failed_source_count": 4,
+        "failed_source_count": 12,
+        "original_failed_source_count": 12,
         "recovered_source_count": 0,
         "recovered_sources": [],
-        "successful_attempt_count": 34,
-        "transient_source_failure_count": 0,
-        "transient_sources": [],
+        "successful_attempt_count": 26,
+        "transient_source_failure_count": 8,
+        "transient_sources": [
+          {
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
+            "source_id": "nc-health-news"
+          },
+          {
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
+            "source_id": "colorado-sun-health"
+          },
+          {
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
+            "source_id": "calmatters-health"
+          },
+          {
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
+            "source_id": "ct-mirror-health"
+          },
+          {
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
+            "source_id": "virginia-mercury-health"
+          },
+          {
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
+            "source_id": "florida-phoenix-health"
+          },
+          {
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
+            "source_id": "texas-tribune-health"
+          },
+          {
+            "adapter_type": "structured_index",
+            "failure_class": "HTTPError",
+            "source_id": "cleveland-clinic-newsroom"
+          }
+        ],
         "unclassified_source_failure_count": 0
       },
       "stale_observability": false
@@ -503,7 +552,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-13T19:01:21.769730Z",
+  "exported_at": "2026-10-13T19:15:03.527071Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "MISSED"

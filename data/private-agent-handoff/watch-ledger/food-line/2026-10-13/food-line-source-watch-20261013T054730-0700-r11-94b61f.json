@@ -1,0 +1,61 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T054730-0700-r11-94b61f",
+  "scheduled_for": "2026-10-13T05:45:54-07:00",
+  "started_at": "2026-10-13T05:47:30-07:00",
+  "completed_at": "2026-10-13T05:48:51.624-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-13T04:53:20.288-07:00",
+    "end_at": "2026-10-13T05:48:51.624-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous persisted hourly watch completed 04:53:20.288 PDT. Search screened same-hour reports plus late-indexed older candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary recall; authoritative production Food Line collection unaffected.",
+    "discovery_status": "SUCCESS",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Only/sole/last/full-service community grocery closure/fire/disaster",
+      "Weather or damage-related emergency food distribution cancellations",
+      "Abrupt food pantry or food-bank closure/major reduction",
+      "Official SNAP/WIC food assistance interruption with immediate consequences"
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire October 12 2026 OR October 13 2026",
+      "\"sole grocery store\" burned closed October 2026",
+      "\"last grocery store\" closed community October 2026",
+      "\"full service grocery store\" closed fire flood October 2026",
+      "\"food distribution\" canceled storm October 13 2026",
+      "\"food bank\" distribution cancelled flooding October 12 2026",
+      "\"food pantry\" \"closed\" \"power outage\" October 13 2026",
+      "\"food bank\" \"suspended\" \"services\" October 2026",
+      "site:gov \"SNAP\" \"interruption\" \"October 13, 2026\"",
+      "site:gov \"WIC\" \"service interruption\" October 2026",
+      "\"emergency food\" \"distribution\" cancelled flood fire October 2026",
+      "\"pantry\" \"closed until further notice\" October 2026"
+    ],
+    "excluded_candidates": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 14 incident; not current hourly window."
+      },
+      {
+        "source_url": "https://www.chron.com/food/article/wheatsville-coop-austin-texas-closing-22473858.php",
+        "reason": "Austin store is not only/sole/last grocery; duplicate from prior 04:52 watch."
+      },
+      {
+        "source_url": "https://mynews4.com/news/local/food-bank-of-northern-nevada-cancels-tuesday-distribution-events-due-to-winter-weather",
+        "reason": "Old winter-storm cancellation."
+      }
+    ],
+    "assessment": "No newly verified, nonduplicate U.S. food-access disruption in the four classes for this hourly window. Search-index results include older reports; no nationwide completeness claim.",
+    "persistence_note": "Contents API write was blocked by connector safety checks; Git Data API fallback attempted.",
+    "side_effects": "No approval, publication, primary collection, schedule or task changes."
+  }
+}

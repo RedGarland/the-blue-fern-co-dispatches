@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T134931-0700-r11",
+  "scheduled_for": "2026-10-13T13:44:51-07:00",
+  "started_at": "2026-10-13T13:49:31-07:00",
+  "completed_at": "2026-10-13T20:50:58.269Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T11:49:00-07:00",
+    "end": "2026-10-13T20:50:58.269Z",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Gaza recall only; production collector/publisher authoritative, no publication, approvals, or schedule changes.",
+    "OCHA OPT checked first (https://www.ochaopt.org/). Accessible, most recent displayed Gaza update 2026-10-09, no new observed item.",
+    "WHO EMRO oPt checked second (https://www.emro.who.int/opt/news/index.html), HTTP 502; global WHO newsroom https://www.who.int/news-room accessible with no Gaza-specific same-window update. WHO regional coverage incomplete.",
+    "Exactly twelve targeted additional searches covering OCHA ReliefWeb, WHO, UNICEF, WFP, ICRC, UNRWA, Reuters, AP, WAFA, PRCS, AFP and UN News.",
+    "UN News search blocked by robots.txt. Search results for several source families stale/unrelated. WHO regional failure and UN News restriction warrant DEGRADED status.",
+    "WAFA October 13 Gaza casualty tallies (https://english.wafa.ps/Pages/Details/175851) and Al-Tuffah vehicle-strike record (https://english.wafa.ps/Pages/Details/175848) previously identified; excluded as duplicates. Latest accessible WAFA local later item concerns Jenin outside Gaza scope.",
+    "Conservative search overlap begins at prior visible 11:49 PDT check; any intervening later check is not verified. No qualifying, traceable, new-to-watch Gaza development found. Source indexing can lag."
+  ]
+}

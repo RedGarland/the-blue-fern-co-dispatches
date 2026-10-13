@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T024216-0700-r11-28f6",
+  "scheduled_for": "2026-10-13T02:45:22-07:00",
+  "started_at": "2026-10-13T02:42:16-07:00",
+  "completed_at": "2026-10-13T02:44:14-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-13T01:46:34-07:00",
+    "end_at": "2026-10-13T02:44:14-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line collector remains authoritative.",
+    "CMS Public Notices checked first; newest listed 2026-10-09 Tender Home Health termination (CA); no new notice in the window.",
+    "Exactly 12 additional targeted searches: hospital, ED, maternity, behavioral health, dialysis, oncology, primary care, rural access, EMS, air-medical, restoration, federal and territory coverage. No verified qualifying new development.",
+    "Older events, proposals, ownership-only stories and Canadian events excluded. Search indexing can lag.",
+    "No approvals, publication, schedule changes or task disabling."
+  ]
+}

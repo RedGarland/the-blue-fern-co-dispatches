@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T124522-0700-r11-5d7c",
+  "scheduled_for": "2026-10-13T12:45:22-07:00",
+  "started_at": "2026-10-13T12:49:14-07:00",
+  "completed_at": "2026-10-13T19:50:46.846Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T09:43:31-07:00",
+    "end": "2026-10-13T12:50:46-07:00",
+    "basis": "Last reported completed supplementary recall watch through current check; gap extended because intervening checks were not established."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; production national Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_first": true,
+      "latest_listed_notice_date": "2026-10-09",
+      "latest_listed_provider": "Tender Home Health",
+      "new_notices_since_prior_check": false
+    },
+    "additional_targeted_searches": 12,
+    "failed_searches": 0,
+    "search_coverage": "US states and territories; hospital/ED, maternity, behavioral health, rural service loss, dialysis, oncology, primary care, ambulance/air medical base, reopenings, CMS provider and CLIA notices.",
+    "outcome_detail": "No independently confirmed new qualifying care-access change published within the observed period among searched sources.",
+    "exclusions": "Older previously reported service changes, Canadian services, proposed-only actions, holiday operating schedules, ownership stories without service change, news recaps and unspecific reopening intentions.",
+    "constraints": "No approval, publication, production-collector intervention, schedule alteration, or task disabling.",
+    "evidence_sources": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.usahealthsystem.com/weather",
+      "https://www.sanluisobispo.com/news/local/article311990122.html",
+      "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/"
+    ]
+  }
+}

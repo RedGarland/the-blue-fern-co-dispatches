@@ -1,0 +1,61 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-10-13",
+  "generated_at": "2026-10-13T20:19:46.987355+00:00",
+  "generator_source_commit": "6cbcc0c0e688aa90d56c8ad76a5f505b92a3a6b8",
+  "generation_mode": "approved_current_review_proposal",
+  "source_count": 1,
+  "story_count": 1,
+  "source_adequacy": {
+    "status": "limited",
+    "label": "Limited / sparse source day",
+    "source_count": 1,
+    "source_families": [
+      "local_news"
+    ],
+    "local_signal_count": 1,
+    "state_signal_count": 0,
+    "national_context_count": 1
+  },
+  "lead_source_record_id": "food_line_source_26e70d7fc86f73e4",
+  "lead_source_canonical_url": "https://www.knopnews2.com/video/2026/10/13/kiwanis-food-pantry-fundraiser-nears-200000-raised-over-34-years",
+  "previous_edition_date": "2026-09-12",
+  "primary_signal_status": "new_primary",
+  "public_rendered": true,
+  "public_signal_count": 1,
+  "qualified_primary_count": 1,
+  "claim_count": 1,
+  "claim_ledger_path": "/food-line/editions/2026-10-13/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-10-13/source_table.html",
+  "edition_mode": "current_update",
+  "validation_status": "ok",
+  "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-10-13-approved-one-item-dry-run.json",
+  "approved_proposal_sha256": "623871890e1a1adc137235a9c714df13769c064f3b1e9b2068657c4f047a8b02",
+  "review_queue_path": "status/food-line/runtime/current-signal-review.json",
+  "review_queue_sha256": "8a746e812dad0fc9254bd03dc542067fe47788aecaf7ea46432a1f087e023639",
+  "approved_item_provenance": [
+    {
+      "review_item_id": "finding_672b7f0e44358ffdf24ac7eb",
+      "finding_id": "finding_672b7f0e44358ffdf24ac7eb",
+      "editorial_decision": "approve_with_edit",
+      "decision_operator": "Codex",
+      "decision_timestamp": "2026-10-13T19:52:44.819460+00:00",
+      "source_url": "https://www.knopnews2.com/video/2026/10/13/kiwanis-food-pantry-fundraiser-nears-200000-raised-over-34-years",
+      "canonical_source_url": "https://www.knopnews2.com/video/2026/10/13/kiwanis-food-pantry-fundraiser-nears-200000-raised-over-34-years",
+      "source_published_at": "2026-10-13"
+    }
+  ],
+  "publication_status": "unpublished",
+  "publication_approval": false,
+  "publication_eligible": false,
+  "pages_status": "not_synced",
+  "bluesky_status": "not_posted",
+  "audio_status": "not_generated",
+  "map_status": "not_published",
+  "podcast_status": "not_generated",
+  "schedule_status": "not_changed",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-10-13/",
+  "bluesky_post_text": null,
+  "bluesky_post_ready": false
+}

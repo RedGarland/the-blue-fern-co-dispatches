@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T1843041910700-cb8e1a",
+  "scheduled_for": "2026-10-12T18:45:54-07:00",
+  "started_at": "2026-10-12T18:41:56-07:00",
+  "completed_at": "2026-10-12T18:43:04.191-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T17:45:54-07:00",
+    "end_at": "2026-10-12T18:43:04.191-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Bounded rolling hour from preceding scheduled check; latest prior completed receipt was not independently established in this run. Recall searches can surface earlier reports, which are screened for newly reported consequences."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only; production nationwide collector remains authoritative.",
+    "discovery_status": "SUCCESS",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Only/sole/last/full-service grocery store loss",
+      "Disaster-related emergency food distribution cancellation/suspension",
+      "Abrupt pantry/food-bank access reduction",
+      "Official SNAP/WIC immediate interruption"
+    ],
+    "search_queries": [
+      "October 12 2026 \"only grocery store\" closed fire town",
+      "October 12 2026 \"last grocery store\" closing community",
+      "October 12 2026 \"sole grocery store\" destroyed fire flood",
+      "October 12 2026 food distribution canceled storm power outage food bank",
+      "October 12 2026 emergency food distribution postponed flooding closure",
+      "October 12 2026 pantry distribution cancelled fire building damage",
+      "October 12 2026 food pantry closing immediately no longer serving clients",
+      "October 12 2026 food bank suspended services due to damage outage",
+      "October 12 2026 pantry shut down unexpected closure families",
+      "October 12 2026 SNAP benefits system outage EBT service interruption state notice",
+      "October 12 2026 WIC benefits suspended system outage official notice",
+      "October 12 2026 SNAP payment delay disrupted benefits agency outage"
+    ],
+    "exclusions": [
+      "Sep 14, 2026 Spencer NY sole-grocery-store fire — preexisting, outside window.",
+      "Early October San Jose Lighthouse Food Rescue zoning-threat article — published last week and reports possible closure, not a verified new current service loss.",
+      "Oct 12 Austin Wheatsville Co-op announced future closure of one location — not a sole/last grocery store, and South Lamar remains open.",
+      "Previous 2025 and earlier grocery fires, outage reports and SNAP shutdown news; non-U.S. events and routine promotional material."
+    ],
+    "findings_assessment": "No newly reported qualifying, nonduplicate U.S. food-access disruption verified within the bounded observation window. Web discovery indexes substantial stale and geographically irrelevant material.",
+    "limitations": "Supplementary web discovery is not exhaustive; no approval, publication, schedule change, or production collection action."
+  }
+}

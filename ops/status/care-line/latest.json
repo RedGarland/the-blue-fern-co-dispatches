@@ -10,11 +10,11 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "SUCCESS",
+  "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "e1ef10f111a97c996e77fcdc61bf91c9d719d6a9",
+  "current_runner_head": "64017babe7e558d106f47244961b036d57c11c77",
   "debug_summary": {
-    "aggregate_status": "SUCCESS",
+    "aggregate_status": "DEGRADED",
     "all_current_failures_external": false,
     "all_current_failures_non_actionable": false,
     "attention_task_count": 1,
@@ -30,7 +30,7 @@
     ],
     "external_access_restriction_count": 4,
     "failed_source_count": 11,
-    "operator_assessment": "HEALTHY",
+    "operator_assessment": "DEGRADED_ACTION_RECOMMENDED",
     "primary_classification": "partial_success",
     "primary_failure_stage": "care_line_collection",
     "primary_layer": "SOURCE_CLASSIFICATION",
@@ -233,6 +233,27 @@
       "started_at": "2026-10-13T13:00:02Z",
       "status": "DEGRADED",
       "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "20261013T150003Z-b85dca89.json",
+      "classification": "nothing_to_publish",
+      "completed_at": "2026-10-13T15:00:03.887843Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "bluesky_publication": false,
+        "pages_sync": false,
+        "publication": false,
+        "queue_mutation": true
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20261013T150003Z-b85dca89",
+      "scheduled_for": "2026-10-13",
+      "started_at": "2026-10-13T15:00:03.881449Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_reviewed_event_queue"
     }
   ],
   "expected_instances": [
@@ -267,8 +288,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-13T13:15:04.290828Z",
-  "last_receipt_at": "2026-10-13T13:02:34.554842Z",
+  "last_exported_at": "2026-10-13T15:15:06.322762Z",
+  "last_receipt_at": "2026-10-13T15:00:03.893787Z",
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -510,6 +531,27 @@
       "started_at": "2026-10-13T13:00:02Z",
       "status": "DEGRADED",
       "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "20261013T150003Z-b85dca89.json",
+      "classification": "nothing_to_publish",
+      "completed_at": "2026-10-13T15:00:03.887843Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "bluesky_publication": false,
+        "pages_sync": false,
+        "publication": false,
+        "queue_mutation": true
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20261013T150003Z-b85dca89",
+      "scheduled_for": "2026-10-13",
+      "started_at": "2026-10-13T15:00:03.881449Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_reviewed_event_queue"
     }
   ]
 }

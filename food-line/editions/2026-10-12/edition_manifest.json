@@ -1,0 +1,71 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-10-12",
+  "generated_at": "2026-10-13T00:48:49.367630+00:00",
+  "generator_source_commit": "e1ef10f111a97c996e77fcdc61bf91c9d719d6a9",
+  "generation_mode": "approved_current_review_proposal",
+  "source_count": 2,
+  "story_count": 2,
+  "source_adequacy": {
+    "status": "limited",
+    "label": "Limited / sparse source day",
+    "source_count": 2,
+    "source_families": [
+      "local_news"
+    ],
+    "local_signal_count": 2,
+    "state_signal_count": 0,
+    "national_context_count": 2
+  },
+  "lead_source_record_id": "food_line_source_8f398e64f188ded3",
+  "lead_source_canonical_url": "https://www.wlwt.com/article/snap-participation-falls-after-new-work-rules/74091376",
+  "previous_edition_date": "2026-10-09",
+  "primary_signal_status": "new_primary",
+  "public_rendered": true,
+  "public_signal_count": 2,
+  "qualified_primary_count": 1,
+  "claim_count": 2,
+  "claim_ledger_path": "/food-line/editions/2026-10-12/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-10-12/source_table.html",
+  "edition_mode": "current_update",
+  "validation_status": "ok",
+  "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-10-12-approved-two-item-dry-run.json",
+  "approved_proposal_sha256": "5a855a701e75bb4dd2c4518f9e5539d46e38f45efe3d28741f352e82f085bea0",
+  "review_queue_path": "status/food-line/runtime/current-signal-review.json",
+  "review_queue_sha256": "993b1c21bf146d12880684f0a0db34afdcc6484b7f92515df53c40993556af44",
+  "approved_item_provenance": [
+    {
+      "review_item_id": "finding_f2e6916e9f78f5cc737a7a1d",
+      "finding_id": "finding_f2e6916e9f78f5cc737a7a1d",
+      "editorial_decision": "approve",
+      "decision_operator": "codex",
+      "decision_timestamp": "2026-10-13T00:17:52.166488+00:00",
+      "source_url": "https://www.wlwt.com/article/snap-participation-falls-after-new-work-rules/74091376",
+      "canonical_source_url": "https://www.wlwt.com/article/snap-participation-falls-after-new-work-rules/74091376",
+      "source_published_at": "2026-10-12"
+    },
+    {
+      "review_item_id": "finding_16f5d5245a02a3977a123c67",
+      "finding_id": "finding_16f5d5245a02a3977a123c67",
+      "editorial_decision": "approve_with_edit",
+      "decision_operator": "codex",
+      "decision_timestamp": "2026-10-13T00:17:59.415897+00:00",
+      "source_url": "https://www.thecharlotteledger.com/p/federal-cuts-strain-charlotte-s-food-pantries",
+      "canonical_source_url": "https://www.thecharlotteledger.com/p/federal-cuts-strain-charlotte-s-food-pantries",
+      "source_published_at": "2026-10-12"
+    }
+  ],
+  "publication_status": "unpublished",
+  "publication_approval": false,
+  "publication_eligible": false,
+  "pages_status": "not_synced",
+  "bluesky_status": "not_posted",
+  "audio_status": "not_generated",
+  "map_status": "not_published",
+  "podcast_status": "not_generated",
+  "schedule_status": "not_changed",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-10-12/",
+  "bluesky_post_text": null,
+  "bluesky_post_ready": false
+}

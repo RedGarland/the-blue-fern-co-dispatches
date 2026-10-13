@@ -28,9 +28,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
+      "aggregate_degradation_required": false,
       "aggregate_status": "SUCCESS",
+      "coverage_caveat_only": true,
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "84f837283b2dcd45aac6f230b91e33fc35dbd83d",
+      "current_runner_head": "f4a841bd19f95145c02c93a10b4b9e72cd223c91",
       "debug_summary": {
         "aggregate_degradation_required": false,
         "aggregate_status": "SUCCESS",
@@ -210,7 +212,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "f4a841bd19f95145c02c93a10b4b9e72cd223c91",
+      "current_runner_head": "e07012ae882b02fca6445f1e19ca9c44ed7463ab",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "SUCCESS",
@@ -447,7 +449,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "84f837283b2dcd45aac6f230b91e33fc35dbd83d",
+      "current_runner_head": "f4a841bd19f95145c02c93a10b4b9e72cd223c91",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "SUCCESS",
@@ -580,7 +582,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-13T22:57:07.130404Z",
+  "exported_at": "2026-10-13T23:04:21.743575Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "SUCCESS"

@@ -14,7 +14,7 @@
   "bluesky_post_uri": "at://did:plc:q3k2kcpmvqexvxy7y6bdo46l/app.bsky.feed.post/3mxrpfngcof2t",
   "bluesky_status": "success",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "84f837283b2dcd45aac6f230b91e33fc35dbd83d",
+  "current_runner_head": "f4a841bd19f95145c02c93a10b4b9e72cd223c91",
   "debug_summary": {
     "aggregate_degradation_required": null,
     "aggregate_status": "SUCCESS",
@@ -51,7 +51,7 @@
   "dry_run_recovery_applied": false,
   "dry_run_recovery_proof": null,
   "effective_receipt_count": 1,
-  "last_exported_at": "2026-10-13T22:57:07.130404Z",
+  "last_exported_at": "2026-10-13T23:04:21.743575Z",
   "last_receipt_at": "2026-10-13T18:51:14Z",
   "latest_recovery_proof_at": null,
   "latest_runtime_proof_date": "2026-10-13T18:51:14Z",
@@ -105,7 +105,7 @@
   "publication_status": "published_and_posted",
   "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": "84f837283b2dcd45aac6f230b91e33fc35dbd83d",
+  "runner_source_head": "f4a841bd19f95145c02c93a10b4b9e72cd223c91",
   "scheduled_health_authoritative": false,
   "scheduled_task_keys": [
     "gaza_daily_dispatch"

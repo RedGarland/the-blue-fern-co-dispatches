@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261012T235038-0700-r11-8e41c6",
+  "scheduled_for": "2026-10-12T23:45:54-07:00",
+  "started_at": "2026-10-12T23:50:38-07:00",
+  "completed_at": "2026-10-12T23:52:50-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-12T22:45:54-07:00",
+    "end_at": "2026-10-12T23:52:50-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Expected previous hourly boundary; actual prior completion unverified"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "classes_checked": [
+      "community sole-store grocery loss",
+      "emergency distribution cancellations",
+      "abrupt food pantry and food bank access loss",
+      "new official SNAP/WIC service interruptions"
+    ],
+    "assessment": "No new verified qualifying signals. Older incidents, routine holiday closures, and pre-existing leads excluded. Search-index freshness is limited.",
+    "collector_role": "Supplementary recall; production authoritative.",
+    "publication_changed": false,
+    "schedule_changed": false
+  }
+}

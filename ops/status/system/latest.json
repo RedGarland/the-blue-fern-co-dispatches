@@ -30,7 +30,7 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "64017babe7e558d106f47244961b036d57c11c77",
+      "current_runner_head": "6cbcc0c0e688aa90d56c8ad76a5f505b92a3a6b8",
       "debug_summary": {
         "aggregate_status": "DEGRADED",
         "all_current_failures_external": false,
@@ -224,19 +224,19 @@
         ],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
+        "operator_assessment": "HEALTHY_WITH_SOURCE_EXCLUSIONS",
         "primary_classification": "completed_with_exclusions",
         "primary_failure_stage": "source_watch",
-        "primary_layer": "EDITORIAL_HANDOFF",
+        "primary_layer": "SOURCE",
         "primary_task_key": "food_line_source_watch",
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 19,
-        "private_review_oldest_pending_date": "2026-10-13",
-        "private_review_pending_date_count": 1,
-        "private_review_pending_item_count": 2,
-        "private_review_unresolved_item_count": 2,
+        "private_review_max_age_hours": 0,
+        "private_review_oldest_pending_date": null,
+        "private_review_pending_date_count": 0,
+        "private_review_pending_item_count": 0,
+        "private_review_unresolved_item_count": 0,
         "publication_attempted": false,
         "publication_status": "skipped_not_release_ready",
         "receipt_completeness": "COMPLETE",
@@ -246,23 +246,13 @@
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
       },
-      "human_action_required": true,
+      "human_action_required": false,
       "latest_receipt_path": "logs/food-line/current-intake/2026-10-13/20261013T155455Z-current-intake.json",
       "migration_status": "MIGRATED",
-      "next_human_action": "Review 2 Food Line items for 2026-10-13.",
+      "next_human_action": "No human review pending.",
       "private_review_backlog": {
         "count_only_gap_count": 55,
-        "dates": [
-          {
-            "age_hours": 19,
-            "count_only_gap_count": 0,
-            "date": "2026-10-13",
-            "dispositioned_item_count": 0,
-            "pending_item_count": 2,
-            "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-13.json",
-            "unresolved_item_count": 2
-          }
-        ],
+        "dates": [],
         "disposition_diagnostics": {
           "duplicate_entry_count": 0,
           "malformed_entry_count": 0,
@@ -424,22 +414,18 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 19,
-        "oldest_pending_date": "2026-10-13",
-        "pending_date_count": 1,
-        "pending_item_count": 2,
-        "unresolved_item_count": 2
+        "max_age_hours": 0,
+        "oldest_pending_date": null,
+        "pending_date_count": 0,
+        "pending_item_count": 0,
+        "unresolved_item_count": 0
       },
       "recovery_lifecycle": "HEALTHY",
-      "review_date": "2026-10-13",
-      "review_item_count": 2,
-      "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-10-13.json",
-      "review_material_paths": [
-        "data/dispatches/food-line/review/proposed-editions/2026-10-13.json",
-        "data/dispatches/food-line/review/proposed-editions/2026-10-13.md",
-        "data/dispatches/food-line/review/reports/2026-10-13/current-intake.json"
-      ],
-      "review_pending": true
+      "review_date": null,
+      "review_item_count": 0,
+      "review_material_path": null,
+      "review_material_paths": null,
+      "review_pending": false
     },
     "gaza": {
       "agent_handoff": {
@@ -455,7 +441,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "64017babe7e558d106f47244961b036d57c11c77",
+      "current_runner_head": "6cbcc0c0e688aa90d56c8ad76a5f505b92a3a6b8",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -584,7 +570,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-13T19:25:30.194027Z",
+  "exported_at": "2026-10-13T19:55:01.206942Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

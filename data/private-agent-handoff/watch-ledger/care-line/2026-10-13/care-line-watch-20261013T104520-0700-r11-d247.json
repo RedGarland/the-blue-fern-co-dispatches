@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T104520-0700-r11-d247",
+  "scheduled_for": "2026-10-13T10:45:22-07:00",
+  "started_at": "2026-10-13T10:45:20-07:00",
+  "completed_at": "2026-10-13T10:46:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-13T09:43:00-07:00",
+    "date_to": "2026-10-13T10:46:43-07:00",
+    "edition_date": "2026-10-13",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall watch only; production Care Line collection authoritative. CMS Public Notices reviewed first directly on October 13; latest posted entry was October 9 Tender Home Health (California), previously known. Exactly 12 additional targeted web searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency services, ground ambulance/air medical, reopening, official notices, and U.S. territories. No new concretely effective and source-supported U.S. or territory healthcare-access change confirmed in this observation window. Excluded older events, proposals, business-only stories, global mismatches, duplicate follow-ups, and general trend commentary. Search indexing and reporting delay limit same-hour recall. No approvals, publication or schedule changes.",
+  "research_status": "SUCCESS",
+  "research_outcome": "no_findings",
+  "sources_checked": {
+    "cms_public_notices": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "additional_targeted_search_count": 12
+  }
+}

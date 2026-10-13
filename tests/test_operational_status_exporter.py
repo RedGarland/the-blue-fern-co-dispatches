@@ -636,6 +636,66 @@ def _write_gaza_success_run_manifest(
     return path
 
 
+def _write_gaza_bluesky_receipt(
+    source: Path,
+    *,
+    date: str = DATE,
+    post_uri: str = "at://did:plc:q3k2kcpmvqexvxy7y6bdo46l/app.bsky.feed.post/3mxrpfngcof2t",
+    status: str = "success",
+) -> Path:
+    path = source / "data" / "dispatches" / "gaza" / "editions" / date / "bluesky_post_receipt.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "dispatch_slug": "gaza",
+        "edition_date": date,
+        "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{date}/",
+        "post_uri": post_uri,
+        "posted_at": f"{date}T18:54:16Z",
+        "card_title": f"Dispatches from Gaza - {date}",
+        "card_description": f"Read the {date} source-backed Gaza update from The Blue Fern Co.",
+        "embed_type": "app.bsky.embed.external",
+        "thumb_status": "uploaded",
+        "status": status,
+    }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _write_gaza_delayed_live_run_manifest(source: Path, *, date: str = DATE) -> Path:
+    path = _write_gaza_success_run_manifest(
+        source,
+        date=date,
+        actual_run_local_time="2026-09-10T11:51:14-07:00",
+        bluesky_status="skipped",
+        bluesky_reason="not_attempted",
+    )
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload.update(
+        {
+            "ok": False,
+            "pipeline_ok": False,
+            "publish_blocked": True,
+            "publish_blocked_reason": "pages-live-verification-failed",
+            "live_http_ok": False,
+            "live_archive_ok": False,
+            "pages_commit_sha": "b87669c1f485faedbede252f4b9ff2bba3db9b51",
+            "publisher_count": 2,
+            "publishers": ["Al Jazeera", "WAFA"],
+            "warnings": [
+                "This is a limited-source update generated from 3 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
+                "audio not generated in daily run; follow-up: python scripts/run_gaza_audio.py --date 2026-09-10 --tts-provider none",
+            ],
+            "errors": [
+                "live verification failed: edition=https://dispatches.thebluefernco.com/gaza/editions/2026-09-10/",
+                "live edition verification failed: {'ok': False, 'status': None, 'marker_found': False, 'error': 'HTTP Error 404: Not Found'}",
+                "live archive verification failed: {'ok': False, 'status': 200, 'marker_found': False, 'error': None}",
+            ],
+        }
+    )
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    return path
+
+
 def _write_ice_day(
     tmp_path: Path,
     *,
@@ -1910,6 +1970,68 @@ def test_gaza_pages_only_manifest_accepts_skipped_bluesky_and_audio(tmp_path: Pa
         "public_output": True,
         "release_workflow": False,
     }
+
+
+def test_gaza_delayed_live_manifest_and_bluesky_receipt_recover_missed_publication(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="visual_validation_failed")
+    manifest = _write_gaza_delayed_live_run_manifest(source)
+    bluesky = _write_gaza_bluesky_receipt(source)
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["recovery_lifecycle"] == "HEALTHY"
+    assert status["publication_recovery_applied"] is True
+    assert status["publication_status"] == "published_and_posted"
+    assert status["publication_recovery_evidence"]["path"] == str(manifest)
+    assert status["publication_recovery_evidence"]["pages_commit_sha"] == "b87669c1f485faedbede252f4b9ff2bba3db9b51"
+    assert status["publication_recovery_evidence"]["delayed_live_success"] is True
+    assert status["publication_recovery_evidence"]["source_adequacy_status"] == "limited_source_update"
+    assert status["publication_recovery_evidence"]["public_story_count"] == 3
+    assert status["publication_recovery_evidence"]["bluesky_status"] == "success"
+    assert status["publication_recovery_evidence"]["bluesky_post_uri"] == (
+        "at://did:plc:q3k2kcpmvqexvxy7y6bdo46l/app.bsky.feed.post/3mxrpfngcof2t"
+    )
+    assert status["source_adequacy_status"] == "limited_source_update"
+    assert status["public_story_count"] == 3
+    assert status["pages_commit_sha"] == "b87669c1f485faedbede252f4b9ff2bba3db9b51"
+    assert status["bluesky_status"] == "success"
+    assert status["bluesky_post_uri"] == "at://did:plc:q3k2kcpmvqexvxy7y6bdo46l/app.bsky.feed.post/3mxrpfngcof2t"
+    assert status["publication_recovery_evidence"]["bluesky_receipt"]["path"] == str(bluesky)
+    assert status["publication_recovery_evidence"]["audio_generated"] is False
+    assert status["publication_recovery_evidence"]["release_workflow_attempted"] is False
+    assert any("3 saved source records from 2 publishers" in item for item in status["publication_recovery_evidence"]["warnings"])
+    assert status["task_summaries"][0]["publication_status"] == "published_and_posted"
+    assert status["task_summaries"][0]["public_side_effects"] == {
+        "audio": False,
+        "bluesky": True,
+        "pages": True,
+        "public_output": True,
+        "release_workflow": False,
+    }
+
+
+def test_gaza_delayed_live_manifest_without_successful_bluesky_receipt_does_not_recover(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="visual_validation_failed")
+    _write_gaza_delayed_live_run_manifest(source)
+    _write_gaza_bluesky_receipt(source, status="failure")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["recovery_lifecycle"] == "INCIDENT_OPEN"
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
 
 
 def test_gaza_success_manifest_does_not_recover_later_failed_receipt(tmp_path: Path) -> None:

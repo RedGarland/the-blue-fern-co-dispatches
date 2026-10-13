@@ -782,6 +782,67 @@ def _gaza_manifest_has_release_workflow(manifest: dict[str, Any]) -> bool:
     return any("release" in str(action).lower() for action in actions)
 
 
+def _gaza_successful_bluesky_receipt(source_root: Path, date: str) -> dict[str, Any] | None:
+    path = source_root / GAZA_RUN_MANIFEST_RELATIVE / date / "bluesky_post_receipt.json"
+    receipt = _load_json_object(path)
+    if not receipt:
+        return None
+    if str(receipt.get("dispatch_slug") or "") != "gaza":
+        return None
+    if str(receipt.get("edition_date") or "") != date:
+        return None
+    if str(receipt.get("status") or "") != "success":
+        return None
+    post_uri = str(receipt.get("post_uri") or "").strip()
+    if not post_uri.startswith("at://"):
+        return None
+    posted_at = _iso(parse_timestamp(str(receipt.get("posted_at") or "")) or _gaza_manifest_time(receipt, path))
+    return {
+        "path": str(path),
+        "path_relative": (GAZA_RUN_MANIFEST_RELATIVE / date / "bluesky_post_receipt.json").as_posix(),
+        "posted_at": posted_at,
+        "status": "success",
+        "post_uri": post_uri,
+        "public_url": str(receipt.get("public_url") or ""),
+        "embed_type": str(receipt.get("embed_type") or ""),
+        "thumb_status": str(receipt.get("thumb_status") or ""),
+    }
+
+
+def _gaza_manifest_pages_commit(manifest: dict[str, Any]) -> str | None:
+    pages_commit = _safe_head(manifest.get("pages_commit_sha"))
+    if not pages_commit or len(pages_commit) >= 40:
+        return pages_commit
+    local_paths = manifest.get("local_paths")
+    if not isinstance(local_paths, dict):
+        return pages_commit
+    pages_repo = local_paths.get("pages_repo")
+    if not pages_repo:
+        return pages_commit
+    expanded = _git_head_for_checkout(Path(str(pages_repo)))
+    if expanded and expanded.startswith(pages_commit):
+        return expanded
+    return pages_commit
+
+
+def _gaza_delayed_live_success_manifest(manifest: dict[str, Any], bluesky_receipt: dict[str, Any] | None) -> bool:
+    if not bluesky_receipt:
+        return False
+    if manifest.get("live_http_ok") is True and manifest.get("live_archive_ok") is True:
+        return True
+    if str(manifest.get("publish_blocked_reason") or "") != "pages-live-verification-failed":
+        return False
+    errors = manifest.get("errors")
+    if not isinstance(errors, list) or not errors:
+        return False
+    allowed_fragments = (
+        "live verification failed",
+        "live edition verification failed",
+        "live archive verification failed",
+    )
+    return all(any(fragment in str(error).lower() for fragment in allowed_fragments) for error in errors)
+
+
 def _gaza_successful_publication_manifest(source_root: Path, date: str) -> dict[str, Any] | None:
     path = source_root / GAZA_RUN_MANIFEST_RELATIVE / date / "run_manifest.json"
     manifest = _load_json_object(path)
@@ -789,51 +850,65 @@ def _gaza_successful_publication_manifest(source_root: Path, date: str) -> dict[
         return None
     if str(manifest.get("date") or "") != date:
         return None
-    required_true = (
-        "ok",
+    required_publish_true = (
         "generation_ok",
         "generated",
         "tests_ok",
         "validation_ok",
-        "pipeline_ok",
         "publish_ok",
         "pages_repo_updated",
         "local_pages_copy_ok",
         "pages_commit_ok",
         "pages_push_ok",
         "remote_tree_verify_ok",
-        "live_http_ok",
     )
-    if any(manifest.get(key) is not True for key in required_true):
+    if any(manifest.get(key) is not True for key in required_publish_true):
+        return None
+    bluesky_receipt = _gaza_successful_bluesky_receipt(source_root, date)
+    live_success = (
+        manifest.get("ok") is True
+        and manifest.get("pipeline_ok") is True
+        and manifest.get("live_http_ok") is True
+        and manifest.get("live_archive_ok") is not False
+    )
+    delayed_live_success = _gaza_delayed_live_success_manifest(manifest, bluesky_receipt)
+    if not live_success and not delayed_live_success:
         return None
     if _positive_int(manifest.get("public_story_count")) != 3:
         return None
     if str(manifest.get("source_adequacy_status") or "") != "limited_source_update":
         return None
-    if str(manifest.get("bluesky_status") or "") != "skipped":
-        return None
-    if str(manifest.get("bluesky_reason") or "") not in {"disabled_by_config", "not_requested", "disabled"}:
-        return None
+    if bluesky_receipt is None:
+        if str(manifest.get("bluesky_status") or "") != "skipped":
+            return None
+        if str(manifest.get("bluesky_reason") or "") not in {"disabled_by_config", "not_requested", "disabled"}:
+            return None
     if not _gaza_manifest_skipped_audio(manifest):
         return None
     if _gaza_manifest_has_release_workflow(manifest):
         return None
-    pages_commit = _safe_head(manifest.get("pages_commit_sha"))
+    pages_commit = _gaza_manifest_pages_commit(manifest)
     if not pages_commit:
         return None
     warnings = [str(item) for item in manifest.get("warnings") or [] if str(item).strip()]
     completed_at = _iso(_gaza_manifest_time(manifest, path))
+    bluesky_status = bluesky_receipt["status"] if bluesky_receipt else str(manifest.get("bluesky_status") or "")
+    bluesky_reason = "posted_after_delayed_live_verification" if bluesky_receipt else str(manifest.get("bluesky_reason") or "")
     return {
         "path": str(path),
         "path_relative": (GAZA_RUN_MANIFEST_RELATIVE / date / "run_manifest.json").as_posix(),
         "completed_at": completed_at,
         "pages_commit_sha": pages_commit,
+        "live_verify_status": "LIVE_OK" if live_success or delayed_live_success else None,
+        "delayed_live_success": bool(delayed_live_success),
         "source_adequacy_status": str(manifest.get("source_adequacy_status") or ""),
         "source_count": _positive_int(manifest.get("source_count")),
         "publisher_count": _positive_int(manifest.get("publisher_count")),
         "public_story_count": _positive_int(manifest.get("public_story_count")),
-        "bluesky_status": str(manifest.get("bluesky_status") or ""),
-        "bluesky_reason": str(manifest.get("bluesky_reason") or ""),
+        "bluesky_status": bluesky_status,
+        "bluesky_reason": bluesky_reason,
+        "bluesky_post_uri": bluesky_receipt.get("post_uri") if bluesky_receipt else None,
+        "bluesky_receipt": bluesky_receipt,
         "audio_generated": False,
         "release_workflow_attempted": False,
         "warnings": warnings,
@@ -873,6 +948,8 @@ def _gaza_manifest_recovery_receipt(
     runner_identity: dict[str, str | None],
 ) -> dict[str, Any]:
     path = Path(str(evidence["path"]))
+    bluesky_posted = str(evidence.get("bluesky_status") or "") == "success"
+    publication_status = "published_and_posted" if bluesky_posted else "pages_only_published"
     return {
         "dispatch": "gaza",
         "task_key": "gaza_daily_dispatch",
@@ -883,7 +960,7 @@ def _gaza_manifest_recovery_receipt(
         "observed_at": evidence["completed_at"],
         "exit_code": 0,
         "status": OperationalStatus.SUCCESS.value,
-        "classification": "pages_only_published",
+        "classification": publication_status,
         "run_id": f"gaza-pages-only-{date}",
         "runner_path": None,
         "branch": runner_identity.get("current_runner_branch"),
@@ -892,22 +969,26 @@ def _gaza_manifest_recovery_receipt(
         "public_side_effects": {
             "pages": True,
             "public_output": True,
-            "bluesky": False,
+            "bluesky": bluesky_posted,
             "audio": False,
             "release_workflow": False,
         },
         "publication_attempted": True,
-        "publication_status": "pages_only_published",
+        "publication_status": publication_status,
         "details": {
             "recovery_evidence": "gaza_run_manifest",
             "run_manifest_path": evidence["path_relative"],
             "pages_commit_sha": evidence["pages_commit_sha"],
+            "live_verify_status": evidence.get("live_verify_status"),
+            "delayed_live_success": bool(evidence.get("delayed_live_success")),
             "source_adequacy_status": evidence["source_adequacy_status"],
             "source_count": evidence["source_count"],
             "publisher_count": evidence["publisher_count"],
             "public_story_count": evidence["public_story_count"],
             "bluesky_status": evidence["bluesky_status"],
             "bluesky_reason": evidence["bluesky_reason"],
+            "bluesky_post_uri": evidence.get("bluesky_post_uri"),
+            "bluesky_receipt_path": (evidence.get("bluesky_receipt") or {}).get("path_relative"),
             "audio_generated": False,
             "release_workflow_attempted": False,
             "limited_source_caveats": evidence["warnings"],
@@ -2490,6 +2571,11 @@ def build_gaza_status(
         "latest_runtime_proof_date": aggregate.get("latest_success_at"),
         "publication_recovery_evidence": publication_recovery_evidence,
         "publication_recovery_applied": publication_recovery_applied,
+        "source_adequacy_status": publication_recovery_evidence.get("source_adequacy_status") if publication_recovery_evidence else None,
+        "public_story_count": publication_recovery_evidence.get("public_story_count") if publication_recovery_evidence else None,
+        "pages_commit_sha": publication_recovery_evidence.get("pages_commit_sha") if publication_recovery_evidence else None,
+        "bluesky_status": publication_recovery_evidence.get("bluesky_status") if publication_recovery_evidence else None,
+        "bluesky_post_uri": publication_recovery_evidence.get("bluesky_post_uri") if publication_recovery_evidence else None,
         "latest_recovery_proof_at": dry_run_recovery_proof.get("completed_at") if dry_run_recovery_proof else None,
         "dry_run_recovery_proof": dry_run_recovery_proof,
         "dry_run_recovery_applied": dry_run_recovery_applied,

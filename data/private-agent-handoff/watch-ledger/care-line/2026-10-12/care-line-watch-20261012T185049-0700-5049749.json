@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T185049-0700-5049749",
+  "scheduled_for": "2026-10-12T18:45:22-07:00",
+  "started_at": "2026-10-12T18:49:12-07:00",
+  "completed_at": "2026-10-12T18:50:49-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-12T14:45:00-07:00",
+    "end": "2026-10-12T18:50:49-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first: no notices newer than 2026-10-09.",
+    "Twelve targeted searches completed; no new qualifying developments confirmed.",
+    "Production Care Line collector remains authoritative.",
+    "A prior direct GitHub write attempt was blocked; this is retry after independent 404 verification."
+  ]
+}

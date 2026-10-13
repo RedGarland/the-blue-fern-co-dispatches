@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T145004-0700-r11-76b3c9",
+  "scheduled_for": "2026-10-13T14:45:54-07:00",
+  "started_at": "2026-10-13T14:50:04-07:00",
+  "completed_at": "2026-10-13T14:51:52.183-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-13T13:46:34.397-07:00",
+    "end_at": "2026-10-13T14:51:52.183-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "End of latest prior durable Food Line hourly heartbeat on ops/watch-ledger; overlap in index recency handled by date verification and excluding already known events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Bounded supplementary high-value miss-class recall only; nationwide production collector remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "discovery_status": "SUCCESS",
+    "priority_classes": [
+      "Only/sole/last/full-service grocery store lost to closure, fire or disaster",
+      "Storm/flood/fire/outage/damage cancellation of emergency food distribution",
+      "Abrupt food-pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate consequences"
+    ],
+    "queries": [
+      "October 13 2026 \"only grocery store\" fire closed town",
+      "October 13 2026 \"last grocery store\" closure town residents",
+      "October 13 2026 \"sole supermarket\" closed flood outage",
+      "October 13 2026 food distribution canceled storm flood food bank",
+      "October 13 2026 food pantry distribution cancelled power outage",
+      "October 13 2026 food pantry suddenly closes serving families",
+      "October 13 2026 SNAP EBT benefits outage interruption state agency",
+      "October 13 2026 WIC benefits service outage interruption notice",
+      "\"Oct 13, 2026\" \"food pantry\" \"closed\" OR \"suspended\" OR \"cancelled\"",
+      "\"October 13, 2026\" \"food distribution\" \"canceled\" OR \"postponed\" storm",
+      "\"October 13, 2026\" \"grocery store\" \"only\" \"closed\" OR \"fire\"",
+      "\"October 13, 2026\" \"SNAP\" OR \"WIC\" \"outage\" \"benefits\" official notice"
+    ],
+    "excluded": [
+      "Spencer, New York only-grocery fire report dated September 14, 2026; not new.",
+      "Prodisee Pantry Stockton, Alabama canceled Saturday Oct 10 distribution due to storm; already identified by prior hourly audit, dated about six days before this run.",
+      "Ruby's Pantry upper-Midwest abrupt shutdown dated April 1, 2026; old.",
+      "Forage multistate EBT payment-processing disruption occurred October 4, 2026; not new.",
+      "Independent EBT-checkup Oct 13 update recycling older events, scheduled Oct 18 maintenance, and routine benefit changes; no current confirmed interruption.",
+      "Generic fundraising, donation guides, historic reports, non-U.S. pages, and grocery reopenings."
+    ],
+    "limitations": "All twelve searches completed but indexing often surfaced older stories despite October 13 date constraints. No newly published, directly corroborated qualifying incident within the watch window was identified. This is not proof of zero disruptions nationwide.",
+    "changes": "No approvals, publication, schedule change, production collection change, or task disablement."
+  }
+}

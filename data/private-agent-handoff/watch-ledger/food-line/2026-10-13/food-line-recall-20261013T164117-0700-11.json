@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261013T164117-0700-11",
+  "scheduled_for": "2026-10-13T15:45:54-07:00",
+  "started_at": "2026-10-13T16:41:17-07:00",
+  "completed_at": "2026-10-13T16:43:14-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T15:48:00-07:00",
+    "end": "2026-10-13T16:42:00-07:00",
+    "scope": "newly published or newly surfaced U.S. disruptions since preceding hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "max_searches": 12,
+    "search_engine": "web search (12 targeted queries, fresh/recent constrained)",
+    "covered_classes": [
+      "sole/only/last/full-service grocery closures or disasters",
+      "weather/disaster-related emergency food distribution cancellations",
+      "abrupt pantry/food bank closures or major access reduction",
+      "new official SNAP/WIC/food-assistance interruption"
+    ],
+    "result": "No confirmed newly reported, qualifying, nonduplicate disruption during the bounded search interval.",
+    "direct_source_issue": "One Oct 13 third-party pantry inventory article (Wisevoter, Wilson NC) could not be fetched directly; snippet described low inventory but did not document an abrupt closure or major access restriction. Not recorded as a positive finding.",
+    "exclusions": [
+      "Older sole-grocery store fire/closure items",
+      "Future October 14 or older reports not establishing a new event in interval",
+      "Donation/shortage stories lacking documented immediate service restriction",
+      "Ordinary grocery closures in places with other full-service stores",
+      "2025 SNAP shutdown articles"
+    ],
+    "limitations": [
+      "Search indexing may lag the one-hour observation window",
+      "No primary production collector status was inferred or changed",
+      "One direct source page unavailable; degraded search coverage, not a verified new finding"
+    ],
+    "production_collector_authoritative": true,
+    "publication_attempted": false,
+    "approval_attempted": false,
+    "schedule_modified": false
+  }
+}

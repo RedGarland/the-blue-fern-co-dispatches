@@ -47,7 +47,7 @@
   "dry_run_recovery_applied": false,
   "dry_run_recovery_proof": null,
   "effective_receipt_count": 0,
-  "last_exported_at": "2026-10-13T07:15:04.176437Z",
+  "last_exported_at": "2026-10-13T10:15:04.058617Z",
   "last_receipt_at": null,
   "latest_recovery_proof_at": null,
   "latest_runtime_proof_date": null,

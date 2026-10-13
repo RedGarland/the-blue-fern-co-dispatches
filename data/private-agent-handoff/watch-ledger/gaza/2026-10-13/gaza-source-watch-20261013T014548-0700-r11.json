@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T014548-0700-r11",
+  "scheduled_for": "2026-10-13T01:44:51-07:00",
+  "started_at": "2026-10-13T01:45:48-07:00",
+  "completed_at": "2026-10-13T01:47:25-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T00:53:31.051-07:00",
+    "end": "2026-10-13T01:47:25-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary watch only; primary daily production remains authoritative.",
+    "OCHA OPT checked first; latest visible Gaza update dated 2026-10-06.",
+    "WHO Eastern Mediterranean oPt endpoint returned HTTP 502; global health-topic fallback accessible but not a current incident feed. Healthcare source coverage incomplete.",
+    "12 additional targeted searches; no newly verified, nonduplicate, in-Gaza development.",
+    "Previously surfaced 2026-10-13 WAFA child-death follow-up and Khan Younis two-injury report excluded as prior-watch discoveries; QNA repeats those reports.",
+    "Historical and unrelated West Bank/region items excluded."
+  ]
+}

@@ -2424,9 +2424,11 @@ def test_care_external_access_restriction_proof_degrades_without_open_incident(t
     assert care["stale_observability"] is False
     assert care["source_failure_summary"]["external_access_restriction_count"] == 2
     assert care["source_failure_summary"]["unclassified_source_failure_count"] == 0
+    assert care["coverage_caveat_only"] is True
     assert care["aggregate_degradation_required"] is False
     assert care["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
     assert care["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
+    assert care["debug_summary"]["coverage_caveat_only"] is True
     proof = next(row for row in care["task_summaries"] if row["run_id"] == "z-external-proof")
     assert proof["diagnostics"]["failed_source_count"] == 2
     assert proof["diagnostics"]["failed_sources"][0]["external_classification"] == "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
@@ -2491,6 +2493,8 @@ def test_care_external_access_restriction_proof_clears_stale_publication_failure
     assert status["aggregate_status"] == "SUCCESS"
     assert status["recovery_lifecycle"] == "HEALTHY"
     assert status["source_failure_summary"]["all_current_failures_external"] is True
+    assert status["coverage_caveat_only"] is True
+    assert status["debug_summary"]["coverage_caveat_only"] is True
     assert status["aggregate_degradation_required"] is False
     assert status["debug_summary"]["aggregate_degradation_required"] is False
     assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
@@ -2604,6 +2608,7 @@ def test_care_collection_checkout_failures_are_superseded_by_recovery_proofs(tmp
     assert status["receipt_completeness"] == "COMPLETE"
     assert status["source_failure_summary"]["external_access_restriction_count"] == 2
     assert status["source_failure_summary"]["unclassified_source_failure_count"] == 0
+    assert status["coverage_caveat_only"] is True
     assert status["aggregate_degradation_required"] is False
     assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
     assert status["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
@@ -2718,6 +2723,9 @@ def test_care_mixed_external_and_unclassified_source_failure_reopens_incident(tm
     assert status["debug_summary"]["operator_assessment"] == "FAILED_ACTION_REQUIRED"
     assert status["source_failure_summary"]["external_access_restriction_count"] == 1
     assert status["source_failure_summary"]["unclassified_source_failure_count"] == 1
+    assert status["coverage_caveat_only"] is False
+    assert status["debug_summary"]["coverage_caveat_only"] is False
+    assert status["aggregate_degradation_required"] is True
     assert status["debug_summary"]["primary_layer"] == "SOURCE_CLASSIFICATION"
     assert status["debug_summary"]["failed_source_count"] == 2
     assert status["debug_summary"]["unclassified_source_failure_count"] == 1
@@ -2779,6 +2787,8 @@ def test_care_mixed_external_and_transient_source_failure_is_non_actionable(tmp_
     assert summary["external_access_restriction_count"] == 1
     assert summary["transient_source_failure_count"] == 1
     assert summary["unclassified_source_failure_count"] == 0
+    assert summary["coverage_caveat_only"] is True
+    assert status["coverage_caveat_only"] is True
     assert summary["aggregate_degradation_required"] is False
     assert status["aggregate_degradation_required"] is False
     assert summary["all_current_failures_external"] is False

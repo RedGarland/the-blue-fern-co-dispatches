@@ -1375,6 +1375,7 @@ def _care_source_failure_summary(
         ],
         "all_current_failures_external": all_external,
         "all_current_failures_non_actionable": all_non_actionable,
+        "coverage_caveat_only": non_actionable_with_coverage,
         "aggregate_degradation_required": failed_count > 0 and not non_actionable_with_coverage,
         "successful_attempt_count": successful_attempt_count,
     }
@@ -2445,6 +2446,7 @@ def build_care_line_status(
             for receipt in non_authoritative_receipts
         ],
         "source_failure_summary": source_failure_summary,
+        "coverage_caveat_only": source_failure_summary.get("coverage_caveat_only"),
         "aggregate_degradation_required": source_failure_summary.get("aggregate_degradation_required"),
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,

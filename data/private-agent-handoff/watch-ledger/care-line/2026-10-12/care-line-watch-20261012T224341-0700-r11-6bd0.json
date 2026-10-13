@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261012T224341-0700-r11-6bd0",
+  "scheduled_for": "2026-10-12T22:43:41-07:00",
+  "started_at": "2026-10-12T22:43:41-07:00",
+  "completed_at": "2026-10-12T22:45:05.681-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-12T21:42:00-07:00",
+    "end": "2026-10-12T22:45:05.681-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_collector_authoritative": true,
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice": "2026-10-09 Tender Home Health termination (CA); no newer notice listed in current index.",
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital and emergency department closures",
+      "maternity services",
+      "rural and emergency-service losses",
+      "behavioral health",
+      "dialysis and oncology",
+      "primary care",
+      "ambulance service",
+      "air-medical bases",
+      "restoration and reopening",
+      "official state closures",
+      "CMS terminations and CLIA actions",
+      "early next-day reports"
+    ],
+    "exclusions": [
+      "Older and duplicate events",
+      "Previously reported hurricane-related service interruptions/recovery",
+      "Holiday-only temporary office and laboratory closures",
+      "Planned relocations or reopenings without new abrupt restoration",
+      "Canadian events",
+      "Ownership stories without concrete service change",
+      "Unimplemented proposals",
+      "Unsupported claims"
+    ],
+    "limitations": [
+      "Targeted indexed web search cannot guarantee exhaustive recall, especially for late-night local news.",
+      "CMS public notices index checked live; no item dated later than 2026-10-09."
+    ],
+    "findings_count": 0,
+    "last_completed_watch_end": "2026-10-12T21:42:00-07:00"
+  }
+}

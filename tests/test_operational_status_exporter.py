@@ -2435,6 +2435,8 @@ def test_care_external_access_restriction_proof_degrades_without_open_incident(t
     assert result["system"]["system_status"] == "SUCCESS"
     assert system_care["aggregate_status"] == "SUCCESS"
     assert system_care["source_failure_summary"]["external_access_restriction_count"] == 2
+    assert system_care["coverage_caveat_only"] is True
+    assert system_care["aggregate_degradation_required"] is False
 
 
 def test_care_external_access_restriction_proof_clears_stale_publication_failure(tmp_path: Path) -> None:

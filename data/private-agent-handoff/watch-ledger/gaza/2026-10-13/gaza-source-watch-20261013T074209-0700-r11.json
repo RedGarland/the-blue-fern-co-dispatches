@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T074209-0700-r11",
+  "scheduled_for": "2026-10-13T07:44:51-07:00",
+  "started_at": "2026-10-13T07:42:09-07:00",
+  "completed_at": "2026-10-13T14:44:23.918Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T06:44:00-07:00",
+    "end": "2026-10-13T14:44:23.918Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "previous hourly watch reportedly completed about 06:44 PDT; search window starts at that checkpoint"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Gaza publisher/collector remains authoritative. No approval, publication, schedule, or public-site changes.",
+    "OCHA OPT checked first: https://www.ochaopt.org/ accessible; the latest listed Gaza entry is the Reported impact snapshot dated 2026-10-09 for 2026-10-07. No fresh qualifying OCHA update found.",
+    "WHO checked second: https://www.who.int/ search accessible, but WHO Eastern Mediterranean Palestine endpoint https://www.emro.who.int/palestine/ returned HTTP 502; healthcare coverage reduced.",
+    "Exactly 12 subsequent targeted searches covered OCHA, WHO regional health, WAFA casualties, Reuters, AP, UNRWA, UNICEF, WFP, ICRC, MSF, ReliefWeb and time-sensitive strike/ceasefire developments. Search results contained older or unrelated information, not new qualifying verified ground events.",
+    "WAFA English homepage https://english.wafa.ps/ accessible and dated 2026-10-13: its latest Gaza-specific dispatches (Al-Tuffah vehicle strike, 24-hour casualty tally, Khan Younis injuries, child fatality) were previously identified and excluded as duplicates. Later visible headline concerned an Arab League statement, excluded as non-ground diplomatic commentary.",
+    "Publication timestamps may lag events and search indexing may lag publication; no_findings means none newly verified in this bounded recall, not that no Gaza events occurred.",
+    "Source-access degradation (WHO EMRO HTTP 502) warrants DEGRADED, rather than FAILED, because OCHA and other reporting were accessible."
+  ]
+}

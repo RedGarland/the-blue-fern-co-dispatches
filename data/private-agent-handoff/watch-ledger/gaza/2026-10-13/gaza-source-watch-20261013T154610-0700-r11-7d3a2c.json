@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T154610-0700-r11-7d3a2c",
+  "scheduled_for": "2026-10-13T15:44:51-07:00",
+  "started_at": "2026-10-13T15:46:10-07:00",
+  "completed_at": "2026-10-13T22:47:35.911Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T14:50:00-07:00",
+    "end": "2026-10-13T22:47:35.911Z",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first: homepage last listed Gaza update dated October 9.",
+    "WHO regional page timed out; WHO global fallback checked; health-region coverage incomplete.",
+    "Twelve additional targeted searches found no nonduplicate qualifying developments.",
+    "Earlier same-day reports already surfaced; no publication, approval or schedule change."
+  ]
+}

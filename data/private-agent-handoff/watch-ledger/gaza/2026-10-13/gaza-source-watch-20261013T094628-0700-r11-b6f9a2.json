@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T094628-0700-r11-b6f9a2",
+  "scheduled_for": "2026-10-13T09:44:51-07:00",
+  "started_at": "2026-10-13T09:46:28-07:00",
+  "completed_at": "2026-10-13T16:49:04.514Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T15:44:27.832Z",
+    "end": "2026-10-13T16:49:04.514Z",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only. Production authoritative; no production or publication side effects.",
+    "OCHA OPT first: https://www.ochaopt.org/updates current listing through October 9, 2026.",
+    "WHO second: https://www.emro.who.int/opt/ returned HTTP 502; WHO global news was accessible, without a newly qualifying update.",
+    "Twelve additional targeted searches covered humanitarian agencies, local reporting, wires, crossings, medical care and related impact classes; no new, independently traceable, nonduplicate development verified.",
+    "WAFA English direct access timed out; indexed results were older. Prior Oct 13 reports were excluded as previously detected.",
+    "Coverage DEGRADED due to WHO and WAFA access failures. Window from previous persisted heartbeat at 08:44:27 PDT."
+  ]
+}

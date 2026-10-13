@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T054717-0700-r11",
+  "scheduled_for": "2026-10-13T05:44:51-07:00",
+  "started_at": "2026-10-13T05:47:17-07:00",
+  "completed_at": "2026-10-13T12:49:01.418Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T04:42:16.753-07:00",
+    "end": "2026-10-13T12:49:01.418Z",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary watch only. Production collector and publication remain authoritative and unchanged.",
+    "OCHA OPT checked first: https://www.ochaopt.org/updates showed latest listing 2026-10-09; no new relevant publication.",
+    "WHO checked second: EMRO news endpoint timed out; WHO global crisis page was accessible without new qualifying Gaza updates.",
+    "Exactly 12 additional targeted searches across WAFA, Reuters, AP, UNRWA, WFP, UNICEF, PRCS, crossings, healthcare, ICRC, water access, UN news.",
+    "WAFA 2026-10-13 current Gaza reports overlapped findings already recorded in prior checks. Latest other reports did not concern Gaza. Reuters October 12 report predates window.",
+    "UN News blocked by robots.txt; UNRWA newsroom returned HTTP 403. Combined coverage incomplete; status DEGRADED.",
+    "No new verified nonduplicate developments detected in this bounded window; late indexing remains possible."
+  ]
+}

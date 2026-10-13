@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T134713-0700-r11-f92d",
+  "scheduled_for": "2026-10-13T13:45:22-07:00",
+  "started_at": "2026-10-13T13:47:13-07:00",
+  "completed_at": "2026-10-13T20:48:37.287Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T12:50:46-07:00",
+    "end": "2026-10-13T13:48:37.287-07:00",
+    "basis": "Previous watch heartbeat completed at 12:50:46 PDT"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall only; national production collection authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_provider": "Tender Home Health",
+      "new_notices": 0
+    },
+    "additional_targeted_searches": 12,
+    "failed_searches": 0,
+    "topics": [
+      "hospital and ED",
+      "maternity",
+      "rural emergency",
+      "ambulance",
+      "air-medical base",
+      "dialysis",
+      "behavioral health",
+      "oncology",
+      "primary care",
+      "reopening",
+      "territories",
+      "regulatory action"
+    ],
+    "excluded": "Older Fitzgibbon and Roseland closure reports; New Orleans clinic reopening scheduled for October 14, not yet effective; proposals and non-US services.",
+    "conclusion": "No newly confirmed qualifying care-access change in bounded search window.",
+    "side_effects": "None: no approval, publication, schedule modification, or task disabling."
+  }
+}

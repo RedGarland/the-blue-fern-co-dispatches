@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261012T223956-0700-r11",
+  "scheduled_for": "2026-10-12T22:44:51-07:00",
+  "started_at": "2026-10-12T22:39:56-07:00",
+  "completed_at": "2026-10-12T22:42:43-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-12T21:49:39-07:00",
+    "end": "2026-10-12T22:42:43-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; homepage accessible, latest listed update 2026-10-06.",
+    "WHO checked second; Eastern Mediterranean regional endpoint HTTP 502; WHO global Gaza emergency overview accessible but without a new update. Health-source coverage reduced.",
+    "12 additional targeted searches: Reuters, AP, WAFA, ReliefWeb, UNRWA, UNICEF, ICRC, MSF, WHO, crossings and ceasefire. No new nonduplicate qualifying findings in the search window.",
+    "Reuters 2026-10-12 06:43 UTC report and prior WAFA casualty/detention reports excluded as out-of-window or previously observed.",
+    "Supplementary watch only; production authoritative. No production, publication, approval or schedule changes."
+  ]
+}

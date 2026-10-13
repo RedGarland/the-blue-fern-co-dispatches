@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T114727-0700-a13b7c8e",
+  "scheduled_for": "2026-10-13T11:45:54-07:00",
+  "started_at": "2026-10-13T11:47:27-07:00",
+  "completed_at": "2026-10-13T18:48:31.463Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T10:46:00-07:00",
+    "end": "2026-10-13T11:47:27-07:00",
+    "geography": "United States",
+    "criterion": "newly published or newly announced qualifying disruptions since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary bounded recall watch only. Production Food Line collection remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "checked_classes": [
+      "only/sole/last/full-service grocery loss, closure, fire or disaster",
+      "weather/disaster/facility-related emergency food distribution cancellation or suspension",
+      "abrupt food pantry or food bank closure or material reduction in access",
+      "new official SNAP/WIC/food assistance interruption with immediate access effects"
+    ],
+    "disposition": "No directly verified, nonduplicate qualifying disruption within the hourly observation window. Earlier events, unrelated grocery closures, future scheduled closures, routine assistance notices, generic storm coverage and service openings excluded.",
+    "important_context": "Search results surfaced an October 7 Alabama storm-related canceled distribution and October 9 Feeding the Gulf Coast office closure; both predate this window. A recent third-party EBT archive lists an October 4 outage and October 18 scheduled maintenance, neither qualifying as a new interruption.",
+    "search_queries": [
+      "\"only grocery store\" closed fire October 13 2026 community",
+      "\"sole grocery store\" fire closure October 2026 town",
+      "\"last grocery store\" shuts down October 13 2026",
+      "\"only full-service grocery store\" closed October 2026",
+      "food pantry closed today October 13 2026 storm flood power outage",
+      "food bank distribution canceled October 13 2026 weather",
+      "emergency food distribution suspended October 13 2026 flooding fire",
+      "food pantry abruptly closed October 13 2026 community",
+      "SNAP benefits interruption October 13 2026 EBT outage official",
+      "WIC office closures benefits interruption October 13 2026 official",
+      "October 13 2026 food bank pantry distribution canceled hurricane Isaias Florida Alabama",
+      "October 13 2026 SNAP WIC EBT service outage suspension agency notice"
+    ],
+    "publication_or_approval_attempted": false,
+    "schedule_modified": false
+  }
+}

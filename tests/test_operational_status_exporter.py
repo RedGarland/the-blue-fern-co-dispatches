@@ -2418,17 +2418,20 @@ def test_care_external_access_restriction_proof_degrades_without_open_incident(t
 
     care = result["care_line"]
     system_care = result["system"]["dispatches"]["care-line"]
-    assert care["aggregate_status"] == "DEGRADED"
+    assert care["aggregate_status"] == "SUCCESS"
     assert care["recovery_lifecycle"] == "HEALTHY"
     assert care["receipt_completeness"] == "COMPLETE"
     assert care["stale_observability"] is False
     assert care["source_failure_summary"]["external_access_restriction_count"] == 2
     assert care["source_failure_summary"]["unclassified_source_failure_count"] == 0
+    assert care["aggregate_degradation_required"] is False
+    assert care["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
+    assert care["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
     proof = next(row for row in care["task_summaries"] if row["run_id"] == "z-external-proof")
     assert proof["diagnostics"]["failed_source_count"] == 2
     assert proof["diagnostics"]["failed_sources"][0]["external_classification"] == "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
-    assert result["system"]["system_status"] == "DEGRADED"
-    assert system_care["aggregate_status"] == "DEGRADED"
+    assert result["system"]["system_status"] == "SUCCESS"
+    assert system_care["aggregate_status"] == "SUCCESS"
     assert system_care["source_failure_summary"]["external_access_restriction_count"] == 2
 
 
@@ -2485,9 +2488,11 @@ def test_care_external_access_restriction_proof_clears_stale_publication_failure
         expected_instances=CARE_EXPECTED_INSTANCES,
     )
 
-    assert status["aggregate_status"] == "DEGRADED"
+    assert status["aggregate_status"] == "SUCCESS"
     assert status["recovery_lifecycle"] == "HEALTHY"
     assert status["source_failure_summary"]["all_current_failures_external"] is True
+    assert status["aggregate_degradation_required"] is False
+    assert status["debug_summary"]["aggregate_degradation_required"] is False
     assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
     assert status["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
     assert status["debug_summary"]["failed_source_count"] == 2
@@ -2594,11 +2599,12 @@ def test_care_collection_checkout_failures_are_superseded_by_recovery_proofs(tmp
         ],
     )
 
-    assert status["aggregate_status"] == "DEGRADED"
+    assert status["aggregate_status"] == "SUCCESS"
     assert status["recovery_lifecycle"] == "HEALTHY"
     assert status["receipt_completeness"] == "COMPLETE"
     assert status["source_failure_summary"]["external_access_restriction_count"] == 2
     assert status["source_failure_summary"]["unclassified_source_failure_count"] == 0
+    assert status["aggregate_degradation_required"] is False
     assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
     assert status["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
     assert [row["run_id"] for row in status["non_authoritative_receipts"]] == [
@@ -2766,12 +2772,15 @@ def test_care_mixed_external_and_transient_source_failure_is_non_actionable(tmp_
     )
 
     summary = status["source_failure_summary"]
-    assert status["aggregate_status"] == "DEGRADED"
+    assert status["aggregate_status"] == "SUCCESS"
     assert status["recovery_lifecycle"] == "HEALTHY"
-    assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES"
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
+    assert status["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
     assert summary["external_access_restriction_count"] == 1
     assert summary["transient_source_failure_count"] == 1
     assert summary["unclassified_source_failure_count"] == 0
+    assert summary["aggregate_degradation_required"] is False
+    assert status["aggregate_degradation_required"] is False
     assert summary["all_current_failures_external"] is False
     assert summary["all_current_failures_non_actionable"] is True
     assert status["debug_summary"]["transient_source_failure_count"] == 1

@@ -1279,6 +1279,77 @@ def test_persistent_http_source_failure_is_not_retried(tmp_path: Path, monkeypat
     assert result["failure_diagnostic"]["retry_attempted"] is False
 
 
+def test_revalidated_external_403_retries_once_and_succeeds(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(
+        source_id="revalidated-feed",
+        name="Revalidated Feed",
+        external_access_restriction_remediation={
+            "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "runner_probe_status": "ok",
+        },
+    )
+    calls = {"count": 0}
+
+    def flaky_403_fetch(_source, timeout=20, allow_insecure_tls=False):  # noqa: ANN001
+        calls["count"] += 1
+        if calls["count"] == 1:
+            raise urllib.error.HTTPError("https://example.org/feed.xml", 403, "Forbidden", {}, None)
+        return b"<rss><channel></channel></rss>", {"final_url": "https://example.org/feed.xml"}
+
+    monkeypatch.setattr(pipeline, "fetch_source", flaky_403_fetch)
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-10-12",
+        run_id="run-revalidated",
+        source_row={"source": source},
+        fetch_timeout=1,
+    )
+
+    assert calls["count"] == 2
+    assert result["attempt"]["collection_status"] == "ok"
+    assert result["attempt"]["retry_state"] == "retried_success"
+    assert result["failure"] == ""
+
+
+def test_revalidated_external_403_failure_is_classified_transient_after_retry(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(
+        source_id="revalidated-feed",
+        name="Revalidated Feed",
+        external_access_restriction_remediation={
+            "previous_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "runner_probe_status": "ok",
+        },
+    )
+    calls = {"count": 0}
+
+    def blocked_fetch(_source, timeout=20, allow_insecure_tls=False):  # noqa: ANN001
+        calls["count"] += 1
+        raise urllib.error.HTTPError("https://example.org/feed.xml", 403, "Forbidden", {}, None)
+
+    monkeypatch.setattr(pipeline, "fetch_source", blocked_fetch)
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-10-12",
+        run_id="run-revalidated-blocked",
+        source_row={"source": source},
+        fetch_timeout=1,
+    )
+
+    diagnostic = result["failure_diagnostic"]
+    assert calls["count"] == 2
+    assert result["attempt"]["collection_status"] == "failed"
+    assert result["attempt"]["retry_state"] == "retried_failed"
+    assert diagnostic["http_status"] == 403
+    assert diagnostic["failure_status_class"] == "transient_external_access_restriction"
+    assert diagnostic["transient"] is True
+    assert diagnostic["retry_attempted"] is True
+    assert diagnostic["retry_count"] == 1
+    assert diagnostic["request_mode"] == "urllib"
+    assert diagnostic["user_agent"] == pipeline.CARE_LINE_USER_AGENT
+
+
 def test_source_failure_payload_preserves_http_status_classification(tmp_path: Path, monkeypatch) -> None:
     source = _care_source(source_id="blocked", name="Blocked Source")
 

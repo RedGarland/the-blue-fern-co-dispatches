@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T045202592-0700-b44dc7",
+  "scheduled_for": "2026-10-13T04:45:54-07:00",
+  "started_at": "2026-10-13T04:50:56-07:00",
+  "completed_at": "2026-10-13T04:53:20.288-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-13T03:52:13.458-07:00",
+    "end_at": "2026-10-13T04:53:20.288-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "The latest prior persisted hourly watch completed at 03:52:13.458 PDT. Supplementary search also screened late-indexed older candidates for previously missed disruption reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only; Food Line production collection remains authoritative.",
+    "discovery_status": "SUCCESS",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "priority_classes": [
+      "Only/sole/last/full-service community grocery store lost/closed/fire/disaster",
+      "Disaster-related cancellation or suspension of emergency food distribution",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire October 13 2026 community",
+      "\"last grocery store\" closing October 2026 town fire",
+      "\"only supermarket\" \"closed\" \"October 12\" 2026",
+      "\"food distribution\" canceled storm October 13 2026 food bank",
+      "\"food pantry\" closed \"October 13\" 2026 storm power",
+      "\"food bank\" \"distribution cancelled\" flood October 2026",
+      "\"food pantry\" \"temporarily closed\" October 12 2026",
+      "SNAP EBT outage October 13 2026 official benefits",
+      "WIC service suspended October 13 2026 state agency",
+      "SNAP benefits delayed interrupted October 13 2026 USDA state agency",
+      "October 13 2026 \"food distribution\" \"cancelled\" outage storm county",
+      "October 13 2026 \"food pantry\" \"closed\" \"flood\" \"fire\" site:com"
+    ],
+    "excluded_candidates": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 14 report, not new within hourly window."
+      },
+      {
+        "source_url": "https://www.chron.com/food/article/wheatsville-coop-austin-texas-closing-22473858.php",
+        "reason": "Austin grocery closure is not the town's only/sole/last store; event scheduled October 25."
+      },
+      {
+        "source_url": "https://www.hawaiinewsnow.com/2026/10/03/hawaii-dhs-offers-replacement-snap-benefits-molokai-households-ahead-outages/",
+        "reason": "Older replacement-benefits assistance, not newly interrupted SNAP benefits."
+      }
+    ],
+    "assessment": "No verified new qualifying nonduplicate food-access disruption in the checked hour. Many indexed hits were old or out of scope. Search-engine indexing does not establish nationwide absence.",
+    "side_effects": "None: no publishing, approval, production collector changes, or schedule changes."
+  }
+}

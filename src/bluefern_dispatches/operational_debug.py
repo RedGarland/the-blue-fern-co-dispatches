@@ -82,10 +82,10 @@ def _failure_layer(*, aggregate_status: str, primary: dict[str, Any] | None, sou
     if aggregate_status == "STALE_OBSERVABILITY":
         return "OBSERVABILITY"
     if source_summary.get("failed_source_count"):
-        if source_summary.get("all_current_failures_external") is True:
-            return "EXTERNAL_DEPENDENCY"
         if _int(source_summary.get("unclassified_source_failure_count")):
             return "SOURCE_CLASSIFICATION"
+        if _int(source_summary.get("external_access_restriction_count")):
+            return "EXTERNAL_DEPENDENCY"
         return "SOURCE"
     if not primary:
         return "NONE" if aggregate_status in {"SUCCESS", "SAFE_NO_OP"} else "UNKNOWN"
@@ -122,6 +122,15 @@ def _operator_assessment(
     if _private_review_pending_item_count(private_review_backlog):
         return "ACTION_REQUIRED_PENDING_REVIEW"
     if aggregate_status in {"SUCCESS", "SAFE_NO_OP"}:
+        if (
+            _int(source_summary.get("external_access_restriction_count"))
+            and not _int(source_summary.get("unclassified_source_failure_count"))
+        ):
+            return "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
+        if source_summary.get("all_current_failures_non_actionable") is True and _int(
+            source_summary.get("transient_source_failure_count")
+        ):
+            return "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES"
         if source_watch_exclusion_summary.get("all_exclusions_non_actionable") is True:
             return "HEALTHY_WITH_SOURCE_EXCLUSIONS"
         return "HEALTHY"
@@ -201,6 +210,9 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
         "external_access_restriction_count": _int(source_summary.get("external_access_restriction_count")),
         "transient_source_failure_count": _int(source_summary.get("transient_source_failure_count")),
         "unclassified_source_failure_count": _int(source_summary.get("unclassified_source_failure_count")),
+        "aggregate_degradation_required": source_summary.get("aggregate_degradation_required")
+        if "aggregate_degradation_required" in source_summary
+        else None,
         "unaccounted_event_count": unaccounted_count,
         "all_current_failures_external": source_summary.get("all_current_failures_external")
         if "all_current_failures_external" in source_summary

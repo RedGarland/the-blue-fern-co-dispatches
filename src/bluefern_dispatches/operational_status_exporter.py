@@ -1345,11 +1345,17 @@ def _care_source_failure_summary(
             unclassified_count += 1
     unreported_count = max(0, failed_count - len(unresolved_failed_rows))
     unclassified_count += unreported_count
+    successful_attempt_count = _care_detail_count(receipt, "successful_attempt_count")
     all_external = failed_count > 0 and len(external_sources) == failed_count and unclassified_count == 0
     all_non_actionable = (
         failed_count > 0
         and len(external_sources) + len(transient_sources) == failed_count
         and unclassified_count == 0
+    )
+    non_actionable_with_coverage = (
+        all_non_actionable
+        and isinstance(successful_attempt_count, int)
+        and successful_attempt_count > 0
     )
     return {
         "failed_source_count": failed_count,
@@ -1369,7 +1375,8 @@ def _care_source_failure_summary(
         ],
         "all_current_failures_external": all_external,
         "all_current_failures_non_actionable": all_non_actionable,
-        "successful_attempt_count": _care_detail_count(receipt, "successful_attempt_count"),
+        "aggregate_degradation_required": failed_count > 0 and not non_actionable_with_coverage,
+        "successful_attempt_count": successful_attempt_count,
     }
 
 
@@ -2220,6 +2227,8 @@ def _care_adjusted_aggregate_status(
     )
     if has_non_collection_failure:
         return aggregate_status
+    if source_failure_summary.get("aggregate_degradation_required") is False:
+        return OperationalStatus.SUCCESS.value
     return OperationalStatus.DEGRADED.value
 
 
@@ -2436,6 +2445,7 @@ def build_care_line_status(
             for receipt in non_authoritative_receipts
         ],
         "source_failure_summary": source_failure_summary,
+        "aggregate_degradation_required": source_failure_summary.get("aggregate_degradation_required"),
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,
         "publication_attempted": publication_attempted,

@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T134351-0700-r11-6f8a13",
+  "scheduled_for": "2026-10-13T13:45:54-07:00",
+  "started_at": "2026-10-13T13:43:51-07:00",
+  "completed_at": "2026-10-13T13:46:34.397-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-13T12:42:00-07:00",
+    "end_at": "2026-10-13T13:46:34.397-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly watch ran 12:42–12:45 Pacific; conservatively include overlap and deduplicate older reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary targeted recall only; production nationwide collection remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failure_count": 0,
+    "discovery_status": "SUCCESS",
+    "priority_classes": [
+      "Only/sole/last/full-service grocery store loss",
+      "Disaster-caused emergency food distribution suspension",
+      "Abrupt pantry or food bank access reduction",
+      "Official immediate SNAP/WIC interruption"
+    ],
+    "queries": [
+      "\"only grocery store\" closed fire October 13 2026 United States",
+      "\"sole grocery store\" OR \"last grocery store\" closure October 13 2026",
+      "\"only full-service grocery\" closing town October 13 2026",
+      "\"food distribution\" canceled storm flood October 13 2026 pantry",
+      "\"food bank\" distribution canceled October 13 2026 power outage",
+      "\"emergency food distribution\" suspended October 13 2026 fire damage",
+      "\"food pantry\" closed flooding October 13 2026",
+      "\"food pantry\" sudden closure October 13 2026 community",
+      "\"food bank\" operations suspended October 13 2026 facility damage",
+      "site:gov October 13 2026 SNAP EBT outage delayed benefits interrupted",
+      "site:gov October 13 2026 WIC clinic benefits suspended interrupted",
+      "\"SNAP\" \"October 13, 2026\" interrupted access state benefits"
+    ],
+    "excluded": [
+      "Prior October 7 Prodisee Pantry Oct 10 storm cancellation (already known, outside window).",
+      "September sole-grocery closures in Eastport ME and Latta SC (old).",
+      "October 14 Colorado Safeway-branded store closure announcement (after window, not community's only grocery option).",
+      "Older flood/fire reports and generic food assistance news."
+    ],
+    "limitations": "Search indexing predominantly retrieved older events; no newly sourced qualifying event verified during this bounded check. No approval, publication, schedule or production collector changes."
+  }
+}

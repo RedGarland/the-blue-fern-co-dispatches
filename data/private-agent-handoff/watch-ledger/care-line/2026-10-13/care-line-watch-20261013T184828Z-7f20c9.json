@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T184828Z-7f20c9",
+  "scheduled_for": "2026-10-13T11:45:22-07:00",
+  "started_at": "2026-10-13T11:48:28-07:00",
+  "completed_at": "2026-10-13T11:50:08-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-13T10:45:22-07:00",
+    "date_to": "2026-10-13T11:48:28-07:00",
+    "edition_date": "2026-10-13",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; national production collection remains authoritative. Scheduled hourly prior-check boundary used; actual previous execution completion timestamp could not be independently verified.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Most recent listed notice is 2026-10-09 Tender Home Health (CA) termination, previously observed; no new notice dated in this window.",
+    "Exactly 12 additional targeted web searches, covering hospital/ED, maternity, rural emergency care, behavioral health, dialysis, oncology, primary care, ambulance, air-medical, regulatory suspensions, restoration, and territory care-access changes. No new qualifying actionable change confirmed.",
+    "Excluded previously announced Roseland Community Hospital maternity closure, risk assessments, proposals, Canadian emergency department interruptions, and non-service business/ownership coverage.",
+    "Search-engine indexing/recency limits prevent proof of universal absence; zero findings means none confirmed in bounded supplemental search.",
+    "No approval, publication, scheduling change, or task disabling."
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T124451-0700-r10",
+  "scheduled_for": "2026-10-14T12:44:51-07:00",
+  "started_at": "2026-10-14T12:43:35-07:00",
+  "completed_at": "2026-10-14T12:48:16.658-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T11:45:41-07:00",
+    "end": "2026-10-14T12:48:16.658-07:00",
+    "prior_heartbeat": "gaza-source-watch-20261014T114451-0700-r10"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261014-un-aid-access-restrictions-oct14",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/175907",
+      "title": "UN reports Israeli airstrikes, shelling and gunfire across Gaza",
+      "publisher": "WAFA, citing UN Deputy Spokesperson Farhan Haq",
+      "source_date": "2026-10-14",
+      "publication_date": "2026-10-14",
+      "publication_at": "2026-10-14T12:00:00-07:00",
+      "event_date": null,
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Humanitarian aid delivery, partner access, fuel, winterization supplies, and medical supplies",
+      "exact_supporting_passage": "operational bans on certain partners, import limitations on essential goods and access denials affecting more than 64 percent of the Strip.",
+      "source_type": "established_news_agency_attributing_UN_briefing",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "summary": "WAFA's October 14 report of the UN daily briefing describes new same-day official reporting on ongoing access denials affecting over 64% of Gaza; UN agencies obtained some fuel, medicines, protective sheeting and winter clothing on October 13, but volumes remain inadequate. This is an updated account of ongoing restrictions, not evidence they began within the watch window.",
+      "discovery_context": {
+        "query": "Gaza October 14 2026 afternoon Reuters AFP AP new deaths hospital food water relief operations",
+        "method": "WAFA source surfaced in bounded search results",
+        "publication_local": "2026-10-14 22:00 Asia/Jerusalem",
+        "un_primary_transcript_verified": false,
+        "previous_check_completed_at": "2026-10-14T11:45:41-07:00",
+        "prior_duplicate_groups_excluded": [
+          "gaza-20261014-jabalia-shooting",
+          "gaza-olive-harvest-2026"
+        ],
+        "event_time_verified": false
+      }
+    }
+  ],
+  "coverage_notes": [
+    "OCHA OPT checked first: latest listed Gaza update Oct 9; none within watch window.",
+    "WHO checked first: global Gaza emergency hub accessible, EMRO regional endpoint inaccessible in this tool. Current regional health coverage not compensated; DEGRADED.",
+    "Exactly 12 additional targeted searches completed; zero searches above user cap.",
+    "WAFA item at 22:00 Palestine local time (12:00 PDT) attributes updated Gaza access facts to UN spokesperson. Direct UN transcript unavailable in this run.",
+    "Excluded prior Jabalia casualty and Reuters olive harvest findings as duplicates; excluded Gaza airstrike activity without specific documented civilian impact.",
+    "No approval, production, publication, task disable, or schedule changes."
+  ]
+}

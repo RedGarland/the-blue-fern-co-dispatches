@@ -1,0 +1,62 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-10-14",
+  "generated_at": "2026-10-14T15:55:49.713374Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-10-14.mp3",
+  "audio_url": "/gaza/audio/2026-10-14.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 704,
+  "tts_input_word_count": 107,
+  "tts_story_count": 3,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 792192,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-10-14T15:55:49.713342Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-10-14-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-14/",
+  "script_text": "This is the Gaza Dispatch audio briefing for October 14, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Colombia inaugurates embassy to Israel in Jerusalem. Palestinian officials slam move by Colombian government that marked major shift after ex-president had cut. This was reported by Al Jazeera.\n\n2. UK restaurateur claims losses after video calling for Gaza destruction. A UK restaurateur is claiming losses, weeks after posting a video appearing to urge. This was reported by Al Jazeera.\n\n3. What's happening to women in Gaza now? This was reported by Haaretz.\n\nFor the full source-backed dispatch, read the October 14, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 3,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-10-14-aljazeera-middle-east-927c43dfa4ac",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/10/14/colombia-inaugurates-embassy-to-israel-in-jerusalem?traffic_source=rss",
+      "title": "Colombia inaugurates embassy to Israel in Jerusalem"
+    },
+    {
+      "source_record_id": "gaza-2026-10-14-aljazeera-middle-east-9a1f146fbae3",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/14/uk-restaurateur-claims-losses-after-video-calling-for-gaza-destruction?traffic_source=rss",
+      "title": "UK restaurateur claims losses after video calling for Gaza destruction"
+    },
+    {
+      "source_record_id": "gaza-2026-10-14-haaretz-gaza-query-b06eacd0936f",
+      "publisher": "Haaretz",
+      "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
+      "title": "What's happening to women in Gaza now? - Haaretz"
+    }
+  ]
+}

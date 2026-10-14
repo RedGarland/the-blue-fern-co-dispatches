@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T114949-0700-r12-a37e",
+  "scheduled_for": "2026-10-14T11:49:49-07:00",
+  "started_at": "2026-10-14T11:49:49-07:00",
+  "completed_at": "2026-10-14T11:51:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-14T10:52:05.531-07:00",
+    "end_at": "2026-10-14T11:51:15-07:00",
+    "basis": "Latest completed supplementary Care Line heartbeat on ops/watch-ledger: care-line-watch-20261014T105024-0700-r12-b6e2."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only; production Care Line collection remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest listed dated notice: 2026-10-09, Tender Home Health, CA. No new qualifying termination, rescission or CLIA notice during this window.",
+    "Exactly 12 additional targeted searches completed, emphasizing hospital/ED, maternity, behavioral health, dialysis/oncology, primary care, rural and emergency service, ambulance, air-medical, effective restoration, state official notices, US territories, and recent local service losses.",
+    "No new time-window-qualified service loss or effective restoration confirmed between 10:52 and 11:51 PDT.",
+    "Fitzgibbon Hospital labor-and-delivery closure in Marshall, MO was reported 2026-10-14 but effective at end of September; not a new access change in this window. Kalamazoo Behavioral Health Hospital license matter remained intent/review with continued operations, not effective closure.",
+    "Dennys River Volunteer Ambulance announced closure and New Orleans Planned Parenthood reopening were previously identified before this window; excluded as duplicates.",
+    "Excluded older closure announcements, prospective proposals lacking concrete access effects, ownership/business stories without service change, unsupported claims, non-US developments, and general policy reporting.",
+    "Date-only publication stamps cannot prove same-hour discovery; publication timestamps and indexing may lag.",
+    "No approvals, publication, schedule changes, or task disabling performed."
+  ]
+}

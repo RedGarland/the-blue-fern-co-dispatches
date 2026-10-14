@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261014T054140-0700-r11",
+  "scheduled_for": "2026-10-14T05:45:54-07:00",
+  "started_at": "2026-10-14T05:41:40-07:00",
+  "completed_at": "2026-10-14T05:43:49.144-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T04:45:54-07:00",
+    "end": "2026-10-14T05:43:49.144-07:00",
+    "basis": "Since prior scheduled hourly check; only publication evidence newly available by this execution is eligible."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_status": "SUCCESS",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "new_qualifying_signals": 0,
+    "role": "Supplementary recall only; production Food Line collector remains authoritative.",
+    "priority_classes": [
+      "only/sole/last/full-service community grocer loss",
+      "disaster-driven emergency food distribution cancellations",
+      "abrupt pantry or food-bank closure or major service reduction",
+      "official immediate SNAP/WIC interruption"
+    ],
+    "exclusions": [
+      "October 14 national syndicated Arvada Safeway closure: not community's sole grocery; other grocery stores in area.",
+      "October 13 Austin Wheatsville location closure: another Wheatsville store remains and no evidence of sole full-service access loss.",
+      "October 5-8 San Jose Lighthouse Food Rescue risk of closure: outside hourly window; no newly verified abrupt closure.",
+      "Prior-year SNAP/WIC shutdown articles and older weather cancellations: outside window."
+    ],
+    "publication_guard": "No approvals, scheduling, publishing, or production collector changes.",
+    "retrieval_note": "Search date filter is imperfect: returned older and geographically out-of-scope items; no search query produced a current verified qualifying event."
+  }
+}

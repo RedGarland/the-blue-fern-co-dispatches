@@ -2635,8 +2635,20 @@ def test_care_collection_checkout_failures_are_superseded_by_recovery_proofs(tmp
     assert any(row["status"] == "FAILED" for row in raw_collection)
 
 
-def test_care_source_replay_receipt_reconciles_latest_collection_failure(tmp_path: Path) -> None:
+@pytest.mark.parametrize("pipeline_field", [None, "failure", "details"])
+def test_care_source_replay_receipt_reconciles_latest_collection_failure(tmp_path: Path, pipeline_field: str | None) -> None:
     source = _write_care_day(tmp_path)
+    if pipeline_field:
+        receipt_dir = source / "status" / "operational-health" / "care-line" / DATE / "runs"
+        collection_path = next(path for path in receipt_dir.glob("*.json")
+                               if json.loads(path.read_text(encoding="utf-8"))["task_key"] == "care_line_collection")
+        collection = json.loads(collection_path.read_text(encoding="utf-8"))
+        collection["run_id"] = "scheduler-wrapper-run"
+        if pipeline_field == "failure":
+            collection["details"]["failure"] = {"pipeline_run_id": "collection"}
+        else:
+            collection["details"]["pipeline_run_id"] = "collection"
+        collection_path.write_text(json.dumps(collection), encoding="utf-8")
     replay_path = (
         source
         / "data"
@@ -2682,6 +2694,35 @@ def test_care_source_replay_receipt_reconciles_latest_collection_failure(tmp_pat
     assert summary["recovered_source_count"] == 1
     collection_summary = next(row for row in status["task_summaries"] if row["task_key"] == "care_line_collection")
     assert collection_summary["diagnostics"]["failed_sources"][0]["effective_source_state"] == "recovered"
+
+
+@pytest.mark.parametrize("parent_id", ["scheduler-wrapper-run", "another-pipeline"])
+def test_care_source_replays_cannot_use_wrapper_or_unrelated_parent_when_pipeline_is_explicit(parent_id):
+    from bluefern_dispatches import operational_status_exporter as exporter
+
+    receipt = {"dispatch": "care-line", "task_key": "care_line_collection", "run_id": "scheduler-wrapper-run",
+               "details": {"failure": {"pipeline_run_id": "collection-pipeline"}, "failed_source_count": 1,
+                           "failed_source_diagnostics": [{"source_id": "nc-health-news", "transient": True}]}}
+    replay = {"dispatch": "care-line", "parent_run_id": parent_id, "source_id": "nc-health-news",
+              "effective_terminal_source_state": "ok", "publication_attempted": False, "public_side_effects": False}
+    summary = exporter._care_source_failure_summary(receipt, {}, [replay])
+    assert summary["failed_source_count"] == 1
+    assert summary["recovered_source_count"] == 0
+    assert exporter._care_collection_diagnostics(receipt, {}, [replay])["failed_sources"][0]["effective_source_state"] == "failed"
+
+
+@pytest.mark.parametrize("failure_id", ["conflicting-pipeline", True, "invalid pipeline"])
+def test_care_source_replay_parent_metadata_conflicts_and_invalid_ids_fail_closed(failure_id):
+    from bluefern_dispatches import operational_status_exporter as exporter
+
+    receipt = {"dispatch": "care-line", "task_key": "care_line_collection", "run_id": "scheduler-wrapper-run",
+               "details": {"pipeline_run_id": "collection-pipeline", "failure": {"pipeline_run_id": failure_id},
+                           "failed_source_count": 1,
+                           "failed_source_diagnostics": [{"source_id": "nc-health-news", "transient": True}]}}
+    replay = {"dispatch": "care-line", "parent_run_id": "collection-pipeline", "source_id": "nc-health-news",
+              "effective_terminal_source_state": "ok", "publication_attempted": False, "public_side_effects": False}
+    assert exporter._care_source_failure_summary(receipt, {}, [replay])["recovered_source_count"] == 0
+    assert exporter._care_collection_diagnostics(receipt, {}, [replay])["failed_sources"][0]["effective_source_state"] == "failed"
 
 
 def test_care_mixed_external_and_unclassified_source_failure_reopens_incident(tmp_path: Path) -> None:

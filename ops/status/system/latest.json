@@ -36,12 +36,20 @@
       "debug_summary": {
         "aggregate_degradation_required": false,
         "aggregate_status": "MISSED",
-        "all_current_failures_external": true,
+        "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 1,
+        "attention_task_count": 2,
         "attention_tasks": [
           {
             "artifact_id": "20261014T155408Z-7252.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20261014T190002Z-13540.json",
             "classification": "partial_success",
             "exit_code": 0,
             "failure_stage": "care_line_collection",
@@ -51,7 +59,7 @@
         ],
         "coverage_caveat_only": true,
         "external_access_restriction_count": 4,
-        "failed_source_count": 4,
+        "failed_source_count": 11,
         "operator_assessment": "FAILED_ACTION_REQUIRED",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
@@ -70,7 +78,7 @@
         "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
-        "transient_source_failure_count": 0,
+        "transient_source_failure_count": 7,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": 0
       },
@@ -82,7 +90,7 @@
       "scheduled_health_available": true,
       "source_failure_summary": {
         "aggregate_degradation_required": false,
-        "all_current_failures_external": true,
+        "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
         "coverage_caveat_only": true,
         "external_access_restriction_count": 4,
@@ -112,42 +120,49 @@
             "source_id": "mayo-clinic-news"
           }
         ],
-        "failed_source_count": 4,
+        "failed_source_count": 11,
         "original_failed_source_count": 11,
-        "recovered_source_count": 7,
-        "recovered_sources": [
+        "recovered_source_count": 0,
+        "recovered_sources": [],
+        "successful_attempt_count": 27,
+        "transient_source_failure_count": 7,
+        "transient_sources": [
           {
-            "receipt": "oct14-recovery-a41bf5a6.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "nc-health-news"
           },
           {
-            "receipt": "oct14-recovery-a41bf5a6.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "colorado-sun-health"
           },
           {
-            "receipt": "oct14-recovery-a41bf5a6.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "calmatters-health"
           },
           {
-            "receipt": "oct14-recovery-a41bf5a6.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "ct-mirror-health"
           },
           {
-            "receipt": "oct14-recovery-a41bf5a6.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "virginia-mercury-health"
           },
           {
-            "receipt": "oct14-recovery-a41bf5a6.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "florida-phoenix-health"
           },
           {
-            "receipt": "oct14-recovery-a41bf5a6.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "texas-tribune-health"
           }
         ],
-        "successful_attempt_count": 27,
-        "transient_source_failure_count": 0,
-        "transient_sources": [],
         "unclassified_source_failure_count": 0
       },
       "stale_observability": false
@@ -212,7 +227,7 @@
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 18,
+        "private_review_max_age_hours": 19,
         "private_review_oldest_pending_date": "2026-10-14",
         "private_review_pending_date_count": 1,
         "private_review_pending_item_count": 4,
@@ -234,7 +249,7 @@
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 18,
+            "age_hours": 19,
             "count_only_gap_count": 0,
             "date": "2026-10-14",
             "dispositioned_item_count": 0,
@@ -404,7 +419,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 18,
+        "max_age_hours": 19,
         "oldest_pending_date": "2026-10-14",
         "pending_date_count": 1,
         "pending_item_count": 4,
@@ -545,7 +560,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-14T18:46:16.710792Z",
+  "exported_at": "2026-10-14T19:15:04.766005Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "MISSED"

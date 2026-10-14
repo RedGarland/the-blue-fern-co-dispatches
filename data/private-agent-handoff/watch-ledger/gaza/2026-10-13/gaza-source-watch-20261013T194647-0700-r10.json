@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T194647-0700-r10",
+  "scheduled_for": "2026-10-13T19:44:51-07:00",
+  "started_at": "2026-10-13T19:46:47-07:00",
+  "completed_at": "2026-10-13T19:48:03-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T18:43:12-07:00",
+    "end": "2026-10-13T19:48:03-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Gaza collection and publication remain authoritative. Prior completed ledger run ended 2026-10-13T18:43:12-07:00.",
+    "OCHA OPT checked first: home page accessible; newest listed update dated 2026-10-09, outside the current window. https://www.ochaopt.org/",
+    "WHO checked second: global oPt emergency page accessible but no timely new health report; WHO EMRO oPt endpoint returned HTTP 502, leaving direct regional health reporting incomplete. https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt ; https://www.emro.who.int/opt/",
+    "Exactly 12 additional targeted searches completed, spanning WAFA, Reuters/AP, PRCS, UNICEF, WFP, UNRWA, ReliefWeb, ICRC, crossings, shelter, water, and hospital/fuel access. No verified new nonduplicate in-Gaza development during the observation window.",
+    "WAFA October 13 reports about Al-Tuffah civilian vehicle strike, hospital casualty figures, and Al-Zawaida child death predate this window and were already recalled; non-Gaza West Bank reports excluded. https://english.wafa.ps/Pages/LastNews",
+    "Older Reuters, OCHA, WHO, and UNICEF reporting excluded as stale; no social-media-only, unsupported, or opinion items admitted.",
+    "Source access is degraded (WHO EMRO 502), but OCHA, WHO global, WAFA and targeted indexed sources supplied useful complementary coverage; no production changes, approvals, publication, schedule changes or task disabling."
+  ]
+}

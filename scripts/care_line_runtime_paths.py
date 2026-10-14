@@ -4,6 +4,11 @@ import re
 
 CARE_LINE_REVIEW_RE = re.compile(r"^data/dispatches/care-line/review(?:/.*)?$")
 CARE_LINE_COLLECTION_RUNS_RE = re.compile(r"^data/dispatches/care-line/collection-runs(?:/.*)?$")
+_CARE_LINE_REPLAY_ID = r"[A-Za-z0-9][A-Za-z0-9_.-]{0,239}"
+CARE_LINE_SOURCE_REPLAY_RECEIPT_RE = re.compile(
+    rf"^data/dispatches/care-line/source-replays/\d{{4}}-\d{{2}}-\d{{2}}/"
+    rf"{_CARE_LINE_REPLAY_ID}/{_CARE_LINE_REPLAY_ID}/{_CARE_LINE_REPLAY_ID}\.json$"
+)
 CARE_LINE_QUEUE_RUNS_RE = re.compile(r"^data/dispatches/care-line/queue-runs(?:/.*)?$")
 CARE_LINE_SOURCES_RE = re.compile(r"^data/dispatches/care-line/sources(?:/.*)?$")
 CARE_LINE_INCIDENTS_RE = re.compile(r"^data/dispatches/incidents(?:/.*)?$")
@@ -46,6 +51,8 @@ def classify_care_line_runtime_path(path_text: str) -> str | None:
         return "review_state"
     if CARE_LINE_COLLECTION_RUNS_RE.match(lower):
         return "local_run_state"
+    if CARE_LINE_SOURCE_REPLAY_RECEIPT_RE.match(lower):
+        return "local_run_state"
     if CARE_LINE_QUEUE_RUNS_RE.match(lower):
         return "local_run_state"
     if CARE_LINE_SOURCES_RE.match(lower):
@@ -76,6 +83,7 @@ def care_line_runtime_paths() -> list[str]:
     return [
         "data/dispatches/care-line/review/",
         "data/dispatches/care-line/collection-runs/",
+        "data/dispatches/care-line/source-replays/YYYY-MM-DD/parent-run/source-id/retry-id.json",
         "data/dispatches/care-line/queue-runs/",
         "data/dispatches/care-line/sources/",
         "data/dispatches/incidents/",

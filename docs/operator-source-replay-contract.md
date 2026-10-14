@@ -41,6 +41,13 @@ The derived effective-state index includes the current successful retry in
 `recovered_source_ids` even while its append-only receipt is being finalized, so
 its source-ID list and effective attempt counts describe the same reconciliation.
 
+The shared runtime-path classifier accepts untracked replay receipts only at
+`data/dispatches/care-line/source-replays/YYYY-MM-DD/parent-run/source-id/retry-id.json`.
+Each ID uses a bounded alphanumeric-leading component. Tracked edits, staged
+changes, deletion/rename, extra path levels, hidden components and other file
+extensions remain risky. This preserves append-only replay evidence during
+guarded source synchronization without accepting an arbitrary replay directory.
+
 ## Disabled Dispatches
 
 Food Line remains disabled for source-level replay because its current durable recovery path is task/run-state based rather than registry-bound one-source replay.

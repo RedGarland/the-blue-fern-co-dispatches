@@ -46,12 +46,12 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-10-14T05:30:02Z",
+  "last_exported_at": "2026-10-14T07:15:03.787253Z",
   "last_receipt_at": "2026-10-13T20:56:03.052044Z",
   "latest_runtime_proof_date": "2026-10-14T04:16:00Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
-  "observed_date": "2026-10-13",
+  "observed_date": "2026-10-14",
   "public_side_effects": {
     "publication_attempted": false,
     "publication_status": "not_authorized_monitor_only"

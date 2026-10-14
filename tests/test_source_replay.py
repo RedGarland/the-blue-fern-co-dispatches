@@ -159,7 +159,19 @@ def test_replay_recovers_source_and_writes_append_only_receipt(tmp_path: Path, m
     assert payload["publication_attempted"] is False
     assert payload["public_side_effects"] is False
     assert (root / payload["receipt_path"]).is_file()
-    assert (root / pipeline.COLLECTION_RUNS_ROOT / DATE / PARENT_RUN / "effective-source-state.json").is_file()
+    effective_path = root / pipeline.COLLECTION_RUNS_ROOT / DATE / PARENT_RUN / "effective-source-state.json"
+    effective = json.loads(effective_path.read_text(encoding="utf-8"))
+    assert effective["recovered_source_ids"] == [SOURCE_ID]
+    assert effective["failed_source_count"] == 0
+
+
+@pytest.mark.parametrize("status,expected_ids", [("ok", [SOURCE_ID]), ("partial", [SOURCE_ID]), ("failed", [])])
+def test_effective_source_ids_include_current_success_before_receipt_write(tmp_path, status, expected_ids):
+    effective = replay._effective_attempts(
+        tmp_path, manifest={"attempts": [{"source_id": SOURCE_ID, "collection_status": "failed"}]},
+        logical_date=DATE, parent_run_id=PARENT_RUN,
+        replay_attempt={"source_id": SOURCE_ID, "collection_status": status})
+    assert effective["recovered_source_ids"] == expected_ids
 
 
 def test_replay_is_idempotent_for_same_retry_id(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

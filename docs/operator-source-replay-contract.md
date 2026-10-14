@@ -29,6 +29,18 @@ The replay wrapper:
 
 Operational status consumes successful replay receipts as effective source-state evidence for the latest Care collection receipt. The original operational-health receipt remains immutable; status derives the effective failed-source count from replay receipts.
 
+The replay's `parent_run_id` identifies the collection pipeline, which can differ
+from the PowerShell wrapper's `run_id`. The exporter resolves the pipeline from
+the collection receipt's `details.pipeline_run_id` or
+`details.failure.pipeline_run_id`; legacy receipts without either field retain
+their original run-ID matching. Conflicting or invalid explicit pipeline IDs
+receive no recovery credit. Wrapper run IDs and schedule-instance matching stay
+unchanged.
+
+The derived effective-state index includes the current successful retry in
+`recovered_source_ids` even while its append-only receipt is being finalized, so
+its source-ID list and effective attempt counts describe the same reconciliation.
+
 ## Disabled Dispatches
 
 Food Line remains disabled for source-level replay because its current durable recovery path is task/run-state based rather than registry-bound one-source replay.

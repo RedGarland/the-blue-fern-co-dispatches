@@ -1273,6 +1273,22 @@ def _care_detail_count(receipt: dict[str, Any], key: str) -> int | None:
         return None
 
 
+def _care_collection_parent_run_id(receipt: dict[str, Any]) -> str | None:
+    """Resolve the child collection identity without changing the wrapper run ID."""
+    details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
+    failure = details.get("failure") if isinstance(details.get("failure"), dict) else {}
+    identities: set[str] = set()
+    for value in (details.get("pipeline_run_id"), failure.get("pipeline_run_id")):
+        if value is None or value == "":
+            continue
+        if not isinstance(value, str) or _safe_identifier(value) != value:
+            return None
+        identities.add(value)
+    if len(identities) > 1:
+        return None
+    return next(iter(identities)) if identities else _safe_identifier(receipt.get("run_id"))
+
+
 def _care_source_failure_summary(
     receipt: dict[str, Any] | None,
     source_failure_policies: dict[str, dict[str, Any]],
@@ -1297,10 +1313,10 @@ def _care_source_failure_summary(
     original_failed_count = _care_detail_count(receipt, "failed_source_count")
     if original_failed_count is None:
         original_failed_count = len(failed_rows)
-    parent_run_id = str(receipt.get("run_id") or "")
+    parent_run_id = _care_collection_parent_run_id(receipt)
     recovered_by_source: dict[str, dict[str, Any]] = {}
     for replay in replay_receipts or []:
-        if replay.get("dispatch") != "care-line" or replay.get("parent_run_id") != parent_run_id:
+        if not parent_run_id or replay.get("dispatch") != "care-line" or replay.get("parent_run_id") != parent_run_id:
             continue
         if replay.get("effective_terminal_source_state") not in {"ok", "partial"}:
             continue
@@ -1392,11 +1408,13 @@ def _care_collection_diagnostics(
     rows = _care_failed_source_rows(receipt)
     failures: list[dict[str, Any]] = []
     policies = source_failure_policies or {}
-    parent_run_id = str(receipt.get("run_id") or "")
+    parent_run_id = _care_collection_parent_run_id(receipt)
     recovered = {
         str(replay.get("source_id") or "")
         for replay in replay_receipts or []
-        if replay.get("parent_run_id") == parent_run_id
+        if parent_run_id
+        and replay.get("dispatch") == "care-line"
+        and replay.get("parent_run_id") == parent_run_id
         and replay.get("effective_terminal_source_state") in {"ok", "partial"}
         and replay.get("publication_attempted") is False
         and replay.get("public_side_effects") is False

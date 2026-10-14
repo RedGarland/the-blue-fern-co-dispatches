@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T054451-0700-r10",
+  "scheduled_for": "2026-10-14T05:44:51-07:00",
+  "started_at": "2026-10-14T05:43:09-07:00",
+  "completed_at": "2026-10-14T05:45:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-14T04:49:43-07:00",
+    "end": "2026-10-14T05:45:58-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Gaza pipeline remains authoritative and unchanged.",
+    "OCHA OPT checked first. Access succeeded; latest listed update October 9, 2026. https://www.ochaopt.org/updates",
+    "WHO checked first. Global oPt hub accessible, WHO EMRO regional endpoint inaccessible; healthcare source coverage incomplete. https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+    "Exactly 12 additional targeted searches conducted for casualties, displacement, aid, food/water, healthcare, medical transport, infrastructure, crossings, detention, ceasefire and military operations with civilian impact.",
+    "No fresh independently traceable and nonduplicate qualifying reports established. Reuters olive harvest report and Gaza City al-Rimal strike were previously logged; older results excluded.",
+    "WAFA homepage timed out; Reuters Middle East listing accessible. No publication, approval, schedule or production changes."
+  ]
+}

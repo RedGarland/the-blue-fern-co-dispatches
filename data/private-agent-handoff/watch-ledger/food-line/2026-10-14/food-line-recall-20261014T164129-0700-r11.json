@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261014T164129-0700-r11",
+  "scheduled_for": "2026-10-14T16:45:54-07:00",
+  "started_at": "2026-10-14T16:41:29-07:00",
+  "completed_at": "2026-10-14T16:42:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T15:50:22-07:00",
+    "end": "2026-10-14T16:42:43-07:00",
+    "basis": "Prior documented supplementary hourly check ended at 2026-10-14T15:50:22-07:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "source_discovery": "SUCCESS",
+    "source_discovery_outcome": "no_findings",
+    "targeted_web_search_count": 12,
+    "targeted_web_search_limit": 12,
+    "search_failures": 0,
+    "classes_checked": [
+      "Closure/fire/disaster affecting the only/sole/last/full-service community grocery store",
+      "Canceled or suspended emergency food distribution owing to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food-bank closure or major service reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "disposition": "No verifiable new nonduplicate high-value disruption first reported within the bounded hourly interval. Older incidents, prospective routine closures, and unrelated SNAP articles excluded.",
+    "excluded_examples": [
+      {
+        "source_url": "https://kentuckylantern.com/2026/10/14/about-80000-kentuckians-have-lost-access-to-food-aid-under-federal-rule-changes/",
+        "reason": "Significant SNAP impact, but report published 2026-10-14 14:51 Eastern (11:51 Pacific), before this check's interval; describes losses accumulated under prior eligibility changes."
+      },
+      {
+        "source_url": "https://www.the-sun.com/money/17150572/wheatsville-food-co-op-closing-austin-texas/",
+        "reason": "Prospective October 25 closure of one co-op location, not a community's sole grocery; prior reports exist."
+      },
+      {
+        "source_url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Published October 13; sole Safeway in city does not mean sole full-service grocery, and other grocery options remain."
+      }
+    ],
+    "query_context": "Twelve targeted searches across sole/only/last grocery closures, weather-related food-distribution cancellations, pantry/food-bank closures, and official SNAP/WIC outages. Search recency 1-2 days; candidate direct pages opened to check publication dates.",
+    "coverage_limitations": "Supplementary search only; indexing and hourly publication timestamps may lag. Production Food Line collector remains authoritative.",
+    "operational_effects": "No approvals, public publication, scheduling changes, or modifications to production collection."
+  }
+}

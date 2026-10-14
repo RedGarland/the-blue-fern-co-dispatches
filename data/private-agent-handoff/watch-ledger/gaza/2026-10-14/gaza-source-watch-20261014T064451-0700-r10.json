@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T064451-0700-r10",
+  "scheduled_for": "2026-10-14T06:44:51-07:00",
+  "started_at": "2026-10-14T06:49:28-07:00",
+  "completed_at": "2026-10-14T06:52:20-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-14T05:45:58-07:00",
+    "end": "2026-10-14T06:52:20-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only. Production Gaza publisher/collector remains authoritative; no changes to production, publication, approval, or schedule.",
+    "OCHA OPT explicitly checked first: https://www.ochaopt.org/ accessible; most recent homepage listed Gaza update dated 2026-10-09; no qualifying update within this observation window.",
+    "WHO explicitly checked first: https://www.emro.who.int/opt/ timed out; WHO global oPt emergency page https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt accessible but offers no newly dated Gaza healthcare update. Regional healthcare coverage incompletely verified; DEGRADED rather than FAILED.",
+    "Exactly 12 additional targeted searches across official humanitarian sources, WAFA, Reuters, AP, aid, health, water, crossings, detentions, ceasefire, and civilian harm; no sufficiently verified nonduplicate new Gaza event since prior completion.",
+    "WAFA homepage https://english.wafa.ps/ current listing reviewed. Oct 14 12:23 Palestine-time casualty roundup https://english.wafa.ps/Pages/Details/175884 was prior to hourly window and shows internal day-of-week/tally inconsistencies; excluded as no confirmed distinct new incident.",
+    "Reuters 2026-10-14 olive harvest damage/access report and WAFA/AP Gaza City al-Rimal apartment-strike report were previously covered; excluded as duplicates. West Bank incidents excluded by scope.",
+    "WHO EMRO failure is recurring and is not evidence that Gaza healthcare conditions were unchanged."
+  ]
+}

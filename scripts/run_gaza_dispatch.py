@@ -357,9 +357,11 @@ def normalize_sources(
             boundary_exclusion_reason = "post-edition-date retrieval excluded from prior-date Gaza rerun"
         selection_exclusion_reason = gaza_story_selection_exclusion_reason(
             {
+                **record,
                 "title": clean_title,
                 "summary_or_snippet": clean_summary,
                 "url": url,
+                "publisher": record.get("publisher"),
                 "attribution_mode": record.get("attribution_mode"),
                 "claim_status": record.get("claim_status"),
             }

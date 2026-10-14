@@ -4375,3 +4375,50 @@ def test_same_parent_same_segment_duplicate_suppressed_but_distinct_gaza_segment
 
     assert [record["segment_id"] for record in result["sources"]] == ["gaza-hospitals", "gaza-aid-convoy"]
     assert result["rejected_by_reason"]["duplicate_url_in_collection"] == 1
+
+
+@pytest.mark.parametrize("item,reason", [
+    ({"title": "Colombia inaugurates embassy to Israel in Jerusalem",
+      "summary_or_snippet": "Palestinian officials slam move by Colombian government that marked major shift after ex-president had cut. Israel ties.",
+      "url": "https://www.aljazeera.com/news/2026/10/14/colombia-inaugurates-embassy-to-israel-in-jerusalem"},
+     "gaza_adjacent_external_event_without_ground_development"),
+    ({"title": "UK restaurateur claims losses after video calling for Gaza destruction",
+      "summary_or_snippet": "A UK restaurateur is claiming losses, weeks after posting a video appearing to urge. Israel to destroy buildings in Gaza.",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/14/uk-restaurateur-claims-losses-after-video-calling-for-gaza-destruction"},
+     "gaza_adjacent_external_event_without_ground_development"),
+    ({"title": "Protests call for Gaza hospital protection",
+      "summary_or_snippet": "Demonstrators in London are calling for aid to Gaza hospitals.",
+      "url": "https://example.com/gaza-protests"},
+     "gaza_adjacent_external_event_without_ground_development"),
+    ({"title": "What's happening to women in Gaza now? - Haaretz",
+      "summary_or_snippet": "What's happening to women in Gaza now? Haaretz.",
+      "publisher": "Haaretz", "url": "https://news.google.com/rss/articles/example?oc=5"},
+     "discovery_headline_without_reported_detail"),
+])
+def test_external_events_and_discovery_headlines_cannot_bypass_saved_source_selection(item, reason):
+    if reason == "discovery_headline_without_reported_detail":
+        # Discovery remains available for canonicalization/article enrichment.
+        assert gaza_sources.gaza_relevance_decision(item)[0] is True
+    else:
+        assert gaza_sources.gaza_relevance_decision(item) == (False, reason)
+    assert gaza_sources.gaza_story_selection_exclusion_reason(item) == reason
+    record = {**item, "source_record_id": "gaza-2026-10-14-test", "publisher": item.get("publisher", "Al Jazeera"),
+              "published_at": "2026-10-14T12:00:00Z", "retrieved_at": "2026-10-14T15:54:25Z",
+              "source_type": "rss", "region_scope": "Gaza", "category_hint": "conflict",
+              "reliability_tier": "reported-public-source"}
+    normalized, _warnings, errors = normalize_sources([record], "2026-10-14", "2026-10-14T16:00:00Z")
+    assert errors == []
+    assert normalized[0]["story_selection_excluded_reason"] == reason
+    assert curate_stories(normalized, "2026-10-14", "2026-10-14T16:00:00Z")[0] == []
+
+
+@pytest.mark.parametrize("item", [
+    {"title": "Embassy statement reports Gaza hospital shortages",
+     "summary_or_snippet": "Hospital officials in Gaza reported fuel shortages.", "url": "https://example.com/gaza-hospital"},
+    {"title": "Gaza hospital faces fuel shortage - Haaretz", "publisher": "Haaretz",
+     "summary_or_snippet": "Doctors in Gaza said fuel stocks fell to one day's supply.",
+     "url": "https://news.google.com/rss/articles/example?oc=5"},
+])
+def test_ground_detail_survives_external_context_and_discovery_guards(item):
+    assert gaza_sources.gaza_relevance_decision(item)[0] is True
+    assert gaza_sources.gaza_story_selection_exclusion_reason(item) is None

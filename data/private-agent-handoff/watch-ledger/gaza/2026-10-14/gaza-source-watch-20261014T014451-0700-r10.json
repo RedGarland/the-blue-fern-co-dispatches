@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T014451-0700-r10",
+  "scheduled_for": "2026-10-14T01:44:51-07:00",
+  "started_at": "2026-10-14T01:43:18-07:00",
+  "completed_at": "2026-10-14T01:46:12.760-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start": "2026-10-14T00:45:58.535-07:00",
+    "end": "2026-10-14T01:46:12.760-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261014-reuters-olive-crop-access-loss-2026",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/gazans-harvest-dregs-olive-groves-bulldozed-cut-off-by-israel-2026-10-14/",
+      "title": "Gazans harvest dregs of olive groves bulldozed and cut off by Israel",
+      "publisher": "Reuters",
+      "source_date": "2026-10-14",
+      "publication_date": "2026-10-14",
+      "publication_at": "2026-10-14T01:02:00-07:00",
+      "event_date": null,
+      "location": "Deir al-Balah; Gaza Strip",
+      "affected_population_or_system": "Olive producers, agricultural livelihoods, food production and access to olive oil",
+      "exact_supporting_passage": "Gaza's agriculture authorities estimate that of 2 million olive trees, barely 150,000 are still standing.",
+      "source_type": "established_wire_original_field_reporting",
+      "classification": "follow-up",
+      "confidence": "high",
+      "summary": "Reuters' October 14 field report offers newly reported current harvest-capacity estimates: approximately 150,000 of 2 million olive trees remain; anticipated olive harvest around 5,000 tons rather than roughly 40,000 normally; seven presses operate versus about 40 before the war. Groves are damaged and partly inaccessible beyond a military boundary. These are attributed estimates and observed ongoing effects, not proof of a new attack within the hourly window.",
+      "discovery_context": {
+        "query": "site:reuters.com Gaza October 14 2026 strikes ceasefire humanitarian",
+        "published_within_window": true,
+        "previous_watch_completion": "2026-10-14T00:45:58.535-07:00",
+        "verified_event_time": null,
+        "duplicate_group": "gaza-olive-harvest-2026"
+      }
+    }
+  ],
+  "coverage_notes": [
+    "OCHA OPT checked first; homepage latest listing 2026-10-09; no new report in window.",
+    "WHO checked first: EMRO regional situation-report endpoint returned HTTP 502; WHO global Gaza emergency hub accessible, but regional health update not covered, making the run DEGRADED.",
+    "Exactly 12 additional targeted searches covering medical care, casualties, food, water, aid, displacement, crossings and ceasefire.",
+    "WAFA October 14 apartment strike and AP follow-up duplicate incident previously found during October 13 23:54 PDT watch; excluded.",
+    "Reuters article published 2026-10-14 08:02 UTC (01:02 PDT); underlying agricultural damage dates not established.",
+    "No production, approval, publication or schedule changes."
+  ]
+}

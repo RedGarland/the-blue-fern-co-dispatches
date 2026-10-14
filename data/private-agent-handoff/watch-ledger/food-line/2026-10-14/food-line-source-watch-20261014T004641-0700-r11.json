@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261014T004641-0700-r11",
+  "scheduled_for": "2026-10-14T00:45:54-07:00",
+  "started_at": "2026-10-14T00:46:41-07:00",
+  "completed_at": "2026-10-14T00:48:56.904-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-14",
+    "start": "2026-10-13T23:48:46-07:00",
+    "end": "2026-10-14T00:48:56.904-07:00",
+    "basis": "Previous persisted watch heartbeat completed 2026-10-13T23:48:46-07:00; searched newly surfaced material with modest late-indexing overlap."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Bounded supplementary recall; authoritative production collector unchanged.",
+    "targeted_web_searches": 12,
+    "search_errors": 0,
+    "categories_checked": [
+      "only/sole/last/full-service grocery store closure, fire or disaster",
+      "emergency food distribution cancellation/suspension from storm, flood, fire, power outage or facility damage",
+      "abrupt food pantry or food bank closure or major access reduction",
+      "official SNAP, WIC or other food-assistance immediate service interruptions"
+    ],
+    "verified_findings": 0,
+    "verification_result": "No new, verifiable, nonduplicate U.S. food-access disruptions reported within the bounded hourly observation window across targeted searches.",
+    "significant_exclusions": [
+      "Spencer NY only-store fire article dated 2026-09-14, predates window",
+      "Prodisee Pantry Stockton AL October 10 distribution cancellation reported 2026-10-07, predates window",
+      "Ruby's Pantry region-wide closure occurred 2026-04-01, predates window",
+      "Predominantly 2025 SNAP/WIC funding disruption results, predating window"
+    ],
+    "queries": [
+      "\"only grocery store\" closed fire October 13 2026 town",
+      "\"sole grocery store\" fire closure October 2026 community",
+      "\"last full-service grocery store\" closing October 2026 town",
+      "\"food distribution\" \"canceled\" storm October 13 2026",
+      "\"food pantry\" \"closed\" flood fire October 13 2026",
+      "\"food bank\" \"distribution\" cancelled power outage October 2026",
+      "\"food pantry\" abruptly closing October 13 2026",
+      "site:gov \"SNAP\" \"interruption\" \"October 13, 2026\"",
+      "site:gov \"WIC\" \"closed\" \"October 14, 2026\" benefits",
+      "\"EBT outage\" \"October 13\" \"2026\" state",
+      "\"October 13, 2026\" \"food distribution\" \"canceled\" OR \"cancelled\" OR \"suspended\"",
+      "\"October 13, 2026\" \"SNAP\" \"outage\" OR \"delayed benefits\" OR \"service interruption\""
+    ],
+    "limitations": "Search indexing lag and limited discoverability of local/official notices; no claim of exhaustive coverage.",
+    "publication_attempted": false,
+    "production_collector_modified": false,
+    "review_actions_taken": false
+  }
+}

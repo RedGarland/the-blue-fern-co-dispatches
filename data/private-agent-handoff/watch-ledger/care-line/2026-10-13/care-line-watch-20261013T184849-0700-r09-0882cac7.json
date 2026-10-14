@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T184849-0700-r09-0882cac7",
+  "scheduled_for": "2026-10-13T18:45:22-07:00",
+  "started_at": "2026-10-13T18:48:49-07:00",
+  "completed_at": "2026-10-13T18:50:16-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T17:42:39-07:00",
+    "end": "2026-10-13T18:50:16-07:00",
+    "basis": "Prior persisted Care Line watch completed at 2026-10-13T17:42:39-07:00. Search targeted new announcements and newly effective access changes since that check; discovery recency spans up to two days to catch delayed indexing, then filters by development freshness."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; production national Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_provider": "Tender Home Health",
+      "new_notices_since_previous_check": 0
+    },
+    "additional_targeted_searches": 12,
+    "failed_searches": 0,
+    "search_focus": [
+      "hospital/ED closure and suspension",
+      "maternity/labor and delivery closures",
+      "behavioral health and psychiatric facility loss",
+      "dialysis and oncology/cancer care closure",
+      "rural hospital and emergency service loss",
+      "ambulance, EMS and air-medical base closure",
+      "primary-care/community health center closure",
+      "concrete effective restoration/reopening",
+      "Nebraska senior-living/assisted-living closure follow-up",
+      "official government closure and access notices",
+      "US territories",
+      "late-day healthcare service-loss announcements"
+    ],
+    "reviewed_exclusions": [
+      {
+        "url": "https://flatwaterfreepress.org/two-nebraska-senior-living-centers-close-sending-almost-100-people-scrambling-for-a-place-to-live/",
+        "reason": "October 13 reporting concerns Cambridge Court (Kearney) closure effective in September and Hickory Villa (Omaha) closure already announced for October 16; previous 17:42:39 watch already considered these events. No new access-change development in the current hourly interval."
+      },
+      {
+        "url": "https://www.fox5vegas.com/2026/09/29/henderson-hospital-closing-maternity-nicu-services-expand-medical-surgical-beds/",
+        "reason": "Henderson maternity/NICU service ended September 30 and was announced before current observation interval."
+      },
+      {
+        "url": "https://themaine monitor.org/her-labor-turned-dangerous/",
+        "reason": "Retrospective 2025 service loss, not new in this hourly window."
+      }
+    ],
+    "limits": "Bounded web search is not exhaustive; broad search indexing can be delayed and may surface older or unrelated articles. No newly confirmed, nonduplicate concrete healthcare-access change was found in the observation window.",
+    "side_effects": "One ledger heartbeat only; no approval, publication, schedule modifications, or changes to primary collection."
+  }
+}

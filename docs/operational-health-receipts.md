@@ -125,6 +125,14 @@ This model intentionally does not duplicate Windows Task Scheduler XML. It descr
 
 ## Local receipt storage
 
+Food Line's existing `dispatch_ops recover` status-rebuild action also regenerates
+the local snapshot `ops/status/food-line/latest.json` through
+`rebuild_dispatch_status_artifacts`. The scheduler and source preflight accept an
+unstaged modification to that exact tracked snapshot as local runtime state.
+Staged changes, deletion, rename/copy, historical status files, and other tracked
+`ops/status` paths remain blocked. The snapshot is derived observability output;
+its presence or an allowed Git state does not establish current run success.
+
 Authoritative local receipts are written atomically under:
 
 `status/operational-health/<dispatch>/YYYY-MM-DD/`

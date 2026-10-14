@@ -58,7 +58,10 @@ FOOD_LINE_OPERATIONAL_STATUS_WRAPPER_LOGS_RE = re.compile(
     r"^logs/operational-status-exporter-wrapper(?:/.*)?$"
 )
 FOOD_LINE_AGENT_HISTORY_RE = re.compile(r"^data/agent-history-staging/food-line(?:/.*)?$")
-FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset()
+# dispatch_ops' bounded REBUILD_STATUS action regenerates this local snapshot.
+# Shared guards permit only an unstaged modification to an exact tracked path;
+# history, configuration, staged changes, deletions and renames stay fail-closed.
+FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset({"ops/status/food-line/latest.json"})
 
 FOOD_LINE_RUNTIME_CATEGORIES = {
     "generated_public_output",
@@ -96,6 +99,8 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
     lower = path.lower()
     if not path:
         return None
+    if lower in FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS:
+        return "local_run_state"
     if (
         lower.startswith(".pytest_cache/")
         or lower.startswith(".pytest-temp")

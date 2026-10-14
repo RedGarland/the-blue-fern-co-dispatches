@@ -4,7 +4,42 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from scripts import food_line_daily_scheduler, preflight_repo_state
+
+
+def test_local_food_status_rebuild_snapshot_is_allowed_without_sanctioning_other_status_files(monkeypatch, tmp_path):
+    snapshot = "ops/status/food-line/latest.json"
+    lines = [
+        f" M {snapshot}",
+        " M ops/status/food-line/history/2026-10-13.json",
+        " M ops/status/food-line/config.json",
+        " M ops/status/care-line/latest.json",
+        " M src/bluefern_dispatches/operational_status_exporter.py",
+    ]
+    report = _preflight_report(lines, monkeypatch, tmp_path)
+    assert report["ok"] is False
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]] == [snapshot]
+    assert preflight_repo_state.classify_path(snapshot) == "local_run_state"
+    assert food_line_daily_scheduler._unexpected_dirty_paths("\n".join(lines)) == sorted(line[3:] for line in lines[1:])
+
+
+@pytest.mark.parametrize("status", ["M ", "MM", " D", "D ", "A ", "AM", "T ", "UU"])
+def test_food_local_status_snapshot_index_changes_and_deletion_remain_blocked(status, monkeypatch, tmp_path):
+    snapshot = "ops/status/food-line/latest.json"
+    line = f"{status} {snapshot}"
+    report = _preflight_report([line], monkeypatch, tmp_path)
+    assert report["ok"] is False
+    assert report["source_repo"]["summary"]["risky_entries"][0]["path"] == snapshot
+    assert food_line_daily_scheduler._unexpected_dirty_paths(line) == [snapshot]
+
+
+def test_food_local_status_snapshot_rename_remains_blocked(monkeypatch, tmp_path):
+    line = "R  ops/status/food-line/other.json -> ops/status/food-line/latest.json"
+    assert _preflight_report([line], monkeypatch, tmp_path)["ok"] is False
+    with pytest.raises(food_line_daily_scheduler.SchedulerError, match="rename or copy"):
+        food_line_daily_scheduler._unexpected_dirty_paths(line)
 
 
 def _preflight_report(lines: list[str], monkeypatch, tmp_path: Path):

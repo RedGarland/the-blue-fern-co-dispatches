@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T214940-0700-r10",
+  "scheduled_for": "2026-10-13T21:44:51-07:00",
+  "started_at": "2026-10-13T21:49:40-07:00",
+  "completed_at": "2026-10-13T21:51:49-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T20:49:40-07:00",
+    "end": "2026-10-13T21:51:49-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first (2026-10-13 PT): accessible; homepage's most recent Gaza update dated 2026-10-09; no fresh qualifying development in the lookback.",
+    "WHO checked second: WHO global Gaza/oPt emergency page accessible and contained no new dated Gaza update; WHO EMRO regional situation-report endpoint timed out, limiting direct WHO regional healthcare coverage.",
+    "Exactly 12 additional targeted searches performed across WAFA, Anadolu, Reuters, AP, UNICEF, UNRWA, WFP, WHO, OCHA, MSF, ICRC and cross-source reporting; no qualifying nonduplicate development found.",
+    "WAFA homepage inspected directly; most recent 2026-10-14 reporting concerned the West Bank, not Gaza. Older 2026-10-13 Gaza casualty reporting excluded as already seen / outside the hourly lookback.",
+    "Search window is a nominal one-hour lookback anchored to this execution; exact preceding hourly run completion could not be independently established.",
+    "Supplementary watch only; no changes to daily publisher/collector, approvals, publication, schedule, or task state."
+  ]
+}

@@ -14,7 +14,7 @@
   "bluesky_post_uri": null,
   "bluesky_status": null,
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "e07012ae882b02fca6445f1e19ca9c44ed7463ab",
+  "current_runner_head": "c06f564d1d1dfffb9bfdc50d5c11d971ce13767f",
   "debug_summary": {
     "aggregate_degradation_required": null,
     "aggregate_status": "DEGRADED",
@@ -60,7 +60,7 @@
   "dry_run_recovery_applied": false,
   "dry_run_recovery_proof": null,
   "effective_receipt_count": 1,
-  "last_exported_at": "2026-10-14T16:15:06.776576Z",
+  "last_exported_at": "2026-10-14T17:15:06.575903Z",
   "last_receipt_at": "2026-10-14T16:07:48.017639Z",
   "latest_recovery_proof_at": null,
   "latest_runtime_proof_date": null,

@@ -1,0 +1,160 @@
+{
+  "schema_version": "gaza_published_story_lineage_v1",
+  "domain": "gaza",
+  "story_id": "gaza-story-2026-10-14-003",
+  "edition_date": "2026-10-14",
+  "story_title": "What's happening to women in Gaza now? - Haaretz",
+  "prior_claim": {
+    "text": "What's happening to women in Gaza now? Haaretz.",
+    "casualty_counts": {}
+  },
+  "source_attribution": "Haaretz",
+  "source_records": [
+    {
+      "source_record_id": "gaza-2026-10-14-haaretz-gaza-query-b06eacd0936f",
+      "title": "What's happening to women in Gaza now? - Haaretz",
+      "publisher": "Haaretz",
+      "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
+      "canonical_url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
+      "published_at": "2026-10-12T16:27:00+00:00",
+      "dispatch_slug": "gaza",
+      "category_hint": "conflict",
+      "claim_fingerprint": "gaza|haaretz|what s happening to women in gaza now|conflict|2026-10-12",
+      "used_in_story_ids": [
+        "gaza-story-2026-10-14-003"
+      ]
+    }
+  ],
+  "pages_provenance": {
+    "repository": "https://github.com/RedGarland/the-blue-fern-co-dispatches.git",
+    "branch": "gh-pages",
+    "pinned_commit": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
+    "observed_head_at_backfill": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
+    "observed_head_contains_pinned_commit": true,
+    "artifacts": [
+      {
+        "role": "curation_manifest",
+        "path": "gaza/editions/2026-10-14/curation_manifest.json",
+        "git_blob_oid": "39780f69859d59569b50bf4584bc8421937daaec",
+        "sha256": "71254dda6024e197d05b6994153850fb0f89db003359b6c997d7605ebc832e2b",
+        "byte_length": 8913
+      },
+      {
+        "role": "dedupe_report",
+        "path": "gaza/editions/2026-10-14/dedupe_report.json",
+        "git_blob_oid": "d5033414d9af956a761f587773c85dcb0dd88704",
+        "sha256": "1cff9e854c65ec51ebdf9db5fb26af27a31935cbd5aa00627c7573d820af0e5e",
+        "byte_length": 6175
+      },
+      {
+        "role": "sources_manifest",
+        "path": "gaza/editions/2026-10-14/sources_manifest.json",
+        "git_blob_oid": "dc05f64d2807822c9c326e4eef65fec8d8c7b947",
+        "sha256": "c7fdc6389ce89f5702a281ac05351aa89b03767df4c22c66d0d5affe9897fcb2",
+        "byte_length": 8137
+      },
+      {
+        "role": "rendered_edition",
+        "path": "gaza/editions/2026-10-14/index.html",
+        "git_blob_oid": "e05e6d5a1eb413106d8ed140d84f69b6d9609916",
+        "sha256": "2fd1d228f1d0d73a8185dca009f18c56fa7d3b38f1f29c0850d9cb33954be5ee",
+        "byte_length": 5868
+      }
+    ],
+    "provenance_fingerprint": "sha256:c370ff073b7c4bce404cdd675867f957eabac61febbf6ba4a9fb121ecb539362"
+  },
+  "evidence": {
+    "story": {
+      "story_id": "gaza-story-2026-10-14-003",
+      "title": "What's happening to women in Gaza now? - Haaretz",
+      "summary": "What's happening to women in Gaza now? Haaretz.",
+      "category": "conflict",
+      "event_date": "2026-10-12T16:27:00+00:00",
+      "location": "Gaza",
+      "development_type": "primary_report",
+      "casualty_counts": {},
+      "attribution": "Haaretz",
+      "publisher_names": [
+        "Haaretz"
+      ],
+      "source_record_ids": [
+        "gaza-2026-10-14-haaretz-gaza-query-b06eacd0936f"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5"
+      ],
+      "public_rendered": true,
+      "included_in_public_summary": true
+    },
+    "story_sha256": "sha256:943fdf756ea3ae92e8ce8c5ea76cef2b716bea6223cc1be4b664401abd3c4686",
+    "sources": [
+      {
+        "source_record_id": "gaza-2026-10-14-haaretz-gaza-query-b06eacd0936f",
+        "title": "What's happening to women in Gaza now? - Haaretz",
+        "publisher": "Haaretz",
+        "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
+        "canonical_url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
+        "published_at": "2026-10-12T16:27:00+00:00",
+        "dispatch_slug": "gaza",
+        "category_hint": "conflict",
+        "claim_fingerprint": "gaza|haaretz|what s happening to women in gaza now|conflict|2026-10-12",
+        "used_in_story_ids": [
+          "gaza-story-2026-10-14-003"
+        ]
+      }
+    ],
+    "sources_sha256": "sha256:e7a24f9ad27ca3e60f70dc5b4821ec8025b7b18ea0e16a729fc071fad81dc289",
+    "dedupe": [
+      {
+        "story_id": "gaza-story-2026-10-14-003",
+        "title": "What's happening to women in Gaza now? - Haaretz",
+        "classification": "new",
+        "include_decision": "include",
+        "public_rendered": true
+      }
+    ],
+    "dedupe_sha256": "sha256:1c68cd2865a7668eb9910a783875e8d25d91858dbb713d17ac06081056ec4f58",
+    "rendered_title": "What's happening to women in Gaza now? - Haaretz",
+    "rendered_claim": "What's happening to women in Gaza now? Haaretz."
+  },
+  "canonicalization_version": "gaza_published_story_lineage_c14n_v1",
+  "stable_event_identity": {
+    "inputs": {
+      "identity_type": "published_story_withdrawal",
+      "dispatch": "gaza",
+      "edition_date": "2026-10-14",
+      "story_id": "gaza-story-2026-10-14-003",
+      "canonical_source_url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
+      "pages_head": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
+      "artifact_set_sha256": "sha256:245fa49369a2f8078b58b77b1ca4a1a448301288cbe5375228f65a5d489df717"
+    },
+    "fingerprint": "sha256:817add2cb72bc85484ec84d777a3c8799c2960726cb6f8d77e3e894feaad278f"
+  },
+  "prior_claim_identity": {
+    "inputs": {
+      "title": "What's happening to women in Gaza now? - Haaretz",
+      "summary": "What's happening to women in Gaza now? Haaretz.",
+      "category": "conflict"
+    },
+    "fingerprint": "topic_fingerprint_v1:3c6cc96602804309"
+  },
+  "backfill_reason": "Private evidence at merged recovery source 33828b2fac7f50ad55a35127d54a5d18d9a64acf; editorial and release review pending",
+  "created_at": "2026-10-14T18:50:22.807257+00:00",
+  "publication_mutation": false,
+  "review_authority": false,
+  "approval_authority": false,
+  "withdrawal_target_identity": {
+    "inputs": {
+      "identity_type": "published_story_withdrawal",
+      "dispatch": "gaza",
+      "edition_date": "2026-10-14",
+      "story_id": "gaza-story-2026-10-14-003",
+      "canonical_source_url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
+      "pages_head": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
+      "artifact_set_sha256": "sha256:245fa49369a2f8078b58b77b1ca4a1a448301288cbe5375228f65a5d489df717"
+    },
+    "fingerprint": "sha256:817add2cb72bc85484ec84d777a3c8799c2960726cb6f8d77e3e894feaad278f",
+    "correction_type": "story_withdrawal"
+  },
+  "record_fingerprint": "sha256:74739bfff09621eadb85a22d2c13acf133855b1139725ae532f00a0c26175415"
+}

@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gaza-edition-correction-review-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "story_id",
+    "owning_edition_date",
+    "reason",
+    "decision",
+    "resulting_review_state",
+    "lineage_sha256",
+    "review_packet_sha256",
+    "reviewer",
+    "reviewed_at",
+    "decision_reason",
+    "evidence_references",
+    "assessment",
+    "archive_authorized",
+    "edition_authorized",
+    "queue_authorized",
+    "source_record_authorized",
+    "cluster_authorized",
+    "audio_authorized",
+    "publication_authorized",
+    "approval_authorized"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gaza_edition_correction_review_v1"
+    },
+    "story_id": {
+      "type": "string",
+      "pattern": "^gaza-story-20[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{3}$"
+    },
+    "owning_edition_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "reason": {
+      "enum": [
+        "scope_error",
+        "insufficient_saved_evidence"
+      ]
+    },
+    "decision": {
+      "enum": [
+        "confirmed_public_scope_contamination",
+        "confirmed_saved_evidence_insufficiency"
+      ]
+    },
+    "resulting_review_state": {
+      "const": "substantively_reviewed"
+    },
+    "lineage_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "review_packet_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "reviewer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decision_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_references": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "url",
+          "supporting_passage",
+          "evidence_type"
+        ],
+        "properties": {
+          "role": {
+            "enum": [
+              "principal",
+              "corroborating"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "supporting_passage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_type": {
+            "enum": [
+              "source_scope",
+              "saved_input"
+            ]
+          }
+        }
+      }
+    },
+    "assessment": {
+      "type": "object"
+    },
+    "archive_authorized": {
+      "const": false
+    },
+    "edition_authorized": {
+      "const": false
+    },
+    "queue_authorized": {
+      "const": false
+    },
+    "source_record_authorized": {
+      "const": false
+    },
+    "cluster_authorized": {
+      "const": false
+    },
+    "audio_authorized": {
+      "const": false
+    },
+    "publication_authorized": {
+      "const": false
+    },
+    "approval_authorized": {
+      "const": false
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "reason": {
+          "const": "scope_error"
+        },
+        "decision": {
+          "const": "confirmed_public_scope_contamination"
+        },
+        "assessment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "materially_concerns_gaza"
+          ],
+          "properties": {
+            "materially_concerns_gaza": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "reason": {
+          "const": "insufficient_saved_evidence"
+        },
+        "decision": {
+          "const": "confirmed_saved_evidence_insufficiency"
+        },
+        "assessment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "materially_concerns_gaza",
+            "saved_article_evidence_sufficient",
+            "underlying_article_verdict",
+            "saved_input_sha256"
+          ],
+          "properties": {
+            "materially_concerns_gaza": {
+              "type": "null"
+            },
+            "saved_article_evidence_sufficient": {
+              "const": false
+            },
+            "underlying_article_verdict": {
+              "const": "undetermined"
+            },
+            "saved_input_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

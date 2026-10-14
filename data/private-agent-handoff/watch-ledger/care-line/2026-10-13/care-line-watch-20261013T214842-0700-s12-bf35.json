@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T214842-0700-s12-bf35",
+  "scheduled_for": "2026-10-13T21:45:00-07:00",
+  "started_at": "2026-10-13T21:48:42-07:00",
+  "completed_at": "2026-10-13T21:50:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T20:45:00-07:00",
+    "end": "2026-10-13T21:50:30-07:00",
+    "basis": "Previous hourly check reported approximately 20:43-20:45 PDT; conservative start at 20:45 PDT. Searched for newly announced or newly effective qualifying U.S. and territory care-access changes and checked older indexed results only to screen out repeats."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Bounded supplementary Care Line recall watch; primary production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_provider": "Tender Home Health",
+      "new_notices_since_previous_check": 0,
+      "retrieval_status": "SUCCESS"
+    },
+    "additional_targeted_searches": 12,
+    "failed_searches": 0,
+    "search_focus": [
+      "hospital/ED closure or suspension",
+      "rural/emergency service loss",
+      "maternity/labor and delivery closure",
+      "behavioral health or psychiatric service closure",
+      "dialysis closures",
+      "oncology and cancer-care closures",
+      "primary-care clinic closures",
+      "ambulance or EMS base closures",
+      "air-medical base closures",
+      "hospital and emergency-service restoration",
+      "assisted-living or nursing-home closure/displacement",
+      "territories: Puerto Rico, U.S. Virgin Islands, Guam"
+    ],
+    "reviewed_exclusions": [
+      {
+        "url": "https://flatwaterfreepress.org/two-nebraska-senior-living-centers-close-sending-almost-100-people-scrambling-for-a-place-to-live/",
+        "reason": "Known Nebraska assisted-living loss was previously reviewed; no new development in this interval."
+      },
+      {
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/",
+        "reason": "Published last week; outside hourly window."
+      }
+    ],
+    "coverage_limitations": "Search indexes returned older relevant incidents and may lag intrahour reporting; no fresh, independently confirmed, nonduplicate change found. Bounded recall cannot establish exhaustive absence.",
+    "side_effects": "One watch-ledger heartbeat only. No approvals, public publication, production collector changes, schedule changes, or task disabling."
+  }
+}

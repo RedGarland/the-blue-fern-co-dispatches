@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T174434-0700-r10",
+  "scheduled_for": "2026-10-13T17:44:51-07:00",
+  "started_at": "2026-10-13T17:44:34-07:00",
+  "completed_at": "2026-10-13T17:45:32-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T16:48:22.495-07:00",
+    "end": "2026-10-13T17:45:32-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; accessible; newest listed update 2026-10-09.",
+    "WHO checked second; global oPt/Gaza overview accessible; two WHO EMRO pages returned HTTP 502.",
+    "Exactly 12 additional targeted searches were completed across official humanitarian sources and established reporting; no verified, newly qualifying nonduplicate in-Gaza development was found.",
+    "Direct WAFA homepage timed out; indexed reporting provided partial fallback.",
+    "Previously seen October 13 casualty reports and historical or non-Gaza items were excluded.",
+    "This is supplementary recall only; production authority, publishing, approvals and schedules unchanged."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T105024-0700-r12-b6e2",
+  "scheduled_for": "2026-10-14T10:50:24-07:00",
+  "started_at": "2026-10-14T10:50:24-07:00",
+  "completed_at": "2026-10-14T10:52:05.531-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-14T09:51:48-07:00",
+    "end_at": "2026-10-14T10:52:05.531-07:00",
+    "basis": "Previous completed supplementary Care Line check ended at 09:51:48 PDT on 2026-10-14; its recovery heartbeat was not persisted to ops/watch-ledger. Latest successfully persisted prior heartbeat ended at 08:48:27 PDT."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; national production Care Line collection remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Newest listed notice 2026-10-09, Tender Home Health (CA); no new dated provider termination, rescission, CLIA limitation, or suspension in this window.",
+    "Exactly 12 additional targeted searches completed. Covered U.S. hospital/ED closures, maternity, behavioral health, dialysis, oncology, primary care, rural care, ambulance and air-medical changes, essential-service restoration, US territories, and local cross-category closures.",
+    "No confirmed new qualifying development during 2026-10-14 09:51-10:51 PDT. The Dennys River Volunteer Ambulance closure in Maine was already identified by the previous supplementary check; additional Bangor Daily News reporting was published 2026-10-13, before this window. October 13 Planned Parenthood New Orleans reopening had already been identified by an earlier watch without new same-window confirmation of operational restoration.",
+    "Excluded previously reported October closures and forthcoming closures without a new announcement, proposals without concrete access effect, organizational ownership news with no service loss, outdated reports, foreign locales, opinion, and results about facilities merely closed outside normal business hours.",
+    "Source indexing and article timestamps can lag; no findings does not prove no underlying access change occurred.",
+    "No approvals, publication, schedule changes, or task disabling performed."
+  ]
+}

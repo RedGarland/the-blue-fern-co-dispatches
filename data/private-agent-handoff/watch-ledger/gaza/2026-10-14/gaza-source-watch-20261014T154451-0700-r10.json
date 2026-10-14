@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T154451-0700-r10",
+  "scheduled_for": "2026-10-14T15:44:51-07:00",
+  "started_at": "2026-10-14T15:43:36-07:00",
+  "completed_at": "2026-10-14T15:44:33-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T14:45:00-07:00",
+    "end": "2026-10-14T15:44:33-07:00",
+    "prior_check": "gaza-source-watch-20261014T144451-0700-r10 (prior report, GitHub heartbeat not persisted)"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT homepage checked first (https://www.ochaopt.org/); newest listed Gaza entry dated 2026-10-09. Linked snapshot exceeded fetch size. No verified within-window update.",
+    "WHO global Gaza/oPt emergency hub checked first (https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt); accessible. WHO EMRO emergency reports endpoint returned HTTP 502 (https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html); regional health coverage incomplete.",
+    "Exactly 12 additional targeted searches completed, spanning WAFA, Reuters, AP, UN, UNICEF, MSF, PRCS, WFP, Anadolu, Al Jazeera and casualty/access/health terms. news.un.org retrieval blocked by robots.txt.",
+    "Searches returned no independently traceable previously unreported Gaza development demonstrably new to 2026-10-14 14:45–15:44 PDT. Publication/event timing of some results was not sufficiently specific to establish interval novelty.",
+    "Excluded duplicates or prior-period reports: WAFA October 14 Jabalia shooting (Saddam Rami al-Za'anin); Reuters October 14 olive-sector disruption; Al Jazeera reporting October 13 Tuffah vehicle strike and prior injury death of 4-year-old Osama Ahmed Abed; October 14 Gaza City apartment casualty; UN aid access restrictions reported in prior midday watch; October 14 Al-Mawasi displaced-person tent strike documented in immediately preceding check.",
+    "This is supplementary recall, not production authority; no approvals, publication, task disable, or scheduling changes.",
+    "DEGRADED reflects WHO EMRO 502 and UN News robots restriction even though substantive alternative coverage was available. No qualifying positive findings."
+  ]
+}

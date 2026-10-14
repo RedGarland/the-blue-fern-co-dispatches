@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T024451-0700-r10",
+  "scheduled_for": "2026-10-14T02:44:51-07:00",
+  "started_at": "2026-10-14T02:48:36-07:00",
+  "completed_at": "2026-10-14T02:50:48-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-14T01:46:12.760-07:00",
+    "end": "2026-10-14T02:50:48-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT and WHO explicitly checked first; 12 further targeted searches conducted.",
+    "OCHA OPT latest Gaza item dated 2026-10-09; no fresh qualifying update.",
+    "WHO EMRO regional situation-report endpoint returned 502; global WHO hub accessible but regional healthcare evidence incomplete.",
+    "WAFA October 14 12:23 Palestine time report said figures announced on Sunday, and lower cumulative casualty totals than October 13; withheld as apparently recycled/inconsistent. https://english.wafa.ps/Pages/Details/175884",
+    "AP October 14 Gaza City apartment-strike report covered the already detected October 13 strike; Reuters olive-harvest story appeared in previous watch; both excluded as duplicates.",
+    "Zero newly qualifying developments; no production, publication, approval or schedule changes."
+  ]
+}

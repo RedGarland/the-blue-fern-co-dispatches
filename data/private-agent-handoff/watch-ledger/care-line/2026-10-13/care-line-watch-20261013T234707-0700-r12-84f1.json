@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261013T234707-0700-r12-84f1",
+  "scheduled_for": "2026-10-13T23:47:07-07:00",
+  "started_at": "2026-10-13T23:47:07-07:00",
+  "completed_at": "2026-10-13T23:48:20-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-13T22:43:00-07:00",
+    "end_at": "2026-10-13T23:48:20-07:00",
+    "basis": "Prior hourly check finished approximately 22:43 PDT on 2026-10-13; search limited to newer, newly effective, and not-previously-reported changes."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only; production national collection remains authoritative.",
+    "CMS Public Notices inspected first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest listed notice was 2026-10-09 Tender Home Health; none posted in the observation window.",
+    "Exactly 12 additional targeted web searches completed, focused on U.S./territory hospital, ED, maternity, rural emergency, ambulance/air medical, behavioral health, dialysis/oncology, primary care and concrete restorations. Search failures: 0.",
+    "No new source-dated qualifying access change was confirmed in this roughly hourly interval. Results with October 13 publication predating prior check were not newly eligible solely because rediscovered; proposals without concrete effect and international news were excluded.",
+    "Reviewed older relevant reports including Illinois dialysis service pause, West Virginia ambulance suspension/hours reduction, Connecticut pediatric office closing October 13, and Florida storm clinic restoration; these predated the observation window and were not emitted as new findings.",
+    "Prior hourly run's heartbeat was not found in the required branch when inspecting 2026-10-13 ledger; previous user-visible run reported no findings. Temporal deduplication uses its reported 22:43 PDT completion as the boundary.",
+    "Nothing approved, published, rescheduled, or disabled."
+  ]
+}

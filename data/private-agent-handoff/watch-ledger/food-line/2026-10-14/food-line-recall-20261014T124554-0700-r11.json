@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261014T124554-0700-r11",
+  "scheduled_for": "2026-10-14T12:45:54-07:00",
+  "started_at": "2026-10-14T12:50:32-07:00",
+  "completed_at": "2026-10-14T12:51:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T11:45:54-07:00",
+    "end": "2026-10-14T12:51:28-07:00",
+    "basis": "Previous hourly scheduled check; authoritative prior completed heartbeat was not accessible for verification."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production nationwide collector remains authoritative.",
+    "12 targeted web searches executed, focused on October 14, 2026 and the four specified access-disruption miss classes; no search execution failures.",
+    "No newly verified, in-window, high-confidence, nonduplicative disruptions found. Results were predominantly prior-year incidents, September 2026 grocery fires/closures, generic/store-chain closures without sole-grocer evidence, and routine SNAP policy updates without an immediate new interruption.",
+    "October 14 EBT news aggregation contained an October 4 processor outage and already scheduled October 18 maintenance; neither was a new current interruption. Aggregator was not treated as primary confirmation.",
+    "Exact previous completed watch receipt could not be inspected; interval follows hourly scheduled cadence. Freshness and coverage are limited by search indexing.",
+    "No approval, publication, schedule change, or production-collector modification."
+  ]
+}

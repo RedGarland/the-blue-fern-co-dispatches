@@ -234,6 +234,11 @@ def _effective_attempts(
         attempts = [dict(row, retry_state="superseded_by_source_replay") if str(row.get("source_id") or "") == source_id else row for row in attempts]
         attempts.append({**dict(replay_attempt), "retry_state": "source_replay_recovered"})
     recovered = successful_replayed_sources_for_parent(root, logical_date=logical_date, parent_run_id=parent_run_id)
+    recovered_source_ids = set(recovered)
+    if replay_attempt and replay_attempt.get("collection_status") in {"ok", "partial"}:
+        current_source_id = str(replay_attempt.get("source_id") or "")
+        if current_source_id:
+            recovered_source_ids.add(current_source_id)
     for source_id, receipt in recovered.items():
         if replay_attempt and source_id == replay_attempt.get("source_id"):
             continue
@@ -268,7 +273,7 @@ def _effective_attempts(
         "failed_source_count": failed,
         "skipped_source_count": skipped,
         "collection_status_counts": dict(sorted(counts.items())),
-        "recovered_source_ids": sorted(recovered),
+        "recovered_source_ids": sorted(recovered_source_ids),
     }
 
 

@@ -37,6 +37,10 @@ their original run-ID matching. Conflicting or invalid explicit pipeline IDs
 receive no recovery credit. Wrapper run IDs and schedule-instance matching stay
 unchanged.
 
+The derived effective-state index includes the current successful retry in
+`recovered_source_ids` even while its append-only receipt is being finalized, so
+its source-ID list and effective attempt counts describe the same reconciliation.
+
 ## Disabled Dispatches
 
 Food Line remains disabled for source-level replay because its current durable recovery path is task/run-state based rather than registry-bound one-source replay.

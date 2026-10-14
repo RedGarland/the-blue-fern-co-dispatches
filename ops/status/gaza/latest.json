@@ -10,27 +10,36 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "UNKNOWN",
+  "aggregate_status": "DEGRADED",
   "bluesky_post_uri": null,
   "bluesky_status": null,
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "e07012ae882b02fca6445f1e19ca9c44ed7463ab",
   "debug_summary": {
     "aggregate_degradation_required": null,
-    "aggregate_status": "UNKNOWN",
+    "aggregate_status": "DEGRADED",
     "all_current_failures_external": null,
     "all_current_failures_non_actionable": null,
-    "attention_task_count": 0,
-    "attention_tasks": [],
+    "attention_task_count": 1,
+    "attention_tasks": [
+      {
+        "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-10-14-20261014T155423415678Z.json",
+        "classification": "pages_propagation_pending",
+        "exit_code": 0,
+        "failure_stage": "gaza_daily_dispatch",
+        "status": "DEGRADED",
+        "task_key": "gaza_daily_dispatch"
+      }
+    ],
     "coverage_caveat_only": null,
     "external_access_restriction_count": null,
     "failed_source_count": null,
-    "operator_assessment": "FAILED_ACTION_REQUIRED",
-    "primary_classification": null,
-    "primary_failure_stage": null,
-    "primary_layer": "UNKNOWN",
-    "primary_task_key": null,
-    "primary_task_status": null,
+    "operator_assessment": "DEGRADED_ACTION_RECOMMENDED",
+    "primary_classification": "pages_propagation_pending",
+    "primary_failure_stage": "gaza_daily_dispatch",
+    "primary_layer": "TASK",
+    "primary_task_key": "gaza_daily_dispatch",
+    "primary_task_status": "DEGRADED",
     "private_review_count_only_gap_count": null,
     "private_review_dispositioned_item_count": null,
     "private_review_max_age_hours": null,
@@ -38,9 +47,9 @@
     "private_review_pending_date_count": null,
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
-    "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "NO_PROOF",
+    "publication_attempted": true,
+    "publication_status": "pages_propagation_pending",
+    "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": null,
@@ -50,9 +59,9 @@
   "dispatch": "gaza",
   "dry_run_recovery_applied": false,
   "dry_run_recovery_proof": null,
-  "effective_receipt_count": 0,
-  "last_exported_at": "2026-10-14T07:15:03.787253Z",
-  "last_receipt_at": null,
+  "effective_receipt_count": 1,
+  "last_exported_at": "2026-10-14T16:15:06.776576Z",
+  "last_receipt_at": "2026-10-14T16:07:48.017639Z",
   "latest_recovery_proof_at": null,
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
@@ -60,26 +69,52 @@
   "non_authoritative_receipt_count": 0,
   "non_authoritative_receipts": [],
   "observed_date": "2026-10-14",
-  "observed_receipt_count": 0,
+  "observed_receipt_count": 1,
   "pages_commit_sha": null,
   "public_side_effects": {
-    "publication_attempted": false,
-    "publication_status": null
+    "publication_attempted": true,
+    "publication_status": "pages_propagation_pending"
   },
   "public_story_count": null,
-  "publication_attempted": false,
+  "publication_attempted": true,
   "publication_recovery_applied": false,
   "publication_recovery_evidence": null,
-  "publication_status": null,
-  "receipt_completeness": "NO_PROOF",
+  "publication_status": "pages_propagation_pending",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": null,
-  "scheduled_health_authoritative": false,
+  "runner_source_head": "e07012ae882b02fca6445f1e19ca9c44ed7463ab",
+  "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "gaza_daily_dispatch"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "source_adequacy_status": null,
   "stale_observability": false,
-  "task_summaries": []
+  "task_summaries": [
+    {
+      "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-10-14-20261014T155423415678Z.json",
+      "classification": "pages_propagation_pending",
+      "completed_at": "2026-10-14T16:07:47.949238Z",
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "gaza_daily_dispatch"
+        }
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": true,
+        "bluesky": false,
+        "pages": true,
+        "public_output": true
+      },
+      "publication_attempted": true,
+      "publication_status": "pages_propagation_pending",
+      "run_id": "gaza-daily-2026-10-14-20261014T155423415678Z",
+      "scheduled_for": "2026-10-14",
+      "started_at": "2026-10-14T15:54:23.415678Z",
+      "status": "DEGRADED",
+      "task_key": "gaza_daily_dispatch"
+    }
+  ]
 }

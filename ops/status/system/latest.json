@@ -227,7 +227,7 @@
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 19,
+        "private_review_max_age_hours": 20,
         "private_review_oldest_pending_date": "2026-10-14",
         "private_review_pending_date_count": 1,
         "private_review_pending_item_count": 4,
@@ -249,7 +249,7 @@
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 19,
+            "age_hours": 20,
             "count_only_gap_count": 0,
             "date": "2026-10-14",
             "dispositioned_item_count": 0,
@@ -419,7 +419,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 19,
+        "max_age_hours": 20,
         "oldest_pending_date": "2026-10-14",
         "pending_date_count": 1,
         "pending_item_count": 4,
@@ -448,12 +448,12 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "DEGRADED",
+      "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "33828b2fac7f50ad55a35127d54a5d18d9a64acf",
       "debug_summary": {
         "aggregate_degradation_required": null,
-        "aggregate_status": "DEGRADED",
+        "aggregate_status": "STALE_OBSERVABILITY",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
         "attention_task_count": 1,
@@ -470,10 +470,10 @@
         "coverage_caveat_only": null,
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "DEGRADED_ACTION_RECOMMENDED",
+        "operator_assessment": "ACTION_REQUIRED_OBSERVABILITY",
         "primary_classification": "pages_propagation_pending",
         "primary_failure_stage": "gaza_daily_dispatch",
-        "primary_layer": "TASK",
+        "primary_layer": "OBSERVABILITY",
         "primary_task_key": "gaza_daily_dispatch",
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": null,
@@ -486,8 +486,8 @@
         "publication_attempted": true,
         "publication_status": "pages_propagation_pending",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "HEALTHY",
-        "stale_observability": false,
+        "recovery_lifecycle": "INCIDENT_OPEN",
+        "stale_observability": true,
         "transient_source_failure_count": null,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
@@ -500,9 +500,9 @@
       "publication_recovery_applied": false,
       "publication_recovery_evidence": null,
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "HEALTHY",
+      "recovery_lifecycle": "INCIDENT_OPEN",
       "scheduled_health_available": true,
-      "stale_observability": false
+      "stale_observability": true
     },
     "ice": {
       "agent_handoff": {
@@ -560,8 +560,10 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-14T19:15:04.766005Z",
+  "exported_at": "2026-10-14T20:15:04.583792Z",
   "schema_version": "bluefern_external_system_status_v1",
-  "stale_observability": [],
+  "stale_observability": [
+    "gaza"
+  ],
   "system_status": "MISSED"
 }

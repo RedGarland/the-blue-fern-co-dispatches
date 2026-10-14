@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import html
 import json
 import subprocess
 from pathlib import Path
@@ -81,7 +82,7 @@ def pages_story() -> dict:
     }
 
 
-def init_pages_repo(root: Path) -> tuple[Path, str, str]:
+def init_pages_repo(root: Path, *, source_date: str = EDITION_DATE) -> tuple[Path, str, str]:
     pages = root / "pages"
     pages.mkdir()
     subprocess.run(["git", "init", "-b", "gh-pages", str(pages)], check=True, capture_output=True)
@@ -102,7 +103,7 @@ def init_pages_repo(root: Path) -> tuple[Path, str, str]:
         "publisher": "WAFA",
         "url": story["source_records"][0]["url"],
         "canonical_url": SOURCE_URL,
-        "published_at": "2026-08-29T14:26:12+00:00",
+        "published_at": f"{source_date}T14:26:12+00:00",
         "dispatch_slug": "gaza",
         "category_hint": "conflict",
         "used_in_story_ids": [STORY_ID],
@@ -146,7 +147,11 @@ def build_record(pages: Path, commit: str, **overrides: object) -> dict:
     return build_gaza_published_story_lineage(pages, **values)
 
 
-def init_withdrawal_pages_repo(root: Path) -> tuple[Path, str]:
+def init_withdrawal_pages_repo(
+    root: Path, *, source_date: str = "2026-10-03", event_date: str = "2026-10-03",
+    title: str = "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
+    claim: str = "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+) -> tuple[Path, str]:
     pages = root / "withdrawal-pages"
     pages.mkdir()
     subprocess.run(["git", "init", "-b", "gh-pages", str(pages)], check=True, capture_output=True)
@@ -154,15 +159,13 @@ def init_withdrawal_pages_repo(root: Path) -> tuple[Path, str]:
     git(pages, "config", "user.name", "Tests")
     git(pages, "remote", "add", "origin", GAZA_PAGES_REPOSITORY)
     story_id = "gaza-story-2026-10-03-003"
-    title = "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters"
-    claim = "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus."
     source = {
         "source_record_id": "gaza-2026-10-03-aljazeera-west-bank",
         "title": title,
         "publisher": "Al Jazeera",
         "url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
         "canonical_url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
-        "published_at": "2026-10-03T12:00:00+00:00",
+        "published_at": f"{source_date}T12:00:00+00:00",
         "dispatch_slug": "gaza",
         "category_hint": "conflict",
         "used_in_story_ids": [story_id],
@@ -173,7 +176,7 @@ def init_withdrawal_pages_repo(root: Path) -> tuple[Path, str]:
         "title": title,
         "summary": claim,
         "category": "palestinian_development",
-        "event_date": "2026-10-03T12:00:00+00:00",
+        "event_date": f"{event_date}T12:00:00+00:00",
         "location": "Gaza",
         "development_type": "",
         "casualty_counts": {},
@@ -202,7 +205,7 @@ def init_withdrawal_pages_repo(root: Path) -> tuple[Path, str]:
         },
     )
     (base / "index.html").write_text(
-        f"<html><body><h3>{title}</h3><p>{claim}</p></body></html>\n",
+        f"<html><body><h3>{html.escape(title)}</h3><p>{html.escape(claim)}</p></body></html>\n",
         encoding="utf-8",
     )
     git(pages, "add", "gaza")
@@ -498,3 +501,67 @@ def test_missing_lineage_still_fails_correction_gate(tmp_path: Path):
     }
     with pytest.raises(ValueError, match="does not resolve as a published story"):
         _validate_gaza_decision_details(review, "corrected", evidence, tmp_path, finding)
+
+
+def _build_withdrawal_record(pages: Path, commit: str) -> dict:
+    return build_gaza_published_story_lineage(
+        pages, pages_commit=commit, story_id="gaza-story-2026-10-03-003", edition_date="2026-10-03",
+        expected_title="Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
+        expected_prior_claim="Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+        backfill_reason="Preserve original published evidence dates for withdrawal only.",
+        created_at="2026-10-14T17:00:00+00:00",
+    )
+
+
+def test_withdrawal_lineage_preserves_prior_day_source_and_event_dates(tmp_path: Path):
+    pages, commit = init_withdrawal_pages_repo(tmp_path, source_date="2026-10-01", event_date="2026-10-01")
+    record = _build_withdrawal_record(pages, commit)
+    assert record["edition_date"] == "2026-10-03"
+    assert record["source_records"][0]["published_at"] == "2026-10-01T12:00:00+00:00"
+    assert record["evidence"]["story"]["event_date"] == "2026-10-01T12:00:00+00:00"
+    assert record["withdrawal_target_identity"]["correction_type"] == "story_withdrawal"
+    assert record["publication_mutation"] is False
+    assert record["approval_authority"] is False
+    assert validate_gaza_published_story_lineage(record) == record
+    # Original source dates remain part of the immutable evidence hash.
+    tampered = copy.deepcopy(record)
+    tampered["source_records"][0]["published_at"] = "2026-10-03T12:00:00+00:00"
+    with pytest.raises(ValueError):
+        validate_gaza_published_story_lineage(tampered)
+
+
+@pytest.mark.parametrize("date_field,bad_date", [
+    ("source_date", "2026-10-04"), ("event_date", "2026-10-04"),
+    ("source_date", "2026-09-31"), ("event_date", "not-a-date"),
+])
+def test_withdrawal_lineage_keeps_future_and_invalid_date_checks(tmp_path: Path, date_field, bad_date):
+    pages, commit = init_withdrawal_pages_repo(tmp_path, **{date_field: bad_date})
+    with pytest.raises(ValueError, match="date differs|differs from evidence"):
+        _build_withdrawal_record(pages, commit)
+
+
+def test_normal_claim_lineage_still_requires_same_day_source(tmp_path: Path):
+    pages, _, commit = init_pages_repo(tmp_path, source_date="2026-08-27")
+    with pytest.raises(ValueError, match="source domain or date differs"):
+        build_record(pages, commit)
+
+
+def test_withdrawal_lineage_matches_html_escaped_quotes_without_rewriting_evidence(tmp_path: Path):
+    title = "What's happening to women in Gaza now? - Haaretz"
+    claim = "What's happening to women in Gaza now? Haaretz."
+    pages, commit = init_withdrawal_pages_repo(tmp_path, source_date="2026-10-01", event_date="2026-10-01", title=title, claim=claim)
+    record = build_gaza_published_story_lineage(
+        pages, pages_commit=commit, story_id="gaza-story-2026-10-03-003", edition_date="2026-10-03",
+        expected_title=title, expected_prior_claim=claim,
+        backfill_reason="Bind the original quoted title, dates and bytes.", created_at="2026-10-14T17:00:00+00:00",
+    )
+    assert record["story_title"] == title
+    assert record["prior_claim"]["text"] == claim
+    assert "&#x27;" in (pages / "gaza/editions/2026-10-03/index.html").read_text()
+    assert validate_gaza_published_story_lineage(record) == record
+    with pytest.raises(ValueError, match="prior claim differs"):
+        build_gaza_published_story_lineage(
+            pages, pages_commit=commit, story_id="gaza-story-2026-10-03-003", edition_date="2026-10-03",
+            expected_title=title, expected_prior_claim=claim + " invented claim",
+            backfill_reason="Must reject changed claims.", created_at="2026-10-14T17:00:00+00:00",
+        )

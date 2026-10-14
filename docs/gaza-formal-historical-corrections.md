@@ -248,3 +248,17 @@ the same proposal and approval arguments.
 
 There is intentionally no `apply`, `publish`, `push`, audio-generation, social,
 email, or scheduler mode.
+
+## Prior-day evidence in withdrawal-only lineage
+
+Withdrawal-only lineage may preserve an original source publication date or
+story event date earlier than its owning edition date. Owning edition identity
+still comes from the exact pinned Pages paths and story ID. The original dates,
+claims, source fingerprints, evidence hashes and Pages blob bindings remain
+unchanged. Invalid or future dates remain rejected. Normal event/claim-correction
+lineage continues to require same-day dates; the withdrawal exception does not
+qualify current public stories or authorize a correction.
+
+The pinned rendered-evidence check recognizes both standard HTML escaping modes
+for quotes, preserving the renderer's original bytes and the manifest's original
+text. It does not normalize claim wording or bypass manifest/title/claim checks.

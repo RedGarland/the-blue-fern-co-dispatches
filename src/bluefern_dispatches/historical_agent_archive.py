@@ -556,9 +556,6 @@ def build_gaza_published_story_lineage(
         raise ValueError("pinned Pages prior claim differs from the expected claim")
     if story.get("public_rendered") is not True or story.get("included_in_public_summary") is not True:
         raise ValueError("pinned Pages story is not an included public story")
-    if str(story.get("event_date") or "")[:10] != edition_date:
-        raise ValueError("pinned Pages story event date differs from the edition date")
-
     source_ids = [str(value) for value in story.get("source_record_ids") or []]
     source_matches = [
         row
@@ -576,9 +573,9 @@ def build_gaza_published_story_lineage(
     if not dedupe_matches or not all(row.get("public_rendered") is True for row in dedupe_matches):
         raise ValueError("pinned Pages dedupe evidence does not retain the public story")
     rendered = artifact_bytes["rendered_edition"].decode("utf-8", errors="strict")
-    if html.escape(expected_title, quote=False) not in rendered or html.escape(
-        expected_prior_claim, quote=False
-    ) not in rendered:
+    if not any(html.escape(expected_title, quote=quote) in rendered for quote in (False, True)) or not any(
+        html.escape(expected_prior_claim, quote=quote) in rendered for quote in (False, True)
+    ):
         raise ValueError("pinned rendered edition does not contain the exact title and prior claim")
 
     story_evidence = {
@@ -666,6 +663,10 @@ def build_gaza_published_story_lineage(
             "fingerprint": stable_fingerprint,
             "correction_type": "story_withdrawal",
         }
+    if not _lineage_evidence_date_matches(
+        story.get("event_date"), edition_date, withdrawal_only=withdrawal_identity is not None
+    ):
+        raise ValueError("pinned Pages story event date differs from the edition date")
     record = {
         "schema_version": GAZA_PUBLISHED_LINEAGE_SCHEMA,
         "domain": "gaza",
@@ -711,6 +712,21 @@ def build_gaza_published_story_lineage(
     record["record_fingerprint"] = _lineage_record_fingerprint(record)
     validate_gaza_published_story_lineage(record)
     return record
+
+
+def _lineage_evidence_date_matches(value: Any, edition_date: str, *, withdrawal_only: bool) -> bool:
+    day = str(value or "")[:10]
+    if not withdrawal_only:
+        return day == edition_date
+    # Withdrawal provenance describes what was actually published. A prior-day
+    # source/event must retain its original date rather than be relabeled to the
+    # owning edition. This exception cannot qualify a new or corrected claim.
+    try:
+        original_day = datetime.fromisoformat(day).date()
+        owning_day = datetime.fromisoformat(edition_date).date()
+    except ValueError:
+        return False
+    return original_day <= owning_day
 
 
 def validate_gaza_published_story_lineage(record: dict[str, Any]) -> dict[str, Any]:
@@ -864,7 +880,7 @@ def validate_gaza_published_story_lineage(record: dict[str, Any]) -> dict[str, A
         raise ValueError("Gaza published-story lineage prior claim differs from evidence")
     if story.get("casualty_counts") != prior_claim.get("casualty_counts"):
         raise ValueError("Gaza published-story lineage casualty claim differs from evidence")
-    if str(story.get("event_date") or "")[:10] != edition_date:
+    if not _lineage_evidence_date_matches(story.get("event_date"), edition_date, withdrawal_only=has_withdrawal_identity):
         raise ValueError("Gaza published-story lineage edition date differs from evidence")
     if story.get("public_rendered") is not True or story.get("included_in_public_summary") is not True:
         raise ValueError("Gaza published-story lineage evidence is not public")
@@ -902,7 +918,9 @@ def validate_gaza_published_story_lineage(record: dict[str, Any]) -> dict[str, A
     from .gaza_sources import story_claim_fingerprint
 
     for source in sources:
-        if source.get("dispatch_slug") != "gaza" or str(source.get("published_at") or "")[:10] != edition_date:
+        if source.get("dispatch_slug") != "gaza" or not _lineage_evidence_date_matches(
+            source.get("published_at"), edition_date, withdrawal_only=has_withdrawal_identity
+        ):
             raise ValueError("Gaza published-story lineage source domain or date differs")
         if source.get("claim_fingerprint") != story_claim_fingerprint(source):
             raise ValueError("Gaza published-story lineage source claim fingerprint differs")

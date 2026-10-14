@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T044451-0700-r10",
+  "scheduled_for": "2026-10-14T04:44:51-07:00",
+  "started_at": "2026-10-14T04:47:44-07:00",
+  "completed_at": "2026-10-14T04:49:43-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-14T03:43:17-07:00",
+    "end": "2026-10-14T04:49:43-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Gaza daily collector/publisher remains authoritative and unchanged.",
+    "OCHA OPT explicitly checked first: homepage accessible; newest listed update 2026-10-09. https://www.ochaopt.org/",
+    "WHO explicitly checked first: WHO global Israel/oPt emergency hub accessible, regional EMRO landing could not be retrieved; current detailed regional healthcare coverage remains incomplete. https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+    "Exactly 12 further targeted searches covering local/wire casualties, healthcare, aid, food and water, medical transport, crossings, infrastructure, detention, displacement and ceasefire developments; no new independently traceable nonduplicate qualifying Gaza development was located.",
+    "AP 2026-10-14 report that a woman died in a Gaza City apartment strike repeats the event already found during the October 13 23:54 PDT watch and noted in the 2026-10-14 03:43 PDT heartbeat. https://apnews.com/article/mideast-israel-palestinians-iran-october-14-2026-7e2c57a29fd5c3afc7ffe0cf63954bf3",
+    "Reuters October 14 Gaza olive harvest coverage previously logged at 01:46 PDT; excluded as duplicate.",
+    "No approvals, production publishing, publication state or schedule modifications."
+  ]
+}

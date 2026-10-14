@@ -18,7 +18,7 @@
   "debug_summary": {
     "aggregate_degradation_required": false,
     "aggregate_status": "MISSED",
-    "all_current_failures_external": false,
+    "all_current_failures_external": true,
     "all_current_failures_non_actionable": true,
     "attention_task_count": 2,
     "attention_tasks": [
@@ -41,7 +41,7 @@
     ],
     "coverage_caveat_only": true,
     "external_access_restriction_count": 4,
-    "failed_source_count": 11,
+    "failed_source_count": 4,
     "operator_assessment": "FAILED_ACTION_REQUIRED",
     "primary_classification": "partial_success",
     "primary_failure_stage": "care_line_collection",
@@ -60,7 +60,7 @@
     "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
-    "transient_source_failure_count": 7,
+    "transient_source_failure_count": 0,
     "unaccounted_event_count": null,
     "unclassified_source_failure_count": 0
   },
@@ -337,7 +337,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -347,7 +347,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -357,7 +357,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -367,7 +367,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -377,7 +377,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -387,7 +387,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -397,7 +397,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -501,7 +501,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-14T19:15:04.766005Z",
+  "last_exported_at": "2026-10-14T22:13:53.802585Z",
   "last_receipt_at": "2026-10-14T19:04:19.983545Z",
   "latest_runtime_proof_date": "2026-10-14T15:54:10.720144Z",
   "migration_status": "MIGRATED",
@@ -526,7 +526,7 @@
   "schema_version": "bluefern_external_operational_status_v1",
   "source_failure_summary": {
     "aggregate_degradation_required": false,
-    "all_current_failures_external": false,
+    "all_current_failures_external": true,
     "all_current_failures_non_actionable": true,
     "coverage_caveat_only": true,
     "external_access_restriction_count": 4,
@@ -556,49 +556,42 @@
         "source_id": "mayo-clinic-news"
       }
     ],
-    "failed_source_count": 11,
+    "failed_source_count": 4,
     "original_failed_source_count": 11,
-    "recovered_source_count": 0,
-    "recovered_sources": [],
-    "successful_attempt_count": 27,
-    "transient_source_failure_count": 7,
-    "transient_sources": [
+    "recovered_source_count": 7,
+    "recovered_sources": [
       {
-        "adapter_type": "rss",
-        "failure_class": "HTTPError",
+        "receipt": "noon-independent-review-01.json",
         "source_id": "nc-health-news"
       },
       {
-        "adapter_type": "rss",
-        "failure_class": "HTTPError",
+        "receipt": "noon-independent-review-01.json",
         "source_id": "colorado-sun-health"
       },
       {
-        "adapter_type": "rss",
-        "failure_class": "HTTPError",
+        "receipt": "noon-independent-review-01.json",
         "source_id": "calmatters-health"
       },
       {
-        "adapter_type": "rss",
-        "failure_class": "HTTPError",
+        "receipt": "noon-independent-review-01.json",
         "source_id": "ct-mirror-health"
       },
       {
-        "adapter_type": "rss",
-        "failure_class": "HTTPError",
+        "receipt": "noon-independent-review-01.json",
         "source_id": "virginia-mercury-health"
       },
       {
-        "adapter_type": "rss",
-        "failure_class": "HTTPError",
+        "receipt": "noon-independent-review-01.json",
         "source_id": "florida-phoenix-health"
       },
       {
-        "adapter_type": "rss",
-        "failure_class": "HTTPError",
+        "receipt": "noon-independent-review-01.json",
         "source_id": "texas-tribune-health"
       }
     ],
+    "successful_attempt_count": 27,
+    "transient_source_failure_count": 0,
+    "transient_sources": [],
     "unclassified_source_failure_count": 0
   },
   "stale_observability": false,
@@ -874,7 +867,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -884,7 +877,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -894,7 +887,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -904,7 +897,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -914,7 +907,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -924,7 +917,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,
@@ -934,7 +927,7 @@
           },
           {
             "adapter_type": "rss",
-            "effective_source_state": "failed",
+            "effective_source_state": "recovered",
             "failure_class": "HTTPError",
             "failure_status_class": "transient_external_access_restriction",
             "http_status": 403,

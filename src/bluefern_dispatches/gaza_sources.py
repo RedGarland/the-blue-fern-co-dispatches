@@ -559,6 +559,43 @@ def gaza_story_selection_exclusion_reason(item: dict[str, Any], source: SourceDe
     scope_reason = _gaza_geographic_scope_exclusion_reason(" ".join([title, summary, url]))
     if scope_reason:
         return scope_reason
+    return _gaza_ground_evidence_exclusion_reason(item, title, summary)
+
+
+def _gaza_ground_evidence_exclusion_reason(
+    item: dict[str, Any], title: str, summary: str, *, check_discovery_detail: bool = True
+) -> str | None:
+    """Do not turn foreign reactions or discovery headlines into ground reports.
+
+    Apply the external-event guard at collection and selection. Check discovery
+    detail only at selection, after article enrichment has had a chance to run.
+    """
+    if re.search(r"\b(embass(?:y|ies)|restaurateur|boycott(?:s)?|protest(?:s)?|demonstration(?:s)?)\b", title, re.I):
+        ground_pattern = r"\b(?:" + "|".join(re.escape(term) for term in GROUND_DEVELOPMENT_TERMS) + r")\b"
+        ground_sentences = [
+            sentence for sentence in re.split(r"[.!?;]", summary)
+            if VERIFIED_GAZA_EVENT_LOCATION_TERMS.search(sentence)
+            and re.search(ground_pattern, sentence, re.I)
+            and not re.search(r"\b(?:call(?:s|ing)? for|urg(?:e|es|ing)|should|would)\b", sentence, re.I)
+        ]
+        if not ground_sentences:
+            return "gaza_adjacent_external_event_without_ground_development"
+    article_detail = (
+        str(item.get("article_fetch_status") or "") == "article_prose_extracted"
+        and bool(str(item.get("content_text") or "").strip())
+        and bool(str(item.get("resolved_canonical_url") or "").strip())
+    )
+    if check_discovery_detail and not article_detail and _looks_like_google_news_wrapper(str(item.get("url") or "")):
+        publisher = str(item.get("publisher") or "")
+        title_key = normalize_title(title, publisher=publisher)
+        summary_key = normalize_title(summary, publisher=publisher)
+        # Google RSS descriptions often repeat the headline followed by the
+        # publisher without a separator. Neither is article evidence.
+        publisher_key = normalize_title(publisher)
+        if publisher_key and summary_key.endswith(" " + publisher_key):
+            summary_key = summary_key[:-(len(publisher_key) + 1)].strip()
+        if not summary_key or summary_key == title_key:
+            return "discovery_headline_without_reported_detail"
     return None
 
 
@@ -2081,6 +2118,12 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
     scope_reason = _gaza_geographic_scope_exclusion_reason(haystack)
     if scope_reason:
         return False, scope_reason
+    ground_reason = _gaza_ground_evidence_exclusion_reason(
+        {**item, "publisher": item.get("publisher") or (source.publisher if source else "")}, title, summary,
+        check_discovery_detail=False,
+    )
+    if ground_reason:
+        return False, ground_reason
     if strong_title or strong_url:
         return True, "strong_title_or_url"
     if is_palestinian_development_text(haystack):

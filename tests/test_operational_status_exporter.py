@@ -3951,3 +3951,18 @@ def test_publication_state_is_separate_from_health(tmp_path: Path) -> None:
     result = export_status(source_root=_write_day(tmp_path), status_checkout=tmp_path / "status", date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
     assert result["food_line"]["aggregate_status"] == "FAILED"
     assert result["food_line"]["publication_attempted"] is False
+
+
+def test_food_without_receipts_before_schedule_is_unknown_not_success(tmp_path: Path) -> None:
+    status = build_food_line_status(source_root=tmp_path, date="2026-10-14",
+                                   evaluated_at="2026-10-14T07:15:03Z", exported_at="2026-10-14T07:15:03Z")
+    assert status["aggregate_status"] == "UNKNOWN"
+    assert status["receipt_completeness"] == "MISSING"
+    assert status["task_summaries"] == []
+    assert status["debug_summary"]["operator_assessment"] != "HEALTHY"
+
+
+def test_food_without_receipts_after_schedule_keeps_stale_alarm(tmp_path: Path) -> None:
+    status = build_food_line_status(source_root=tmp_path, date="2026-10-14",
+                                   evaluated_at="2026-10-14T16:15:03Z", exported_at="2026-10-14T16:15:03Z")
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"

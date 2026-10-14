@@ -2316,6 +2316,8 @@ def build_food_line_status(
             and not non_source_watch_degraded
             and not aggregate["upstream_blocked_tasks"]
         ) else OperationalStatus.DEGRADED.value
+    elif not effective_receipts:
+        aggregate_status = OperationalStatus.UNKNOWN.value
     else:
         aggregate_status = OperationalStatus.SUCCESS.value
     source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}

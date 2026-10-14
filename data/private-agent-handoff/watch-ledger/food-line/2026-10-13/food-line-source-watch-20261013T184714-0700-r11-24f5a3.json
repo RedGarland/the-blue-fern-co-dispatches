@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T184714-0700-r11-24f5a3",
+  "scheduled_for": "2026-10-13T18:45:54-07:00",
+  "started_at": "2026-10-13T18:47:14-07:00",
+  "completed_at": "2026-10-14T01:48:33.078+00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T17:50:30-07:00",
+    "end": "2026-10-14T01:48:33.078+00:00",
+    "scope": "U.S. newly reported food-access disruptions since previous hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "queries_succeeded": 12,
+    "queries_failed": 0,
+    "covered_classes": [
+      "sole/last/full-service community grocery loss",
+      "storm/flood/fire/outage-disrupted emergency food distribution",
+      "abrupt pantry/food-bank closure or major service reduction",
+      "new official SNAP/WIC/food-assistance interruption"
+    ],
+    "assessment": "No new verified, qualifying, nonduplicate disruptions surfaced in the bounded supplementary recall search.",
+    "excluded_candidates": [
+      "Spencer NY only-grocery fire: previously reported September 14, 2026",
+      "Prodisee Pantry Stockton AL distribution cancellation: announced October 7 for October 10, 2026",
+      "El Paso TX storm-damaged food bank closure: reported September 28, 2026",
+      "Richlands VA Grants Supermarket closure October 10: outside current hourly window and comparable grocer remains",
+      "Colorado Safeway November 14 planned closure: future event and other local grocery options remain",
+      "Earlier 2025 SNAP/WIC interruption and generic program-coverage stories"
+    ],
+    "caveats": [
+      "Search indexes may lag the observation hour; older stories were returned despite freshness parameters.",
+      "No primary nationwide collection or publication action was performed."
+    ],
+    "prior_heartbeat": "food-line-source-watch-20261013T174844-0700-r11.json",
+    "production_collection_authoritative": true,
+    "approval_attempted": false,
+    "publication_attempted": false,
+    "schedule_modified": false
+  }
+}

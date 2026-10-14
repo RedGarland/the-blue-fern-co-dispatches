@@ -135,7 +135,7 @@
   ],
   "human_action_required": false,
   "incident_reference": null,
-  "last_exported_at": "2026-10-13T23:04:21.743575Z",
+  "last_exported_at": "2026-10-14T02:15:04.706414Z",
   "last_receipt_at": "2026-10-13T15:54:55.028299Z",
   "latest_receipt_path": "logs/food-line/current-intake/2026-10-13/20261013T155455Z-current-intake.json",
   "latest_runtime_proof_date": "2026-10-13T15:54:55.028299Z",

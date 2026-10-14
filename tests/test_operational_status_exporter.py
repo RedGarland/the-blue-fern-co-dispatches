@@ -1619,6 +1619,8 @@ def test_export_is_idempotent_and_atomic(tmp_path: Path) -> None:
 
 
 def test_rebuild_dispatch_status_artifacts_writes_only_local_dispatch_status(tmp_path: Path) -> None:
+    from scripts import food_line_daily_scheduler, preflight_repo_state
+
     success_statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
     source = _write_day(tmp_path, success_statuses)
 
@@ -1638,6 +1640,9 @@ def test_rebuild_dispatch_status_artifacts_writes_only_local_dispatch_status(tmp
     assert (source / "ops/status/food-line/history" / f"{DATE}.json").is_file()
     assert not (source / "ops/status/system/latest.json").exists()
     assert result["status"]["dispatch"] == "food-line"
+    latest_status = " M ops/status/food-line/latest.json"
+    assert food_line_daily_scheduler._unexpected_dirty_paths(latest_status) == []
+    assert preflight_repo_state.classify_status_line(latest_status)["is_risky"] is False
 
 
 def test_export_reuses_food_timestamp_but_advances_changed_system_timestamp(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

@@ -159,6 +159,8 @@ def test_replay_recovers_source_and_writes_append_only_receipt(tmp_path: Path, m
     assert payload["publication_attempted"] is False
     assert payload["public_side_effects"] is False
     assert (root / payload["receipt_path"]).is_file()
+    from scripts.preflight_repo_state import classify_status_line
+    assert classify_status_line(f"?? {payload['receipt_path']}")["is_risky"] is False
     effective_path = root / pipeline.COLLECTION_RUNS_ROOT / DATE / PARENT_RUN / "effective-source-state.json"
     effective = json.loads(effective_path.read_text(encoding="utf-8"))
     assert effective["recovered_source_ids"] == [SOURCE_ID]

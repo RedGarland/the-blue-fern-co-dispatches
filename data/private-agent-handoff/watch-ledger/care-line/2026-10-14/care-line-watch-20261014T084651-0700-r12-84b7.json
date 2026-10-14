@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T084651-0700-r12-84b7",
+  "scheduled_for": "2026-10-14T08:46:51-07:00",
+  "started_at": "2026-10-14T08:46:51-07:00",
+  "completed_at": "2026-10-14T08:48:27-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-14T07:54:00-07:00",
+    "end_at": "2026-10-14T08:48:27-07:00",
+    "basis": "Prior Care Line recall watch reportedly completed about 07:54 PDT on October 14; that run's heartbeat was not persisted to the required branch."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only; production national collection remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest listed notice dated 2026-10-09 (Tender Home Health, CA). No newly dated termination, rescission, or CLIA action found.",
+    "Exactly 12 additional targeted web searches were completed covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency care, ambulance, air medical, service restoration, assisted-living/long-term care, and other concrete closures.",
+    "No verified new qualifying development in the bounded October 14 07:54-08:48 PDT window. October 14 reports on Fitzgibbon Hospital described maternity deliveries ending in September; the New Orleans clinic reopening had been flagged by the previous watch without same-hour confirmation of operations; Nebraska senior living closures were previously identified. A Greenville, Texas outpatient pharmacy closure was announced October 1 and was not effective during this window. Excluded old events, duplicates, proposed openings without prior loss, and non-US locations.",
+    "Publication timestamps and indexing may lag; absence of search findings is not exhaustive coverage. No review approvals, publication, schedule changes, or task disabling performed."
+  ]
+}

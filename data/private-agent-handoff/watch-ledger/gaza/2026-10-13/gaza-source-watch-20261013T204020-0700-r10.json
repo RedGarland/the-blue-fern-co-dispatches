@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T204020-0700-r10",
+  "scheduled_for": "2026-10-13T20:44:51-07:00",
+  "started_at": "2026-10-13T20:40:20-07:00",
+  "completed_at": "2026-10-13T20:42:03-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T19:48:03-07:00",
+    "end": "2026-10-13T20:42:03-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; primary Gaza publisher/collector remains authoritative. Previous durable hourly watch heartbeat completed 2026-10-13T19:48:03-07:00.",
+    "OCHA OPT checked first: accessible; newest listed news/update is 2026-10-09, not a new development in the window. https://www.ochaopt.org/",
+    "WHO checked second: global Gaza/oPt emergency page accessible but no timely new report; WHO EMRO regional emergency situation reports endpoint returned HTTP 502. Direct regional health coverage remains incomplete. https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt ; https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+    "Exactly 12 additional targeted searches completed: WAFA, Palestinian Red Crescent, UNICEF, WFP, UNRWA, ICRC, Reuters, AP, ReliefWeb, MSF, Gaza casualty/evening reports, and Gaza crossings/medical evacuation/aid. None yielded a verified new nonduplicate qualifying Gaza development published or confirmed within the observation window.",
+    "Direct WAFA latest-news feed accessible: latest listed Gaza casualty stories were published earlier on October 13 Palestine time, preceding the previous watch. More recent stories concerned the West Bank or non-Gaza politics, excluded. https://english.wafa.ps/Pages/LastNews",
+    "Search results from official humanitarian agencies and Reuters/AP were older, off-topic, or duplicated previously recalled casualty/shelter claims; no unsupported social-only or opinion material accepted.",
+    "DEGRADED due to WHO EMRO HTTP 502, while WHO global, OCHA, WAFA and indexed established sources supplied useful complementary coverage. No approval, production publishing, monitoring schedule or task-state changes."
+  ]
+}

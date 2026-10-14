@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T165007-0700-r12-b6c9",
+  "scheduled_for": "2026-10-14T16:50:07-07:00",
+  "started_at": "2026-10-14T16:50:07-07:00",
+  "completed_at": "2026-10-14T16:50:50-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-14T15:49:00-07:00",
+    "end_at": "2026-10-14T16:50:50-07:00",
+    "basis": "Previous hourly Care Line recall watch reported completion around 15:49 PDT; last durable GitHub care-line heartbeat found at 11:51 PDT. Window start is approximate because intervening runs reported persistence failures."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall; production national Care Line collection remains authoritative.",
+    "CMS Public Notices explicitly checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; current page lists 2026-10-09 Tender Home Health, California, as newest notice. No new CMS termination, rescission, CLIA limitation or suspension in observation window.",
+    "Exactly 12 additional targeted searches completed, covering hospital/ED, maternity, behavioral health, dialysis/oncology, primary care, rural emergency access, ground ambulance, air medical, concrete reopening, official state notices, and territories.",
+    "No newly reported, credibly confirmed qualifying closure, suspension, or effective restoration found in this bounded window. Search results predominantly concerned older developments, proposals, opinion, and unrelated items.",
+    "Previously reported Dennys River Volunteer Ambulance, Piedmont HealthCare outage and earlier closures were excluded as duplicates. Date-only publication stamps cannot resolve hour of initial release.",
+    "No approvals, publication, schedule alteration, or task disabling performed."
+  ]
+}

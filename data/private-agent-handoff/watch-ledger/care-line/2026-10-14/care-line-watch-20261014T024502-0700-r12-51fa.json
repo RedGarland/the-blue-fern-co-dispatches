@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T024502-0700-r12-51fa",
+  "scheduled_for": "2026-10-14T02:45:02-07:00",
+  "started_at": "2026-10-14T02:45:02-07:00",
+  "completed_at": "2026-10-14T02:46:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-14T01:47:47.166-07:00",
+    "end_at": "2026-10-14T02:46:11-07:00",
+    "basis": "Previous latest persisted Care Line Watch run care-line-watch-20261014T014549-0700-r12-f403 on ops/watch-ledger completed at 2026-10-14T01:47:47.166-07:00."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only; production national Care Line collector remains authoritative and was not modified.",
+    "CMS Public Notices explicitly checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest displayed notice was 2026-10-09, Tender Home Health (California); no newly listed notice dated within the observation window.",
+    "Exactly 12 additional targeted web searches (recency 1 day) checked U.S. hospital/ED/maternity, rural and emergency services, ambulance/air-medical bases, behavioral health, dialysis/oncology/primary care, official restrictions, and effective restoration. No qualifying new access change was confirmed within this hourly interval.",
+    "Excluded pre-window events including an October 13 Roseland Community Hospital maternity-services suspension report, retrospective reports, funding-risk/proposal coverage without new service effects, non-U.S. results, and duplicate known events.",
+    "Bounded search is not exhaustive; absence of confirmed new findings does not establish absence of all access changes nationwide or in U.S. territories.",
+    "No review approval, publishing, schedule changes, or task disabling. No finding was added without concrete new in-window evidence."
+  ]
+}

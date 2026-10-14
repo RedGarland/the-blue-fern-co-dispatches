@@ -38,7 +38,7 @@
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 3,
+        "attention_task_count": 4,
         "attention_tasks": [
           {
             "artifact_id": "20261013T130002Z-37048.json",
@@ -63,11 +63,19 @@
             "failure_stage": "care_line_collection",
             "status": "DEGRADED",
             "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20261014T010002Z-20496.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
           }
         ],
         "coverage_caveat_only": true,
         "external_access_restriction_count": 4,
-        "failed_source_count": 12,
+        "failed_source_count": 11,
         "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
@@ -86,7 +94,7 @@
         "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
-        "transient_source_failure_count": 8,
+        "transient_source_failure_count": 7,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": 0
       },
@@ -128,12 +136,12 @@
             "source_id": "mayo-clinic-news"
           }
         ],
-        "failed_source_count": 12,
-        "original_failed_source_count": 12,
+        "failed_source_count": 11,
+        "original_failed_source_count": 11,
         "recovered_source_count": 0,
         "recovered_sources": [],
-        "successful_attempt_count": 26,
-        "transient_source_failure_count": 8,
+        "successful_attempt_count": 27,
+        "transient_source_failure_count": 7,
         "transient_sources": [
           {
             "adapter_type": "rss",
@@ -169,11 +177,6 @@
             "adapter_type": "rss",
             "failure_class": "HTTPError",
             "source_id": "texas-tribune-health"
-          },
-          {
-            "adapter_type": "structured_index",
-            "failure_class": "HTTPError",
-            "source_id": "cleveland-clinic-newsroom"
           }
         ],
         "unclassified_source_failure_count": 0
@@ -582,7 +585,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-13T23:15:04.028181Z",
+  "exported_at": "2026-10-14T01:15:03.547103Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "SUCCESS"

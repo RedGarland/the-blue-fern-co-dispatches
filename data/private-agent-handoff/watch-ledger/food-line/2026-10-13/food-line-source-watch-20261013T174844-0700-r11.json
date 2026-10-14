@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T174844-0700-r11",
+  "scheduled_for": "2026-10-13T17:45:54-07:00",
+  "started_at": "2026-10-13T17:48:44-07:00",
+  "completed_at": "2026-10-13T17:50:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-13T16:42:00-07:00",
+    "end": "2026-10-13T17:50:30-07:00",
+    "scope": "U.S. new interruptions since previous hourly watch"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "queries_succeeded": 12,
+    "covered_classes": [
+      "sole/last community grocer loss",
+      "storm/fire/flood/outage cancellation of emergency distribution",
+      "abrupt pantry/food bank access reductions",
+      "official SNAP/WIC interruption"
+    ],
+    "assessment": "No newly verified qualifying nonduplicate signals.",
+    "exclusions": [
+      "Historical sole grocer losses",
+      "Richlands VA grant supermarket 10 Oct closure: alternate comparable grocery remains",
+      "Future chain grocery closures with nearby alternatives",
+      "2025 SNAP pause reports",
+      "Shelter services not confirmed as pantry service"
+    ],
+    "caveats": [
+      "Indexing may lag the bounded window",
+      "Freshness filter returned some older stories"
+    ],
+    "prior_heartbeat": "food-line-recall-20261013T164117-0700-11.json",
+    "production_collection_authoritative": true,
+    "approval_attempted": false,
+    "publication_attempted": false,
+    "schedule_modified": false
+  }
+}

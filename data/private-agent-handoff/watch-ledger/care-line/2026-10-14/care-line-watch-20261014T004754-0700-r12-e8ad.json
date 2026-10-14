@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T004754-0700-r12-e8ad",
+  "scheduled_for": "2026-10-14T00:47:54-07:00",
+  "started_at": "2026-10-14T00:47:54-07:00",
+  "completed_at": "2026-10-14T00:49:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-13T23:48:20-07:00",
+    "end_at": "2026-10-14T00:49:59-07:00",
+    "basis": "Prior persisted Care Line Watch heartbeat on ops/watch-ledger completed 2026-10-13T23:48:20-07:00."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only. Production national Care Line collector remains authoritative.",
+    "CMS Public Notices checked first: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices . Latest listed notice 2026-10-09 Tender Home Health, California. No notice dated after the prior watch observed.",
+    "Exactly 12 additional targeted web searches completed, recency-limited (1-2 days), for hospital/ED, maternity, rural emergency, ambulance, air-medical, behavioral-health, dialysis, oncology, primary-care, official service disruption, restoration, and US territories. No search returned a definitive new qualifying access-loss or essential-service-restoration item for the precise interval.",
+    "Search results mostly historical, unrelated, or current policy context rather than new concrete access changes. Roseland Community Hospital labor/delivery closure report was published before this interval; Florida hurricane response reports did not establish a newly effective healthcare service change in the interval.",
+    "No proposed, speculative, ownership-only, duplicate, historical, or unsupported claims were emitted. Zero new findings is not evidence that no such changes occurred nationwide.",
+    "No approvals, publication, schedule changes, or task disabling performed. Scheduled_for uses execution start because no separate scheduler timestamp was exposed."
+  ]
+}

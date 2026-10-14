@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261013T224240-0700-r10",
+  "scheduled_for": "2026-10-13T22:44:51-07:00",
+  "started_at": "2026-10-13T22:42:40-07:00",
+  "completed_at": "2026-10-13T22:44:40-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-13T21:51:49-07:00",
+    "end": "2026-10-13T22:44:40-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT and WHO checked first. OCHA current publications latest Gaza item dated 2026-10-09. WHO global Gaza/oPt overview accessible; WHO EMRO regional reports endpoint HTTP 502.",
+    "Exactly 12 additional targeted searches completed across WAFA, Anadolu, Reuters, AP, UNRWA, UNICEF, WFP, ICRC, MSF, PRCS and Gaza-focused aid/health reports. No new verified in-Gaza event not previously recorded.",
+    "WAFA homepage October 14 Palestine-time items concerned the West Bank; its latest Gaza report was October 13 at 13:39 Palestine time. Anadolu October 13 casualty and home-demolition reports already seen in earlier recall watches.",
+    "Previous durable heartbeat completed at 2026-10-13T21:51:49-07:00. WHO EMRO error leaves healthcare coverage incomplete, while official humanitarian and established journalistic alternatives remained accessible.",
+    "Supplementary watch only; daily production authoritative. No schedule, publishing, approval, or task state changes."
+  ]
+}

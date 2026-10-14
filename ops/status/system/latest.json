@@ -32,7 +32,7 @@
       "aggregate_status": "MISSED",
       "coverage_caveat_only": true,
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "c06f564d1d1dfffb9bfdc50d5c11d971ce13767f",
+      "current_runner_head": "a41bf5a665abafae2591ec219454d5a25e0f7478",
       "debug_summary": {
         "aggregate_degradation_required": false,
         "aggregate_status": "MISSED",
@@ -189,73 +189,67 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "e07012ae882b02fca6445f1e19ca9c44ed7463ab",
+      "current_runner_head": "a41bf5a665abafae2591ec219454d5a25e0f7478",
       "debug_summary": {
         "aggregate_degradation_required": null,
-        "aggregate_status": "FAILED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 3,
+        "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20261014T155410Z-source-watch.json",
-            "classification": "failed",
-            "exit_code": 10,
+            "artifact_id": "20261014T175702Z-source-watch.json",
+            "classification": "completed_with_exclusions",
+            "exit_code": 0,
             "failure_stage": "source_watch",
-            "status": "FAILED",
+            "status": "DEGRADED",
             "task_key": "food_line_source_watch"
-          },
-          {
-            "artifact_id": "20261014T155409Z-current-intake.json",
-            "classification": "source_watch_not_initialized",
-            "exit_code": 0,
-            "failure_stage": null,
-            "status": "UPSTREAM_BLOCKED",
-            "task_key": "food_line_current_intake"
-          },
-          {
-            "artifact_id": "20261014T155409Z-status-resume.json",
-            "classification": "source_watch_not_initialized",
-            "exit_code": 0,
-            "failure_stage": null,
-            "status": "UPSTREAM_BLOCKED",
-            "task_key": "food_line_source_watch_resume"
           }
         ],
         "coverage_caveat_only": null,
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
-        "primary_classification": "failed",
+        "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
+        "primary_classification": "completed_with_exclusions",
         "primary_failure_stage": "source_watch",
-        "primary_layer": "SOURCE",
+        "primary_layer": "EDITORIAL_HANDOFF",
         "primary_task_key": "food_line_source_watch",
-        "primary_task_status": "FAILED",
+        "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 0,
-        "private_review_oldest_pending_date": null,
-        "private_review_pending_date_count": 0,
-        "private_review_pending_item_count": 0,
-        "private_review_unresolved_item_count": 0,
+        "private_review_max_age_hours": 18,
+        "private_review_oldest_pending_date": "2026-10-14",
+        "private_review_pending_date_count": 1,
+        "private_review_pending_item_count": 4,
+        "private_review_unresolved_item_count": 4,
         "publication_attempted": false,
         "publication_status": "skipped_not_release_ready",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "INCIDENT_OPEN",
+        "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "transient_source_failure_count": null,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
       },
-      "human_action_required": false,
-      "latest_receipt_path": "logs/food-line/source-watch/2026-10-14/20261014T155410Z-source-watch.json",
+      "human_action_required": true,
+      "latest_receipt_path": "logs/food-line/current-intake/2026-10-14/20261014T180117Z-current-intake.json",
       "migration_status": "MIGRATED",
-      "next_human_action": "No human review pending.",
+      "next_human_action": "Review 4 Food Line items for 2026-10-14.",
       "private_review_backlog": {
         "count_only_gap_count": 55,
-        "dates": [],
+        "dates": [
+          {
+            "age_hours": 18,
+            "count_only_gap_count": 0,
+            "date": "2026-10-14",
+            "dispositioned_item_count": 0,
+            "pending_item_count": 4,
+            "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
+            "unresolved_item_count": 4
+          }
+        ],
         "disposition_diagnostics": {
           "duplicate_entry_count": 0,
           "malformed_entry_count": 0,
@@ -417,18 +411,22 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 0,
-        "oldest_pending_date": null,
-        "pending_date_count": 0,
-        "pending_item_count": 0,
-        "unresolved_item_count": 0
+        "max_age_hours": 18,
+        "oldest_pending_date": "2026-10-14",
+        "pending_date_count": 1,
+        "pending_item_count": 4,
+        "unresolved_item_count": 4
       },
-      "recovery_lifecycle": "INCIDENT_OPEN",
-      "review_date": null,
-      "review_item_count": 0,
-      "review_material_path": null,
-      "review_material_paths": null,
-      "review_pending": false
+      "recovery_lifecycle": "HEALTHY",
+      "review_date": "2026-10-14",
+      "review_item_count": 4,
+      "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
+      "review_material_paths": [
+        "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
+        "data/dispatches/food-line/review/proposed-editions/2026-10-14.md",
+        "data/dispatches/food-line/review/reports/2026-10-14/current-intake.json"
+      ],
+      "review_pending": true
     },
     "gaza": {
       "agent_handoff": {
@@ -444,7 +442,7 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "c06f564d1d1dfffb9bfdc50d5c11d971ce13767f",
+      "current_runner_head": "a41bf5a665abafae2591ec219454d5a25e0f7478",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "DEGRADED",
@@ -554,8 +552,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-14T17:15:06.575903Z",
+  "exported_at": "2026-10-14T18:04:16.257106Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "FAILED"
+  "system_status": "MISSED"
 }

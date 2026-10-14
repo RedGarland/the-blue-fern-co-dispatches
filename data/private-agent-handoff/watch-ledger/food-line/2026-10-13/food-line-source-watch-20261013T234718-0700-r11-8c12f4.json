@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261013T234718-0700-r11-8c12f4",
+  "scheduled_for": "2026-10-13T23:45:54-07:00",
+  "started_at": "2026-10-13T23:47:18-07:00",
+  "completed_at": "2026-10-14T06:48:46.738Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-13",
+    "start": "2026-10-13T22:45:54-07:00",
+    "end": "2026-10-14T06:48:46.738Z"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary bounded recall only; authoritative production collection unchanged.",
+    "targeted_web_searches": 12,
+    "categories_checked": [
+      "sole/only/last/full-service grocery store closure/fire/disaster",
+      "emergency food distribution cancellation/suspension from severe weather, outage, fire, or facility damage",
+      "abrupt pantry or food-bank closure or substantial service reduction",
+      "new official SNAP/WIC/food-assistance interruption with immediate access effects"
+    ],
+    "verification_result": "No newly verified, qualifying U.S. food-access disruption from the observation window. Search results were predominantly older, non-U.S., routine/promotional, or nonqualifying. No positive evidence suitable for handoff.",
+    "search_limitations": "Search-engine indexing lag and local notice discoverability make negative results non-exhaustive. No primary production pipeline access or edits.",
+    "search_errors": 0,
+    "exclusions": "Donations, routine listings/guides, general price/inflation coverage, old items, duplicates, and unverified impacts excluded."
+  }
+}

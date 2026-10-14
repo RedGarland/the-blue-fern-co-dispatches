@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T114451-0700-r10",
+  "scheduled_for": "2026-10-14T11:44:51-07:00",
+  "started_at": "2026-10-14T11:44:32-07:00",
+  "completed_at": "2026-10-14T11:45:41-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-14T10:46:07-07:00",
+    "end": "2026-10-14T11:45:41-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first. Latest listed official Gaza update dated October 9; no newer qualifying item identified.",
+    "WHO global site checked; WHO regional oPt endpoint returned HTTP 502. Regional healthcare reporting coverage gap.",
+    "Exactly 12 additional targeted searches across casualty, aid, water, food, health, access, displacement, negotiations and military-operations coverage.",
+    "All potentially relevant retrieved reports were previously seen or predated this window; no new qualifying finding.",
+    "Supplementary recall only. Production, approval, publication and watch schedule unchanged."
+  ]
+}

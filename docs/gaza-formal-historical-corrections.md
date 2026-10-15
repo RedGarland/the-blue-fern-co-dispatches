@@ -4,6 +4,11 @@ This capability packages a correction to an already published Gaza story. It is
 not the daily generator, a historical-edition publisher, or an editorial approval
 workflow. It cannot mutate or publish Pages.
 
+Coordinated multi-story preparation with separate scope-error and saved-evidence
+reasons uses [Gaza edition correction preparation](gaza-edition-correction-preparation.md).
+That owner has distinct non-authorizing preparation/proposal schemas; these
+legacy single-story approval and staging commands do not accept them.
+
 The proposal validator supports two correction shapes:
 
 - the original same-story `claim_correction` path for the GZ-01 casualty-count

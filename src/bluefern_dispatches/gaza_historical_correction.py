@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from urllib.parse import urlsplit
 from xml.etree import ElementTree
 
@@ -555,9 +555,10 @@ class _HtmlNode:
 class _StrictHtmlTreeParser(HTMLParser):
     """Record exact element spans while rejecting malformed target HTML."""
 
-    def __init__(self, source: str) -> None:
+    def __init__(self, source: str, *, void_tags: set[str] | None = None) -> None:
         super().__init__(convert_charrefs=True)
         self.source = source
+        self.void_tags = _VOID_HTML_TAGS if void_tags is None else void_tags
         self.line_starts = [0]
         self.line_starts.extend(index + 1 for index, char in enumerate(source) if char == "\n")
         self.roots: list[_HtmlNode] = []
@@ -590,7 +591,7 @@ class _StrictHtmlTreeParser(HTMLParser):
         )
         (parent.children if parent else self.roots).append(node)
         self.nodes.append(node)
-        if node.tag in _VOID_HTML_TAGS:
+        if node.tag in self.void_tags:
             node.end_tag_start = node.start_tag_end
             node.end = node.start_tag_end
         else:
@@ -2182,14 +2183,15 @@ def _validate_podcast_audio_identity(
 
 
 def _validate_edition_audio_ownership(
-    pages_root: Path, correction: dict[str, Any]
+    pages_root: Path, correction: dict[str, Any],
+    *, json_loader: Callable[[Path, str], Any] | None = None,
 ) -> _EditionAudioOwnership:
     date = correction["owning_edition_date"]
     audio_file = f"{date}.mp3"
     audio_path = f"/gaza/audio/{audio_file}"
     transcript_path = f"/gaza/audio/{date}-transcript.html"
     edition_path = f"/gaza/editions/{date}/"
-    metadata = _load_json(
+    metadata = (json_loader or _load_json)(
         _repo_path(pages_root, f"gaza/audio/{date}.json", "owning-edition audio metadata"),
         "owning-edition audio metadata",
     )
@@ -2251,6 +2253,7 @@ def _validate_flash_briefing_audio_ownership(
     pages_root: Path,
     document: _JsonDocument,
     correction: dict[str, Any],
+    *, json_loader: Callable[[Path, str], Any] | None = None,
 ) -> _EditionAudioOwnership:
     root = _require_json_kind(document.root, "array", "flash briefing")
     if len(root.items) != 1:
@@ -2269,6 +2272,7 @@ def _validate_flash_briefing_audio_ownership(
     return _validate_edition_audio_ownership(
         pages_root,
         {"owning_edition_date": flash_date},
+        json_loader=json_loader,
     )
 
 

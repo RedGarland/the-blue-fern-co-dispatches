@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gaza-edition-correction-request-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "edition_date",
+    "correction_date",
+    "correction_at",
+    "expected_source_head",
+    "expected_pages_head",
+    "review_packet_sha256",
+    "tts_provider",
+    "tts_model",
+    "tts_voice",
+    "targets"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gaza_edition_correction_request_v1"
+    },
+    "edition_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "correction_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "correction_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expected_source_head": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "expected_pages_head": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "review_packet_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "tts_provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tts_model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tts_voice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "story_id",
+          "reason"
+        ],
+        "properties": {
+          "story_id": {
+            "type": "string",
+            "pattern": "^gaza-story-20[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{3}$"
+          },
+          "reason": {
+            "enum": [
+              "scope_error",
+              "insufficient_saved_evidence"
+            ]
+          },
+          "review_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision_audit_path": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261015T124451-0700-r11",
+  "scheduled_for": "2026-10-15T12:44:51-07:00",
+  "started_at": "2026-10-15T12:48:12-07:00",
+  "completed_at": "2026-10-15T12:49:23-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T11:48:52-07:00",
+    "end": "2026-10-15T12:49:23-07:00",
+    "window_basis": "Previous supplementary watch completed at 11:48:52 PDT; sources checked during this execution."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "research_status": "DEGRADED",
+    "supplementary_targeted_searches": 12,
+    "initial_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "latest_listed_gaza_item": "2026-10-09"
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "accessible; no new in-window Gaza health update identified"
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP 502",
+        "gap": "Regional healthcare reporting unavailable"
+      }
+    ],
+    "targeted_source_scope": "12 bounded searches: casualties, OCHA/UN aid and displacement, WHO care and evacuation, UNRWA, ReliefWeb, Reuters, WFP, UNICEF, ICRC, crossings, ceasefire and operational civilian impact.",
+    "exclusions": [
+      "Commercial-import restrictions and Reuters details were identified in prior October 15 hourly watches and are duplicates.",
+      "AP Thursday-morning fatal strike was flagged before this observation window and event identity remains unresolved; not counted as new.",
+      "Israeli-prison detention reporting was not established as a new in-Gaza development.",
+      "Other returns were stale, outside Gaza, or not verifiably new within the observation window."
+    ],
+    "limitations": "WHO regional endpoints returned HTTP 502; search results may lag publication and cannot exclude unindexed developments.",
+    "production_boundary": "No daily collector, publication, approvals, Pages, schedule or automation changes."
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261014T194236-0700-r11",
+  "scheduled_for": "2026-10-14T18:45:54-07:00",
+  "started_at": "2026-10-14T19:42:36-07:00",
+  "completed_at": "2026-10-14T19:44:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T15:50:22-07:00",
+    "end": "2026-10-14T19:44:15-07:00",
+    "basis": "Last check explicitly evidenced in available run context ended at 15:50:22 PDT; subsequent hourly check receipts were not enumerable through this GitHub connection. Conservatively widened coverage rather than claiming an unverified hourly boundary."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "source_discovery": "SUCCESS",
+    "targeted_web_search_count": 12,
+    "targeted_web_search_limit": 12,
+    "search_failures": 0,
+    "classes_checked": [
+      "Only/sole/last/full-service grocery store closure, loss, fire or disaster",
+      "Canceled or suspended emergency food distribution due to storm, flood, fire, outage or damage",
+      "Abrupt food bank or pantry closure or major access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate consequences"
+    ],
+    "disposition": "No newly verified, in-window, nonduplicate qualifying disruption was found. No evidence of a qualifying cancellation or agency benefit interruption in the bounded searches.",
+    "excluded_examples": [
+      {
+        "source_url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Arvada story concerns last Safeway of a chain in the city, not its only grocery store; other grocers exist; announced before this window."
+      },
+      {
+        "source_url": "https://www.chron.com/food/article/wheatsville-coop-austin-texas-closing-22473858.php",
+        "reason": "Austin co-op location closure announced before interval; a second location remains open."
+      },
+      {
+        "source_url": "https://www.wjhg.com/2026/10/14/feeding-gulf-coast-distributes-350000-pounds-food-after-hurricane-isaias/",
+        "reason": "Storm relief distribution continuing; no substantiated cancellation/suspension; published before watch window."
+      },
+      {
+        "source_url": "https://www.thecooldown.com/green-business/grocery-store-matador-texas-neighbors-82-miles-avocados/",
+        "reason": "Current recap of grocery loss occurring in 2025, not a new in-window disruption."
+      }
+    ],
+    "coverage_limitations": "Supplementary, not authoritative nationwide collection; publication indexing can lag and not all pages give hour-level timestamps. Exact last successful hourly ledger checkpoint not verified.",
+    "operational_effects": "No editorial approval, publication, schedule, task enablement, or production collection change."
+  }
+}

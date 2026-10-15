@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T084522-0700-r12-8b4f",
+  "scheduled_for": "2026-10-15T08:45:22-07:00",
+  "started_at": "2026-10-15T08:48:12-07:00",
+  "completed_at": "2026-10-15T15:51:21.020Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-15T06:54:00-07:00",
+    "end": "2026-10-15T15:51:21.020Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative lookback to last explicitly available completed check; intervening hourly heartbeat unverified"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collector_role": "Supplementary recall watch; production Care Line collector remains authoritative",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_notice_provider": "Tender Home Health",
+      "newer_notices_identified": 0
+    },
+    "additional_targeted_searches": 12,
+    "search_failure_count": 0,
+    "focus": [
+      "Hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "Emergency/rural service loss",
+      "Ambulance or air-medical/base loss",
+      "CMS termination/rescission/CLIA restrictions",
+      "Concrete reopening/restoration of previously lost essential care"
+    ],
+    "search_queries": [
+      "hospital emergency department closed suspended reopening October 15 2026 United States local news",
+      "maternity labor delivery unit closure suspended October 15 2026 hospital access",
+      "dialysis center oncology cancer clinic closing service suspended October 15 2026",
+      "behavioral health mental health detox clinic inpatient beds closing October 15 2026",
+      "\"October 15, 2026\" ambulance service closing suspended air medical base USA",
+      "\"October 15, 2026\" hospital emergency department rural closing service suspended",
+      "\"October 15, 2026\" \"primary care\" clinic closing patients",
+      "\"October 15, 2026\" hospital maternity unit reopened emergency services restored",
+      "\"Oct 15, 2026\" \"ambulance\" \"service\" \"closed\" OR \"suspended\" hospital",
+      "\"Oct 15, 2026\" \"emergency department\" \"closed\" OR \"reopened\" hospital",
+      "\"October 15, 2026\" healthcare closure dialysis cancer hospice nursing home news",
+      "\"October 15, 2026\" Puerto Rico Guam US Virgin Islands hospital clinic emergency closure"
+    ],
+    "result_summary": "No newly verifiable qualifying U.S. or territorial access change surfaced. Search results were predominantly older reports, proposed actions, or non-U.S. developments.",
+    "exclusions": [
+      "Previously reported closures or proposals without a newly concrete access change",
+      "Older reports and duplicate developments",
+      "Non-U.S. developments"
+    ],
+    "limitations": [
+      "Search-engine recency results included stale articles; zero findings does not establish that no changes occurred nationally",
+      "Intervening prior hourly heartbeat could not be independently located"
+    ],
+    "approvals_or_publication_performed": false,
+    "schedule_modified": false
+  }
+}

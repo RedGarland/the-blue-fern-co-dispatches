@@ -26,42 +26,42 @@
     }
   ],
   "pages_provenance": {
-    "repository": "https://github.com/RedGarland/the-blue-fern-co-dispatches.git",
-    "branch": "gh-pages",
-    "pinned_commit": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
-    "observed_head_at_backfill": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
-    "observed_head_contains_pinned_commit": true,
     "artifacts": [
       {
-        "role": "curation_manifest",
-        "path": "gaza/editions/2026-10-14/curation_manifest.json",
+        "byte_length": 8913,
         "git_blob_oid": "39780f69859d59569b50bf4584bc8421937daaec",
-        "sha256": "71254dda6024e197d05b6994153850fb0f89db003359b6c997d7605ebc832e2b",
-        "byte_length": 8913
+        "path": "gaza/editions/2026-10-14/curation_manifest.json",
+        "role": "curation_manifest",
+        "sha256": "71254dda6024e197d05b6994153850fb0f89db003359b6c997d7605ebc832e2b"
       },
       {
-        "role": "dedupe_report",
-        "path": "gaza/editions/2026-10-14/dedupe_report.json",
+        "byte_length": 6175,
         "git_blob_oid": "d5033414d9af956a761f587773c85dcb0dd88704",
-        "sha256": "1cff9e854c65ec51ebdf9db5fb26af27a31935cbd5aa00627c7573d820af0e5e",
-        "byte_length": 6175
+        "path": "gaza/editions/2026-10-14/dedupe_report.json",
+        "role": "dedupe_report",
+        "sha256": "1cff9e854c65ec51ebdf9db5fb26af27a31935cbd5aa00627c7573d820af0e5e"
       },
       {
-        "role": "sources_manifest",
-        "path": "gaza/editions/2026-10-14/sources_manifest.json",
+        "byte_length": 8137,
         "git_blob_oid": "dc05f64d2807822c9c326e4eef65fec8d8c7b947",
-        "sha256": "c7fdc6389ce89f5702a281ac05351aa89b03767df4c22c66d0d5affe9897fcb2",
-        "byte_length": 8137
+        "path": "gaza/editions/2026-10-14/sources_manifest.json",
+        "role": "sources_manifest",
+        "sha256": "c7fdc6389ce89f5702a281ac05351aa89b03767df4c22c66d0d5affe9897fcb2"
       },
       {
-        "role": "rendered_edition",
-        "path": "gaza/editions/2026-10-14/index.html",
+        "byte_length": 5868,
         "git_blob_oid": "e05e6d5a1eb413106d8ed140d84f69b6d9609916",
-        "sha256": "2fd1d228f1d0d73a8185dca009f18c56fa7d3b38f1f29c0850d9cb33954be5ee",
-        "byte_length": 5868
+        "path": "gaza/editions/2026-10-14/index.html",
+        "role": "rendered_edition",
+        "sha256": "2fd1d228f1d0d73a8185dca009f18c56fa7d3b38f1f29c0850d9cb33954be5ee"
       }
     ],
-    "provenance_fingerprint": "sha256:c370ff073b7c4bce404cdd675867f957eabac61febbf6ba4a9fb121ecb539362"
+    "branch": "gh-pages",
+    "observed_head_at_backfill": "a990d6b67f283474baea1a3030f40e8e22dd8ffe",
+    "observed_head_contains_pinned_commit": true,
+    "pinned_commit": "a990d6b67f283474baea1a3030f40e8e22dd8ffe",
+    "provenance_fingerprint": "sha256:d93a9e788260d84ee9b73380d15bad248e5525460adba9fb4234e25650818ca6",
+    "repository": "https://github.com/RedGarland/the-blue-fern-co-dispatches.git"
   },
   "evidence": {
     "story": {
@@ -156,5 +156,5 @@
     "fingerprint": "sha256:b5ebbad42b1b83a84417f3925ef77435b2336a124ae0a34a30c2e7af32f7b476",
     "correction_type": "story_withdrawal"
   },
-  "record_fingerprint": "sha256:35f503b8461e9bd02d34f85736589e43d1ff737d6fe07c30101da7f2e7a1712c"
+  "record_fingerprint": "sha256:c837342b463b017460a2f50a06fc20fbabcf51c807d52d3c54335abafcb01904"
 }

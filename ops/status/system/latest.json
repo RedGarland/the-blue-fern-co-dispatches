@@ -32,13 +32,13 @@
       "aggregate_status": "MISSED",
       "coverage_caveat_only": true,
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "33828b2fac7f50ad55a35127d54a5d18d9a64acf",
+      "current_runner_head": "98b93fcbede35078e1cf54614dad25c74809dcca",
       "debug_summary": {
         "aggregate_degradation_required": false,
         "aggregate_status": "MISSED",
-        "all_current_failures_external": true,
+        "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 2,
+        "attention_task_count": 3,
         "attention_tasks": [
           {
             "artifact_id": "20261014T155408Z-7252.json",
@@ -55,11 +55,19 @@
             "failure_stage": "care_line_collection",
             "status": "DEGRADED",
             "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20261015T010002Z-16028.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
           }
         ],
         "coverage_caveat_only": true,
         "external_access_restriction_count": 4,
-        "failed_source_count": 4,
+        "failed_source_count": 9,
         "operator_assessment": "FAILED_ACTION_REQUIRED",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
@@ -78,7 +86,7 @@
         "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
-        "transient_source_failure_count": 0,
+        "transient_source_failure_count": 5,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": 0
       },
@@ -90,7 +98,7 @@
       "scheduled_health_available": true,
       "source_failure_summary": {
         "aggregate_degradation_required": false,
-        "all_current_failures_external": true,
+        "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
         "coverage_caveat_only": true,
         "external_access_restriction_count": 4,
@@ -120,42 +128,39 @@
             "source_id": "mayo-clinic-news"
           }
         ],
-        "failed_source_count": 4,
-        "original_failed_source_count": 11,
-        "recovered_source_count": 7,
-        "recovered_sources": [
+        "failed_source_count": 9,
+        "original_failed_source_count": 9,
+        "recovered_source_count": 0,
+        "recovered_sources": [],
+        "successful_attempt_count": 29,
+        "transient_source_failure_count": 5,
+        "transient_sources": [
           {
-            "receipt": "noon-independent-review-01.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "nc-health-news"
           },
           {
-            "receipt": "noon-independent-review-01.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "colorado-sun-health"
           },
           {
-            "receipt": "noon-independent-review-01.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "calmatters-health"
           },
           {
-            "receipt": "noon-independent-review-01.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "ct-mirror-health"
           },
           {
-            "receipt": "noon-independent-review-01.json",
-            "source_id": "virginia-mercury-health"
-          },
-          {
-            "receipt": "noon-independent-review-01.json",
-            "source_id": "florida-phoenix-health"
-          },
-          {
-            "receipt": "noon-independent-review-01.json",
+            "adapter_type": "rss",
+            "failure_class": "HTTPError",
             "source_id": "texas-tribune-health"
           }
         ],
-        "successful_attempt_count": 27,
-        "transient_source_failure_count": 0,
-        "transient_sources": [],
         "unclassified_source_failure_count": 0
       },
       "stale_observability": false
@@ -192,7 +197,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "33828b2fac7f50ad55a35127d54a5d18d9a64acf",
+      "current_runner_head": "98b93fcbede35078e1cf54614dad25c74809dcca",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "SUCCESS",
@@ -220,7 +225,7 @@
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 24,
+        "private_review_max_age_hours": 25,
         "private_review_oldest_pending_date": "2026-10-14",
         "private_review_pending_date_count": 1,
         "private_review_pending_item_count": 4,
@@ -242,7 +247,7 @@
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 24,
+            "age_hours": 25,
             "count_only_gap_count": 0,
             "date": "2026-10-14",
             "dispositioned_item_count": 0,
@@ -412,7 +417,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 24,
+        "max_age_hours": 25,
         "oldest_pending_date": "2026-10-14",
         "pending_date_count": 1,
         "pending_item_count": 4,
@@ -443,7 +448,7 @@
       },
       "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "33828b2fac7f50ad55a35127d54a5d18d9a64acf",
+      "current_runner_head": "98b93fcbede35078e1cf54614dad25c74809dcca",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "STALE_OBSERVABILITY",
@@ -553,7 +558,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-15T00:15:07.113530Z",
+  "exported_at": "2026-10-15T01:15:06.830949Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza"

@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261015T074451-0700-r11",
+  "scheduled_for": "2026-10-15T07:44:51-07:00",
+  "started_at": "2026-10-15T07:47:54-07:00",
+  "completed_at": "2026-10-15T07:50:34-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T06:49:00-07:00",
+    "end": "2026-10-15T07:50:34-07:00",
+    "prior_heartbeat": "gaza-source-watch-20261015T064451-0700-r11 (prior run reported; GitHub persistence unconfirmed)"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT reviewed first: homepage latest posted Gaza report is dated 2026-10-09, no newer item identified. WHO regional oPt page was inaccessible; WHO global pages and search index accessible, but no verified new Gaza health update within this hourly observation window.",
+    "Exactly 12 additional targeted searches: WHO(1), current Gaza news/aid (1), Gaza casualties (1), UN (1), WHO (1), WAFA (1), Reuters (1), UNRWA (1), WFP (1), Gaza casualty/health local-time (1), Palestinian Red Crescent (1), COGAT/crossings (1). This note intentionally enumerates only the 12 searches after the direct OCHA/WHO checks.",
+    "Previously identified AP commercial-import suspension (COGAT announced 2026-10-14) and earlier Gaza City casualty report are duplicates, not newly qualifying for this watch window. Other relevant hits were older, follow-ups without distinct new verifiable developments, or outside Gaza.",
+    "WHO regional inaccessible: material source-coverage caveat; search still produced useful coverage. No unverified claims promoted to findings.",
+    "Supplementary recall watch only; primary publisher/collector remains authoritative. No approval, publication, schedule or production changes."
+  ]
+}

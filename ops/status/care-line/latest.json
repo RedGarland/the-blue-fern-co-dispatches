@@ -14,7 +14,7 @@
   "aggregate_status": "SUCCESS",
   "coverage_caveat_only": true,
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "4ec22d6a5c6177a5822ac2e375bd9859d76e1370",
+  "current_runner_head": "385d98a8fb4c0e9ed4517f85a5d5ad72c5c15f86",
   "debug_summary": {
     "aggregate_degradation_required": false,
     "aggregate_status": "SUCCESS",
@@ -293,9 +293,9 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-15T16:15:04.074825Z",
+  "last_exported_at": "2026-10-15T17:15:04.817536Z",
   "last_receipt_at": "2026-10-15T15:30:03.782210Z",
-  "latest_runtime_proof_date": null,
+  "latest_runtime_proof_date": "2026-10-15T15:00:03.059103Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "non_authoritative_receipts": [],

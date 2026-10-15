@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261014T174451-0700-r10",
+  "scheduled_for": "2026-10-14T17:44:51-07:00",
+  "started_at": "2026-10-14T17:45:33-07:00",
+  "completed_at": "2026-10-14T17:47:51-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T16:49:05-07:00",
+    "end": "2026-10-14T17:47:51-07:00",
+    "prior_heartbeat": "gaza-source-watch-20261014T164451-0700-r10"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT and WHO reviewed first. WHO regional reporting unavailable (timeout/502); global WHO and OCHA accessible.",
+    "Exactly 12 further targeted searches completed. No new verified qualifying reports; older items excluded.",
+    "Supplementary watch only. No production, publication, approval or schedule changes."
+  ]
+}

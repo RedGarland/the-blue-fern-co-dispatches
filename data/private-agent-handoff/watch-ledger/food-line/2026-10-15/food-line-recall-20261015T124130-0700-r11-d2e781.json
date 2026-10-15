@@ -1,0 +1,62 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T124130-0700-r11-d2e781",
+  "scheduled_for": "2026-10-15T12:41:30-07:00",
+  "started_at": "2026-10-15T12:41:30-07:00",
+  "completed_at": "2026-10-15T12:43:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-15T11:48:02-07:00",
+    "end_at": "2026-10-15T12:41:30-07:00",
+    "timezone": "America/Los_Angeles",
+    "interpretation": "Since immediately preceding recorded hourly recall check, including newly reported or newly verified disruptions only."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "targeted_web_search_limit": 12,
+    "targeted_web_searches": [
+      "\"only grocery store\" closed fire October 15 2026 community food access",
+      "\"sole grocery store\" \"fire\" \"October\" 2026 town",
+      "\"last grocery store\" closing October 2026 community",
+      "\"full service grocery store\" closed fire October 15 2026",
+      "food pantry closed suddenly today October 15 2026 local news",
+      "food bank pantry emergency closure \"Oct 15\" 2026",
+      "food distribution canceled \"October 15\" 2026 storm flooding",
+      "food distribution cancelled October 15 2026 outage facility damage",
+      "SNAP benefits interruption Oct 15 2026 official agency notice outage",
+      "WIC clinic benefits suspended October 15 2026 state agency notice",
+      "grocery store \"only\" \"closed\" Oct 15 2026 fire flood",
+      "\"food pantry\" \"closed\" \"October 15, 2026\" storm outage"
+    ],
+    "qualifying_classes": [
+      "Loss of only/sole/last/full-service grocery through closure, fire, or disaster",
+      "Emergency distribution canceled/suspended due to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "new_qualifying_signals": 0,
+    "web_search_failures": 0,
+    "excluded_results": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Sept 14, 2026 historical grocery loss; outside current observation window"
+      },
+      {
+        "url": "https://www.wkyt.com/2026/10/15/lexingtons-big-give-food-drive-kicks-off-food-insecurity-rises-kentucky/",
+        "reason": "Oct 15 fundraising drive and generic demand context, not a covered disruption; published before window"
+      },
+      {
+        "url": "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+        "reason": "April 2026 historical pantry closures, not newly reported"
+      }
+    ],
+    "coverage_limitations": "Supplementary recall only, not exhaustive; search indexing can lag. Search results surfaced older incidents, non-U.S. items, donation drives, and nonqualifying general food stories, but no independently verified new qualifying source inside the hourly window. Production collection remains authoritative.",
+    "production_collector_authoritative": true,
+    "approvals_publications_schedule_changes": "none",
+    "scheduled_for_note": "No distinct scheduled fire time supplied for this invocation; execution-start local timestamp used."
+  }
+}

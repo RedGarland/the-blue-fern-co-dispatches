@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T094816-0700-r12-3ae8",
+  "scheduled_for": "2026-10-15T09:45:22-07:00",
+  "started_at": "2026-10-15T09:48:16-07:00",
+  "completed_at": "2026-10-15T09:50:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T08:45:22-07:00",
+    "end": "2026-10-15T09:50:00-07:00",
+    "basis": "Previous scheduled hourly boundary; exact previous completed-run time could not be independently verified."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line collection remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Most recent listed notice is 2026-10-09, Tender Home Health (California), previously seen; no new CMS notice identified.",
+    "Exactly 12 additional targeted web searches: hospital/ED, maternity, behavioral-health, dialysis/oncology, ambulance, air-medical, service restoration, rural primary care, official government service suspensions, official clinic closures, U.S. territories, ambulance cessation.",
+    "No novel, confirmed U.S. or U.S.-territory service closure, suspension, access-risk CMS notice, or concrete reopening found in the targeted interval.",
+    "Excluded repeat reporting on Bradford Regional Medical Center (closed May 2026), Wayne County NY maternity unit (closed September 2026), Chapman Global Medical Center CA ambulance designation restored in October 12 reporting, older EMS cessation in Maine, proposals, and non-U.S. developments.",
+    "One October 15 EMS1 article noted a Pennsylvania micro-hospital opened in June 2026; older operational change, excluded.",
+    "Supplementary targeted discovery is not an exhaustive national audit. No approvals, publication, schedule changes or task disabling."
+  ]
+}

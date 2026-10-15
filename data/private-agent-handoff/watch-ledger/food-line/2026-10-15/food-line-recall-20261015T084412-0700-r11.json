@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T084412-0700-r11",
+  "scheduled_for": "2026-10-15T08:45:54-07:00",
+  "started_at": "2026-10-15T08:44:12-07:00",
+  "completed_at": "2026-10-15T15:47:45.110Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-15T07:49:23-07:00",
+    "end": "2026-10-15T08:45:00-07:00",
+    "timezone": "America/Los_Angeles",
+    "scope": "new U.S. food-access disruptions since prior hourly check",
+    "basis": "Last verified persisted Food Line ledger run food-line-recall-20261015T074923-0700-r11, whose search window ended at 07:49:23 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "source_discovery": "SUCCESS",
+    "web_searches": 12,
+    "search_failures": 0,
+    "new_qualifying_signals": 0,
+    "bounded_queries": [
+      "\"only grocery store\" closed fire October 15 2026 community",
+      "\"sole grocery store\" \"fire\" \"October\" 2026",
+      "\"last grocery store\" closure October 15 2026 rural",
+      "\"food distribution\" canceled storm flood Thursday October 15 2026",
+      "\"food bank\" \"distribution cancelled\" weather October 15 2026",
+      "\"food pantry\" \"closed\" \"flood\" October 2026",
+      "\"food bank\" \"temporarily closed\" October 15 2026",
+      "site:gov \"SNAP\" \"benefits\" \"interrupted\" \"October 15, 2026\"",
+      "site:gov \"WIC\" \"service interruption\" October 2026",
+      "\"SNAP\" \"EBT\" \"outage\" October 15 2026 state",
+      "\"October 15, 2026\" \"food pantry\" \"closed\" storm outage",
+      "\"October 15, 2026\" \"SNAP\" \"benefits\" \"delayed\" \"state\""
+    ],
+    "target_classes": [
+      "community only/sole/last/full-service grocery store loss",
+      "emergency food distribution canceled by storm/flood/fire/outage/facility damage",
+      "abrupt food pantry/bank closure or access reduction",
+      "official immediate SNAP/WIC/food aid interruption"
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Qualifying only-store fire, but September 14 report outside hourly interval."
+      },
+      {
+        "url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "Weather cancellation announced October 7, outside hourly interval."
+      },
+      {
+        "url": "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+        "reason": "Abrupt closure announced April 1; not new."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17150572/wheatsville-food-co-op-closing-austin-texas/",
+        "reason": "Austin co-op closure does not establish community's sole/last grocery store loss."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Only Safeway-brand store in Arvada; the community has other supermarkets."
+      }
+    ],
+    "limitations": "Index date filters yielded substantial historical noise; a bounded supplementary search cannot establish absence of unindexed notices. No new eligible, nonduplicate signal verified.",
+    "production_collector_authoritative": true,
+    "publication_authorized": false
+  }
+}

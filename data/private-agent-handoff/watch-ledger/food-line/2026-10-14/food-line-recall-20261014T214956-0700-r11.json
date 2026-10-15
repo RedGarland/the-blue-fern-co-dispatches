@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261014T214956-0700-r11",
+  "scheduled_for": "2026-10-14T21:45:54-07:00",
+  "started_at": "2026-10-14T21:49:56-07:00",
+  "completed_at": "2026-10-14T21:50:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T20:47:16-07:00",
+    "end": "2026-10-14T21:49:56-07:00",
+    "basis": "Prior hourly execution completion from previous local recovery artifact; no authoritative prior-heartbeat read-back verified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "discovery_status": "SUCCESS",
+    "targeted_searches": 12,
+    "search_failures": 0,
+    "priority_miss_classes": [
+      "loss of only/sole/last/full-service grocery store",
+      "storm/flood/fire/outage/damage cancellation of emergency food distribution",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "queries": [
+      "\"only grocery store\" closed fire town October 14 2026",
+      "\"sole grocery store\" fire closure October 14 2026",
+      "\"last grocery store\" closing \"October 14\" 2026",
+      "\"full-service grocery store\" closing residents \"Oct\" \"2026\"",
+      "\"food distribution\" canceled storm flood Wednesday October 14 2026",
+      "\"food distribution\" suspended power outage October 14 2026",
+      "\"food pantry\" \"closed\" suddenly October 14 2026",
+      "\"food bank\" \"suspend services\" October 14 2026",
+      "\"SNAP\" \"EBT\" \"outage\" benefits October 14 2026 official",
+      "\"WIC\" \"interruption\" benefits October 14 2026 state",
+      "site:gov \"SNAP\" \"October 14, 2026\" interruption delayed suspended benefits",
+      "\"food pantry\" OR \"food distribution\" \"cancelled\" OR \"closed\" \"October 14, 2026\" storm flood outage"
+    ],
+    "qualifying_new_events": 0,
+    "excluded_examples": [
+      "Bangor Daily News October 14 Ashland, Maine article mentions the only grocery store closed for months; the disruption predates this hourly window.",
+      "October 14 Wheatsville co-op article is an announced October 25 closure, not demonstrated sole/full-service grocery access loss within this window.",
+      "Arvada Safeway closure refers to the chain's sole store in that city, not its only grocery store; other grocers serve residents."
+    ],
+    "limitations": [
+      "Search recency ranking returned predominantly historical stories.",
+      "Search coverage is bounded and supplementary, not exhaustive nationwide collection.",
+      "No authoritative production-database deduplication was performed.",
+      "Prior hourly GitHub checkpoint was not independently verified; window starts at recorded completion of preceding execution."
+    ],
+    "production_collection": "authoritative and unchanged",
+    "editorial_or_publication_actions": "none",
+    "schedule_changed": false
+  }
+}

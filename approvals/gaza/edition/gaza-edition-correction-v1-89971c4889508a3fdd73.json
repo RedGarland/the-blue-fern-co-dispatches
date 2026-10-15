@@ -1,0 +1,17 @@
+{
+  "approval_fingerprint": "sha256:113d76094d32bea72239b3ab954e5a0a487332f34ec8e509e1f53ddd8f81b6da",
+  "approval_id": "william-patton-gaza-edition-package-audio-20261015",
+  "approved_at": "2026-10-15T01:33:47.6966050Z",
+  "approver": "William Patton",
+  "audio_authorized": true,
+  "audio_request_sha256": "1be56662acedcc7ad40435e59a3f23f549119f6377f8d7968130919ecb45da04",
+  "correction_id": "gaza-edition-correction-v1-89971c4889508a3fdd73",
+  "package_authorized": true,
+  "pages_head": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
+  "preview_set_sha256": "db77c8c8f9cd931653d4304af3aaf365d86169733d41b06c4f09e21a84cce8ee",
+  "proposal_sha256": "sha256:3e1c7c5c3d2ca7ca3d35e0a80524b7eb0ebb288f50488ddceef3d19f080df69a",
+  "publication_authorized": false,
+  "schema_version": "gaza_edition_correction_release_approval_v1",
+  "scope": "gaza_edition_correction",
+  "source_commit": "98b93fcbede35078e1cf54614dad25c74809dcca"
+}

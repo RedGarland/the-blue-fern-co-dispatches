@@ -2,7 +2,7 @@
   "dispatch_slug": "gaza",
   "edition_date": "2026-10-14",
   "generated_at": "2026-10-14T15:55:49.713374Z",
-  "audio_status": "audio_file_ready",
+  "audio_status": "superseded_pending_correction_audio",
   "audio_file": "2026-10-14.mp3",
   "audio_url": "/gaza/audio/2026-10-14.mp3",
   "audio_mime_type": "audio/mpeg",
@@ -58,5 +58,10 @@
       "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
       "title": "What's happening to women in Gaza now? - Haaretz"
     }
-  ]
+  ],
+  "superseded_by_correction_id": "gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4",
+  "supersession_notice": "No qualified stories remain in the corrected saved-input selection. The saved evidence does not establish that no news occurred.",
+  "historical_recording": true,
+  "current_briefing": false,
+  "publication_authorized": false
 }

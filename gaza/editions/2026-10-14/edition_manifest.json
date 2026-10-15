@@ -8,17 +8,14 @@
   "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\dispatches\\gaza\\editions\\2026-10-14",
   "local_backup_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\tmp-backups-pages\\gaza\\2026-10-14",
   "template_version": "gaza-source-record-v1",
-  "source_count": 3,
-  "story_count": 3,
-  "source_adequacy_status": "limited_source_update",
-  "source_adequacy_label": "Limited-source update",
-  "publisher_count": 2,
-  "publishers": [
-    "Al Jazeera",
-    "Haaretz"
-  ],
+  "source_count": 0,
+  "story_count": 0,
+  "source_adequacy_status": "no_qualified_stories",
+  "source_adequacy_label": "No qualified stories retained",
+  "publisher_count": 0,
+  "publishers": [],
   "source_adequacy_warnings": [
-    "This is a limited-source update generated from 3 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing."
+    "No qualified stories remain in the corrected saved-input selection. The saved evidence does not establish that no news occurred."
   ],
   "allow_post_edition_date_sources": false,
   "post_edition_date_sources_included": false,
@@ -35,11 +32,9 @@
   "detail_artifacts_publicly_exposed": false,
   "is_free_public": true,
   "has_detail_tier": false,
-  "public_exposed": true,
+  "public_exposed": false,
   "warnings": [
-    "This is a limited-source update generated from 3 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
-    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\sources\\2026-10-14\\manual_sources.template.json",
-    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+    "No qualified stories remain in the corrected saved-input selection. The saved evidence does not establish that no news occurred."
   ],
   "errors": [],
   "scheduled_run_local_time": "2026-10-14T06:00:00-07:00",
@@ -70,5 +65,114 @@
       ],
       "source_count": 3
     }
-  ]
+  ],
+  "publication_authorized": false,
+  "publication_state": "private_correction_preview",
+  "prior_public_exposed": true,
+  "saved_source_count": 3,
+  "retained_story_ids": [],
+  "corrections": [
+    {
+      "schema_version": "gaza_edition_correction_record_v1",
+      "correction_id": "gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4",
+      "owning_edition_date": "2026-10-14",
+      "correction_date": "2026-10-14",
+      "review_state": "substantively_reviewed",
+      "retained_story_ids": [],
+      "saved_source_count": 3,
+      "retained_story_count": 0,
+      "corrections": [
+        {
+          "story_id": "gaza-story-2026-10-14-001",
+          "reason": "scope_error",
+          "source_attribution": "Al Jazeera",
+          "source_record_ids": [
+            "gaza-2026-10-14-aljazeera-middle-east-927c43dfa4ac"
+          ],
+          "source_urls": [
+            "https://www.aljazeera.com/news/2026/10/14/colombia-inaugurates-embassy-to-israel-in-jerusalem?traffic_source=rss"
+          ],
+          "source_published_at": [
+            "2026-10-14T14:08:45+00:00"
+          ],
+          "event_date": "2026-10-14T14:08:45+00:00",
+          "prior_claim": {
+            "text": "Palestinian officials slam move by Colombian government that marked major shift after ex-president had cut. Israel ties.",
+            "casualty_counts": {}
+          },
+          "prior_claim_fingerprint": "topic_fingerprint_v1:316eb18a7d56fa88",
+          "lineage_record_fingerprint": "sha256:21ca21d07bbbc7b3c4a21584af91d3fd4a02a7610cc66392b7ab17135ab0651a",
+          "target_fingerprint": "sha256:610bf12d067101c02d58d3edc596db895e8d2d8a0828e2e0a92d896aa9f7e119",
+          "saved_input_sha256": "74b442353fd364fee32660691e369ad81b530fe276aeba29e074efacbfbd7bac",
+          "review_sha256": "20acd57ebfae2c15d48f0af1d9c13f31478b600583c4b42ba31bb071b150d60f",
+          "audit_sha256": "20acd57ebfae2c15d48f0af1d9c13f31478b600583c4b42ba31bb071b150d60f",
+          "underlying_article_verdict": null,
+          "substantive_decision": "confirmed_public_scope_contamination"
+        },
+        {
+          "story_id": "gaza-story-2026-10-14-002",
+          "reason": "scope_error",
+          "source_attribution": "Al Jazeera",
+          "source_record_ids": [
+            "gaza-2026-10-14-aljazeera-middle-east-9a1f146fbae3"
+          ],
+          "source_urls": [
+            "https://www.aljazeera.com/video/newsfeed/2026/10/14/uk-restaurateur-claims-losses-after-video-calling-for-gaza-destruction?traffic_source=rss"
+          ],
+          "source_published_at": [
+            "2026-10-14T13:28:21+00:00"
+          ],
+          "event_date": "2026-10-14T13:28:21+00:00",
+          "prior_claim": {
+            "text": "A UK restaurateur is claiming losses, weeks after posting a video appearing to urge. Israel to destroy buildings in Gaza.",
+            "casualty_counts": {}
+          },
+          "prior_claim_fingerprint": "topic_fingerprint_v1:ed27aba2fb3685c5",
+          "lineage_record_fingerprint": "sha256:cb3bde3137d4a4b4ca2aed183b64771bb06dbe0789cba447278defab4f51b5d3",
+          "target_fingerprint": "sha256:70ea99cf5fc9067ed19a5cd487a460b5687ebd1b4c24cee8b94bafcf3da90fe5",
+          "saved_input_sha256": "74b442353fd364fee32660691e369ad81b530fe276aeba29e074efacbfbd7bac",
+          "review_sha256": "e80c2eed96dd43da193c90971dba64dd7a25c9d5a2cde90f8e845246888a5358",
+          "audit_sha256": "e80c2eed96dd43da193c90971dba64dd7a25c9d5a2cde90f8e845246888a5358",
+          "underlying_article_verdict": null,
+          "substantive_decision": "confirmed_public_scope_contamination"
+        },
+        {
+          "story_id": "gaza-story-2026-10-14-003",
+          "reason": "insufficient_saved_evidence",
+          "source_attribution": "Haaretz",
+          "source_record_ids": [
+            "gaza-2026-10-14-haaretz-gaza-query-b06eacd0936f"
+          ],
+          "source_urls": [
+            "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5"
+          ],
+          "source_published_at": [
+            "2026-10-12T16:27:00+00:00"
+          ],
+          "event_date": "2026-10-12T16:27:00+00:00",
+          "prior_claim": {
+            "text": "What's happening to women in Gaza now? Haaretz.",
+            "casualty_counts": {}
+          },
+          "prior_claim_fingerprint": "topic_fingerprint_v1:3c6cc96602804309",
+          "lineage_record_fingerprint": "sha256:0d0dde901fd06f265d278a2cff11d042e3e5858585f298607c04f3d49204a2aa",
+          "target_fingerprint": "sha256:70ad96becf6264c3b361b9f52ae3af2f14c55c3cc451c5cf31c117a5f3180f0d",
+          "saved_input_sha256": "74b442353fd364fee32660691e369ad81b530fe276aeba29e074efacbfbd7bac",
+          "review_sha256": "1513fd334995499e21f302d1abb7981cc58d13c0c5f2342a947e19635af3849a",
+          "audit_sha256": "1513fd334995499e21f302d1abb7981cc58d13c0c5f2342a947e19635af3849a",
+          "underlying_article_verdict": "undetermined",
+          "substantive_decision": "confirmed_saved_evidence_insufficiency"
+        }
+      ],
+      "archive_authorized": false,
+      "edition_authorized": false,
+      "queue_authorized": false,
+      "source_record_authorized": false,
+      "cluster_authorized": false,
+      "audio_authorized": false,
+      "publication_authorized": false,
+      "approval_authorized": false
+    }
+  ],
+  "selection_counts_recomputed_after_correction": true
 }

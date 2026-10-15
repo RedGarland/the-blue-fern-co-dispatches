@@ -1,0 +1,101 @@
+{
+  "approval_authorized": false,
+  "archive_authorized": false,
+  "audio_authorized": false,
+  "cluster_authorized": false,
+  "correction_date": "2026-10-14",
+  "correction_id": "gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4",
+  "corrections": [
+    {
+      "audit_sha256": "20acd57ebfae2c15d48f0af1d9c13f31478b600583c4b42ba31bb071b150d60f",
+      "event_date": "2026-10-14T14:08:45+00:00",
+      "lineage_record_fingerprint": "sha256:21ca21d07bbbc7b3c4a21584af91d3fd4a02a7610cc66392b7ab17135ab0651a",
+      "prior_claim": {
+        "casualty_counts": {},
+        "text": "Palestinian officials slam move by Colombian government that marked major shift after ex-president had cut. Israel ties."
+      },
+      "prior_claim_fingerprint": "topic_fingerprint_v1:316eb18a7d56fa88",
+      "reason": "scope_error",
+      "review_sha256": "20acd57ebfae2c15d48f0af1d9c13f31478b600583c4b42ba31bb071b150d60f",
+      "saved_input_sha256": "74b442353fd364fee32660691e369ad81b530fe276aeba29e074efacbfbd7bac",
+      "source_attribution": "Al Jazeera",
+      "source_published_at": [
+        "2026-10-14T14:08:45+00:00"
+      ],
+      "source_record_ids": [
+        "gaza-2026-10-14-aljazeera-middle-east-927c43dfa4ac"
+      ],
+      "source_urls": [
+        "https://www.aljazeera.com/news/2026/10/14/colombia-inaugurates-embassy-to-israel-in-jerusalem?traffic_source=rss"
+      ],
+      "story_id": "gaza-story-2026-10-14-001",
+      "substantive_decision": "confirmed_public_scope_contamination",
+      "target_fingerprint": "sha256:610bf12d067101c02d58d3edc596db895e8d2d8a0828e2e0a92d896aa9f7e119",
+      "underlying_article_verdict": null
+    },
+    {
+      "audit_sha256": "e80c2eed96dd43da193c90971dba64dd7a25c9d5a2cde90f8e845246888a5358",
+      "event_date": "2026-10-14T13:28:21+00:00",
+      "lineage_record_fingerprint": "sha256:cb3bde3137d4a4b4ca2aed183b64771bb06dbe0789cba447278defab4f51b5d3",
+      "prior_claim": {
+        "casualty_counts": {},
+        "text": "A UK restaurateur is claiming losses, weeks after posting a video appearing to urge. Israel to destroy buildings in Gaza."
+      },
+      "prior_claim_fingerprint": "topic_fingerprint_v1:ed27aba2fb3685c5",
+      "reason": "scope_error",
+      "review_sha256": "e80c2eed96dd43da193c90971dba64dd7a25c9d5a2cde90f8e845246888a5358",
+      "saved_input_sha256": "74b442353fd364fee32660691e369ad81b530fe276aeba29e074efacbfbd7bac",
+      "source_attribution": "Al Jazeera",
+      "source_published_at": [
+        "2026-10-14T13:28:21+00:00"
+      ],
+      "source_record_ids": [
+        "gaza-2026-10-14-aljazeera-middle-east-9a1f146fbae3"
+      ],
+      "source_urls": [
+        "https://www.aljazeera.com/video/newsfeed/2026/10/14/uk-restaurateur-claims-losses-after-video-calling-for-gaza-destruction?traffic_source=rss"
+      ],
+      "story_id": "gaza-story-2026-10-14-002",
+      "substantive_decision": "confirmed_public_scope_contamination",
+      "target_fingerprint": "sha256:70ea99cf5fc9067ed19a5cd487a460b5687ebd1b4c24cee8b94bafcf3da90fe5",
+      "underlying_article_verdict": null
+    },
+    {
+      "audit_sha256": "1513fd334995499e21f302d1abb7981cc58d13c0c5f2342a947e19635af3849a",
+      "event_date": "2026-10-12T16:27:00+00:00",
+      "lineage_record_fingerprint": "sha256:0d0dde901fd06f265d278a2cff11d042e3e5858585f298607c04f3d49204a2aa",
+      "prior_claim": {
+        "casualty_counts": {},
+        "text": "What's happening to women in Gaza now? Haaretz."
+      },
+      "prior_claim_fingerprint": "topic_fingerprint_v1:3c6cc96602804309",
+      "reason": "insufficient_saved_evidence",
+      "review_sha256": "1513fd334995499e21f302d1abb7981cc58d13c0c5f2342a947e19635af3849a",
+      "saved_input_sha256": "74b442353fd364fee32660691e369ad81b530fe276aeba29e074efacbfbd7bac",
+      "source_attribution": "Haaretz",
+      "source_published_at": [
+        "2026-10-12T16:27:00+00:00"
+      ],
+      "source_record_ids": [
+        "gaza-2026-10-14-haaretz-gaza-query-b06eacd0936f"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5"
+      ],
+      "story_id": "gaza-story-2026-10-14-003",
+      "substantive_decision": "confirmed_saved_evidence_insufficiency",
+      "target_fingerprint": "sha256:70ad96becf6264c3b361b9f52ae3af2f14c55c3cc451c5cf31c117a5f3180f0d",
+      "underlying_article_verdict": "undetermined"
+    }
+  ],
+  "edition_authorized": false,
+  "owning_edition_date": "2026-10-14",
+  "publication_authorized": false,
+  "queue_authorized": false,
+  "retained_story_count": 0,
+  "retained_story_ids": [],
+  "review_state": "substantively_reviewed",
+  "saved_source_count": 3,
+  "schema_version": "gaza_edition_correction_record_v1",
+  "source_record_authorized": false
+}

@@ -40,14 +40,14 @@
     "primary_task_status": "DEGRADED",
     "private_review_count_only_gap_count": 55,
     "private_review_dispositioned_item_count": 66,
-    "private_review_max_age_hours": 39,
+    "private_review_max_age_hours": 40,
     "private_review_oldest_pending_date": "2026-10-14",
     "private_review_pending_date_count": 2,
     "private_review_pending_item_count": 10,
     "private_review_unresolved_item_count": 10,
     "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "PARTIAL",
+    "publication_status": "skipped_not_release_ready",
+    "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": null,
@@ -78,6 +78,22 @@
       "started_at": "2026-10-15T13:10:02.238940Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
+    },
+    {
+      "artifact_id": "22644-de986715.json",
+      "classification": "skipped_not_release_ready",
+      "completed_at": "2026-10-15T15:30:02.1256308Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": false,
+      "publication_status": "skipped_not_release_ready",
+      "run_id": "20261015T153002Z-22644-3904cb65",
+      "scheduled_for": "2026-10-15",
+      "started_at": "2026-10-15T15:30:02.0906688Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "food_line_daily_publish"
     },
     {
       "artifact_id": "20261015T123629Z-source-watch.json",
@@ -119,10 +135,10 @@
   ],
   "human_action_required": true,
   "incident_reference": null,
-  "last_exported_at": "2026-10-15T15:15:04.031368Z",
-  "last_receipt_at": "2026-10-15T13:10:03.617928Z",
+  "last_exported_at": "2026-10-15T16:15:04.074825Z",
+  "last_receipt_at": "2026-10-15T15:30:02.125630Z",
   "latest_receipt_path": "logs/food-line/current-intake/2026-10-15/20261015T131003Z-current-intake.json",
-  "latest_runtime_proof_date": "2026-10-15T13:10:03.617928Z",
+  "latest_runtime_proof_date": "2026-10-15T15:30:02.125630Z",
   "next_expected_run": null,
   "next_human_action": "Review 6 Food Line items for 2026-10-15.",
   "observed_date": "2026-10-15",
@@ -130,7 +146,7 @@
     "count_only_gap_count": 55,
     "dates": [
       {
-        "age_hours": 39,
+        "age_hours": 40,
         "count_only_gap_count": 0,
         "date": "2026-10-14",
         "dispositioned_item_count": 0,
@@ -139,7 +155,7 @@
         "unresolved_item_count": 4
       },
       {
-        "age_hours": 15,
+        "age_hours": 16,
         "count_only_gap_count": 0,
         "date": "2026-10-15",
         "dispositioned_item_count": 0,
@@ -309,7 +325,7 @@
       }
     ],
     "dispositioned_item_count": 66,
-    "max_age_hours": 39,
+    "max_age_hours": 40,
     "oldest_pending_date": "2026-10-14",
     "pending_date_count": 2,
     "pending_item_count": 10,
@@ -317,11 +333,11 @@
   },
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "skipped_not_release_ready"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "PARTIAL",
+  "publication_status": "skipped_not_release_ready",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
   "review_date": "2026-10-15",
   "review_item_count": 6,
@@ -388,6 +404,22 @@
       "started_at": "2026-10-15T13:10:02.238940Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
+    },
+    {
+      "artifact_id": "22644-de986715.json",
+      "classification": "skipped_not_release_ready",
+      "completed_at": "2026-10-15T15:30:02.1256308Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": false,
+      "publication_status": "skipped_not_release_ready",
+      "run_id": "20261015T153002Z-22644-3904cb65",
+      "scheduled_for": "2026-10-15",
+      "started_at": "2026-10-15T15:30:02.0906688Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "food_line_daily_publish"
     },
     {
       "artifact_id": "20261015T123629Z-source-watch.json",

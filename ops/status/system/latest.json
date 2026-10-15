@@ -29,13 +29,13 @@
         "unaccounted_count": 0
       },
       "aggregate_degradation_required": false,
-      "aggregate_status": "DEGRADED",
+      "aggregate_status": "SUCCESS",
       "coverage_caveat_only": true,
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "4ec22d6a5c6177a5822ac2e375bd9859d76e1370",
       "debug_summary": {
         "aggregate_degradation_required": false,
-        "aggregate_status": "DEGRADED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
         "attention_task_count": 1,
@@ -52,7 +52,7 @@
         "coverage_caveat_only": true,
         "external_access_restriction_count": 4,
         "failed_source_count": 9,
-        "operator_assessment": "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES",
+        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
         "primary_layer": "EXTERNAL_DEPENDENCY",
@@ -66,8 +66,8 @@
         "private_review_pending_item_count": null,
         "private_review_unresolved_item_count": null,
         "publication_attempted": false,
-        "publication_status": null,
-        "receipt_completeness": "PARTIAL",
+        "publication_status": "safe_no_op",
+        "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "transient_source_failure_count": 5,
@@ -77,7 +77,7 @@
       "latest_runtime_proof_date": null,
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-15",
-      "receipt_completeness": "PARTIAL",
+      "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "source_failure_summary": {
@@ -209,14 +209,14 @@
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 39,
+        "private_review_max_age_hours": 40,
         "private_review_oldest_pending_date": "2026-10-14",
         "private_review_pending_date_count": 2,
         "private_review_pending_item_count": 10,
         "private_review_unresolved_item_count": 10,
         "publication_attempted": false,
-        "publication_status": null,
-        "receipt_completeness": "PARTIAL",
+        "publication_status": "skipped_not_release_ready",
+        "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "transient_source_failure_count": null,
@@ -231,7 +231,7 @@
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 39,
+            "age_hours": 40,
             "count_only_gap_count": 0,
             "date": "2026-10-14",
             "dispositioned_item_count": 0,
@@ -240,7 +240,7 @@
             "unresolved_item_count": 4
           },
           {
-            "age_hours": 15,
+            "age_hours": 16,
             "count_only_gap_count": 0,
             "date": "2026-10-15",
             "dispositioned_item_count": 0,
@@ -410,7 +410,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 39,
+        "max_age_hours": 40,
         "oldest_pending_date": "2026-10-14",
         "pending_date_count": 2,
         "pending_item_count": 10,
@@ -542,8 +542,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-15T15:15:04.031368Z",
+  "exported_at": "2026-10-15T16:15:04.074825Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "DEGRADED"
+  "system_status": "UNKNOWN"
 }

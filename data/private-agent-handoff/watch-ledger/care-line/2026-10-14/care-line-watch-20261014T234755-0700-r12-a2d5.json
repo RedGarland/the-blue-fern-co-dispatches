@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T234755-0700-r12-a2d5",
+  "scheduled_for": "2026-10-14T23:45:22-07:00",
+  "started_at": "2026-10-14T23:47:55-07:00",
+  "completed_at": "2026-10-14T23:50:06-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-14T22:45:22-07:00",
+    "end_at": "2026-10-14T23:50:06-07:00",
+    "basis": "Prior hourly scheduled check; latest actual prior-run completion could not be independently verified."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only. Production Care Line national collection remains authoritative.",
+    "CMS Public Notices checked first on 2026-10-14 PDT. Latest listed CMS notice was 2026-10-09: Tender Home Health (CA), Termination Notice; no notice listed later than 2026-10-09.",
+    "CMS index: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "Exactly 12 additional targeted web searches covering hospitals/ED, maternity, behavioral health, dialysis, oncology, primary care, rural EMS, ambulance, air medical, restoration/reopening, health departments, and territories. Search recency two days.",
+    "No new qualifying concrete U.S./territory access change was verified in the observation window. Returned items were older events, plans without service effect, unrelated or non-US reports, or previously flagged developments such as Dennys River Volunteer Ambulance Service (Maine).",
+    "No approvals, publication, task schedule changes, or disabling performed."
+  ]
+}

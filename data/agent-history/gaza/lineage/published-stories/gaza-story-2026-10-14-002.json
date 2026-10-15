@@ -28,8 +28,8 @@
   "pages_provenance": {
     "repository": "https://github.com/RedGarland/the-blue-fern-co-dispatches.git",
     "branch": "gh-pages",
-    "pinned_commit": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
-    "observed_head_at_backfill": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
+    "pinned_commit": "a990d6b67f283474baea1a3030f40e8e22dd8ffe",
+    "observed_head_at_backfill": "a990d6b67f283474baea1a3030f40e8e22dd8ffe",
     "observed_head_contains_pinned_commit": true,
     "artifacts": [
       {
@@ -61,7 +61,7 @@
         "byte_length": 5868
       }
     ],
-    "provenance_fingerprint": "sha256:c370ff073b7c4bce404cdd675867f957eabac61febbf6ba4a9fb121ecb539362"
+    "provenance_fingerprint": "sha256:d93a9e788260d84ee9b73380d15bad248e5525460adba9fb4234e25650818ca6"
   },
   "evidence": {
     "story": {
@@ -125,10 +125,10 @@
       "edition_date": "2026-10-14",
       "story_id": "gaza-story-2026-10-14-002",
       "canonical_source_url": "https://www.aljazeera.com/video/newsfeed/2026/10/14/uk-restaurateur-claims-losses-after-video-calling-for-gaza-destruction?traffic_source=rss",
-      "pages_head": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
+      "pages_head": "a990d6b67f283474baea1a3030f40e8e22dd8ffe",
       "artifact_set_sha256": "sha256:245fa49369a2f8078b58b77b1ca4a1a448301288cbe5375228f65a5d489df717"
     },
-    "fingerprint": "sha256:b5ebbad42b1b83a84417f3925ef77435b2336a124ae0a34a30c2e7af32f7b476"
+    "fingerprint": "sha256:70ea99cf5fc9067ed19a5cd487a460b5687ebd1b4c24cee8b94bafcf3da90fe5"
   },
   "prior_claim_identity": {
     "inputs": {
@@ -150,11 +150,11 @@
       "edition_date": "2026-10-14",
       "story_id": "gaza-story-2026-10-14-002",
       "canonical_source_url": "https://www.aljazeera.com/video/newsfeed/2026/10/14/uk-restaurateur-claims-losses-after-video-calling-for-gaza-destruction?traffic_source=rss",
-      "pages_head": "e01f4539a2e66b3e02aefec53ae2a2db603ac724",
+      "pages_head": "a990d6b67f283474baea1a3030f40e8e22dd8ffe",
       "artifact_set_sha256": "sha256:245fa49369a2f8078b58b77b1ca4a1a448301288cbe5375228f65a5d489df717"
     },
-    "fingerprint": "sha256:b5ebbad42b1b83a84417f3925ef77435b2336a124ae0a34a30c2e7af32f7b476",
+    "fingerprint": "sha256:70ea99cf5fc9067ed19a5cd487a460b5687ebd1b4c24cee8b94bafcf3da90fe5",
     "correction_type": "story_withdrawal"
   },
-  "record_fingerprint": "sha256:35f503b8461e9bd02d34f85736589e43d1ff737d6fe07c30101da7f2e7a1712c"
+  "record_fingerprint": "sha256:cb3bde3137d4a4b4ca2aed183b64771bb06dbe0789cba447278defab4f51b5d3"
 }

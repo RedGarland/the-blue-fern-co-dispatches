@@ -1,0 +1,12 @@
+# Gaza edition correction publication authorization
+
+The staged Gaza edition correction package has a separate publication gate. Package/audio approval remains private construction authority and must keep `publication_authorized: false`.
+
+`scripts/gaza_edition_publication.py --mode dry-run` validates a private request against the exact current source approval commit, its sole-parent approval artifact, the approval fingerprint and bindings, the verified staged package manifest, every staged artifact hash, and a clean Pages checkout at the requested target head. It emits the complete path-scoped publication diff without writing either repository.
+
+`--mode authorize` writes `publication-authorizations/gaza/edition/<correction-id>-publication-v1.json`. This record is the only new publication authority. It sets `publication_authorized` and `pages_authorized` true, while keeping audio, social, source changes, and execution false. It is idempotent and rejects a different second record.
+
+The request must be private and must bind `source_approval_commit`, `proposal_source_commit`, `approval_ref`, `approval_path`, `approval_fingerprint`, `proposal_sha256`, `pages_head`, `package_manifest_sha256`, `package_artifact_set_sha256`, `rendered_audio_sha256`, and the staged package path. Any stale source or Pages head, dirty checkout, altered or extra staged file, approval lineage change, or package hash drift fails closed.
+
+Publication execution remains a separate Pages-repository operation. The executor must re-read the authorization, require the Pages head to match, apply only the listed files, preserve newer editions and unrelated paths, and record a rollback receipt containing the prior hashes. A head or path drift aborts before mutation.
+

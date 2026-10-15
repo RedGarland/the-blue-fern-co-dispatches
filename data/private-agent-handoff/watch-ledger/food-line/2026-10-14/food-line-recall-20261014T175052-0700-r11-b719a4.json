@@ -1,0 +1,66 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261014T175052-0700-r11-b719a4",
+  "scheduled_for": "2026-10-14T17:45:54-07:00",
+  "started_at": "2026-10-14T17:50:52-07:00",
+  "completed_at": "2026-10-15T00:52:16.622Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-14T15:50:22-07:00",
+    "end": "2026-10-15T00:52:16.622Z",
+    "basis": "Latest documented prior watch completion was 2026-10-14 15:50:22 PDT; exact intervening hourly persisted checkpoint not verified. Used conservative gap-inclusive window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "search_limit": 12,
+    "search_failures": 0,
+    "source_discovery_status": "SUCCESS",
+    "qualifying_findings_count": 0,
+    "focus_classes": [
+      "only/sole/last/full-service grocery store closure/fire/disaster",
+      "emergency food distribution canceled/suspended due to weather/disaster/outage/facility damage",
+      "abrupt pantry/food-bank closure or major service access reduction",
+      "official SNAP/WIC/food assistance interruption with immediate consequences"
+    ],
+    "queries": [
+      "\"only grocery store\" closed OR fire OR destroyed October 14 2026 USA",
+      "\"last grocery store\" closes OR fire OR flood October 14 2026",
+      "\"sole grocery store\" fire OR closes October 14 2026",
+      "\"food distribution\" canceled storm flooding October 14 2026 food bank",
+      "\"food pantry\" canceled distribution power outage October 14 2026",
+      "\"food distribution\" suspended hurricane fire October 14 2026",
+      "\"food bank\" suddenly closed October 14 2026",
+      "\"food pantry\" closes immediately food access October 14 2026",
+      "\"food bank\" service suspended damaged October 14 2026",
+      "site:gov \"SNAP\" \"interruption\" \"October 14, 2026\"",
+      "site:gov WIC benefits outage October 14 2026",
+      "SNAP EBT outage benefit suspended October 14 2026 official state notice"
+    ],
+    "excluded_examples": [
+      {
+        "source_url": "https://www.tmj4.com/news/local-news/in-your-community/kenosha-county/people-need-assistance-kenosha-pantry-reacts-as-county-food-bank-prepares-to-close",
+        "reason": "Prior-week report; not newly published within observation interval."
+      },
+      {
+        "source_url": "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+        "reason": "April 2026 historical closure; outside the interval."
+      },
+      {
+        "source_url": "https://www.gpb.org/news/2026/03/17/really-difficult-choice-columbus-pantry-cancels-distribution-due-food-shortage",
+        "reason": "March 2026 historical cancellation; outside interval and different causal class."
+      }
+    ],
+    "limitation": "Search-index publication timestamps are not consistently hour-resolved. This is a bounded supplementary recall watch and is not evidence of zero incidents nationally. Production collector remains authoritative.",
+    "github_target": {
+      "repository": "RedGarland/the-blue-fern-co-dispatches",
+      "branch": "ops/watch-ledger",
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-14/food-line-recall-20261014T175052-0700-r11-b719a4.json"
+    },
+    "operational_effects": "No approvals, publication, schedule changes, task disabling, or production collection changes."
+  }
+}

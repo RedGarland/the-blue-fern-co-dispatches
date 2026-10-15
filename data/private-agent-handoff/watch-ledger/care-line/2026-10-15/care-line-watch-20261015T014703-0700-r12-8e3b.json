@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T014703-0700-r12-8e3b",
+  "scheduled_for": "2026-10-15T01:45:22-07:00",
+  "started_at": "2026-10-15T01:47:03-07:00",
+  "completed_at": "2026-10-15T01:48:54-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-15T00:49:00-07:00",
+    "end_at": "2026-10-15T01:48:54-07:00",
+    "basis": "Previous hourly report placed its completion at approximately 00:49 PDT; overlap boundary is approximate."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only. Production Care Line collector and editorial gates remain authoritative.",
+    "CMS Public Notices checked first on 2026-10-15; newest posted notice dated 2026-10-09 for Tender Home Health (CA). No fresh CMS notice found in this window.",
+    "Exactly 12 additional targeted web searches completed, spanning hospital/ED, maternity, rural/emergency, behavioral-health/detox, ambulance, air-medical, dialysis, oncology, primary-care, essential-service restoration, territories, and government health notices.",
+    "No new qualifying U.S. or territory essential-care access change was supported by source evidence in the observation window. Older events, proposals, background reports, foreign events and earlier-watch duplicates excluded.",
+    "Search index publication times may lag actual events; absence of results is not proof of absence.",
+    "No approvals, publication, scheduling or task disablement performed."
+  ]
+}

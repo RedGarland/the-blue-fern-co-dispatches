@@ -9,6 +9,7 @@ from xml.etree import ElementTree
 import pytest
 
 from bluefern_dispatches import gaza_edition_correction as edition
+from bluefern_dispatches import gaza_edition_package as package
 from bluefern_dispatches import gaza_historical_correction as legacy
 from bluefern_dispatches.gaza_sources import story_claim_fingerprint
 from bluefern_dispatches.historical_agent_archive import build_gaza_published_story_lineage
@@ -571,3 +572,51 @@ def test_zero_story_casualty_aggregates_are_recomputed_from_retained_claims(case
     result = prepare(case)
     data = json.loads((Path(result["packet_path"]).parent / f"preview/gaza/editions/{DATE}/edition_manifest.json").read_bytes())
     assert data["casualty_totals"] == {"new_deaths": 0, "new_injuries": 0}
+
+
+def test_edition_package_consumer_approves_plans_and_stages_privately(case, tmp_path):
+    install_synthetic_reviews(case)
+    result = prepare(case, formal=True)
+    proposal_path = Path(result["packet_path"])
+    approval_request_path = tmp_path / "edition-approval-request.json"
+    request_result = package.create_edition_approval_request(
+        proposal_path=proposal_path, output_path=approval_request_path
+    )
+    assert request_result["publication_authorized"] is False
+    approval_request = json.loads(approval_request_path.read_bytes())
+    assert approval_request["package_authorized"] is False
+    assert approval_request["audio_authorized"] is False
+    approval_path = case["source_root"] / "approvals/gaza/edition/synthetic.json"
+    created = package.create_edition_package_approval(
+        source_root=case["source_root"], proposal_path=proposal_path,
+        approval_request_path=approval_request_path, output_path=approval_path,
+        approval_id="synthetic-edition-approval", approver="Synthetic fixture only",
+        approved_at=DATE + "T23:00:00Z",
+    )
+    assert created["publication_authorized"] is False
+    approval_commit = commit(case["source_root"])
+    plan = package.plan_edition_correction(
+        source_root=case["source_root"], pages_root=case["pages_root"],
+        proposal_path=proposal_path, approval_ref=approval_commit,
+        approval_path="approvals/gaza/edition/synthetic.json",
+    )
+    assert plan["status"] == "validated_edition_plan"
+    assert plan["package_authorized"] is True
+    assert plan["audio_authorized"] is True
+    assert plan["publication_authorized"] is False
+    rendered_audio = tmp_path / "correction.mp3"
+    rendered_audio.write_bytes(b"ID3-synthetic-correction")
+    staged = package.stage_edition_correction(
+        plan=plan, input_root=proposal_path.parent, rendered_audio_path=rendered_audio,
+        staging_root=tmp_path / "staged", source_root=case["source_root"],
+        pages_root=case["pages_root"],
+    )
+    assert staged["status"] == "staged_edition_correction"
+    assert staged["publication_authorized"] is False
+    verified = package.verify_staged_edition_package(
+        plan=plan, package_root=Path(staged["package_path"]),
+        source_root=case["source_root"], pages_root=case["pages_root"],
+    )
+    assert verified["status"] == "staged_edition_package_verified"
+    with pytest.raises(legacy.CorrectionValidationError):
+        legacy._validate_proposal_shape(json.loads(proposal_path.read_bytes()))

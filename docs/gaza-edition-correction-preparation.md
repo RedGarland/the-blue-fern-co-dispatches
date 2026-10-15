@@ -1,13 +1,17 @@
 # Coordinated Gaza edition correction preparation
 
 This private owner prepares one coherent correction to multiple projections in
-one already published edition. It does not collect new stories, approve a
-decision, render audio, stage a release, or mutate/publish Pages. Its separate
-schemas cannot enter the legacy single-story approval or staging commands.
-Those legacy operations and their default byte-preservation behavior are unchanged.
+one already published edition. It does not collect new stories, make editorial
+decisions, render audio, or mutate/publish Pages. Its separate schemas cannot
+enter the legacy single-story approval or staging commands. Those legacy
+operations and their default byte-preservation behavior are unchanged.
 
 Use `scripts/gaza_edition_correction.py` with `prepare`, `propose`, or read-only
-`verify`. No approval, audio-provider, scheduler or publication mode exists.
+`verify`. The separate `scripts/gaza_edition_package.py` consumer accepts only a
+formal proposal: it can emit a non-authorizing approval request, validate a
+separately committed human package/audio approval, produce a read-only plan, and
+stage a private package outside both repositories. It never publishes or grants
+publication authority.
 
 ## Reasons and authority
 
@@ -44,15 +48,17 @@ for every target. The closed `gaza_edition_correction_review_v1` schema requires
   publication and approval authorization fields.
 
 Only then can the owner emit `gaza_edition_correction_proposal_v1` in
-`proposal.json`. This remains non-authorizing. It is a separate edition-level
-preapproval contract; the legacy single-story package approval/plan/stage modes
-reject it. Any later package/audio approval, staging consumer and publication
-operation require separate human review and authority. This preparation change
-does not introduce them or imply that a proposal is deployable.
+`proposal.json`. This remains non-authorizing. The edition package consumer
+requires that proposal, a non-authorizing approval request, and a separately
+committed approval-only source change whose package/audio authority is explicit
+and whose publication authority is false. A validated plan is read-only; staging
+writes only to a caller-selected private directory outside source and Pages.
+Publication remains a separate human-controlled operation.
 
 Never manufacture a scope-contamination decision to make evidence insufficiency
-fit the old withdrawal contract. Actual review/approval artifacts are not
-included with the implementation. Synthetic test decisions are fixtures only.
+fit the old withdrawal contract. The committed October review/audit records are
+source-bound inputs; an approval artifact is not created by this PR. Synthetic
+test approvals are fixtures only.
 
 ## Input and exact bindings
 
@@ -148,3 +154,46 @@ python scripts/gaza_edition_correction.py --mode verify `
 
 Use a new output root when reviewed inputs change or when issuing a later formal
 proposal. Preserve prior packets and their evidence; do not rebind them in place.
+
+
+## Edition package consumer
+
+Generate a non-authorizing request from a formal proposal:
+
+```powershell
+python scripts/gaza_edition_package.py --mode approval-request \
+  --proposal PRIVATE_PROPOSAL/proposal.json \
+  --output PRIVATE_PROPOSAL/approval_request.json
+```
+
+A separately authorized reviewer may create the approval artifact under
+`approvals/gaza/edition/`. That artifact must be committed in an approval-only
+commit whose sole parent is the proposal source commit:
+
+```powershell
+python scripts/gaza_edition_package.py --mode approve-package \
+  --source-root SOURCE_CHECKOUT \
+  --proposal PRIVATE_PROPOSAL/proposal.json \
+  --approval-request PRIVATE_PROPOSAL/approval_request.json \
+  --output SOURCE_CHECKOUT/approvals/gaza/edition/APPROVAL.json \
+  --approval-id APPROVAL_ID --approver "Reviewer" --approved-at 2026-10-15T12:00:00Z
+```
+
+Read-only planning validates that topology, all proposal hashes, immutable public
+bindings, and the exact Pages head. Private staging requires the resulting plan
+and a separately rendered approved MP3; it writes no repository:
+
+```powershell
+python scripts/gaza_edition_package.py --mode plan \
+  --source-root SOURCE_CHECKOUT --pages-root CLEAN_PAGES_CHECKOUT \
+  --proposal PRIVATE_PROPOSAL/proposal.json \
+  --approval-ref APPROVAL_COMMIT --approval-path approvals/gaza/edition/APPROVAL.json
+
+python scripts/gaza_edition_package.py --mode stage \
+  --plan PLAN.json --input-root PRIVATE_PROPOSAL \
+  --rendered-audio APPROVED_RENDER.mp3 --staging-root PRIVATE_STAGING \
+  --source-root SOURCE_CHECKOUT --pages-root CLEAN_PAGES_CHECKOUT
+```
+
+The staged package and its verification remain private. No command in this
+consumer applies Pages, publishes a feed, sends social, or releases audio.

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T074721-0700-r12-9fe2",
+  "scheduled_for": "2026-10-15T07:45:22-07:00",
+  "started_at": "2026-10-15T07:47:21-07:00",
+  "completed_at": "2026-10-15T07:49:31-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-15T06:54:00-07:00",
+    "end_at": "2026-10-15T07:49:31-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall; production authoritative.",
+    "CMS Public Notices checked first, latest 2026-10-09 Tender Home Health, CA: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "12 additional targeted searches across five miss classes, all completed; no qualifying fresh in-window U.S./territory service loss or restoration.",
+    "October 15 feature references older maternity closures, not new; Missouri Fitzgibbon and Washington EvergreenHealth reports already known.",
+    "No approvals, publication, schedule changes or disablement."
+  ]
+}

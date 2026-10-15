@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T134359-0700-r11-1427",
+  "scheduled_for": "2026-10-15T12:45:54-07:00",
+  "started_at": "2026-10-15T13:43:59-07:00",
+  "completed_at": "2026-10-15T13:45:49-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T11:51:51-07:00",
+    "end": "2026-10-15T13:45:49-07:00",
+    "basis": "Latest prior visible completed search ended at 11:51:51 Pacific; exact intervening check not authenticated."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall; production nationwide collector authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "qualifying_findings": 0,
+    "priority_classes": [
+      "sole/last/full-service grocery store loss",
+      "disaster-caused food distribution cancellations",
+      "abrupt pantry or food bank access reductions",
+      "official SNAP/WIC food-assistance interruptions"
+    ],
+    "source_discovery_status": "SUCCESS",
+    "assessment": "No new qualifying nonduplicate food-access disruption verified within bounded window. Most search results predated Oct 15; new reports did not satisfy sole provider or immediate-access criteria.",
+    "examples_excluded": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September incident"
+      },
+      {
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "September incident"
+      },
+      {
+        "url": "https://www.the-sun.com/money/17150572/wheatsville-food-co-op-closing-austin-texas/",
+        "reason": "No sole grocer or immediate access loss"
+      }
+    ],
+    "indexing_lag_caveat": "Near-real-time web indexes can lag original publication.",
+    "publication_or_approval_changes": false,
+    "schedule_changes": false
+  }
+}

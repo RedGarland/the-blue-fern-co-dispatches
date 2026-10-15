@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T124800-0700-r12-5d40",
+  "scheduled_for": "2026-10-15T12:45:22-07:00",
+  "started_at": "2026-10-15T12:48:00-07:00",
+  "completed_at": "2026-10-15T12:49:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T11:48:02-07:00",
+    "end": "2026-10-15T12:49:59-07:00",
+    "basis": "Prior hourly watch completed at 11:48:02 PDT; searched until current observation."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line collection remains authoritative.",
+    "CMS Public Notices checked first; newest 2026-10-09 Tender Home Health, California; https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "12 additional targeted searches across hospital, ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency, ambulance/air medical, reopening, US territories, state suspension.",
+    "No new verifiable in-window developments; older known Maine ambulance closure excluded.",
+    "No publication, approvals, schedule changes or disabling."
+  ]
+}

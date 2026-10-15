@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T105010-0700-r11-a630f7",
+  "scheduled_for": "2026-10-15T10:45:54-07:00",
+  "started_at": "2026-10-15T10:50:10-07:00",
+  "completed_at": "2026-10-15T17:51:50.588Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-15T09:45:54-07:00",
+    "end_at": "2026-10-15T10:50:10-07:00",
+    "timezone": "America/Los_Angeles",
+    "interpretation": "Previous hourly scheduled check through this run's observation start; new reports or newly verified disruptions only."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "targeted_web_search_limit": 12,
+    "targeted_web_searches": [
+      "\"only grocery store\" closed fire October 15 2026 community",
+      "\"sole grocery store\" closing fire October 2026 local",
+      "\"full-service grocery store\" \"closed\" \"October 15\" 2026",
+      "\"food distribution\" canceled \"October 15\" 2026 storm",
+      "\"food pantry\" distribution cancelled \"October 15\" 2026 flood power outage",
+      "\"food bank\" distribution suspended storm October 2026",
+      "\"food pantry\" \"closed\" \"October 15, 2026\" emergency",
+      "\"food bank\" \"temporarily closed\" October 15 2026 damage",
+      "\"pantry\" \"suspend services\" October 2026 United States",
+      "site:gov \"SNAP\" \"October 15, 2026\" \"interruption\" benefits",
+      "site:gov \"WIC\" \"October 15, 2026\" \"closed\" \"outage\"",
+      "\"SNAP\" \"WIC\" \"benefits unavailable\" \"October 15 2026\""
+    ],
+    "qualifying_classes": [
+      "Loss/closure/fire/disaster affecting a community's only/sole/last/full-service grocery",
+      "Weather/disaster/outage/facility-damage cancellation of emergency food distribution",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "new_qualifying_signals": 0,
+    "web_search_failures": 0,
+    "excluded_results": "Routine pantry calendars, donation/promotion, historical food-access incidents, planned closures without verified sole/full-service community loss, and reports not newly evidenced in the observation window.",
+    "coverage_limitations": "Bounded supplementary recall sweep; search engine results are not an exhaustive feed and item discovery timestamps may be unavailable. No specific candidate was independently verified as a new qualifying disruption during this window.",
+    "production_collector_authoritative": true,
+    "approvals_publications_schedule_changes": "none"
+  }
+}

@@ -5,57 +5,27 @@
   "run_id": "food-line-recall-20261014T184444-0700-r11-43d97c",
   "scheduled_for": "2026-10-14T18:45:54-07:00",
   "started_at": "2026-10-14T18:44:44-07:00",
-  "completed_at": "2026-10-14T-6:46:16.817-07:00",
+  "completed_at": "2026-10-14T18:46:16.817-07:00",
   "status": "SUCCESS",
   "outcome": "no_findings",
   "search_window": {
     "timezone": "America/Los_Angeles",
     "start": "2026-10-14T17:44:44-07:00",
-    "end": "2026-10-14T-6:46:16.817-07:00",
-    "basis": "Approximate prior-hour boundary; latest prior successful ledger timestamp not independently established. Screened search results for new publication/announcement in this window."
+    "end": "2026-10-14T18:46:16.817-07:00",
+    "basis": "Approximate previous-hour boundary; prior ledger run time not confirmed."
   },
   "findings": [],
   "coverage_notes": {
-    "source_discovery": "SUCCESS",
     "targeted_web_search_count": 12,
-    "targeted_web_search_limit": 12,
     "search_failures": 0,
     "classes_checked": [
-      "Only/sole/last/full-service community grocery closure, fire, or disaster",
-      "Emergency food distribution canceled/suspended owing to storm, flood, fire, outage, or facility damage",
-      "Abrupt pantry or food-bank shutdown or material service reduction",
-      "New official SNAP/WIC/food-benefit interruption causing immediate access consequences"
+      "only/last/full-service grocery loss",
+      "storm/disaster food distribution cancellation",
+      "abrupt pantry/food-bank closure",
+      "official SNAP/WIC interruption"
     ],
-    "queries": [
-      "\"only grocery store\" closed fire community October 14 2026",
-      "\"sole grocery store\" \"closed\" October 2026 United States",
-      "\"last grocery store\" fire closed October 14 2026",
-      "\"full-service grocery\" closure October 14 2026 food desert",
-      "\"food distribution\" canceled storm October 14 2026 food bank",
-      "\"food distribution\" cancelled flood fire outage October 14 2026",
-      "\"mobile pantry\" canceled October 14 2026 weather",
-      "\"food pantry\" \"closed\" October 14 2026 emergency",
-      "October 14 2026 \"SNAP\" \"benefits\" \"interrupted\" \"outage\" state",
-      "October 14 2026 \"WIC\" \"closed\" \"services\" \"interrupted\" department health",
-      "October 14 2026 \"food bank\" \"suspended\" \"distribution\" storm",
-      "October 14 2026 \"pantry\" \"temporarily closed\" flood fire damage"
-    ],
-    "disposition": "No corroborated new, in-window, nonduplicate qualifying signals discovered. Results were predominately previously published incidents or unrelated routine/forward-looking grocery stories; no fresh official notice establishing immediate SNAP/WIC interruption.",
-    "excluded_examples": [
-      {
-        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
-        "reason": "Published September 14, outside prior-hour window."
-      },
-      {
-        "source_url": "https://www.inc.com/amaya-nichole/iga-is-closing-stores-list-shuttered-locations-for-2026/91406265",
-        "reason": "Published September 19, outside window."
-      },
-      {
-        "source_url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
-        "reason": "Safeway chain's only store in Arvada, not Arvada's only community grocery; future closure."
-      }
-    ],
-    "coverage_limitations": "Supplementary targeted web search only, not the authoritative nationwide Food Line collector. Search indexing and article publication timestamps may lag; full hour-level coverage not guaranteed. Prior heartbeat could not be verified in this run.",
-    "operational_effects": "No approval, publication, production collector, or schedule changes."
+    "result": "No new verified in-window qualifying signal; stale and off-topic sources excluded.",
+    "limitations": "Search indexing may lag. Production Food Line collector remains authoritative.",
+    "operational_effects": "No approval, publication, or scheduling change."
   }
 }

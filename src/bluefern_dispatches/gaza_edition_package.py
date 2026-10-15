@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -309,17 +310,45 @@ def plan_edition_correction(
     }
 
 
-def _rendered_content(role: str, content: bytes, rendered_audio_length: int) -> bytes:
+def _rendered_content(
+    role: str,
+    content: bytes,
+    rendered_audio_length: int,
+    rendered_audio_sha256: str,
+    correction_id: str,
+) -> bytes:
     if role == "correction_audio_metadata":
         metadata = json.loads(content.decode("utf-8"))
         metadata["render_status"] = "rendered_for_private_review"
         metadata["rendered_audio_sha256"] = rendered_audio_sha256
         return _json(metadata)
     if role in {"podcast", "audio_podcast"}:
-        marker = b'type="audio/mpeg" length="0"'
-        if content.count(marker) != 1:
-            raise Error(f"{role} lacks one correction-audio placeholder")
-        return content.replace(marker, f'type="audio/mpeg" length="{rendered_audio_length}"'.encode("ascii"), 1)
+        correction_bytes = re.escape(correction_id.encode("utf-8"))
+        item_pattern = re.compile(
+            rb"<item\b[^>]*>.*?<guid\b[^>]*>\s*"
+            + correction_bytes
+            + rb"\s*</guid>.*?</item>",
+            re.S,
+        )
+        items = list(item_pattern.finditer(content))
+        if len(items) != 1:
+            raise Error(f"{role} lacks one correction feed item")
+        item_match = items[0]
+        item = item_match.group(0)
+        enclosure_pattern = re.compile(
+            rb'(<enclosure\b[^>]*\blength=")\d+(")',
+            re.S,
+        )
+        enclosures = list(enclosure_pattern.finditer(item))
+        if len(enclosures) != 1:
+            raise Error(f"{role} correction feed item lacks one enclosure")
+        enclosure = enclosures[0]
+        rendered = (
+            item[:enclosure.start(2)]
+            + str(rendered_audio_length).encode("ascii")
+            + item[enclosure.end(2):]
+        )
+        return content[:item_match.start()] + rendered + content[item_match.end():]
     return content
 
 
@@ -364,7 +393,13 @@ def stage_edition_correction(
         source = _path(input_root, row["input_path"], "approved edition preview")
         if not source.is_file() or legacy.sha256_file(source) != row["corrected_sha256"]:
             raise Error(f"approved edition preview is missing for {row['role']}")
-        content = _rendered_content(row["role"], source.read_bytes(), len(audio_content))
+        content = _rendered_content(
+            row["role"],
+            source.read_bytes(),
+            len(audio_content),
+            audio_sha,
+            plan["correction_id"],
+        )
         final_content[row["role"]] = content
         final_rows.append({"role": row["role"], "public_path": row["public_path"], "sha256": _hash(content)})
     audio_public_path = plan["audio_request"]["public_path"]

@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T074923-0700-r11",
+  "scheduled_for": "2026-10-15T07:45:54-07:00",
+  "started_at": "2026-10-15T07:49:23-07:00",
+  "completed_at": "2026-10-15T07:50:55-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-15T06:46:00-07:00",
+    "end": "2026-10-15T07:49:23-07:00",
+    "timezone": "America/Los_Angeles",
+    "scope": "new U.S. food-access disruptions since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Bounded supplementary recall; production nationwide collector authoritative.",
+    "search_count": 12,
+    "search_failures": 0,
+    "qualifying_new_findings": 0,
+    "reviewed_miss_classes": [
+      "only/sole/last/full-service grocery store loss or closure",
+      "weather/disaster/facility cancellation of emergency food distributions",
+      "abrupt food-bank or pantry closure or substantial access reduction",
+      "new official SNAP/WIC/food assistance disruption with immediate access impact"
+    ],
+    "excluded_as_out_of_window_or_historical": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Published September 14, outside observation window."
+      },
+      {
+        "source_url": "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+        "reason": "October 7-8 announcement for October 10 distribution; outside observation window."
+      },
+      {
+        "source_url": "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+        "reason": "April closure, outside observation window."
+      }
+    ],
+    "assessment": "Twelve targeted web searches covered four specified miss classes. No qualifying newly published U.S. access disruption verified within the bounded window. This does not establish nationwide absence; freshness/search-index limitations apply.",
+    "pipeline_impact": "No production collection, publication, approval, schedule, or other branch modified."
+  }
+}

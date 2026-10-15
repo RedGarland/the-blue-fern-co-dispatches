@@ -10,12 +10,12 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "SUCCESS",
+  "aggregate_status": "UNKNOWN",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "6cbcc0c0e688aa90d56c8ad76a5f505b92a3a6b8",
   "debug_summary": {
     "aggregate_degradation_required": null,
-    "aggregate_status": "SUCCESS",
+    "aggregate_status": "UNKNOWN",
     "all_current_failures_external": null,
     "all_current_failures_non_actionable": null,
     "attention_task_count": 0,
@@ -23,10 +23,10 @@
     "coverage_caveat_only": null,
     "external_access_restriction_count": null,
     "failed_source_count": null,
-    "operator_assessment": "HEALTHY",
+    "operator_assessment": "FAILED_ACTION_REQUIRED",
     "primary_classification": null,
     "primary_failure_stage": null,
-    "primary_layer": "NONE",
+    "primary_layer": "UNKNOWN",
     "primary_task_key": null,
     "primary_task_status": null,
     "private_review_count_only_gap_count": null,
@@ -37,8 +37,8 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": "not_authorized_monitor_only",
-    "receipt_completeness": "COMPLETE",
+    "publication_status": null,
+    "receipt_completeness": "NO_PROOF",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": null,
@@ -46,50 +46,27 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-10-15T06:15:04.280824Z",
-  "last_receipt_at": "2026-10-13T20:56:03.052044Z",
-  "latest_runtime_proof_date": "2026-10-14T04:16:00Z",
+  "last_exported_at": "2026-10-15T07:15:04.458506Z",
+  "last_receipt_at": null,
+  "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
   "next_expected_run": null,
-  "observed_date": "2026-10-14",
+  "observed_date": "2026-10-15",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": "not_authorized_monitor_only"
+    "publication_status": null
   },
   "publication_attempted": false,
-  "publication_status": "not_authorized_monitor_only",
-  "receipt_completeness": "COMPLETE",
+  "publication_status": null,
+  "receipt_completeness": "NO_PROOF",
   "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": "6cbcc0c0e688aa90d56c8ad76a5f505b92a3a6b8",
-  "scheduled_health_authoritative": true,
+  "runner_source_head": null,
+  "scheduled_health_authoritative": false,
   "scheduled_task_keys": [
     "ice_monitor"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_observability": false,
-  "task_summaries": [
-    {
-      "artifact_id": "monitor_receipt.json",
-      "classification": "healthy",
-      "completed_at": "2026-10-13T20:56:02Z",
-      "diagnostics": null,
-      "exit_code": 0,
-      "next_expected_run": null,
-      "public_side_effects": {
-        "audio": false,
-        "pages": false,
-        "publication": false,
-        "rss": false,
-        "social": false
-      },
-      "publication_attempted": false,
-      "publication_status": "not_authorized_monitor_only",
-      "run_id": "ice-monitor-20261013Tcodex-proof",
-      "scheduled_for": "2026-10-13",
-      "started_at": "2026-10-13T20:54:44Z",
-      "status": "SUCCESS",
-      "task_key": "ice_monitor"
-    }
-  ],
+  "task_summaries": [],
   "unaccounted_event_count": 0
 }

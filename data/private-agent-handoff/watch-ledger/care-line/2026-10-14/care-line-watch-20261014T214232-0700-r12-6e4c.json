@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T214232-0700-r12-6e4c",
+  "scheduled_for": "2026-10-14T21:42:32-07:00",
+  "started_at": "2026-10-14T21:42:32-07:00",
+  "completed_at": "2026-10-14T21:43:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-14T20:51:00-07:00",
+    "end_at": "2026-10-14T21:43:32-07:00",
+    "basis": "Since the previous hourly supplementary Care Line check, which ended about 20:51 PDT; previous watch execution reported GitHub write failure."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; primary national Care Line production collector remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; latest visible entry dated 2026-10-09 (Tender Home Health, CA), with no newer listed 2026-10-14 notices.",
+    "Exactly 12 additional targeted search queries, recency=1 day, across hospital/ED, maternity, rural/emergency care, behavioral health, dialysis, oncology, primary care, ambulance/air medical, official interruption announcements, reopenings and U.S. territories.",
+    "No new independently verifiable development with concrete healthcare-access change since previous hourly check identified.",
+    "EvergreenHealth Monroe recovery-center program closure and Dennys River Volunteer Ambulance Service November 30 closure were previously identified and excluded as duplicates; Roseland labor/delivery closure already announced; no confirmed new restoration event.",
+    "Search-engine date granularity did not prove publication hour for some October 14 sources; no unsupported claim of a new hourly development was made.",
+    "Excluded proposals without present service effects, ownership-only reports, opinions, stale news, foreign locations, duplicates and unverified social claims.",
+    "No approval, publication, schedule change or disabling performed."
+  ]
+}

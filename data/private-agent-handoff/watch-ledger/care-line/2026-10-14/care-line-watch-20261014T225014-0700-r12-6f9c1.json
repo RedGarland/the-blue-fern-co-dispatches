@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261014T225014-0700-r12-6f9c1",
+  "scheduled_for": "2026-10-14T22:50:14-07:00",
+  "started_at": "2026-10-14T22:50:14-07:00",
+  "completed_at": "2026-10-14T22:51:56.126-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-14T21:43:32-07:00",
+    "end_at": "2026-10-14T22:51:56.126-07:00",
+    "basis": "Prior GitHub watch heartbeat completed 2026-10-14T21:43:32-07:00."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Care Line collector remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; newest listed notice 2026-10-09 Tender Home Health (CA).",
+    "Exactly 12 additional targeted recency=1 day searches completed: hospital/ED, maternity, behavioral health/detox, dialysis, oncology, primary care, rural/emergency services, ambulance/EMS, air medical, reopening, U.S. territories, official state/local notices.",
+    "No new qualifying and corroborated healthcare access change since previous hourly check identified; search results were predominantly dated older than October 14, outside the U.S., and/or unqualified. Publication-hour uncertainty noted.",
+    "Previously identified EvergreenHealth Monroe, Dennys River Ambulance, and Piedmont HealthCare events were excluded as duplicates without proven new access consequences or restoration.",
+    "No approvals, publication, scheduling changes, or disabling."
+  ]
+}

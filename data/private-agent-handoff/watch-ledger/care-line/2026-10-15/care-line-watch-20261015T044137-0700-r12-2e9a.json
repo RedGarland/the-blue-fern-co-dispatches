@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T044137-0700-r12-2e9a",
+  "scheduled_for": "2026-10-15T04:41:37-07:00",
+  "started_at": "2026-10-15T04:41:37-07:00",
+  "completed_at": "2026-10-15T04:43:19-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-15T03:51:00-07:00",
+    "end_at": "2026-10-15T04:43:19-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior hourly recall watch; late-indexed notices inspected but not presented as hourly developments without evidence."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices explicitly checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; newest listed notice 2026-10-09 (Tender Home Health, CA).",
+    "12 additional targeted web searches completed covering hospital/ED, maternity, behavioral health, dialysis/oncology, EMS/air medical, primary care, government notices, and service restoration.",
+    "No new qualifying and nonduplicate U.S. or territorial care-access change was verified for this comparison window.",
+    "Previously identified Maine EMS closure and Washington behavioral-health suspension were excluded; older reports, proposals, international stories, and general policy trend pieces were excluded.",
+    "Supplementary recall watch only; production national collection remains authoritative. No publication or review approvals."
+  ]
+}

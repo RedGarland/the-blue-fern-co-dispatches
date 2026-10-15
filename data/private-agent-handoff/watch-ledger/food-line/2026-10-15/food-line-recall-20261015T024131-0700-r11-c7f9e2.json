@@ -1,0 +1,55 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T024131-0700-r11-c7f9e2",
+  "scheduled_for": "2026-10-15T02:41:31-07:00",
+  "started_at": "2026-10-15T02:41:31-07:00",
+  "completed_at": "2026-10-15T02:42:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-15T01:52:00-07:00",
+    "end": "2026-10-15T02:41:31-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last reported completed hourly search was approximately 01:52 PDT; precise ledger cutoff unavailable because prior heartbeat write failed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Bounded supplementary recall watch only; production collector authoritative.",
+    "targeted_web_searches": 12,
+    "failed_searches": 0,
+    "query_context": [
+      "Oct 15 only grocery store closed fire",
+      "Oct 15 sole grocery store closure",
+      "Oct 15 last grocery store closed",
+      "Oct 15 full service grocery fire",
+      "Oct 15 food distribution canceled storm flooding",
+      "Oct 15 food pantry closed flood fire outage",
+      "Oct 15 emergency food distribution suspended weather",
+      "Oct 15 SNAP EBT outage state notice",
+      "Oct 15 WIC service interruption",
+      "Oct 15 food bank temporarily closed damage",
+      "site:gov Oct 15 SNAP WIC EBT interruption",
+      "Oct 15 food pantry distribution cancelled PG&E shutoff"
+    ],
+    "high_value_classes_checked": [
+      "sole/only/last/full-service grocery store loss",
+      "emergency food distribution canceled due to hazard or facility damage",
+      "pantry or food bank abrupt closure/access reduction",
+      "official SNAP/WIC/food assistance immediate interruption"
+    ],
+    "assessment": "No newly published, independently substantiated food-access disruption in the bounded observation window; most matches were historical or unrelated. California October 14-15 PG&E power shutoffs were observed but no direct evidence of a qualifying pantry/distribution/food-assistance interruption was found.",
+    "exclusions": [
+      "Earlier September 2026 sole-store fire in Spencer NY",
+      "Historical SNAP/WIC outage and shutdown coverage from 2025 and June 2026",
+      "PG&E power outage news without corroborated loss of emergency food access"
+    ],
+    "source_links_context": [
+      "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+      "https://www.sfchronicle.com/bayarea/article/planned-pge-power-outages-wildfire-risk-22477837.php"
+    ],
+    "no_approval_or_publication": true,
+    "observation_note": "Scheduled_for is the supplied automation observation time because exact nominal scheduler trigger time was not provided."
+  }
+}

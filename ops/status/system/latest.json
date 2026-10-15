@@ -32,7 +32,7 @@
       "aggregate_status": "MISSED",
       "coverage_caveat_only": true,
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "e055c198c5c8f55b5c83be9a849305ba4cffec62",
+      "current_runner_head": "4ec22d6a5c6177a5822ac2e375bd9859d76e1370",
       "debug_summary": {
         "aggregate_degradation_required": false,
         "aggregate_status": "MISSED",
@@ -197,7 +197,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "e055c198c5c8f55b5c83be9a849305ba4cffec62",
+      "current_runner_head": "4ec22d6a5c6177a5822ac2e375bd9859d76e1370",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "SUCCESS",
@@ -225,7 +225,7 @@
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 27,
+        "private_review_max_age_hours": 28,
         "private_review_oldest_pending_date": "2026-10-14",
         "private_review_pending_date_count": 1,
         "private_review_pending_item_count": 4,
@@ -247,7 +247,7 @@
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 27,
+            "age_hours": 28,
             "count_only_gap_count": 0,
             "date": "2026-10-14",
             "dispositioned_item_count": 0,
@@ -417,7 +417,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 27,
+        "max_age_hours": 28,
         "oldest_pending_date": "2026-10-14",
         "pending_date_count": 1,
         "pending_item_count": 4,
@@ -448,7 +448,7 @@
       },
       "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "e055c198c5c8f55b5c83be9a849305ba4cffec62",
+      "current_runner_head": "4ec22d6a5c6177a5822ac2e375bd9859d76e1370",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "STALE_OBSERVABILITY",
@@ -558,7 +558,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-15T03:15:05.669778Z",
+  "exported_at": "2026-10-15T04:15:04.418500Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza"

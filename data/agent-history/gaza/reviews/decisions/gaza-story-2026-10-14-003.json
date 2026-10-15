@@ -1,0 +1,35 @@
+{
+  "schema_version": "gaza_edition_correction_review_v1",
+  "story_id": "gaza-story-2026-10-14-003",
+  "owning_edition_date": "2026-10-14",
+  "reason": "insufficient_saved_evidence",
+  "decision": "confirmed_saved_evidence_insufficiency",
+  "resulting_review_state": "substantively_reviewed",
+  "lineage_sha256": "7f8ddbd6150319a8ed5f7f1ceff1500b5c5248456adf246a01cb45ab91794180",
+  "review_packet_sha256": "ba9606bc3027280519af94fffa00d0edacc0871f4db1872d46380577e277dc8c",
+  "reviewer": "Independent read-only source reviewer",
+  "reviewed_at": "2026-10-15T00:01:56.4539911Z",
+  "decision_reason": "The saved input contains only a Google News RSS wrapper, repeated headline/publisher snippet and timestamp; content_text is null and canonical publisher resolution was not established. This confirms saved-evidence insufficiency only; material Gaza relevance and underlying accuracy remain undetermined.",
+  "evidence_references": [
+    {
+      "role": "principal",
+      "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxNZzBsOUFuOFFVOS1NUTduTGVtR2dfdWl1ZnFxVFRULVd4SHdnaVVMV3BkRmlWS21aNTNBZVd3cVk4cXFfVk1YUHB2YzQ0UmpGbmpBTmdvb2tVS1lBZVAyQWxPeS1pWWp6akpsVnAydXNoMDVKZkdBajNnd1h6Tzg4LU1sRnRraUdWczlFQ1VhYlpMcmhXWUhzV1BnV0lIT2xLR2UyaUlJbkwzd0xRM0djMGFuZWFmLXBmZzVaWDZldktaa2VxWmlsMjRUa1JYUFVSaDVuRVpfZnFOeXRubGFJU3laVkZNdm5rZ1B1RURpdWxFZXk1dHlR?oc=5",
+      "supporting_passage": "The saved input contains the Haaretz headline and publisher snippet but no article body or resolved canonical publisher URL.",
+      "evidence_type": "saved_input"
+    }
+  ],
+  "assessment": {
+    "materially_concerns_gaza": null,
+    "saved_article_evidence_sufficient": false,
+    "underlying_article_verdict": "undetermined",
+    "saved_input_sha256": "74b442353fd364fee32660691e369ad81b530fe276aeba29e074efacbfbd7bac"
+  },
+  "archive_authorized": false,
+  "edition_authorized": false,
+  "queue_authorized": false,
+  "source_record_authorized": false,
+  "cluster_authorized": false,
+  "audio_authorized": false,
+  "publication_authorized": false,
+  "approval_authorized": false
+}

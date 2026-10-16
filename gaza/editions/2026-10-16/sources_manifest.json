@@ -1,0 +1,55 @@
+[
+  {
+    "source_record_id": "gaza-private-2026-10-16-unicef-child-casualty-window",
+    "source_id": "gaza-private-2026-10-16-unicef-child-casualty-window",
+    "title": "UNICEF briefing reports child casualties during the preceding two weeks in Gaza",
+    "url": "https://www.unicef.org/mena/press-releases/childhood-defined-struggle-survival-gaza-strip",
+    "canonical_url": "https://www.unicef.org/mena/press-releases/childhood-defined-struggle-survival-gaza-strip",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "UNICEF",
+    "published_at": "2026-10-16",
+    "retrieved_at": "2026-10-16T17:30:11.270118Z",
+    "retrieved_local_date": "2026-10-16",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "UNICEF Global Deputy Spokesperson Ricardo Pires said at a 16 October Geneva briefing that, in the last two weeks in Gaza, five boys and two girls had been reported killed and at least 33 children seriously injured in air strikes, drone strikes and gunfire; two additional boys died from earlier injuries. This is a reported two-week window, not a count of deaths on 16 October.",
+    "source_type": "primary institutional briefing",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian conflict",
+    "reliability_tier": "official-humanitarian-source",
+    "provider_id": "primary institutional briefing",
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "traceability_note": "UNICEF page summarizing Ricardo Pires's Geneva briefing; the figures are explicitly bounded to the preceding two weeks and preserve the separate earlier-injury statement.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-10-16",
+    "used_in_story_ids": [
+      "gaza-story-2026-10-16-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 62,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|unicef|unicef briefing reports child casualties during the preceding two weeks in gaza|humanitarian conflict|2026-10-16",
+    "title_fingerprint": "unicef briefing reports child casualties during the preceding two weeks in gaza",
+    "claim_fingerprint": "gaza|unicef|unicef briefing reports child casualties during the preceding two weeks in gaza|humanitarian conflict|2026-10-16"
+  }
+]

@@ -1,0 +1,73 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-10-16",
+  "generated_at": "2026-10-16T19:42:36.817886+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-16/",
+  "local_output_path": "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\site\\gaza\\editions\\2026-10-16",
+  "local_dispatch_output_path": "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\dispatches\\gaza\\editions\\2026-10-16",
+  "local_backup_path": "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\tmp-backups-pages\\gaza\\2026-10-16",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 1,
+  "story_count": 1,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 1,
+  "publishers": [
+    "UNICEF"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 1 saved source record from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+    "All rendered public stories in this edition rely on sources from UNICEF."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\site\\gaza\\editions\\2026-10-16\\sources_manifest.json",
+  "curation_manifest_path": "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\site\\gaza\\editions\\2026-10-16\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\site\\gaza\\editions\\2026-10-16\\index.html",
+    "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\site\\gaza\\editions\\2026-10-16\\edition_manifest.json",
+    "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\site\\gaza\\editions\\2026-10-16\\sources_manifest.json",
+    "C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\output\\site\\gaza\\editions\\2026-10-16\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This is a limited-source update generated from 1 saved source record from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+    "All rendered public stories in this edition rely on sources from UNICEF.",
+    "manual supplement recommended: add source-backed records at C:\\Users\\willb\\Documents\\Codex\\2026-10-14\\task\\gaza-oct16-private-review-20261016\\private-pages-bound-public-diff-20261016-postmerge-pr661-rerun3\\data\\dispatches\\gaza\\sources\\2026-10-16\\manual_sources.template.json",
+    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-10-16T06:00:00-07:00",
+  "actual_run_local_time": "2026-10-16T12:42:36-07:00",
+  "source_window_start_utc": "2026-10-16T00:00:00Z",
+  "source_window_end_utc": "2026-10-16T00:00:00Z",
+  "first_source_retrieved_at": "2026-10-16T17:30:11.270118Z",
+  "last_source_retrieved_at": "2026-10-16T17:30:11.270118Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-10-16T17:30:11.270118Z",
+      "retrieved_at_local": "2026-10-16T10:30:11-07:00",
+      "retrieved_local_date": "2026-10-16",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-private-2026-10-16-unicef-child-casualty-window"
+      ],
+      "source_count": 1
+    }
+  ]
+}

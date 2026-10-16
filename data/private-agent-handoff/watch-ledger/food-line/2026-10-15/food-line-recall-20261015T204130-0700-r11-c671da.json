@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T204130-0700-r11-c671da",
+  "scheduled_for": "2026-10-15T20:41:30-07:00",
+  "started_at": "2026-10-15T20:41:30-07:00",
+  "completed_at": "2026-10-15T20:43:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-15T19:50:51-07:00",
+    "end_at": "2026-10-15T20:43:01-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly check at approximately 19:50:51 PDT; this supplementary recall pass covers newly reported signals since then."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary targeted recall only; production nationwide collection remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_failure_count": 0,
+    "focus": [
+      "sole/only/last/full-service grocery store lost",
+      "emergency distribution canceled due to disaster/outage/damage",
+      "abrupt food pantry or food bank closure/access reduction",
+      "official immediate SNAP/WIC/food-assistance interruption"
+    ],
+    "disposition": "No new evidence-verified, in-window, nonduplicate, directly qualifying incident.",
+    "excluded_examples": [
+      {
+        "title": "Spencer, NY lone grocery store fire",
+        "date": "2026-09-14",
+        "reason": "historical/outside window",
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/"
+      },
+      {
+        "title": "Feeding the Gulf Coast hurricane relief schedule",
+        "date": "2026-10-14",
+        "reason": "distributions continuing; no confirmed canceled service",
+        "source_url": "https://www.wjhg.com/2026/10/14/feeding-gulf-coast-distributes-350000-pounds-food-after-hurricane-isaias/"
+      },
+      {
+        "title": "Food Town Deer Park closure report",
+        "date": null,
+        "reason": "planned closure in December, not sole community grocery access, not within watch scope",
+        "source_url": "https://www.chron.com/food/article/food-town-houston-texas-closing-22475831.php"
+      }
+    ],
+    "limitations": [
+      "Web search indexing includes historical and apparently future-dated results; those were excluded. Publication-time precision insufficient to prove an event occurred after 19:50 PDT absent timestamped source.",
+      "No unsupported food-distribution cancellation, pantry reduction, or SNAP/WIC outage has been elevated to a finding."
+    ],
+    "query_categories": [
+      "only grocery store fire/closure",
+      "sole grocery store closure/fire",
+      "pantry abrupt closure",
+      "distribution canceled by storm/flood/outage",
+      "official SNAP/EBT interruption",
+      "official WIC service suspension",
+      "pantry storm/outage closure",
+      "hurricane Isaias distribution cancellation",
+      "rural sole supermarket closure",
+      "EBT outage official notice",
+      "WIC clinic storm disruption",
+      "pantry suspended operations"
+    ]
+  }
+}

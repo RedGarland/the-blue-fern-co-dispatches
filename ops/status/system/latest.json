@@ -29,13 +29,13 @@
         "unaccounted_count": 0
       },
       "aggregate_degradation_required": false,
-      "aggregate_status": "DEGRADED",
+      "aggregate_status": "SUCCESS",
       "coverage_caveat_only": true,
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "ba26bb4a4fcd453426f370dfa0b50a1fc620742f",
       "debug_summary": {
         "aggregate_degradation_required": false,
-        "aggregate_status": "DEGRADED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
         "attention_task_count": 1,
@@ -52,7 +52,7 @@
         "coverage_caveat_only": true,
         "external_access_restriction_count": 4,
         "failed_source_count": 9,
-        "operator_assessment": "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES",
+        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
         "primary_layer": "EXTERNAL_DEPENDENCY",
@@ -66,8 +66,8 @@
         "private_review_pending_item_count": null,
         "private_review_unresolved_item_count": null,
         "publication_attempted": false,
-        "publication_status": null,
-        "receipt_completeness": "PARTIAL",
+        "publication_status": "safe_no_op",
+        "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "transient_source_failure_count": 5,
@@ -77,7 +77,7 @@
       "latest_runtime_proof_date": null,
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-16",
-      "receipt_completeness": "PARTIAL",
+      "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "source_failure_summary": {
@@ -179,70 +179,54 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "385d98a8fb4c0e9ed4517f85a5d5ad72c5c15f86",
+      "current_runner_head": "ba26bb4a4fcd453426f370dfa0b50a1fc620742f",
       "debug_summary": {
         "aggregate_degradation_required": null,
-        "aggregate_status": "FAILED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 3,
+        "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20261016T123003Z-source-watch.json",
-            "classification": "failed",
-            "exit_code": 10,
+            "artifact_id": "20261016T153600Z-source-watch.json",
+            "classification": "completed_with_exclusions",
+            "exit_code": 0,
             "failure_stage": "source_watch",
-            "status": "FAILED",
+            "status": "DEGRADED",
             "task_key": "food_line_source_watch"
-          },
-          {
-            "artifact_id": "20261016T131002Z-current-intake.json",
-            "classification": "upstream_blocked",
-            "exit_code": 0,
-            "failure_stage": null,
-            "status": "UPSTREAM_BLOCKED",
-            "task_key": "food_line_current_intake"
-          },
-          {
-            "artifact_id": "20261016T130002Z-status-resume.json",
-            "classification": "upstream_blocked",
-            "exit_code": 0,
-            "failure_stage": null,
-            "status": "UPSTREAM_BLOCKED",
-            "task_key": "food_line_source_watch_resume"
           }
         ],
         "coverage_caveat_only": null,
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
-        "primary_classification": "failed",
+        "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
+        "primary_classification": "completed_with_exclusions",
         "primary_failure_stage": "source_watch",
-        "primary_layer": "SOURCE",
+        "primary_layer": "EDITORIAL_HANDOFF",
         "primary_task_key": "food_line_source_watch",
-        "primary_task_status": "FAILED",
+        "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
         "private_review_max_age_hours": 63,
         "private_review_oldest_pending_date": "2026-10-14",
-        "private_review_pending_date_count": 1,
-        "private_review_pending_item_count": 4,
-        "private_review_unresolved_item_count": 4,
+        "private_review_pending_date_count": 2,
+        "private_review_pending_item_count": 7,
+        "private_review_unresolved_item_count": 7,
         "publication_attempted": false,
-        "publication_status": null,
-        "receipt_completeness": "PARTIAL",
-        "recovery_lifecycle": "INCIDENT_OPEN",
+        "publication_status": "skipped_not_release_ready",
+        "receipt_completeness": "COMPLETE",
+        "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "transient_source_failure_count": null,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
       },
       "human_action_required": true,
-      "latest_receipt_path": "logs/food-line/current-intake/2026-10-16/20261016T131002Z-current-intake.json",
+      "latest_receipt_path": "logs/food-line/current-intake/2026-10-16/20261016T153606Z-current-intake.json",
       "migration_status": "MIGRATED",
-      "next_human_action": "Review 4 Food Line items for 2026-10-14.",
+      "next_human_action": "Review 3 Food Line items for 2026-10-16.",
       "private_review_backlog": {
         "count_only_gap_count": 55,
         "dates": [
@@ -254,6 +238,15 @@
             "pending_item_count": 4,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
             "unresolved_item_count": 4
+          },
+          {
+            "age_hours": 15,
+            "count_only_gap_count": 0,
+            "date": "2026-10-16",
+            "dispositioned_item_count": 0,
+            "pending_item_count": 3,
+            "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-16.json",
+            "unresolved_item_count": 3
           }
         ],
         "disposition_diagnostics": {
@@ -419,18 +412,18 @@
         "dispositioned_item_count": 66,
         "max_age_hours": 63,
         "oldest_pending_date": "2026-10-14",
-        "pending_date_count": 1,
-        "pending_item_count": 4,
-        "unresolved_item_count": 4
+        "pending_date_count": 2,
+        "pending_item_count": 7,
+        "unresolved_item_count": 7
       },
-      "recovery_lifecycle": "INCIDENT_OPEN",
-      "review_date": "2026-10-14",
-      "review_item_count": 4,
-      "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
+      "recovery_lifecycle": "HEALTHY",
+      "review_date": "2026-10-16",
+      "review_item_count": 3,
+      "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-10-16.json",
       "review_material_paths": [
-        "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
-        "data/dispatches/food-line/review/proposed-editions/2026-10-14.md",
-        "data/dispatches/food-line/review/reports/2026-10-14/current-intake.json"
+        "data/dispatches/food-line/review/proposed-editions/2026-10-16.json",
+        "data/dispatches/food-line/review/proposed-editions/2026-10-16.md",
+        "data/dispatches/food-line/review/reports/2026-10-16/current-intake.json"
       ],
       "review_pending": true
     },
@@ -558,7 +551,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-16T15:15:05.546616Z",
+  "exported_at": "2026-10-16T15:36:13.662403Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

@@ -11,13 +11,13 @@
     "unaccounted_count": 0
   },
   "aggregate_degradation_required": false,
-  "aggregate_status": "DEGRADED",
+  "aggregate_status": "SUCCESS",
   "coverage_caveat_only": true,
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "ba26bb4a4fcd453426f370dfa0b50a1fc620742f",
   "debug_summary": {
     "aggregate_degradation_required": false,
-    "aggregate_status": "DEGRADED",
+    "aggregate_status": "SUCCESS",
     "all_current_failures_external": false,
     "all_current_failures_non_actionable": true,
     "attention_task_count": 1,
@@ -34,7 +34,7 @@
     "coverage_caveat_only": true,
     "external_access_restriction_count": 4,
     "failed_source_count": 9,
-    "operator_assessment": "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES",
+    "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
     "primary_classification": "partial_success",
     "primary_failure_stage": "care_line_collection",
     "primary_layer": "EXTERNAL_DEPENDENCY",
@@ -48,8 +48,8 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "PARTIAL",
+    "publication_status": "safe_no_op",
+    "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": 5,
@@ -238,6 +238,48 @@
       "started_at": "2026-10-16T15:00:14.152044Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_reviewed_event_queue"
+    },
+    {
+      "artifact_id": "20261016T153002Z-12124.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-16T15:30:05Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "20261016T153002Z-12124",
+      "scheduled_for": "2026-10-16",
+      "started_at": "2026-10-16T15:30:03Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261016T152825Z-18dc6baf.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-16T15:36:09Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261016T152825Z-18dc6baf",
+      "scheduled_for": "2026-10-16",
+      "started_at": "2026-10-16T15:36:08Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
     }
   ],
   "expected_instances": [
@@ -272,8 +314,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-16T15:15:05.546616Z",
-  "last_receipt_at": "2026-10-16T15:00:14.211214Z",
+  "last_exported_at": "2026-10-16T15:36:13.662403Z",
+  "last_receipt_at": "2026-10-16T15:36:09.797380Z",
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -281,11 +323,11 @@
   "observed_date": "2026-10-16",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "safe_no_op"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "PARTIAL",
+  "publication_status": "safe_no_op",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
   "runner_source_head": "ba26bb4a4fcd453426f370dfa0b50a1fc620742f",
   "scheduled_health_authoritative": true,
@@ -544,6 +586,48 @@
       "started_at": "2026-10-16T15:00:14.152044Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_reviewed_event_queue"
+    },
+    {
+      "artifact_id": "20261016T153002Z-12124.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-16T15:30:05Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "20261016T153002Z-12124",
+      "scheduled_for": "2026-10-16",
+      "started_at": "2026-10-16T15:30:03Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261016T152825Z-18dc6baf.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-16T15:36:09Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261016T152825Z-18dc6baf",
+      "scheduled_for": "2026-10-16",
+      "started_at": "2026-10-16T15:36:08Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
     }
   ]
 }

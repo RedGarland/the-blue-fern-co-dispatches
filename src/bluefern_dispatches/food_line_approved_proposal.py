@@ -145,6 +145,10 @@ def _validate_item(proposal_item: dict[str, Any], queue_item: dict[str, Any]) ->
     for proposal_key, queue_key in exact_pairs:
         if str(proposal_item.get(proposal_key) or "").strip() != str(queue_item.get(queue_key) or "").strip():
             raise ValueError(f"approved proposal {proposal_key} does not match its review-queue record")
+    proposal_passage = str(proposal_item.get("exact_supporting_passage") or "").strip()
+    queue_passage = str(queue_item.get("exact_supporting_passage") or "").strip()
+    if proposal_passage and proposal_passage != queue_passage:
+        raise ValueError("approved proposal exact supporting passage must match its review-queue record")
 
 
 def _source_row(proposal_item: dict[str, Any], queue_item: dict[str, Any]) -> dict[str, Any]:
@@ -153,7 +157,7 @@ def _source_row(proposal_item: dict[str, Any], queue_item: dict[str, Any]) -> di
     public_id = "food_line_source_" + hashlib.sha256(_url_identity(canonical_source_url).encode("utf-8")).hexdigest()[:16]
     summary = str(proposal_item.get("summary") or "").strip()
     evidence = str(queue_item.get("exact_supporting_passage") or "").strip()
-    location = str(queue_item.get("location_scope") or "").strip()
+    location = str(proposal_item.get("location_name") or queue_item.get("location_scope") or "").strip()
     return {
         "source_record_id": public_id,
         "title": str(proposal_item.get("headline") or "").strip(),
@@ -171,6 +175,8 @@ def _source_row(proposal_item: dict[str, Any], queue_item: dict[str, Any]) -> di
         "evidence_text": evidence,
         "exact_supporting_passage": evidence,
         "evidence_text_basis": "operator_reviewed_exact_passage",
+        "claim_supported": str(proposal_item.get("claim_supported") or summary).strip(),
+        "review_notes": str(proposal_item.get("review_notes") or "").strip(),
         "evidence_level": str(queue_item.get("evidence_level") or "direct reporting").strip(),
         "confidence": str(queue_item.get("confidence") or "high").strip(),
         "pressure_signal": True,
@@ -303,13 +309,15 @@ def build_release_manifest(
     review_snapshot_path: str | None = None,
     review_snapshot_sha256: str | None = None,
     provenance_role: str = "generated_output",
+    include_rss: bool = False,
 ) -> dict[str, Any]:
     root = root.resolve()
     pages_root = pages_root.resolve()
     source_paths = list(source_paths)
-    rss_path = root / "output" / "site" / "food-line" / "rss.xml"
-    if rss_path.exists() and rss_path not in source_paths:
-        source_paths.append(rss_path)
+    if include_rss:
+        rss_path = root / "output" / "site" / "food-line" / "rss.xml"
+        if rss_path.exists() and rss_path not in source_paths:
+            source_paths.append(rss_path)
     entries: list[dict[str, Any]] = []
     for source_path in sorted({path.resolve() for path in source_paths}, key=lambda path: path.as_posix()):
         source_rel = source_path.relative_to(root).as_posix()

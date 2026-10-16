@@ -513,7 +513,12 @@ def _replace_release_fields(card_html: str, release: PublicRelease, *, include_s
     )
     if date_count != 1:
         raise ValueError(f"Latest date field not found for {release.slug}")
-    updated, button_count = re.subn(r'(<a class="button" href=")[^"]+(">Read latest</a>)', rf'\g<1>{html.escape(release.relative_url)}\g<2>', updated, count=1)
+    updated, button_count = re.subn(
+        r'(<a class="button" href=")[^"]+(">Read (?:latest|corrected edition|the latest briefing)</a>)',
+        rf'\g<1>{html.escape(release.relative_url)}\g<2>',
+        updated,
+        count=1,
+    )
     if button_count != 1:
         raise ValueError(f"Read latest link not found for {release.slug}")
     if include_source_count:

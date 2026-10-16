@@ -359,7 +359,7 @@ def test_invalid_date_argument_fails(capsys) -> None:
     assert "Invalid date '2026-13-40'" in captured.err
 
 
-def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
+def _release_fixture(tmp_path: Path, *, include_rss: bool = True) -> tuple[Path, Path, Path]:
     source = tmp_path / "source"
     pages = tmp_path / "pages"
     edition = source / "output/site/food-line/editions/2026-06-19"
@@ -377,10 +377,88 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         edition_date="2026-06-19",
         source_commit="test",
         source_paths=[site / "index.html", site / "archive.html", *sorted(edition.iterdir())],
+        include_rss=include_rss,
     )
     manifest = source / "release.json"
     write_json_deterministic(manifest, payload)
     return source, pages, manifest
+
+
+def test_strict_current_release_manifest_can_omit_rss(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path, include_rss=False)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    monkeypatch.setattr(module, "_git_commit_exists", lambda *_args: True)
+    monkeypatch.setattr(module, "_git_file_bytes", lambda _root, _commit, source_rel: (source / source_rel).read_bytes())
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+    )
+    assert errors == []
+
+
+def test_strict_generated_output_rejects_uncommitted_source_bytes(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    generated = "output/site/food-line/index.html"
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [generated])
+    monkeypatch.setattr(module, "_git_commit_exists", lambda *_args: True)
+    monkeypatch.setattr(module, "_git_file_bytes", lambda _root, _commit, source_rel: (source / source_rel).read_bytes())
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+    )
+    assert any("generated output must be committed" in error for error in errors)
+
+
+def test_strict_generated_output_rejects_source_commit_hash_mismatch(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    monkeypatch.setattr(module, "_git_commit_exists", lambda *_args: True)
+    monkeypatch.setattr(module, "_git_file_bytes", lambda *_args: b"source-commit-bytes")
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+    )
+    assert any("source-input hash mismatch" in error for error in errors)
+
+
+def test_strict_retrospective_manifest_must_bind_rss(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path, include_rss=False)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    for entry in payload["entries"]:
+        entry["provenance_role"] = "approved_retrospective_generated_output"
+        entry["source_sha256"] = hashlib.sha256((source / entry["source_path"]).read_bytes()).hexdigest()
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_validate_retrospective_release_authority", lambda **_kwargs: [])
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+    )
+    assert any("manifest-bound RSS artifact" in error for error in errors)
 
 
 def test_strict_release_manifest_validates_exact_delta_and_ignores_unrelated_dirt(tmp_path: Path, monkeypatch) -> None:

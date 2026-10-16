@@ -1933,23 +1933,31 @@ def _edition_history_root(root: Path) -> Path:
     return root / "output" / "site" / DISPATCH_SLUG / "editions"
 
 
-def _previous_edition_date(root: Path, edition_date: str) -> str | None:
-    editions_root = _edition_history_root(root)
-    if not editions_root.exists():
-        return None
+def _previous_edition_date(root: Path, edition_date: str, pages_root: Path | None = None) -> str | None:
+    editions_roots = [_edition_history_root(root)]
+    if pages_root is not None:
+        editions_roots.insert(0, pages_root / DISPATCH_SLUG / "editions")
     prior_dates = sorted(
-        path.name
-        for path in editions_root.iterdir()
-        if path.is_dir() and DATE_RE.match(path.name) and path.name < edition_date
+        {
+            path.name
+            for editions_root in editions_roots
+            if editions_root.exists()
+            for path in editions_root.iterdir()
+            if path.is_dir() and DATE_RE.match(path.name) and path.name < edition_date
+        }
     )
     return prior_dates[-1] if prior_dates else None
 
 
-def _load_previous_edition_context(root: Path, edition_date: str) -> dict[str, Any]:
-    previous_date = _previous_edition_date(root, edition_date)
+def _load_previous_edition_context(root: Path, edition_date: str, pages_root: Path | None = None) -> dict[str, Any]:
+    previous_date = _previous_edition_date(root, edition_date, pages_root)
     if not previous_date:
         return {}
     edition_dir = _edition_history_root(root) / previous_date
+    if pages_root is not None:
+        pages_edition_dir = pages_root / DISPATCH_SLUG / "editions" / previous_date
+        if pages_edition_dir.is_dir():
+            edition_dir = pages_edition_dir
     manifest_path = edition_dir / "edition_manifest.json"
     sources_path = edition_dir / "sources_manifest.json"
     manifest = _read_json(manifest_path) if manifest_path.exists() else {}
@@ -4032,7 +4040,26 @@ def _food_line_landing_story_rows(root: Path, date: str) -> list[dict[str, str]]
     return rows
 
 
-def _food_line_landing_display_title(root: Path, date: str) -> str:
+def _food_line_landing_display_title(root: Path, date: str, *, pages_root: Path | None = None) -> str:
+    if pages_root is not None:
+        bound_entry = _bound_pages_archive_entries(pages_root).get(date)
+        if bound_entry:
+            bound_title = _food_line_clean_landing_title(bound_entry.get("title"), date)
+            if bound_title:
+                return bound_title
+        bound_manifest, bound_lead = _food_line_archive_manifest_and_lead(root, pages_root, date)
+        bound_candidates = [
+            bound_manifest.get("public_title"),
+            bound_manifest.get("public_archive_title"),
+            bound_manifest.get("edition_title"),
+            bound_manifest.get("title"),
+            bound_manifest.get("headline"),
+            bound_lead.get("title"),
+        ]
+        for candidate in bound_candidates:
+            title = _food_line_clean_landing_title(candidate, date)
+            if title:
+                return title
     manifest = _food_line_public_edition_manifest(root, date) or {}
     if str(manifest.get("edition_mode") or manifest.get("render_mode") or "").strip() == "no_current_update":
         return _food_line_no_current_update_public_label()
@@ -4058,7 +4085,19 @@ def _food_line_landing_display_title(root: Path, date: str) -> str:
     return "Food Line briefing"
 
 
-def _food_line_landing_story_count(root: Path, date: str) -> int:
+def _food_line_landing_story_count(root: Path, date: str, *, pages_root: Path | None = None) -> int | None:
+    if pages_root is not None and date in _bound_pages_archive_entries(pages_root):
+        bound_manifest, _ = _food_line_archive_manifest_and_lead(root, pages_root, date)
+        if str(bound_manifest.get("edition_mode") or bound_manifest.get("render_mode") or "").strip() == "no_current_update":
+            return None
+        for key in ("story_count", "public_signal_count", "source_count"):
+            try:
+                count = int(bound_manifest.get(key) or 0)
+            except (TypeError, ValueError):
+                count = 0
+            if count > 0:
+                return count
+        return None
     manifest = _food_line_public_edition_manifest(root, date) or {}
     if str(manifest.get("edition_mode") or manifest.get("render_mode") or "").strip() == "no_current_update":
         return 0
@@ -7436,7 +7475,7 @@ def _update_index_archive(
     def public_label(public_date: str) -> str:
         return pages_labels.get(public_date) or _food_line_public_edition_label(root, public_date)
     latest_public_date = public_dates[0] if public_dates else ""
-    latest_public_title = _food_line_landing_display_title(root, latest_public_date) if latest_public_date else ""
+    latest_public_title = _food_line_landing_display_title(root, latest_public_date, pages_root=retrospective_pages_root) if latest_public_date else ""
     latest_recovery_note = _food_line_landing_recovery_note(root, latest_public_date) if latest_public_date else ""
     latest_story_rows = _food_line_landing_story_rows(root, latest_public_date) if latest_public_date else []
     latest_story_rows = [
@@ -7452,13 +7491,16 @@ def _update_index_archive(
     recent_public_dates = public_dates[1 : min(len(public_dates), 9)] if latest_public_date else public_dates[:8]
     recent_entries: list[str] = []
     for public_date in recent_public_dates:
-        recent_title = _food_line_landing_display_title(root, public_date)
-        story_count = _food_line_landing_story_count(root, public_date)
+        recent_title = _food_line_landing_display_title(root, public_date, pages_root=retrospective_pages_root)
+        story_count = _food_line_landing_story_count(root, public_date, pages_root=retrospective_pages_root)
+        count_block = ""
+        if story_count is not None:
+            count_block = f'<div class="food-line-edition-meta">{html.escape(str(story_count))} source-backed {"development" if story_count == 1 else "developments"}</div>'
         recent_entries.append(
             '<li>'
             f'<div class="food-line-edition-meta">{html.escape(public_date)}</div>'
             f'<a class="food-line-recent-title" href="editions/{html.escape(public_date)}/">{html.escape(recent_title)}</a>'
-            f'<div class="food-line-edition-meta">{html.escape(str(story_count))} source-backed {"development" if story_count == 1 else "developments"}</div>'
+            f'{count_block}'
             '</li>'
         )
     recent_entries_html = "".join(recent_entries)
@@ -7608,7 +7650,7 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
     sources = [dict(row) for row in bundle.source_rows]
     lead_row = sources[0]
     continuing_rows: list[dict[str, Any]] = []
-    previous_context = _load_previous_edition_context(root, date)
+    previous_context = _load_previous_edition_context(root, date, PAGES_REPO)
     adequacy = source_adequacy(sources)
     role_counts = _role_counts(sources)
     scope_counts = _scope_counts(sources)
@@ -7662,6 +7704,14 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
                 "source_published_at": proposal_item["source_published_at"],
             }
         )
+    stale_source_ids = [
+        str(row.get("source_record_id") or "").strip()
+        for row in sources
+        if str(row.get("source_freshness_status") or row.get("freshness_status") or "").strip()
+        == "stale_outside_daily_window"
+    ]
+    stale_public_story_count = len(stale_source_ids)
+    source_freshness_status = "passed" if not stale_public_story_count else "passed_with_stale_exclusions"
     manifest = {
         "dispatch_slug": DISPATCH_SLUG,
         "dispatch_name": DISPATCH_NAME,
@@ -7684,6 +7734,11 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         "source_table_path": f"/food-line/editions/{date}/source_table.html",
         "edition_mode": "current_update",
         "validation_status": "ok",
+        "source_freshness_status": source_freshness_status,
+        "stale_public_story_count": stale_public_story_count,
+        "excluded_stale_source_count": stale_public_story_count,
+        "freshness_window_days": FOOD_LINE_FRESHNESS_WINDOW_DAYS,
+        "stale_source_ids": stale_source_ids,
         "approved_proposal_path": bundle.proposal_path.relative_to(root).as_posix(),
         "approved_proposal_sha256": bundle.proposal_sha256,
         "review_queue_path": bundle.queue_path.relative_to(root).as_posix(),
@@ -7713,10 +7768,19 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         _write_json(edition_dir / "sources_manifest.json", sources)
         _write_json(edition_dir / "curation_manifest.json", {"stories": sources})
         _write_json(edition_dir / "edition_manifest.json", manifest)
-    _update_index_archive(root, date, mission, max_edition_date=date)
+    _update_index_archive(
+        root,
+        date,
+        mission,
+        max_edition_date=date,
+        retrospective_pages_root=PAGES_REPO,
+    )
 
     site_root = root / "output" / "site" / DISPATCH_SLUG
-    release_sources = [site_root / "index.html", site_root / "archive.html", site_root / "rss.xml"]
+    # The ordinary current-edition sync is intentionally scoped to the index,
+    # archive, and selected edition assets. RSS remains a separately authorized
+    # retrospective/supersession surface and must not be widened implicitly.
+    release_sources = [site_root / "index.html", site_root / "archive.html"]
     release_sources.extend(
         edition_dirs[0] / filename
         for filename in (
@@ -7728,12 +7792,16 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
             "edition_manifest.json",
         )
     )
+    social_card = edition_dirs[0] / "social-card.png"
+    if social_card.exists():
+        release_sources.append(social_card)
     release_manifest = build_release_manifest(
         root=root,
         pages_root=PAGES_REPO,
         edition_date=date,
         source_commit=source_commit,
         source_paths=release_sources,
+        include_rss=False,
     )
     release_manifest_path = root / "data" / "dispatches" / DISPATCH_SLUG / "review" / "releases" / f"{date}.json"
     write_json_deterministic(release_manifest_path, release_manifest)
@@ -7801,7 +7869,7 @@ def _run_food_line_retrospective(
     sources = [dict(row) for row in bundle.source_rows]
     lead_row = sources[0]
     continuing_rows = sources[1:]
-    previous_context = _load_previous_edition_context(root, date)
+    previous_context = _load_previous_edition_context(root, date, pages_root)
     adequacy = source_adequacy(sources)
     role_counts = _role_counts(sources)
     scope_counts = _scope_counts(sources)
@@ -7953,6 +8021,7 @@ def _run_food_line_retrospective(
         source_commit=source_commit,
         source_paths=release_sources,
         provenance_role="approved_retrospective_generated_output",
+        include_rss=True,
     )
     release_manifest.update(
         {
@@ -8040,6 +8109,7 @@ def refresh_food_line_retrospective_release_manifest(
         source_commit=bundle.source_head,
         source_paths=source_paths,
         provenance_role="approved_retrospective_generated_output",
+        include_rss=True,
     )
     manifest.update(
         {

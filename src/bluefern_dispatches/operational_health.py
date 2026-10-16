@@ -364,6 +364,7 @@ def map_gaza_status(operator_status: str, *, ok: bool, exit_code: int | None = N
         return OperationalStatus.SAFE_NO_OP
     if status in {
         "PUBLISHED",
+        "PUBLISHED_NOT_POSTED",
         "PUBLISHED_AND_POSTED",
         "ALREADY_POSTED",
         "LIVE_OK",

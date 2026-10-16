@@ -601,7 +601,7 @@ def test_post_only_does_not_publish_push_or_regenerate(isolated: Path, monkeypat
     assert all("push origin" not in command for command in result["commands_run"])
 
 
-@pytest.mark.parametrize("operator_status", ["ALREADY_POSTED", "PUBLISHED_AND_POSTED"])
+@pytest.mark.parametrize("operator_status", ["ALREADY_POSTED", "PUBLISHED_NOT_POSTED", "PUBLISHED_AND_POSTED"])
 def test_email_failure_after_successful_publish_is_nonfatal(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], operator_status: str) -> None:
     args = operator.parse_args(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
     emitted: list[dict] = []
@@ -719,7 +719,7 @@ def test_operational_receipt_includes_final_email_status(isolated: Path, monkeyp
     monkeypatch.setattr(operator, "write_operational_receipt", capture_receipt)
     result = {
         "ok": True,
-        "operator_status": "PUBLISHED",
+        "operator_status": "PUBLISHED_NOT_POSTED",
         "date": args.date,
         "source_count": 4,
         "publisher_count": 2,

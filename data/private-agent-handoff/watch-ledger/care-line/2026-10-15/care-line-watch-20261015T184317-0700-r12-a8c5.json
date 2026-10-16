@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T184317-0700-r12-a8c5",
+  "scheduled_for": "2026-10-15T18:45:22-07:00",
+  "started_at": "2026-10-15T18:43:17-07:00",
+  "completed_at": "2026-10-15T18:45:20-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "from": "2026-10-15T17:46:02-07:00",
+    "to": "2026-10-15T18:45:20-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Care Line recall watch only; the production national collector remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; newest listed notice dated 2026-10-09 (Tender Home Health, CA); no newer CMS notice observed.",
+    "Exactly 12 additional targeted web searches completed across closure/suspension, hospital/ED, maternity, behavioral-health, dialysis/oncology, rural primary care, ambulance/air medical, restoration, hurricane-related service disruptions, and U.S. territories.",
+    "No newly announced or newly effective qualifying access change confirmed since the 2026-10-15T17:46:02-07:00 prior completed watch.",
+    "Previously identified Seeley Lake MT primary-care closure (effective 2026-10-15) excluded as duplicate; Roseland IL maternity closure expected later in October was reported earlier, not newly changed.",
+    "Search results surfaced historical closures, analyses, proposals, and unrelated services, all excluded.",
+    "No approval, publication, schedule change, or task disable performed."
+  ]
+}

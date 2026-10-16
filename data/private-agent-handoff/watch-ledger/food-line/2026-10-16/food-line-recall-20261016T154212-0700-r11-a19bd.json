@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T154212-0700-r11-a19bd",
+  "scheduled_for": "2026-10-16T15:45:54-07:00",
+  "started_at": "2026-10-16T15:42:12-07:00",
+  "completed_at": "2026-10-16T15:42:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T14:50:37-07:00",
+    "end": "2026-10-16T15:42:57-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "discovery_status": "SUCCESS",
+    "summary": "No new verified qualifying U.S. food-access disruptions in the four priority miss classes. Older stories, unchanged outages and unverified food-service impacts excluded.",
+    "previous_heartbeat": "food-line-recall-20261016T144946-0700-r11.json",
+    "production_collector_authoritative": true,
+    "public_effects": false
+  }
+}

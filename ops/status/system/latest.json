@@ -38,10 +38,18 @@
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 1,
+        "attention_task_count": 2,
         "attention_tasks": [
           {
             "artifact_id": "20261016T130002Z-32328.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20261016T190003Z-3320.json",
             "classification": "partial_success",
             "exit_code": 0,
             "failure_stage": "care_line_collection",
@@ -200,7 +208,7 @@
         "primary_task_status": null,
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 66,
+        "private_review_max_age_hours": 67,
         "private_review_oldest_pending_date": "2026-10-14",
         "private_review_pending_date_count": 1,
         "private_review_pending_item_count": 4,
@@ -222,7 +230,7 @@
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 66,
+            "age_hours": 67,
             "count_only_gap_count": 0,
             "date": "2026-10-14",
             "dispositioned_item_count": 0,
@@ -392,7 +400,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 66,
+        "max_age_hours": 67,
         "oldest_pending_date": "2026-10-14",
         "pending_date_count": 1,
         "pending_item_count": 4,
@@ -533,7 +541,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-16T18:45:26.827026Z",
+  "exported_at": "2026-10-16T19:15:05.143094Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza"

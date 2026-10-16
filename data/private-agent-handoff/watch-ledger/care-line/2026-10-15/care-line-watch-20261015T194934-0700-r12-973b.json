@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T194934-0700-r12-973b",
+  "scheduled_for": "2026-10-15T19:45:22-07:00",
+  "started_at": "2026-10-15T19:49:34-07:00",
+  "completed_at": "2026-10-15T19:50:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T18:45:22-07:00",
+    "end": "2026-10-15T19:50:57-07:00",
+    "basis": "Previous scheduled hourly check; earlier 2026-10-15 reports treated as background or duplicate, not new findings."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; authoritative national production collector unchanged.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; newest listed notice 2026-10-09 Tender Home Health, CA, no new CMS actions in window.",
+    "12 additional targeted web searches completed across hospital/ED, maternity, behavioral health, dialysis/oncology, ambulance/air-medical, rural/primary care, reopenings. No materially new in-window qualifying development confirmed.",
+    "New Orleans Planned Parenthood reopening was announced 2026-10-14 and reported on 2026-10-15 before observation window; exclude out of window. Seeley Lake MT clinic closure, Maine ambulance shutdown previously identified; exclude duplicates.",
+    "Proposals and announced facilities without current service effects excluded. Search results do not guarantee comprehensive national or territory coverage."
+  ]
+}

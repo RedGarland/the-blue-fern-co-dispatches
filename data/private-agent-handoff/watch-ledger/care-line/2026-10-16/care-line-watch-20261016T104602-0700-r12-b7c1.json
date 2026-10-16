@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261016T104602-0700-r12-b7c1",
+  "scheduled_for": "2026-10-16T10:45:22-07:00",
+  "started_at": "2026-10-16T10:46:02-07:00",
+  "completed_at": "2026-10-16T10:47:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T09:50:00-07:00",
+    "end": "2026-10-16T10:47:29-07:00",
+    "basis": "Bounded recall search following prior hourly observation; included recently indexed reporting, retaining only genuinely new qualifying access changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_listed_date": "2026-10-09",
+      "latest_listed_name": "Tender Home Health",
+      "new_window_notices": 0
+    },
+    "additional_targeted_searches": 12,
+    "scope": "Hospital/ED, maternity, rural/emergency, behavioral, dialysis, oncology, primary care, ambulance/air medical, CMS termination/rescission/CLIA, U.S. territories and material service restorations.",
+    "exclusions": "No newly verified qualifying developments; previously identified Maine EMS closure and older maternity/clinic closures excluded as prior reports. Other hits were historical, policy proposals, business-only, non-U.S., or not effective access changes.",
+    "limitations": "Search indexing and source timestamps do not establish comprehensive minute-level coverage. Supplementary recall only; production national collection remains authoritative.",
+    "side_effects": "No editorial approval, publication, schedule changes or task disabling."
+  }
+}

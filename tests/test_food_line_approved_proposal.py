@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from copy import deepcopy
 from pathlib import Path
 
@@ -277,6 +278,92 @@ def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     assert not (tmp_path / "output/site/food-line/podcast.xml").exists()
     assert not (tmp_path / "data/bluesky").exists()
     assert not (tmp_path / "schedules").exists()
+
+
+def test_approved_generation_preserves_full_pages_history_for_sparse_source(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target_date = "2026-10-15"
+    proposal_path, proposal, queue = _fixture(tmp_path)
+    proposal["edition_date"] = target_date
+    queue["edition_date"] = target_date
+    queue["items"][0]["freshness_check"]["edition_date"] = target_date
+    _rewrite(tmp_path, proposal_path, proposal, queue)
+    pages = tmp_path / "pages"
+    history_dates = [
+        "2026-06-06", "2026-06-07", "2026-06-09", "2026-06-13", "2026-06-14",
+        "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20",
+        "2026-06-21", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25",
+        "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30",
+        "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05",
+        "2026-07-27", "2026-07-28", "2026-07-31", "2026-08-05", "2026-08-09",
+        "2026-08-14", "2026-08-15", "2026-08-16", "2026-08-30", "2026-08-31",
+        "2026-09-12", "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02",
+        "2026-10-03", "2026-10-04", "2026-10-07", "2026-10-09", "2026-10-11",
+        "2026-10-12", "2026-10-13",
+    ]
+    pages_editions = pages / "food-line" / "editions"
+    archive_items = []
+    for history_date in history_dates:
+        edition = pages_editions / history_date
+        edition.mkdir(parents=True, exist_ok=True)
+        source_id = f"historical-{history_date}"
+        summary = f"Preserved public Food Line history for {history_date}."
+        _write_json(
+            edition / "edition_manifest.json",
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": history_date,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "source_freshness_status": "current",
+                "freshness_window_days": 3,
+                "qualified_primary_count": 1,
+                "public_signal_count": 1,
+                "public_archive_title": f"Preserved Food Line history {history_date}",
+                "public_archive_subtitle": summary,
+                "lead_source_record_id": source_id,
+            },
+        )
+        _write_json(
+            edition / "sources_manifest.json",
+            [{
+                "source_record_id": source_id,
+                "pressure_signal": True,
+                "title": f"Historical source {history_date}",
+                "publisher": "Historical source",
+                "url": f"https://example.com/food/{history_date}",
+                "summary_or_snippet": summary,
+            }],
+        )
+        _write_json(edition / "curation_manifest.json", {"stories": []})
+        (edition / "index.html").write_text(f"<html><body><h1>{history_date}</h1></body></html>", encoding="utf-8")
+        archive_items.append(
+            f'<li><a href="editions/{history_date}/">{history_date} - Preserved Food Line history {history_date}</a>'
+            f"<br><small>{summary}</small></li>"
+        )
+    archive = pages / "food-line" / "archive.html"
+    archive.parent.mkdir(parents=True, exist_ok=True)
+    archive.write_text("<ul>" + "".join(reversed(archive_items)) + "</ul>", encoding="utf-8")
+
+    monkeypatch.setattr(runner, "PAGES_REPO", pages)
+    result = runner.run_food_line_dispatch(
+        tmp_path,
+        target_date,
+        generate_audio=False,
+        approved_proposal_path=proposal_path,
+    )
+
+    assert result["ok"] is True
+    output_archive = (tmp_path / "output/site/food-line/archive.html").read_text(encoding="utf-8")
+    output_dates = sorted(set(re.findall(r"editions/(\d{4}-\d{2}-\d{2})/", output_archive)))
+    assert output_dates == sorted(set([*history_dates, target_date]))
+    current_manifest = json.loads(
+        (tmp_path / "output/site/food-line/editions" / target_date / "edition_manifest.json").read_text(encoding="utf-8")
+    )
+    assert current_manifest["previous_edition_date"] == "2026-10-13"
+    homepage = (tmp_path / "output/site/food-line/index.html").read_text(encoding="utf-8")
+    assert 'href="editions/2026-10-13/"' in homepage
 
 
 def test_current_release_manifest_includes_existing_food_line_social_card(

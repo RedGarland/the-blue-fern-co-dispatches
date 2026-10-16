@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261016T044629-0700-r11-7e4b",
+  "scheduled_for": "2026-10-16T04:45:22-07:00",
+  "started_at": "2026-10-16T04:46:29-07:00",
+  "completed_at": "2026-10-16T04:48:42-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T01:42:09-07:00",
+    "end": "2026-10-16T04:48:42-07:00",
+    "basis": "Last confirmed prior watch in available context; earlier intervening heartbeat not verified."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall check only; authoritative national Care Line production collection unchanged.",
+    "CMS Public Notices checked first on 2026-10-16; latest table entry was 2026-10-09 Tender Home Health (California), not new in this window.",
+    "Exactly 12 additional targeted web searches completed; categories covered hospital/ED/maternity/behavioral health/dialysis/oncology/primary care; rural service; ground and air ambulance; restorations; government notices; U.S. territories; hurricane-related possible service interruptions.",
+    "No new qualifying actionable U.S. or territory service closure, suspension, official CMS access-risk notice, or confirmed reopening found in this bounded check.",
+    "Excluded older closures, proposals without concrete access effect, non-U.S. coverage, policy commentary, and prior Seeley Lake Montana primary-care closure.",
+    "Search result freshness was mixed; numerous stale results returned despite recency filters, so absence of findings is not evidence of complete national coverage.",
+    "No approval, publishing, scheduling or other production changes."
+  ]
+}

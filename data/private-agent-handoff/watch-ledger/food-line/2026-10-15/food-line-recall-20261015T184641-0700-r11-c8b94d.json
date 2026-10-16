@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T184641-0700-r11-c8b94d",
+  "scheduled_for": "2026-10-15T18:45:54-07:00",
+  "started_at": "2026-10-15T18:46:41-07:00",
+  "completed_at": "2026-10-15T18:47:34-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-15T17:47:43-07:00",
+    "end_at": "2026-10-15T18:47:34-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "collection_role": "supplementary recall; production authoritative",
+    "assessment": "No verified qualifying new disruptions.",
+    "publication_or_approval_changes": false,
+    "schedule_changes": false
+  }
+}

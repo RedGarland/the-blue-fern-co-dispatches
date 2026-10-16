@@ -652,12 +652,13 @@ def _maybe_send_email(result: dict[str, Any], smtp_debug: bool) -> str:
 
 
 def _publication_side_effect_verified(result: dict[str, Any]) -> bool:
-    """Return true only after the Pages push boundary has succeeded.
+    """Return true only after a verified publication boundary has succeeded.
 
     A successful local build or manual-source check is still pre-publication,
     even though ``run_operator`` returns ``ok: true`` for those states.
-    ``pages_push_ok`` is the durable publication boundary recorded by the
-    operator; receipt and live-verification details are downstream of it.
+    ``pages_push_ok`` is the durable publication boundary for a normal run.
+    The post-only path has no new Pages push, so it instead requires
+    ``LIVE_OK`` plus a successful or deduplicated post-publication result.
     """
 
     if result.get("pages_push_ok") is True:

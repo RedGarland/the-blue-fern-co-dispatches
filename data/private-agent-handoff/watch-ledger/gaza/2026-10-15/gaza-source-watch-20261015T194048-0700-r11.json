@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261015T194048-0700-r11",
+  "scheduled_for": "2026-10-15T19:44:51-07:00",
+  "started_at": "2026-10-15T19:40:48-07:00",
+  "completed_at": "2026-10-15T19:42:18-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T18:49:36.743-07:00",
+    "end": "2026-10-15T19:42:18-07:00",
+    "prior_heartbeat_run_id": "gaza-source-watch-20261015T184451-0700-r11"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_searches": 12,
+    "source_first_sequence": [
+      "OCHA OPT site/index",
+      "WHO official global and EMRO health reporting"
+    ],
+    "primary_sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "observation": "Homepage most recent item 2026-10-09; no newer qualifying publication found"
+      },
+      {
+        "name": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "observation": "Accessible; no time-bounded new Gaza health event found"
+      },
+      {
+        "name": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/opt-news/",
+        "observation": "Regional reporting endpoint inaccessible to web retrieval"
+      }
+    ],
+    "secondary_coverage": "12 bounded targeted searches covering Reuters, AP, UN, UNICEF, WFP, ICRC, MSF, UNRWA, healthcare, casualties, medical evacuations, Rafah and other crossings, ceasefire/negotiation changes, water/fuel access, and civilians affected by operations.",
+    "exclusions": "AP/Reuters/FT October 15 commercial-import restriction material was identified before this search window; October 15 casualty reports lacked proof of a distinct event in the window. Earlier historical or unverified results excluded.",
+    "limitations": "WHO EMRO direct regional reporting inaccessible; search engine freshness/indexing lag; no claim that Gaza conditions were unchanged.",
+    "research_status": "DEGRADED",
+    "production_boundary": "Supplementary recall only. No production/publication, approval, schedule or task changes."
+  }
+}

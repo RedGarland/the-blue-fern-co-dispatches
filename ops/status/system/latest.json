@@ -32,7 +32,7 @@
       "aggregate_status": "SUCCESS",
       "coverage_caveat_only": true,
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "ba26bb4a4fcd453426f370dfa0b50a1fc620742f",
+      "current_runner_head": "dfcdcbb940e10ffb4c28bc23c0cfc642a41a312a",
       "debug_summary": {
         "aggregate_degradation_required": false,
         "aggregate_status": "SUCCESS",
@@ -74,7 +74,7 @@
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": 0
       },
-      "latest_runtime_proof_date": null,
+      "latest_runtime_proof_date": "2026-10-16T15:00:14.207075Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-16",
       "receipt_completeness": "COMPLETE",
@@ -181,7 +181,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "ba26bb4a4fcd453426f370dfa0b50a1fc620742f",
+      "current_runner_head": "dfcdcbb940e10ffb4c28bc23c0cfc642a41a312a",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "SUCCESS",
@@ -200,7 +200,7 @@
         "primary_task_status": null,
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 64,
+        "private_review_max_age_hours": 65,
         "private_review_oldest_pending_date": "2026-10-14",
         "private_review_pending_date_count": 1,
         "private_review_pending_item_count": 4,
@@ -215,14 +215,14 @@
         "unclassified_source_failure_count": null
       },
       "human_action_required": true,
-      "latest_receipt_path": "logs/food-line/current-intake/2026-10-16/20261016T163527Z-current-intake.json",
+      "latest_receipt_path": "logs/food-line/current-intake/2026-10-16/20261016T171446Z-current-intake.json",
       "migration_status": "MIGRATED",
       "next_human_action": "Review 4 Food Line items for 2026-10-14.",
       "private_review_backlog": {
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 64,
+            "age_hours": 65,
             "count_only_gap_count": 0,
             "date": "2026-10-14",
             "dispositioned_item_count": 0,
@@ -392,7 +392,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 64,
+        "max_age_hours": 65,
         "oldest_pending_date": "2026-10-14",
         "pending_date_count": 1,
         "pending_item_count": 4,
@@ -421,12 +421,12 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "ba26bb4a4fcd453426f370dfa0b50a1fc620742f",
+      "current_runner_head": "dfcdcbb940e10ffb4c28bc23c0cfc642a41a312a",
       "debug_summary": {
         "aggregate_degradation_required": null,
-        "aggregate_status": "FAILED",
+        "aggregate_status": "STALE_OBSERVABILITY",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
         "attention_task_count": 1,
@@ -443,10 +443,10 @@
         "coverage_caveat_only": null,
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
+        "operator_assessment": "ACTION_REQUIRED_OBSERVABILITY",
         "primary_classification": "failed",
         "primary_failure_stage": "gaza_daily_dispatch",
-        "primary_layer": "TASK",
+        "primary_layer": "OBSERVABILITY",
         "primary_task_key": "gaza_daily_dispatch",
         "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": null,
@@ -460,7 +460,7 @@
         "publication_status": "failed",
         "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "INCIDENT_OPEN",
-        "stale_observability": false,
+        "stale_observability": true,
         "transient_source_failure_count": null,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
@@ -475,7 +475,7 @@
       "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "INCIDENT_OPEN",
       "scheduled_health_available": true,
-      "stale_observability": false
+      "stale_observability": true
     },
     "ice": {
       "agent_handoff": {
@@ -491,7 +491,7 @@
       },
       "aggregate_status": "UNKNOWN",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "ba26bb4a4fcd453426f370dfa0b50a1fc620742f",
+      "current_runner_head": "dfcdcbb940e10ffb4c28bc23c0cfc642a41a312a",
       "debug_summary": {
         "aggregate_degradation_required": null,
         "aggregate_status": "UNKNOWN",
@@ -533,8 +533,10 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-16T16:35:36.426799Z",
+  "exported_at": "2026-10-16T17:14:51.989996Z",
   "schema_version": "bluefern_external_system_status_v1",
-  "stale_observability": [],
-  "system_status": "FAILED"
+  "stale_observability": [
+    "gaza"
+  ],
+  "system_status": "STALE_OBSERVABILITY"
 }

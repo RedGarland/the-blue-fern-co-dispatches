@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261016T094451-0700-r11",
+  "scheduled_for": "2026-10-16T09:44:51-07:00",
+  "started_at": "2026-10-16T09:48:40-07:00",
+  "completed_at": "2026-10-16T09:50:55-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T08:45:03-07:00",
+    "end": "2026-10-16T09:50:55-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "OCHA homepage accessible; latest Gaza publication dated Oct 9",
+    "who_global": "WHO global conflict overview accessible; no new Gaza update in observation window",
+    "who_regional": "WHO EMRO Gaza endpoint HTTP 502; incomplete healthcare coverage",
+    "additional_targeted_searches": 12,
+    "excluded": "Older or previously flagged Reuters/UNICEF nutrition report, commercial import suspension, West Bank-only reports, prior strikes",
+    "unverified_lead": "PRCS health-capacity figures in Oct 16 secondary report cite Oct 15 statement; primary source and within-window timing unverified. https://english.palinfo.com/news/2026/10/16/372056/",
+    "production_unchanged": true
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T114646-0700-r11",
+  "scheduled_for": "2026-10-16T11:45:54-07:00",
+  "started_at": "2026-10-16T11:46:46-07:00",
+  "completed_at": "2026-10-16T11:48:06-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "date_from": "2026-10-16",
+    "date_to": "2026-10-16",
+    "edition_date": "2026-10-16",
+    "start": "2026-10-16T10:50:54-07:00",
+    "end": "2026-10-16T11:48:06-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "discovery_status": "SUCCESS",
+    "new_qualifying_findings": 0,
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "query_context": [
+      "\"only grocery store\" fire closed town October 16 2026",
+      "\"sole grocery store\" closed fire \"Oct\" \"2026\"",
+      "\"last full-service grocery\" closure October 2026",
+      "\"food distribution\" canceled storm flood October 16 2026",
+      "\"food bank\" distribution canceled power outage Friday October 16 2026",
+      "\"food pantry\" abruptly closed fire October 16 2026",
+      "October 16 2026 \"food distribution\" cancelled due to weather",
+      "October 16 2026 pantry \"closed\" \"due to\" outage flood",
+      "October 16 2026 \"food bank\" \"suspended\" \"distribution\"",
+      "site:gov \"SNAP\" \"outage\" \"October 16, 2026\"",
+      "site:gov \"WIC\" \"interruption\" \"October 2026\" benefits",
+      "October 16 2026 \"SNAP benefits\" delayed system outage agency"
+    ],
+    "excluded": "Earlier events: Spencer NY grocery fire Sept. 11; El Paso food bank storm damage Sept. 25; Prodisee Pantry Oct. 10 cancellation announced Oct. 7; Arvada Safeway chain exit announced days earlier but not sole town grocery; 2025 SNAP shutdown material and other stale program articles. Routine distributions and non-disruption pages excluded.",
+    "search_window_limitation": "Most recent successful on-branch heartbeat not established; previous watch completed 2026-10-16 10:50:54 PT, based on prior execution record.",
+    "freshness_limitation": "Search engines mostly surfaced older or loosely matched reports; zero findings means none verified from bounded coverage, not nationwide absence.",
+    "persistence": "COMMITTED_IF_VERIFIED",
+    "operator_effects": "Supplementary discovery only. No approvals, public site changes, social posting, schedule changes, or primary collection changes."
+  }
+}

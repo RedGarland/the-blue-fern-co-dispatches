@@ -4,6 +4,7 @@ import json
 import shutil
 import uuid
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -603,6 +604,7 @@ def test_post_only_does_not_publish_push_or_regenerate(isolated: Path, monkeypat
 @pytest.mark.parametrize("operator_status", ["ALREADY_POSTED", "PUBLISHED_AND_POSTED"])
 def test_email_failure_after_successful_publish_is_nonfatal(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], operator_status: str) -> None:
     args = operator.parse_args(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    emitted: list[dict] = []
     monkeypatch.setattr(
         operator,
         "run_operator",
@@ -614,6 +616,9 @@ def test_email_failure_after_successful_publish_is_nonfatal(isolated: Path, monk
             "publisher_count": 3,
             "public_story_count": 6,
             "pages_commit_sha": "abc1234",
+            "pages_push_ok": True,
+            "remote_tree_verify_ok": True,
+            "live_verify_status": "LIVE_OK",
             "bluesky_status": "skipped",
             "audio_status": "audio_generated",
             "email_status": "not_requested",
@@ -623,6 +628,11 @@ def test_email_failure_after_successful_publish_is_nonfatal(isolated: Path, monk
             "source_repo_status_after": "## clean",
             "pages_repo_status_after": "## clean",
         },
+    )
+    monkeypatch.setattr(
+        operator,
+        "_emit_operational_receipt",
+        lambda parsed_args, result, **kwargs: emitted.append(dict(result)) or "receipt.json",
     )
     monkeypatch.setattr(operator, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
 
@@ -634,6 +644,107 @@ def test_email_failure_after_successful_publish_is_nonfatal(isolated: Path, monk
     assert payload["ok"] is True
     assert payload["email_status"].startswith("failed:")
     assert "smtp outage" in output
+    assert payload["operational_receipt"] == "receipt.json"
+    assert emitted[0]["ok"] is True
+    assert emitted[0]["pages_push_ok"] is True
+    assert emitted[0]["email_status"].startswith("failed:")
+
+
+def test_email_failure_before_publication_remains_failed_and_receipt_is_not_success(
+    isolated: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    args = operator.parse_args(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    emitted: list[dict] = []
+    monkeypatch.setattr(
+        operator,
+        "run_operator",
+        lambda parsed_args: {
+            "ok": False,
+            "operator_status": "FAILED",
+            "date": parsed_args.date,
+            "source_count": 4,
+            "publisher_count": 2,
+            "public_story_count": 3,
+            "generation_ok": True,
+            "tests_ok": True,
+            "validation_ok": True,
+            "pages_commit_sha": None,
+            "pages_push_ok": None,
+            "remote_tree_verify_ok": None,
+            "live_verify_status": None,
+            "bluesky_status": "skipped",
+            "audio_status": "audio_generated",
+            "email_status": "not_requested",
+            "cleanup_status": "skipped_evidence_preserved",
+            "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{parsed_args.date}/",
+            "next_action": "Pages dry-run history guard failed.",
+            "source_repo_status_after": "## dirty evidence preserved",
+            "pages_repo_status_after": "## clean",
+        },
+    )
+    monkeypatch.setattr(
+        operator,
+        "_emit_operational_receipt",
+        lambda parsed_args, result, **kwargs: emitted.append(dict(result)) or "receipt.json",
+    )
+    monkeypatch.setattr(operator, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+
+    code = operator.main(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+
+    output = capsys.readouterr().out
+    payload = json.loads(output[output.find("{") :])
+    assert code == 1
+    assert payload["ok"] is False
+    assert payload["operator_status"] == "FAILED"
+    assert payload["pages_push_ok"] is None
+    assert payload["email_status"].startswith("failed:")
+    assert payload["operational_receipt"] == "receipt.json"
+    assert emitted[0]["ok"] is False
+    assert emitted[0]["pages_push_ok"] is None
+    assert emitted[0]["email_status"].startswith("failed:")
+
+
+def test_operational_receipt_includes_final_email_status(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default")
+    monkeypatch.setattr(operator, "_git_output", lambda repo, *git_args: "source-head")
+    emitted: dict = {}
+
+    def capture_receipt(root: Path, receipt: dict) -> SimpleNamespace:
+        emitted.update(receipt)
+        return SimpleNamespace(receipt_path=root / "receipt.json")
+
+    monkeypatch.setattr(operator, "write_operational_receipt", capture_receipt)
+    result = {
+        "ok": True,
+        "operator_status": "PUBLISHED",
+        "date": args.date,
+        "source_count": 4,
+        "publisher_count": 2,
+        "public_story_count": 3,
+        "generation_ok": True,
+        "validation_ok": True,
+        "pages_commit_sha": "pages123",
+        "pages_push_ok": True,
+        "bluesky_status": "skipped",
+        "audio_status": "audio_generated",
+        "email_status": "failed: Gmail OAuth token refresh failed with HTTP 400: invalid_grant",
+        "live_verify_status": "LIVE_OK",
+    }
+
+    receipt_path = operator._emit_operational_receipt(
+        args,
+        result,
+        started_at="2026-06-26T12:00:00Z",
+        completed_at="2026-06-26T12:01:00Z",
+    )
+
+    assert receipt_path == str(isolated / "receipt.json")
+    assert emitted["status"] == "SUCCESS"
+    assert emitted["public_side_effects"]["pages"] is True
+    assert emitted["details"]["email_status"].startswith("failed:")
 
 
 def test_email_failure_remains_fatal_on_dry_run(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:

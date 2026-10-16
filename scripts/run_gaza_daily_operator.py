@@ -1130,6 +1130,7 @@ def _emit_operational_receipt(args: argparse.Namespace, result: dict[str, Any], 
             "generation_ok": bool(result.get("generation_ok")),
             "validation_ok": result.get("validation_ok"),
             "live_verify_status": result.get("live_verify_status"),
+            "email_status": result.get("email_status"),
         },
     )
     write_result = write_operational_receipt(ROOT, receipt)
@@ -1146,13 +1147,6 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     started_at = _utc_now()
     result = run_operator(args)
-    completed_at = _utc_now()
-    try:
-        receipt_path = _emit_operational_receipt(args, result, started_at=started_at, completed_at=completed_at)
-        if receipt_path:
-            result["operational_receipt"] = receipt_path
-    except Exception as exc:  # noqa: BLE001
-        result.setdefault("warnings", []).append(f"operational receipt emission failed: {type(exc).__name__}: {exc}")
     if args.email_report:
         try:
             result["email_status"] = _maybe_send_email(result, smtp_debug=bool(args.smtp_debug))
@@ -1162,13 +1156,18 @@ def main(argv: list[str] | None = None) -> int:
                 result.setdefault("warnings", []).append(result["email_status"])
                 result["source_repo_status_after"] = _git_status_branch(ROOT)
                 result["pages_repo_status_after"] = _git_status_branch(Path(args.pages_repo))
-                print(f"Email warning: {result['email_status']}")
-                _print_human_summary(result)
-                print(json.dumps(result, indent=2))
-                return 0
-            if result.get("ok"):
+            elif result.get("ok"):
                 result["ok"] = False
                 result["next_action"] = result["email_status"]
+    completed_at = _utc_now()
+    try:
+        receipt_path = _emit_operational_receipt(args, result, started_at=started_at, completed_at=completed_at)
+        if receipt_path:
+            result["operational_receipt"] = receipt_path
+    except Exception as exc:  # noqa: BLE001
+        result.setdefault("warnings", []).append(f"operational receipt emission failed: {type(exc).__name__}: {exc}")
+    if result.get("email_status", "").startswith("failed:") and result.get("ok"):
+        print(f"Email warning: {result['email_status']}")
     _print_human_summary(result)
     print(json.dumps(result, indent=2))
     return 0 if result.get("ok") else 1

@@ -601,6 +601,67 @@ def test_post_only_does_not_publish_push_or_regenerate(isolated: Path, monkeypat
     assert all("push origin" not in command for command in result["commands_run"])
 
 
+@pytest.mark.parametrize(
+    ("bluesky_result", "expected_status"),
+    [
+        ({"status": "success", "post_uri": "at://example/post/1"}, "PUBLISHED_AND_POSTED"),
+        ({"status": "skipped", "reason": "skipped_existing_receipt"}, "ALREADY_POSTED"),
+    ],
+)
+def test_post_only_email_failure_after_live_verified_social_success_is_nonfatal(
+    isolated: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    bluesky_result: dict[str, str],
+    expected_status: str,
+) -> None:
+    args = operator.parse_args(
+        [
+            "--date",
+            "2026-06-26",
+            "--post-bluesky-only",
+            "--email-report",
+            "--skip-audio",
+            "--pages-repo",
+            str(isolated / "bluefern-dispatches-pages"),
+        ]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "verify_live_publication",
+        lambda **kwargs: {
+            "status": "LIVE_OK",
+            "live_http_ok": True,
+            "live_archive_ok": True,
+            "live_homepage_ok": True,
+        },
+    )
+    monkeypatch.setattr(operator, "maybe_post_gaza_dispatch_to_bluesky", lambda **kwargs: bluesky_result)
+    monkeypatch.setattr(operator, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+
+    code = operator.main(
+        [
+            "--date",
+            "2026-06-26",
+            "--post-bluesky-only",
+            "--email-report",
+            "--skip-audio",
+            "--pages-repo",
+            str(isolated / "bluefern-dispatches-pages"),
+        ]
+    )
+
+    output = capsys.readouterr().out
+    payload = json.loads(output[output.find("{") :])
+    assert code == 0
+    assert payload["ok"] is True
+    assert payload["operator_status"] == expected_status
+    assert payload["live_verify_status"] == "LIVE_OK"
+    assert payload["pages_push_ok"] is None
+    assert payload["email_status"].startswith("failed:")
+
+
 @pytest.mark.parametrize("operator_status", ["ALREADY_POSTED", "PUBLISHED_NOT_POSTED", "PUBLISHED_AND_POSTED"])
 def test_email_failure_after_successful_publish_is_nonfatal(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], operator_status: str) -> None:
     args = operator.parse_args(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])

@@ -660,7 +660,16 @@ def _publication_side_effect_verified(result: dict[str, Any]) -> bool:
     operator; receipt and live-verification details are downstream of it.
     """
 
-    return result.get("pages_push_ok") is True
+    if result.get("pages_push_ok") is True:
+        return True
+    # The post-only path resumes an already published edition. It has no new
+    # Pages push to record, but LIVE_OK plus a successful or deduplicated
+    # Bluesky result proves that the requested post-publication stage passed.
+    if result.get("live_verify_status") != "LIVE_OK":
+        return False
+    if result.get("operator_status") == "ALREADY_POSTED":
+        return True
+    return result.get("operator_status") == "PUBLISHED_AND_POSTED" and result.get("bluesky_status") == "success"
 
 
 def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:

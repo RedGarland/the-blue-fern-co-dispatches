@@ -11,7 +11,7 @@ import shutil
 import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from email.utils import format_datetime
+from email.utils import format_datetime, parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 
@@ -2194,7 +2194,16 @@ def briefing_presentation_for_edition(site_root: Path, dispatch: DispatchConfig,
         and story_count == 0
         and str(manifest.get("source_freshness_status") or "").strip()
     )
-    type_label = "Historical catch-up" if edition_mode == "historical_retrospective" else "Daily briefing"
+    adequacy_status = str(manifest.get("source_adequacy_status") or "").strip().lower()
+    adequacy_label = str(manifest.get("source_adequacy_label") or "").strip()
+    if edition_mode == "historical_retrospective":
+        type_label = "Historical catch-up"
+    elif adequacy_status == "limited_source_update" or adequacy_label == "Limited-source update":
+        type_label = "Limited-source update"
+    elif manifest.get("publication_state") == "private_correction_preview":
+        type_label = "Correction"
+    else:
+        type_label = "Daily briefing"
     if is_no_update:
         type_label = "No qualifying update"
     return BriefingPresentation(
@@ -2655,8 +2664,8 @@ def _gaza_landing_latest_card(
         presentation = briefing_presentation_for_edition(site_root, dispatch, date)
         title = presentation.title
         if title == date:
-            title = "Daily briefing"
-        type_label = "Daily briefing"
+            title = presentation.type_label
+        type_label = presentation.type_label
         detail_parts = [presentation.summary, _count_label(presentation)]
         detail = " | ".join(part for part in detail_parts if part)
         href = f"editions/{html.escape(date)}/"
@@ -2673,6 +2682,315 @@ def _gaza_landing_latest_card(
         f"{legacy_latest_link}"
         "    </article>"
     )
+
+
+def _gaza_page_aggregate_text(pages_repo: Path, filename: str) -> str | None:
+    path = pages_repo / "gaza" / filename
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+
+
+def _gaza_pages_aggregate_baseline(pages_repo: Path) -> dict[str, str] | None:
+    """Read a complete Pages aggregate baseline or identify an empty bootstrap.
+
+    A Pages repository with an established Gaza aggregate surface is authoritative.
+    Falling back to manifest regeneration when one of its three aggregate files is
+    missing or unreadable can silently erase correction, no-update, or other
+    historical records, so that state fails closed.  The only permitted fallback is
+    an explicitly empty bootstrap: an existing Pages checkout with no Gaza directory
+    or with an empty Gaza directory.
+    """
+    if not pages_repo.exists() or not pages_repo.is_dir():
+        raise ValueError("authoritative Gaza aggregate baseline unavailable: Pages repository is missing or not a directory")
+    gaza_root = pages_repo / "gaza"
+    if not gaza_root.exists():
+        return None
+    if not gaza_root.is_dir():
+        raise ValueError("authoritative Gaza aggregate baseline incomplete/unreadable: Pages gaza path is not a directory")
+    paths = {filename: gaza_root / filename for filename in ("archive.html", "index.html", "rss.xml")}
+    existing = [path for path in paths.values() if path.exists()]
+    if not existing:
+        if any(gaza_root.iterdir()):
+            raise ValueError(
+                "authoritative Gaza aggregate baseline incomplete/unreadable: "
+                "Gaza history exists but archive.html, index.html, and rss.xml are absent"
+            )
+        return None
+    if len(existing) != len(paths) or any(not path.is_file() for path in paths.values()):
+        raise ValueError("authoritative Gaza aggregate baseline incomplete/unreadable: all archive.html, index.html, and rss.xml files are required")
+    baseline: dict[str, str] = {}
+    for filename, path in paths.items():
+        try:
+            content = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise ValueError(
+                f"authoritative Gaza aggregate baseline incomplete/unreadable: cannot read {filename}"
+            ) from exc
+        if not content:
+            raise ValueError(
+                f"authoritative Gaza aggregate baseline incomplete/unreadable: {filename} is empty"
+            )
+        baseline[filename] = content
+    return baseline
+
+
+def _gaza_history_dates_in_text(text: str) -> list[str]:
+    """Return relevant dated identities from one aggregate row/item or document."""
+    dates: list[str] = []
+
+    def add(value: str) -> None:
+        if value not in dates:
+            dates.append(value)
+
+    def add_iso_values(value: str) -> None:
+        for date in re.findall(r"\b(\d{4}-\d{2}-\d{2})\b", value):
+            try:
+                datetime.strptime(date, "%Y-%m-%d")
+            except ValueError:
+                continue
+            add(date)
+
+    # Feed timestamps are the identity for correction records whose link points
+    # at an older edition. Prefer them over the linked edition date for ordering.
+    timestamp_matches = re.findall(
+        r"<(?:pubDate|dc:date|date)\b[^>]*>(.*?)</(?:pubDate|dc:date|date)>"
+        r"|<time\b[^>]*\bdatetime=[\"']([^\"']+)[\"'][^>]*>",
+        text,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    for iso_value, rfc_value in timestamp_matches:
+        value = iso_value or rfc_value
+        add_iso_values(value)
+        if not re.search(r"\b\d{4}-\d{2}-\d{2}\b", value):
+            try:
+                parsed = parsedate_to_datetime(value.strip())
+            except (TypeError, ValueError, OverflowError):
+                parsed = None
+            if parsed is not None:
+                add(parsed.date().isoformat())
+    # Edition links and explicit edition-date spans cover ordinary published rows
+    # and no-update records. Generic ISO dates are the final bounded fallback for
+    # correction/history fixtures that do not use either markup convention.
+    for date in GAZA_PUBLIC_HISTORY_DATE_RE.findall(text):
+        add(date)
+    add_iso_values(text)
+    return dates
+
+
+def _gaza_history_date_for_entry(text: str) -> str | None:
+    dates = _gaza_history_dates_in_text(text)
+    return dates[0] if dates else None
+
+
+def _gaza_aggregate_latest_date(*values: str) -> str | None:
+    dates = [date for value in values for date in _gaza_history_dates_in_text(value)]
+    return max(dates) if dates else None
+
+
+def _gaza_insert_date_ordered_list_item(
+    document: str,
+    list_open: str,
+    new_row: str,
+    edition_date: str,
+) -> str:
+    list_start = document.index(list_open) + len(list_open)
+    list_end = document.index("</ul>", list_start)
+    row_matches = list(re.finditer(r"<li\b.*?</li>", document[list_start:list_end], re.DOTALL | re.IGNORECASE))
+    insert_at = list_end
+    for match in row_matches:
+        row_date = _gaza_history_date_for_entry(match.group(0))
+        if row_date and row_date < edition_date:
+            insert_at = list_start + match.start()
+            break
+    prefix = document[:insert_at]
+    if not prefix.endswith("\n"):
+        prefix += "\n"
+    return prefix + new_row + "\n" + document[insert_at:]
+
+
+def _gaza_insert_date_ordered_rss_item(rss: str, new_item: str, edition_date: str) -> str:
+    item_matches = list(re.finditer(r"<item\b.*?</item>", rss, re.DOTALL | re.IGNORECASE))
+    insert_at = len(rss)
+    for match in item_matches:
+        item_date = _gaza_history_date_for_entry(match.group(0))
+        if item_date and item_date < edition_date:
+            insert_at = match.start()
+            break
+    if insert_at == len(rss):
+        channel_close = rss.find("</channel>")
+        if channel_close >= 0:
+            insert_at = channel_close
+    prefix = rss[:insert_at]
+    if not prefix.endswith("\n"):
+        prefix += "\n"
+    return prefix + new_item + "\n" + rss[insert_at:]
+
+
+def _gaza_month_key(heading: str) -> tuple[int, int] | None:
+    try:
+        parsed = datetime.strptime(heading.strip(), "%B %Y")
+    except ValueError:
+        return None
+    return parsed.year, parsed.month
+
+
+def _gaza_insert_missing_archive_month(archive: str, month_section: str, month_heading: str) -> str:
+    month_pattern = re.compile(
+        r'    <section class="archive-month"><h2>(?P<heading>[^<]+)</h2>\n'
+        r'      <ul class="edition-list archive-list">.*?\n      </ul>\n    </section>',
+        re.DOTALL,
+    )
+    month_matches = list(month_pattern.finditer(archive))
+    new_key = _gaza_month_key(month_heading)
+    if new_key is None:
+        raise ValueError(f"Gaza archive cannot order unknown month heading: {month_heading}")
+    insert_at = archive.rfind("</body>")
+    if insert_at < 0:
+        raise ValueError("Gaza archive baseline has no month section or body close")
+    for match in month_matches:
+        existing_key = _gaza_month_key(match.group("heading"))
+        if existing_key is None:
+            raise ValueError(f"Gaza archive cannot order unknown month heading: {match.group('heading')}")
+        if existing_key < new_key:
+            insert_at = match.start()
+            break
+    prefix = archive[:insert_at]
+    if prefix and not prefix.endswith("\n"):
+        prefix += "\n"
+    return prefix + month_section + "\n" + archive[insert_at:]
+
+
+def _gaza_render_new_rss_item(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
+    presentation = briefing_presentation_for_edition(site_root, dispatch, edition_date)
+    label = public_edition_label(site_root, dispatch, edition_date)
+    if label == edition_date:
+        label = presentation.type_label
+    detail_parts = [presentation.summary, _count_label(presentation), presentation.type_label]
+    detail = " | ".join(part for part in detail_parts if part)
+    edition_url = f"{BASE_URL}/{dispatch.slug}/editions/{edition_date}/"
+    return f"""  <item>
+    <title>{html.escape(dispatch.name)} - {html.escape(label)}</title>
+    <link>{edition_url}</link>
+    <guid>{edition_url}</guid>
+    <description>{html.escape(detail)}</description>
+  </item>"""
+
+
+def _gaza_aggregate_render_from_pages_history(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    edition_date: str,
+    pages_repo: Path,
+    *,
+    dry_run: bool,
+    wrote: list[str],
+) -> bool:
+    """Preserve authoritative Gaza aggregate history and add only a new edition.
+
+    Pages is the immutable public-history baseline. Rebuilding aggregate rows from
+    every historical manifest can change old titles, summaries, correction rows,
+    and no-update notices even when only one new edition is intended. This helper
+    carries the baseline bytes forward and inserts the current edition once.
+    """
+    baseline = _gaza_pages_aggregate_baseline(pages_repo)
+    if baseline is None:
+        return False
+    archive = baseline["archive.html"]
+    index = baseline["index.html"]
+    rss = baseline["rss.xml"]
+
+    baseline_date_sets = {
+        "archive": set(_gaza_history_dates_in_text(archive)),
+        "index": set(_gaza_history_dates_in_text(index)),
+        "rss": set(_gaza_history_dates_in_text(rss)),
+    }
+    present = {name for name, dates in baseline_date_sets.items() if edition_date in dates}
+    if present and present != set(baseline_date_sets):
+        raise ValueError(
+            f"Gaza aggregate history has partial current-date identity for {edition_date}: {sorted(present)}"
+        )
+
+    if present == set(baseline_date_sets):
+        expected_payloads = {
+            "archive.html": render_briefing_archive_row(briefing_presentation_for_edition(site_root, dispatch, edition_date)),
+            "index.html": render_briefing_list_item(briefing_presentation_for_edition(site_root, dispatch, edition_date)),
+            "rss.xml": _gaza_render_new_rss_item(site_root, dispatch, edition_date),
+        }
+        mismatched = [filename for filename, payload in expected_payloads.items() if payload not in baseline[filename]]
+        if mismatched:
+            raise ValueError(
+                f"Gaza aggregate date {edition_date} is already listed with a mismatched payload on {', '.join(mismatched)}; use the separate correction workflow"
+            )
+        rendered = {"index.html": index, "archive.html": archive, "rss.xml": rss}
+    else:
+        row = ("daily", edition_date)
+        archive_row = render_briefing_archive_row(briefing_presentation_for_edition(site_root, dispatch, edition_date))
+        baseline_latest_date = _gaza_aggregate_latest_date(archive, index, rss)
+        is_newest_edition = baseline_latest_date is None or edition_date > baseline_latest_date
+        if is_newest_edition:
+            archive_latest = _render_gaza_archive_latest_entry(site_root, dispatch, row)
+            archive_latest_pattern = re.compile(
+                r'    <section class="archive-latest" aria-label="Latest archive entry">.*?    </section>',
+                re.DOTALL,
+            )
+            archive_matches = archive_latest_pattern.findall(archive)
+            if len(archive_matches) != 1:
+                raise ValueError("Gaza archive baseline must contain exactly one latest-entry section")
+            archive = archive_latest_pattern.sub(archive_latest, archive, count=1)
+        month_heading = _gaza_month_heading(edition_date)
+        month_open = f'    <section class="archive-month"><h2>{html.escape(month_heading)}</h2>\n      <ul class="edition-list archive-list">'
+        if month_open not in archive:
+            month_section = (
+                f'    <section class="archive-month"><h2>{html.escape(month_heading)}</h2>\n'
+                '      <ul class="edition-list archive-list">\n'
+                f"{archive_row}\n"
+                "      </ul>\n    </section>"
+            )
+            archive = _gaza_insert_missing_archive_month(archive, month_section, month_heading)
+        else:
+            archive = _gaza_insert_date_ordered_list_item(archive, month_open, archive_row, edition_date)
+
+        if is_newest_edition:
+            latest_card = _gaza_landing_latest_card(site_root, dispatch, row)
+            latest_card_pattern = re.compile(r'    <article class="gaza-latest-card">.*?    </article>', re.DOTALL)
+            index_matches = latest_card_pattern.findall(index)
+            if len(index_matches) != 1:
+                raise ValueError("Gaza homepage baseline must contain exactly one latest card")
+            index = latest_card_pattern.sub(latest_card, index, count=1)
+        readable_open = '    <ul class="edition-list gaza-readable-list">'
+        readable_row = render_briefing_list_item(briefing_presentation_for_edition(site_root, dispatch, edition_date))
+        if readable_open not in index:
+            raise ValueError("Gaza homepage baseline has no readable-briefings list")
+        index = _gaza_insert_date_ordered_list_item(index, readable_open, readable_row, edition_date)
+
+        rss_item = _gaza_render_new_rss_item(site_root, dispatch, edition_date)
+        rss_description = re.search(r"  <description>.*?</description>\n", rss, re.DOTALL)
+        if rss_description is None:
+            raise ValueError("Gaza RSS baseline has no channel description")
+        rss = _gaza_insert_date_ordered_rss_item(rss, rss_item, edition_date)
+        rendered = {"index.html": index, "archive.html": archive, "rss.xml": rss}
+
+    for filename, content in rendered.items():
+        write_text(site_root / "gaza" / filename, content, dry_run, wrote)
+    return True
+
+
+def _gaza_aggregate_preserve_pages_history(
+    site_root: Path,
+    pages_repo: Path,
+    *,
+    dry_run: bool,
+    wrote: list[str],
+) -> bool:
+    """Carry the exact authoritative aggregate bytes through a no-current run."""
+    baseline = _gaza_pages_aggregate_baseline(pages_repo)
+    if baseline is None:
+        return False
+    for filename in ("index.html", "archive.html", "rss.xml"):
+        write_text(site_root / "gaza" / filename, baseline[filename], dry_run, wrote)
+    return True
 
 
 def _render_gaza_archive_grouped_history(

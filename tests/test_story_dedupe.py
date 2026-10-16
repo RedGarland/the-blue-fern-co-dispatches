@@ -224,6 +224,35 @@ def test_gaza_official_follow_up_counts_as_material_update_not_duplicate():
     assert result.decisions[0]["watchlist_status"] == "material_follow_up"
 
 
+def test_gaza_major_update_without_material_evidence_is_skipped():
+    root = make_root()
+    prior = story(
+        "old",
+        "Alone in Gaza: Genocide leaves Palestinian man without family or a home",
+        "https://example.com/alone-in-gaza-prior",
+        summary="Earlier coverage described conditions in Gaza.",
+        publisher="Al Jazeera",
+        category="conflict",
+    )
+    write_prior_memory(root, prior, edition_date="2026-06-30", dispatch_slug="gaza")
+    candidate = story(
+        "new",
+        "Alone in Gaza: Genocide leaves Palestinian man without family or a home",
+        "https://example.com/alone-in-gaza-current",
+        summary="One man wanders Gaza in search of somewhere to sleep, having lost his family in an Israeli strike.",
+        publisher="Al Jazeera",
+        category="conflict",
+    )
+
+    result = dedupe_public_stories(root, "gaza", "2026-10-16", [candidate])
+
+    assert result.stories == []
+    decision = result.decisions[0]
+    assert decision["classification"] == "duplicate_skip"
+    assert decision["material_update"] is False
+    assert "non_material_major_update" in decision["duplicate_reasons"]
+
+
 def test_gaza_ceasefire_implementation_shift_survives_duplicate_guard():
     root = make_root()
     prior = story(

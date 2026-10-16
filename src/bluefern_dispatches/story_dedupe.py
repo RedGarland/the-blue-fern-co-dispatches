@@ -946,9 +946,14 @@ def dedupe_public_stories(
     for story in collapsed:
         classification, why, prior = classify_against_prior(story, prior_rows)
         material, material_reasons = material_update(story, prior)
-        include = classification in {"new", "major_update"} or (classification == "continuing_development" and material)
-        final_classification = "duplicate_skip" if classification == "continuing_development" and not material else classification
-        duplicate_reasons = [] if include else unique_strings(why + (["non_material_continuation"] if classification == "continuing_development" else []))
+        is_non_material_update = classification in {"major_update", "continuing_development"} and not material
+        include = classification == "new" or (classification in {"major_update", "continuing_development"} and material)
+        final_classification = "duplicate_skip" if is_non_material_update else classification
+        non_material_reason = {
+            "major_update": "non_material_major_update",
+            "continuing_development": "non_material_continuation",
+        }.get(classification)
+        duplicate_reasons = [] if include else unique_strings(why + ([non_material_reason] if non_material_reason else []))
         annotated = dict(story)
         annotated["dedupe_classification"] = final_classification if not include else classification
         annotated["dedupe_reasons"] = why

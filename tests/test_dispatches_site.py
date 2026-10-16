@@ -3186,7 +3186,7 @@ def test_pages_publish_removes_nested_duplicate_dispatch_trees(built_site):
     assert any("food-line/food-line" in path.replace("\\", "/") for path in result["nested_duplicate_dispatch_paths_removed"])
 
 
-def test_pages_publish_removes_skipped_food_line_editions(built_site):
+def test_pages_publish_preserves_skipped_food_line_editions(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
     site_root = work / "output" / "site"
@@ -3211,6 +3211,11 @@ def test_pages_publish_removes_skipped_food_line_editions(built_site):
         ),
         encoding="utf-8",
     )
+    before = {
+        path.relative_to(pages_repo).as_posix(): path.read_bytes()
+        for path in stale_edition.rglob("*")
+        if path.is_file()
+    }
 
     result = publish_pages(
         work,
@@ -3224,7 +3229,12 @@ def test_pages_publish_removes_skipped_food_line_editions(built_site):
     )
 
     assert result["ok"] is True
-    assert not (pages_repo / "food-line" / "editions" / "2026-06-01" / "index.html").exists()
+    after = {
+        path.relative_to(pages_repo).as_posix(): path.read_bytes()
+        for path in stale_edition.rglob("*")
+        if path.is_file()
+    }
+    assert after == before
 
 
 def test_pages_publish_preserves_existing_food_line_history_when_source_site_is_scoped_to_new_backfill(built_site):

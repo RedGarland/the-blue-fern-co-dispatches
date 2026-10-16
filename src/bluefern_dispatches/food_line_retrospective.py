@@ -956,43 +956,64 @@ def food_line_public_history(public_root: Path) -> dict[str, set[str]]:
     return {"archive_dates": archive_dates, "rss_urls": rss_urls}
 
 
-def assert_retrospective_history_monotonic(
+def assert_food_line_history_monotonic(
     pages_root: Path,
     candidate_site_root: Path,
     *,
     edition_dates: Sequence[str],
+    include_rss: bool = True,
 ) -> dict[str, Any]:
     pages_root = pages_root.resolve(strict=True)
     candidate_site_root = candidate_site_root.resolve(strict=True)
     prior = food_line_public_history(pages_root)
     prepared = food_line_public_history(candidate_site_root)
     archive_dropped = sorted(prior["archive_dates"] - prepared["archive_dates"])
-    rss_dropped_urls = sorted(prior["rss_urls"] - prepared["rss_urls"])
+    rss_dropped_urls = sorted(prior["rss_urls"] - prepared["rss_urls"]) if include_rss else []
     rss_dropped = [value.rstrip("/").rsplit("/", 1)[-1] for value in rss_dropped_urls]
     occupied = sorted(
         edition_date
         for edition_date in edition_dates
         if (pages_root / "food-line" / "editions" / edition_date).exists()
     )
-    if archive_dropped or rss_dropped or occupied:
+    if archive_dropped or (include_rss and rss_dropped) or occupied:
+        history_detail = f"archive dropped: {archive_dropped};"
+        if include_rss:
+            history_detail += f" rss dropped: {rss_dropped};"
+        history_detail += f" existing edition directories selected for replacement: {occupied}"
         raise FoodLineRetrospectiveError(
             "Food Line retrospective publication would shrink public history: "
-            f"archive dropped: {archive_dropped}; rss dropped: {rss_dropped}; "
-            f"existing edition directories selected for replacement: {occupied}"
+            + history_detail
         )
     return {
         "prior_archive_count": len(prior["archive_dates"]),
         "prepared_archive_count": len(prepared["archive_dates"]),
         "archive_added": sorted(prepared["archive_dates"] - prior["archive_dates"]),
         "archive_dropped": archive_dropped,
-        "prior_rss_count": len(prior["rss_urls"]),
-        "prepared_rss_count": len(prepared["rss_urls"]),
+        "rss_checked": include_rss,
+        "prior_rss_count": len(prior["rss_urls"]) if include_rss else None,
+        "prepared_rss_count": len(prepared["rss_urls"]) if include_rss else None,
         "rss_added": sorted(
             value.rstrip("/").rsplit("/", 1)[-1]
             for value in prepared["rss_urls"] - prior["rss_urls"]
         ),
         "rss_dropped": rss_dropped,
     }
+
+
+def assert_retrospective_history_monotonic(
+    pages_root: Path,
+    candidate_site_root: Path,
+    *,
+    edition_dates: Sequence[str],
+    include_rss: bool = True,
+) -> dict[str, Any]:
+    """Backward-compatible name for the shared Food Line history guard."""
+    return assert_food_line_history_monotonic(
+        pages_root,
+        candidate_site_root,
+        edition_dates=edition_dates,
+        include_rss=include_rss,
+    )
 
 
 def _load_retrospective_bundle(

@@ -11,8 +11,8 @@
   <meta name="description" content="Source-backed daily Food Line dispatch covering pantry demand, benefit disruption, and food-access pressure across the United States.">
   <meta property="og:description" content="Source-backed daily Food Line dispatch covering pantry demand, benefit disruption, and food-access pressure across the United States.">
   <meta name="twitter:description" content="Source-backed daily Food Line dispatch covering pantry demand, benefit disruption, and food-access pressure across the United States.">
-  <meta property="og:image" content="https://dispatches.thebluefernco.com/food-line/assets/food-line-dispatch-social.png">
-  <meta name="twitter:image" content="https://dispatches.thebluefernco.com/food-line/assets/food-line-dispatch-social.png">
+  <meta property="og:image" content="https://dispatches.thebluefernco.com/food-line/assets/food-line-dispatch-social.jpg">
+  <meta name="twitter:image" content="https://dispatches.thebluefernco.com/food-line/assets/food-line-dispatch-social.jpg">
   <meta property="og:image:alt" content="The Food Line Dispatch social card from The Blue Fern Co., with wheat, a U.S. map outline, and the subtitle Source-backed daily food-pressure briefing.">
   <meta name="twitter:image:alt" content="The Food Line Dispatch social card from The Blue Fern Co., with wheat, a U.S. map outline, and the subtitle Source-backed daily food-pressure briefing.">
   <meta property="og:site_name" content="Food Line Dispatch">
@@ -27,14 +27,21 @@
 <body>
 <style>
 :root {
+  --bf-dark-blue: #1E3F4F;
+  --bf-background-cream: #EFE7DA;
+  --bf-accent-blue-grey: #4E6B79;
+  --bf-soft-steel-grey: #9BAEB5;
+  --bf-pale-beige: #D9CEC0;
+  --bf-white: #FFFFFF;
+  --bf-text: #1E3F4F;
   --ink: #1E3F4F;
   --navy: #1E3F4F;
   --blue-fern: #4E6B79;
   --soft-blue: #EFE7DA;
   --fern-green: #4E6B79;
-  --paper: #FBF7EF;
-  --border: #D2C5B4;
-  --panel: #FFFDF8;
+  --paper: #EFE7DA;
+  --border: #D9CEC0;
+  --panel: #FFFFFF;
   --muted: #4E6B79;
 }
 .food-line-shell {
@@ -61,10 +68,10 @@
   margin: 0 auto;
 }
 .food-line-logo--home {
-  width: min(360px, 90vw);
+  width: min(260px, 72vw);
 }
 .food-line-logo--edition {
-  width: min(460px, 90vw);
+  width: min(240px, 68vw);
 }
 .food-line-logo--map {
   width: min(520px, 90vw);
@@ -83,6 +90,17 @@
 .food-line-panel h3:first-child {
   margin-top: 0;
 }
+.briefing .food-line-hero {
+  gap: 0.45rem;
+  padding-bottom: 0.9rem;
+}
+.briefing .food-line-logo--edition {
+  width: min(220px, 60vw);
+}
+.briefing .food-line-hero h1 {
+  margin: 0.15rem 0 0.35rem;
+  font-size: clamp(1.9rem, 3.6vw, 2.85rem);
+}
 .food-line-actions {
   display: flex;
   flex-wrap: wrap;
@@ -93,7 +111,8 @@
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.45rem 0.75rem;
-  background: #F3EBDD;
+  background: var(--paper);
+  color: var(--ink);
   font-weight: 700;
   text-decoration: none;
 }
@@ -107,7 +126,7 @@
   border-left: 4px solid var(--fern-green);
   margin: 0.9rem 0 1rem;
   padding: 0.7rem 0 0.7rem 0.9rem;
-  background: #F6F0E6;
+  background: var(--paper);
 }
 .food-line-story-list,
 .food-line-recent-list {
@@ -152,7 +171,7 @@
 .food-line-source-table th {
   text-align: left;
   color: var(--navy);
-  background: #F3EBDD;
+  background: var(--paper);
   position: sticky;
   top: 0;
 }
@@ -200,7 +219,7 @@
   width: 0.8rem;
   height: 0.8rem;
   border-radius: 50%;
-  border: 1px solid #1B2F39;
+  border: 1px solid var(--ink);
   display: inline-block;
 }
 .food-line-map-popup {
@@ -234,7 +253,7 @@
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 1rem 1rem 0.9rem;
-  background: #FFFDF9;
+  background: var(--panel);
   box-shadow: 0 10px 24px rgba(30, 63, 79, 0.06);
 }
 .food-line-source-card h3 {
@@ -248,7 +267,7 @@
   .food-line-logo--map,
   .food-line-logo--audio,
   .food-line-logo--home {
-    width: 90vw;
+    width: min(72vw, 260px);
   }
   .food-line-source-table {
     font-size: 0.9rem;
@@ -261,15 +280,14 @@
   <section class="food-line-hero">
 <img class="hero-logo food-line-logo food-line-logo--home" src="assets/food-line-logo.png" alt="The Food Line Dispatch">    <p class="eyebrow">The Blue Fern Co.</p>
     <h1>Food Line Dispatch</h1>
-    <p>The Food Line Dispatch tracks source-backed signs of food insecurity and food-access pressure across the United States, including benefit disruption, pantry strain, school-meal gaps, price pressure, and local access failures.</p>
+    <p>The Food Line Dispatch tracks daily signs of food insecurity across the United States - benefit disruptions, pantry strain, school-meal gaps, price pressure, and local access failures - using source-backed public records and reporting.</p>
   </section>
   <section class="food-line-panel">
     <h2>Latest Briefing</h2>
-    <div class="food-line-briefing-meta">2026-09-12</div>
-    <h3><a href="editions/2026-09-12/">Food Line recovery-disclosed publication</a></h3>
-    <p class="food-line-note">Recovery note: These items were recovered after the September 10 Food Line collection failed. They were reconstructed from separately preserved, source-backed evidence and subsequently human reviewed. They are not artifacts from the failed production run.</p>
-    <ul class="food-line-story-list"><li><a href="editions/2026-09-12/">Hawaii Island Salvation Army pantries report staple shortages after Lala</a><div class="food-line-edition-meta">2026-09-08</div></li><li><a href="editions/2026-09-12/">Eastport&#x27;s only full-size grocery store remains without a committed reopening</a><div class="food-line-edition-meta">2026-09-09</div></li><li><a href="editions/2026-09-12/">Puerto Rico water shutoffs add food-preparation and prepared-food costs</a><div class="food-line-edition-meta">2026-09-10</div></li><li><a href="editions/2026-09-12/">Texas SNAP redetermination delays interrupted benefits for an East Texas household</a><div class="food-line-edition-meta">2026-09-10</div></li></ul>
-    <div class="food-line-actions"><a href="editions/2026-09-12/">Read briefing</a><a href="archive.html">Archive</a></div>
+    <div class="food-line-briefing-meta">2026-10-15</div>
+    <h3><a href="editions/2026-10-15/">Boerne weekend-meal program reaches more than 500 students across 14 campuses</a></h3>
+    <ul class="food-line-story-list"><li><a href="editions/2026-10-15/">Baylor&#x27;s student food store serves about 800 students weekly amid ongoing campus hunger</a></li><li><a href="editions/2026-10-15/">Colorado food banks report rising demand amid inflation and SNAP disruption</a></li></ul>
+    <div class="food-line-actions"><a href="editions/2026-10-15/">Read briefing</a><a href="archive.html">Archive</a></div>
   </section>
   <section class="food-line-panel">
     <h2>About Food Line</h2>
@@ -278,13 +296,13 @@
   </section>
   <section class="food-line-panel">
     <h2>Recent Editions</h2>
-    <ul class="food-line-recent-list"><li><div class="food-line-edition-meta">2026-09-12</div><a class="food-line-recent-title" href="editions/2026-09-12/">Food Line recovery-disclosed publication</a><div class="food-line-edition-meta">4 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-08-31</div><a class="food-line-recent-title" href="editions/2026-08-31/">Food Line retrospective: benefit losses and rising demand</a><div class="food-line-edition-meta">3 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-08-30</div><a class="food-line-recent-title" href="editions/2026-08-30/">Food Line retrospective: August service interruptions</a><div class="food-line-edition-meta">6 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-06-20</div><a class="food-line-recent-title" href="editions/2026-06-20/">No qualifying update</a><div class="food-line-edition-meta">0 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-06-19</div><a class="food-line-recent-title" href="editions/2026-06-19/">Charlotte nonprofits brace for summer hunger surge</a><div class="food-line-edition-meta">1 source-backed development</div></li><li><div class="food-line-edition-meta">2026-06-18</div><a class="food-line-recent-title" href="editions/2026-06-18/">No qualifying update</a><div class="food-line-edition-meta">0 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-06-17</div><a class="food-line-recent-title" href="editions/2026-06-17/">More Americans are hungry in the face of federal cuts, rising grocery prices</a><div class="food-line-edition-meta">1 source-backed development</div></li><li><div class="food-line-edition-meta">2026-06-16</div><a class="food-line-recent-title" href="editions/2026-06-16/">More families rely on food pantries. A food drive in St. Lawrence County aims to help</a><div class="food-line-edition-meta">1 source-backed development</div></li></ul>
+    <ul class="food-line-recent-list"><li><div class="food-line-edition-meta">2026-09-12</div><a class="food-line-recent-title" href="editions/2026-09-12/">Hawaii Island Salvation Army pantries report staple shortages after Lala</a><div class="food-line-edition-meta">4 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-08-31</div><a class="food-line-recent-title" href="editions/2026-08-31/">Phoenix food-box demand rose as Arizona SNAP access contracted</a><div class="food-line-edition-meta">3 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-08-30</div><a class="food-line-recent-title" href="editions/2026-08-30/">Broken pipe closed St. Columba pantry for restoration</a><div class="food-line-edition-meta">6 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-06-20</div><a class="food-line-recent-title" href="editions/2026-06-20/">Charlotte nonprofits brace for summer hunger surge</a><div class="food-line-edition-meta">0 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-06-19</div><a class="food-line-recent-title" href="editions/2026-06-19/">Charlotte nonprofits brace for summer hunger surge</a><div class="food-line-edition-meta">1 source-backed development</div></li><li><div class="food-line-edition-meta">2026-06-18</div><a class="food-line-recent-title" href="editions/2026-06-18/">Home | Food Lifeline</a><div class="food-line-edition-meta">0 source-backed developments</div></li><li><div class="food-line-edition-meta">2026-06-17</div><a class="food-line-recent-title" href="editions/2026-06-17/">More Americans are hungry in the face of federal cuts, rising grocery prices</a><div class="food-line-edition-meta">1 source-backed development</div></li><li><div class="food-line-edition-meta">2026-06-16</div><a class="food-line-recent-title" href="editions/2026-06-16/">More families rely on food pantries. A food drive in St. Lawrence County aims to help</a><div class="food-line-edition-meta">1 source-backed development</div></li></ul>
     <p class="food-line-open-archive"><a href="archive.html">Open the full archive</a></p>
   </section>
 </main>
   <footer class="site-footer">
     <div class="publisher">
-      <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="assets/bluefern.png" alt="The Blue Fern Co."></a>
+      <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="/assets/bluefern.png" alt="The Blue Fern Co."></a>
       <p class="publisher-label">Published by <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer">The Blue Fern Company</a></p>
     </div>
   </footer>

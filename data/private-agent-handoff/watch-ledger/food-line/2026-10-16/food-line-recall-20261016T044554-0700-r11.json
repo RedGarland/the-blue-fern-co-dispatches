@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T044554-0700-r11",
+  "scheduled_for": "2026-10-16T04:45:54-07:00",
+  "started_at": "2026-10-16T04:49:32-07:00",
+  "completed_at": "2026-10-16T04:51:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-16T03:45:54-07:00",
+    "end_at": "2026-10-16T04:51:44-07:00",
+    "observation_date": "2026-10-16",
+    "inclusion_rule": "Only newly evidenced disruptions first published or officially announced since the preceding hourly check; 2–3-day search-result lookback used solely for delayed indexing and verification."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_limit": 12,
+    "search_failures": 0,
+    "targeted_classes": [
+      "only/sole/last/full-service grocery loss",
+      "weather/disaster-canceled emergency distributions",
+      "abrupt pantry or food-bank closures/access reductions",
+      "new official SNAP/WIC assistance interruption"
+    ],
+    "source_priority": [
+      "fresh local news",
+      "official agency and provider notices",
+      "direct primary pages"
+    ],
+    "excluded": [
+      "prior-month grocery losses",
+      "2025 SNAP/WIC shutdown stories",
+      "older disaster-related food distribution cancellations",
+      "routine outreach and resource guides",
+      "multi-store urban supermarket closure with alternatives",
+      "duplicate or historical reports"
+    ],
+    "outcome_explanation": "No source with a confirmed new qualifying U.S. food-access disruption in the preceding hourly observation window was identified among 12 bounded searches. Search ranking returned many historical items; this negative finding is a supplementary recall result, not proof of nationwide absence.",
+    "collection_authority": "Production Food Line collector remains authoritative.",
+    "publication_actions": "none",
+    "editorial_actions": "none"
+  }
+}

@@ -198,7 +198,7 @@
         "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20261016T224217Z-source-watch.json",
+            "artifact_id": "20261016T225609Z-source-watch.json",
             "classification": "completed_with_exclusions",
             "exit_code": 0,
             "failure_stage": "source_watch",
@@ -219,9 +219,9 @@
         "private_review_dispositioned_item_count": 66,
         "private_review_max_age_hours": 70,
         "private_review_oldest_pending_date": "2026-10-14",
-        "private_review_pending_date_count": 1,
-        "private_review_pending_item_count": 4,
-        "private_review_unresolved_item_count": 4,
+        "private_review_pending_date_count": 2,
+        "private_review_pending_item_count": 8,
+        "private_review_unresolved_item_count": 8,
         "publication_attempted": false,
         "publication_status": "skipped_not_release_ready",
         "receipt_completeness": "COMPLETE",
@@ -232,9 +232,9 @@
         "unclassified_source_failure_count": null
       },
       "human_action_required": true,
-      "latest_receipt_path": "logs/food-line/current-intake/2026-10-16/20261016T224224Z-current-intake.json",
+      "latest_receipt_path": "logs/food-line/current-intake/2026-10-16/20261016T225615Z-current-intake.json",
       "migration_status": "MIGRATED",
-      "next_human_action": "Review 4 Food Line items for 2026-10-14.",
+      "next_human_action": "Review 4 Food Line items for 2026-10-16.",
       "private_review_backlog": {
         "count_only_gap_count": 55,
         "dates": [
@@ -245,6 +245,15 @@
             "dispositioned_item_count": 0,
             "pending_item_count": 4,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
+            "unresolved_item_count": 4
+          },
+          {
+            "age_hours": 22,
+            "count_only_gap_count": 0,
+            "date": "2026-10-16",
+            "dispositioned_item_count": 0,
+            "pending_item_count": 4,
+            "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-16.json",
             "unresolved_item_count": 4
           }
         ],
@@ -411,18 +420,18 @@
         "dispositioned_item_count": 66,
         "max_age_hours": 70,
         "oldest_pending_date": "2026-10-14",
-        "pending_date_count": 1,
-        "pending_item_count": 4,
-        "unresolved_item_count": 4
+        "pending_date_count": 2,
+        "pending_item_count": 8,
+        "unresolved_item_count": 8
       },
       "recovery_lifecycle": "HEALTHY",
-      "review_date": "2026-10-14",
+      "review_date": "2026-10-16",
       "review_item_count": 4,
-      "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
+      "review_material_path": "data/dispatches/food-line/review/proposed-editions/2026-10-16.json",
       "review_material_paths": [
-        "data/dispatches/food-line/review/proposed-editions/2026-10-14.json",
-        "data/dispatches/food-line/review/proposed-editions/2026-10-14.md",
-        "data/dispatches/food-line/review/reports/2026-10-14/current-intake.json"
+        "data/dispatches/food-line/review/proposed-editions/2026-10-16.json",
+        "data/dispatches/food-line/review/proposed-editions/2026-10-16.md",
+        "data/dispatches/food-line/review/reports/2026-10-16/current-intake.json"
       ],
       "review_pending": true
     },
@@ -550,7 +559,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-16T22:42:30.403192Z",
+  "exported_at": "2026-10-16T22:56:21.311675Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza"

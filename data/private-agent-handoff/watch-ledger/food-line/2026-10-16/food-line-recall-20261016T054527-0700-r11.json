@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T054527-0700-r11",
+  "scheduled_for": "2026-10-16T05:45:54-07:00",
+  "started_at": "2026-10-16T05:45:27-07:00",
+  "completed_at": "2026-10-16T05:47:16-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T04:45:54-07:00",
+    "end": "2026-10-16T05:47:16-07:00",
+    "prior_verified_check_at": null,
+    "note": "Nominal prior hourly boundary used. Last personally visible prior completed check ended 2026-10-16T00:44:38-07:00; intervening run receipts unavailable for verification."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_status": "SUCCESS",
+    "search_queries_executed": 12,
+    "search_queries_limit": 12,
+    "search_failures": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire community October 16 2026",
+      "\"last grocery store\" shuttered community Oct 15 2026",
+      "\"sole grocery store\" fire closed October 2026",
+      "\"full-service grocery\" closing residents October 16 2026",
+      "\"food distribution\" \"canceled\" storm October 16 2026",
+      "\"food pantry\" \"closed\" flooding October 16 2026",
+      "\"food distribution\" \"cancelled\" power outage October 15 2026",
+      "\"food bank\" suspended distributions storm October 16 2026",
+      "\"food pantry\" \"temporarily closed\" October 16 2026 emergency",
+      "\"food bank\" abruptly closes services October 15 2026",
+      "state SNAP EBT outage interruption benefits October 16 2026 official",
+      "WIC office closed outage benefits unavailable October 16 2026 state"
+    ],
+    "disposition": "No new independently verified, nonduplicate U.S. food-access loss/interruption in the four narrow miss classes surfaced by this bounded search.",
+    "excluded": "Historical rural-grocery fires/closures; previous food pantry shutdowns; older benefit freezes/outages; routine hurricane food distributions and programs; non-U.S. food-bank closures; pet food pantries.",
+    "representative_excluded_sources": [
+      "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+      "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+      "https://mynews4.com/news/local/food-bank-of-northern-nevada-cancels-tuesday-distribution-events-due-to-winter-weather"
+    ],
+    "search_limitations": "Index returned primarily older results. No findings is not proof of complete U.S. nationwide coverage; this is supplementary to authoritative production collection.",
+    "intended_repository": "RedGarland/the-blue-fern-co-dispatches",
+    "intended_branch": "ops/watch-ledger",
+    "intended_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-16/food-line-recall-20261016T054527-0700-r11.json",
+    "production_collection_authoritative": true,
+    "no_approval_or_publication_or_schedule_changes": true
+  }
+}

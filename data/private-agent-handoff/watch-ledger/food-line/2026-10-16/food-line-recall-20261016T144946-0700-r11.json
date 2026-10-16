@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T144946-0700-r11",
+  "scheduled_for": "2026-10-16T14:45:54-07:00",
+  "started_at": "2026-10-16T14:49:46-07:00",
+  "completed_at": "2026-10-16T14:50:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "date_from": "2026-10-16",
+    "date_to": "2026-10-16",
+    "start": "2026-10-16T13:48:52-07:00",
+    "end": "2026-10-16T14:50:37-07:00",
+    "basis": "Previous committed supplementary Food Line watch completed October 16 at 13:48:52 Pacific; this watch searched for newly surfaced U.S. food-access disruptions since that checkpoint."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "discovery_status": "SUCCESS",
+    "new_qualifying_findings": 0,
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "query_context": [
+      "\"only grocery store\" closed fire October 16 2026 food access",
+      "\"sole grocery store\" closure October 2026 community",
+      "\"last grocery store\" fire closed October 16 2026",
+      "\"full-service grocery\" closes residents October 16 2026",
+      "food pantry closed unexpectedly today October 16 2026",
+      "food bank pantry closing services abruptly October 16 2026",
+      "food distribution canceled storm flooding October 16 2026",
+      "emergency food distribution cancelled power outage October 16 2026",
+      "site:gov SNAP benefits outage October 16 2026 suspended EBT",
+      "site:gov WIC service interruption October 16 2026",
+      "food pantry temporarily closed fire flood October 16 2026",
+      "SNAP EBT outages today October 16 2026 state agency"
+    ],
+    "miss_classes": [
+      "only/sole/last/full-service grocery loss, closure, fire, or disaster",
+      "weather/flood/fire/outage-related emergency food distribution cancellation",
+      "abrupt pantry/food-bank closure or major service/access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate food access consequence"
+    ],
+    "excluded": "Results included Spencer NY grocery store fire (September 14, 2026), Wolcott NY and Latta SC earlier grocery closures, Ruby's Pantry April 2026 shutdown, and 2025 SNAP/WIC government shutdown coverage. These were not new signals in the bounded hourly window. Promotional, resource, and unrelated results excluded.",
+    "freshness_limitation": "Search indexing surfaced older incidents despite 1-2-day recency queries. Zero newly verifiable findings is not proof that no U.S. disruptions occurred.",
+    "deduplication": "Compared date and subject matter against previous durable 13:47 PT Food Line supplementary watch heartbeat.",
+    "operator_effects": "Supplementary recall discovery only. Production collector remains authoritative. No approval, publication, social posting, schedule change, or production mutation."
+  }
+}

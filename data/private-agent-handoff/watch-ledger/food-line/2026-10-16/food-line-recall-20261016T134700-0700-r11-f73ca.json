@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T134700-0700-r11-f73ca",
+  "scheduled_for": "2026-10-16T13:45:54-07:00",
+  "started_at": "2026-10-16T13:47:00-07:00",
+  "completed_at": "2026-10-16T13:48:52-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "date_from": "2026-10-16",
+    "date_to": "2026-10-16",
+    "start": "2026-10-16T12:50:17-07:00",
+    "end": "2026-10-16T13:48:52-07:00",
+    "basis": "Prior 12:48 PT recall watch observation ended at 12:50:17 PT; that run's heartbeat was uncommitted. Last durable watch heartbeat ended at 11:48:06 PT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "discovery_status": "SUCCESS",
+    "new_qualifying_findings": 0,
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "query_context": [
+      "\"only grocery store\" closed fire October 16 2026 town US",
+      "\"last grocery store\" \"closed\" community October 2026",
+      "\"only full-service grocery store\" closing October 2026",
+      "food distribution canceled storm Friday October 16 2026 food bank",
+      "\"food distribution\" \"cancelled\" \"Oct. 16\" 2026 flood",
+      "food pantry unexpectedly closed October 16 2026 services",
+      "food bank closure sudden service suspended October 16 2026",
+      "site:gov \"SNAP\" \"interruption\" \"October 16, 2026\" benefits",
+      "October 16 2026 \"EBT\" \"outage\" SNAP state agency",
+      "October 16 2026 WIC \"closed\" \"services\" state agency",
+      "October 16 2026 \"only grocery store\" \"fire\" closure town",
+      "October 16 2026 \"food distribution\" \"cancelled\" weather pantry"
+    ],
+    "miss_classes": [
+      "only/sole/last/full-service grocery closure or disaster",
+      "weather/disaster-related distribution cancellation",
+      "abrupt pantry or food-bank service loss",
+      "official SNAP/WIC/food aid service interruption"
+    ],
+    "excluded": "Earlier Spencer NY grocery fire (September 2026), Latta SC grocery closure (July 2026), Prodisee Pantry weather cancellation already announced October 7 for October 10, historic 2025 SNAP shutdown news, 2026 Arvada Safeway chain exit (not community's only grocery), Ahold U.S. retail website outages (no verified qualifying grocery access loss under bounded criteria), and routine resource/promotional content.",
+    "freshness_limitation": "Search results frequently surfaced older incidents despite Oct 16 date and recency filters. Zero qualifying findings means nothing newly verifiable surfaced in this bounded search, not that no disruptions occurred nationwide.",
+    "deduplication": "Checked candidate dates against the prior 12:48-12:52 PT watch record and previous persisted 11:46 PT ledger record.",
+    "operator_effects": "Supplementary discovery only. Production collector authoritative. No approval, publication, social posts, schedule changes, or primary collector mutations."
+  }
+}

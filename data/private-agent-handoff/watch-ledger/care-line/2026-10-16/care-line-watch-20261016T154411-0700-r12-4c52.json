@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261016T154411-0700-r12-4c52",
+  "scheduled_for": "2026-10-16T15:45:22-07:00",
+  "started_at": "2026-10-16T15:44:11-07:00",
+  "completed_at": "2026-10-16T15:45:25-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-16T14:43:51-07:00",
+    "end": "2026-10-16T15:45:25-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line collection remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; latest listed notice 2026-10-09 (Tender Home Health, CA), with no newly listed notices in the observation window.",
+    "Exactly 12 additional targeted searches completed using recent-date filtering, covering hospital and emergency services, maternity, behavioral health, oncology, dialysis, primary care, EMS/air medical, rural services, reopenings, state regulatory actions, and U.S. territories.",
+    "No verified, nonduplicate healthcare-access changes first reported during the bounded observation window.",
+    "Search indexes returned some older articles despite date filters; these were excluded. Prior Guam hospital suspensions, Pensacola pediatric clinic reopening, and Maine ambulance closure are known prior-watch candidates and were not re-raised.",
+    "All findings require pending_review; none identified, approved or published. No schedule changes."
+  ]
+}

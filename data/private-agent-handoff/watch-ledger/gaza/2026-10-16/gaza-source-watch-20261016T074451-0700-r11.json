@@ -1,0 +1,64 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261016T074451-0700-r11",
+  "scheduled_for": "2026-10-16T07:44:51-07:00",
+  "started_at": "2026-10-16T07:45:19-07:00",
+  "completed_at": "2026-10-16T07:47:03-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T06:43:08-07:00",
+    "end": "2026-10-16T07:47:03-07:00",
+    "basis": "Previous verified 06:44 watch heartbeat completed_at through current observation"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only; primary Gaza daily production remains authoritative. No publication or approval.",
+    "primary_sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications",
+        "result": "Search-indexed publication listing current through 09 Oct 2026; direct page timed out during this watch."
+      },
+      {
+        "name": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "WHO global oPt overview accessible; no newly dated Gaza health item within observation window."
+      },
+      {
+        "name": "WHO EMRO situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502; regional Gaza-specific healthcare verification incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "Reuters casualties/crossings",
+      "AP humanitarian developments",
+      "UNRWA aid",
+      "UNICEF nutrition",
+      "WFP food aid",
+      "MSF health",
+      "Gaza hourly news",
+      "Gaza access/crossings",
+      "Gaza strikes/casualties",
+      "ReliefWeb situation reporting",
+      "ICRC detention/hostages",
+      "UN humanitarian and medical evacuation"
+    ],
+    "exclusions": [
+      "Reuters 16 Oct 12:02 UTC UNICEF nutrition report previously identified in 05:44 watch and explicitly excluded in 06:44 heartbeat.",
+      "Reuters/AP 15 Oct commercial shipments halted: same preexisting incident; duplicates excluded.",
+      "Anadolu syndicated 16 Oct 14:25 local publication reports 15 Oct drone casualties; prior-day event and publication timing outside observation window; not counted as new.",
+      "Financial Times 16 Oct commercial goods story: follow-up to known suspension, no verified independent new event in observation window.",
+      "AP 16 Oct West Bank olive harvest attacks: out of scope (not in-Gaza).",
+      "Historical reports, opinion, unsupported social posts, and recycled material excluded."
+    ],
+    "result": "No newly verified qualifying in-Gaza development first reported or materially updated inside this bounded watch window.",
+    "degradation": "OCHA publications page timed out; WHO EMRO situation reports returned HTTP 502. Useful official-index and established-reporting coverage remained.",
+    "deduplication_basis": "Checked previous persisted watch 2026-10-16 06:44:51 PDT with outcome no_findings, and preceding 04:44:51 heartbeat; 05:44 attempted heartbeat not present on branch."
+  }
+}

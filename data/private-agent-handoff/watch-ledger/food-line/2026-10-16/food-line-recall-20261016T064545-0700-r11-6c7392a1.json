@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T064545-0700-r11-6c7392a1",
+  "scheduled_for": "2026-10-16T06:45:54-07:00",
+  "started_at": "2026-10-16T06:45:45-07:00",
+  "completed_at": "2026-10-16T13:47:45.131Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T05:45:54-07:00",
+    "end": "2026-10-16T06:46:42-07:00",
+    "prior_verified_check_at": null,
+    "note": "Previous actual completion timestamp unavailable; bounded to preceding hourly slot. Web results checked for source publication/update within interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_status": "SUCCESS",
+    "search_queries_executed": 12,
+    "search_queries_limit": 12,
+    "search_failures": 0,
+    "search_queries": [
+      "\"only grocery store\" \"closed\" OR \"fire\" October 16 2026",
+      "\"last grocery store\" \"closing\" October 2026 town",
+      "\"only full-service grocery\" closed fire storm October 2026",
+      "\"food distribution\" \"canceled\" storm flood Friday October 16 2026",
+      "\"food pantry\" \"closed\" \"flood\" OR \"fire\" October 16 2026",
+      "\"food bank\" \"suspended services\" October 2026 damage",
+      "SNAP EBT WIC outage benefits interruption October 16 2026 official agency",
+      "SNAP WIC benefits not available \"October 16\" 2026 notice",
+      "site:facebook.com \"food distribution\" \"cancelled\" \"October 16, 2026\" storm",
+      "\"October 16, 2026\" \"food pantry\" \"closed\" service",
+      "\"October 15, 2026\" \"food distribution\" canceled weather power",
+      "site:gov \"October 16, 2026\" SNAP WIC \"interruption\" \"outage\""
+    ],
+    "coverage_classes": [
+      "sole or full-service grocery store closure/fire/disaster",
+      "emergency food distribution cancellations due to damage/weather/outages",
+      "abrupt pantry or food-bank service reduction/closure",
+      "official SNAP/WIC/food-assistance interruption with immediate impact"
+    ],
+    "disposition": "No newly verified qualifying U.S. food-access disruption discovered in bounded interval. No candidate advanced for review.",
+    "representative_exclusions": [
+      {
+        "url": "https://www.the-sun.com/money/17150572/wheatsville-food-co-op-closing-austin-texas/",
+        "reason": "Grocery co-op closure announced earlier; remaining Austin branch operating, no evidence of sole or only full-service grocery loss."
+      },
+      {
+        "url": "https://www.wtkr.com/news/in-the-community/portsmouth/oasis-social-ministry-temporarily-closes-food-pantry-services-due-to-city-of-portsmouth-construction-project",
+        "reason": "Closure announced months earlier."
+      },
+      {
+        "url": "https://thebellecenter.org/event/the-belle-center-food-pantry-42/",
+        "reason": "Routine operating-hours event, no disruption."
+      }
+    ],
+    "search_limitations": "Index returned predominantly older historical incidents and routine listings; absence of hits does not establish exhaustive nationwide coverage.",
+    "production_collection_authoritative": true,
+    "publication_or_approval_or_schedule_mutations": false
+  }
+}

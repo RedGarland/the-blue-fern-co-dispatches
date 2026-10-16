@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261016T114451-0700-r11",
+  "scheduled_for": "2026-10-16T11:44:51-07:00",
+  "started_at": "2026-10-16T11:40:18-07:00",
+  "completed_at": "2026-10-16T11:41:46-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T10:45:00-07:00",
+    "end": "2026-10-16T11:41:46-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "sources_checked": [
+      "OCHA OPT publications: latest October 9, no new item",
+      "WHO global overview: accessible, no new item",
+      "WHO EMRO emergency situation reports: HTTP 502"
+    ],
+    "additional_targeted_searches": 12,
+    "exclusions": [
+      "previous UNICEF nutrition coverage",
+      "previous WHO capacity graphics",
+      "existing commercial imports coverage",
+      "older casualty reports"
+    ],
+    "degradation": "WHO EMRO reports unavailable (502); one news search blocked by robots.txt.",
+    "note": "No new verified qualifying in-Gaza developments in search window. Supplementary recall only; no production actions."
+  }
+}

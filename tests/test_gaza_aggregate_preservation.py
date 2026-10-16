@@ -206,30 +206,122 @@ def test_backdated_recovery_does_not_replace_actual_latest_entry(tmp_path: Path)
     assert rendered_rss.index("editions/2026-10-12/") > rendered_rss.index("editions/2026-10-14/")
 
 
-def test_include_current_false_does_not_call_pages_append_helper(tmp_path: Path, monkeypatch):
+@pytest.mark.parametrize("run_kind", ["no-update", "failed-render"])
+def test_non_current_render_preserves_pages_history(tmp_path: Path, monkeypatch, run_kind: str):
+    _site_root, pages_repo, _dispatch = fixture_roots(tmp_path)
     root = tmp_path
     (root / "output" / "site" / "gaza").mkdir(parents=True)
-    pages_repo = root / "pages"
-    calls: list[object] = []
-
-    def sentinel(*args, **kwargs):
-        calls.append((args, kwargs))
-        return True
 
     monkeypatch.setattr(gaza_runner, "reconcile_gaza_public_editions", lambda *args, **kwargs: None)
     monkeypatch.setattr(gaza_runner, "discover_edition_dates", lambda *args, **kwargs: [])
-    monkeypatch.setattr(gaza_runner, "_gaza_aggregate_render_from_pages_history", sentinel)
+    monkeypatch.setattr(gaza_runner, "_default_pages_repo", lambda *args, **kwargs: pages_repo)
     wrote: list[str] = []
     gaza_runner.render_archive_index_rss(
         root,
         DATE,
-        dry_run=True,
+        dry_run=False,
         wrote=wrote,
         include_current=False,
         pages_repo=pages_repo,
     )
-    assert calls == []
+    for filename in ("index.html", "archive.html", "rss.xml"):
+        assert (root / "output" / "site" / "gaza" / filename).read_bytes() == (
+            pages_repo / "gaza" / filename
+        ).read_bytes(), run_kind
     assert {Path(path).name for path in wrote} == {"index.html", "archive.html", "rss.xml"}
+
+
+def test_established_pages_history_missing_surface_fails_closed(tmp_path: Path, monkeypatch):
+    _site_root, pages_repo, _dispatch = fixture_roots(tmp_path)
+    (pages_repo / "gaza" / "rss.xml").unlink()
+    root = tmp_path
+    (root / "output" / "site" / "gaza").mkdir(parents=True)
+    monkeypatch.setattr(gaza_runner, "reconcile_gaza_public_editions", lambda *args, **kwargs: None)
+    monkeypatch.setattr(gaza_runner, "discover_edition_dates", lambda *args, **kwargs: [])
+    with pytest.raises(ValueError, match="authoritative Gaza aggregate baseline incomplete/unreadable"):
+        gaza_runner.render_archive_index_rss(
+            root,
+            DATE,
+            dry_run=False,
+            wrote=[],
+            include_current=False,
+            pages_repo=pages_repo,
+        )
+    assert not (root / "output" / "site" / "gaza" / "archive.html").exists()
+
+
+def test_empty_pages_bootstrap_allows_generic_aggregate_render(tmp_path: Path, monkeypatch):
+    root = tmp_path
+    pages_repo = root / "pages"
+    pages_repo.mkdir()
+    (root / "output" / "site" / "gaza").mkdir(parents=True)
+    monkeypatch.setattr(gaza_runner, "reconcile_gaza_public_editions", lambda *args, **kwargs: None)
+    monkeypatch.setattr(gaza_runner, "discover_edition_dates", lambda *args, **kwargs: [])
+    wrote: list[str] = []
+    gaza_runner.render_archive_index_rss(
+        root,
+        DATE,
+        dry_run=False,
+        wrote=wrote,
+        include_current=False,
+        pages_repo=pages_repo,
+    )
+    assert {Path(path).name for path in wrote} == {"index.html", "archive.html", "rss.xml"}
+
+
+def test_current_date_exact_repeat_is_idempotent_but_mismatch_requires_correction_workflow(tmp_path: Path):
+    site_root, pages_repo, dispatch = fixture_roots(tmp_path)
+    _gaza_aggregate_render_from_pages_history(
+        site_root, dispatch, DATE, pages_repo, dry_run=False, wrote=[]
+    )
+    for filename in ("index.html", "archive.html", "rss.xml"):
+        write(
+            pages_repo / "gaza" / filename,
+            (site_root / "gaza" / filename).read_text(encoding="utf-8"),
+        )
+    original = {filename: (pages_repo / "gaza" / filename).read_bytes() for filename in ("index.html", "archive.html", "rss.xml")}
+    assert _gaza_aggregate_render_from_pages_history(
+        site_root, dispatch, DATE, pages_repo, dry_run=False, wrote=[]
+    ) is True
+    assert {filename: (site_root / "gaza" / filename).read_bytes() for filename in original} == original
+
+    manifest_path = site_root / "gaza" / "editions" / DATE / "edition_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["public_archive_title"] = "Changed input must not overwrite established history"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="separate correction workflow"):
+        _gaza_aggregate_render_from_pages_history(
+            site_root, dispatch, DATE, pages_repo, dry_run=True, wrote=[]
+        )
+
+
+def test_aggregate_insertion_handles_no_update_rows_and_irregular_rss_items(tmp_path: Path):
+    site_root, pages_repo, dispatch = fixture_roots(tmp_path)
+    archive_path = pages_repo / "gaza" / "archive.html"
+    archive = archive_path.read_text(encoding="utf-8")
+    correction = archive[archive.index('      <li class="archive-row archive-row--daily"'):archive.index("\n      <li class=\"archive-row archive-row--no-update\"")]
+    no_update = archive[archive.index('      <li class="archive-row archive-row--no-update"'):archive.index("\n      <li><a href=")]
+    archive = archive.replace(correction + "\n" + no_update, no_update + "\n" + correction)
+    archive_path.write_text(archive, encoding="utf-8")
+    rss_path = pages_repo / "gaza" / "rss.xml"
+    rss_path.write_text(rss_path.read_text(encoding="utf-8").replace("  <item>", "<item>"), encoding="utf-8")
+
+    assert _gaza_aggregate_render_from_pages_history(
+        site_root, dispatch, DATE, pages_repo, dry_run=False, wrote=[]
+    ) is True
+    rendered_archive = (site_root / "gaza" / "archive.html").read_text(encoding="utf-8")
+    rendered_rss = (site_root / "gaza" / "rss.xml").read_text(encoding="utf-8")
+    assert rendered_archive.index("editions/2026-10-16/") < rendered_archive.index("2026-10-15")
+    assert rendered_rss.index("editions/2026-10-16/") < rendered_rss.index("editions/2026-10-14/")
+
+
+def test_backdated_missing_month_is_inserted_in_date_order(tmp_path: Path):
+    site_root, pages_repo, dispatch = fixture_roots(tmp_path)
+    assert _gaza_aggregate_render_from_pages_history(
+        site_root, dispatch, "2026-03-10", pages_repo, dry_run=False, wrote=[]
+    ) is True
+    rendered_archive = (site_root / "gaza" / "archive.html").read_text(encoding="utf-8")
+    assert rendered_archive.index("October 2026") < rendered_archive.index("March 2026")
 
 
 def test_limited_source_manifest_gets_explicit_aggregate_label(tmp_path: Path):

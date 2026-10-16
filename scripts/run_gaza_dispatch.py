@@ -34,6 +34,7 @@ from bluefern_dispatches.generator import (
     render_rss_for_dates,
     reconcile_gaza_public_editions,
     _gaza_aggregate_render_from_pages_history,
+    _gaza_aggregate_preserve_pages_history,
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical_from_google_wrapper
@@ -2033,11 +2034,19 @@ def render_archive_index_rss(
     if include_current and edition_date not in dates:
         dates = sorted([*dates, edition_date], reverse=True)
     gaza_root = site_root / DISPATCH_SLUG
-    if dispatch.slug == "gaza" and pages_repo is not None and include_current:
-        if _gaza_aggregate_render_from_pages_history(
+    if dispatch.slug == "gaza" and pages_repo is not None:
+        if include_current:
+            if _gaza_aggregate_render_from_pages_history(
+                site_root,
+                dispatch,
+                edition_date,
+                pages_repo,
+                dry_run=dry_run,
+                wrote=wrote,
+            ):
+                return
+        elif _gaza_aggregate_preserve_pages_history(
             site_root,
-            dispatch,
-            edition_date,
             pages_repo,
             dry_run=dry_run,
             wrote=wrote,

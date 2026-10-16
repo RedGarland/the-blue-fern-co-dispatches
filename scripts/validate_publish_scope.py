@@ -470,6 +470,11 @@ def _release_manifest_delta(
     seen_pages: set[str] = set()
     source_root = source_repo_root.resolve()
     pages_root = pages_repo_root.resolve() if pages_repo_root is not None else None
+    try:
+        dirty_source_paths = set(_git_status_porcelain(source_root))
+    except RuntimeError as exc:
+        errors.append(str(exc))
+        dirty_source_paths = set()
     runtime_editorial_prefixes = (
         "data/dispatches/food-line/review/proposed-editions/",
         "data/dispatches/food-line/review/signal-reviews/",
@@ -550,6 +555,10 @@ def _release_manifest_delta(
             if provenance_role == "approved_retrospective_generated_output":
                 if retrospective_authority_errors:
                     errors.append(f"retrospective generated output lacks valid committed authority: {source_rel}")
+            elif provenance_role == "generated_output" and source_rel in dirty_source_paths:
+                errors.append(
+                    f"release manifest generated output must be committed before synchronization: {source_rel}"
+                )
             elif source_commit and _git_commit_exists(source_root, source_commit):
                 file_bytes = _git_file_bytes(source_root, source_commit, source_rel)
                 if file_bytes is None:
@@ -585,8 +594,20 @@ def _release_manifest_delta(
         expected_paths = {
             "output/site/food-line/index.html",
             "output/site/food-line/archive.html",
-            "output/site/food-line/rss.xml",
         }
+        # RSS is optional for a current release, but a retrospective release
+        # must bind the complete history surface to its manifest. Checking
+        # only the candidate RSS bytes would otherwise let a retrospective
+        # manifest omit RSS while the history guard still passes on archive.
+        if retrospective_role_requested:
+            expected_paths.add("output/site/food-line/rss.xml")
+            if "output/site/food-line/rss.xml" not in source_paths:
+                errors.append(
+                    "retrospective Food Line release manifest must include "
+                    "the manifest-bound RSS artifact"
+                )
+        if "output/site/food-line/rss.xml" in source_paths:
+            expected_paths.add("output/site/food-line/rss.xml")
         if edition_dir.is_dir():
             expected_paths.update(path.relative_to(source_root).as_posix() for path in edition_dir.rglob("*") if path.is_file())
         missing = sorted(expected_paths - set(source_paths))

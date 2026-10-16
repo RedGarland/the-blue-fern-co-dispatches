@@ -122,6 +122,43 @@ def test_retrospective_pages_dry_run_rejects_history_shrink(release_repos: tuple
     assert any("rss dropped: ['2026-08-24']" in error for error in report["errors"])
 
 
+def test_current_food_release_dry_run_rejects_history_shrink(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-08-30"])
+    (source / "output/site/food-line/archive.html").write_text(
+        '<a href="editions/2026-08-30/">new</a>', encoding="utf-8"
+    )
+    (source / "output/site/food-line/rss.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-30/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+    (pages / "food-line").mkdir(parents=True)
+    (pages / "food-line/archive.html").write_text(
+        '<a href="editions/2026-08-24/">old</a>', encoding="utf-8"
+    )
+    (pages / "food-line/rss.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-24/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+    _commit_repo(source, "food release candidate")
+    _commit_repo(pages, "published history")
+    manifest = _release_manifest(source, pages, "2026-08-30")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-08-30"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is False
+    assert any("archive dropped: ['2026-08-24']" in error for error in report["errors"])
+    assert all("rss dropped" not in error for error in report["errors"])
+
+
 def _release_manifest_with_runtime_inputs(source: Path, pages: Path, date_text: str) -> Path:
     manifest_path = _release_manifest(source, pages, date_text)
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -1114,6 +1151,35 @@ def test_dry_run_reports_planned_paths_for_food_line_dates(release_repos: tuple[
     assert not (pages / "food-line").exists()
 
 
+def test_legacy_cleanup_preserves_existing_food_line_history(tmp_path: Path) -> None:
+    source = tmp_path / "source" / "output" / "site"
+    pages = tmp_path / "pages"
+    pages.mkdir(parents=True)
+    dates = ("2026-10-04", "2026-10-12", "2026-10-13")
+    before: dict[str, bytes] = {}
+    for date_text in dates:
+        edition = pages / "food-line" / "editions" / date_text
+        edition.mkdir(parents=True)
+        (edition / "index.html").write_text(f"published {date_text}\n", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text(
+            json.dumps({"edition_date": date_text, "public_rendered": True}),
+            encoding="utf-8",
+        )
+        for path in edition.rglob("*"):
+            if path.is_file():
+                before[path.relative_to(pages).as_posix()] = path.read_bytes()
+
+    assert generator.remove_non_publishable_pages_editions(source, pages, dry_run=True) == []
+    assert generator.remove_non_publishable_pages_editions(source, pages, dry_run=False) == []
+
+    after = {
+        path.relative_to(pages).as_posix(): path.read_bytes()
+        for path in pages.rglob("*")
+        if path.is_file()
+    }
+    assert after == before
+
+
 def test_allowed_path_validation_rejects_unexpected_pages_diff(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
     source, pages = release_repos
     _write_food_line_site(source, ["2026-06-19"])
@@ -1367,6 +1433,33 @@ def test_live_check_url_construction_and_only_mode(release_repos: tuple[Path, Pa
     assert seen_urls[0] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/?cache_bust=abc+123"
     assert seen_urls[1] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/sources_manifest.json?cache_bust=abc+123"
     assert seen_urls[2] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/curation_manifest.json?cache_bust=abc+123"
+
+
+def test_live_check_only_allows_an_already_published_edition(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    published_edition = pages / "food-line" / "editions" / "2026-06-19"
+    published_edition.mkdir(parents=True)
+    (published_edition / "index.html").write_text("published", encoding="utf-8")
+    (pages / "food-line" / "archive.html").write_text(
+        '<a href="editions/2026-06-19/">published</a>', encoding="utf-8"
+    )
+    _commit_repo(pages, "published edition")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        live_check=True,
+        live_check_only=True,
+        fetch_status=lambda _url, _timeout: 200,
+    )
+
+    assert report["ok"] is True
+    assert report["commit_status"] == "live-check-only"
 
 
 def test_date_validation_and_multiple_date_handling() -> None:

@@ -16,7 +16,7 @@ from typing import Any, Callable, Sequence
 from bluefern_dispatches.generator import public_site_contains_blocked_public_text, public_site_contains_detail_artifacts
 from bluefern_dispatches.food_line_retrospective import (
     FoodLineRetrospectiveError,
-    assert_retrospective_history_monotonic,
+    assert_food_line_history_monotonic,
 )
 from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 from scripts.validate_publish_scope import validate_publish_scope
@@ -535,12 +535,17 @@ def sync_pages_from_source(
     pre_copy_errors = []
     pre_copy_errors.extend(public_site_contains_detail_artifacts(source_root / "output" / "site"))
     pre_copy_errors.extend(public_site_contains_blocked_public_text(source_root / "output" / "site"))
-    if retrospective_release:
+    if dispatch == "food-line" and not live_check_only:
+        # Live-check-only is a read-only verification of an already deployed
+        # edition. It must remain usable after publication, when the selected
+        # Pages edition directory is intentionally occupied. Vacancy and
+        # history-shrink guards apply to copy/commit planning, not GET checks.
         try:
-            assert_retrospective_history_monotonic(
+            assert_food_line_history_monotonic(
                 pages_root,
                 source_root / "output" / "site",
                 edition_dates=selected_dates,
+                include_rss=include_rss,
             )
         except FoodLineRetrospectiveError as exc:
             pre_copy_errors.append(str(exc))

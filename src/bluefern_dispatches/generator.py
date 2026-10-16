@@ -4736,7 +4736,12 @@ def refresh_shared_homepage_from_pages_inventory(
 
 
 def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[dict[str, str]]:
-    tracked_slugs = ("cascadia", "food-line", CARE_LINE_DISPATCH_SLUG)
+    # Food Line Pages editions are an immutable public history.  The current
+    # approved-proposal release path uses the guarded exact-delta sync helper,
+    # which has no deletion plan.  Keep the legacy generic cleanup from
+    # interpreting older Food Line manifests as transitional and deleting
+    # already-published history when the source checkout is incomplete.
+    tracked_slugs = ("cascadia", CARE_LINE_DISPATCH_SLUG)
     if not any((pages_repo / slug / "editions").exists() for slug in tracked_slugs):
         return []
     removed: list[dict[str, str]] = []

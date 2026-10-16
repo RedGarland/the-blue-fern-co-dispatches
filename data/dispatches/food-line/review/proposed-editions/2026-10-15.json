@@ -1,0 +1,389 @@
+{
+  "approved_item_count": 3,
+  "draft": true,
+  "draft_status": "draft_approved_pending_publication",
+  "edition_date": "2026-10-15",
+  "items": [
+    {
+      "freshness_check": {
+        "age_days": 0,
+        "basis": "newly_published",
+        "basis_date": "2026-10-15",
+        "edition_date": "2026-10-15",
+        "reason": "",
+        "status": "current"
+      },
+      "headline": "Boerne weekend-meal program reaches more than 500 students across 14 campuses",
+      "location_name": "Boerne, Texas",
+      "rank": 2,
+      "section": "Core Food Pressure Signals",
+      "source": "KSAT",
+      "source_published_at": "2026-10-15",
+      "source_url": "https://www.ksat.com/news/local/2026/10/15/boerne-volunteers-pack-weekend-meals-for-students-facing-food-insecurity",
+      "state": "Texas",
+      "summary": "KSAT reports that Blessings in a Backpack packs weekend meals for more than 500 Boerne ISD students across 14 campuses; an organizer says rising food costs restrict nutritious purchases.",
+      "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+      "why_it_matters": "Every Thursday, volunteers in Boerne pack hundreds of weekend food bags through Blessings in a Backpack to support more than 500 Boerne ISD students on free or reduced-price lunch.",
+      "exact_supporting_passage": "Every Thursday, a group of Boerne community members forms an assembly line to help make sure local students have enough to eat when school is out. The volunteers pack hundreds of bags of food for students in the Boerne Independent School District who are on the free or reduced-price lunch program. […] It now serves more than 500 students at all 14 Boerne ISD campuses. […] Duran said rising food costs are making it harder to stock the bags with nutritious items. “I haven't bought any mandarins in a while, because they're like $25 a case, which is quite high, because it used to be like $15 to $16.”",
+      "claim_supported": "The source reports a Boerne weekend-meal program serving more than 500 Boerne ISD students at 14 campuses, with rising food costs affecting nutritious items.",
+      "review_notes": "Publisher page reviewed on 2026-10-16 UTC; public provenance uses the reviewed source passage rather than Google wrapper or navigation text."
+    },
+    {
+      "freshness_check": {
+        "age_days": 1,
+        "basis": "newly_published",
+        "basis_date": "2026-10-14",
+        "edition_date": "2026-10-15",
+        "reason": "",
+        "status": "current"
+      },
+      "headline": "Baylor's student food store serves about 800 students weekly amid ongoing campus hunger",
+      "location_name": "Waco, Texas",
+      "rank": 5,
+      "section": "Core Food Pressure Signals",
+      "source": "The Baylor Lariat",
+      "source_published_at": "2026-10-14",
+      "source_url": "https://baylorlariat.com/2026/10/14/free-farmers-market-commemorates-10-years-of-fighting-food-insecurity",
+      "state": "Texas",
+      "summary": "The Baylor Lariat reports that The Store serves about 800 students each week and describes ongoing student hunger on campus.",
+      "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+      "why_it_matters": "The Baylor Lariat reported that The Store serves about 800 students per week and that food insecurity remains an issue for Baylor students.",
+      "exact_supporting_passage": "White tents lined Fountain Mall Wednesday as Baylor students gathered for the 10th annual Free Farmers Market. The event provided fresh produce and other healthy food at no cost to students while raising awareness of food insecurity on campus. […] Hosted by The Store with help from BaylorEats, community partners and vendors, the Free Farmers Market aims to give students access to nutritious food while reminding them of the resources available through Baylor. […] “We serve about 800 students per week in The Store,” Baldwin said. “Students might be sitting beside another student who eats once a day or even once a week. There is a need on our campus for students to support one another.”",
+      "claim_supported": "The source reports that Baylor's Free Farmers Market provides food access on campus and that The Store serves about 800 students per week.",
+      "review_notes": "Publisher page reviewed on 2026-10-16 UTC; the article date is October 14, 2026, and public provenance excludes the stale financial-stress framing."
+    },
+    {
+      "freshness_check": {
+        "age_days": 0,
+        "basis": "newly_published",
+        "basis_date": "2026-10-15",
+        "edition_date": "2026-10-15",
+        "reason": "",
+        "status": "current"
+      },
+      "headline": "Colorado food banks report rising demand amid inflation and SNAP disruption",
+      "location_name": "Colorado",
+      "rank": 10,
+      "section": "Core Food Pressure Signals",
+      "source": "Colorado Newsline",
+      "source_published_at": "2026-10-15",
+      "source_url": "https://coloradonewsline.com/2026/10/15/colorado-food-banks-demand-inflation-snap-cuts",
+      "state": "Colorado",
+      "summary": "Colorado Newsline reports that an Adams County food bank served 3,400 new people since January, Project Worthmore served 90% more families, and Feeding Colorado estimates about 40,000 people lost SNAP over the last year.",
+      "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+      "why_it_matters": "Colorado Newsline reported growing Denver-metro food-assistance demand, about 40,000 Coloradans losing access to SNAP benefits in the last year, 3,400 new people at the Adams County Emergency Food Bank, and a 90% increase in families served by Project Worthmore.",
+      "exact_supporting_passage": "Fueled by the rising cost of living and cuts to federal benefits, food assistance programs from around the Denver metro area have seen growing demand and an influx of new, first-time families in need of support this year. […] In the last year, about 40,000 Coloradans have lost access to SNAP benefits amid changes to program requirements, according to Ron Meehan, government relations manager for Feeding Colorado. […] The Adams County Emergency Food Bank has seen 3,400 new people come through its doors since January, executive director Steph Wayne said. […] Simret Kahsai, director of programs at Project Worthmore, which offers various services to immigrant and refugee families, including a food market, said the organization distributed 400,000 pounds of food between January and September this year, compared to 183,000 pounds last year. […] They've seen a 90% increase in the number of families the organization has served.",
+      "claim_supported": "The source reports growing Denver-metro demand, about 40,000 Coloradans losing SNAP access, 3,400 new Adams County Emergency Food Bank visitors, and a 90% increase in families served by Project Worthmore.",
+      "review_notes": "Publisher page reviewed on 2026-10-16 UTC; public provenance keeps the article's current demand and SNAP figures distinct from its cited 2025 shutdown context."
+    }
+  ],
+  "layout": {
+    "at_a_glance": [
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Boerne weekend-meal program reaches more than 500 students across 14 campuses",
+        "location_name": "national",
+        "rank": 2,
+        "section": "Core Food Pressure Signals",
+        "source": "KSAT",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://www.ksat.com/news/local/2026/10/15/boerne-volunteers-pack-weekend-meals-for-students-facing-food-insecurity",
+        "state": "US",
+        "summary": "KSAT reports that Blessings in a Backpack packs weekend meals for more than 500 Boerne ISD students across 14 campuses; an organizer says rising food costs restrict nutritious purchases.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Every Thursday, volunteers in Boerne pack hundreds of weekend food bags through Blessings in a Backpack to support more than 500 Boerne ISD students on free or reduced-price lunch."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Baylor's student food store serves about 800 students weekly amid ongoing campus hunger",
+        "location_name": "national",
+        "rank": 5,
+        "section": "Core Food Pressure Signals",
+        "source": "The Baylor Lariat",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://baylorlariat.com/2026/10/14/free-farmers-market-commemorates-10-years-of-fighting-food-insecurity",
+        "state": "US",
+        "summary": "The Baylor Lariat reports that The Store serves about 800 students each week and describes ongoing student hunger on campus.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "The Baylor Lariat reported on research linking household financial stress to food hardship among some U.S. households, especially among children. The signal points to household financial stress as a food-pressure pathway."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Colorado food banks report rising demand amid inflation and SNAP disruption",
+        "location_name": "national",
+        "rank": 10,
+        "section": "Core Food Pressure Signals",
+        "source": "Colorado Newsline",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://coloradonewsline.com/2026/10/15/colorado-food-banks-demand-inflation-snap-cuts",
+        "state": "US",
+        "summary": "Colorado Newsline reports that an Adams County food bank served 3,400 new people since January, Project Worthmore served 90% more families, and Feeding Colorado estimates about 40,000 people lost SNAP over the last year.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Colorado Newsline reported a SNAP benefit delay, affecting SNAP households, low-income households."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Assemblywoman Soria delivers $250,000 check to Madera County Food Bank",
+        "location_name": "national",
+        "rank": 30,
+        "section": "Core Food Pressure Signals",
+        "source": "KMPH Fox 26",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://kmph.com/news/local/assemblywoman-soria-delivers-250000-check-to-madera-county-food-bank",
+        "state": "US",
+        "summary": "Assemblywoman Esmeralda Soria (D-Merced) presented a check for $250,000 to the Madera County Food Bank on Wednesday.Assemblywoman Esmeralda Soria (D-Merced), Ma",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Assemblywoman Esmeralda Soria (D-Merced) presented a check for $250,000 to the Madera County Food Bank on Wednesday.Assemblywoman Esmeralda Soria (D-Merced), Ma"
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Food Bank kicks off Thanksgiving food drive as 157,000 Delawareans face food insecurity",
+        "location_name": "national",
+        "rank": 32,
+        "section": "Core Food Pressure Signals",
+        "source": "Newark Post",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://www.newarkpostonline.com/news/food-bank-kicks-off-thanksgiving-food-drive-as-157-000-delawareans-face-food-insecurity/article_9418668f-81f0-4878-bcc9-3489720ed0d5.html",
+        "state": "US",
+        "summary": "Newark Post reported household food hardship.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Newark Post reported household food hardship."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Damien's Food Pantry open twice weekly - The New Bedford Light",
+        "location_name": "national",
+        "rank": 43,
+        "section": "Core Food Pressure Signals",
+        "source": "The New Bedford Light",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://newbedfordlight.org/event/damiens-food-pantry-open-twice-weekly/2026-12-24",
+        "state": "US",
+        "summary": "WAREHAM --  Damien's Food Pantry provides food to residents of Bristol, Plymouth and Barnstable counties on Thursdays and Saturdays from 8 a.m. to noon.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "WAREHAM --  Damien's Food Pantry provides food to residents of Bristol, Plymouth and Barnstable counties on Thursdays and Saturdays from 8 a.m. to noon."
+      }
+    ],
+    "core_food_pressure_signals": [
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Boerne weekend-meal program reaches more than 500 students across 14 campuses",
+        "location_name": "national",
+        "rank": 2,
+        "section": "Core Food Pressure Signals",
+        "source": "KSAT",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://www.ksat.com/news/local/2026/10/15/boerne-volunteers-pack-weekend-meals-for-students-facing-food-insecurity",
+        "state": "US",
+        "summary": "KSAT reports that Blessings in a Backpack packs weekend meals for more than 500 Boerne ISD students across 14 campuses; an organizer says rising food costs restrict nutritious purchases.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Every Thursday, volunteers in Boerne pack hundreds of weekend food bags through Blessings in a Backpack to support more than 500 Boerne ISD students on free or reduced-price lunch."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Baylor's student food store serves about 800 students weekly amid ongoing campus hunger",
+        "location_name": "national",
+        "rank": 5,
+        "section": "Core Food Pressure Signals",
+        "source": "The Baylor Lariat",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://baylorlariat.com/2026/10/14/free-farmers-market-commemorates-10-years-of-fighting-food-insecurity",
+        "state": "US",
+        "summary": "The Baylor Lariat reports that The Store serves about 800 students each week and describes ongoing student hunger on campus.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "The Baylor Lariat reported on research linking household financial stress to food hardship among some U.S. households, especially among children. The signal points to household financial stress as a food-pressure pathway."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Colorado food banks report rising demand amid inflation and SNAP disruption",
+        "location_name": "national",
+        "rank": 10,
+        "section": "Core Food Pressure Signals",
+        "source": "Colorado Newsline",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://coloradonewsline.com/2026/10/15/colorado-food-banks-demand-inflation-snap-cuts",
+        "state": "US",
+        "summary": "Colorado Newsline reports that an Adams County food bank served 3,400 new people since January, Project Worthmore served 90% more families, and Feeding Colorado estimates about 40,000 people lost SNAP over the last year.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Colorado Newsline reported a SNAP benefit delay, affecting SNAP households, low-income households."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Assemblywoman Soria delivers $250,000 check to Madera County Food Bank",
+        "location_name": "national",
+        "rank": 30,
+        "section": "Core Food Pressure Signals",
+        "source": "KMPH Fox 26",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://kmph.com/news/local/assemblywoman-soria-delivers-250000-check-to-madera-county-food-bank",
+        "state": "US",
+        "summary": "Assemblywoman Esmeralda Soria (D-Merced) presented a check for $250,000 to the Madera County Food Bank on Wednesday.Assemblywoman Esmeralda Soria (D-Merced), Ma",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Assemblywoman Esmeralda Soria (D-Merced) presented a check for $250,000 to the Madera County Food Bank on Wednesday.Assemblywoman Esmeralda Soria (D-Merced), Ma"
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Food Bank kicks off Thanksgiving food drive as 157,000 Delawareans face food insecurity",
+        "location_name": "national",
+        "rank": 32,
+        "section": "Core Food Pressure Signals",
+        "source": "Newark Post",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://www.newarkpostonline.com/news/food-bank-kicks-off-thanksgiving-food-drive-as-157-000-delawareans-face-food-insecurity/article_9418668f-81f0-4878-bcc9-3489720ed0d5.html",
+        "state": "US",
+        "summary": "Newark Post reported household food hardship.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Newark Post reported household food hardship."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Damien's Food Pantry open twice weekly - The New Bedford Light",
+        "location_name": "national",
+        "rank": 43,
+        "section": "Core Food Pressure Signals",
+        "source": "The New Bedford Light",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://newbedfordlight.org/event/damiens-food-pantry-open-twice-weekly/2026-12-24",
+        "state": "US",
+        "summary": "WAREHAM --  Damien's Food Pantry provides food to residents of Bristol, Plymouth and Barnstable counties on Thursdays and Saturdays from 8 a.m. to noon.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "WAREHAM --  Damien's Food Pantry provides food to residents of Bristol, Plymouth and Barnstable counties on Thursdays and Saturdays from 8 a.m. to noon."
+      }
+    ],
+    "edition_summary": "This edition tracks 6 current, source-traceable food-pressure signals.",
+    "eyebrow_status": "FOOD LINE — PRIVATE DRAFT / UNPUBLISHED",
+    "generation_note": "Private editorial preview assembled from current-review items that are pending or approved; no public output was generated.",
+    "h1": "Food Line Dispatch — 2026-10-15",
+    "other_food_line_signals": [],
+    "source_mix": {
+      "publishers": {
+        "Colorado Newsline": 1,
+        "KMPH Fox 26": 1,
+        "KSAT": 1,
+        "Newark Post": 1,
+        "The Baylor Lariat": 1,
+        "The New Bedford Light": 1
+      },
+      "states": {
+        "US": 6
+      }
+    },
+    "source_note": "Every item retains its canonical source URL, any available source publication date, and its explicit currentness basis.",
+    "todays_read": [
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-10-15",
+          "edition_date": "2026-10-15",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Boerne weekend-meal program reaches more than 500 students across 14 campuses",
+        "location_name": "national",
+        "rank": 2,
+        "section": "Core Food Pressure Signals",
+        "source": "KSAT",
+        "source_published_at": "2026-10-15",
+        "source_url": "https://www.ksat.com/news/local/2026/10/15/boerne-volunteers-pack-weekend-meals-for-students-facing-food-insecurity",
+        "state": "US",
+        "summary": "KSAT reports that Blessings in a Backpack packs weekend meals for more than 500 Boerne ISD students across 14 campuses; an organizer says rising food costs restrict nutritious purchases.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "Every Thursday, volunteers in Boerne pack hundreds of weekend food bags through Blessings in a Backpack to support more than 500 Boerne ISD students on free or reduced-price lunch."
+      }
+    ]
+  },
+  "pending_item_count": 0,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "published": false,
+  "rejected_item_count": 0,
+  "schema_version": "food_line_proposed_edition_v1",
+  "selected_item_count": 3,
+  "source_queue_path": "status/food-line/runtime/current-signal-review.json",
+  "source_queue_sha256": "b2258a5c7765d75294e5cda89c270beb8523122202fd1d709fc38f82a397c3e2"
+}

@@ -1,0 +1,82 @@
+{
+  "deletions": [],
+  "dispatch": "food-line",
+  "edition_date": "2026-10-15",
+  "entries": [
+    {
+      "action": "modify",
+      "pages_path": "food-line/archive.html",
+      "pages_sha256_before": "0fee9fe41f25fe2160686633d60363999a92bd860f0602834463be53fccde274",
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/archive.html",
+      "source_sha256": "eb1cb9b7fec137ec4ae2e7713f3662a5c5fa098b70d6e7fde3abde356a82df58"
+    },
+    {
+      "action": "add",
+      "pages_path": "food-line/editions/2026-10-15/claim_ledger.html",
+      "pages_sha256_before": null,
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/editions/2026-10-15/claim_ledger.html",
+      "source_sha256": "285dc2a185f154a7d8cfda9bede52ce64ee1d65cc46995d77978071b6549dca4"
+    },
+    {
+      "action": "add",
+      "pages_path": "food-line/editions/2026-10-15/curation_manifest.json",
+      "pages_sha256_before": null,
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/editions/2026-10-15/curation_manifest.json",
+      "source_sha256": "e07e70cc63040095a0d96074c02ea5d0fa70d701f5fd8cdb9ee6a0f0aa7db3ca"
+    },
+    {
+      "action": "add",
+      "pages_path": "food-line/editions/2026-10-15/edition_manifest.json",
+      "pages_sha256_before": null,
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/editions/2026-10-15/edition_manifest.json",
+      "source_sha256": "70d477d8f20e691ce29126a423e8522fb0f0753640820bf3c80d9ac15e313213"
+    },
+    {
+      "action": "add",
+      "pages_path": "food-line/editions/2026-10-15/index.html",
+      "pages_sha256_before": null,
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/editions/2026-10-15/index.html",
+      "source_sha256": "d0894ade0a378b23e57e0355f307a4acfe1561efe5b75bad1be4dbbd95aeb113"
+    },
+    {
+      "action": "add",
+      "pages_path": "food-line/editions/2026-10-15/social-card.png",
+      "pages_sha256_before": null,
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/editions/2026-10-15/social-card.png",
+      "source_sha256": "780008015067f76fa45a96fa15bdf54145ca3f5bac3c48ee5a7f1791771b6c9c"
+    },
+    {
+      "action": "add",
+      "pages_path": "food-line/editions/2026-10-15/source_table.html",
+      "pages_sha256_before": null,
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/editions/2026-10-15/source_table.html",
+      "source_sha256": "90d2e1eadf77e5ef5cf91db2a858fb853de0471096e35fdde2bb6425eea550f4"
+    },
+    {
+      "action": "add",
+      "pages_path": "food-line/editions/2026-10-15/sources_manifest.json",
+      "pages_sha256_before": null,
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/editions/2026-10-15/sources_manifest.json",
+      "source_sha256": "cc673f84b0ec3eb68d1b14007d5aaa8d9251dca294c28eeb8759e120ce994856"
+    },
+    {
+      "action": "modify",
+      "pages_path": "food-line/index.html",
+      "pages_sha256_before": "ae2b206b5c488f78afdee1576881d83a6994c8138b29a5d515bfd85ff8045826",
+      "provenance_role": "generated_output",
+      "source_path": "output/site/food-line/index.html",
+      "source_sha256": "5ac34d302eacbadf0b680d6d440fdfd9a093cbd86eb0bf9d88aaa63a9bbeda66"
+    }
+  ],
+  "schema_version": "food_line_release_manifest_v2",
+  "shared_files": [],
+  "source_commit": "8e4790c5e6595c763b107e1ef1fd7e830d434d89"
+}

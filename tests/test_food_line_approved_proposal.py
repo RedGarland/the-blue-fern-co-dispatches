@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from copy import deepcopy
 from pathlib import Path
 
 import pytest
 
 from bluefern_dispatches.food_line_approved_proposal import load_approved_proposal
+from bluefern_dispatches.food_line_current_review import build_proposed_edition
 from scripts import run_food_line_dispatch as runner
 
 
@@ -70,6 +72,7 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "headline": item["proposed_public_headline"],
         "summary": SUMMARY,
         "why_it_matters": item["why_it_matters"],
+        "exact_supporting_passage": item["exact_supporting_passage"],
         "uncertainty_note": item["uncertainty_note"],
         "source": "Northern News Now",
         "source_url": CANONICAL_URL,
@@ -113,8 +116,79 @@ def test_approved_proposal_loads_one_source_backed_current_signal(tmp_path: Path
     row = bundle.source_rows[0]
     assert row["url"] == SOURCE_URL
     assert row["approved_public_summary"] == SUMMARY
-    assert row["location_name"] == "Superior and Douglas County, Wisconsin"
+    assert row["location_name"] == "Superior"
     assert row["map_eligible"] is False
+
+
+def test_current_review_producer_output_loads_and_keeps_queue_evidence(tmp_path: Path) -> None:
+    proposal_path, _, queue = _fixture(tmp_path)
+    queue["historical_roots_excluded"] = ["data/agent-history", "data/agent-history-staging"]
+    queue["allowed_decisions"] = ["approve", "approve_with_edit", "hold", "reject"]
+    queue["items"][0]["title"] = queue["items"][0]["proposed_public_headline"]
+    queue["items"][0]["location_name"] = "Superior"
+    queue["items"][0]["editorial_note"] = "Approved for the producer-to-loader regression."
+    queue["items"][0]["proposed_section"] = "Core Food Pressure Signals"
+    queue_path = tmp_path / "status/food-line/runtime/current-signal-review.json"
+    _write_json(queue_path, queue)
+    proposed = build_proposed_edition(queue)
+    assert "exact_supporting_passage" not in proposed["items"][0]
+    proposed["source_queue_sha256"] = hashlib.sha256(queue_path.read_bytes()).hexdigest()
+    _write_json(proposal_path, proposed)
+    bundle = load_approved_proposal(tmp_path, proposal_path, DATE)
+    assert bundle.source_rows[0]["exact_supporting_passage"] == queue["items"][0]["exact_supporting_passage"]
+
+
+def test_proposal_exact_supporting_passage_mismatch_fails_closed(tmp_path: Path) -> None:
+    proposal_path, proposal, _ = _fixture(tmp_path)
+    proposal["items"][0]["exact_supporting_passage"] = "A passage that was not reviewed."
+    _write_json(proposal_path, proposal)
+    with pytest.raises(ValueError, match="exact supporting passage"):
+        load_approved_proposal(tmp_path, proposal_path, DATE)
+
+
+def test_homepage_binds_previous_title_and_count_to_pages_when_source_history_is_incomplete(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    pages = tmp_path / "pages"
+    current_edition = source / "output/site/food-line/editions/2026-10-15"
+    current_edition.mkdir(parents=True)
+    (current_edition / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": "2026-10-15", "public_signal_count": 3}), encoding="utf-8"
+    )
+    pages_edition = pages / "food-line/editions/2026-10-13"
+    pages_edition.mkdir(parents=True)
+    (pages_edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "edition_date": "2026-10-13",
+                "public_archive_title": "October 13 verified Food Line signals",
+                "public_signal_count": 4,
+            }
+        ),
+        encoding="utf-8",
+    )
+    pages_archive = pages / "food-line/archive.html"
+    pages_archive.parent.mkdir(parents=True, exist_ok=True)
+    pages_archive.write_text(
+        "<ul>"
+        '<li><a href="editions/2026-10-15/">2026-10-15 - Current Food Line</a></li>'
+        '<li><a href="editions/2026-10-13/">2026-10-13 - October 13 verified Food Line signals</a></li>'
+        "</ul>",
+        encoding="utf-8",
+    )
+
+    runner._update_index_archive(
+        source,
+        "2026-10-15",
+        "A bounded Food Line mission.",
+        max_edition_date="2026-10-15",
+        retrospective_pages_root=pages,
+    )
+
+    homepage = (source / "output/site/food-line/index.html").read_text(encoding="utf-8")
+    assert "October 13 verified Food Line signals" in homepage
+    assert "4 source-backed developments" in homepage
+    assert "Food Line briefing" not in homepage
+    assert "0 source-backed developments" not in homepage
 
 
 @pytest.mark.parametrize("status", ["pending_editorial_review", "draft_pending_review"])
@@ -204,3 +278,118 @@ def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     assert not (tmp_path / "output/site/food-line/podcast.xml").exists()
     assert not (tmp_path / "data/bluesky").exists()
     assert not (tmp_path / "schedules").exists()
+
+
+def test_approved_generation_preserves_full_pages_history_for_sparse_source(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target_date = "2026-10-15"
+    proposal_path, proposal, queue = _fixture(tmp_path)
+    proposal["edition_date"] = target_date
+    queue["edition_date"] = target_date
+    queue["items"][0]["freshness_check"]["edition_date"] = target_date
+    _rewrite(tmp_path, proposal_path, proposal, queue)
+    pages = tmp_path / "pages"
+    history_dates = [
+        "2026-06-06", "2026-06-07", "2026-06-09", "2026-06-13", "2026-06-14",
+        "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20",
+        "2026-06-21", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25",
+        "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30",
+        "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05",
+        "2026-07-27", "2026-07-28", "2026-07-31", "2026-08-05", "2026-08-09",
+        "2026-08-14", "2026-08-15", "2026-08-16", "2026-08-30", "2026-08-31",
+        "2026-09-12", "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02",
+        "2026-10-03", "2026-10-04", "2026-10-07", "2026-10-09", "2026-10-11",
+        "2026-10-12", "2026-10-13",
+    ]
+    pages_editions = pages / "food-line" / "editions"
+    archive_items = []
+    for history_date in history_dates:
+        edition = pages_editions / history_date
+        edition.mkdir(parents=True, exist_ok=True)
+        source_id = f"historical-{history_date}"
+        summary = f"Preserved public Food Line history for {history_date}."
+        _write_json(
+            edition / "edition_manifest.json",
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": history_date,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "source_freshness_status": "current",
+                "freshness_window_days": 3,
+                "qualified_primary_count": 1,
+                "public_signal_count": 1,
+                "public_archive_title": f"Preserved Food Line history {history_date}",
+                "public_archive_subtitle": summary,
+                "lead_source_record_id": source_id,
+            },
+        )
+        _write_json(
+            edition / "sources_manifest.json",
+            [{
+                "source_record_id": source_id,
+                "pressure_signal": True,
+                "title": f"Historical source {history_date}",
+                "publisher": "Historical source",
+                "url": f"https://example.com/food/{history_date}",
+                "summary_or_snippet": summary,
+            }],
+        )
+        _write_json(edition / "curation_manifest.json", {"stories": []})
+        (edition / "index.html").write_text(f"<html><body><h1>{history_date}</h1></body></html>", encoding="utf-8")
+        archive_items.append(
+            f'<li><a href="editions/{history_date}/">{history_date} - Preserved Food Line history {history_date}</a>'
+            f"<br><small>{summary}</small></li>"
+        )
+    archive = pages / "food-line" / "archive.html"
+    archive.parent.mkdir(parents=True, exist_ok=True)
+    archive.write_text("<ul>" + "".join(reversed(archive_items)) + "</ul>", encoding="utf-8")
+
+    monkeypatch.setattr(runner, "PAGES_REPO", pages)
+    result = runner.run_food_line_dispatch(
+        tmp_path,
+        target_date,
+        generate_audio=False,
+        approved_proposal_path=proposal_path,
+    )
+
+    assert result["ok"] is True
+    output_archive = (tmp_path / "output/site/food-line/archive.html").read_text(encoding="utf-8")
+    output_dates = sorted(set(re.findall(r"editions/(\d{4}-\d{2}-\d{2})/", output_archive)))
+    assert output_dates == sorted(set([*history_dates, target_date]))
+    current_manifest = json.loads(
+        (tmp_path / "output/site/food-line/editions" / target_date / "edition_manifest.json").read_text(encoding="utf-8")
+    )
+    assert current_manifest["previous_edition_date"] == "2026-10-13"
+    homepage = (tmp_path / "output/site/food-line/index.html").read_text(encoding="utf-8")
+    assert 'href="editions/2026-10-13/"' in homepage
+
+
+def test_current_release_manifest_includes_existing_food_line_social_card(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proposal_path, _, _ = _fixture(tmp_path)
+    pages = tmp_path / "pages"
+    pages.mkdir()
+    edition = tmp_path / "output/site/food-line/editions" / DATE
+    edition.mkdir(parents=True)
+    (edition / "social-card.png").write_bytes(b"private-preview-card")
+    monkeypatch.setattr(runner, "PAGES_REPO", pages)
+
+    result = runner.run_food_line_dispatch(
+        tmp_path,
+        DATE,
+        generate_audio=False,
+        approved_proposal_path=proposal_path,
+    )
+
+    assert result["ok"] is True
+    manifest = json.loads(
+        (tmp_path / "data/dispatches/food-line/review/releases" / f"{DATE}.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    entry = next(item for item in manifest["entries"] if item["source_path"].endswith("/social-card.png"))
+    assert entry["pages_path"] == f"food-line/editions/{DATE}/social-card.png"
+    assert entry["source_sha256"] == hashlib.sha256((edition / "social-card.png").read_bytes()).hexdigest()

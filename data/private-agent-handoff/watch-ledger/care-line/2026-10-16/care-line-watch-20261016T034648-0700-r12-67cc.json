@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261016T034648-0700-r12-67cc",
+  "scheduled_for": "2026-10-16T03:45:22-07:00",
+  "started_at": "2026-10-16T03:46:48-07:00",
+  "completed_at": "2026-10-16T03:48:19-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T01:45:15-07:00",
+    "end": "2026-10-16T03:48:19-07:00",
+    "basis": "Previous confirmed completed watch at 01:45:15 PDT; any intervening run not verified."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; primary production collection authoritative.",
+    "CMS Public Notices inspected first; latest dated 2026-10-09 (Tender Home Health, CA).",
+    "Exactly 12 targeted searches covering closures, ambulance, rural care, CMS, restoration, territories. No new qualified developments confirmed.",
+    "Seeley Lake clinic closure from 2026-10-15 excluded as already reported. Search results had extensive irrelevant and historical matches.",
+    "CMS: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+  ]
+}

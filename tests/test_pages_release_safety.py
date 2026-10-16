@@ -1114,6 +1114,90 @@ def test_gaza_no_update_history_does_not_change_rss_or_audio_guards(tmp_path: Pa
     assert _gaza_history_report(reports, "gaza/podcast.xml")["dropped_dates"] == ["2026-09-18"]
 
 
+def test_gaza_sparse_source_rebuild_preserves_pages_correction_only_history_and_audio(
+    tmp_path: Path,
+) -> None:
+    pages = tmp_path / "pages"
+    source_site = tmp_path / "site"
+    candidate_root = tmp_path / "candidate"
+    correction_date = "2026-10-14"
+    current_date = "2026-10-16"
+
+    _write_gaza_history_guard_fixture(
+        pages,
+        archive_edition_dates=(correction_date,),
+        rss_edition_dates=(correction_date,),
+        audio_dates=(correction_date,),
+    )
+    correction_edition = pages / "gaza" / "editions" / correction_date
+    (correction_edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "gaza",
+                "edition_date": correction_date,
+                "public_exposed": False,
+                "publication_state": "private_correction_preview",
+                "source_count": 0,
+                "story_count": 0,
+                "corrections": [{"correction_id": "correction-2026-10-14"}],
+                "warning": "Saved evidence did not establish that no news occurred.",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (correction_edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": "saved-source"}]),
+        encoding="utf-8",
+    )
+    (correction_edition / "curation_manifest.json").write_text("[]", encoding="utf-8")
+
+    current_edition = source_site / "gaza" / "editions" / current_date
+    current_edition.mkdir(parents=True, exist_ok=True)
+    (current_edition / "index.html").write_text(f"<html>{current_date}</html>", encoding="utf-8")
+    (current_edition / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "gaza", "edition_date": current_date, "source_count": 1, "story_count": 1}),
+        encoding="utf-8",
+    )
+    (current_edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": "current-source"}]),
+        encoding="utf-8",
+    )
+    (current_edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "current-story"}]),
+        encoding="utf-8",
+    )
+    source_gaza = source_site / "gaza"
+    source_gaza.mkdir(parents=True, exist_ok=True)
+    (source_gaza / "archive.html").write_text(
+        f'<a href="editions/{current_date}/">{current_date}</a>',
+        encoding="utf-8",
+    )
+    (source_gaza / "rss.xml").write_text(
+        f'<item><link>https://dispatches.thebluefernco.com/gaza/editions/{current_date}/</link></item>',
+        encoding="utf-8",
+    )
+    _write_gaza_audio_surfaces(source_site, (correction_date, current_date))
+
+    materialized = generator._materialize_gaza_dry_run_validation_site(
+        source_site,
+        pages,
+        candidate_root,
+        max_public_date=current_date,
+        gaza_publication_dates=(current_date,),
+    )
+
+    assert (materialized / "gaza" / "editions" / correction_date / "edition_manifest.json").exists()
+    assert correction_date in (materialized / "gaza" / "archive.html").read_text(encoding="utf-8")
+    assert correction_date in (materialized / "gaza" / "rss.xml").read_text(encoding="utf-8")
+    assert current_date in (materialized / "gaza" / "archive.html").read_text(encoding="utf-8")
+    assert current_date in (materialized / "gaza" / "rss.xml").read_text(encoding="utf-8")
+
+    reports = generator._gaza_public_surface_history_diagnostics(pages, materialized)
+    assert _gaza_history_report(reports, "gaza/archive.html")["dropped_dates"] == []
+    assert _gaza_history_report(reports, "gaza/rss.xml")["dropped_dates"] == []
+    assert _gaza_history_report(reports, "gaza/audio/index.html")["dropped_dates"] == []
+
+
 def test_dry_run_reports_planned_paths_for_food_line_dates(release_repos: tuple[Path, Path]) -> None:
     source, pages = release_repos
     _write_food_line_site(source, ["2026-06-19", "2026-06-20"])

@@ -1588,7 +1588,20 @@ def _gaza_public_edition_is_listable(
     local_edition_dir = site_root / "gaza" / "editions" / edition_date
     candidate_dirs = [local_edition_dir]
     if pages_repo is not None:
-        candidate_dirs.append(pages_repo / "gaza" / "editions" / edition_date)
+        pages_edition_dir = pages_repo / "gaza" / "editions" / edition_date
+        candidate_dirs.append(pages_edition_dir)
+        # Pages is the authoritative public-history ledger. A correction-only
+        # edition can have zero retained stories and still be intentionally
+        # listed in the already published archive/RSS surfaces. Preserve that
+        # exact public identity during a later sparse-source rebuild, but only
+        # when the Pages edition has the complete public artifact set and its
+        # date is already present in the existing history surfaces.
+        if (
+            pages_edition_dir.exists()
+            and _edition_has_required_public_artifacts(pages_edition_dir)
+            and _gaza_pages_repo_has_public_history_date(pages_repo, edition_date)
+        ):
+            return True
     for edition_dir in candidate_dirs:
         if not edition_dir.exists():
             continue
@@ -1791,6 +1804,14 @@ def _gaza_public_surface_date_sets(public_root: Path, *, audio_root: Path | None
         result[surface] = extractor(_read_text_if_exists(path))
     result["gaza/archive.html"] |= no_update_dates
     return result
+
+
+def _gaza_pages_repo_has_public_history_date(pages_repo: Path, edition_date: str) -> bool:
+    surfaces = _gaza_public_surface_date_sets(pages_repo)
+    return (
+        edition_date in surfaces.get("gaza/archive.html", set())
+        and edition_date in surfaces.get("gaza/rss.xml", set())
+    )
 
 
 def _gaza_public_surface_catchup_sets(public_root: Path) -> dict[str, set[str]]:
@@ -2862,7 +2883,7 @@ def reconcile_gaza_public_editions(
             continue
         source_name, source_dir = chosen
         _copytree_if_missing(source_dir, target_dir, dry_run=dry_run, wrote=wrote)
-        if public_edition_is_listable(site_root, "gaza", edition_date):
+        if _gaza_public_edition_is_listable(site_root, edition_date, pages_repo):
             backfilled.append(
                 {
                     "edition_date": edition_date,

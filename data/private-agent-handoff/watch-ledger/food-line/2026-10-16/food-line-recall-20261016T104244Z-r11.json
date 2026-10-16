@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T104244Z-r11",
+  "scheduled_for": "2026-10-16T02:45:54-07:00",
+  "started_at": "2026-10-16T03:42:44-07:00",
+  "completed_at": "2026-10-16T03:44:52.618-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-16T02:42:44-07:00",
+    "end": "2026-10-16T03:44:52.618-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "hourly rolling supplementary recall check; indexed announcements examined for new release/evidence inside window"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary search only; production Food Line collection remains authoritative.",
+    "12 bounded targeted web searches: 3 sole/last grocery loss, 2 distribution cancellations, 2 pantry closure, 1 SNAP/WIC service interruption, 4 refined cross-class searches.",
+    "No independently verified newly announced U.S. food access disruption matching the four high-value recall classes within the rolling window.",
+    "Search results predominantly older or outside U.S.; examples excluded: October 14 Arvada Safeway report concerns chain exit rather than the community's sole grocery option, and October 15 Austin food co-op closure leaves another operating location. Older sole-grocery and pantry incidents were outside the observation window.",
+    "Web search indexing and publication timestamp resolution limit confidence in proving complete absence; lack of findings is not a nationwide clearance.",
+    "No approvals, production collection edits, publication, schedule or task-setting changes were made."
+  ]
+}

@@ -269,6 +269,31 @@ def test_empty_pages_bootstrap_allows_generic_aggregate_render(tmp_path: Path, m
     assert {Path(path).name for path in wrote} == {"index.html", "archive.html", "rss.xml"}
 
 
+def test_pages_history_without_aggregates_fails_closed(tmp_path: Path):
+    site_root = tmp_path / "site"
+    pages_repo = tmp_path / "pages"
+    (site_root / "gaza" / "editions" / DATE).mkdir(parents=True)
+    write(pages_repo / "gaza" / "editions" / "2026-10-15" / "index.html", "historical edition")
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date=DATE,
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+    )
+    with pytest.raises(ValueError, match="Gaza history exists but archive.html"):
+        _gaza_aggregate_render_from_pages_history(
+            site_root,
+            dispatch,
+            DATE,
+            pages_repo,
+            dry_run=True,
+            wrote=[],
+        )
+
+
 def test_current_date_exact_repeat_is_idempotent_but_mismatch_requires_correction_workflow(tmp_path: Path):
     site_root, pages_repo, dispatch = fixture_roots(tmp_path)
     _gaza_aggregate_render_from_pages_history(

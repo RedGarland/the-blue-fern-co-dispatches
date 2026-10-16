@@ -2712,6 +2712,11 @@ def _gaza_pages_aggregate_baseline(pages_repo: Path) -> dict[str, str] | None:
     paths = {filename: gaza_root / filename for filename in ("archive.html", "index.html", "rss.xml")}
     existing = [path for path in paths.values() if path.exists()]
     if not existing:
+        if any(gaza_root.iterdir()):
+            raise ValueError(
+                "authoritative Gaza aggregate baseline incomplete/unreadable: "
+                "Gaza history exists but archive.html, index.html, and rss.xml are absent"
+            )
         return None
     if len(existing) != len(paths) or any(not path.is_file() for path in paths.values()):
         raise ValueError("authoritative Gaza aggregate baseline incomplete/unreadable: all archive.html, index.html, and rss.xml files are required")

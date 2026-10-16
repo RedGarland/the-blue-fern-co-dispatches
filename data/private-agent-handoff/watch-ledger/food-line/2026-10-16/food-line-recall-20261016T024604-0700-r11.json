@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T024604-0700-r11",
+  "scheduled_for": "2026-10-16T02:45:54-07:00",
+  "started_at": "2026-10-16T02:46:04-07:00",
+  "completed_at": "2026-10-16T02:47:07-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T00:43:57-07:00",
+    "end": "2026-10-16T02:47:07-07:00",
+    "prior_verified_check_at": "2026-10-16T00:43:57-07:00",
+    "note": "Latest prior check evidenced in conversation; no intervening completed check was available to verify. Search accepts fresh publications within the rolling window only."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_status": "SUCCESS",
+    "search_queries_executed": 12,
+    "search_queries_limit": 12,
+    "search_failures": 0,
+    "search_queries": [
+      "October 16 2026 only grocery store town closed fire food desert local news",
+      "October 15 2026 last grocery store community closing fire outage local news",
+      "October 16 2026 emergency food distribution cancelled flood storm power outage pantry",
+      "October 15 2026 food bank mobile pantry distribution canceled storm flooding",
+      "October 16 2026 food pantry sudden closure indefinitely services suspended local",
+      "October 15 2026 food bank warehouse fire flood operations closed clients",
+      "October 16 2026 SNAP benefits outage suspended EBT system state agency alert",
+      "October 15 2026 WIC benefits system down service interruption official notice",
+      "site:gov SNAP October 16, 2026 interruption benefits",
+      "October 16 2026 only full service grocery store town closing food access",
+      "October 16, 2026 food pantry closed power",
+      "October 15, 2026 food distribution cancelled weather"
+    ],
+    "disposition": "No newly verified qualifying U.S. food-access disruption in the observation window. Broader and date-filtered searches predominantly returned historical or unrelated events.",
+    "excluded": "Older sole-grocery closures; week-old Prodisee Pantry weather cancellation; store closures without evidence of sole/full-service access loss; prior SNAP/WIC outages; guides, donation appeals, routine promotions.",
+    "representative_excluded_sources": [
+      "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+      "https://www.bangordailynews.com/2026/08/29/down-east/downeast-business/eastport-grocery-store-iga-close-next-week-joam40zk0w/",
+      "https://www.cbsnews.com/chicago/news/illinois-wic-ebt-system-impacted-by-outage/"
+    ],
+    "search_limitations": "Search-index date filtering was inconsistent and predominantly surfaced prior-month/year incidents. No findings does not establish exhaustive national coverage.",
+    "persistence_status": "COMMIT_ATTEMPTED",
+    "intended_repository": "RedGarland/the-blue-fern-co-dispatches",
+    "intended_branch": "ops/watch-ledger",
+    "intended_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-16/food-line-recall-20261016T024604-0700-r11.json",
+    "production_collection_authoritative": true,
+    "no_approval_or_publication_or_schedule_changes": true
+  }
+}

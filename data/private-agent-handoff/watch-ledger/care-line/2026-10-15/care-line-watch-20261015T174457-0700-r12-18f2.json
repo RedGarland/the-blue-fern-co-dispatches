@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261015T174457-0700-r12-18f2",
+  "scheduled_for": "2026-10-15T17:45:22-07:00",
+  "started_at": "2026-10-15T17:44:57-07:00",
+  "completed_at": "2026-10-15T17:46:02-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "from": "2026-10-15T16:48:34-07:00",
+    "to": "2026-10-15T17:46:02-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Care Line recall watch only; production national collector remains authoritative.",
+    "CMS Public Notices checked first; newest notice 2026-10-09 Tender Home Health CA.",
+    "12 targeted searches completed, no verified newly reported access change.",
+    "No approval, publication, schedule change, or task disable performed."
+  ]
+}

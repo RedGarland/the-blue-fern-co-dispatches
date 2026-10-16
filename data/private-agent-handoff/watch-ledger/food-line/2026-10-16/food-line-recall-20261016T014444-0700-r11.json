@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T014444-0700-r11",
+  "scheduled_for": "2026-10-16T01:45:54-07:00",
+  "started_at": "2026-10-16T01:44:44-07:00",
+  "completed_at": "2026-10-16T08:46:37.607Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T00:44:38-07:00",
+    "end": "2026-10-16T08:46:37.607Z",
+    "prior_verified_check_at": "2026-10-16T00:44:38-07:00",
+    "note": "Prior local watch completion to current bounded recall check; indexed reports may precede discovery."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_status": "SUCCESS",
+    "search_queries_executed": 12,
+    "search_queries_limit": 12,
+    "search_failures": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire October 15 2026 town",
+      "\"sole grocery store\" fire closure \"October\" 2026",
+      "\"last grocery store\" shuts down October 2026 rural",
+      "\"food distribution\" canceled storm October 15 2026",
+      "\"food pantry\" distribution canceled flooding October 15 2026",
+      "\"food bank\" distributions suspended power outage October 15 2026",
+      "site:sanjosespotlight.com \"Lighthouse Food Rescue\" \"October 15\" 2026 closed shut",
+      "\"food pantry\" \"closed\" \"October 15, 2026\" families",
+      "\"food bank\" \"suspend\" OR \"shut down\" \"October 16, 2026\"",
+      "site:gov \"SNAP\" \"interruption\" \"October 15, 2026\"",
+      "site:gov \"WIC\" \"benefits\" \"outage\" \"October 15, 2026\"",
+      "\"food assistance\" \"benefits\" \"delayed\" \"October 15, 2026\" state"
+    ],
+    "disposition": "No newly verified, nonduplicate U.S. food-access disruption matching the four high-value miss classes in this bounded hourly window.",
+    "representative_excluded_sources": [
+      {
+        "url": "https://sanjosespotlight.com/san-jose-food-pantry-faces-opposition-from-neighbors/",
+        "reason": "October 15 follow-up to October 5 zoning closure threat; pantry still operating, no new abrupt shutdown or major service reduction established."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "October 13 chain-specific store closure announcement; other area grocery options remain; outside window."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17150572/wheatsville-food-co-op-closing-austin-texas/",
+        "reason": "October 14 article, future branch closure with another Austin food co-op location, not the community's sole full-service grocery store."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 2026 grocery-store loss, outside current hourly observation period."
+      }
+    ],
+    "search_limitations": "Freshness-limited targeted search indexed mostly older incidents; no verified signal does not establish that all incidents nationwide have been indexed. Supplementary watch only, production collection authoritative.",
+    "persistence_status": "PERSISTED_IF_COMMIT_CONFIRMED",
+    "intended_repository": "RedGarland/the-blue-fern-co-dispatches",
+    "intended_branch": "ops/watch-ledger",
+    "intended_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-16/food-line-recall-20261016T014444-0700-r11.json",
+    "production_collection_authoritative": true,
+    "no_approval_or_publication_or_schedule_changes": true
+  }
+}

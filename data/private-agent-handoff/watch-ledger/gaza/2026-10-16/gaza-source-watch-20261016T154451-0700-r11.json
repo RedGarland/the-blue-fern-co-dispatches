@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261016T154451-0700-r11",
+  "scheduled_for": "2026-10-16T15:44:51-07:00",
+  "started_at": "2026-10-16T15:43:21-07:00",
+  "completed_at": "2026-10-16T15:44:51-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T14:48:41-07:00",
+    "end": "2026-10-16T15:44:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "https://www.ochaopt.org/updates — checked; latest 2026-10-09",
+    "who": "WHO checked; no newly verified window-scoped report",
+    "who_emro": "Direct source HTTP 502; incomplete regional coverage",
+    "additional_targeted_searches": 12,
+    "exclusions": "UNICEF Oct 16 item already checked on prior watch; Reuters 05:02 PDT follow-up older; 16 Oct cumulative totals without hour; West Bank and duplicates excluded",
+    "production": "Untouched; supplementary monitoring only",
+    "baseline": "Prior verified 14:44 ledger completed 14:48:41 PDT"
+  }
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -1112,6 +1113,204 @@ def test_gaza_no_update_history_does_not_change_rss_or_audio_guards(tmp_path: Pa
     assert _gaza_history_report(reports, "gaza/audio/index.html")["dropped_dates"] == ["2026-09-18"]
     assert _gaza_history_report(reports, "gaza/audio/podcast.xml")["dropped_dates"] == ["2026-09-18"]
     assert _gaza_history_report(reports, "gaza/podcast.xml")["dropped_dates"] == ["2026-09-18"]
+
+
+def test_gaza_reconcile_and_copy_preserve_authoritative_correction_bytes_and_audio(
+    tmp_path: Path,
+) -> None:
+    pages = tmp_path / "pages"
+    root = tmp_path / "source"
+    source_site = root / "output" / "site"
+    source_dispatches = root / "output" / "dispatches"
+    candidate_root = tmp_path / "candidate"
+    copied_pages = tmp_path / "copied-pages"
+    correction_date = "2026-10-14"
+
+    _write_gaza_history_guard_fixture(
+        pages,
+        archive_edition_dates=(correction_date,),
+        rss_edition_dates=(correction_date,),
+        audio_dates=(correction_date,),
+    )
+    correction_edition = pages / "gaza" / "editions" / correction_date
+    (correction_edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "gaza",
+                "edition_date": correction_date,
+                "public_exposed": False,
+                "publication_authorized": False,
+                "publication_state": "private_correction_preview",
+                "source_count": 0,
+                "story_count": 0,
+                "saved_source_count": 3,
+                "corrections": [{"correction_id": "authoritative-correction"}],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (correction_edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": "saved-source", "saved_input_sha256": "saved-hash"}], sort_keys=True),
+        encoding="utf-8",
+    )
+    (correction_edition / "curation_manifest.json").write_text("[]", encoding="utf-8")
+    (correction_edition / "index.html").write_text(
+        "<html><body>AUTHORITATIVE CORRECTION RECORD</body></html>", encoding="utf-8"
+    )
+    _commit_repo(pages, "authoritative correction history")
+
+    # The local source and dispatch output contain same-date stale/private
+    # preview bytes. Reconciliation must not silently select them.
+    _write_gaza_history_guard_fixture(
+        source_site,
+        no_update_dates=(correction_date,),
+        audio_dates=(correction_date,),
+    )
+    stale_manifest = {
+        "dispatch_slug": "gaza",
+        "edition_date": correction_date,
+        "public_exposed": False,
+        "publication_authorized": False,
+        "publication_state": "private_correction_preview",
+        "source_count": 0,
+        "story_count": 0,
+        "saved_source_count": 3,
+        "corrections": [{"correction_id": "stale-preview"}],
+    }
+    for edition in (
+        source_site / "gaza" / "editions" / correction_date,
+        source_dispatches / "gaza" / "editions" / correction_date,
+    ):
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text("<html>STALE PRIVATE PREVIEW</html>", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text(json.dumps(stale_manifest, sort_keys=True), encoding="utf-8")
+        (edition / "sources_manifest.json").write_text(
+            json.dumps([{"source_record_id": "stale-source"}], sort_keys=True), encoding="utf-8"
+        )
+        (edition / "curation_manifest.json").write_text("[]", encoding="utf-8")
+    for surface in (
+        source_site / "gaza" / "audio" / "index.html",
+        source_site / "gaza" / "audio" / "podcast.xml",
+        source_site / "gaza" / "podcast.xml",
+    ):
+        surface.write_text("STALE AUDIO LINEAGE", encoding="utf-8")
+
+    wrote: list[str] = []
+    reconciliation = generator.reconcile_gaza_public_editions(
+        root,
+        source_site,
+        dry_run=False,
+        wrote=wrote,
+        pages_repo=pages,
+    )
+    assert any(
+        row["reason"] == "conflicting_local_bytes_for_authoritative_pages_correction"
+        for row in reconciliation["skipped"]
+    )
+    assert "STALE PRIVATE PREVIEW" in (
+        source_site / "gaza" / "editions" / correction_date / "index.html"
+    ).read_text(encoding="utf-8")
+    assert not generator._gaza_public_edition_is_listable(source_site, correction_date, pages)
+
+    # The guarded validation materializer may replace a conflicting candidate
+    # with the immutable Pages correction, while preserving all Pages audio
+    # lineage bytes. This is the path later consumed by collection/copy.
+    materialized = generator._materialize_gaza_dry_run_validation_site(
+        source_site,
+        pages,
+        candidate_root,
+        max_public_date=correction_date,
+        gaza_publication_dates=(),
+    )
+    materialized_edition = materialized / "gaza" / "editions" / correction_date
+    for pages_file in sorted(path for path in correction_edition.rglob("*") if path.is_file()):
+        candidate_file = materialized_edition / pages_file.relative_to(correction_edition)
+        assert candidate_file.read_bytes() == pages_file.read_bytes()
+    for relative in (
+        "gaza/audio/index.html",
+        "gaza/audio/podcast.xml",
+        "gaza/podcast.xml",
+    ):
+        assert (materialized / relative).read_bytes() == (pages / relative).read_bytes()
+    assert generator._gaza_public_edition_is_listable(materialized, correction_date, pages)
+    assert correction_date in (materialized / "gaza" / "archive.html").read_text(encoding="utf-8")
+    assert correction_date in (materialized / "gaza" / "rss.xml").read_text(encoding="utf-8")
+
+    collected = generator.collect_public_site_files(
+        materialized,
+        only_dispatches=("gaza",),
+        public_max_dates={"gaza": correction_date},
+        expect_date=correction_date,
+        gaza_publication_dates=(correction_date,),
+        pages_repo=pages,
+    )
+    collected_relative = {path.relative_to(materialized).as_posix() for path in collected}
+    assert f"gaza/editions/{correction_date}/edition_manifest.json" in collected_relative
+    assert "gaza/audio/podcast.xml" in collected_relative
+    shutil.copytree(pages, copied_pages)
+    generator.copy_public_site_to_pages(
+        materialized,
+        copied_pages,
+        dry_run=False,
+        only_dispatches=("gaza",),
+        public_max_dates={"gaza": correction_date},
+        expect_date=correction_date,
+        gaza_publication_dates=(correction_date,),
+    )
+    for pages_file in sorted(path for path in correction_edition.rglob("*") if path.is_file()):
+        copied_file = copied_pages / pages_file.relative_to(pages)
+        assert copied_file.read_bytes() == pages_file.read_bytes()
+    for relative in (
+        "gaza/audio/podcast.xml",
+        "gaza/podcast.xml",
+    ):
+        assert (copied_pages / relative).read_bytes() == (pages / relative).read_bytes()
+    assert generator.validate_gaza_public_link_consistency(
+        materialized,
+        pages,
+        gaza_publication_dates=(correction_date,),
+    ) == []
+    inferred_pages = materialized.parents[1] / "bluefern-dispatches-pages"
+    shutil.copytree(pages, inferred_pages)
+    assert generator._gaza_public_edition_is_listable(materialized, correction_date)
+    assert generator.validate_gaza_public_link_consistency(
+        materialized,
+        gaza_publication_dates=(correction_date,),
+    ) == []
+
+    conflicting_manifest = json.loads(
+        (materialized / "gaza" / "editions" / correction_date / "edition_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    conflicting_manifest["public_exposed"] = True
+    conflicting_manifest["story_count"] = 1
+    (materialized / "gaza" / "editions" / correction_date / "edition_manifest.json").write_text(
+        json.dumps(conflicting_manifest, sort_keys=True), encoding="utf-8"
+    )
+    assert not generator._gaza_public_edition_is_listable(materialized, correction_date, pages)
+    assert not generator._gaza_public_edition_is_listable(materialized, correction_date)
+
+    # A normal same-date no-update record remains non-listable merely because
+    # archive/RSS contain the date; it has no correction identity.
+    ordinary_pages = tmp_path / "ordinary-pages"
+    ordinary_site = tmp_path / "ordinary-site"
+    _write_gaza_history_guard_fixture(
+        ordinary_pages,
+        archive_edition_dates=(correction_date,),
+        rss_edition_dates=(correction_date,),
+    )
+    _write_gaza_history_guard_fixture(
+        ordinary_site,
+        archive_edition_dates=(correction_date,),
+        rss_edition_dates=(correction_date,),
+        no_update_dates=(correction_date,),
+    )
+    assert not generator._gaza_public_edition_is_listable(ordinary_site, correction_date, ordinary_pages)
+    ordinary_errors = generator.validate_gaza_public_link_consistency(ordinary_site, ordinary_pages)
+    assert any("gaza public dead edition link blocked" in error for error in ordinary_errors)
+    assert any("gaza no-update date rendered as clickable edition" in error for error in ordinary_errors)
 
 
 def test_dry_run_reports_planned_paths_for_food_line_dates(release_repos: tuple[Path, Path]) -> None:

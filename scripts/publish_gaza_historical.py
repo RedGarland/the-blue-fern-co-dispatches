@@ -261,7 +261,7 @@ def validate_generated_output(edition_date: str) -> dict[str, Any]:
         if not isinstance(story, dict):
             errors.append("curation_manifest.json contains a non-object story record")
             continue
-        if story.get("included_in_public_summary") is False:
+        if story.get("included_in_public_summary") is False or story.get("public_rendered") is False:
             continue
         public_story_count += 1
         story_source_ids = story.get("source_ids") or story.get("source_record_ids") or []

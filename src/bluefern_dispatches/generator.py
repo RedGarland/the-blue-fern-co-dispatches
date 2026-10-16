@@ -1455,6 +1455,74 @@ def _pages_repo_authoritative_ref(pages_repo: Path) -> str:
     return "HEAD"
 
 
+def _gaza_pages_correction_only_edition_dir(
+    pages_repo: Path | None,
+    edition_date: str,
+) -> Path | None:
+    """Return a Pages correction record only when its public identity is authoritative.
+
+    A date in archive/RSS is not sufficient authorization.  The Pages edition
+    must be an explicit private correction preview with saved evidence,
+    required public artifacts, and a committed index on the authoritative
+    Pages ref.  Normal zero-story/no-update output never satisfies this test.
+    """
+    if pages_repo is None:
+        return None
+    pages_repo = pages_repo.resolve()
+    edition_dir = pages_repo / "gaza" / "editions" / edition_date
+    if not edition_dir.exists() or not _edition_has_required_public_artifacts(edition_dir):
+        return None
+    try:
+        manifest = json.loads((edition_dir / "edition_manifest.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(manifest, dict):
+        return None
+    try:
+        source_count = int(manifest.get("source_count", 0) or 0)
+        story_count = int(manifest.get("story_count", 0) or 0)
+        saved_source_count = int(manifest.get("saved_source_count", 0) or 0)
+    except (TypeError, ValueError):
+        return None
+    if (
+        manifest.get("dispatch_slug") != "gaza"
+        or manifest.get("edition_date") != edition_date
+        or manifest.get("publication_state") != "private_correction_preview"
+        or manifest.get("public_exposed") is not False
+        or manifest.get("publication_authorized") is not False
+        or source_count != 0
+        or story_count != 0
+        or saved_source_count <= 0
+        or not isinstance(manifest.get("corrections"), list)
+        or not manifest.get("corrections")
+    ):
+        return None
+    rel_index = Path("gaza") / "editions" / edition_date / "index.html"
+    if not _pages_repo_ref_contains_path(pages_repo, rel_index, _pages_repo_authoritative_ref(pages_repo)):
+        return None
+    if not _gaza_pages_repo_has_public_history_date(pages_repo, edition_date):
+        return None
+    return edition_dir
+
+
+def _gaza_edition_dirs_byte_equal(left: Path, right: Path) -> bool:
+    if not left.exists() or not right.exists():
+        return False
+    left_files = {
+        path.relative_to(left).as_posix(): path
+        for path in left.rglob("*")
+        if path.is_file()
+    }
+    right_files = {
+        path.relative_to(right).as_posix(): path
+        for path in right.rglob("*")
+        if path.is_file()
+    }
+    if set(left_files) != set(right_files):
+        return False
+    return all(left_files[relative].read_bytes() == right_files[relative].read_bytes() for relative in left_files)
+
+
 def _gaza_public_edition_dir_is_valid(
     site_root: Path,
     edition_date: str,
@@ -1558,6 +1626,9 @@ def _gaza_no_update_supersedes_edition(
 ) -> bool:
     if _gaza_no_update_entry_for_date(site_root, edition_date) is None:
         return False
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
+    if _gaza_pages_correction_only_edition_dir(pages_repo, edition_date) is not None:
+        return False
     if edition_date in set(gaza_publication_dates):
         local_edition_dir = site_root / "gaza" / "editions" / edition_date
         if _gaza_public_edition_dir_is_valid(
@@ -1577,6 +1648,11 @@ def _gaza_public_edition_is_listable(
     *,
     gaza_publication_dates: tuple[str, ...] = (),
 ) -> bool:
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
+    correction_dir = _gaza_pages_correction_only_edition_dir(pages_repo, edition_date)
+    if correction_dir is not None:
+        local_edition_dir = site_root / "gaza" / "editions" / edition_date
+        return not local_edition_dir.exists() or _gaza_edition_dirs_byte_equal(local_edition_dir, correction_dir)
     if _gaza_no_update_supersedes_edition(
         site_root,
         edition_date,
@@ -1584,11 +1660,11 @@ def _gaza_public_edition_is_listable(
         gaza_publication_dates=gaza_publication_dates,
     ):
         return False
-    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     local_edition_dir = site_root / "gaza" / "editions" / edition_date
     candidate_dirs = [local_edition_dir]
     if pages_repo is not None:
-        candidate_dirs.append(pages_repo / "gaza" / "editions" / edition_date)
+        pages_edition_dir = pages_repo / "gaza" / "editions" / edition_date
+        candidate_dirs.append(pages_edition_dir)
     for edition_dir in candidate_dirs:
         if not edition_dir.exists():
             continue
@@ -1791,6 +1867,14 @@ def _gaza_public_surface_date_sets(public_root: Path, *, audio_root: Path | None
         result[surface] = extractor(_read_text_if_exists(path))
     result["gaza/archive.html"] |= no_update_dates
     return result
+
+
+def _gaza_pages_repo_has_public_history_date(pages_repo: Path, edition_date: str) -> bool:
+    surfaces = _gaza_public_surface_date_sets(pages_repo)
+    return (
+        edition_date in surfaces.get("gaza/archive.html", set())
+        and edition_date in surfaces.get("gaza/rss.xml", set())
+    )
 
 
 def _gaza_public_surface_catchup_sets(public_root: Path) -> dict[str, set[str]]:
@@ -2371,6 +2455,7 @@ def _gaza_public_history_rows_with_no_updates(
     catchups: list[GazaHistoricalCatchupEntry],
     *,
     gaza_publication_dates: tuple[str, ...] = (),
+    pages_repo: Path | None = None,
 ) -> list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]]:
     edition_dates = [
         date
@@ -2378,6 +2463,7 @@ def _gaza_public_history_rows_with_no_updates(
         if not _gaza_no_update_supersedes_edition(
             site_root,
             date,
+            pages_repo=pages_repo,
             gaza_publication_dates=gaza_publication_dates,
         )
     ]
@@ -2632,12 +2718,14 @@ def _render_gaza_public_history_list(
     *,
     limit: int | None = None,
     gaza_publication_dates: tuple[str, ...] = (),
+    pages_repo: Path | None = None,
 ) -> str:
     rows = _gaza_public_history_rows_with_no_updates(
         site_root,
         edition_dates,
         catchups,
         gaza_publication_dates=gaza_publication_dates,
+        pages_repo=pages_repo,
     )
     if limit is not None:
         rows = rows[:limit]
@@ -2839,10 +2927,25 @@ def reconcile_gaza_public_editions(
 
     for edition_date in sorted(editions_by_date.keys()):
         target_dir = site_root / "gaza" / "editions" / edition_date
+        authoritative_correction = _gaza_pages_correction_only_edition_dir(pages_repo, edition_date)
         if target_dir.exists():
+            if authoritative_correction is not None and not _gaza_edition_dirs_byte_equal(
+                target_dir, authoritative_correction
+            ):
+                skipped.append(
+                    {
+                        "edition_date": edition_date,
+                        "reason": "conflicting_local_bytes_for_authoritative_pages_correction",
+                    }
+                )
             continue
         chosen: tuple[str, Path] | None = None
-        for source_name in ("output_dispatches", "output_site", "pages_repo"):
+        source_order = (
+            ("pages_repo", "output_dispatches", "output_site")
+            if authoritative_correction is not None
+            else ("output_dispatches", "output_site", "pages_repo")
+        )
+        for source_name in source_order:
             for candidate_source, candidate_dir in editions_by_date[edition_date]:
                 if candidate_source != source_name:
                     continue
@@ -2862,7 +2965,7 @@ def reconcile_gaza_public_editions(
             continue
         source_name, source_dir = chosen
         _copytree_if_missing(source_dir, target_dir, dry_run=dry_run, wrote=wrote)
-        if public_edition_is_listable(site_root, "gaza", edition_date):
+        if _gaza_public_edition_is_listable(site_root, edition_date, pages_repo):
             backfilled.append(
                 {
                     "edition_date": edition_date,
@@ -3050,6 +3153,7 @@ def render_dispatch_index_for_dates(
     *,
     gaza_catchups: list[GazaHistoricalCatchupEntry] | None = None,
     gaza_publication_dates: tuple[str, ...] = (),
+    pages_repo: Path | None = None,
 ) -> str:
     latest = edition_dates[0] if edition_dates else ""
     signal_pack_note = ""
@@ -3082,6 +3186,7 @@ def render_dispatch_index_for_dates(
             if not _gaza_no_update_supersedes_edition(
                 site_root,
                 date,
+                pages_repo=pages_repo,
                 gaza_publication_dates=gaza_publication_dates,
             )
         ]
@@ -3093,6 +3198,7 @@ def render_dispatch_index_for_dates(
             edition_dates,
             gaza_catchups,
             gaza_publication_dates=gaza_publication_dates,
+            pages_repo=pages_repo,
         )
         latest_readable = _gaza_latest_readable_archive_row(gaza_rows)
         if latest_readable is not None:
@@ -3304,6 +3410,7 @@ def render_archive_for_dates(
     gaza_catchups: list[GazaHistoricalCatchupEntry] | None = None,
     retrospective_pages_root: Path | None = None,
     gaza_publication_dates: tuple[str, ...] = (),
+    pages_repo: Path | None = None,
 ) -> str:
     site_root = site_root or Path("output") / "site"
     gaza_audio_link = ""
@@ -3347,6 +3454,7 @@ def render_archive_for_dates(
             if not _gaza_no_update_supersedes_edition(
                 site_root,
                 date,
+                pages_repo=pages_repo,
                 gaza_publication_dates=gaza_publication_dates,
             )
         ]
@@ -3357,6 +3465,7 @@ def render_archive_for_dates(
             edition_dates,
             gaza_catchups,
             gaza_publication_dates=gaza_publication_dates,
+            pages_repo=pages_repo,
         )
         grouped_archive = _render_gaza_archive_grouped_history(site_root, dispatch, rows)
         body = f"""{header(dispatch.name, "", "archive.html")}
@@ -3528,6 +3637,7 @@ def render_rss_for_dates(
     *,
     gaza_catchups: list[GazaHistoricalCatchupEntry] | None = None,
     gaza_publication_dates: tuple[str, ...] = (),
+    pages_repo: Path | None = None,
 ) -> str:
     site_root = site_root or Path("output") / "site"
     if dispatch.slug == "gaza":
@@ -3537,6 +3647,7 @@ def render_rss_for_dates(
             if not _gaza_no_update_supersedes_edition(
                 site_root,
                 date,
+                pages_repo=pages_repo,
                 gaza_publication_dates=gaza_publication_dates,
             )
         ]
@@ -4022,6 +4133,7 @@ def build_site(
                     site_root,
                     gaza_catchups=gaza_catchups,
                     gaza_publication_dates=gaza_publication_dates if dispatch.slug == "gaza" else (),
+                    pages_repo=pages_repo if dispatch.slug == "gaza" else None,
                 ),
                 dry_run,
                 wrote,
@@ -4034,6 +4146,7 @@ def build_site(
                     site_root,
                     gaza_catchups=gaza_catchups,
                     gaza_publication_dates=gaza_publication_dates if dispatch.slug == "gaza" else (),
+                    pages_repo=pages_repo if dispatch.slug == "gaza" else None,
                 ),
                 dry_run,
                 wrote,
@@ -4046,6 +4159,7 @@ def build_site(
                     site_root,
                     gaza_catchups=gaza_catchups,
                     gaza_publication_dates=gaza_publication_dates if dispatch.slug == "gaza" else (),
+                    pages_repo=pages_repo if dispatch.slug == "gaza" else None,
                 ),
                 dry_run,
                 wrote,
@@ -4218,7 +4332,13 @@ def _copy_missing_gaza_pages_public_records(
             if not _edition_has_required_public_artifacts(source_dir):
                 continue
             target_dir = candidate_editions_root / source_dir.name
-            if not target_dir.exists():
+            correction_dir = _gaza_pages_correction_only_edition_dir(pages_repo, source_dir.name)
+            if not target_dir.exists() or (
+                correction_dir is not None
+                and not _gaza_edition_dirs_byte_equal(target_dir, correction_dir)
+            ):
+                if target_dir.exists():
+                    shutil.rmtree(target_dir)
                 target_dir.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copytree(source_dir, target_dir)
     pages_status_root = pages_repo / "gaza" / "status" / "no-updates"
@@ -4316,6 +4436,7 @@ def _render_gaza_public_history_surfaces_for_candidate(
             candidate_site_root,
             gaza_catchups=gaza_catchups,
             gaza_publication_dates=gaza_publication_dates,
+            pages_repo=pages_repo,
         ),
         encoding="utf-8",
     )
@@ -4326,6 +4447,7 @@ def _render_gaza_public_history_surfaces_for_candidate(
             candidate_site_root,
             gaza_catchups=gaza_catchups,
             gaza_publication_dates=gaza_publication_dates,
+            pages_repo=pages_repo,
         ),
         encoding="utf-8",
     )
@@ -4336,6 +4458,7 @@ def _render_gaza_public_history_surfaces_for_candidate(
             candidate_site_root,
             gaza_catchups=gaza_catchups,
             gaza_publication_dates=gaza_publication_dates,
+            pages_repo=pages_repo,
         ),
         encoding="utf-8",
     )
@@ -4422,9 +4545,11 @@ def collect_public_site_files(
     artifact_family: str | None = None,
     expect_date: str | None = None,
     gaza_publication_dates: tuple[str, ...] = (),
+    pages_repo: Path | None = None,
 ) -> list[Path]:
     if not site_root.exists():
         return []
+    public_max_dates = public_max_dates or {}
     if artifact_family == "no-update":
         files, errors = _gaza_no_update_publish_source_files(site_root, expect_date)
         return [] if errors else sorted(files)
@@ -4457,6 +4582,7 @@ def collect_public_site_files(
                 listable = _gaza_public_edition_is_listable(
                     site_root,
                     edition_date,
+                    pages_repo=pages_repo,
                     gaza_publication_dates=gaza_publication_dates,
                 )
             else:
@@ -4584,6 +4710,7 @@ def copy_public_site_to_pages(
         artifact_family=artifact_family,
         expect_date=expect_date,
         gaza_publication_dates=gaza_publication_dates,
+        pages_repo=pages_repo,
     ):
         target = pages_repo / source.relative_to(site_root)
         relative = source.relative_to(site_root).as_posix()
@@ -5370,6 +5497,7 @@ def validate_gaza_public_link_consistency(
     gaza_publication_dates: tuple[str, ...] = (),
 ) -> list[str]:
     errors: list[str] = []
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     gaza_root = site_root / "gaza"
     surfaces = {
         "gaza/index.html": gaza_root / "index.html",
@@ -5395,6 +5523,18 @@ def validate_gaza_public_link_consistency(
     no_update_entries = discover_gaza_no_update_entries(site_root)
     recent_no_update_dates = {entry.date for entry in no_update_entries[:GAZA_HOME_RECENT_CHECK_LIMIT]}
     for entry in no_update_entries:
+        if _gaza_pages_correction_only_edition_dir(pages_repo, entry.date) is not None:
+            # An authoritative, byte-matched Pages correction is a legitimate
+            # zero-story edition.  It may remain represented by a historical
+            # no-update marker while the public surfaces link to the correction.
+            # Normal no-update records still go through the guards below.
+            if _gaza_public_edition_is_listable(
+                site_root,
+                entry.date,
+                pages_repo,
+                gaza_publication_dates=gaza_publication_dates,
+            ):
+                continue
         if entry.date in set(gaza_publication_dates):
             local_edition_dir = site_root / "gaza" / "editions" / entry.date
             if _gaza_public_edition_dir_is_valid(

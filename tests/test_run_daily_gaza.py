@@ -95,6 +95,37 @@ def write_pages_output(root: Path, edition_date: str) -> None:
     (pages / "gaza" / "editions" / edition_date / "index.html").write_text("edition", encoding="utf-8")
 
 
+def test_validate_generated_output_counts_only_rendered_public_stories(isolated) -> None:
+    root = isolated
+    edition_date = "2026-05-07"
+    write_generated_output(root, edition_date)
+    edition = root / "output" / "site" / "gaza" / "editions" / edition_date
+    (edition / "sources_manifest.json").write_text(
+        json.dumps(
+            [
+                {"source_record_id": "gaza-src", "source_id": "gaza-src", "url": "https://valid.test/gaza-source"},
+                {"source_record_id": "gaza-src-suppressed", "source_id": "gaza-src-suppressed", "url": "https://valid.test/gaza-source-suppressed"},
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {"story_id": "rendered", "included_in_public_summary": True, "public_rendered": True, "source_ids": ["gaza-src"]},
+                {"story_id": "suppressed", "included_in_public_summary": True, "public_rendered": False, "source_ids": ["gaza-src-suppressed"]},
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    result = historical.validate_generated_output(edition_date)
+
+    assert result["source_count"] == 2
+    assert result["public_story_count"] == 1
+    assert result["errors"] == []
+
+
 def completed(args, returncode=0, payload=None, stdout=None):
     text = stdout if stdout is not None else json.dumps(payload or {"ok": True, "errors": []})
     return subprocess.CompletedProcess(args, returncode, text, "")

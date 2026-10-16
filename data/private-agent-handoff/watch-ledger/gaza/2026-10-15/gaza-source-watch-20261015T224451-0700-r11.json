@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261015T224451-0700-r11",
+  "scheduled_for": "2026-10-15T22:44:51-07:00",
+  "started_at": "2026-10-15T22:48:46-07:00",
+  "completed_at": "2026-10-15T22:51:44-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T21:43:00-07:00",
+    "end": "2026-10-15T22:51:44-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches": "OCHA OPT and WHO first, followed by 12 targeted searches.",
+    "official_sources": "OCHA OPT latest Gaza report dated 2026-10-09; WHO global overview accessible; WHO EMRO regional reporting endpoint failed.",
+    "excluded": "Previously detected import restrictions and casualty report were duplicates. Other material was out of window, not Gaza-specific, or unverified.",
+    "limitation": "WHO regional healthcare reporting inaccessible; one UN News search robot-blocked.",
+    "boundary": "Supplementary research only; no production, publication, approvals or scheduling changes."
+  }
+}

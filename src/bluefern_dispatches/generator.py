@@ -2194,7 +2194,16 @@ def briefing_presentation_for_edition(site_root: Path, dispatch: DispatchConfig,
         and story_count == 0
         and str(manifest.get("source_freshness_status") or "").strip()
     )
-    type_label = "Historical catch-up" if edition_mode == "historical_retrospective" else "Daily briefing"
+    adequacy_status = str(manifest.get("source_adequacy_status") or "").strip().lower()
+    adequacy_label = str(manifest.get("source_adequacy_label") or "").strip()
+    if edition_mode == "historical_retrospective":
+        type_label = "Historical catch-up"
+    elif adequacy_status == "limited_source_update" or adequacy_label == "Limited-source update":
+        type_label = "Limited-source update"
+    elif manifest.get("publication_state") == "private_correction_preview":
+        type_label = "Correction"
+    else:
+        type_label = "Daily briefing"
     if is_no_update:
         type_label = "No qualifying update"
     return BriefingPresentation(
@@ -2655,8 +2664,8 @@ def _gaza_landing_latest_card(
         presentation = briefing_presentation_for_edition(site_root, dispatch, date)
         title = presentation.title
         if title == date:
-            title = "Daily briefing"
-        type_label = "Daily briefing"
+            title = presentation.type_label
+        type_label = presentation.type_label
         detail_parts = [presentation.summary, _count_label(presentation)]
         detail = " | ".join(part for part in detail_parts if part)
         href = f"editions/{html.escape(date)}/"
@@ -2673,6 +2682,169 @@ def _gaza_landing_latest_card(
         f"{legacy_latest_link}"
         "    </article>"
     )
+
+
+def _gaza_page_aggregate_text(pages_repo: Path, filename: str) -> str | None:
+    path = pages_repo / "gaza" / filename
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+
+
+def _gaza_aggregate_latest_date(*values: str) -> str | None:
+    dates = [date for value in values for date in GAZA_PUBLIC_HISTORY_DATE_RE.findall(value)]
+    return max(dates) if dates else None
+
+
+def _gaza_insert_date_ordered_list_item(
+    document: str,
+    list_open: str,
+    new_row: str,
+    edition_date: str,
+) -> str:
+    list_start = document.index(list_open) + len(list_open)
+    list_end = document.index("</ul>", list_start)
+    row_matches = list(re.finditer(r"      <li\b.*?</li>", document[list_start:list_end], re.DOTALL))
+    insert_at = list_end
+    for match in row_matches:
+        row_dates = GAZA_PUBLIC_HISTORY_DATE_RE.findall(match.group(0))
+        if row_dates and row_dates[0] < edition_date:
+            insert_at = list_start + match.start()
+            break
+    prefix = document[:insert_at]
+    if not prefix.endswith("\n"):
+        prefix += "\n"
+    return prefix + new_row + "\n" + document[insert_at:]
+
+
+def _gaza_insert_date_ordered_rss_item(rss: str, new_item: str, edition_date: str) -> str:
+    item_matches = list(re.finditer(r"  <item>.*?</item>", rss, re.DOTALL))
+    insert_at = len(rss)
+    for match in item_matches:
+        item_dates = GAZA_PUBLIC_HISTORY_DATE_RE.findall(match.group(0))
+        if item_dates and item_dates[0] < edition_date:
+            insert_at = match.start()
+            break
+    if insert_at == len(rss):
+        channel_close = rss.find("</channel>")
+        if channel_close >= 0:
+            insert_at = channel_close
+    prefix = rss[:insert_at]
+    if not prefix.endswith("\n"):
+        prefix += "\n"
+    return prefix + new_item + "\n" + rss[insert_at:]
+
+
+def _gaza_render_new_rss_item(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
+    presentation = briefing_presentation_for_edition(site_root, dispatch, edition_date)
+    label = public_edition_label(site_root, dispatch, edition_date)
+    if label == edition_date:
+        label = presentation.type_label
+    detail_parts = [presentation.summary, _count_label(presentation), presentation.type_label]
+    detail = " | ".join(part for part in detail_parts if part)
+    edition_url = f"{BASE_URL}/{dispatch.slug}/editions/{edition_date}/"
+    return f"""  <item>
+    <title>{html.escape(dispatch.name)} - {html.escape(label)}</title>
+    <link>{edition_url}</link>
+    <guid>{edition_url}</guid>
+    <description>{html.escape(detail)}</description>
+  </item>"""
+
+
+def _gaza_aggregate_render_from_pages_history(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    edition_date: str,
+    pages_repo: Path,
+    *,
+    dry_run: bool,
+    wrote: list[str],
+) -> bool:
+    """Preserve authoritative Gaza aggregate history and add only a new edition.
+
+    Pages is the immutable public-history baseline. Rebuilding aggregate rows from
+    every historical manifest can change old titles, summaries, correction rows,
+    and no-update notices even when only one new edition is intended. This helper
+    carries the baseline bytes forward and inserts the current edition once.
+    """
+    archive = _gaza_page_aggregate_text(pages_repo, "archive.html")
+    index = _gaza_page_aggregate_text(pages_repo, "index.html")
+    rss = _gaza_page_aggregate_text(pages_repo, "rss.xml")
+    if archive is None or index is None or rss is None:
+        return False
+
+    baseline_date_sets = {
+        "archive": _extract_gaza_public_history_dates(archive),
+        "index": _extract_gaza_public_history_dates(index),
+        "rss": _extract_gaza_public_history_dates(rss),
+    }
+    present = {name for name, dates in baseline_date_sets.items() if edition_date in dates}
+    if present and present != set(baseline_date_sets):
+        raise ValueError(
+            f"Gaza aggregate history has partial current-date identity for {edition_date}: {sorted(present)}"
+        )
+
+    if present == set(baseline_date_sets):
+        rendered = {"index.html": index, "archive.html": archive, "rss.xml": rss}
+    else:
+        row = ("daily", edition_date)
+        archive_row = render_briefing_archive_row(briefing_presentation_for_edition(site_root, dispatch, edition_date))
+        baseline_latest_date = _gaza_aggregate_latest_date(archive, index, rss)
+        is_newest_edition = baseline_latest_date is None or edition_date > baseline_latest_date
+        if is_newest_edition:
+            archive_latest = _render_gaza_archive_latest_entry(site_root, dispatch, row)
+            archive_latest_pattern = re.compile(
+                r'    <section class="archive-latest" aria-label="Latest archive entry">.*?    </section>',
+                re.DOTALL,
+            )
+            archive_matches = archive_latest_pattern.findall(archive)
+            if len(archive_matches) != 1:
+                raise ValueError("Gaza archive baseline must contain exactly one latest-entry section")
+            archive = archive_latest_pattern.sub(archive_latest, archive, count=1)
+        month_heading = _gaza_month_heading(edition_date)
+        month_open = f'    <section class="archive-month"><h2>{html.escape(month_heading)}</h2>\n      <ul class="edition-list archive-list">'
+        if month_open not in archive:
+            month_section = (
+                f'    <section class="archive-month"><h2>{html.escape(month_heading)}</h2>\n'
+                '      <ul class="edition-list archive-list">\n'
+                f"{archive_row}\n"
+                "      </ul>\n    </section>"
+            )
+            first_month = re.search(r'    <section class="archive-month"><h2>[^<]+</h2>\n      <ul class="edition-list archive-list">', archive)
+            if first_month is not None:
+                archive = archive[:first_month.start()] + month_section + "\n" + archive[first_month.start():]
+            else:
+                body_close = archive.rfind("</body>")
+                if body_close < 0:
+                    raise ValueError("Gaza archive baseline has no month section or body close")
+                archive = archive[:body_close] + month_section + "\n" + archive[body_close:]
+        else:
+            archive = _gaza_insert_date_ordered_list_item(archive, month_open, archive_row, edition_date)
+
+        if is_newest_edition:
+            latest_card = _gaza_landing_latest_card(site_root, dispatch, row)
+            latest_card_pattern = re.compile(r'    <article class="gaza-latest-card">.*?    </article>', re.DOTALL)
+            index_matches = latest_card_pattern.findall(index)
+            if len(index_matches) != 1:
+                raise ValueError("Gaza homepage baseline must contain exactly one latest card")
+            index = latest_card_pattern.sub(latest_card, index, count=1)
+        readable_open = '    <ul class="edition-list gaza-readable-list">'
+        readable_row = render_briefing_list_item(briefing_presentation_for_edition(site_root, dispatch, edition_date))
+        if readable_open not in index:
+            raise ValueError("Gaza homepage baseline has no readable-briefings list")
+        index = _gaza_insert_date_ordered_list_item(index, readable_open, readable_row, edition_date)
+
+        rss_item = _gaza_render_new_rss_item(site_root, dispatch, edition_date)
+        rss_description = re.search(r"  <description>.*?</description>\n", rss, re.DOTALL)
+        if rss_description is None:
+            raise ValueError("Gaza RSS baseline has no channel description")
+        rss = _gaza_insert_date_ordered_rss_item(rss, rss_item, edition_date)
+        rendered = {"index.html": index, "archive.html": archive, "rss.xml": rss}
+
+    for filename, content in rendered.items():
+        write_text(site_root / "gaza" / filename, content, dry_run, wrote)
+    return True
 
 
 def _render_gaza_archive_grouped_history(

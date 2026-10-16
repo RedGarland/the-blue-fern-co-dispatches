@@ -1626,6 +1626,7 @@ def _gaza_no_update_supersedes_edition(
 ) -> bool:
     if _gaza_no_update_entry_for_date(site_root, edition_date) is None:
         return False
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     if _gaza_pages_correction_only_edition_dir(pages_repo, edition_date) is not None:
         return False
     if edition_date in set(gaza_publication_dates):
@@ -1647,6 +1648,7 @@ def _gaza_public_edition_is_listable(
     *,
     gaza_publication_dates: tuple[str, ...] = (),
 ) -> bool:
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     correction_dir = _gaza_pages_correction_only_edition_dir(pages_repo, edition_date)
     if correction_dir is not None:
         local_edition_dir = site_root / "gaza" / "editions" / edition_date
@@ -1658,7 +1660,6 @@ def _gaza_public_edition_is_listable(
         gaza_publication_dates=gaza_publication_dates,
     ):
         return False
-    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     local_edition_dir = site_root / "gaza" / "editions" / edition_date
     candidate_dirs = [local_edition_dir]
     if pages_repo is not None:
@@ -5496,6 +5497,7 @@ def validate_gaza_public_link_consistency(
     gaza_publication_dates: tuple[str, ...] = (),
 ) -> list[str]:
     errors: list[str] = []
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     gaza_root = site_root / "gaza"
     surfaces = {
         "gaza/index.html": gaza_root / "index.html",
@@ -5521,6 +5523,18 @@ def validate_gaza_public_link_consistency(
     no_update_entries = discover_gaza_no_update_entries(site_root)
     recent_no_update_dates = {entry.date for entry in no_update_entries[:GAZA_HOME_RECENT_CHECK_LIMIT]}
     for entry in no_update_entries:
+        if _gaza_pages_correction_only_edition_dir(pages_repo, entry.date) is not None:
+            # An authoritative, byte-matched Pages correction is a legitimate
+            # zero-story edition.  It may remain represented by a historical
+            # no-update marker while the public surfaces link to the correction.
+            # Normal no-update records still go through the guards below.
+            if _gaza_public_edition_is_listable(
+                site_root,
+                entry.date,
+                pages_repo,
+                gaza_publication_dates=gaza_publication_dates,
+            ):
+                continue
         if entry.date in set(gaza_publication_dates):
             local_edition_dir = site_root / "gaza" / "editions" / entry.date
             if _gaza_public_edition_dir_is_valid(

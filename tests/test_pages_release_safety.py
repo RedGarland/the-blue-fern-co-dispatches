@@ -1266,6 +1266,31 @@ def test_gaza_reconcile_and_copy_preserve_authoritative_correction_bytes_and_aud
         "gaza/podcast.xml",
     ):
         assert (copied_pages / relative).read_bytes() == (pages / relative).read_bytes()
+    assert generator.validate_gaza_public_link_consistency(
+        materialized,
+        pages,
+        gaza_publication_dates=(correction_date,),
+    ) == []
+    inferred_pages = materialized.parents[1] / "bluefern-dispatches-pages"
+    shutil.copytree(pages, inferred_pages)
+    assert generator._gaza_public_edition_is_listable(materialized, correction_date)
+    assert generator.validate_gaza_public_link_consistency(
+        materialized,
+        gaza_publication_dates=(correction_date,),
+    ) == []
+
+    conflicting_manifest = json.loads(
+        (materialized / "gaza" / "editions" / correction_date / "edition_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    conflicting_manifest["public_exposed"] = True
+    conflicting_manifest["story_count"] = 1
+    (materialized / "gaza" / "editions" / correction_date / "edition_manifest.json").write_text(
+        json.dumps(conflicting_manifest, sort_keys=True), encoding="utf-8"
+    )
+    assert not generator._gaza_public_edition_is_listable(materialized, correction_date, pages)
+    assert not generator._gaza_public_edition_is_listable(materialized, correction_date)
 
     # A normal same-date no-update record remains non-listable merely because
     # archive/RSS contain the date; it has no correction identity.
@@ -1276,8 +1301,16 @@ def test_gaza_reconcile_and_copy_preserve_authoritative_correction_bytes_and_aud
         archive_edition_dates=(correction_date,),
         rss_edition_dates=(correction_date,),
     )
-    _write_gaza_history_guard_fixture(ordinary_site, no_update_dates=(correction_date,))
+    _write_gaza_history_guard_fixture(
+        ordinary_site,
+        archive_edition_dates=(correction_date,),
+        rss_edition_dates=(correction_date,),
+        no_update_dates=(correction_date,),
+    )
     assert not generator._gaza_public_edition_is_listable(ordinary_site, correction_date, ordinary_pages)
+    ordinary_errors = generator.validate_gaza_public_link_consistency(ordinary_site, ordinary_pages)
+    assert any("gaza public dead edition link blocked" in error for error in ordinary_errors)
+    assert any("gaza no-update date rendered as clickable edition" in error for error in ordinary_errors)
 
 
 def test_dry_run_reports_planned_paths_for_food_line_dates(release_repos: tuple[Path, Path]) -> None:

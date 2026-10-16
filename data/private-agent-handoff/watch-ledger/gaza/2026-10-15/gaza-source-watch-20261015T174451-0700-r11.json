@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261015T174451-0700-r11",
+  "scheduled_for": "2026-10-15T17:44:51-07:00",
+  "started_at": "2026-10-15T17:47:42-07:00",
+  "completed_at": "2026-10-15T17:49:12.794-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T16:47:22.568-07:00",
+    "end": "2026-10-15T17:49:12.794-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources": "OCHA OPT public homepage checked first: newest listed update 2026-10-09 (Gaza impact snapshot for 2026-10-07). WHO global oPt emergency page accessible. WHO EMRO emergency situation reports endpoint returned HTTP 502.",
+    "targeted_searches": 12,
+    "sources_checked": "Reuters, AP, UN/OCHA, WHO, UNICEF, WFP, ICRC, MSF, and targeted crossings, casualty, ceasefire, and infrastructure reporting.",
+    "exclusions": "Reuters/AP October 15 commercial-import restriction and resulting follow-ups were known before this window. Other surfaced reporting predates prior completed watch, concerns the West Bank, or lacks verified new Gaza-specific event timing. FT article on same import restrictions could not be fully evaluated due to paywall and did not establish a distinct development.",
+    "limitations": "WHO EMRO regional health coverage degraded (HTTP 502). Searches may miss updates unindexed within the hourly window.",
+    "production_boundary": "Supplementary research only; no publication, approval, schedule, or production mutation."
+  }
+}

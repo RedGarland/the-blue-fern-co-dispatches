@@ -651,6 +651,18 @@ def _maybe_send_email(result: dict[str, Any], smtp_debug: bool) -> str:
     return "sent"
 
 
+def _publication_side_effect_verified(result: dict[str, Any]) -> bool:
+    """Return true only after the Pages push boundary has succeeded.
+
+    A successful local build or manual-source check is still pre-publication,
+    even though ``run_operator`` returns ``ok: true`` for those states.
+    ``pages_push_ok`` is the durable publication boundary recorded by the
+    operator; receipt and live-verification details are downstream of it.
+    """
+
+    return result.get("pages_push_ok") is True
+
+
 def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:
     return {
         "ok": False,
@@ -1152,7 +1164,7 @@ def main(argv: list[str] | None = None) -> int:
             result["email_status"] = _maybe_send_email(result, smtp_debug=bool(args.smtp_debug))
         except Exception as exc:  # noqa: BLE001
             result["email_status"] = f"failed: {notification_error_message(exc)}"
-            if result.get("ok") and not args.dry_run:
+            if result.get("ok") and _publication_side_effect_verified(result):
                 result.setdefault("warnings", []).append(result["email_status"])
                 result["source_repo_status_after"] = _git_status_branch(ROOT)
                 result["pages_repo_status_after"] = _git_status_branch(Path(args.pages_repo))

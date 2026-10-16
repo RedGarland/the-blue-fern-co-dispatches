@@ -706,6 +706,65 @@ def test_email_failure_before_publication_remains_failed_and_receipt_is_not_succ
     assert emitted[0]["email_status"].startswith("failed:")
 
 
+@pytest.mark.parametrize("operator_status", ["LOCAL_PUBLISH_READY", "MANUAL_SOURCE_VALID"])
+def test_email_failure_before_pages_push_is_fatal_for_successful_prepublication_states(
+    isolated: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    operator_status: str,
+) -> None:
+    emitted: list[dict] = []
+    monkeypatch.setattr(
+        operator,
+        "run_operator",
+        lambda parsed_args: {
+            "ok": True,
+            "operator_status": operator_status,
+            "date": parsed_args.date,
+            "source_count": 4,
+            "publisher_count": 2,
+            "public_story_count": 3,
+            "generation_ok": True,
+            "tests_ok": True,
+            "validation_ok": True,
+            "pages_commit_sha": "local123",
+            "pages_push_ok": None,
+            "remote_tree_verify_ok": None,
+            "live_verify_status": None,
+            "bluesky_status": "skipped",
+            "audio_status": "audio_skipped",
+            "email_status": "not_requested",
+            "cleanup_status": "skipped_evidence_preserved",
+            "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{parsed_args.date}/",
+            "next_action": "Review the local publication package before pushing.",
+            "source_repo_status_after": "## clean",
+            "pages_repo_status_after": "## clean",
+        },
+    )
+    monkeypatch.setattr(
+        operator,
+        "_emit_operational_receipt",
+        lambda parsed_args, result, **kwargs: emitted.append(dict(result)) or "receipt.json",
+    )
+    monkeypatch.setattr(operator, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+
+    code = operator.main(
+        ["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+
+    output = capsys.readouterr().out
+    payload = json.loads(output[output.find("{") :])
+    assert code == 1
+    assert payload["ok"] is False
+    assert payload["operator_status"] == operator_status
+    assert payload["pages_push_ok"] is None
+    assert payload["email_status"].startswith("failed:")
+    assert payload["operational_receipt"] == "receipt.json"
+    assert emitted[0]["ok"] is False
+    assert emitted[0]["pages_push_ok"] is None
+    assert emitted[0]["email_status"].startswith("failed:")
+
+
 def test_operational_receipt_includes_final_email_status(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     args = operator.parse_args(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
     monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default")
@@ -778,6 +837,63 @@ def test_email_failure_remains_fatal_on_dry_run(isolated: Path, monkeypatch: pyt
     assert code == 1
     assert payload["ok"] is False
     assert payload["email_status"].startswith("failed:")
+
+
+def test_email_failure_does_not_turn_requested_social_failure_into_success(
+    isolated: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    emitted: list[dict] = []
+    monkeypatch.setattr(
+        operator,
+        "run_operator",
+        lambda parsed_args: {
+            "ok": False,
+            "operator_status": "BLUESKY_FAILED",
+            "date": parsed_args.date,
+            "source_count": 4,
+            "publisher_count": 2,
+            "public_story_count": 3,
+            "generation_ok": True,
+            "tests_ok": True,
+            "validation_ok": True,
+            "pages_commit_sha": "pages123",
+            "pages_push_ok": True,
+            "remote_tree_verify_ok": True,
+            "live_verify_status": "LIVE_OK",
+            "bluesky_status": "failed",
+            "audio_status": "audio_skipped",
+            "email_status": "not_requested",
+            "cleanup_status": "skipped_evidence_preserved",
+            "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{parsed_args.date}/",
+            "next_action": "Inspect the Bluesky posting failure.",
+            "source_repo_status_after": "## clean",
+            "pages_repo_status_after": "## clean",
+        },
+    )
+    monkeypatch.setattr(
+        operator,
+        "_emit_operational_receipt",
+        lambda parsed_args, result, **kwargs: emitted.append(dict(result)) or "receipt.json",
+    )
+    monkeypatch.setattr(operator, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+
+    code = operator.main(
+        ["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+
+    output = capsys.readouterr().out
+    payload = json.loads(output[output.find("{") :])
+    assert code == 1
+    assert payload["ok"] is False
+    assert payload["operator_status"] == "BLUESKY_FAILED"
+    assert payload["pages_push_ok"] is True
+    assert payload["bluesky_status"] == "failed"
+    assert payload["email_status"].startswith("failed:")
+    assert payload["operational_receipt"] == "receipt.json"
+    assert emitted[0]["ok"] is False
+    assert emitted[0]["operator_status"] == "BLUESKY_FAILED"
 
 
 def test_audio_retry_reuses_existing_audio(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:

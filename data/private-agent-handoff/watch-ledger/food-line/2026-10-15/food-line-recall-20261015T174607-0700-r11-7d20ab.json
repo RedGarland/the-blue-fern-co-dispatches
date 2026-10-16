@@ -1,0 +1,62 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T174607-0700-r11-7d20ab",
+  "scheduled_for": "2026-10-15T17:45:54-07:00",
+  "started_at": "2026-10-15T17:46:07-07:00",
+  "completed_at": "2026-10-15T17:47:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-15T16:48:27-07:00",
+    "end_at": "2026-10-15T17:47:43-07:00",
+    "basis": "Previous supplementary Food Line watch began 2026-10-15T16:48:27-07:00. Earlier notices are excluded unless newly established as relevant to this bounded interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collection_role": "Supplementary targeted recall; primary nationwide Food Line production collector remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "source_fetch_failures": 0,
+    "new_qualifying_signals": 0,
+    "queries": [
+      "October 15 2026 \"only grocery store\" closed fire town",
+      "October 15 2026 \"sole grocery store\" closes OR burned OR flooded",
+      "October 15 2026 \"last grocery store\" shutdown OR closure community",
+      "October 15 2026 food bank distribution canceled storm flood today",
+      "October 15 2026 pantry distribution cancelled power outage hurricane",
+      "October 15 2026 food pantry closed abruptly emergency damage",
+      "October 15 2026 food bank suspends operations closure residents",
+      "October 15 2026 SNAP benefits outage interruption agency notice state",
+      "October 15 2026 WIC benefits outage suspension state agency",
+      "October 15 2026 emergency food distribution canceled facility damage fire",
+      "October 15 2026 \"food pantry\" \"power outage\" \"closed\" California",
+      "October 15 2026 \"food distribution\" \"canceled\" \"power\" OR \"weather\" OR \"storm\" OR \"fire\""
+    ],
+    "excluded_examples": [
+      {
+        "url": "https://www.cuesta.edu/student-support/basic-needs-center/",
+        "reason": "Official notice confirms SLO Campus student pantry closure October 15–16 due to scheduled power outage, but wording 'tomorrow' on October 15 implies October 14 announcement; no evidence first emerged since 16:48 PDT, so excluded from current-hour new findings. May be relevant to production collector."
+      },
+      {
+        "url": "https://sanjosespotlight.com/san-jose-food-pantry-faces-opposition-from-neighbors/",
+        "reason": "October 15 coverage reiterates September 25 municipal notice and ongoing operation; no newly effective closure or major access reduction."
+      },
+      {
+        "url": "https://www.dvc.edu/student-services/basic-needs-services/food",
+        "reason": "Current San Ramon campus power-related closure banner, but source does not date start or verify food-bank locker access was interrupted; insufficient new-hour evidence."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Verified sole-grocery fire loss was reported September 14; not new in this observation interval."
+      }
+    ],
+    "assessment": "No confirmed new, nonduplicate U.S. food-access disruption announced in the bounded one-hour window across the four priority miss classes.",
+    "freshness_limitation": "Web indexing and undated provider alerts limit minute-level attribution; zero findings does not imply no disruptions.",
+    "publication_or_approval_changes": false,
+    "schedule_changes": false,
+    "attempted_persistence_branch": "ops/watch-ledger"
+  }
+}

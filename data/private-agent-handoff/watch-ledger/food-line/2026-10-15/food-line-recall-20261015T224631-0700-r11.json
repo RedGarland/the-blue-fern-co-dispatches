@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261015T224631-0700-r11",
+  "scheduled_for": "2026-10-15T22:45:54-07:00",
+  "started_at": "2026-10-15T22:46:31-07:00",
+  "completed_at": "2026-10-15T22:48:07.549-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-15T21:46:53.916-07:00",
+    "end": "2026-10-15T22:48:07.549-07:00",
+    "prior_verified_check_at": "2026-10-15T21:46:53.916-07:00",
+    "note": "Prior visible completed supplementary watch; dated results screened for novelty and event time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_status": "SUCCESS",
+    "search_queries_executed": 12,
+    "search_queries_limit": 12,
+    "search_failures": 0,
+    "search_queries": [
+      "October 15 2026 \"only grocery store\" closed fire community USA",
+      "October 15 2026 \"sole grocery store\" closed fire town",
+      "October 15 2026 \"last grocery store\" shutting down rural town",
+      "October 15 2026 food bank distribution canceled storm flood power outage",
+      "October 15 2026 food pantry distribution cancelled weather flooding",
+      "October 15 2026 emergency food distribution suspended fire facility damage",
+      "October 15 2026 food pantry closed suddenly permanently temporarily no service",
+      "October 15 2026 food bank closes distribution center services suspended",
+      "October 15 2026 community food pantry shut down access reduction fire flooding",
+      "site:gov October 15 2026 SNAP EBT benefits interrupted outage delayed payments",
+      "site:gov October 15 2026 WIC benefits interrupted suspension clinic outage",
+      "October 15 2026 \"SNAP\" \"benefits\" \"delay\" \"state\" official notice"
+    ],
+    "disposition": "No newly verified qualifying, nonduplicate U.S. food-access disruption found in the supplementary bounded window.",
+    "excluded": "Search hits predominantly dated 2025 or older 2026; September 2026 Spencer, NY only-grocery fire; October 13–15 2026 chain/co-op grocery closures that did not eliminate community grocery access; old government-shutdown SNAP/WIC stories; unrelated resources and donations.",
+    "caveat": "Index/search coverage cannot prove absence; production nationwide collector remains authoritative. Late-reported developments may be found in subsequent checks.",
+    "persistence_status": "COMMIT_ATTEMPTED",
+    "intended_repository": "RedGarland/the-blue-fern-co-dispatches",
+    "intended_branch": "ops/watch-ledger",
+    "intended_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-15/food-line-recall-20261015T224631-0700-r11.json",
+    "production_collection_authoritative": true,
+    "no_approval_or_publication_or_schedule_changes": true
+  }
+}

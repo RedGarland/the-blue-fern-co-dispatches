@@ -144,12 +144,80 @@ def _write_public_gaza_edition(base: Path, edition_date: str, *, title: str = "G
     )
 
 
+def _write_public_gaza_aggregate_fixture(base: Path, edition_dates: list[str]) -> None:
+    """Create the complete Pages aggregate surface required by Gaza history preservation."""
+    gaza = base / "gaza"
+    gaza.mkdir(parents=True, exist_ok=True)
+    ordered_dates = sorted(edition_dates, reverse=True)
+    latest = ordered_dates[0]
+    archive_rows = "\n".join(
+        "      <li class=\"archive-row archive-row--daily\">"
+        f"<span class=\"edition-date\">{date_text}</span>"
+        f"<span class=\"briefing-row-main\"><a class=\"briefing-row-title\" href=\"editions/{date_text}/\">"
+        f"Gaza update {date_text}</a></span>"
+        f"<a class=\"briefing-row-cta\" href=\"editions/{date_text}/\">Read</a></li>"
+        for date_text in ordered_dates
+    )
+    readable_rows = "\n".join(
+        "      <li class=\"briefing-row briefing-row--readable\">"
+        f"<span class=\"edition-date\">{date_text}</span>"
+        f"<span class=\"briefing-row-main\"><a class=\"briefing-row-title\" href=\"editions/{date_text}/\">"
+        f"Gaza update {date_text}</a></span>"
+        f"<a class=\"briefing-row-cta\" href=\"editions/{date_text}/\">Read briefing</a></li>"
+        for date_text in ordered_dates
+    )
+    rss_items = "\n".join(
+        "  <item>\n"
+        f"    <title>Dispatches From Gaza - Gaza update {date_text}</title>\n"
+        f"    <link>https://dispatches.thebluefernco.com/gaza/editions/{date_text}/</link>\n"
+        f"    <guid>https://dispatches.thebluefernco.com/gaza/editions/{date_text}/</guid>\n"
+        f"    <description>Gaza update {date_text}</description>\n"
+        "  </item>"
+        for date_text in ordered_dates
+    )
+    (gaza / "archive.html").write_text(
+        "<!doctype html><html><body>\n"
+        '    <section class="archive-latest" aria-label="Latest archive entry">\n'
+        f'      <h2><a href="editions/{latest}/">{latest}</a></h2>\n'
+        "      <p>Latest Gaza update.</p>\n"
+        "    </section>\n"
+        '    <section class="archive-month"><h2>October 2026</h2>\n'
+        '      <ul class="edition-list archive-list">\n'
+        f"{archive_rows}\n"
+        "      </ul>\n    </section>\n"
+        "</body></html>\n",
+        encoding="utf-8",
+    )
+    (gaza / "index.html").write_text(
+        "<!doctype html><html><body>\n"
+        '    <article class="gaza-latest-card">\n'
+        f'      <p class="edition-date">{latest}</p>\n'
+        "      <h3>Gaza daily briefing</h3>\n"
+        '      <p class="topic-badge topic-badge--gaza">Daily briefing</p>\n'
+        "    </article>\n"
+        '    <ul class="edition-list gaza-readable-list">\n'
+        f"{readable_rows}\n"
+        "    </ul>\n"
+        "</body></html>\n",
+        encoding="utf-8",
+    )
+    (gaza / "rss.xml").write_text(
+        "<rss><channel>\n"
+        "  <title>Dispatches From Gaza</title>\n"
+        "  <description>Saved Gaza updates.</description>\n"
+        f"{rss_items}\n"
+        "</channel></rss>\n",
+        encoding="utf-8",
+    )
+
+
 def test_gaza_archive_rss_index_include_pages_public_editions_despite_local_no_update_marker(tmp_path: Path) -> None:
     root = tmp_path
     pages = root / "bluefern-dispatches-pages"
     known_dates = ["2026-10-03", "2026-10-01", "2026-09-30", "2026-09-29"]
     for date_text in known_dates:
         _write_public_gaza_edition(pages, date_text, title=f"Gaza update {date_text}")
+    _write_public_gaza_aggregate_fixture(pages, known_dates)
     status = root / "output" / "site" / "gaza" / "status" / "no-updates"
     status.mkdir(parents=True, exist_ok=True)
     (status / "2026-10-03.json").write_text(

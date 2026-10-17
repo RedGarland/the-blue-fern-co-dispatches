@@ -1024,6 +1024,27 @@
       "started_at": "2026-10-17T19:56:06Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261017T195826Z-15558f73.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-17T20:25:18Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261017T195826Z-15558f73",
+      "scheduled_for": "2026-10-17",
+      "started_at": "2026-10-17T20:25:16Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
     }
   ],
   "expected_instances": [
@@ -1058,8 +1079,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-17T19:56:11.167520Z",
-  "last_receipt_at": "2026-10-17T19:56:08.222645Z",
+  "last_exported_at": "2026-10-17T20:25:21.322219Z",
+  "last_receipt_at": "2026-10-17T20:25:18.091188Z",
   "latest_runtime_proof_date": "2026-10-17T15:30:03Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -2106,6 +2127,27 @@
       "run_id": "care-proof-only-food-care-continuation-20261017T192826Z-8def2001",
       "scheduled_for": "2026-10-17",
       "started_at": "2026-10-17T19:56:06Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261017T195826Z-15558f73.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-17T20:25:18Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261017T195826Z-15558f73",
+      "scheduled_for": "2026-10-17",
+      "started_at": "2026-10-17T20:25:16Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
     }

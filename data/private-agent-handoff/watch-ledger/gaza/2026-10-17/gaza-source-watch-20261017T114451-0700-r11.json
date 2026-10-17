@@ -1,0 +1,67 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T114451-0700-r11",
+  "scheduled_for": "2026-10-17T11:44:51-07:00",
+  "started_at": "2026-10-17T11:45:13-07:00",
+  "completed_at": "2026-10-17T11:46:49-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T10:48:00-07:00",
+    "end": "2026-10-17T11:46:49-07:00",
+    "basis": "Previous hourly watch reported ending approximately 10:48 AM PDT; exact completion second not available."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall only. Production remains authoritative; no publication, authorization or scheduling change.",
+    "primary_sources_checked_first": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Website accessible; most recent listed Gaza-specific item dated 2026-10-09, no in-window update verified."
+      },
+      {
+        "name": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated in-window Gaza development. WHO HeRAMS published 2026-10-16 reflects observations through 2026-09-30 and was previously identified."
+      },
+      {
+        "name": "WHO Eastern Mediterranean emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; regional health reporting inaccessible this run."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "Reuters Gaza civilian casualties",
+      "AP Gaza civilian casualties",
+      "UNICEF children/water",
+      "WFP food/crossings",
+      "UNRWA displacement/shelter",
+      "ICRC detention/ambulances",
+      "MSF hospital shortages",
+      "UN humanitarian/ceasefire",
+      "Gaza Ministry of Health casualty reports",
+      "Rafah/Kerem Shalom crossings",
+      "ceasefire/hostages/negotiations",
+      "WHO medical evacuation/fuel/capacity"
+    ],
+    "exclusions": [
+      "AP reporting on four Gaza deaths identified earlier on 2026-10-17; duplicate, not a new hourly finding",
+      "WHO HeRAMS 2026-10-16 covers September and was previously surfaced",
+      "Stale, recycled, unverifiable and out-of-window material",
+      "West Bank-only incidents and commentary"
+    ],
+    "source_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "impact": "Regional healthcare and medical-evacuation source coverage incomplete."
+      }
+    ],
+    "assessment": "No new, traceable, nonduplicate in-window Gaza development found in bounded search. This is not evidence that no developments occurred."
+  }
+}

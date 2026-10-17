@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T024451-0700-r11",
+  "scheduled_for": "2026-10-17T02:44:51-07:00",
+  "started_at": "2026-10-17T02:42:40-07:00",
+  "completed_at": "2026-10-17T09:44:47.329+00:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T01:45:09-07:00",
+    "end": "2026-10-17T09:44:47.329+00:00",
+    "basis": "Last verified persisted hourly watch completed at 01:45:09 PDT; this run's observation ended at heartbeat assembly time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary Gaza recall only; primary production collection and publishing remain authoritative. No public updates, approvals, credentials, or scheduling changes.",
+    "previous_run": "gaza-source-watch-20261017T014451-0700-r11",
+    "source_checks_order": [
+      "OCHA OPT homepage and dated releases",
+      "WHO global Gaza emergency and September 2026 HeRAMS",
+      "WHO Eastern Mediterranean Palestine endpoint",
+      "12 additional targeted searches"
+    ],
+    "primary_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "finding": "Accessible; newest listed Gaza news item dated 2026-10-09. No verified development in window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/publications/m/item/herams-opt-gaza-infographics-2026-09",
+        "finding": "Published 2026-10-16, based on data through 2026-09-30, already identified by prior watch; no newly verified hourly update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/palestine/",
+        "finding": "HTTP 502 Bad Gateway; regional Gaza healthcare-source coverage incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_search_coverage": [
+      "Reuters and AP casualties/military civilian impact",
+      "UNICEF displacement, water, nutrition",
+      "WFP food aid and crossings",
+      "UNRWA shelter, aid and displacement",
+      "ICRC medical evacuation, detainees and hostages",
+      "Reuters and AP crossings, ceasefire and negotiations",
+      "ReliefWeb humanitarian situation reports",
+      "UN/OCHA updates",
+      "MSF healthcare, ambulance, fuel and access",
+      "Cross-source Gaza overnight water/infrastructure/strikes"
+    ],
+    "source_failures": [
+      {
+        "source": "WHO EMRO Palestine",
+        "error": "HTTP 502 Bad Gateway"
+      },
+      {
+        "source": "UN News targeted search",
+        "error": "robots.txt blocked access"
+      }
+    ],
+    "exclusions": [
+      "2026-10-16 WHO HeRAMS health-capacity report and September source data already assessed in prior hours",
+      "2026-10-16 Reuters/UNICEF commercial-supply and malnutrition reporting already assessed",
+      "West Bank-only October 16 settler-attack reports",
+      "Earlier-day, older and undated articles, without proven publication within this watch window"
+    ],
+    "assessment": "No new traceable, previously unlogged in-Gaza development verifiable between 01:45:09 and this check. Research coverage remains useful despite regional WHO and UN News access errors, so status DEGRADED rather than FAILED."
+  }
+}

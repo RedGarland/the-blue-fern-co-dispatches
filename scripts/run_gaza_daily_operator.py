@@ -651,6 +651,28 @@ def _maybe_send_email(result: dict[str, Any], smtp_debug: bool) -> str:
     return "sent"
 
 
+def _publication_side_effect_verified(result: dict[str, Any]) -> bool:
+    """Return true only after a verified publication boundary has succeeded.
+
+    A successful local build or manual-source check is still pre-publication,
+    even though ``run_operator`` returns ``ok: true`` for those states.
+    ``pages_push_ok`` is the durable publication boundary for a normal run.
+    The post-only path has no new Pages push, so it instead requires
+    ``LIVE_OK`` plus a successful or deduplicated post-publication result.
+    """
+
+    if result.get("pages_push_ok") is True:
+        return True
+    # The post-only path resumes an already published edition. It has no new
+    # Pages push to record, but LIVE_OK plus a successful or deduplicated
+    # Bluesky result proves that the requested post-publication stage passed.
+    if result.get("live_verify_status") != "LIVE_OK":
+        return False
+    if result.get("operator_status") == "ALREADY_POSTED":
+        return True
+    return result.get("operator_status") == "PUBLISHED_AND_POSTED" and result.get("bluesky_status") == "success"
+
+
 def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:
     return {
         "ok": False,
@@ -1130,6 +1152,7 @@ def _emit_operational_receipt(args: argparse.Namespace, result: dict[str, Any], 
             "generation_ok": bool(result.get("generation_ok")),
             "validation_ok": result.get("validation_ok"),
             "live_verify_status": result.get("live_verify_status"),
+            "email_status": result.get("email_status"),
         },
     )
     write_result = write_operational_receipt(ROOT, receipt)
@@ -1146,6 +1169,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     started_at = _utc_now()
     result = run_operator(args)
+    if args.email_report:
+        try:
+            result["email_status"] = _maybe_send_email(result, smtp_debug=bool(args.smtp_debug))
+        except Exception as exc:  # noqa: BLE001
+            result["email_status"] = f"failed: {notification_error_message(exc)}"
+            if result.get("ok") and _publication_side_effect_verified(result):
+                result.setdefault("warnings", []).append(result["email_status"])
+                result["source_repo_status_after"] = _git_status_branch(ROOT)
+                result["pages_repo_status_after"] = _git_status_branch(Path(args.pages_repo))
+            elif result.get("ok"):
+                result["ok"] = False
+                result["next_action"] = result["email_status"]
     completed_at = _utc_now()
     try:
         receipt_path = _emit_operational_receipt(args, result, started_at=started_at, completed_at=completed_at)
@@ -1153,22 +1188,8 @@ def main(argv: list[str] | None = None) -> int:
             result["operational_receipt"] = receipt_path
     except Exception as exc:  # noqa: BLE001
         result.setdefault("warnings", []).append(f"operational receipt emission failed: {type(exc).__name__}: {exc}")
-    if args.email_report:
-        try:
-            result["email_status"] = _maybe_send_email(result, smtp_debug=bool(args.smtp_debug))
-        except Exception as exc:  # noqa: BLE001
-            result["email_status"] = f"failed: {notification_error_message(exc)}"
-            if result.get("ok") and not args.dry_run:
-                result.setdefault("warnings", []).append(result["email_status"])
-                result["source_repo_status_after"] = _git_status_branch(ROOT)
-                result["pages_repo_status_after"] = _git_status_branch(Path(args.pages_repo))
-                print(f"Email warning: {result['email_status']}")
-                _print_human_summary(result)
-                print(json.dumps(result, indent=2))
-                return 0
-            if result.get("ok"):
-                result["ok"] = False
-                result["next_action"] = result["email_status"]
+    if result.get("email_status", "").startswith("failed:") and result.get("ok"):
+        print(f"Email warning: {result['email_status']}")
     _print_human_summary(result)
     print(json.dumps(result, indent=2))
     return 0 if result.get("ok") else 1

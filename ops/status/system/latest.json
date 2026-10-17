@@ -231,7 +231,7 @@
         "unclassified_source_failure_count": null
       },
       "human_action_required": true,
-      "latest_receipt_path": "logs/food-line/current-intake/2026-10-16/20261017T021502Z-current-intake.json",
+      "latest_receipt_path": "logs/food-line/current-intake/2026-10-16/20261017T024527Z-current-intake.json",
       "migration_status": "MIGRATED",
       "next_human_action": "Review 4 Food Line items for 2026-10-14.",
       "private_review_backlog": {
@@ -549,7 +549,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-17T02:15:03.408816Z",
+  "exported_at": "2026-10-17T02:45:34.034204Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza"

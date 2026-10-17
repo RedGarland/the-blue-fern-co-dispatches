@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261016T234554-0700-11",
+  "scheduled_for": "2026-10-16T23:45:54-07:00",
+  "started_at": "2026-10-16T23:48:21-07:00",
+  "completed_at": "2026-10-16T23:49:07-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T22:49:00-07:00",
+    "end": "2026-10-16T23:49:07-07:00",
+    "basis": "Since prior hourly check; local observation date October 16, 2026."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch, not authoritative production collection",
+    "targeted_web_searches": 12,
+    "searches_failed": 0,
+    "focus": [
+      "Only/sole/last/full-service grocery loss, closure, fire, or disaster",
+      "Weather/disaster-caused emergency food distribution cancellation",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "summary": "No newly verified qualifying signals found in the bounded hourly window. Search results were predominantly historic closures, unrelated programs, prospective nonexclusive grocery closures, and prior SNAP interruptions. Discovery is not exhaustive; production collection remains authoritative.",
+    "exclusions": "Donation drives, resource guides, routine promotion, generic inflation, opinions, older and duplicate incidents excluded.",
+    "github_ledger_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-16/food-line-recall-20261016T234554-0700-11.json",
+    "query_count": 12,
+    "search_coverage": "Targeted web discovery returned results across four priority classes; no qualifying new official or local-source confirmation.",
+    "approvals_publications_schedule_changes": false
+  }
+}

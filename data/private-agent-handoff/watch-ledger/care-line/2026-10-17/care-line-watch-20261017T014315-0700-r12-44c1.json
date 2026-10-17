@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T014315-0700-r12-44c1",
+  "scheduled_for": "2026-10-17T01:43:15-07:00",
+  "started_at": "2026-10-17T01:43:15-07:00",
+  "completed_at": "2026-10-17T01:45:31.398-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "started_at": "2026-10-17T00:44:06-07:00",
+    "ended_at": "2026-10-17T01:45:31.398-07:00",
+    "interpretation": "since previous verified hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall only; production Care Line national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_notice_provider": "Tender Home Health",
+      "new_notices_found": 0
+    },
+    "additional_targeted_searches": 12,
+    "search_failures": 1,
+    "degraded_source": "postguam.com blocked by robots.txt in territorial coverage search; other sources remained accessible.",
+    "coverage_scope": [
+      "hospital and emergency service closures/suspensions",
+      "maternity, rural and primary care loss",
+      "behavioral health, dialysis, oncology",
+      "ambulance and air-medical base closures",
+      "concrete service restoration and U.S. territories",
+      "CMS provider notices and CLIA actions"
+    ],
+    "exclusions": [
+      "Known Guam suspensions and Florida reopening were previously seen or outside observation window.",
+      "Previously surfaced Arizona primary-care and Missouri maternity changes excluded.",
+      "Historical/foreign/proposed/ownership/opinion items excluded."
+    ],
+    "zero_result_caveat": "Bounded coverage, not exhaustive national surveillance."
+  }
+}

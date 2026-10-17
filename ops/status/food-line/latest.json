@@ -31,7 +31,7 @@
     "primary_task_status": null,
     "private_review_count_only_gap_count": 55,
     "private_review_dispositioned_item_count": 66,
-    "private_review_max_age_hours": 85,
+    "private_review_max_age_hours": 86,
     "private_review_oldest_pending_date": "2026-10-14",
     "private_review_pending_date_count": 1,
     "private_review_pending_item_count": 4,
@@ -105,7 +105,7 @@
   ],
   "human_action_required": true,
   "incident_reference": null,
-  "last_exported_at": "2026-10-17T13:54:41.976799Z",
+  "last_exported_at": "2026-10-17T14:15:05.664904Z",
   "last_receipt_at": "2026-10-17T13:54:35.727881Z",
   "latest_receipt_path": "logs/food-line/current-intake/2026-10-17/20261017T135435Z-current-intake.json",
   "latest_runtime_proof_date": "2026-10-17T13:54:35.727881Z",
@@ -116,7 +116,7 @@
     "count_only_gap_count": 55,
     "dates": [
       {
-        "age_hours": 85,
+        "age_hours": 86,
         "count_only_gap_count": 0,
         "date": "2026-10-14",
         "dispositioned_item_count": 0,
@@ -286,7 +286,7 @@
       }
     ],
     "dispositioned_item_count": 66,
-    "max_age_hours": 85,
+    "max_age_hours": 86,
     "oldest_pending_date": "2026-10-14",
     "pending_date_count": 1,
     "pending_item_count": 4,

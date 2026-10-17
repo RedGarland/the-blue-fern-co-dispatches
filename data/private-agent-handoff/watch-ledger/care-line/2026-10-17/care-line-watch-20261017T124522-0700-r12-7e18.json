@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T124522-0700-r12-7e18",
+  "scheduled_for": "2026-10-17T12:45:00-07:00",
+  "started_at": "2026-10-17T12:45:22-07:00",
+  "completed_at": "2026-10-17T12:45:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-17T11:53:00-07:00",
+    "end_at": "2026-10-17T12:45:57-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production national collector remains authoritative.",
+    "CMS Public Notices checked first: newest listed notice dated 2026-10-09 (Tender Home Health, CA); no new notice in window.",
+    "12 additional targeted web searches completed, spanning hospitals/ED, maternity, behavioral health, dialysis/oncology, rural primary care, ground/air ambulance, reopenings, territory coverage and state notices.",
+    "No new qualifying development verified within the observation window. Previous Axis Health System Norwood (CO) and Winchester Family Medicine (NH) closures excluded as previously surfaced.",
+    "Search results included older events, general analysis, proposals, and non-U.S. changes; excluded."
+  ]
+}

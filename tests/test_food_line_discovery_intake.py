@@ -8,6 +8,8 @@ from pathlib import Path
 import scripts.run_food_line_dispatch as food_line_dispatch
 from bluefern_dispatches.food_line_discovery_bridge import run_food_line_discovery_intake_bridge
 from bluefern_dispatches.food_line_discovery_expansion import run_food_line_discovery_expansion
+from bluefern_dispatches.food_line_runtime_state import current_queue_path
+from scripts.process_food_line_current_intake import _build_review_queue
 
 
 def _ensure_assets(root: Path) -> None:
@@ -153,6 +155,109 @@ def test_food_line_discovery_bridge_keeps_google_news_metadata_but_intakes_publi
     assert bridge_row["classification_status"] == "blocked_fetch"
     assert bridge_row["candidate_review_status"] == "needs_review"
     assert bridge_row["discovery_lane"] == "news_article"
+
+
+def test_nl_times_foreign_scope_survives_discovery_bridge_inbox_adapter_and_full_queue(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    edition_date = "2026-10-17"
+    google_news_url = "https://news.google.com/rss/articles/NLFOREIGN?oc=5"
+    publisher_url = "https://nltimes.nl/2026/10/17/food-banks-waitlists"
+    title = "Food banks report longer waitlists as household costs rise"
+    article_body = (
+        "Stichting Armoedefonds reported that food banks in the Netherlands are seeing longer waitlists "
+        "as grocery, energy, and school-supply costs rise."
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": title,
+                        "link": google_news_url,
+                        "source_url": publisher_url,
+                        "publisher": "NL Times",
+                        "pubDate": "Sat, 17 Oct 2026 12:00:00 GMT",
+                        "description": "Dutch food banks report longer waitlists.",
+                    }
+                ]
+            )
+        if url == google_news_url:
+            return f'<html><body><a href="{publisher_url}">story</a></body></html>'.encode("utf-8")
+        if url == publisher_url:
+            return (
+                f'<html><head><title>{title}</title>'
+                f'<link rel="canonical" href="{publisher_url}">'
+                '<meta property="article:published_time" content="2026-10-17T12:00:00Z">'
+                '</head><body><nav>New York, United States food desk</nav>'
+                f'<article><p>{article_body}</p></article>'
+                '<footer>United States navigation and related stories</footer></body></html>'
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    expanded = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        edition_mode="no_current_update",
+        max_queries=1,
+        max_results_per_query=10,
+    )
+    bridge = run_food_line_discovery_intake_bridge(tmp_path, edition_date)
+    bridge_rows = json.loads(Path(bridge["discovery_source_input_path"]).read_text(encoding="utf-8"))
+    bridge_row = next(row for row in bridge_rows if row["discovered_publisher"] == "NL Times")
+
+    assert expanded["ok"] is True
+    assert bridge["discovery_expansion_used"] is True
+    assert bridge_row["final_trace_url"] == publisher_url
+    assert bridge_row["geography_evidence_basis"] == "source_body"
+    assert bridge_row["source_body_text"] == article_body
+    assert bridge_row["food_line_geography_status"] == "outside"
+    assert bridge_row["public_claim_eligible"] is False
+    assert "New York" not in bridge_row["source_body_text"]
+
+    inbox = tmp_path / "data/dispatches/food-line/agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    _write_json(
+        inbox / "nl-times.json",
+        {
+            "agent_name": "Food Line Source Watch",
+            "agent_run_id": "nl-times-full-queue",
+            "edition_date": edition_date,
+            "findings": [
+                {
+                    "finding_id": bridge_row["candidate_id"],
+                    "title": bridge_row["title"],
+                    "publisher": bridge_row["publisher"],
+                    "source_url": bridge_row["source_url"],
+                    "source_published_at": bridge_row["published_at"],
+                    "exact_supporting_passage": bridge_row["source_body_text"],
+                    "source_body_text": bridge_row["source_body_text"],
+                    "geography_evidence_basis": "source_body",
+                    "pressure_type": "food-bank waitlist",
+                    "pressure_summary": "Food banks reported a growing waitlist.",
+                }
+            ],
+        },
+    )
+    queue = _build_review_queue(tmp_path, edition_date, inbox)
+    loaded = json.loads(current_queue_path(tmp_path).read_text(encoding="utf-8"))
+    assert loaded == queue
+    assert queue["review_lifecycle"]["discovered"] == 1
+    assert queue["review_lifecycle"]["dispositions"] == {"rejected_with_reason": 1}
+    assert queue["items"] == []
+    intake = json.loads(
+        (
+            tmp_path
+            / "data/dispatches/food-line/agent-intake/2026-10-17/nl-times-full-queue.json"
+        ).read_text(encoding="utf-8")
+    )
+    retained = intake["candidate_rows"][0]
+    assert retained["country"] == ""
+    assert retained["event_country"] == ""
+    assert retained["food_line_geography_status"] == "outside"
+    assert retained["eligible_for_review"] is False
+    assert "outside_food_line_us_territories_scope" in retained["exclusion_reason"]
 
 
 def test_food_line_blocked_candidates_do_not_become_public_signals_without_manual_fallback(tmp_path: Path):

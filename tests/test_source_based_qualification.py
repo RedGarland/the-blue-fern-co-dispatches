@@ -9,6 +9,8 @@ def test_food_line_retains_only_grocery_store_fire_access_loss() -> None:
             "source_url": "https://example.org/spencer-shurfine-fire",
             "publisher": "FingerLakes1",
             "source_published_date": "2026-09-13",
+            "event_country": "United States",
+            "event_state": "NY",
             "evidence_text": (
                 "A fire destroyed Spencer's only full-service grocery store, Shurfine Food Mart. "
                 "Residents said the loss will make grocery shopping harder, especially for people unable to travel."
@@ -29,6 +31,8 @@ def test_food_line_retains_snap_losses_tied_to_emergency_food_demand() -> None:
             "publisher": "Arizona Food Bank Network",
             "source_published_date": "2026-06-30",
             "observed_date": "2026-09-14",
+            "event_country": "United States",
+            "event_state": "AZ",
             "evidence_text": (
                 "Arizona SNAP participation declined by more than 50 percent while food bank visits increased "
                 "and emergency food providers reported more need."

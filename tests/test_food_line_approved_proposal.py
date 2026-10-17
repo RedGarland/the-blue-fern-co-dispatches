@@ -9,7 +9,15 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.food_line_approved_proposal import load_approved_proposal
-from bluefern_dispatches.food_line_current_review import build_proposed_edition
+from bluefern_dispatches.food_line_current_review import (
+    apply_editorial_decision,
+    build_proposed_edition,
+    validate_queue,
+    write_json_atomic,
+)
+from bluefern_dispatches.source_based_qualification import assess_review_retention
+from scripts.process_food_line_current_intake import _build_review_queue
+from bluefern_dispatches.adapters.food_line_agent import adapt_food_line_agent_output, map_finding_to_food_line_candidate
 from scripts import run_food_line_dispatch as runner
 
 
@@ -117,7 +125,56 @@ def test_approved_proposal_loads_one_source_backed_current_signal(tmp_path: Path
     assert row["url"] == SOURCE_URL
     assert row["approved_public_summary"] == SUMMARY
     assert row["location_name"] == "Superior"
+    assert row["country"] == "United States"
+    assert row["event_country"] == "United States"
+    assert row["state"] == "WI"
+    assert row["event_state"] == "WI"
+    assert row["supported_product_geography"] is True
     assert row["map_eligible"] is False
+
+
+def test_approved_loader_rejects_unreviewed_proposal_location_override(tmp_path: Path) -> None:
+    proposal_path, proposal, _ = _fixture(tmp_path)
+    proposal["items"][0]["location_name"] = "France"
+    _write_json(proposal_path, proposal)
+    with pytest.raises(ValueError, match="location_name does not match reviewed queue geography"):
+        load_approved_proposal(tmp_path, proposal_path, DATE)
+
+
+def test_approved_loader_rejects_contiguous_place_fragment_override(tmp_path: Path) -> None:
+    """Synthetic contract fixture: a reviewed New Mexico row cannot authorize Mexico."""
+    proposal_path, proposal, queue = _fixture(tmp_path)
+    queue["items"][0].update(
+        {
+            "event_location": "New Mexico",
+            "event_state": "NM",
+            "location_name": "New Mexico",
+            "location_scope": "New Mexico",
+            "state": "NM",
+        }
+    )
+    proposal["items"][0]["location_name"] = "Mexico"
+    _rewrite(tmp_path, proposal_path, proposal, queue)
+    with pytest.raises(ValueError, match="location_name does not match reviewed queue geography"):
+        load_approved_proposal(tmp_path, proposal_path, DATE)
+
+
+@pytest.mark.parametrize(
+    "geography_fields",
+    [
+        {"event_country": "Netherlands", "state": ""},
+        {"event_state": "WV", "event_location": "Virginia", "state": ""},
+        {"event_state": "ZZ", "state": ""},
+    ],
+)
+def test_approved_loader_rejects_foreign_conflicting_or_unknown_queue_geography(
+    tmp_path: Path, geography_fields: dict[str, str]
+) -> None:
+    proposal_path, proposal, queue = _fixture(tmp_path)
+    queue["items"][0].update(geography_fields)
+    _rewrite(tmp_path, proposal_path, proposal, queue)
+    with pytest.raises(ValueError, match="event geography"):
+        load_approved_proposal(tmp_path, proposal_path, DATE)
 
 
 def test_current_review_producer_output_loads_and_keeps_queue_evidence(tmp_path: Path) -> None:
@@ -125,7 +182,7 @@ def test_current_review_producer_output_loads_and_keeps_queue_evidence(tmp_path:
     queue["historical_roots_excluded"] = ["data/agent-history", "data/agent-history-staging"]
     queue["allowed_decisions"] = ["approve", "approve_with_edit", "hold", "reject"]
     queue["items"][0]["title"] = queue["items"][0]["proposed_public_headline"]
-    queue["items"][0]["location_name"] = "Superior"
+    queue["items"][0]["location_name"] = "Superior and Douglas County, Wisconsin"
     queue["items"][0]["editorial_note"] = "Approved for the producer-to-loader regression."
     queue["items"][0]["proposed_section"] = "Core Food Pressure Signals"
     queue_path = tmp_path / "status/food-line/runtime/current-signal-review.json"
@@ -136,6 +193,82 @@ def test_current_review_producer_output_loads_and_keeps_queue_evidence(tmp_path:
     _write_json(proposal_path, proposed)
     bundle = load_approved_proposal(tmp_path, proposal_path, DATE)
     assert bundle.source_rows[0]["exact_supporting_passage"] == queue["items"][0]["exact_supporting_passage"]
+    assert proposed["items"][0]["location_name"] == "Superior and Douglas County, Wisconsin"
+    assert bundle.source_rows[0]["location_name"] == "Superior and Douglas County, Wisconsin"
+
+
+def test_arizona_and_original_nc_body_only_signals_retain_validate_and_load_as_approved_sources(tmp_path: Path) -> None:
+    inbox = tmp_path / "data/dispatches/food-line/agent-inbox"
+    inbox.mkdir(parents=True)
+    findings = [
+        {
+            "finding_id": "arizona-body-only",
+            "title": "Arizona pantry closes after losing its remaining food supply",
+            "publisher": "Arizona Example News",
+            "source_url": "https://example.org/arizona-pantry",
+            "source_published_at": f"{DATE}T08:00:00Z",
+            "exact_supporting_passage": "The Arizona pantry closed permanently after losing its remaining food supply.",
+            "source_body_text": "The Arizona pantry closed permanently after losing its remaining food supply.",
+            "geography_evidence_basis": "source_body",
+            "pressure_type": "service closure",
+            "pressure_summary": "An Arizona pantry closed permanently after losing its remaining supply.",
+        },
+        {
+            "finding_id": "north-carolina-body-only",
+            "title": "North Carolina pantry cannot supply everyone seeking assistance",
+            "publisher": "North Carolina Example News",
+            "source_url": "https://example.org/north-carolina-pantry",
+            "source_published_at": f"{DATE}T09:00:00Z",
+            "exact_supporting_passage": "The North Carolina pantry cannot supply food to everyone seeking assistance after an inventory shortage.",
+            "source_body_text": "The North Carolina pantry cannot supply food to everyone seeking assistance after an inventory shortage.",
+            "geography_evidence_basis": "source_body",
+            "pressure_type": "supply shortage",
+            "pressure_summary": "A North Carolina pantry cannot supply everyone seeking assistance.",
+        },
+    ]
+    payload = {
+        "agent_name": "Food Line Source Watch",
+        "agent_run_id": "body-only-az-nc",
+        "edition_date": DATE,
+        "findings": findings,
+    }
+    inbox_path = inbox / "body-only-az-nc.json"
+    _write_json(inbox_path, payload)
+
+    adapted = adapt_food_line_agent_output(payload, agent_name="Food Line Source Watch", agent_run_id="body-only-az-nc")
+    candidates = [map_finding_to_food_line_candidate(finding, edition_date=DATE) for finding in adapted]
+    for candidate, state in zip(candidates, ("AZ", "NC")):
+        assert candidate["eligible_for_review"] is True
+        assert candidate["state"] == state
+        assert candidate["location_name"] in {"Arizona", "North Carolina"}
+        assert assess_review_retention(candidate, dispatch="food-line", edition_date=DATE)["eligible_for_review"] is True
+
+    queue = _build_review_queue(tmp_path, DATE, inbox)
+    assert len(queue["items"]) == 2
+    assert [item["state"] for item in queue["items"]] == ["AZ", "NC"]
+    assert queue["review_lifecycle"]["dispositions"] == {"retained_for_review": 2}
+    assert validate_queue(queue) == queue
+
+    for item in queue["items"]:
+        apply_editorial_decision(
+            queue,
+            review_item_id=item["review_item_id"],
+            decision="approve",
+            decided_by="Independent reviewer",
+            decided_at=f"{DATE}T12:00:00Z",
+            editorial_note="Approved for the private body-only geography integration test.",
+        )
+    queue_path = tmp_path / "status/food-line/runtime/current-signal-review.json"
+    write_json_atomic(queue_path, queue)
+    proposal = build_proposed_edition(queue)
+    proposal_path = tmp_path / "data/dispatches/food-line/review/proposed-editions" / f"{DATE}.json"
+    proposal["source_queue_sha256"] = hashlib.sha256(queue_path.read_bytes()).hexdigest()
+    _write_json(proposal_path, proposal)
+    bundle = load_approved_proposal(tmp_path, proposal_path, DATE)
+
+    assert {row["state"] for row in bundle.source_rows} == {"AZ", "NC"}
+    assert all(row["supported_product_geography"] is True for row in bundle.source_rows)
+    assert all(row["source_public_story_eligible"] is True for row in bundle.source_rows)
 
 
 def test_proposal_exact_supporting_passage_mismatch_fails_closed(tmp_path: Path) -> None:

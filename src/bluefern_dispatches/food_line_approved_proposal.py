@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Sequence
 from urllib.parse import urlsplit
+
+from .food_line_sources import food_line_supported_geography_result
 
 
 APPROVED_DRAFT_STATUS = "draft_approved_pending_publication"
@@ -106,6 +109,57 @@ def _matching_queue_item(proposal_item: dict[str, Any], queue_items: Sequence[An
     return matches[0]
 
 
+def _normalized_location_tokens(value: Any) -> tuple[str, ...]:
+    return tuple(re.findall(r"[a-z0-9]+", str(value or "").casefold()))
+
+
+def _normalized_location_components(value: Any) -> tuple[tuple[str, ...], ...]:
+    """Return complete reviewed place names or explicitly delimited components."""
+    raw = str(value or "").strip()
+    if not raw:
+        return ()
+    components = re.split(r"\s+(?:and|or)\s+|[;,/|]", raw, flags=re.IGNORECASE)
+    return tuple(
+        tokens
+        for component in components
+        if (tokens := _normalized_location_tokens(component))
+    )
+
+
+def _proposal_location_is_reviewed(
+    proposal_location: Any,
+    queue_item: dict[str, Any],
+    geography_result: dict[str, Any],
+) -> bool:
+    proposal_tokens = _normalized_location_tokens(proposal_location)
+    if not proposal_tokens:
+        return True
+    reviewed_values = [
+        queue_item.get(key)
+        for key in (
+            "event_location",
+            "impact_location",
+            "location_name",
+            "location",
+            "location_scope",
+            "event_state",
+            "impact_state",
+            "state",
+        )
+    ]
+    reviewed_values.extend(
+        geography_result.get(key)
+        for key in ("normalized_location_name", "normalized_state")
+    )
+    for value in reviewed_values:
+        reviewed_tokens = _normalized_location_tokens(value)
+        if proposal_tokens == reviewed_tokens:
+            return True
+        if proposal_tokens in _normalized_location_components(value):
+            return True
+    return False
+
+
 def _validate_item(proposal_item: dict[str, Any], queue_item: dict[str, Any]) -> None:
     decision = str(queue_item.get("editorial_status") or "").strip()
     audit = queue_item.get("decision_audit")
@@ -124,6 +178,14 @@ def _validate_item(proposal_item: dict[str, Any], queue_item: dict[str, Any]) ->
     _require_https(queue_item.get("canonical_source_url"), "selected item canonical_source_url")
     if not str(queue_item.get("exact_supporting_passage") or "").strip():
         raise ValueError("selected item exact supporting evidence is required")
+    geography_result = food_line_supported_geography_result(dict(queue_item))
+    if not geography_result["supported"]:
+        raise ValueError(
+            "selected item event geography is not supported or verified for Food Line: "
+            + str(geography_result["reason"] or geography_result["status"])
+        )
+    if not _proposal_location_is_reviewed(proposal_item.get("location_name"), queue_item, geography_result):
+        raise ValueError("approved proposal location_name does not match reviewed queue geography")
     duplicate = queue_item.get("duplicate_check")
     if not isinstance(duplicate, dict) or duplicate.get("status") != "not_published":
         raise ValueError("selected item duplicate status must be not_published")
@@ -157,7 +219,20 @@ def _source_row(proposal_item: dict[str, Any], queue_item: dict[str, Any]) -> di
     public_id = "food_line_source_" + hashlib.sha256(_url_identity(canonical_source_url).encode("utf-8")).hexdigest()[:16]
     summary = str(proposal_item.get("summary") or "").strip()
     evidence = str(queue_item.get("exact_supporting_passage") or "").strip()
-    location = str(proposal_item.get("location_name") or queue_item.get("location_scope") or "").strip()
+    geography_result = food_line_supported_geography_result(dict(queue_item))
+    if not geography_result["supported"]:
+        raise ValueError("cannot build approved Food Line source row with unsupported or unverified event geography")
+    normalized_country = str(geography_result.get("normalized_country") or "").strip()
+    normalized_state = str(geography_result.get("normalized_state") or "").strip().upper()
+    normalized_location = str(geography_result.get("normalized_location_name") or "").strip()
+    location = str(
+        proposal_item.get("location_name")
+        or queue_item.get("event_location")
+        or queue_item.get("location_name")
+        or geography_result.get("normalized_location_name")
+        or queue_item.get("location_scope")
+        or ""
+    ).strip()
     return {
         "source_record_id": public_id,
         "title": str(proposal_item.get("headline") or "").strip(),
@@ -190,10 +265,20 @@ def _source_row(proposal_item: dict[str, Any], queue_item: dict[str, Any]) -> di
         "source_purpose": "current_news",
         "collector_source_type": "manual_review",
         "location_name": location,
-        "state": str(proposal_item.get("state") or queue_item.get("state") or "").strip(),
-        "location_scope": "local",
+        # Bind the public row to the normalized geography result.  Queue
+        # fields remain the evidence input, but a supported state-only item
+        # must not lose its normalized United States country at load time.
+        "state": normalized_state,
+        "country": normalized_country,
+        "event_country": normalized_country,
+        "event_state": normalized_state,
+        "event_location": str(queue_item.get("event_location") or location or normalized_location).strip(),
+        "food_line_geography_status": geography_result["status"],
+        "food_line_geography_reason": geography_result["reason"],
+        "food_line_geography_evidence_field": geography_result["evidence_field"],
+        "location_scope": str(geography_result.get("normalized_location_scope") or queue_item.get("location_scope") or "").strip(),
         "affected_groups": list(queue_item.get("affected_groups") or []),
-        "supported_product_geography": True,
+        "supported_product_geography": bool(geography_result["supported"]),
         "source_public_story_eligible": True,
         "freshness_status": "current",
         "source_freshness_status": "current",

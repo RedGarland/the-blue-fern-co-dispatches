@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T034451-0700-r11",
+  "scheduled_for": "2026-10-17T03:44:51-07:00",
+  "started_at": "2026-10-17T03:48:38-07:00",
+  "completed_at": "2026-10-17T10:50:16.235Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T02:44:47.329-07:00",
+    "end": "2026-10-17T10:50:16.235Z",
+    "basis": "Previous persisted watch completed at 2026-10-17T02:44:47.329 PDT; only newly traceable developments since that check qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary Gaza recall only; production publisher/collector authoritative. No editorial approvals, publication, schedule, credentials, or production changes.",
+    "previous_run": "gaza-source-watch-20261017T024451-0700-r11",
+    "source_checks_order": [
+      "OCHA OPT home/news check",
+      "WHO global Gaza emergency and October 16 HeRAMS",
+      "WHO Eastern Mediterranean oPt regional check",
+      "12 additional targeted searches"
+    ],
+    "primary_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Homepage accessible; most recent listed Gaza item dated October 9, 2026; no in-window report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated in-window health development."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/publications/m/item/herams-opt-gaza-infographics-2026-09",
+        "result": "October 16 report relies on September 30 data and is already identified in previous watches, excluded as duplicate."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/palestine/",
+        "result": "HTTP 502; regional healthcare coverage incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "Reuters overnight Gaza civilian casualties",
+      "Associated Press overnight Gaza civilian-impact military strikes",
+      "UNICEF water, nutrition and displacement",
+      "UNRWA aid, shelters and displacement",
+      "WFP food aid, border crossings and truck deliveries",
+      "ICRC hostages, detainees and medical evacuation",
+      "MSF hospital capacity, ambulance, fuel and health access",
+      "Palestine Red Crescent Society ambulances and casualties",
+      "UN News Gaza humanitarian updates",
+      "ReliefWeb Gaza situation and infrastructure reports",
+      "Reuters ceasefire, negotiations, hostages and crossings",
+      "Cross-source overnight Gaza water, infrastructure, strikes and medical evacuation"
+    ],
+    "source_failures": [
+      {
+        "source": "WHO EMRO Palestine",
+        "error": "HTTP 502 Bad Gateway"
+      },
+      {
+        "source": "UN News targeted site search",
+        "error": "robots.txt blocked domain search"
+      }
+    ],
+    "exclusions": [
+      "Reuters and UNICEF October 16 Gaza malnutrition/commercial-goods reports already recorded in earlier watches.",
+      "October 16 WHO HeRAMS September healthcare-capacity data previously recorded.",
+      "October 15-16 commercial-import interruption Reuters/AP/FT reports previously assessed.",
+      "Historical and undated articles returned by targeted searches; no evidence placing them in the current window."
+    ],
+    "assessment": "No verified novel, traceable in-Gaza development within observation window. Useful coverage from OCHA, WHO global, and other sources despite persistent WHO EMRO and UN News access gaps; DEGRADED rather than FAILED. No finding means no editorial action."
+  }
+}

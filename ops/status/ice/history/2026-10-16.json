@@ -10,12 +10,12 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "UNKNOWN",
+  "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "9c94bf750065d764b60b562d99eb0bb080b7d06f",
   "debug_summary": {
     "aggregate_degradation_required": null,
-    "aggregate_status": "UNKNOWN",
+    "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
     "all_current_failures_non_actionable": null,
     "attention_task_count": 0,
@@ -23,10 +23,10 @@
     "coverage_caveat_only": null,
     "external_access_restriction_count": null,
     "failed_source_count": null,
-    "operator_assessment": "FAILED_ACTION_REQUIRED",
+    "operator_assessment": "HEALTHY",
     "primary_classification": null,
     "primary_failure_stage": null,
-    "primary_layer": "UNKNOWN",
+    "primary_layer": "NONE",
     "primary_task_key": null,
     "primary_task_status": null,
     "private_review_count_only_gap_count": null,
@@ -37,8 +37,8 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "NO_PROOF",
+    "publication_status": "not_authorized_monitor_only",
+    "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": null,
@@ -46,27 +46,50 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-10-17T03:45:20.786675Z",
-  "last_receipt_at": null,
-  "latest_runtime_proof_date": null,
+  "last_exported_at": "2026-10-17T04:24:56.686806Z",
+  "last_receipt_at": "2026-10-17T04:15:41.105215Z",
+  "latest_runtime_proof_date": "2026-10-17T04:15:02Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-10-16",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "not_authorized_monitor_only"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "NO_PROOF",
+  "publication_status": "not_authorized_monitor_only",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": null,
-  "scheduled_health_authoritative": false,
+  "runner_source_head": "9c94bf750065d764b60b562d99eb0bb080b7d06f",
+  "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "ice_monitor"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_observability": false,
-  "task_summaries": [],
+  "task_summaries": [
+    {
+      "artifact_id": "monitor_receipt.json",
+      "classification": "healthy",
+      "completed_at": "2026-10-17T04:15:41Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "pages": false,
+        "publication": false,
+        "rss": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "not_authorized_monitor_only",
+      "run_id": "ice-monitor-20261017T041502Z-1ed9ce59",
+      "scheduled_for": "2026-10-16",
+      "started_at": "2026-10-17T04:15:02Z",
+      "status": "SUCCESS",
+      "task_key": "ice_monitor"
+    }
+  ],
   "unaccounted_event_count": 0
 }

@@ -6,12 +6,14 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.operational_health import (
+    CARE_LINE_TASK_EXPECTATIONS,
     FOOD_LINE_TASK_EXPECTATIONS,
     MIGRATION_TASK_EXPECTATIONS,
     OperationalStatus,
     RecoveryContext,
     RecoveryState,
     build_food_line_operational_receipt,
+    build_care_line_operational_receipt,
     build_operational_receipt,
     evaluate_dispatch_health,
     evaluate_system_health,
@@ -182,6 +184,79 @@ def test_food_publish_is_not_missed_before_its_local_deadline() -> None:
     assert before["overall_health"] == "SUCCESS"
     assert after["missed_tasks"] == ["food_line_daily_publish"]
     assert after["overall_health"] == "MISSED"
+
+
+def test_completed_care_collection_is_degraded_before_missing_receipt_grace() -> None:
+    collection = build_care_line_operational_receipt(
+        task_key="care_line_collection",
+        scheduled_for="2026-10-17",
+        started_at="2026-10-17T13:00:03Z",
+        completed_at="2026-10-17T13:02:48Z",
+        exit_code=0,
+        task_status="partial_success",
+        run_id="20261017-b13da4aafc46-01",
+        runner_path="C:\\BlueFernRunner\\CareLineNationalCurrent8",
+        branch="add/pages-repo-default",
+        source_head="dfa202acb7be8fc46438508cc8ae1cd78f981ec7",
+        collection_health="partial_success",
+        details={"failed_source_count": 10, "unclassified_source_failure_count": 1},
+    )
+    publication = build_care_line_operational_receipt(
+        task_key="care_line_approved_release_publication",
+        scheduled_for="2026-10-17",
+        started_at="2026-10-17T13:30:00Z",
+        completed_at="2026-10-17T13:31:00Z",
+        exit_code=0,
+        task_status="safe_no_op",
+        run_id="care-proof-only-food-care-continuation-20261017T132825Z-cc2bb2aa",
+        publication_attempted=False,
+        publication_status="already_published",
+        public_side_effects={"pages": False, "social": False, "audio": False},
+    )
+    aggregate = evaluate_dispatch_health(
+        dispatch="care-line",
+        receipts=[collection, publication],
+        expectations=CARE_LINE_TASK_EXPECTATIONS,
+        evaluated_at="2026-10-17T13:54:41Z",
+        expected_instances=[
+            {"task_key": "care_line_collection", "scheduled_for": "2026-10-17T13:00:00Z"},
+            {"task_key": "care_line_reviewed_event_queue", "scheduled_for": "2026-10-17T15:00:00Z"},
+            {"task_key": "care_line_approved_release_publication", "scheduled_for": "2026-10-17"},
+        ],
+    )
+
+    assert aggregate["degraded_tasks"] == ["care_line_collection:2026-10-17T13:00:00Z"]
+    assert aggregate["completed_tasks"] == [
+        "care_line_collection:2026-10-17T13:00:00Z",
+        "care_line_approved_release_publication:2026-10-17",
+    ]
+    assert aggregate["missed_tasks"] == []
+    assert aggregate["overall_health"] == "DEGRADED"
+
+
+def test_future_care_receipt_is_not_eligible_for_historical_evaluation() -> None:
+    future_collection = build_care_line_operational_receipt(
+        task_key="care_line_collection",
+        scheduled_for="2026-10-17T19:00:00Z",
+        started_at="2026-10-17T19:00:02Z",
+        completed_at="2026-10-17T19:03:00Z",
+        exit_code=0,
+        task_status="completed",
+        run_id="future-care-1900",
+    )
+    aggregate = evaluate_dispatch_health(
+        dispatch="care-line",
+        receipts=[future_collection],
+        expectations=CARE_LINE_TASK_EXPECTATIONS,
+        evaluated_at="2026-10-17T13:54:41Z",
+        expected_instances=[
+            {"task_key": "care_line_collection", "scheduled_for": "2026-10-17T19:00:00Z"},
+        ],
+    )
+
+    assert aggregate["completed_tasks"] == []
+    assert aggregate["missed_tasks"] == []
+    assert aggregate["overall_health"] == "SUCCESS"
 
 
 def test_intentionally_inactive_dispatch_has_no_missed_run_alert() -> None:

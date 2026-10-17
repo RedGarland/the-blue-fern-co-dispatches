@@ -203,7 +203,24 @@ def _receipt_matches_expected_instance(
     scheduled_for: str,
     scheduled: datetime | None,
     grace_minutes: int,
+    evaluated_at: datetime,
 ) -> bool:
+    completion = parse_timestamp(str(receipt.get("completed_at") or ""))
+    if completion is None:
+        completion = parse_timestamp(str(receipt.get("observed_at") or ""))
+    if completion is None:
+        completion = parse_timestamp(str(receipt.get("receipt_created_at") or ""))
+    if completion is None:
+        completion = parse_timestamp(str(receipt.get("started_at") or ""))
+    if completion is None:
+        return False
+    if completion.tzinfo is None:
+        completion = completion.replace(tzinfo=timezone.utc)
+    # A saved receipt is eligible only after the evaluation could have
+    # observed its execution. This prevents a historical evaluation from
+    # consuming a future instance's exact scheduled_for match.
+    if completion > evaluated_at:
+        return False
     receipt_scheduled_for = str(receipt.get("scheduled_for") or "")
     if receipt_scheduled_for == scheduled_for:
         return True
@@ -649,8 +666,6 @@ def evaluate_dispatch_health(
                 if scheduled is not None and scheduled.tzinfo is None:
                     scheduled = scheduled.replace(tzinfo=timezone.utc)
                 due = scheduled is None or evaluated_dt >= scheduled + timedelta(minutes=expectation.grace_minutes)
-                if not due:
-                    continue
                 match = next(
                     (
                         (index, candidate) for index, candidate in enumerate(task_receipts)
@@ -660,12 +675,21 @@ def evaluate_dispatch_health(
                             scheduled_for=scheduled_for,
                             scheduled=scheduled,
                             grace_minutes=expectation.grace_minutes,
+                            evaluated_at=evaluated_dt,
                         )
                     ),
                     None,
                 )
                 receipt = match[1] if match else None
                 if receipt is None:
+                    if not due:
+                        # Grace applies to an absent receipt only.  Once a
+                        # scheduler has produced a matching receipt, its
+                        # reported status is authoritative immediately; a
+                        # later proof-only task must not hide a completed
+                        # degraded collection during the missing-receipt
+                        # grace window.
+                        continue
                     if expectation.required:
                         missed.append(f"{expectation.task_key}:{scheduled_for}")
                     continue

@@ -1,0 +1,64 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T004451-0700-r11",
+  "scheduled_for": "2026-10-17T00:44:51-07:00",
+  "started_at": "2026-10-17T00:41:57-07:00",
+  "completed_at": "2026-10-17T00:44:08-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T23:49:35-07:00",
+    "end": "2026-10-17T00:44:08-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only; no publication or approval.",
+    "sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "observation": "No new Gaza item; latest listed 2026-10-09."
+      },
+      {
+        "name": "WHO global",
+        "url": "https://www.who.int/publications/m/item/herams-opt-gaza-infographics-2026-09",
+        "observation": "October 16 HeRAMS based on September data; previously assessed."
+      },
+      {
+        "name": "WHO EMRO",
+        "url": "https://www.emro.who.int/palestine/",
+        "observation": "HTTP 502."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "topics": [
+      "civilian casualties",
+      "displacement",
+      "aid, water, food",
+      "healthcare functionality and evacuation",
+      "infrastructure and crossings",
+      "detainees/hostages",
+      "ceasefire and military operations"
+    ],
+    "exclusions": [
+      "Previously assessed October 16 UNICEF nutrition report",
+      "Previously assessed WHO HeRAMS report",
+      "Out-of-window reports",
+      "West Bank reports"
+    ],
+    "source_failures": [
+      {
+        "source": "WHO regional",
+        "error": "HTTP 502"
+      },
+      {
+        "source": "UN News search",
+        "error": "robots.txt"
+      }
+    ],
+    "previous_run": "gaza-source-watch-20261016T234451-0700-r11"
+  }
+}

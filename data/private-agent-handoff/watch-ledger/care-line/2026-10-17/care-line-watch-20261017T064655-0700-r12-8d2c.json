@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T064655-0700-r12-8d2c",
+  "scheduled_for": "2026-10-17T06:45:22-07:00",
+  "started_at": "2026-10-17T06:46:55-07:00",
+  "completed_at": "2026-10-17T06:47:51-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-17T05:49:00-07:00",
+    "end": "2026-10-17T06:47:51-07:00",
+    "timezone": "America/Los_Angeles",
+    "description": "Supplementary hourly recall since prior observed check; late-indexed discovery considered but only nonduplicate concrete changes qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; production collection remains authoritative.",
+    "cms_public_notices": "Checked first. The current official CMS Public Notices table lists October 9, 2026 Tender Home Health (CA) as its most recent notice; no newer notice at observation time.",
+    "cms_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "additional_targeted_searches": 12,
+    "coverage": [
+      "hospital and ED closures/suspensions",
+      "maternity and behavioral-health changes",
+      "dialysis and oncology",
+      "rural/primary-care access",
+      "ambulance and air medical/base closures",
+      "restorations and reopenings",
+      "territories via national source coverage"
+    ],
+    "excluded": "Search hits were older than the window, previously known, prospective without concrete effect, outside U.S./territories, or not service-access developments. Prior known Guam, Arizona, Missouri, Florida, and Maine developments were not repeated.",
+    "search_caveat": "Discovery engines may index reports after the observation; absence of a hit is not proof of no new event.",
+    "source_access": "A legacy CMS URL failed to open, but the active official CMS Public Notices page was found and read successfully."
+  }
+}

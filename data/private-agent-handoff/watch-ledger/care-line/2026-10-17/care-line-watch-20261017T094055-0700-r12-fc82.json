@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T094055-0700-r12-fc82",
+  "scheduled_for": "2026-10-17T09:40:55-07:00",
+  "started_at": "2026-10-17T09:40:55-07:00",
+  "completed_at": "2026-10-17T09:41:51-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-17T08:50:00-07:00",
+    "end": "2026-10-17T09:41:51-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; newest listed notice dated 2026-10-09 (Tender Home Health, California), predating this observation window. Source: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "12 additional targeted web searches completed, recency 2–3 days; areas covered ED/hospital, maternity, behavioral health, dialysis/oncology, rural primary care, ground and air EMS, reopenings, territories, government notices and critical access hospitals.",
+    "No verifiable new, nonduplicate, concrete U.S. or U.S. territory service-access change identified within the observation window. Older/background, overseas, speculative, proposal-only and nonaccess items excluded.",
+    "Earlier reported 2026-10-16 Axis Health System Norwood and Cheshire Medical Center Winchester clinic closures excluded as previously surfaced; production Care Line collector remains authoritative."
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261016T184451-0700-r11",
+  "scheduled_for": "2026-10-16T18:44:51-07:00",
+  "started_at": "2026-10-16T18:43:35-07:00",
+  "completed_at": "2026-10-16T18:44:54-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T17:49:38.769-07:00",
+    "end": "2026-10-16T18:44:54-07:00",
+    "basis": "Previous verified Gaza watch 17:44:51 PDT heartbeat, completed 17:49:38.769 PDT"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only. Primary daily Gaza collector/publisher remains authoritative. No approvals, publication, production changes or scheduling changes.",
+    "primary_sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications",
+        "result": "Direct publications listing available during watch; most recent listed Gaza publication 9 October 2026; no new entry in window."
+      },
+      {
+        "name": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Global occupied Palestinian territory health overview accessible; no verified new hourly development."
+      },
+      {
+        "name": "WHO EMRO Gaza emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 on direct reporting endpoint; region-specific coverage incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "UNICEF Gaza October 16 nutrition/children",
+      "UNRWA Gaza October 16 displacement/aid",
+      "UN Geneva October 16 humanitarian situation",
+      "Reuters Gaza October 16 civilian casualties/aid",
+      "AP Gaza October 16 strikes/crossings",
+      "Gaza healthcare and ambulance capacity",
+      "Gaza evening crossings/water/displacement",
+      "ReliefWeb Gaza October 16 health/food",
+      "Gaza October 16 evening casualties",
+      "UN October 16 Gaza humanitarian/casualties",
+      "ICRC Gaza October 16 detention/health",
+      "Gaza Rafah/Kerem Shalom October 16 aid"
+    ],
+    "exclusions": [
+      "Reuters 16 October UNICEF malnutrition assessment and roughly 800,000 displaced children: previously identified earlier on 16 October; duplicate of prior watch.",
+      "Reuters and AP commercial cargo suspension dated 15 October: known disruption already covered in prior watches.",
+      "UN 16 October summary of UNICEF more than 340 child deaths since October 2025 ceasefire: retrospective aggregate, not verified as newly reported/materially changed in this hourly window.",
+      "WHO 16 October Gaza HeRAMS September healthcare capacity assessment: already identified in earlier watches; reporting period is September.",
+      "AP 16 October West Bank settler attacks: out of in-Gaza scope.",
+      "Older reporting, syndicated repetitions, and unsupported/unattributed claims excluded."
+    ],
+    "source_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "impact": "Incomplete regional WHO emergency situation report coverage."
+      },
+      {
+        "source": "UN news tag page",
+        "error": "HTTP 403 Forbidden",
+        "impact": "Direct UN news page inaccessible; search-indexed snippet reviewed but no temporally verified new qualifying development."
+      }
+    ],
+    "deduction": "No verified newly reported or materially changed in-Gaza development within this bounded window, subject to stated source coverage gaps.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-10-16/gaza-source-watch-20261016T174451-0700-r11.json"
+  }
+}

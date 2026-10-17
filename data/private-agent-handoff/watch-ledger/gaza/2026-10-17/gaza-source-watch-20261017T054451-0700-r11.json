@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T054451-0700-r11",
+  "scheduled_for": "2026-10-17T05:44:51-07:00",
+  "started_at": "2026-10-17T05:44:27-07:00",
+  "completed_at": "2026-10-17T05:46:29-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T04:49:00-07:00",
+    "end": "2026-10-17T05:46:29-07:00",
+    "basis": "Previous completed hourly recall check ended approximately 04:49 PDT on October 17; no GitHub heartbeat was successfully persisted for that check. Results require independently verified newness within this window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall watch only; production collector/publisher remains authoritative. No approvals, publication, schedule, or production mutations.",
+    "sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Homepage accessible; most recent listed Gaza item dated 9 October 2026; no in-window update identified."
+      },
+      {
+        "name": "WHO Global",
+        "url": "https://www.who.int/publications/m/item/herams-opt-gaza-infographics-2026-09",
+        "result": "Accessible; September 2026 Gaza HeRAMS infographics published 16 October, already identified in prior checks; no new in-window operational change."
+      },
+      {
+        "name": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502; regional healthcare source unavailable."
+      },
+      {
+        "name": "Associated Press",
+        "url": "https://apnews.com/article/mideast-israel-palestinians-houthis-october-17-2026-aaf6d7e5367f99869eaf4b419c66e0df",
+        "result": "17 October report of four Gaza deaths across Gaza City/Deir al-Balah/Rafah already identified at prior 04:49 watch; no separately timed follow-up established."
+      },
+      {
+        "name": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/175973",
+        "result": "17 October report timestamped 1:03 PM local on publisher page (approximately 03:03 PDT), outside the observation window; Deir al-Balah casualty report overlaps existing coverage."
+      },
+      {
+        "name": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/un-says-gaza-malnutrition-gains-fragile-commercial-supplies-halt-2026-10-16/",
+        "result": "16 October report predates window and had been identified earlier."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "OCHA/WHO date-scoped coverage",
+      "civilian casualties/military strikes",
+      "hospital capacity, transport, fuel, medical evacuation",
+      "displacement and civilian infrastructure",
+      "food, water, humanitarian access and crossings",
+      "hostages/ceasefire changes"
+    ],
+    "exclusions": [
+      "AP October 17 four deaths — identified before this hourly window, not recounted as new",
+      "WAFA October 17 Deir al-Balah casualty report timestamped before hourly window",
+      "October 16 WHO HeRAMS September coverage and Reuters UNICEF/commercial-goods report already identified",
+      "Al Jazeera October 17 recap without verified in-window publication time or distinct corroborated new event",
+      "West Bank-only and other regional events, unsupported claims, opinion and stale search results"
+    ],
+    "source_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "error": "HTTP 502",
+        "impact": "Reduced independent regional health-source coverage"
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt block",
+        "impact": "Direct UN News search inaccessible; other established and UN humanitarian sources remained available"
+      }
+    ],
+    "prior_hourly_run": "gaza-source-watch-20261017T044451-0700-r11 (04:49 PDT completion; prior GitHub heartbeat write reportedly failed)",
+    "note": "No new, time-verified, nonduplicative Gaza development confirmed within this search window; a zero-result watch is not evidence of no incident."
+  }
+}

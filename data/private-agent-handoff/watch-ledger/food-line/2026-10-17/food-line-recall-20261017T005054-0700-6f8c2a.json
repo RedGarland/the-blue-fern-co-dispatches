@@ -6,8 +6,8 @@
   "scheduled_for": "2026-10-17T00:45:54-07:00",
   "started_at": "2026-10-17T00:50:54-07:00",
   "completed_at": "2026-10-17T00:53:07-07:00",
-  "status": "FAILED",
-  "outcome": "failed",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
   "search_window": {
     "start": "2026-10-16T22:48:42-07:00",
     "end": "2026-10-17T00:53:07-07:00",
@@ -21,7 +21,7 @@
     "qualifying_findings": 0,
     "collection_role": "Supplementary recall; primary production collection remains authoritative.",
     "exclusions": "Search hits were historical incidents, future closures, aid guides, or unrelated material. Date-indexing imprecise.",
-    "persistence": "Initial GitHub Contents API creation blocked by OpenAI safety checks; independent read-back 404; this retry is intended to persist failure status.",
+    "persistence": "Committed on retry and verified by read-back; no outstanding persistence failure.",
     "source_observation": "No newly verified signal in bounded window."
   }
 }

@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T074451-0700-r11",
+  "scheduled_for": "2026-10-17T07:44:51-07:00",
+  "started_at": "2026-10-17T07:44:50-07:00",
+  "completed_at": "2026-10-17T07:46:16-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T06:45:00-07:00",
+    "end": "2026-10-17T07:46:16-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_searches": 12,
+    "coverage_gaps": [
+      "WHO Eastern Mediterranean regional HTTP 502",
+      "UN News search robots blocked",
+      "OCHA direct reports page unavailable"
+    ],
+    "exclusions": [
+      "Prior watch already identified AP October 17 four-casualty strike",
+      "WHO October 16 HeRAMS report covers September",
+      "Other older reports"
+    ],
+    "disposition": "No verified new in-window developments. This is supplementary only; production unchanged."
+  }
+}

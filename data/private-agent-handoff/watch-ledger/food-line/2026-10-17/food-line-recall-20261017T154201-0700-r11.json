@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261017T154201-0700-r11",
+  "scheduled_for": "2026-10-17T15:42:01-07:00",
+  "started_at": "2026-10-17T15:42:01-07:00",
+  "completed_at": "2026-10-17T15:43:19-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T14:46:46-07:00",
+    "end": "2026-10-17T15:43:19-07:00",
+    "basis": "Prior completed hourly watch ended 2026-10-17 14:46:46 PDT. The time recorded as scheduled_for is the automation trigger timestamp; no distinct scheduled fire timestamp was supplied."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_status": "SUCCESS",
+    "searches_used": 12,
+    "search_failures": 0,
+    "new_verified_qualifying_signals": 0,
+    "targeted_miss_classes": [
+      "Closure or disaster affecting the only, sole, last or full-service grocery store",
+      "Weather/disaster/outage/facility-related emergency food distribution cancellation",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "query_context": "Twelve targeted searches against October 17, 2026 reports, including fresh local news and agency/provider sources; results checked for events newly published since preceding hourly watch.",
+    "excluded_examples": [
+      "Cape Girardeau, MO last-grocery-store loss: October 17 local roundup discusses older loss and a grant, not a newly occurring closure.",
+      "Kenosha County Food Bank: previous-week report describes a planned end-of-2026 shutdown, not an abrupt new disruption.",
+      "Prodisee Pantry storm cancellation concerns October 10 distribution, reported October 7.",
+      "Official October 2026 SNAP/WIC information located describes continuing benefits, not an interruption."
+    ],
+    "coverage_limitations": "Search index lag and undated notices mean absence of verified new findings does not establish absence of disruptions. This is a bounded supplemental watch, not the primary nationwide collector.",
+    "production_collection_authoritative": true,
+    "persistence_status": "COMMITTED_IF_WRITE_SUCCEEDS"
+  }
+}

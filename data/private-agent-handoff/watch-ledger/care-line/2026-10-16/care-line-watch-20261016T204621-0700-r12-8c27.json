@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261016T204621-0700-r12-8c27",
+  "scheduled_for": "2026-10-16T20:45:22-07:00",
+  "started_at": "2026-10-16T20:46:21-07:00",
+  "completed_at": "2026-10-17T03:48:28.828Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-16T19:50:00-07:00",
+    "end": "2026-10-16T20:46:21-07:00",
+    "basis": "Since previous hourly watch completion, approximately 19:50 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only; production national collector authoritative. No approval, publication or schedule changes.",
+    "cms_public_notices": {
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_first": true,
+      "latest_notice": "2026-10-09 Tender Home Health, CA termination",
+      "new_notices": false
+    },
+    "additional_targeted_searches": 12,
+    "covered": [
+      "hospital/ED/maternity",
+      "behavioral health",
+      "dialysis and oncology",
+      "rural primary care",
+      "ambulance and air medical bases",
+      "Guam and other territories",
+      "essential-service restorations"
+    ],
+    "exclusions": [
+      "Prior Parker Medical Center (AZ), Missouri maternity loss, Guam storm hospital suspensions, Florida pediatric reopening, Maine EMS closure",
+      "Winchester Family Medicine (NH) closure notice reported October 16 ~14:30 PDT, before prior check; not a newly reported hourly event",
+      "Out-of-US articles, stale or speculative proposals, entrance construction with continued service, acquisitions without access effect"
+    ],
+    "source_failures": [],
+    "finding_basis": "No new qualifying changes reported or established within 19:50–20:46 PDT hourly window."
+  }
+}

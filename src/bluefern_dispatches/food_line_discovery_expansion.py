@@ -13,6 +13,7 @@ import urllib.error
 import urllib.parse
 from collections import Counter
 from datetime import datetime, timedelta, timezone
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Callable
 import xml.etree.ElementTree as ET
@@ -21,6 +22,8 @@ from bluefern_dispatches.food_line_sources import (
     FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES,
     canonical_url,
     evaluate_food_line_pressure,
+    food_line_geography_evidence_text,
+    food_line_supported_geography_result,
     resolve_food_line_fetcher,
     validate_date,
 )
@@ -906,15 +909,22 @@ def _candidate_source_family(row: dict[str, Any]) -> str:
 
 
 def _candidate_location_name(row: dict[str, Any]) -> str:
-    for key in ("metro", "state_or_territory", "state_hint", "discovered_publisher", "direct_source_name"):
+    for key in (
+        "event_location",
+        "impact_location",
+        "verified_event_location",
+        "verified_location",
+        "manual_fallback_location",
+        "location_name",
+    ):
         value = _nonempty(row.get(key))
         if value:
             return value
-    return "United States"
+    return ""
 
 
 def _candidate_public_evidence_text(row: dict[str, Any]) -> str:
-    for key in ("evidence_text", "pressure_evidence_summary", "manually_reviewed_summary", "summary_or_snippet"):
+    for key in ("source_body_text", "evidence_text", "pressure_evidence_summary", "manually_reviewed_summary", "summary_or_snippet"):
         value = _cap_text(_nonempty(row.get(key)), limit=1200)
         if value:
             return value
@@ -961,7 +971,7 @@ def _discovery_early_exclusion_reason(row: dict[str, Any]) -> str:
 
 def _candidate_source_text_fields(row: dict[str, Any]) -> dict[str, str]:
     fields: dict[str, str] = {}
-    for key in ("selected_title", "discovered_title", "summary_or_snippet", "pressure_evidence_summary", "manually_reviewed_summary", "evidence_text"):
+    for key in ("selected_title", "discovered_title", "summary_or_snippet", "pressure_evidence_summary", "manually_reviewed_summary", "source_body_text", "evidence_text"):
         value = _cap_text(_nonempty(row.get(key)), limit=1200)
         if value:
             fields[key] = value
@@ -1178,9 +1188,20 @@ def _derive_candidate_public_prose(row: dict[str, Any], *, edition_date: str) ->
         "source_family": _candidate_source_family(row),
         "source_name": _nonempty(row.get("direct_source_name") or row.get("discovered_publisher")),
         "publisher": _nonempty(row.get("discovered_publisher")),
-        "location_name": _candidate_location_name(row),
         "published_at": _nonempty(row.get("source_published_date")),
-        "state": _nonempty(row.get("state_abbrev")),
+        "country": _nonempty(row.get("country")),
+        "event_country": _nonempty(row.get("event_country")),
+        "impact_country": _nonempty(row.get("impact_country")),
+        "event_state": _nonempty(row.get("event_state")),
+        "impact_state": _nonempty(row.get("impact_state")),
+        "event_location": _nonempty(row.get("event_location")),
+        "impact_location": _nonempty(row.get("impact_location")),
+        "location": _nonempty(row.get("location")),
+        "event_location_scope": _nonempty(row.get("event_location_scope")),
+        "state": _nonempty(row.get("state")),
+        "location_name": _nonempty(row.get("location_name")),
+        "source_body_text": _nonempty(row.get("source_body_text")),
+        "geography_evidence_basis": _nonempty(row.get("geography_evidence_basis")),
         "url": _nonempty(row.get("source_url") or row.get("final_trace_url")),
     }
     pressure_required = _nonempty(row.get("classification_status")) in {"qualified_pressure_signal", "manual_fallback"}
@@ -1272,12 +1293,49 @@ def _missing_public_prose_fields(row: dict[str, Any]) -> list[str]:
 
 def _apply_public_readiness_gate(row: dict[str, Any], *, edition_date: str) -> None:
     row.update(_derive_candidate_public_prose(row, edition_date=edition_date))
+    geography_row = {
+        "country": _nonempty(row.get("country")),
+        "event_country": _nonempty(row.get("event_country")),
+        "impact_country": _nonempty(row.get("impact_country")),
+        "event_state": _nonempty(row.get("event_state")),
+        "impact_state": _nonempty(row.get("impact_state")),
+        "state": _nonempty(row.get("state")),
+        "event_location": _nonempty(row.get("event_location")),
+        "impact_location": _nonempty(row.get("impact_location")),
+        "location_name": _nonempty(row.get("location_name")),
+        "location": _nonempty(row.get("location")),
+        "evidence_text": food_line_geography_evidence_text(row)[0],
+        "geography_evidence_basis": _nonempty(row.get("geography_evidence_basis")),
+    }
+    geography_result = food_line_supported_geography_result(geography_row)
+    if geography_result["supported"]:
+        row["country"] = _nonempty(geography_result.get("normalized_country")) or _nonempty(row.get("country"))
+        row["event_country"] = row["country"]
+        row["state"] = _nonempty(geography_result.get("normalized_state"))
+        row["event_state"] = row["state"]
+        row["location_name"] = _nonempty(geography_result.get("normalized_location_name"))
+        row["event_location"] = row["location_name"]
+        row["location_scope"] = _nonempty(geography_result.get("normalized_location_scope"))
+        row["event_location_scope"] = row["location_scope"]
+    row["supported_product_geography"] = bool(geography_result["supported"])
+    row["food_line_geography_status"] = geography_result["status"]
+    row["food_line_geography_reason"] = geography_result["reason"]
+    row["food_line_geography_evidence_field"] = geography_result["evidence_field"]
     missing = _missing_public_prose_fields(row)
     row["missing_public_prose_fields"] = missing
     blockers = list(row.get("public_claim_blockers") or [])
     if missing and "missing_public_prose_fields" not in blockers:
         blockers.append("missing_public_prose_fields")
     if missing:
+        row["public_claim_eligible"] = False
+    if not geography_result["supported"]:
+        geography_blocker = (
+            "outside_food_line_us_territories_scope"
+            if geography_result["status"] == "outside"
+            else "food_line_event_geography_unverified"
+        )
+        if geography_blocker not in blockers:
+            blockers.append(geography_blocker)
         row["public_claim_eligible"] = False
     row["public_claim_blockers"] = blockers
 
@@ -1973,6 +2031,116 @@ def _meta_content(text: str, *, attr: str, value: str) -> str:
     return _clean_title_text(match.group(1)) if match else ""
 
 
+_IGNORED_HTML_TAGS = frozenset({"script", "style", "noscript", "template"})
+_RAW_HTML_TAGS = frozenset({"script", "style", "noscript"})
+_HTML_TAG_START_RE = re.compile(r"<\s*(?P<closing>/)?\s*(?P<tag>[a-z][a-z0-9:-]*)\b", re.IGNORECASE)
+
+
+def _html_tag_end(text: str, start: int) -> int:
+    quote = ""
+    for index in range(start + 1, len(text)):
+        char = text[index]
+        if quote:
+            if char == quote:
+                quote = ""
+        elif char in {"'", '"'}:
+            quote = char
+        elif char == ">":
+            return index + 1
+    return len(text)
+
+
+def _html_tag_info(text: str, start: int) -> tuple[int, str, bool, bool] | None:
+    end = _html_tag_end(text, start)
+    match = _HTML_TAG_START_RE.match(text, start)
+    if not match:
+        return None
+    return end, match.group("tag").casefold(), bool(match.group("closing")), text[start:end].rstrip().endswith("/>")
+
+
+def _raw_html_close_end(text: str, tag_name: str, start: int) -> int:
+    match = re.search(rf"</\s*{re.escape(tag_name)}\s*>", text[start:], flags=re.IGNORECASE)
+    return start + match.end() if match else len(text)
+
+
+def _nested_html_container_end(text: str, tag_name: str, start: int) -> int:
+    """Find a matching hidden container while respecting nested templates."""
+    depth = 1
+    index = start
+    while index < len(text):
+        comment_start = text.find("<!--", index)
+        next_tag = text.find("<", index)
+        if comment_start == next_tag and comment_start >= 0:
+            comment_end = text.find("-->", comment_start + 4)
+            index = len(text) if comment_end < 0 else comment_end + 3
+            continue
+        if next_tag < 0:
+            return len(text)
+        if comment_start >= 0 and comment_start < next_tag:
+            comment_end = text.find("-->", comment_start + 4)
+            index = len(text) if comment_end < 0 else comment_end + 3
+            continue
+        info = _html_tag_info(text, next_tag)
+        if info is None:
+            index = next_tag + 1
+            continue
+        end, current_tag, closing, self_closing = info
+        if current_tag in _RAW_HTML_TAGS and not closing and not self_closing:
+            index = _raw_html_close_end(text, current_tag, end)
+            continue
+        if current_tag == tag_name and not self_closing:
+            if closing:
+                depth -= 1
+                if depth == 0:
+                    return end
+            else:
+                depth += 1
+        index = end
+    return len(text)
+
+
+def _mask_ignored_html_blocks(text: str) -> str:
+    """Mask hidden HTML structurally, including nested templates and raw scripts."""
+    if not text:
+        return text
+    masked = list(text)
+
+    def blank(start: int, end: int) -> None:
+        masked[start:end] = [" "] * max(0, end - start)
+
+    index = 0
+    while index < len(text):
+        if text.startswith("<!--", index):
+            comment_end = text.find("-->", index + 4)
+            end = len(text) if comment_end < 0 else comment_end + 3
+            blank(index, end)
+            index = end
+            continue
+        if text[index] != "<":
+            index += 1
+            continue
+        info = _html_tag_info(text, index)
+        if info is None:
+            index += 1
+            continue
+        tag_end, tag_name, closing, self_closing = info
+        if tag_name not in _IGNORED_HTML_TAGS:
+            index = tag_end
+            continue
+        if closing or self_closing:
+            blank(index, tag_end)
+            index = tag_end
+            continue
+        end = (
+            _raw_html_close_end(text, tag_name, tag_end)
+            if tag_name in _RAW_HTML_TAGS
+            else _nested_html_container_end(text, tag_name, tag_end)
+        )
+        blank(index, end)
+        index = end
+    return "".join(masked)
+
+
 def _extract_json_ld_headlines(text: str) -> list[str]:
     candidates: list[str] = []
 
@@ -2005,19 +2173,69 @@ def _extract_json_ld_headlines(text: str) -> list[str]:
     return _dedupe_texts(candidates)
 
 
+def _balanced_html_scopes(
+    text: str,
+    tag: str,
+    *,
+    predicate: Any = None,
+) -> list[str]:
+    """Return balanced inner HTML for matching scopes.
+
+    Publisher pages frequently nest divs and sections. A non-greedy regex
+    stops at the first nested closing tag and can silently discard later
+    source prose. This scanner keeps same-tag nesting balanced while retaining
+    the original HTML for the conservative text parser.
+    """
+
+    tag_name = str(tag).strip().casefold()
+    if not tag_name:
+        return []
+    scan_text = _mask_ignored_html_blocks(text)
+    token_pattern = re.compile(rf"(?is)<(?P<closing>/)?{re.escape(tag_name)}\b[^>]*>")
+    scopes: list[str] = []
+    depth = 0
+    start = 0
+    for match in token_pattern.finditer(scan_text):
+        token = match.group(0)
+        if match.group("closing"):
+            if depth <= 0:
+                continue
+            depth -= 1
+            if depth == 0:
+                scopes.append(scan_text[start:match.start()])
+            continue
+        if token.rstrip().endswith("/>"):
+            continue
+        if depth == 0:
+            if predicate is not None and not predicate(token):
+                continue
+            start = match.end()
+        depth += 1
+    return scopes
+
+
 def _extract_scoped_h1_titles(text: str) -> list[str]:
     candidates: list[str] = []
-    for scope_pattern in (
-        r"<article\b[^>]*>(.*?)</article>",
-        r"<main\b[^>]*>(.*?)</main>",
-        r'<div\b[^>]*(?:class|id)=["\'][^"\']*(?:content|article|post|entry|story)[^"\']*["\'][^>]*>(.*?)</div>',
+    scan_text = _mask_ignored_html_blocks(text)
+    for scope in (
+        *_balanced_html_scopes(scan_text, "article"),
+        *_balanced_html_scopes(scan_text, "main"),
+        *_balanced_html_scopes(
+            scan_text,
+            "div",
+            predicate=lambda opening: bool(
+                re.search(
+                    r'(?:class|id)=["\'][^"\']*(?:content|article|post|entry|story)[^"\']*["\']',
+                    opening,
+                    flags=re.IGNORECASE,
+                )
+            ),
+        ),
     ):
-        for scope_match in re.finditer(scope_pattern, text, flags=re.IGNORECASE | re.DOTALL):
-            scope = scope_match.group(1)
-            h1_match = re.search(r"<h1\b[^>]*>(.*?)</h1>", scope, flags=re.IGNORECASE | re.DOTALL)
-            if h1_match:
-                candidates.append(_clean_title_text(h1_match.group(1)))
-    for h1_match in re.finditer(r"<h1\b[^>]*>(.*?)</h1>", text, flags=re.IGNORECASE | re.DOTALL):
+        h1_match = re.search(r"<h1\b[^>]*>(.*?)</h1\s*>", scope, flags=re.IGNORECASE | re.DOTALL)
+        if h1_match:
+            candidates.append(_clean_title_text(h1_match.group(1)))
+    for h1_match in re.finditer(r"<h1\b[^>]*>(.*?)</h1\s*>", scan_text, flags=re.IGNORECASE | re.DOTALL):
         candidates.append(_clean_title_text(h1_match.group(1)))
     return _dedupe_texts(candidates)
 
@@ -2112,16 +2330,160 @@ def _page_summary(payload: bytes) -> str:
         match = re.search(pattern, text, re.IGNORECASE)
         if match:
             return _nonempty(html.unescape(match.group(1)))
-    cleaned = re.sub(r"<[^>]+>", " ", text)
+    cleaned = re.sub(r"<[^>]+>", " ", _mask_ignored_html_blocks(text))
     return re.sub(r"\s+", " ", cleaned).strip()[:400]
 
 
-def _page_text(payload: bytes, *, limit: int = 3000) -> str:
-    text = payload.decode("utf-8", errors="replace")
-    cleaned = re.sub(r"(?is)<script[^>]*>.*?</script>", " ", text)
-    cleaned = re.sub(r"(?is)<style[^>]*>.*?</style>", " ", cleaned)
+def _visible_html_text(fragment: str, *, limit: int = 3000) -> str:
+    cleaned = _mask_ignored_html_blocks(fragment)
     cleaned = re.sub(r"<[^>]+>", " ", cleaned)
     return re.sub(r"\s+", " ", html.unescape(cleaned)).strip()[:limit]
+
+
+class _ScopedArticleTextParser(HTMLParser):
+    """Keep article prose while dropping nested page chrome and related cards."""
+
+    _SKIP_TAGS = {
+        "aside",
+        "footer",
+        "form",
+        "header",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "nav",
+        "noscript",
+        "script",
+        "style",
+        "template",
+    }
+    _SKIP_MARKERS = (
+        "advert",
+        "breadcrumb",
+        "comment",
+        "footer",
+        "header",
+        "masthead",
+        "nav",
+        "newsletter",
+        "promo",
+        "recommend",
+        "related",
+        "share",
+        "sidebar",
+        "social",
+        "subscribe",
+        "attribution",
+        "author",
+        "byline",
+        "publisher",
+    )
+    _VOID_TAGS = {
+        "area",
+        "base",
+        "br",
+        "col",
+        "embed",
+        "hr",
+        "img",
+        "input",
+        "link",
+        "meta",
+        "param",
+        "source",
+        "track",
+        "wbr",
+    }
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self._skip_depth = 0
+        self.parts: list[str] = []
+
+    @classmethod
+    def _is_non_story_element(cls, tag: str, attrs: list[tuple[str, str | None]]) -> bool:
+        if tag.casefold() in cls._SKIP_TAGS:
+            return True
+        values = " ".join(value or "" for key, value in attrs if key.casefold() in {"class", "id", "role", "aria-label", "data-testid"}).casefold()
+        return bool(values and any(marker in values for marker in cls._SKIP_MARKERS))
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.casefold() in self._VOID_TAGS:
+            return
+        if self._skip_depth:
+            self._skip_depth += 1
+        elif self._is_non_story_element(tag, attrs):
+            self._skip_depth = 1
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        return
+
+    def handle_endtag(self, tag: str) -> None:
+        if self._skip_depth:
+            self._skip_depth -= 1
+
+    def handle_data(self, data: str) -> None:
+        if not self._skip_depth:
+            self.parts.append(data)
+
+
+def _scoped_article_text(fragment: str, *, limit: int = 3000) -> str:
+    parser = _ScopedArticleTextParser()
+    try:
+        parser.feed(fragment)
+        parser.close()
+    except Exception:  # noqa: BLE001 - malformed publisher HTML stays conservative
+        return ""
+    return re.sub(r"\s+", " ", html.unescape(" ".join(parser.parts))).strip()[:limit]
+
+
+def _has_article_prose_markup(fragment: str) -> bool:
+    return bool(re.search(r"(?is)<(?:p|h1|h2|h3|h4|h5|h6|blockquote|time)\b", fragment))
+
+
+def _page_text_with_basis(payload: bytes, *, limit: int = 3000) -> tuple[str, str]:
+    """Extract only a scoped article/event passage with an honest basis.
+
+    A page-wide visible-text scrape can include navigation, mastheads, footers,
+    and related-story cards. It is not source-body evidence. If no article/main
+    scope is identifiable, return no source-body passage rather than guessing.
+    """
+
+    text = payload.decode("utf-8", errors="replace")
+    candidates: list[tuple[int, int, str, str]] = []
+    article_body_predicate = lambda opening: bool(
+        re.search(
+            r'(?:itemprop\s*=\s*["\']articleBody["\']|(?:id|class)\s*=\s*["\'][^"\']*(?:article[-_ ]?body|story[-_ ]?body|article[-_ ]?content)[^"\']*["\'])',
+            opening,
+            flags=re.IGNORECASE,
+        )
+    )
+    scopes = (
+        (0, "article_body", _balanced_html_scopes(text, "div", predicate=article_body_predicate)),
+        (0, "article_body", _balanced_html_scopes(text, "section", predicate=article_body_predicate)),
+        (1, "article", _balanced_html_scopes(text, "article")),
+        (2, "main", _balanced_html_scopes(text, "main")),
+    )
+    for priority, label, fragments in scopes:
+        for fragment in fragments:
+            if label == "main" and not _has_article_prose_markup(fragment):
+                continue
+            visible = _scoped_article_text(fragment, limit=limit)
+            if visible:
+                # Lower tuple priority is preferred because articleBody is
+                # the strongest scope, followed by article, then main.
+                candidates.append((priority, len(visible), label, visible))
+    if not candidates:
+        return "", "source_body_unavailable_unscoped"
+    priority, _, label, visible = min(candidates, key=lambda item: (item[0], -item[1]))
+    return visible, f"source_body_scoped_{label}"
+
+
+def _page_text(payload: bytes, *, limit: int = 3000) -> str:
+    return _page_text_with_basis(payload, limit=limit)[0]
 
 
 def _extract_page_published_date(payload: bytes) -> str:
@@ -3284,6 +3646,17 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
             "source_family": _nonempty(record.get("source_family") or "local_news"),
             "discovered_title": headline,
             "discovered_publisher": publisher,
+            "country": _nonempty(record.get("country")),
+            "event_country": _nonempty(record.get("event_country")),
+            "impact_country": _nonempty(record.get("impact_country")),
+            "state": _nonempty(record.get("state")),
+            "event_state": _nonempty(record.get("event_state")),
+            "impact_state": _nonempty(record.get("impact_state")),
+            "location": _nonempty(record.get("location")),
+            "event_location": _nonempty(record.get("event_location")),
+            "impact_location": _nonempty(record.get("impact_location")),
+            "source_body_text": _cap_text(_nonempty(record.get("source_body_text")), limit=1200),
+            "geography_evidence_basis": _nonempty(record.get("geography_evidence_basis")),
             "discovered_url": canonical or trace_url,
             "canonical_url": canonical,
             "source_url": trace_url or canonical,
@@ -4011,6 +4384,7 @@ def run_food_line_discovery_expansion(
             title_quality_status = _title_quality_status(selected_title)
             page_summary = ""
             page_text = ""
+            page_text_basis = "source_body_unavailable_unscoped"
             page_published_date = ""
             page_date_basis = "missing"
             evidence_text = _nonempty(item.get("title")) + " " + _nonempty(item.get("description"))
@@ -4046,7 +4420,7 @@ def run_food_line_discovery_expansion(
                         )
                         selected_title = page_title or _nonempty(item.get("title"))
                         page_summary = _page_summary(payload2)
-                        page_text = _page_text(payload2)
+                        page_text, page_text_basis = _page_text_with_basis(payload2)
                         page_published_date, page_date_basis = _extract_page_published_date_info(payload2, final_trace_url)
                         if _is_article_specific_url(canonical_from_page):
                             canonical = canonical_from_page
@@ -4079,7 +4453,7 @@ def run_food_line_discovery_expansion(
                     )
                     selected_title = page_title or _nonempty(item.get("title"))
                     page_summary = _page_summary(payload2)
-                    page_text = _page_text(payload2)
+                    page_text, page_text_basis = _page_text_with_basis(payload2)
                     page_published_date, page_date_basis = _extract_page_published_date_info(payload2, final_trace_url)
                     if _is_article_specific_url(canonical_from_page):
                         canonical = canonical_from_page
@@ -4280,6 +4654,9 @@ def run_food_line_discovery_expansion(
                 "summary_or_snippet": _nonempty(page_summary or item.get("description")),
                 "evidence_text": _cap_text(evidence_text, limit=1200),
                 "evidence_text_basis": "page_text_excerpt" if fetch_status == "ok" else ("rss_item_text" if discovery_channel in {"direct_rss", "google_news_rss"} else "manual_source_text"),
+                "source_body_text": _cap_text(page_text, limit=1200) if fetch_status == "ok" and _nonempty(page_text_basis) and page_text_basis != "source_body_unavailable_unscoped" else "",
+                "source_body_extraction_basis": page_text_basis if fetch_status == "ok" else "source_body_unavailable_unscoped",
+                "geography_evidence_basis": "source_body" if fetch_status == "ok" and _nonempty(page_text) and page_text_basis != "source_body_unavailable_unscoped" else "",
                 "missing_public_prose_fields": [],
                 "query_url": query_url,
                 "retrieved_at": discovered_at,

@@ -8,7 +8,7 @@ from scripts.import_food_line_agent_findings import process, validate_input
 
 
 def _row(**overrides):
-    row = {"title": "Food bank demand rises", "publisher": "Local News", "source_url": "https://example.com/story?utm_source=agent", "source_published_at": "2026-07-27", "exact_supporting_passage": "Food bank demand rose as households faced higher grocery costs.", "summary": "A pressure signal.", "location_name": "Charlotte", "state": "NC", "confidence": "high", "agent_query_context": {"query": "food insecurity"}}
+    row = {"title": "Food bank demand rises", "publisher": "Local News", "source_url": "https://example.com/story?utm_source=agent", "source_published_at": "2026-07-27", "exact_supporting_passage": "Food bank demand rose as households faced higher grocery costs.", "summary": "A pressure signal.", "location_name": "Charlotte", "state": "NC", "event_country": "United States", "event_state": "NC", "event_location": "Charlotte", "confidence": "high", "agent_query_context": {"query": "food insecurity"}}
     row.update(overrides)
     return row
 
@@ -214,14 +214,18 @@ def test_food_line_agent_does_not_default_latin_america_to_us_scope():
         publisher="teleSUR English",
         state="",
         location_name="",
+        event_country="",
+        event_state="",
+        event_location="",
+        geography_evidence_basis="source_body",
         exact_supporting_passage="Up to 16 million people in Latin America and the Caribbean could face food insecurity.",
         summary="Food insecurity in Latin America and the Caribbean.",
     )
     finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-09-08T00:00:00Z")[0]
     candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-09-08")
     assert candidate["state"] == ""
-    assert candidate["location_name"] == "Latin America and the Caribbean"
-    assert candidate["location_scope"] == "international"
+    assert candidate["location_name"] == ""
+    assert candidate["query_location_hint"] == ""
     assert candidate["eligible_for_review"] is False
     assert "outside_food_line_us_territories_scope" in candidate["exclusion_reason"]
 
@@ -233,14 +237,18 @@ def test_food_line_agent_does_not_default_bangladesh_to_us_scope():
         publisher="unb.com.bd",
         state="",
         location_name="",
+        event_country="",
+        event_state="",
+        event_location="",
+        geography_evidence_basis="source_body",
         exact_supporting_passage="The Bangladesh government has taken measures including school feeding programmes.",
         summary="Bangladesh school feeding policy.",
     )
     finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-09-08T00:00:00Z")[0]
     candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-09-08")
     assert candidate["state"] == ""
-    assert candidate["location_name"] == "Bangladesh"
-    assert candidate["location_scope"] == "international"
+    assert candidate["location_name"] == ""
+    assert candidate["query_location_hint"] == ""
     assert candidate["eligible_for_review"] is False
     assert "outside_food_line_us_territories_scope" in candidate["exclusion_reason"]
 
@@ -253,6 +261,7 @@ def test_food_line_agent_resolves_north_carolina_from_retained_text():
         "source_published_at": "2026-09-08",
         "state": "",
         "location_name": "",
+        "geography_evidence_basis": "source_body",
         "exact_supporting_passage": "Recent SNAP eligibility restrictions and cuts could cause thousands of North Carolina students to lose automatic eligibility for free school meals.",
         "summary": "School-age children receiving SNAP are automatically eligible for free school meals in North Carolina, and SNAP cuts could cause thousands to lose that access.",
         "confidence": "high",

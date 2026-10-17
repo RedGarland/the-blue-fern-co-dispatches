@@ -5,64 +5,31 @@ import re
 from typing import Any
 
 from ..agent_findings import FoodLineAgentFinding, finding_from_payload
-from ..food_line_sources import evaluate_food_line_pressure
+from ..food_line_sources import evaluate_food_line_pressure, food_line_supported_geography_result
 from ..source_based_qualification import assess_review_retention
 
-_STATE_HINTS = {
-    "north carolina": "NC",
-    "n.c.": "NC",
-    "nc": "NC",
-}
-_FOREIGN_GEOGRAPHY_TERMS = (
-    "latin america",
-    "latin america and the caribbean",
-    "caribbean",
-    "bangladesh",
-)
+def _normalize_food_line_geography(finding: FoodLineAgentFinding) -> tuple[str, str, str, str, str, str]:
+    """Keep event geography separate from query/publisher hints.
 
+    The agent envelope may contain legacy ``state``/``metro`` hints.  Those
+    remain private audit fields and are not promoted to event geography.  A
+    source body or reviewer may provide explicit event/impact fields.
+    """
 
-def _combined_geography_text(finding: FoodLineAgentFinding) -> str:
     raw = finding.raw_agent_payload
-    parts = [
-        finding.location_name,
-        finding.state,
-        finding.title,
-        finding.summary,
-        finding.exact_supporting_passage,
-        str(raw.get("location") or ""),
-        str(raw.get("state_or_territory") or ""),
-        str(raw.get("state_hint") or ""),
-        str(raw.get("geographic_scope") or ""),
-    ]
-    return " ".join(part for part in parts if part).casefold()
-
-
-def _is_clearly_foreign_food_line_geography(finding: FoodLineAgentFinding) -> bool:
-    text = _combined_geography_text(finding)
-    return any(term in text for term in _FOREIGN_GEOGRAPHY_TERMS)
-
-
-def _normalize_food_line_geography(finding: FoodLineAgentFinding) -> tuple[str, str, str]:
-    text = _combined_geography_text(finding)
-    state = (finding.state or "").upper()
-    location_name = finding.location_name
-    location_scope = finding.location_scope
-    if _is_clearly_foreign_food_line_geography(finding):
-        if "bangladesh" in text:
-            return "Bangladesh", "", "international"
-        if "latin america" in text and "caribbean" in text:
-            return "Latin America and the Caribbean", "", "international"
-        if "latin america" in text:
-            return "Latin America", "", "international"
-        return location_name or "International", "", "international"
-    if not state:
-        for marker, abbrev in _STATE_HINTS.items():
-            if re.search(rf"(?<![a-z0-9]){re.escape(marker)}(?![a-z0-9])", text):
-                state = abbrev
-                break
-    if state == "NC" and (not location_name or location_name.casefold() == "national"):
-        location_name = "North Carolina"
-    return location_name, state, location_scope
+    country = str(raw.get("event_country") or raw.get("impact_country") or raw.get("country") or "").strip()
+    state = str(raw.get("event_state") or raw.get("impact_state") or "").strip().upper()
+    location_name = str(raw.get("event_location") or raw.get("impact_location") or "").strip()
+    location_scope = str(raw.get("event_location_scope") or raw.get("impact_location_scope") or "").strip()
+    query_state_hint = str(raw.get("state") or raw.get("state_abbrev") or raw.get("state_hint") or "").strip()
+    query_location_hint = str(
+        raw.get("metro")
+        or raw.get("location")
+        or raw.get("location_name")
+        or raw.get("state_or_territory")
+        or ""
+    ).strip()
+    return location_name, state, location_scope, country, query_state_hint, query_location_hint
 
 
 def adapt_food_line_agent_output(payload: Any, *, agent_name: str, agent_run_id: str, discovered_at: str | None = None) -> list[FoodLineAgentFinding]:
@@ -87,8 +54,17 @@ def adapt_food_line_agent_output(payload: Any, *, agent_name: str, agent_run_id:
 
 def map_finding_to_food_line_candidate(finding: FoodLineAgentFinding, *, edition_date: str) -> dict[str, Any]:
     raw = finding.raw_agent_payload
-    location_name, state, location_scope = _normalize_food_line_geography(finding)
-    foreign_scope = _is_clearly_foreign_food_line_geography(finding)
+    location_name, state, location_scope, country, query_state_hint, query_location_hint = _normalize_food_line_geography(finding)
+    raw_country = str(raw.get("country") or "").strip()
+    raw_event_country = str(raw.get("event_country") or "").strip()
+    raw_impact_country = str(raw.get("impact_country") or "").strip()
+    raw_state = str(raw.get("state") or "").strip().upper()
+    raw_event_state = str(raw.get("event_state") or "").strip().upper()
+    raw_impact_state = str(raw.get("impact_state") or "").strip().upper()
+    raw_location = str(raw.get("location") or "").strip()
+    raw_event_location = str(raw.get("event_location") or "").strip()
+    raw_impact_location = str(raw.get("impact_location") or "").strip()
+    raw_location_name = str(raw.get("location_name") or "").strip()
     row = {
         "candidate_id": finding.finding_id,
         "title": finding.title,
@@ -101,12 +77,28 @@ def map_finding_to_food_line_candidate(finding: FoodLineAgentFinding, *, edition
         "source_published_date": finding.source_published_at[:10],
         "summary_or_snippet": finding.summary,
         "evidence_text": finding.exact_supporting_passage,
+        "exact_supporting_passage": finding.exact_supporting_passage,
         "evidence_text_basis": str(raw.get("evidence_text_basis") or "page_text_excerpt"),
+        "source_body_text": str(raw.get("source_body_text") or "").strip(),
+        "source_body_excerpt": str(raw.get("source_body_excerpt") or "").strip(),
+        "event_location_evidence": str(raw.get("event_location_evidence") or "").strip(),
         "source_family": str(raw.get("source_family") or "local_news"),
         "source_name": finding.publisher,
-        "state": state,
-        "location_name": location_name,
+        "state": raw_state,
+        "location_name": raw_location_name,
         "location_scope": location_scope,
+        "country": raw_country,
+        "event_country": raw_event_country,
+        "impact_country": raw_impact_country,
+        "event_state": raw_event_state,
+        "impact_state": raw_impact_state,
+        "location": raw_location,
+        "event_location": raw_event_location,
+        "impact_location": raw_impact_location,
+        "query_state_hint": query_state_hint,
+        "query_location_hint": query_location_hint,
+        "query_geographic_scope": str(raw.get("geographic_scope") or "").strip(),
+        "geography_evidence_basis": str(raw.get("geography_evidence_basis") or "").strip(),
         "source_role": finding.source_role,
         "pressure_type": finding.pressure_type,
         "agent_name": finding.agent_name,
@@ -135,13 +127,45 @@ def map_finding_to_food_line_candidate(finding: FoodLineAgentFinding, *, edition
             "source_family": raw.get("source_family") or row["source_family"],
             "evaluator_pressure_signal": bool(evaluated.get("pressure_signal")),
             "pressure_reason": evaluated.get("pressure_reason"),
+            "country": raw_country,
+            "event_country": raw_event_country,
+            "impact_country": raw_impact_country,
+            "event_state": raw_event_state,
+            "impact_state": raw_impact_state,
+            "event_location": raw_event_location,
+            "impact_location": raw_impact_location,
+            # Assess the same explicit event fields that the candidate row
+            # uses.  Legacy ``state``/``location_name`` values are retained as
+            # query hints in the candidate, never as event geography.
+            "location_name": location_name,
+            "state": state,
         }
     )
     retention = assess_review_retention(qualification_input, dispatch="food-line", edition_date=edition_date)
-    if foreign_scope:
+    geography_result = food_line_supported_geography_result(row)
+    if geography_result["supported"]:
+        state = str(geography_result.get("normalized_state") or state).strip().upper()
+        location_name = str(geography_result.get("normalized_location_name") or location_name).strip()
+        location_scope = str(geography_result.get("normalized_location_scope") or location_scope).strip()
+        country = str(geography_result.get("normalized_country") or country).strip()
+        row["state"] = state
+        row["location_name"] = location_name
+        row["location_scope"] = location_scope
+        row["country"] = country
+        row["event_country"] = country
+        row["event_state"] = state
+        row["event_location"] = location_name
+    if not geography_result["supported"]:
         retention["eligible_for_review"] = False
         retention["failure_reasons"] = list(
-            dict.fromkeys([*retention["failure_reasons"], "outside_food_line_us_territories_scope"])
+            dict.fromkeys(
+                [
+                    *retention["failure_reasons"],
+                    "outside_food_line_us_territories_scope"
+                    if geography_result["status"] == "outside"
+                    else "food_line_event_geography_unverified",
+                ]
+            )
         )
         retention["disposition"] = "rejected_with_reason"
         retention["next_transition_owner"] = ""
@@ -171,6 +195,10 @@ def map_finding_to_food_line_candidate(finding: FoodLineAgentFinding, *, edition
         row["freshness_status"] = "current"
         row["freshness_disqualification_reason"] = ""
     row["source_based_qualification"] = retention
+    row["supported_product_geography"] = bool(geography_result["supported"])
+    row["food_line_geography_status"] = geography_result["status"]
+    row["food_line_geography_reason"] = geography_result["reason"]
+    row["food_line_geography_evidence_field"] = geography_result["evidence_field"]
     row["qualification_reason"] = retention["qualification_basis"]
     row["freshness_basis"] = retention["freshness_basis"]
     row["freshness_check"] = retention["freshness_check"]

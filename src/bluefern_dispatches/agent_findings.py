@@ -11,7 +11,7 @@ from email.utils import parsedate_to_datetime
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-from .food_line_sources import canonical_url
+from .food_line_sources import FOOD_LINE_GEOGRAPHY_EVIDENCE_BASES, canonical_url
 
 TRACKING_KEYS = {"fbclid", "gclid", "mc_cid", "mc_eid", "ref", "source"}
 
@@ -110,10 +110,17 @@ def finding_from_payload(payload: dict[str, Any], *, agent_name: str, agent_run_
         or payload.get("source_name")
         or payload.get("direct_source_name")
     )
+    geography_basis = _text(payload.get("geography_evidence_basis"))
+    evidence_basis = _text(payload.get("evidence_text_basis"))
+    trusted_body_basis = geography_basis.casefold() in FOOD_LINE_GEOGRAPHY_EVIDENCE_BASES
+    trusted_evidence_basis = evidence_basis.casefold() in FOOD_LINE_GEOGRAPHY_EVIDENCE_BASES
     supporting_passage = _text(
         payload.get("exact_supporting_passage")
-        or payload.get("passage")
-        or payload.get("evidence_text")
+        or payload.get("source_body_text")
+        or payload.get("source_body_excerpt")
+        or payload.get("event_location_evidence")
+        or (payload.get("passage") if trusted_body_basis or trusted_evidence_basis else "")
+        or (payload.get("evidence_text") if trusted_body_basis or trusted_evidence_basis else "")
     )
     duplicate_key = duplicate_key_for(canonical_source_url=canonical, title=title, publisher=publisher)
     identity = "|".join((agent_name, agent_run_id, duplicate_key, _slug(supporting_passage)))
@@ -138,9 +145,12 @@ def finding_from_payload(payload: dict[str, Any], *, agent_name: str, agent_run_
         source_published_at=_source_publication_date(payload),
         title=title, exact_supporting_passage=supporting_passage,
         summary=_text(payload.get("summary") or payload.get("summary_or_snippet") or payload.get("pressure_summary")),
-        location_name=_text(payload.get("location_name") or payload.get("location") or payload.get("metro") or payload.get("state_or_territory")),
-        state=_text(payload.get("state") or payload.get("state_abbrev") or payload.get("state_hint")).upper(),
-        location_scope=_text(payload.get("location_scope") or payload.get("geographic_scope")),
+        # Legacy ``location``/``metro`` and ``state``/``state_hint`` values are
+        # query or publisher hints.  Keep them in raw_agent_payload, but do not
+        # expose them as event geography on the normalized finding.
+        location_name=_text(payload.get("event_location") or payload.get("impact_location")),
+        state=_text(payload.get("event_state") or payload.get("impact_state")).upper(),
+        location_scope=_text(payload.get("event_location_scope") or payload.get("impact_location_scope")),
         affected_groups=[_text(v) for v in payload.get("affected_groups") or [] if _text(v)],
         pressure_type=_text(payload.get("pressure_type") or payload.get("pressure_signal_type_hint")), confidence=_text(payload.get("confidence")),
         source_role=_text(payload.get("source_role")), evidence_level=_text(payload.get("evidence_level")),

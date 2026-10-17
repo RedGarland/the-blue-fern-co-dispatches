@@ -330,6 +330,21 @@ def assess_review_retention(record: Mapping[str, Any], *, dispatch: str, edition
     if unsupported:
         failure_reasons.append("claim_exceeds_traceable_source_support")
 
+    food_line_geography: dict[str, Any] | None = None
+    if dispatch == "food-line":
+        # Keep the shared Care Line path unchanged while making Food Line's
+        # public geography gate fail closed.  Import lazily to avoid the
+        # existing Food Line source-module dependency cycle.
+        from .food_line_sources import food_line_supported_geography_result
+
+        food_line_geography = food_line_supported_geography_result(dict(record))
+        if not food_line_geography["supported"]:
+            failure_reasons.append(
+                "outside_food_line_us_territories_scope"
+                if food_line_geography["status"] == "outside"
+                else "food_line_event_geography_unverified"
+            )
+
     eligible = not failure_reasons
     if trace_failures:
         disposition = "invalid_source_with_reason"
@@ -363,4 +378,14 @@ def assess_review_retention(record: Mapping[str, Any], *, dispatch: str, edition
         "failure_reasons": list(dict.fromkeys(failure_reasons)),
         "disposition": disposition,
         "next_transition_owner": "human_editorial_review" if eligible else "",
+        **(
+            {
+                "food_line_geography_status": food_line_geography["status"],
+                "food_line_geography_reason": food_line_geography["reason"],
+                "food_line_geography_evidence_field": food_line_geography["evidence_field"],
+                "supported_product_geography": bool(food_line_geography["supported"]),
+            }
+            if food_line_geography is not None
+            else {}
+        ),
     }

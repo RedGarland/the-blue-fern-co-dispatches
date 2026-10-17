@@ -44,6 +44,20 @@ STOPWORDS = {
     "weekly",
     "daily",
 }
+GAZA_GENERIC_TOPIC_TOKENS = {
+    "attack",
+    "conflict",
+    "gaza",
+    "israel",
+    "israeli",
+    "killed",
+    "man",
+    "palestinian",
+    "people",
+    "strike",
+    "war",
+    "woman",
+}
 GAZA_EVENT_STOPWORDS = STOPWORDS | {
     "a",
     "an",
@@ -586,6 +600,21 @@ def has_same_topic(left: dict[str, Any], right: dict[str, Any]) -> bool:
     return overlap >= 0.5
 
 
+def _gaza_has_same_cross_edition_topic(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    """Require a distinguishing shared token for low-similarity Gaza matches.
+
+    Generic Gaza/conflict vocabulary is not enough to identify the same event.
+    Exact URLs, exact titles, and high title similarity remain handled by the
+    normal matching paths; this only narrows the broad keyword-overlap fallback.
+    """
+    if not has_same_topic(left, right):
+        return False
+    if similarity(left.get("title"), right.get("title")) >= 0.82:
+        return True
+    shared_tokens = story_keywords(left) & story_keywords(right)
+    return bool(shared_tokens - GAZA_GENERIC_TOPIC_TOKENS)
+
+
 def has_new_detail(candidate: dict[str, Any], prior: dict[str, Any]) -> bool:
     if similarity(candidate.get("summary"), prior.get("summary")) < 0.88:
         return True
@@ -598,8 +627,18 @@ def has_new_detail(candidate: dict[str, Any], prior: dict[str, Any]) -> bool:
     return bool(candidate_urls - prior_urls)
 
 
-def is_major_update(candidate: dict[str, Any], prior: dict[str, Any]) -> bool:
-    if not has_same_topic(candidate, prior):
+def is_major_update(
+    candidate: dict[str, Any],
+    prior: dict[str, Any],
+    *,
+    dispatch_slug: str | None = None,
+) -> bool:
+    same_topic = (
+        _gaza_has_same_cross_edition_topic(candidate, prior)
+        if dispatch_slug == "gaza"
+        else has_same_topic(candidate, prior)
+    )
+    if not same_topic:
         return False
     candidate_text = normalize_text(f"{candidate.get('title', '')} {candidate.get('summary', '')}")
     markers = {"announces", "announced", "approves", "approved", "orders", "ordered", "resumes", "ends", "major"}
@@ -652,7 +691,12 @@ def material_update(candidate: dict[str, Any], prior: dict[str, Any] | None) -> 
     return bool(reasons), unique_strings(reasons)
 
 
-def classify_against_prior(candidate: dict[str, Any], prior_rows: list[dict[str, Any]]) -> tuple[str, list[str], dict[str, Any] | None]:
+def classify_against_prior(
+    candidate: dict[str, Any],
+    prior_rows: list[dict[str, Any]],
+    *,
+    dispatch_slug: str | None = None,
+) -> tuple[str, list[str], dict[str, Any] | None]:
     candidate_urls = {url for url in (normalize_url(url) for url in story_identity_urls(candidate)) if url}
     candidate_title = normalize_title(candidate.get("title"))
     candidate_publishers = {normalize_source_publisher(publisher) for publisher in story_publishers(candidate)}
@@ -679,8 +723,10 @@ def classify_against_prior(candidate: dict[str, Any], prior_rows: list[dict[str,
             return "duplicate_skip", ["normalized_title", "no_new_summary_detail"], prior
         if publisher_title and not has_new_detail(candidate, prior):
             return "duplicate_skip", ["publisher_title", "no_new_summary_detail"], prior
-        if is_major_update(candidate, prior):
+        if is_major_update(candidate, prior, dispatch_slug=dispatch_slug):
             return "major_update", ["same_topic", "material_new_development"], prior
+        if dispatch_slug == "gaza":
+            topic_match = _gaza_has_same_cross_edition_topic(candidate, prior)
         if exact_url or fuzzy_title or topic_match:
             if has_new_detail(candidate, prior):
                 reasons = ["same_topic", "new_source_or_summary_detail"]
@@ -944,11 +990,16 @@ def dedupe_public_stories(
         skipped.append(merged_decision)
         decisions.append(merged_decision)
     for story in collapsed:
-        classification, why, prior = classify_against_prior(story, prior_rows)
+        classification, why, prior = classify_against_prior(story, prior_rows, dispatch_slug=dispatch_slug)
         material, material_reasons = material_update(story, prior)
-        include = classification in {"new", "major_update"} or (classification == "continuing_development" and material)
-        final_classification = "duplicate_skip" if classification == "continuing_development" and not material else classification
-        duplicate_reasons = [] if include else unique_strings(why + (["non_material_continuation"] if classification == "continuing_development" else []))
+        is_non_material_update = classification in {"major_update", "continuing_development"} and not material
+        include = classification == "new" or (classification in {"major_update", "continuing_development"} and material)
+        final_classification = "duplicate_skip" if is_non_material_update else classification
+        non_material_reason = {
+            "major_update": "non_material_major_update",
+            "continuing_development": "non_material_continuation",
+        }.get(classification)
+        duplicate_reasons = [] if include else unique_strings(why + ([non_material_reason] if non_material_reason else []))
         annotated = dict(story)
         annotated["dedupe_classification"] = final_classification if not include else classification
         annotated["dedupe_reasons"] = why

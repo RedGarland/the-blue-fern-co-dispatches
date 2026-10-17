@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T004300-0700-r12-0f61",
+  "scheduled_for": "2026-10-17T00:43:00-07:00",
+  "started_at": "2026-10-17T00:43:00-07:00",
+  "completed_at": "2026-10-17T00:44:06-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "started_at": "2026-10-16T22:46:00-07:00",
+    "ended_at": "2026-10-17T00:44:06-07:00",
+    "interpretation": "since last visible completed hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall only; production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_notice_provider": "Tender Home Health",
+      "new_notices_found": 0
+    },
+    "additional_targeted_searches": 12,
+    "search_failures": 0,
+    "high_value_classes": [
+      "hospital/ED/maternity/rural closures and suspensions",
+      "behavioral health",
+      "dialysis/oncology/primary care",
+      "ambulance/air medical",
+      "service restoration",
+      "U.S. territories"
+    ],
+    "exclusions": [
+      "Guam Memorial Hospital elective outpatient suspension reported in earlier watch; duplicate.",
+      "Michigan Ypsilanti pediatric rehabilitation clinic October 16 closure noted but outside specified high-value miss classes.",
+      "Unverified, older, proposed, or non-U.S. reports not included."
+    ],
+    "zero_result_caveat": "Bounded recall search cannot establish exhaustive national coverage."
+  }
+}

@@ -5,6 +5,7 @@ import json
 import sys
 import types
 import urllib.error
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -1094,6 +1095,190 @@ def test_care_line_keeps_september_weak_leads_rejected() -> None:
     assert kansas_lead["exclusion_reason"] in {"non_care_line", "general_healthcare_news"}
     assert alabama_lead["qualification_status"] == "excluded"
     assert alabama_lead["exclusion_reason"] == "service_expansion_without_prior_loss_context"
+
+
+def test_care_line_classifies_ongoing_service_hold_from_feed_summary() -> None:
+    raw_item = {
+        "raw_item_id": "virginia-transgender-care-hold",
+        "source_id": "virginia-mercury-health",
+        "source_name": "Virginia Mercury Health",
+        "item_url": "https://virginiamercury.com/2026/10/16/transgender-care-for-young-patients-remains-on-hold-at-virginia-hospitals/",
+        "title": "Transgender care for young patients remains on hold at Virginia hospitals",
+        "description": (
+            "Children's hospitals in Virginia have kept transgender services for patients younger than 19 "
+            "on hold for more than a year following President Donald Trump's January 2025 executive order. "
+            "They include the Children's Hospital of Richmond at VCU, Norfolk-based Children's Hospital of the King's Daughters "
+            "and Charlottesville-based UVA Health Children's Hospital."
+        ),
+    }
+
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    assert lead["qualification_status"] == "event_lead"
+    assert "service_suspension" in lead["positive_hits"]
+    assert lead["event_type_hint"] == "service_suspension"
+    assert "hospital" in lead["context_hits"]
+    assert lead["exclusion_reason"] == ""
+
+
+def test_care_line_ongoing_service_hold_uses_existing_freshness_contract() -> None:
+    row = pipeline._sentence_currentness(
+        "Children's hospitals have kept transgender services for patients younger than 19 on hold for more than a year.",
+        source_date=None,
+        event_type="service_suspension",
+        service_line="",
+    )
+
+    assert row["currentness_class"] == "CURRENT_UPDATE_TO_PRIOR_EVENT"
+    assert row["freshness_role"] == "ONGOING_EVENT_UPDATE"
+    assert "service_suspension" in row["positive_hits"]
+
+
+@pytest.mark.parametrize(
+    "sentence",
+    [
+        "In 2020, the hospital had kept pediatric services on hold for months.",
+        "In 2020, the hospital did not keep pediatric services on hold.",
+    ],
+)
+def test_care_line_ongoing_service_hold_cannot_override_historical_or_negated_evidence(sentence: str) -> None:
+    row = pipeline._sentence_currentness(
+        sentence,
+        source_date=date(2026, 10, 17),
+        event_type="service_suspension",
+        service_line="",
+    )
+
+    assert row["currentness_class"] == "HISTORICAL_BACKGROUND"
+    assert row["freshness_role"] == "HISTORICAL_CONTEXT"
+
+
+def test_care_line_ongoing_service_hold_cannot_override_conditional_evidence() -> None:
+    row = pipeline._sentence_currentness(
+        "If the hospital kept pediatric services on hold next year, patients would travel farther.",
+        source_date=date(2026, 10, 17),
+        event_type="service_suspension",
+        service_line="",
+    )
+
+    assert row["currentness_class"] == "DATE_UNRESOLVED"
+    assert row["freshness_role"] == "UNKNOWN"
+
+
+def test_care_line_current_ongoing_service_hold_remains_current() -> None:
+    row = pipeline._sentence_currentness(
+        "Children's hospitals have kept transgender services for patients younger than 19 on hold for more than a year.",
+        source_date=date(2026, 10, 16),
+        event_type="service_suspension",
+        service_line="",
+    )
+
+    assert row["currentness_class"] == "CURRENT_UPDATE_TO_PRIOR_EVENT"
+    assert row["freshness_role"] == "ONGOING_EVENT_UPDATE"
+
+
+def test_care_line_current_ongoing_service_hold_with_historical_start_date_remains_current() -> None:
+    row = pipeline._sentence_currentness(
+        "Children's hospitals have kept transgender services for patients younger than 19 on hold for more than a year following President Donald Trump's January 2025 executive order.",
+        source_date=date(2026, 10, 16),
+        event_type="service_suspension",
+        service_line="",
+    )
+
+    assert row["currentness_class"] == "CURRENT_UPDATE_TO_PRIOR_EVENT"
+    assert row["freshness_role"] == "ONGOING_EVENT_UPDATE"
+
+
+def test_care_line_current_ongoing_service_hold_with_may_start_date_is_not_conditional() -> None:
+    row = pipeline._sentence_currentness(
+        "Pediatric services remain on hold since May 2025.",
+        source_date=date(2026, 10, 16),
+        event_type="service_suspension",
+        service_line="",
+    )
+
+    assert row["currentness_class"] == "CURRENT_UPDATE_TO_PRIOR_EVENT"
+    assert row["freshness_role"] == "ONGOING_EVENT_UPDATE"
+
+
+def test_care_line_existing_remains_closed_marker_with_historical_start_date_remains_current() -> None:
+    row = pipeline._sentence_currentness(
+        "The hospital remains closed since January 2025.",
+        source_date=date(2026, 10, 16),
+        event_type="facility_closure",
+        service_line="",
+    )
+
+    assert row["currentness_class"] == "CURRENT_UPDATE_TO_PRIOR_EVENT"
+    assert row["freshness_role"] == "ONGOING_EVENT_UPDATE"
+
+
+@pytest.mark.parametrize(
+    "description",
+    [
+        "The hospital's administrative services remain on hold pending negotiations.",
+        "The hospital's billing services remain on hold.",
+        "Services are operating while supplier invoices remain on hold.",
+        "Patient appointments remain on hold while scheduling is finalized.",
+        "A proposed plan would keep pediatric services on hold next year.",
+    ],
+)
+def test_care_line_ongoing_service_hold_avoids_non_service_hold_false_positives(description: str) -> None:
+    lead = pipeline.event_lead_from_raw_item(
+        {
+            "raw_item_id": "hold-negative",
+            "source_id": "example-hospital-news",
+            "source_name": "Example Hospital News",
+            "item_url": "https://example.org/hold-negative",
+            "title": "Hospital operations update",
+            "description": description,
+        }
+    )
+
+    assert "service_suspension" not in lead["positive_hits"]
+    assert lead["qualification_status"] == "excluded"
+
+
+def test_care_line_ongoing_service_hold_keeps_patient_service_pending_negotiations() -> None:
+    lead = pipeline.event_lead_from_raw_item(
+        {
+            "raw_item_id": "hold-patient-service",
+            "source_id": "example-hospital-news",
+            "source_name": "Example Hospital News",
+            "item_url": "https://example.org/pediatric-hold",
+            "title": "Pediatric service remains on hold",
+            "description": "Pediatric services remain on hold pending negotiations.",
+        }
+    )
+
+    assert "service_suspension" in lead["positive_hits"]
+    assert lead["qualification_status"] == "event_lead"
+
+
+def test_care_line_supporting_passage_uses_bounded_service_hold_predicate() -> None:
+    passage = pipeline._supporting_passage(
+        "Billing services remain on hold. Pediatric services remain on hold pending negotiations.",
+        "service_suspension",
+        "",
+    )
+
+    assert passage == "Pediatric services remain on hold pending negotiations."
+
+
+def test_care_line_ongoing_service_hold_does_not_match_negated_keep() -> None:
+    lead = pipeline.event_lead_from_raw_item(
+        {
+            "raw_item_id": "hold-negated",
+            "source_id": "example-hospital-news",
+            "source_name": "Example Hospital News",
+            "item_url": "https://example.org/hold-negated",
+            "title": "Hospital operations update",
+            "description": "The hospital has not kept pediatric services on hold.",
+        }
+    )
+
+    assert "service_suspension" not in lead["positive_hits"]
+    assert lead["qualification_status"] == "excluded"
 
 
 def test_care_line_qualifies_it_incident_with_sexual_health_walk_in_cancellation(tmp_path: Path, monkeypatch) -> None:

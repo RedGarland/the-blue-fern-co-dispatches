@@ -192,6 +192,23 @@ MAX_EXTRACTED_TEXT_CHARS = 24000
 
 SOURCE_FAILURE_CLASSES = {"HTTPError", "ValueError", "ParseError", "TimeoutError", "URLError"}
 
+ONGOING_SERVICE_HOLD_RE = re.compile(
+    r"\b(?:"
+    r"(?:(?:has|have|had)\s+kept|keeps?|kept|continues?\s+to\s+keep)\s+"
+    r"(?:[\w'-]+\s+){0,8}(?:care|services?|treatment|therapy|prescribing)"
+    r"(?:\s+[\w'-]+){0,10}\s+(?:on hold|paused|suspended)"
+    r"|"
+    r"(?:care|services?|treatment|therapy|prescribing)"
+    r"(?:\s+[\w'-]+){0,10}\s+(?:remain(?:s)?|continues?|still)(?:\s+to\s+be)?\s+"
+    r"(?:on hold|paused|suspended)"
+    r")\b",
+    re.I,
+)
+ONGOING_SERVICE_HOLD_EXCLUSION_RE = re.compile(
+    r"\b(?:administrative|billing|invoice|invoices|paperwork|supplier|operating|proposal|proposed|future|appointment|appointments|scheduling)\b",
+    re.I,
+)
+
 POSITIVE_EVENT_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
     ("facility_closure", "closure", re.compile(r"\b(close|closed|closing|closure|remain(?:s)? closed|still closed|shut(?:ting)? down|cease(?:s|d)? operations?)\b", re.I)),
     ("planned_facility_closure", "closure", re.compile(r"\b(will close|plans? to close|set to close|scheduled to close)\b", re.I)),
@@ -1595,6 +1612,26 @@ def _sentence_candidates(text: str) -> list[str]:
     return [sentence.strip() for sentence in sentences if sentence.strip()]
 
 
+def _has_bounded_ongoing_service_hold(text: str) -> bool:
+    for sentence in _sentence_candidates(text):
+        for match in ONGOING_SERVICE_HOLD_RE.finditer(sentence):
+            context = sentence[max(0, match.start() - 120) : match.end()]
+            if not ONGOING_SERVICE_HOLD_EXCLUSION_RE.search(context) and not re.search(
+                r"\b(?:if|unless|whether|would|could|might|may|should|not|never|no longer)\b",
+                context,
+                re.I,
+            ):
+                return True
+    return False
+
+
+def _event_positive_hits(text: str) -> list[str]:
+    hits = _keyword_hits(text, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])
+    if _has_bounded_ongoing_service_hold(text) and "service_suspension" not in hits:
+        hits.append("service_suspension")
+    return hits
+
+
 def _service_line_from_text(text: str) -> str:
     for service_line, pattern in SERVICE_LINE_PATTERNS:
         if pattern.search(text):
@@ -1610,7 +1647,7 @@ def _facility_type_from_text(text: str) -> str:
 
 
 def _event_type_from_text(text: str, *, service_line: str) -> str:
-    hits = _keyword_hits(text, [(event_type, pattern) for event_type, _, pattern in POSITIVE_EVENT_PATTERNS])
+    hits = _event_positive_hits(text)
     if not hits:
         return ""
     for preferred in ("facility_reopening", "service_restoration", "temporary_facility_suspension", "service_suspension", "hours_reduction", "capacity_reduction", "coverage_cancellation", "coverage_delay", "service_reduction"):
@@ -2325,6 +2362,8 @@ def _supporting_passage(text: str, event_type: str, service_line: str) -> str:
         for pattern in scoring_terms:
             if pattern.search(sentence):
                 score += 2
+        if _has_bounded_ongoing_service_hold(sentence):
+            score += 2
         for _, pattern in ACCESS_CONSEQUENCE_PATTERNS:
             if pattern.search(sentence):
                 score += 3
@@ -2387,19 +2426,37 @@ def _sentence_currentness(
     service_line: str,
 ) -> dict[str, Any]:
     lowered = sentence.casefold()
-    positive_hits = _keyword_hits(sentence, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])
+    positive_hits = _event_positive_hits(sentence)
     access_hits = _keyword_hits(sentence, ACCESS_CONSEQUENCE_PATTERNS)
     context_hits = _keyword_hits(sentence, HEALTHCARE_CONTEXT_PATTERNS)
     date_refs = _all_date_references(sentence, source_date=source_date)
     has_historical_marker = any(marker in lowered for marker in HISTORICAL_MARKERS) or bool(re.search(r"\bthe hospital closed in\b|\bclosed in 20\d{2}\b|\bpreviously\b", lowered))
     has_recent_background_marker = any(marker in lowered for marker in RECENT_BACKGROUND_MARKERS)
     has_current_announcement = any(marker in lowered for marker in CURRENT_ANNOUNCEMENT_MARKERS) or bool(re.search(r"\bannounced\b|\bsaid\b|\bwill\b|\bplans?\b", lowered))
-    has_ongoing_update = any(marker in lowered for marker in ONGOING_UPDATE_MARKERS)
+    has_negated_event = bool(re.search(r"\b(?:not|never|no longer)\b", lowered))
+    has_conditional_event = bool(
+        re.search(r"\b(?:if|unless|whether)\b", lowered)
+        or re.search(
+            r"\b(?:would|could|might|should|may)\s+(?:[\w'-]+\s+){0,8}(?:keep|kept|remain(?:s)?|continue(?:s)?|suspend(?:ed|ing)?|pause(?:d|ing)?|hold)\b",
+            lowered,
+        )
+    )
     has_retro_marker = any(marker in lowered for marker in RETROSPECTIVE_MARKERS)
     actionable_event = bool(ACTIONABLE_EVENT_PATTERN.search(sentence))
     explicit_historical = any(ref.get("relation") == "historical" for ref in date_refs)
     explicit_future = any(ref.get("relation") == "future" for ref in date_refs)
     recent_past = any(ref.get("relation") == "recent_past" for ref in date_refs)
+    has_bounded_service_hold = _has_bounded_ongoing_service_hold(sentence)
+    has_current_continuation = bool(
+        re.search(r"\b(?:has|have|keeps?|continues?|remain(?:s)?|still)\b", lowered)
+    )
+    has_ongoing_update = (
+        any(marker in lowered for marker in ONGOING_UPDATE_MARKERS) or has_bounded_service_hold
+    ) and not (
+        ((has_historical_marker or explicit_historical) and not has_current_continuation)
+        or has_negated_event
+        or has_conditional_event
+    )
     score = 0
     score += len(positive_hits) * 3
     score += len(access_hits) * 2
@@ -2500,7 +2557,7 @@ def _currentness_analysis(
     sentence_rows = [
         _sentence_currentness(sentence, source_date=source_date, event_type=event_type, service_line=service_line)
         for sentence in sentences
-        if _keyword_hits(sentence, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])
+        if _event_positive_hits(sentence)
         or _keyword_hits(sentence, ACCESS_CONSEQUENCE_PATTERNS)
     ]
     title_agrees = _title_body_event_agreement(title, text, service_line=service_line)
@@ -3191,7 +3248,7 @@ def event_lead_from_raw_item(raw_item: Mapping[str, Any]) -> dict[str, Any]:
     title = _text(raw_item, "title")
     description = _text(raw_item, "description")
     combined = _normalize_text(f"{title} {description[:350]}")
-    positive_hits = _keyword_hits(combined, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])
+    positive_hits = _event_positive_hits(combined)
     context_hits = _keyword_hits(combined, HEALTHCARE_CONTEXT_PATTERNS)
     negative_reason = _negative_classification(combined, positive_hits=positive_hits, context_hits=context_hits)
     lead_score = len(positive_hits) * 3 + len(context_hits) * 2 - (2 if negative_reason else 0)
@@ -4090,7 +4147,7 @@ def qualify_event_lead(
     )
     if source_date_state != "source_dated" and has_reviewable_currentness:
         failed_gates = [gate for gate in failed_gates if gate != "missing_source_date"]
-    extraction_confidence = min(1.0, 0.55 + 0.07 * len(_keyword_hits(supporting_passage, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])) + (0.1 if article_content else 0.0))
+    extraction_confidence = min(1.0, 0.55 + 0.07 * len(_event_positive_hits(supporting_passage)) + (0.1 if article_content else 0.0))
     full_article_required = bool(_text(lead, "full_article_required")) and not article_content
     currentness_passage = _text(currentness, "operative_event_passage")
     if currentness_passage:

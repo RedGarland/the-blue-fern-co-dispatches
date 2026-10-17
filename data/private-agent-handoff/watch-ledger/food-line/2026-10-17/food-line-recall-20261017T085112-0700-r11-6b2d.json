@@ -1,0 +1,55 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261017T085112-0700-r11-6b2d",
+  "scheduled_for": "2026-10-17T08:45:54-07:00",
+  "started_at": "2026-10-17T08:49:36-07:00",
+  "completed_at": "2026-10-17T08:51:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T08:00:31-07:00",
+    "end": "2026-10-17T08:51:12-07:00",
+    "basis": "Since the prior 2026-10-17 hourly check ended at 08:00:31 PT; older indexed material excluded unless a new qualifying disruption was verifiable."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "supplementary_only": true,
+    "production_collection_authoritative": true,
+    "targeted_web_search_count": 12,
+    "targeted_web_search_limit": 12,
+    "search_failures": 0,
+    "source_discovery_status": "SUCCESS",
+    "qualified_signals": 0,
+    "targeted_queries": [
+      "October 17 2026 \"only grocery store\" closes fire community",
+      "October 17 2026 \"sole grocery store\" fire closes town",
+      "October 17 2026 food bank pantry emergency distribution canceled storm flooding",
+      "October 17 2026 food pantry abruptly closes services suspended",
+      "October 17 2026 SNAP benefits interruption outage state agency",
+      "October 17 2026 WIC benefits outage closure official state agency",
+      "October 17 2026 community \"last grocery store\" shut down",
+      "October 17 2026 food bank mobile distribution canceled flooding power outage",
+      "food pantry closed indefinitely October 17 2026 families local news",
+      "site:facebook.com \"food distribution\" \"cancelled\" \"October 17, 2026\" storm",
+      "site:gov \"October 17, 2026\" \"SNAP\" \"outage\" benefits",
+      "2026-10-17 food bank \"closed\" \"flood\" emergency distribution"
+    ],
+    "classes_checked": [
+      "only/sole/last/full-service grocery loss",
+      "disaster-caused emergency food distribution cancellation",
+      "abrupt pantry/food-bank shutdown or major access reduction",
+      "new official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "exclusions": [
+      "Arvada Safeway and Austin Wheatsville planned closures reported October 14-15 were already public before this hourly window, with nearby grocery alternatives; neither represents new last-store loss.",
+      "Historical grocery-fire, pantry-closure and SNAP/WIC notices predating this hour excluded.",
+      "Donation drives, generic resource guides and unrelated stories excluded."
+    ],
+    "discovery_limitation": "Fresh local and official search results were sparse; many results are historical despite recency filtering. No qualifying new disruption was verified in this bounded search window.",
+    "review_policy": "No review approval, publication, schedule alteration, or task disablement.",
+    "persistence_status": "SUCCESS on commit, subject to read-back verification"
+  }
+}

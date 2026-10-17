@@ -225,7 +225,7 @@
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
-        "private_review_max_age_hours": 75,
+        "private_review_max_age_hours": 76,
         "private_review_oldest_pending_date": "2026-10-14",
         "private_review_pending_date_count": 2,
         "private_review_pending_item_count": 9,
@@ -247,7 +247,7 @@
         "count_only_gap_count": 55,
         "dates": [
           {
-            "age_hours": 75,
+            "age_hours": 76,
             "count_only_gap_count": 0,
             "date": "2026-10-14",
             "dispositioned_item_count": 0,
@@ -256,7 +256,7 @@
             "unresolved_item_count": 4
           },
           {
-            "age_hours": 27,
+            "age_hours": 28,
             "count_only_gap_count": 0,
             "date": "2026-10-16",
             "dispositioned_item_count": 0,
@@ -426,7 +426,7 @@
           }
         ],
         "dispositioned_item_count": 66,
-        "max_age_hours": 75,
+        "max_age_hours": 76,
         "oldest_pending_date": "2026-10-14",
         "pending_date_count": 2,
         "pending_item_count": 9,
@@ -567,7 +567,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-17T03:56:10.188215Z",
+  "exported_at": "2026-10-17T04:15:03.335532Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza"

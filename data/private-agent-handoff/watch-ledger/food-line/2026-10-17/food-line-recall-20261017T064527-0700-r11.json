@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261017T064527-0700-r11",
+  "scheduled_for": "2026-10-17T06:45:54-07:00",
+  "started_at": "2026-10-17T06:45:27-07:00",
+  "completed_at": "2026-10-17T06:45:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T05:51:00-07:00",
+    "end": "2026-10-17T06:45:53-07:00",
+    "basis": "Prior completed hourly supplementary watch (05:49-05:51 PT); search indexed recent coverage across October 16-17 with publication-time verification required for inclusion."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "supplementary_only": true,
+    "production_collection_authoritative": true,
+    "targeted_web_search_count": 12,
+    "targeted_web_search_limit": 12,
+    "search_failures": 0,
+    "qualified_signals": 0,
+    "review_policy": "Do not approve, publish, or modify operational schedule.",
+    "classes_checked": [
+      "community sole/last/full-service grocery loss or closure/fire/disaster",
+      "storm/flood/fire/outage/damage-caused emergency distribution cancellation",
+      "abrupt pantry/food-bank closure or major food-access reduction",
+      "new official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_queries": [
+      "October 17 2026 only grocery store closes fire community food desert local news",
+      "October 16 2026 \"only grocery store\" \"closed\" fire outage",
+      "October 17 2026 food pantry emergency distribution canceled storm flooding",
+      "October 16 2026 food bank distribution cancelled due to storms power outage",
+      "October 17 2026 food pantry abruptly closes stops serving families",
+      "October 16 2026 food bank pantry closed permanently sudden closure access",
+      "October 17 2026 SNAP benefits system outage interruption state notice EBT",
+      "October 16 2026 WIC service benefits suspended outage state notice",
+      "\"food distribution\" \"canceled\" \"October 17, 2026\" storm power",
+      "\"food pantry\" \"closed\" \"October 16, 2026\" emergency",
+      "\"grocery store\" \"only\" \"October 16, 2026\" closure town",
+      "\"SNAP\" \"WIC\" \"outage\" \"October 17, 2026\" benefits"
+    ],
+    "exclusion_notes": [
+      "Recent report of Hopkins, Minnesota Driskill’s Downtown Market financial risk does not document actual closure or interruption and predates the hourly observation window.",
+      "Older grocery and pantry closures or outage notices were excluded as outside the hourly observation window.",
+      "Fundraising, general program guides, routine events, and non-food-business closures excluded."
+    ],
+    "limitation": "Web results were often old or undated relative to hourly window; no qualifying event could be verified as newly reported or newly interrupted within the period.",
+    "persistence_verification": "pending_write"
+  }
+}

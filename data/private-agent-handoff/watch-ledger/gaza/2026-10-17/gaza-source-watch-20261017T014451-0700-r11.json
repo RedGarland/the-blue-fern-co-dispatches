@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T014451-0700-r11",
+  "scheduled_for": "2026-10-17T01:44:51-07:00",
+  "started_at": "2026-10-17T01:43:19-07:00",
+  "completed_at": "2026-10-17T01:45:09-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T00:44:08-07:00",
+    "end": "2026-10-17T01:45:09-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall only. Production remains authoritative. No approval, publication or schedule changes.",
+    "previous_run": "gaza-source-watch-20261017T004451-0700-r11",
+    "source_checks_order": [
+      "OCHA OPT",
+      "WHO global",
+      "WHO EMRO",
+      "12 additional targeted searches"
+    ],
+    "sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "observation": "Homepage remained accessible; latest listed Gaza news was 2026-10-09. No in-window update."
+      },
+      {
+        "name": "WHO global",
+        "url": "https://www.who.int/publications/m/item/herams-opt-gaza-infographics-2026-09",
+        "observation": "October 16 HeRAMS report remains based on September 30 data; previously assessed, excluded as duplicate."
+      },
+      {
+        "name": "WHO EMRO",
+        "url": "https://www.emro.who.int/palestine/",
+        "observation": "Timed out; regional healthcare coverage incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "topic_coverage": [
+      "civilian casualties and civilian-impact military operations",
+      "displacement and shelters",
+      "humanitarian aid, crossings, food and water",
+      "healthcare and ambulances, fuel, medical evacuations, hospital capacity",
+      "infrastructure",
+      "detention and hostages",
+      "ceasefire and negotiations"
+    ],
+    "searched_publishers": [
+      "Reuters",
+      "Associated Press",
+      "OCHA OPT",
+      "WHO",
+      "UNICEF",
+      "WFP",
+      "UNRWA",
+      "ICRC",
+      "ReliefWeb",
+      "UN News",
+      "multi-source Gaza reporting"
+    ],
+    "source_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Request timed out"
+      },
+      {
+        "source": "UN News targeted search",
+        "error": "robots.txt blocked access"
+      }
+    ],
+    "exclusions": [
+      "2026-10-16 WHO HeRAMS September data previously assessed",
+      "Previously reported 2026-10-16 UNICEF nutrition claims",
+      "Old October and earlier stories returned as search hits",
+      "No verified, newly published in-window development"
+    ],
+    "assessment": "No newly verified qualifying development in the bounded search window; source-coverage loss warrants DEGRADED rather than FAILED."
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261017T034649-0700-r11-1f4b",
+  "scheduled_for": "2026-10-17T03:45:54-07:00",
+  "started_at": "2026-10-17T03:46:49-07:00",
+  "completed_at": "2026-10-17T03:48:00-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-17T02:43:00-07:00",
+    "end": "2026-10-17T03:48:00-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "qualifying_findings": 0,
+    "collection_role": "supplementary recall",
+    "persistence_note": "The first GitHub contents write was rejected; retried via Git objects and contents API.",
+    "public_side_effects": false
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T094451-0700-r11",
+  "scheduled_for": "2026-10-17T09:44:51-07:00",
+  "started_at": "2026-10-17T09:39:59-07:00",
+  "completed_at": "2026-10-17T09:41:19-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T08:45:00-07:00",
+    "end": "2026-10-17T09:41:19-07:00",
+    "basis": "Previous supplementary hourly check completed approximately 08:45 PDT; this is a bounded recall window, not a primary production collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary private recall only; production is authoritative. No editorial approval, publishing, scheduling, or production mutations.",
+    "sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Homepage latest news/updates is 09 Oct 2026; no new Gaza development in this window."
+      },
+      {
+        "name": "WHO global",
+        "url": "https://www.who.int/publications/m/item/herams-opt-gaza-infographics-2026-09",
+        "result": "HeRAMS published 16 Oct 2026, based on data through 30 Sep 2026; previously identified; no fresh in-window development."
+      },
+      {
+        "name": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502; regional direct coverage unavailable."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "new civilian casualties",
+      "displacement/shelter",
+      "crossings/humanitarian aid",
+      "hospitals/medical evacuation/ambulances/fuel",
+      "nutrition/food distribution",
+      "water/sanitation/infrastructure",
+      "ceasefire/hostages/detention",
+      "military operations and civilian impact",
+      "UNRWA",
+      "ICRC",
+      "PRCS",
+      "ReliefWeb"
+    ],
+    "exclusions": [
+      "Previously surfaced 17 Oct AP report of four deaths; duplicate and precise first-publication time unverified.",
+      "WHO HeRAMS report from 16 Oct covers September data.",
+      "Search returns primarily older material; dates verified before exclusion.",
+      "Opinion, social-only claims, undated reports, recycled claims."
+    ],
+    "source_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "error": "502 Bad Gateway",
+        "impact": "Reduced regional health situation-report coverage"
+      }
+    ],
+    "prior_observation": "2026-10-17T08:45:00-07:00",
+    "signal": "No independently verified new, traceable in-window development found across accessible sources."
+  }
+}

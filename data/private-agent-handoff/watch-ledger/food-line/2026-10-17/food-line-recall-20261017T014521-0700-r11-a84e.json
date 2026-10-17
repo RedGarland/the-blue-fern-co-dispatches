@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261017T014521-0700-r11-a84e",
+  "scheduled_for": "2026-10-17T01:45:54-07:00",
+  "started_at": "2026-10-17T01:45:21-07:00",
+  "completed_at": "2026-10-17T01:46:52.709-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-17T00:53:07-07:00",
+    "end": "2026-10-17T01:46:52.709-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified Food Line Source Watch heartbeat completed 2026-10-17 00:53:07 PDT on ops/watch-ledger."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "qualifying_findings": 0,
+    "collection_role": "Supplementary high-value recall only; nationwide production collection remains authoritative.",
+    "watch_classes": [
+      "sole/only/last/full-service grocery loss",
+      "weather/disaster food distribution cancellations",
+      "abrupt pantry or food-bank closure/access reduction",
+      "official SNAP/WIC immediate interruption"
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire October 16 2026 town",
+      "\"sole grocery store\" fire closure October 2026 town",
+      "\"last grocery store\" closing Friday October 16 2026",
+      "\"full service grocery store\" closed community October 16 2026",
+      "food bank \"distribution cancelled\" storm October 16 2026",
+      "food pantry \"distribution canceled\" flooding October 16 2026",
+      "mobile food pantry distribution canceled power outage October 16 2026",
+      "food pantry \"closed\" \"October 16, 2026\" emergency",
+      "food bank \"temporarily closed\" October 16 2026",
+      "SNAP EBT outage benefits interruption October 17 2026 official",
+      "WIC clinic closure service interruption October 16 2026 state",
+      "site:gov \"SNAP\" \"service interruption\" October 16 2026"
+    ],
+    "exclusions": "Fresh-indexed hits concerned September or earlier grocery fires and closures, October 7-10 distribution cancellations, past pantry shutdowns, prior-year SNAP/WIC interruption reports, or irrelevant material; no verified new event reported during the bounded hourly window.",
+    "date_precision_caveat": "Web search recency filters and crawl dates do not establish reporting time; no unverified/old hit was promoted.",
+    "persistence": "GitHub ops/watch-ledger branch, requested private-agent-handoff path; verify read-back before marking run durable.",
+    "public_side_effects": false,
+    "review_or_publication_actions": false
+  }
+}

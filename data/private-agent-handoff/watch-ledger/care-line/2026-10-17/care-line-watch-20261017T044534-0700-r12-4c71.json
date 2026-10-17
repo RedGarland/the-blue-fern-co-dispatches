@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T044534-0700-r12-4c71",
+  "scheduled_for": "2026-10-17T04:45:22-07:00",
+  "started_at": "2026-10-17T04:45:34-07:00",
+  "completed_at": "2026-10-17T04:47:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T03:49:00-07:00",
+    "end": "2026-10-17T04:47:29-07:00",
+    "basis": "prior completed hourly check to current observation"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_listed_notice_date": "2026-10-09",
+      "new_notice_within_window": false
+    },
+    "targeted_search_count": 12,
+    "covered_classes": [
+      "hospital and emergency-service interruption",
+      "maternity",
+      "rural emergency services",
+      "ambulance and air-medical bases",
+      "dialysis",
+      "oncology",
+      "behavioral health",
+      "primary care",
+      "restorations",
+      "US territories",
+      "storm-related closures and reopenings"
+    ],
+    "exclusions": [
+      "Guam Regional Medical City Oct 19 outpatient suspension was reported in an earlier watch; Oct 17 provider notice reiterates it, while visitation suspension is not qualifying clinical-service loss.",
+      "Guam Memorial Hospital non-emergency service suspension was previously found.",
+      "October 17 effective Comfort Care Home Health CMS termination notice was dated October 2, predating the hourly observation window.",
+      "No proposals, business-only changes, or unsupported reports admitted."
+    ],
+    "search_limit_observed": true,
+    "source_coverage": "CMS primary-source index was accessible; all 12 bounded targeted searches returned results, but negative discovery is not exhaustive."
+  }
+}

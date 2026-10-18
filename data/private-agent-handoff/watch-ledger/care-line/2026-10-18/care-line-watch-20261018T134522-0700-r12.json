@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261018T134522-0700-r12",
+  "scheduled_for": "2026-10-18T13:45:22-07:00",
+  "started_at": "2026-10-18T13:49:13-07:00",
+  "completed_at": "2026-10-18T13:50:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-18T11:48:00-07:00",
+    "end": "2026-10-18T13:50:24-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line collector is authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; latest notice listed was Tender Home Health (California), dated 2026-10-09, previously seen.",
+    "Exactly 12 further targeted searches executed across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency, ambulance/air-medical, restoration, and U.S. territories; no newly confirmed qualifying developments.",
+    "Results appearing in searches were older, out of window, proposals or general context, or lacked an independently confirmed concrete service change; no additional collector actions authorized."
+  ]
+}

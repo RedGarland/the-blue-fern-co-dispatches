@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261017T224554-0700-224927-r11",
+  "scheduled_for": "2026-10-17T22:45:54-07:00",
+  "started_at": "2026-10-17T22:49:27-07:00",
+  "completed_at": "2026-10-18T05:51:45.205Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-17T21:44:00-07:00",
+    "date_to": "2026-10-18T05:51:45.205Z",
+    "edition_date": "2026-10-17",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall watch only; production nationwide collection remains authoritative. Completed 12 targeted web searches across: sole/only/last/full-service grocer closures or fires (4); emergency food distribution cancellations due to weather/outage/facility damage (3); abrupt pantry or food-bank service closure/reduction (2); SNAP/EBT/WIC benefits or service interruptions (3). No source with verifiable new qualifying event published within the post-prior-check window was located. Search results were older incidents, unrelated stories, historical program notices, or other exclusions; publication indexing delays limit completeness. No positive finding, approval, publication, or schedule change. Requested ledger path may differ from documented canonical ops/watch-ledger/ layout."
+}

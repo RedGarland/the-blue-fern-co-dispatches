@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T164451-0700-r11",
+  "scheduled_for": "2026-10-18T16:44:51-07:00",
+  "started_at": "2026-10-18T16:42:36-07:00",
+  "completed_at": "2026-10-18T16:43:45-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T15:42:22-07:00",
+    "end": "2026-10-18T16:43:45-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; primary Gaza production collection and publication remain authoritative and unchanged.",
+    "OCHA OPT homepage checked first (https://www.ochaopt.org/); latest visible news was October 9, 2026, and no new in-window update was located.",
+    "WHO checked second: WHO global emergency page returned 404 and WHO Eastern Mediterranean Palestine health-emergency page was inaccessible, reducing direct healthcare coverage.",
+    "Exactly 12 additional targeted web searches: 10 fast and 2 focused slow, spanning civilian casualties, food/water, health, infrastructure, crossings, aid, detention and ceasefire developments.",
+    "UN News search was blocked by robots.txt; supplementary established reporting and humanitarian sources remained searchable.",
+    "Previously detected October 18 Associated Press report of WFP reducing Gaza food assistance to 1.1 million people was excluded as a duplicate from the earlier hourly watch.",
+    "October 17 reports of Gaza strikes and prior days' commercial-supply suspension were excluded because events predate the observation window; later discovery alone is not a new event.",
+    "No sufficiently sourced, time-qualified new Gaza development was established for the observation window.",
+    "No approval, publication, production, schedule or task-disable action taken."
+  ]
+}

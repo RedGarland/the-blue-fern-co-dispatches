@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T194451-0700-r11",
+  "scheduled_for": "2026-10-17T19:44:51-07:00",
+  "started_at": "2026-10-17T19:40:46-07:00",
+  "completed_at": "2026-10-17T19:42:17-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T18:44:48-07:00",
+    "end": "2026-10-17T19:42:17-07:00",
+    "basis": "Previous verified ledger heartbeat completion."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall; primary production authoritative. No publication, approval, or schedule changes.",
+    "primary_sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible, latest item dated Oct 9; no in-window development."
+      },
+      {
+        "name": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no in-window health update verified."
+      },
+      {
+        "name": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502; incomplete regional health coverage."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "source_failures": [
+      "WHO EMRO HTTP 502",
+      "UN News robots.txt block"
+    ],
+    "exclusions": [
+      "Previous Oct 17 AP Gaza casualty reporting was duplicate",
+      "West Bank-only news outside scope",
+      "Old/out-of-window, opinion, unsupported claims"
+    ],
+    "assessment": "No new traceable nonduplicate in-Gaza developments verified; source gaps make coverage DEGRADED."
+  }
+}

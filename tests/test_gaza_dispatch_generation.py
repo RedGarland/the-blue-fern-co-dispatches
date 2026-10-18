@@ -7,6 +7,7 @@ import pytest
 from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
 
 from bluefern_dispatches.generator import build_site
+from bluefern_dispatches import generator as generator_module
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
 from bluefern_dispatches.gaza_audio import _audio_story_eligibility
 from scripts.run_gaza_dispatch import (
@@ -3639,3 +3640,63 @@ def test_gaza_public_prose_collapses_same_event_ceasefire_reports_and_preserves_
     ):
         assert url in html
 
+
+def test_gaza_pages_history_preserves_retained_aggregate_and_audio_bytes(tmp_path):
+    pages = tmp_path / "pages"
+    root = tmp_path / "candidate"
+    _write_public_gaza_aggregate_fixture(pages, ["2026-10-14"])
+    audio = pages / "gaza" / "audio"
+    audio.mkdir(parents=True, exist_ok=True)
+    audio_payloads = {
+        "index.html": b"<span class=\"gaza-audio-index-date\"><strong>2026-10-14</strong></span>",
+        "podcast.xml": b"<rss><item><link>/gaza/audio/2026-10-14-transcript.html</link></item></rss>",
+    }
+    for name, payload in audio_payloads.items():
+        (audio / name).write_bytes(payload)
+    (pages / "gaza" / "podcast.xml").write_bytes(audio_payloads["podcast.xml"])
+    source = root / "data" / "dispatches" / "gaza" / "sources" / "2026-10-17" / "manual_sources.json"
+    source.parent.mkdir(parents=True, exist_ok=True)
+    source.write_text(json.dumps([{
+        "source_record_id": "gaza-2026-10-17-history-regression",
+        "title": "Oct 17 Gaza ground development",
+        "url": "https://example.com/gaza/2026-10-17",
+        "publisher": "Fixture News",
+        "published_at": "2026-10-17T12:00:00Z",
+        "retrieved_at": "2026-10-18T12:00:00Z",
+        "summary_or_snippet": "A verified Gaza ground development.",
+        "source_type": "manual",
+        "region_scope": "Gaza",
+        "category_hint": "conflict",
+        "reliability_tier": "reported-public-source",
+    }]), encoding="utf-8")
+
+    result = build_site(
+        root,
+        dry_run=False,
+        only_dispatches=("gaza",),
+        pages_repo=pages,
+        dispatch_seed_dates={"gaza": "2026-10-17"},
+        gaza_publication_dates=("2026-10-17",),
+    )
+    assert result["ok"] is True
+    site = root / "output" / "site"
+    archive = (site / "gaza" / "archive.html").read_text(encoding="utf-8")
+    rss = (site / "gaza" / "rss.xml").read_text(encoding="utf-8")
+    assert "2026-10-14" in archive and "2026-10-17" in archive
+    assert "2026-10-14" in rss and "2026-10-17" in rss
+    for relative in ("gaza/audio/index.html", "gaza/audio/podcast.xml", "gaza/podcast.xml"):
+        assert (site / relative).read_bytes() == (pages / relative).read_bytes()
+
+    validation_site = generator_module._materialize_gaza_dry_run_validation_site(
+        site,
+        pages,
+        tmp_path / "historical-validation",
+        max_public_date="2026-10-17",
+        gaza_publication_dates=("2026-10-17",),
+    )
+    validation_archive = (validation_site / "gaza" / "archive.html").read_text(encoding="utf-8")
+    validation_rss = (validation_site / "gaza" / "rss.xml").read_text(encoding="utf-8")
+    assert "2026-10-14" in validation_archive and "2026-10-17" in validation_archive
+    assert "2026-10-14" in validation_rss and "2026-10-17" in validation_rss
+    for relative in ("gaza/audio/index.html", "gaza/audio/podcast.xml", "gaza/podcast.xml"):
+        assert (validation_site / relative).read_bytes() == (pages / relative).read_bytes()

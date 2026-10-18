@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T104554-0700-r11-4f79",
+  "scheduled_for": "2026-10-18T10:45:54-07:00",
+  "started_at": "2026-10-18T10:45:33-07:00",
+  "completed_at": "2026-10-18T10:47:13-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "started_at": "2026-10-18T09:45:00-07:00",
+    "ended_at": "2026-10-18T10:45:33-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous watch completed approximately 09:45 PT; one-hour supplementary recall window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "priority_miss_classes": [
+      "only/sole/last/full-service community grocery loss",
+      "weather/disaster-related emergency distribution cancellation",
+      "abrupt pantry/food bank closure or service reduction",
+      "official immediate SNAP/WIC/food-assistance interruption"
+    ],
+    "queries": [
+      "October 18 2026 \"only grocery store\" closed fire town",
+      "October 18 2026 \"sole grocery store\" destroyed fire community",
+      "October 18 2026 \"last grocery store\" closing residents",
+      "October 18 2026 \"food distribution\" canceled storm flood",
+      "October 18 2026 \"food pantry\" distribution cancelled power outage",
+      "October 18 2026 food bank emergency distribution suspended due to weather",
+      "October 18 2026 food pantry closed abruptly emergency building damage",
+      "October 18 2026 food bank shut down services clients",
+      "October 18 2026 SNAP benefits interrupted state agency EBT outage",
+      "October 18 2026 WIC benefits suspended system outage notice official",
+      "site:gov \"October 18, 2026\" \"SNAP\" \"delay\" \"benefits\"",
+      "site:gov \"October 18, 2026\" WIC service interruption"
+    ],
+    "result_assessment": "No new qualifying U.S. food-access interruption discovered in this bounded search. Returned hits were older incidents (including September 2026 Spencer NY grocery fire), routine/general materials, foreign locations, or older 2025 SNAP shutdown coverage. Freshness verified against article dates; search recency does not guarantee publication within prior hour.",
+    "collector_authority": "Supplementary recall only; primary nationwide production collector remains authoritative.",
+    "exclusion_policy": "Excluded donation drives, resource guides, recipes, opinion, routine promotion, generic inflation reports, stale incidents, and duplicates.",
+    "limitations": "Search engine indexing may lag real-time provider notices; no finding is not proof no disruption occurred."
+  }
+}

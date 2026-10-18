@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T144451-0700-r11",
+  "scheduled_for": "2026-10-18T14:44:51-07:00",
+  "started_at": "2026-10-18T14:48:26-07:00",
+  "completed_at": "2026-10-18T14:49:54-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T13:45:18-07:00",
+    "end": "2026-10-18T14:49:54-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT index checked first; newest visible update dated October 9, 2026.",
+    "WHO searched first; global and regional situation pages returned internal errors.",
+    "12 additional targeted searches across casualties, displacement, aid, food/water, health, crossings, detention, ceasefire, military civilian impact; no qualifying nonduplicate in-window finding verified.",
+    "AP October 18 WFP food-assistance reductions already captured during the morning watch; excluded as duplicate.",
+    "Supplementary recall only; no production, schedule, approval or publication change."
+  ]
+}

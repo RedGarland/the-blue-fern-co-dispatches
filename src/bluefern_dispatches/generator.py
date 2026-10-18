@@ -4482,6 +4482,28 @@ def build_site(
                 dry_run,
                 wrote,
             )
+        # The generic date-derived render above can omit historical Pages
+        # rows. Reapply the authoritative baseline after those writes.
+        if (
+            dispatch.slug == "gaza"
+            and pages_repo is not None
+            and not skip_current_edition
+            and dispatch.edition_date in gaza_publication_dates
+            and _gaza_public_edition_is_listable(
+                site_root,
+                dispatch.edition_date,
+                pages_repo,
+                gaza_publication_dates=gaza_publication_dates,
+            )
+        ):
+            _gaza_aggregate_render_from_pages_history(
+                site_root,
+                dispatch,
+                dispatch.edition_date,
+                pages_repo,
+                dry_run=dry_run,
+                wrote=wrote,
+            )
     if not only_dispatches or CARE_LINE_DISPATCH_SLUG in only_dispatches:
         try:
             if care_line_signal_wire is None:
@@ -4532,6 +4554,12 @@ def build_site(
                 public_urls.extend(str(url) for url in care_line_signal_wire.get("public_urls") or [])
         except Exception as exc:
             errors.append(f"care-line signal wire generation failed: {exc}")
+    if (not dry_run) and (not only_dispatches or "gaza" in only_dispatches) and pages_repo is not None:
+        _preserve_gaza_pages_audio_history_for_candidate(
+            site_root,
+            pages_repo,
+            gaza_publication_dates=gaza_publication_dates,
+        )
     ensure_public_html_favicons(site_root, dry_run, wrote)
     return {
         "ok": not errors,
@@ -4780,6 +4808,24 @@ def _render_gaza_public_history_surfaces_for_candidate(
         ),
         encoding="utf-8",
     )
+    if (
+        latest
+        and latest in gaza_publication_dates
+        and _gaza_public_edition_is_listable(
+            candidate_site_root,
+            latest,
+            pages_repo,
+            gaza_publication_dates=gaza_publication_dates,
+        )
+    ):
+        _gaza_aggregate_render_from_pages_history(
+            candidate_site_root,
+            dispatch,
+            latest,
+            pages_repo,
+            dry_run=False,
+            wrote=[],
+        )
 
 
 def _materialize_gaza_dry_run_validation_site(

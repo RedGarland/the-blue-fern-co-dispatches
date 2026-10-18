@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T074451-0700-r11",
+  "scheduled_for": "2026-10-18T07:44:51-07:00",
+  "started_at": "2026-10-18T07:40:56-07:00",
+  "completed_at": "2026-10-18T07:43:19-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T06:43:00-07:00",
+    "end": "2026-10-18T07:43:19-07:00",
+    "start_basis": "Approximate completion minute of prior hourly check; precise terminal timestamp was not provided in available prior-run summary.",
+    "early_execution_note": "Automation runtime began before the nominal scheduled minute; scheduled_for retains the canonical hourly schedule time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest visible Gaza-relevant item on home listing dated 2026-10-09; no verified in-window update."
+      },
+      {
+        "name": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; WHO situation overview and linked news checked; no new in-window health, hospital, evacuation, or transport development verified."
+      },
+      {
+        "name": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "Direct source timed out; regional health and medevac recall coverage incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_search_topics": [
+      "Reuters Gaza casualties/ceasefire",
+      "Associated Press Gaza casualties",
+      "OCHA updates",
+      "WHO hospital and medical evacuation",
+      "UNICEF children and water",
+      "UNRWA humanitarian displacement",
+      "Gaza ceasefire/strikes broad news",
+      "Reuters crossings and ceasefire",
+      "AP hospitals and casualties",
+      "ReliefWeb humanitarian health",
+      "ICRC ambulance/hospital/aid",
+      "WFP crossing/food access"
+    ],
+    "search_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "type": "timeout",
+        "detail": "Direct access timed out; regional source not fully inspected."
+      }
+    ],
+    "excluded_examples": [
+      {
+        "url": "https://www.unicef.org/jordan/press-releases/childhood-defined-struggle-survival-gaza-strip",
+        "reason": "Published 2026-10-16; outside hourly window."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-2-october-2026",
+        "reason": "Earlier situation report; not a new in-window development."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-two-people-gaza-medics-say-2026-09-23/",
+        "reason": "September report, not current."
+      }
+    ],
+    "result": "No verifiable new, traceable, nonduplicate, in-Gaza civilian-impact development was found in this bounded search window. Results are subject to publication and indexing delays.",
+    "production_boundary": "Supplementary recall only. No approvals, publishing, production mutation, schedule modification, or disablement.",
+    "observation_date": "2026-10-18",
+    "material_new_failure": false
+  }
+}

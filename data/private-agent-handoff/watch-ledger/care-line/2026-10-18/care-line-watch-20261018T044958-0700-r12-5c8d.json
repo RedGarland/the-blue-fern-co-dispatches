@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261018T044958-0700-r12-5c8d",
+  "scheduled_for": "2026-10-18T04:45:22-07:00",
+  "started_at": "2026-10-18T04:49:58-07:00",
+  "completed_at": "2026-10-18T04:51:38-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-18T02:52:29-07:00",
+    "end_at": "2026-10-18T04:51:38-07:00",
+    "mode": "supplementary_recall_since_previous_confirmed_hourly_check"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest listed notice dated 2026-10-09: Tender Home Health (CA); no newer in-window CMS termination, rescission, CLIA, or access-risk notice.",
+    "Exactly 12 additional targeted web searches completed, covering hospital/ED, maternity, behavioral health, dialysis, oncology, rural and primary care, ambulance, air-medical bases, U.S. territories and reopening/restoration. No new independently supported qualifying in-window development found.",
+    "Excluded stale reporting, proposed changes, general financing and staffing news without demonstrated access effect, out-of-geography results, and previously reported developments.",
+    "The preceding observable check completed 2026-10-18T02:52:29-07:00; expanded recall interval conservatively to cover the gap. Search recency filters were broader to catch delayed indexing. This supplementary watch is not proof of exhaustive national coverage.",
+    "Production Care Line collector remains authoritative; no editorial approval, publication, scheduling changes, or task disabling."
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261017T194814-0700-h11",
+  "scheduled_for": "2026-10-17T19:45:54-07:00",
+  "started_at": "2026-10-17T19:48:14-07:00",
+  "completed_at": "2026-10-17T19:49:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-17T18:43:00-07:00",
+    "until": "2026-10-17T19:49:04-07:00",
+    "basis": "Previous hourly watch completed about 18:43 PT; bounded supplementary recall, not the production collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "classes_checked": [
+      "Only/sole/last/full-service grocery closure, fire or disaster",
+      "Emergency food distribution suspended/canceled due to disaster, power outage or facility damage",
+      "Abrupt food pantry/food bank closure or major service reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access impact"
+    ],
+    "queries": [
+      "\"only grocery store\" closed fire community October 17 2026",
+      "\"only grocery store\" fire OR closure OR flooding \"October 17\" 2026",
+      "\"last grocery store\" OR \"sole grocery store\" closes town October 2026",
+      "\"full-service grocery store\" shutdown closure fire October 2026 town",
+      "\"food distribution\" canceled storm flood Saturday October 17 2026",
+      "\"food pantry\" closed due to fire flood power outage October 17 2026",
+      "food bank pantry \"closed\" \"October 17, 2026\" emergency",
+      "food pantry food bank \"suspended services\" October 17 2026",
+      "October 17 2026 cancelled food distribution storm flood outage county",
+      "site:gov \"SNAP\" \"outage\" OR \"interruption\" October 17 2026 EBT",
+      "site:gov \"WIC\" benefits \"unavailable\" OR \"interruption\" October 17 2026",
+      "October 17 2026 \"food assistance\" \"suspended\" \"benefits\" state agency"
+    ],
+    "exclusions": "Search results were stale (2022-2026 pre-window), unrelated, outside the United States, or not actual food-access disruptions. An October 2026 report on Safeway exiting Arvada, CO did not qualify: alternate grocers remain and shutdown is scheduled November 14.",
+    "verification_limitations": "Search indexing and first-publication timestamps may lag the ~one-hour recall window; no claim of exhaustive nationwide coverage.",
+    "production_collection_authoritative": true,
+    "review_status": "not_applicable",
+    "approvals_or_publications": false
+  }
+}

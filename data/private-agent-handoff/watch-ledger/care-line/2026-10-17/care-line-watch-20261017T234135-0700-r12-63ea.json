@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T234135-0700-r12-63ea",
+  "scheduled_for": "2026-10-17T22:45:22-07:00",
+  "started_at": "2026-10-17T23:41:35-07:00",
+  "completed_at": "2026-10-17T23:43:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T22:45:06-07:00",
+    "end": "2026-10-17T23:43:28-07:00",
+    "description": "Since the prior reported hourly supplementary watch; its heartbeat had not been durably committed."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. As of observation, newest listed notice remained 2026-10-09 Tender Home Health (California) termination. https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "Exactly 12 additional targeted web searches completed across hospital/ED, maternity, behavioral health, dialysis/oncology, primary care, emergency/rural care, ambulance/air medical, restoration, official notices, and U.S. territories.",
+    "No new confirmed nonduplicate U.S. or territory change first reported within the observation window. Returned results were older than the window, proposals without effective access change, outside U.S. jurisdiction, or already covered.",
+    "Earlier known Winchester Family Medicine (New Hampshire), air ambulance base, and Guam outpatient changes treated as duplicates, not new findings.",
+    "Search indexing and reporting lag limit immediate detection; this is a supplementary recall watch, not the authoritative production Care Line collector.",
+    "No approvals, publishing, source-policy edits, schedule changes, or task disabling performed."
+  ]
+}

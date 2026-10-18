@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T024451-0700-r11",
+  "scheduled_for": "2026-10-18T02:44:51-07:00",
+  "started_at": "2026-10-18T02:42:14-07:00",
+  "completed_at": "2026-10-18T02:45:53-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T01:43:49-07:00",
+    "end": "2026-10-18T02:45:53-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources": [
+      "https://www.ochaopt.org/",
+      "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt"
+    ],
+    "additional_targeted_searches": 12,
+    "limitation": "WHO regional reporting unavailable (HTTP 502).",
+    "assessment": "No date-verified novel relevant development; production untouched."
+  }
+}

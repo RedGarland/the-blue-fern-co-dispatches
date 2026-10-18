@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T054451-0700-r11",
+  "scheduled_for": "2026-10-18T05:44:51-07:00",
+  "started_at": "2026-10-18T05:44:18-07:00",
+  "completed_at": "2026-10-18T05:46:23.769-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T04:48:48.712-07:00",
+    "end": "2026-10-18T05:46:23.769-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Checked first. The latest listed update is dated 2026-10-09; no new in-window Gaza report located."
+      },
+      {
+        "name": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Checked first. Global WHO Gaza overview accessible; no new in-window dated report found."
+      },
+      {
+        "name": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "result": "Direct access returned HTTP 502. Regional health/medical evacuation coverage incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_scope": "Reuters casualties; AP casualties; Reuters crossings/aid; UNRWA displacement/aid; UNICEF child casualties/water; WFP food; PRCS ambulance; ICRC medical/detention; MSF hospitals; UN ceasefire; BBC/Al Jazeera civilian operations; Reuters negotiations/detention. All targeted to 2026-10-18 with one-day recency.",
+    "search_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "result": "HTTP 502 on direct access."
+      }
+    ],
+    "excluded_prior_or_out_of_scope": [
+      {
+        "reason": "Search results returned historical Reuters, AP, UNRWA, UNICEF and MSF reporting dated before the 2026-10-18T04:48:48.712-07:00 window."
+      },
+      {
+        "reason": "Undated or ambiguous search results lacked evidence of in-window publication or event; not counted as findings."
+      }
+    ],
+    "assessment": "No new, traceable, nonduplicate in-Gaza development verified in the bounded window. The WHO regional endpoint remains inaccessible, and search-index latency can delay identification of breaking developments. Supplementary recall watch only; production remains authoritative. No approvals, publication, schedule changes or task disabling."
+  }
+}

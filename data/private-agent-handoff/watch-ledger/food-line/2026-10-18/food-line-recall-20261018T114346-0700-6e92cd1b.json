@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T114346-0700-6e92cd1b",
+  "scheduled_for": "2026-10-18T11:43:46-07:00",
+  "started_at": "2026-10-18T11:44:08-07:00",
+  "completed_at": "2026-10-18T11:44:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-18T10:43:46-07:00",
+    "end": "2026-10-18T11:44:37-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly check approximately 10:43 PT; newly reported U.S. disruptions, with broader indexed results screened for actual publication dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary high-value recall watch only; production collector remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "classes_checked": [
+      "Loss of only/sole/last or full-service community grocery store",
+      "Disaster/outage-canceled emergency food distributions",
+      "Abrupt food pantry/bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance service interruption"
+    ],
+    "evaluation": "No source dated within the bounded interval substantiated a qualifying new disruption. Search results were older incidents, routine schedules/notices, foreign locations, or closures without sole/full-service grocery loss.",
+    "examples_excluded": [
+      "Spencer, NY sole-grocer fire previously reported in September 2026",
+      "Arvada, CO Safeway closure notice dated October 14; nearby grocers remain",
+      "SNAP/WIC shutdown notices from October-November 2025",
+      "Routine October 2026 food distribution calendars"
+    ],
+    "limitations": "Targeted search engine results are not an exhaustive nationwide crawl; freshness indexing may lag."
+  }
+}

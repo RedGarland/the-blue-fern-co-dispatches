@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T004554-0700-r11",
+  "scheduled_for": "2026-10-18T00:45:54-07:00",
+  "started_at": "2026-10-18T00:49:24-07:00",
+  "completed_at": "2026-10-18T00:50:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "edition_date": "2026-10-18",
+    "date_from": "2026-10-17T23:45:54-07:00",
+    "date_to": "2026-10-18T00:50:32-07:00",
+    "prior_hourly_check": "estimated from hourly schedule, not verified from prior persisted heartbeat",
+    "targeted_web_searches": 12
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall sweep, not primary nationwide collection. Twelve targeted searches covered only/sole/last/full-service grocery losses, disaster-related food distribution cancellations, pantry/food-bank service reductions, and immediate SNAP/WIC interruptions. No qualifying new U.S. food-access disruption with independently substantiated fresh source date surfaced within the estimated since-prior-hourly-check window. Results included older Sept 2026 sole-grocery-store fire coverage, prior-week weather distribution cancellation, and 2025 SNAP shutdown stories, excluded as stale. Searches returned without search-system errors. Search indexing/publication lag and an unverified previous-check timestamp limit completeness. No approval, publication, schedule mutation, or production collection change was made."
+}

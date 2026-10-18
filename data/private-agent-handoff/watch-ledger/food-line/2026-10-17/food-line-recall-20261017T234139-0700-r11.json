@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261017T234139-0700-r11",
+  "scheduled_for": "2026-10-17T22:45:54-07:00",
+  "started_at": "2026-10-17T23:41:39-07:00",
+  "completed_at": "2026-10-17T23:43:21-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "edition_date": "2026-10-17",
+    "date_from": "2026-10-17T21:44:00-07:00",
+    "date_to": "2026-10-17T23:43:21-07:00",
+    "previous_check_basis": "Latest prior completed watch reported October 17, 2026 at approximately 21:44 PT; no authoritative later check receipt was available.",
+    "search_count": 12,
+    "max_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" closed fire October 17 2026 town US",
+      "\"sole grocery store\" closing fire October 2026 community",
+      "\"last grocery store\" fire closed Saturday October 17 2026",
+      "\"food distribution\" canceled storm flooding October 17 2026",
+      "\"food pantry\" closed unexpectedly October 17 2026",
+      "\"food bank\" services suspended outage October 17 2026",
+      "site:gov \"SNAP\" \"October 17, 2026\" outage interruption benefits",
+      "site:gov \"WIC\" \"October 17, 2026\" closure benefits emergency",
+      "food pantry food bank emergency distribution canceled October 17 2026 storm outage US",
+      "October 17 2026 last grocery store closed burned town food access",
+      "SNAP EBT outage food benefits October 17 2026 official state notice",
+      "October 17 2026 WIC office emergency closure food assistance distribution cancelled"
+    ]
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch; production Food Line collector remains authoritative. Twelve targeted web searches across sole/last/full-service grocery loss, weather/disaster distribution cancellations, abrupt food-pantry/food-bank shutdowns, and official SNAP/WIC interruptions. No new verified qualifying event within the bounded observation interval. Results were older incidents, prior-year benefit notices, chain-only or nonsole closures, or routine nonqualifying items; excluded. No search request failed. Web indexing may lag real-time local/provider notices; discovery is not proof that no disruption occurred. Review status remains unchanged; no approval or publication."
+}

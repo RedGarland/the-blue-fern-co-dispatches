@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T204451-0700-r11",
+  "scheduled_for": "2026-10-17T20:44:51-07:00",
+  "started_at": "2026-10-17T20:49:08-07:00",
+  "completed_at": "2026-10-18T03:51:34.284Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T19:42:17-07:00",
+    "end": "2026-10-18T03:51:34.284Z",
+    "basis": "Previous verified ops/watch-ledger heartbeat completed 2026-10-17T19:42:17-07:00; review extended through this execution."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall only; primary daily Gaza production remains authoritative; no approval, publication, schedule or task state changes.",
+    "source_order": "OCHA OPT and WHO checked before additional targeted searches.",
+    "primary_sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest listed Gaza-specific update dated 2026-10-09. No newly dated in-window development."
+      },
+      {
+        "name": "WHO global oPt crisis",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest displayed news and regional updates are older than observation window. No new in-window development."
+      },
+      {
+        "name": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; regional report coverage incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_lookback": "Searches were constrained to 1-day recency, then evaluated against the actual previous-heartbeat completion. Search-engine recency was not accepted as evidence of publication time.",
+    "targeted_search_groups": [
+      "WHO global and Eastern Mediterranean Gaza healthcare / evacuation",
+      "OCHA humanitarian civilian harm and access",
+      "ReliefWeb and UNRWA displacement / aid",
+      "WFP food supply and crossings; UNICEF water and child impact",
+      "ICRC detention / hostages / medical access; MSF hospital / ambulances",
+      "AP and Reuters civilian casualties / military effects / ceasefire",
+      "Cross-source evening Gaza civilian impact / aid / hospitals / negotiations"
+    ],
+    "exclusions": [
+      "Previously identified 2026-10-17 AP strikes/casualty report; duplicate, not a new hourly development",
+      "Older 2025/2026 reports, undated/recycled search hits, West Bank-only developments, opinion and unsupported claims"
+    ],
+    "source_failures": [
+      "WHO EMRO emergency situation reports HTTP 502"
+    ],
+    "assessment": "No verifiable, source-traceable, nonduplicate in-Gaza development was established since the previous verified hourly check. WHO regional failure requires DEGRADED status; absence of findings does not establish absence of events."
+  }
+}

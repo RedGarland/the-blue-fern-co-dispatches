@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T194231-0700-r12-9f31",
+  "scheduled_for": "2026-10-17T18:45:22-07:00",
+  "started_at": "2026-10-17T19:42:31-07:00",
+  "completed_at": "2026-10-17T19:57:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T17:52:12-07:00",
+    "end": "2026-10-17T19:57:29-07:00",
+    "description": "Recall from last documented completed hourly watch; later scheduled runs not independently verified."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; newest listed public notice was 2026-10-09 Tender Home Health termination notice, California. https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "Exactly 12 additional targeted searches completed, covering hospital/ED, maternity, behavioral health, rural emergency service, ambulance/air medical, dialysis, oncology, primary care, restoration, official state notices, and U.S. territories.",
+    "No new nonduplicate qualifying U.S./territorial healthcare-access development confirmed in the recall window. Search returns were older, out-of-scope, proposals, or already known; October 17 proposed Charlotte behavioral-health hospital excluded because not an effective restoration.",
+    "Known October 16 Winchester Family Medicine NH and Axis Norwood CO closure announcements and already identified Guam Regional Medical City October 19 outpatient suspension excluded as prior-watch detections.",
+    "Supplementary watch only. Primary national collector remains authoritative. No editorial approval, production publication or schedule change."
+  ]
+}

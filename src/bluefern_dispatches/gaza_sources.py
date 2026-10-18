@@ -2179,7 +2179,13 @@ def build_gaza_collection_timing_metadata(
 ) -> dict[str, Any]:
     scheduled_run_local_dt = _scheduled_run_local_dt(edition_date)
     actual_run_dt = _parse_metadata_dt(actual_run_utc) or datetime.now(timezone.utc)
-    published_datetimes = [dt for dt in (_parse_metadata_dt(str(source.get("published_at") or "")) for source in sources) if dt is not None]
+    published_datetimes = [
+        dt
+        for source in sources
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(source.get("published_at") or "").strip())
+        for dt in [_parse_metadata_dt(str(source.get("published_at") or ""))]
+        if dt is not None
+    ]
     retrieved_datetimes = [dt for dt in (_parse_metadata_dt(str(source.get("retrieved_at") or "")) for source in sources) if dt is not None]
     retrieval_batches: list[dict[str, Any]] = []
     later_same_day_batches: list[dict[str, Any]] = []

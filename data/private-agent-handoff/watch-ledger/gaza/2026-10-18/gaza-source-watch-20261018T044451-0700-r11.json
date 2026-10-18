@@ -1,0 +1,61 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T044451-0700-r11",
+  "scheduled_for": "2026-10-18T04:44:51-07:00",
+  "started_at": "2026-10-18T04:47:16-07:00",
+  "completed_at": "2026-10-18T04:48:48.712-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T03:49:35-07:00",
+    "end": "2026-10-18T04:48:48.712-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Checked first; main news listing still last updated 2026-10-09. No new Gaza report in the search window."
+      },
+      {
+        "name": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Checked first; current WHO overview accessible, no verified new in-window Gaza update."
+      },
+      {
+        "name": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "HTTP 502 on direct access; regional health/medical evacuation coverage incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_failures": [
+      {
+        "source": "UN News",
+        "result": "Search blocked by robots.txt."
+      },
+      {
+        "source": "WHO Eastern Mediterranean",
+        "result": "HTTP 502 on direct access."
+      }
+    ],
+    "excluded_prior_or_out_of_scope": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-says-commercial-goods-no-longer-entering-gaza-after-merchants-suspend-2026-10-15/",
+        "reason": "October 15 event, before current window."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/un-says-gaza-malnutrition-gains-fragile-commercial-supplies-halt-2026-10-16/",
+        "reason": "October 16 update, before current window."
+      },
+      {
+        "reason": "October 17-18 West Bank settler attacks explicitly outside Gaza scope."
+      }
+    ],
+    "assessment": "No new, traceable, nonduplicative in-Gaza development verified since preceding hourly check. WHO regional feed and UN News could not be fully checked; search-index latency remains possible. This is a supplementary recall watch only; no approvals, publication, production changes, or schedule changes."
+  }
+}

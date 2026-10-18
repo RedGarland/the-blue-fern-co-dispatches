@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T214451-0700-r11",
+  "scheduled_for": "2026-10-17T21:44:51-07:00",
+  "started_at": "2026-10-17T21:43:38-07:00",
+  "completed_at": "2026-10-17T21:45:07-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T20:51:34.284-07:00",
+    "end": "2026-10-17T21:45:07-07:00",
+    "basis": "Previous verified heartbeat completed at 20:51:34 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary Gaza recall only. Primary publisher authoritative. No approval, publication or schedule changes.",
+    "first_sources_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest listed Gaza-specific news dated October 9; no in-window update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No newly dated in-window development."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Source timed out."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_searches": "Reuters; AP; UNRWA; WFP; UNICEF; ICRC; MSF; PRCS; ReliefWeb; UN; BBC; Gaza overnight casualty, access, medical capacity and ceasefire",
+    "source_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "error": "timeout",
+        "impact": "Regional healthcare coverage incomplete"
+      },
+      {
+        "source": "BBC News",
+        "error": "robots.txt",
+        "impact": "One targeted reporting query blocked"
+      }
+    ],
+    "excluded": [
+      "Previously identified October 17 AP casualty reporting",
+      "October 16 Reuters food-supply reporting predates window",
+      "Out-of-date aggregated Gaza casualty counts",
+      "West Bank-only AP report",
+      "Unsupported, recycled or undated material"
+    ],
+    "assessment": "No new verified nonduplicate in-Gaza development within the precise window; degraded coverage does not establish that no events happened."
+  }
+}

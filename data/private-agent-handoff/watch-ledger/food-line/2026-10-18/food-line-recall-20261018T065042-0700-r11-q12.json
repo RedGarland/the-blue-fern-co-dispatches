@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T065042-0700-r11-q12",
+  "scheduled_for": "2026-10-18T06:45:54-07:00",
+  "started_at": "2026-10-18T06:50:42-07:00",
+  "completed_at": "2026-10-18T06:52:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-18T05:46:43-07:00",
+    "end": "2026-10-18T06:52:23-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly check completed at 05:46:43 PDT; current watch cutoff at completion."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary U.S. food-access miss-class recall watch only; production collection remains authoritative.",
+    "targeted_searches": 12,
+    "search_failures": 0,
+    "new_qualifying_signals_verified": 0,
+    "searched_categories": [
+      "Closure/fire/disaster affecting a community’s only/sole/last/full-service grocery store",
+      "Emergency food distribution canceled/suspended due to weather, flood, fire, outage, or damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate food-access consequences"
+    ],
+    "excluded": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Sole-grocer fire occurred/reported September 2026, not in this hourly window."
+      },
+      {
+        "source_url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+        "reason": "Distribution cancellation reported the previous week, outside this hourly window."
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+        "reason": "Earlier national SNAP trend analysis, not newly announced official immediate benefit interruption."
+      },
+      {
+        "source_url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Safeway's only store in Arvada is not the community's sole grocery provider, and announcement predates hourly window."
+      }
+    ],
+    "coverage_limit": "Web-index search is not exhaustive; publication/indexing lag is possible. No fresh in-window, confirmed, nonduplicate qualifying event found.",
+    "bounded_query_context": {
+      "observation_date": "2026-10-18",
+      "time_zone": "America/Los_Angeles",
+      "query_count": 12,
+      "recency_filter_days": 1,
+      "searches_completed": true
+    },
+    "github_requested_branch": "ops/watch-ledger",
+    "github_requested_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-18/food-line-recall-20261018T065042-0700-r11-q12.json"
+  }
+}

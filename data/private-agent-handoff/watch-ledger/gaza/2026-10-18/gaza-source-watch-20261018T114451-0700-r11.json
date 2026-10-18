@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T114451-0700-r11",
+  "scheduled_for": "2026-10-18T11:44:51-07:00",
+  "started_at": "2026-10-18T11:44:07-07:00",
+  "completed_at": "2026-10-18T11:46:23-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T10:49:15-07:00",
+    "end": "2026-10-18T11:46:23-07:00",
+    "start_basis": "Previous hourly watch recovery record gives terminal observation 2026-10-18T10:49:15-07:00; that prior heartbeat did not persist."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Checked first. No verified Gaza development published within the observation window; retrieved humanitarian updates were older."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Checked first. Situation landing page accessible; no verified in-window hospital, ambulance, medical-evacuation or health-capacity update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 on direct access; supplementary regional health coverage unavailable."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "additional_search_categories": [
+      "casualties and civilian impact (Reuters/AP/AFP/Haaretz)",
+      "military operations and ceasefire/negotiations",
+      "OCHA/UN humanitarian access and displacement",
+      "WFP and UNICEF food insecurity and nutrition",
+      "UNRWA displacement and shelters",
+      "ICRC detention, hostages and healthcare",
+      "PRCS ambulance reports",
+      "Gaza crossings, water, medical evacuation and transport"
+    ],
+    "excluded_or_unverified": [
+      {
+        "url": "https://apnews.com/article/793087dde3cb4435c6b771bae28faff3",
+        "reason": "October 18 WFP reductions were already identified in the 09:50 PDT watch; duplicate."
+      },
+      {
+        "url": "https://www.haaretz.com/gaza/2026-10-18/ty-article/reports-two-children-among-at-least-eight-killed-by-israeli-fire-in-gaza/000001a1-4f13-da52-a3f1-4f5f20440000",
+        "reason": "Headline reports deaths since Saturday but page returned HTTP 403; publication time and exact event/source lineage could not be verified as new since prior hourly check. Withheld pending verification."
+      },
+      {
+        "url": "https://apnews.com/article/744d4b8c005b20d94ce6fc952a63e063",
+        "reason": "Commercial supplies disruption reported October 15; outside hourly window."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/us-officials-visit-palestinian-village-after-settler-attacks-diplomats-2026-10-18/",
+        "reason": "West Bank event, not in Gaza."
+      }
+    ],
+    "research_assessment": "DEGRADED: useful coverage obtained across primary humanitarian and established news sources, but WHO regional health page returned 502 and same-day Haaretz casualty report could not be directly retrieved (403). No new qualifying nonduplicate development sufficiently verified within this window.",
+    "production": "No approvals, publication, schedule changes, disabling, or production mutation."
+  }
+}

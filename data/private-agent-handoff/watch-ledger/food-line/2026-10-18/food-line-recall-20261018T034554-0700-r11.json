@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T034554-0700-r11",
+  "scheduled_for": "2026-10-18T03:45:54-07:00",
+  "started_at": "2026-10-18T03:49:13-07:00",
+  "completed_at": "2026-10-18T03:50:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "edition_date": "2026-10-18",
+    "date_from": "2026-10-18T02:44:00-07:00",
+    "date_to": "2026-10-18T03:49:13-07:00",
+    "purpose": "New high-value U.S. food-access disruption signals since previous hourly watch; discovery allowed late-indexed Oct 17 notices.",
+    "targeted_web_searches": 12
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted searches; all four high-value categories covered: sole/only grocery loss, weather/disaster-related emergency distribution cancellations, abrupt pantry/food-bank service loss, and official SNAP/WIC interruption. Zero verified new qualifying signals in the hourly window. Search results skewed toward 2025 benefit notices, earlier 2026 grocery fires, and Oct 7 hurricane-related distribution cancellations; excluded as older than current interval. Oct 14 Arvada Safeway closing is not loss of sole community grocery (other groceries remain). Oct 17 Santa Rosa County hurricane recovery notice lists distributions rather than cancellations. No source or search failures. Supplementary watch only; primary production intake authoritative. Nothing approved or published."
+}

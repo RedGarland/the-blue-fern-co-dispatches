@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261018T094124-0700-r12-b7e6",
+  "scheduled_for": "2026-10-18T09:41:24-07:00",
+  "started_at": "2026-10-18T09:41:24-07:00",
+  "completed_at": "2026-10-18T09:43:36-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-18T08:45:27-07:00",
+    "end": "2026-10-18T09:43:36-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last reported prior watch completed 08:45:27 PDT; conservative publication/observation window."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; primary Care Line production collection remains authoritative.",
+    "CMS Public Notices checked first; top dated item is Tender Home Health (CA) 2026-10-09. No CMS notices dated within the current window. https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "Exactly 12 additional targeted web searches completed across hospital/ED, rural/emergency care, maternity, behavioral health, dialysis, oncology, primary care, ambulance/air medical, reopenings, and U.S. territories. No qualifying newly announced or newly effective nonduplicate access change was independently verified within the window.",
+    "Excluded: Guam Regional Medical City typhoon-related 2026-10-19 outpatient-clinic closure was announced on 2026-10-17, before this window, with 24/7 ED and inpatient care maintained. https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+    "Excluded: Guam Memorial Hospital suspension of non-emergency elective services announced 2026-10-16 before the window. https://kuam.com/story/364066179/gmha-announces-expectant-mother-intake-plans-and-service-suspensions-uscg-sets-port-condition-yankee",
+    "Excluded: Dennys River Volunteer Ambulance Service November 30 closure reported October 14, pre-window; older hospital closure/conditional reopening/proposal stories excluded.",
+    "No editorial approval, publication, production collection modification, or automation schedule change was requested or performed."
+  ]
+}

@@ -137,9 +137,7 @@ def _export_agent_inbox(
     }
     export_path = inbox_dir / f"food-line-source-watch-{edition_date}-{_short_run_tag(run_id)}.json"
     _atomic_write_json(export_path, export_payload)
-    export_sha256 = hashlib.sha256(
-        json.dumps(export_payload, indent=2, ensure_ascii=False, sort_keys=True).encode("utf-8")
-    ).hexdigest()
+    export_sha256 = hashlib.sha256(export_path.read_bytes()).hexdigest()
     return {"status": "success", "path": str(export_path), "sha256": export_sha256}
 
 

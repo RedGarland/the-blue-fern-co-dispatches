@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261017T184451-0700-r11",
+  "scheduled_for": "2026-10-17T18:44:51-07:00",
+  "started_at": "2026-10-17T18:42:15-07:00",
+  "completed_at": "2026-10-17T18:44:48-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T17:53:00-07:00",
+    "end": "2026-10-17T18:44:48-07:00",
+    "basis": "Prior completed reported watch ended approximately 17:53 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only. Primary daily collection and publication remain authoritative; no approvals/publication/scheduling changes.",
+    "primary_first": [
+      {
+        "name": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "finding": "Latest listed Gaza snapshot posted 2026-10-09; no newly dated in-window update."
+      },
+      {
+        "name": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "accessible",
+        "finding": "No newly dated in-window Gaza health development verified."
+      },
+      {
+        "name": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "unavailable",
+        "error": "Internal Error; regional health reporting incomplete."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_source_groups": [
+      "Reuters/AP casualty and ceasefire updates",
+      "UNICEF/WFP/UNRWA aid, nutrition, children, WASH",
+      "OCHA/WHO health and civilian impact",
+      "ReliefWeb/UN humanitarian briefings"
+    ],
+    "excluded": [
+      "Earlier same-day AP Gaza deaths report: duplicate",
+      "October 16 nutrition/health capacity reporting: out-of-window or previously known",
+      "West Bank-only developments: excluded",
+      "Older, opinion, unsupported or non-verifiable claims"
+    ],
+    "source_failures": [
+      "WHO Eastern Mediterranean regional reports direct endpoint: Internal Error"
+    ],
+    "assessment": "Zero newly verified nonduplicate in-Gaza developments during observation window; WHO EMRO partial outage degrades coverage."
+  }
+}

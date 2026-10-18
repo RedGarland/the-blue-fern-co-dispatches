@@ -156,11 +156,13 @@ def write_care_line_approved_release_fixture(work: Path, edition_date: str) -> N
 
 
 @pytest.fixture(scope="session")
-def built_site_template(tmp_path_factory):
+def built_site_template(request, tmp_path_factory):
     import os
+    from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
 
     repo = Path(__file__).parent.parent
     test_root = tmp_path_factory.mktemp("dispatches-site-template")
+    register_fixture_root(request, test_root, group="built-site-template")
     work = test_root / "repo"
     copy_repo_assets(repo, work)
     copy_care_line_data(repo, work)
@@ -175,6 +177,7 @@ def built_site_template(tmp_path_factory):
             backup_root=backup_root,
             dispatch_seed_dates={"care-line": "2026-05-23"},
         )
+        mark_fixture_setup_complete(request, test_root)
         yield work, backup_root, result
     finally:
         if previous_seed is None:
@@ -184,13 +187,17 @@ def built_site_template(tmp_path_factory):
 
 
 @pytest.fixture()
-def built_site(tmp_path_factory, built_site_template):
+def built_site(request, tmp_path_factory, built_site_template):
+    from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+
     template_work, template_backup_root, result = built_site_template
     test_root = tmp_path_factory.mktemp("dispatches-site-copy")
+    register_fixture_root(request, test_root, parent_group="built-site-template")
     work = test_root / "repo"
     backup_root = test_root / "dispatches-bluefern-backups"
     shutil.copytree(template_work, work)
     shutil.copytree(template_backup_root, backup_root)
+    mark_fixture_setup_complete(request, test_root)
     return work, backup_root, result
 
 

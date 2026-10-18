@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261018T154612-0700-r12",
+  "scheduled_for": "2026-10-18T15:45:22-07:00",
+  "started_at": "2026-10-18T15:46:12-07:00",
+  "completed_at": "2026-10-18T22:48:21.505Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-18T14:47:00-07:00",
+    "end_at": "2026-10-18T22:48:21.505Z",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line national collector remains authoritative.",
+    "CMS Public Notices checked first (https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices): latest posted notice dated 2026-10-09, Tender Home Health, CA; no new CMS action identified in this search window.",
+    "Completed exactly 12 targeted additional searches across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency service, ambulance/air-medical base closure, and effective essential-service restoration.",
+    "No new U.S. or territorial healthcare-access change was confirmed as first reported or effectively changed within the 2026-10-18 14:47–15:48 PDT observation window. This is not proof no change occurred; news indexing may lag.",
+    "Excluded old/duplicate developments (including Dennys River Volunteer Ambulance Service announcement from several days earlier), Canadian ED reopenings, non-service proposals, and unrelated reports.",
+    "Bounded national supplementary search; broader production coverage is authoritative."
+  ]
+}

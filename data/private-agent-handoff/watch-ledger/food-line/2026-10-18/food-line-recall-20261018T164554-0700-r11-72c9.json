@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T164554-0700-r11-72c9",
+  "scheduled_for": "2026-10-18T16:45:54-07:00",
+  "started_at": "2026-10-18T16:50:14-07:00",
+  "completed_at": "2026-10-18T23:51:44.194+00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "started_after": "2026-10-18T15:43:00-07:00",
+    "through": "2026-10-18T23:51:44.194+00:00",
+    "timezone": "America/Los_Angeles",
+    "scope": "United States",
+    "prior_check_basis": "Prior hourly watch completed approximately 15:43 PT; window conservatively begins then. Search results checked for genuinely new publication/event timestamps."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_coverage_status": "SUCCESS",
+    "targeted_search_count": 12,
+    "search_failures": 0,
+    "new_qualifying_signals_verified": 0,
+    "priority_classes": [
+      "sole_last_full_service_grocery_disruption",
+      "emergency_distribution_weather_damage_cancellation",
+      "abrupt_pantry_food_bank_access_loss",
+      "official_snap_wic_assistance_immediate_interruption"
+    ],
+    "sources": [
+      "fresh local news",
+      "official agency/provider notices",
+      "government notices"
+    ],
+    "exclusions": [
+      "older incidents",
+      "routine closures without sole/full-service evidence",
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine promotion",
+      "generic inflation stories",
+      "duplicates"
+    ],
+    "search_notes": "12 targeted web searches using a one-day recency filter and October 18, 2026 contextual terms. Returned examples included Spencer NY (Sep. 2026), Arvada CO (Oct. 2026 planned chain exit, but alternatives remain), and Ruby's Pantry (Apr. 2026), all excluded as pre-window or otherwise nonqualifying. No independently verified new disruption since previous hourly check. Search indexing and publication lag limit nationwide detection; production collector remains authoritative.",
+    "production_collection_authoritative": true,
+    "persistence_status": "COMMITTED_ON_SUCCESS"
+  }
+}

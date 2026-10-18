@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T004451-0700-r11",
+  "scheduled_for": "2026-10-18T00:44:51-07:00",
+  "started_at": "2026-10-18T00:48:27-07:00",
+  "completed_at": "2026-10-18T00:50:34-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-17T23:43:26-07:00",
+    "end": "2026-10-18T00:50:34-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources": [
+      "OCHA OPT homepage checked directly: latest listed update October 9, 2026; no newly listed report within observation window. https://www.ochaopt.org/",
+      "WHO global OPT crisis page checked directly: no date-verified new Gaza development in this observation window. https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "WHO Eastern Mediterranean OPT page https://www.emro.who.int/opt/: HTTP 502; regional coverage incomplete."
+    ],
+    "additional_targeted_searches": 12,
+    "additional_coverage": [
+      "Casualties, strikes, displacement, infrastructure, health capacity, medical evacuation, fuel, crossings, food and water, aid, detention/hostages, negotiations and ceasefire covered in bounded searches of official and established reporting.",
+      "UN News domain search blocked by robots.txt; other humanitarian and established reporting checked.",
+      "Previously identified October 17 casualty reporting excluded as old/duplicate. A Reuters Connect photograph attributed to Anadolu records an October 17 Deir al-Balah strike but does not establish a new post-check development.",
+      "October 17 West Bank settler violence excluded as outside Gaza geography.",
+      "No source supplied verified publication/event timing placing a qualifying new development after the prior check."
+    ],
+    "assessment": "Supplementary recall only. No new independently traceable, nonduplicate in-Gaza development verified during window. WHO regional and UN News access failures degraded coverage; other source checks and 12 targeted searches completed. Production remains authoritative; no publication, approval or schedule change."
+  }
+}

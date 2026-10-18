@@ -4,6 +4,7 @@ import uuid
 from pathlib import Path
 
 import pytest
+from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
 
 from bluefern_dispatches.generator import build_site
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
@@ -19,6 +20,37 @@ from scripts.run_gaza_dispatch import (
     render_gaza_no_update_from_preserved_artifacts,
     run_gaza_dispatch,
 )
+
+
+def test_date_only_published_at_does_not_create_midnight_source_window() -> None:
+    report = build_gaza_collection_timing_metadata(
+        [{"source_record_id": "date-only", "published_at": "2026-10-17", "retrieved_at": "2026-10-18T01:53:52Z"}],
+        "2026-10-17",
+        "2026-10-18T02:00:00Z",
+    )
+    assert report["source_window_start_utc"] is None
+    assert report["source_window_end_utc"] is None
+
+
+@pytest.mark.parametrize("published_at", ["", "2026-10-17Tnot-a-time"])
+def test_absent_or_malformed_published_at_does_not_create_source_window(published_at: str) -> None:
+    report = build_gaza_collection_timing_metadata(
+        [{"source_record_id": "invalid", "published_at": published_at, "retrieved_at": "2026-10-18T01:53:52Z"}],
+        "2026-10-17",
+        "2026-10-18T02:00:00Z",
+    )
+    assert report["source_window_start_utc"] is None
+    assert report["source_window_end_utc"] is None
+
+
+def test_precise_published_at_remains_in_source_window() -> None:
+    report = build_gaza_collection_timing_metadata(
+        [{"source_record_id": "precise", "published_at": "2026-10-17T13:03:00Z", "retrieved_at": "2026-10-18T01:53:52Z"}],
+        "2026-10-17",
+        "2026-10-18T02:00:00Z",
+    )
+    assert report["source_window_start_utc"] == "2026-10-17T13:03:00Z"
+    assert report["source_window_end_utc"] == "2026-10-17T13:03:00Z"
 
 
 def test_written_palestinian_development_survives_unrelated_audio_sidebar() -> None:

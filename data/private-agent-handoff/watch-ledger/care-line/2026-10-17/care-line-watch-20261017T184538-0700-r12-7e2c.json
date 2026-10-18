@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261017T184538-0700-r12-7e2c",
+  "scheduled_for": "2026-10-17T18:45:22-07:00",
+  "started_at": "2026-10-17T18:45:38-07:00",
+  "completed_at": "2026-10-17T18:46:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-17T17:52:00-07:00",
+    "end": "2026-10-17T18:46:46-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous hourly recall completion through current observation; older source material inspected solely to identify newly surfaced changes and duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "source_order": "CMS Public Notices first, followed by 12 targeted supplementary searches.",
+    "cms_public_notices": {
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-09",
+      "latest_notice_provider": "Tender Home Health",
+      "new_notices_in_window": 0
+    },
+    "targeted_search_count": 12,
+    "searched_service_lines": [
+      "hospital and ED",
+      "primary care",
+      "maternity",
+      "ground ambulance",
+      "dialysis",
+      "oncology",
+      "behavioral health",
+      "rural emergency care",
+      "air ambulance",
+      "US territories",
+      "essential-service restorations"
+    ],
+    "screened_out": [
+      "older and previously surfaced closures and reopenings",
+      "speculative or not-yet-effective proposals",
+      "non-US changes",
+      "general healthcare commentary",
+      "articles without a newly verified service-access change"
+    ],
+    "primary_collector": "Production national collection remains authoritative; this is a supplementary recall watch.",
+    "result": "No independently confirmed new, nonduplicate, concrete qualifying US or territory healthcare access development in the observation window."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261018T124047-0700-r12-b70d",
+  "scheduled_for": "2026-10-18T12:40:47-07:00",
+  "started_at": "2026-10-18T12:40:47-07:00",
+  "completed_at": "2026-10-18T12:42:03-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T11:48:00-07:00",
+    "end": "2026-10-18T12:42:03-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only. Production Care Line collection remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Most recent notice listed is October 9, 2026 (Tender Home Health, California); no new notice in this search window.",
+    "Exactly 12 additional targeted web searches completed, covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency care, ambulance, air medical bases, concrete restoration/reopening, US territories, and government notices.",
+    "No verifiable new U.S. or territory essential healthcare access loss/restoration with an announcement or effective change in the observation window; results were older, outside US/territories, non-concrete, or nonqualifying. No editorial review, approval, publication, or schedule mutation."
+  ]
+}

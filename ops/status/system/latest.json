@@ -195,34 +195,25 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "DEGRADED",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "0cf10eedc62ca1dc5814586144098e9114aa5fc6",
       "debug_summary": {
         "aggregate_degradation_required": null,
-        "aggregate_status": "DEGRADED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 1,
-        "attention_tasks": [
-          {
-            "artifact_id": "20261018T025523Z-source-watch.json",
-            "classification": "completed_with_exclusions",
-            "exit_code": 0,
-            "failure_stage": "source_watch",
-            "status": "DEGRADED",
-            "task_key": "food_line_source_watch"
-          }
-        ],
+        "attention_task_count": 0,
+        "attention_tasks": [],
         "coverage_caveat_only": null,
         "external_access_restriction_count": null,
         "failed_source_count": null,
         "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
-        "primary_classification": "completed_with_exclusions",
-        "primary_failure_stage": "source_watch",
+        "primary_classification": null,
+        "primary_failure_stage": null,
         "primary_layer": "EDITORIAL_HANDOFF",
-        "primary_task_key": "food_line_source_watch",
-        "primary_task_status": "DEGRADED",
+        "primary_task_key": null,
+        "primary_task_status": null,
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
         "private_review_max_age_hours": 99,
@@ -240,7 +231,7 @@
         "unclassified_source_failure_count": null
       },
       "human_action_required": true,
-      "latest_receipt_path": "logs/food-line/current-intake/2026-10-17/20261018T025528Z-current-intake.json",
+      "latest_receipt_path": "logs/food-line/current-intake/2026-10-17/20261018T032556Z-current-intake.json",
       "migration_status": "MIGRATED",
       "next_human_action": "Review 4 Food Line items for 2026-10-14.",
       "private_review_backlog": {
@@ -558,7 +549,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-18T03:15:03.370729Z",
+  "exported_at": "2026-10-18T03:26:02.160584Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza"

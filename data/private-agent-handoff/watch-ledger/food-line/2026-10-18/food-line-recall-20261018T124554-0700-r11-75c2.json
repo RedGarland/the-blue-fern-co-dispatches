@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T124554-0700-r11-75c2",
+  "scheduled_for": "2026-10-18T12:45:54-07:00",
+  "started_at": "2026-10-18T12:50:16-07:00",
+  "completed_at": "2026-10-18T12:52:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "started_after": "2026-10-18T09:45:13-07:00",
+    "through": "2026-10-18T12:50:54-07:00",
+    "timezone": "America/Los_Angeles",
+    "scope": "United States",
+    "prior_check_basis": "Last visible previous run finished at 09:45:13 PT; conservatively cover elapsed interval because later verified heartbeats are unavailable."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_coverage_status": "SUCCESS",
+    "targeted_search_count": 12,
+    "search_failures": 0,
+    "new_qualifying_signals_verified": 0,
+    "priority_classes": [
+      "sole_last_full_service_grocery_disruption",
+      "emergency_distribution_weather_damage_cancellation",
+      "abrupt_pantry_food_bank_access_loss",
+      "official_snap_wic_assistance_immediate_interruption"
+    ],
+    "sources": [
+      "local news",
+      "official/provider notices",
+      "government notices"
+    ],
+    "exclusions": [
+      "older incidents",
+      "non-sole stores",
+      "donation drives",
+      "resource guides",
+      "routine promotion",
+      "generic inflation",
+      "duplicates"
+    ],
+    "search_notes": "Twelve targeted, recent/date-limited web searches; many results were older incidents or unrelated closures; no newly verified qualifying incident surfaced in the bounded search window. Search results do not establish comprehensive nationwide absence.",
+    "production_collection_authoritative": true,
+    "persistence_status": "COMMITTED_ON_SUCCESS"
+  }
+}

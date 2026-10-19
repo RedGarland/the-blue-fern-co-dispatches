@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261019T004522-0700-r12",
+  "scheduled_for": "2026-10-19T00:45:22-07:00",
+  "started_at": "2026-10-19T00:47:54-07:00",
+  "completed_at": "2026-10-19T07:49:00.854Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T23:55:00-07:00",
+    "end": "2026-10-19T00:47:54-07:00",
+    "basis": "Since the previous hourly check ending approximately 2026-10-18 23:55 PDT; overlap in search publication windows to account for indexing latency."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary national recall watch only; production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-10-09",
+      "result": "No notice dated within the observation window; newest displayed notice Tender Home Health, CA."
+    },
+    "additional_targeted_searches": 12,
+    "search_categories": [
+      "hospital/ED",
+      "maternity",
+      "rural emergency",
+      "ambulance service",
+      "air medical",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "primary care",
+      "reopening/restoration",
+      "U.S. territories",
+      "official site notice"
+    ],
+    "search_result": "No source substantiated a newly announced qualifying access change since the last check. Older closures, previously indexed developments, foreign events, planned restorations without effective resumption, proposed changes, and commentary excluded.",
+    "limitations": [
+      "Search indexing delays and limited local reporting may obscure recently announced developments.",
+      "Searches are supplementary, not an exhaustive primary collection."
+    ],
+    "source_refs": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T074826-0700-r11",
+  "scheduled_for": "2026-10-19T07:44:51-07:00",
+  "started_at": "2026-10-19T07:48:26-07:00",
+  "completed_at": "2026-10-19T07:50:10-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T06:59:43-07:00",
+    "end": "2026-10-19T07:50:10-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT and WHO checked first. OCHA 2026-10-19 report https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026 covers earlier dates and facts already surfaced in prior watches.",
+    "WHO global emergency URL returned 404 and WHO EMRO report index returned 502; WHO 24 September remarks remain available. Health coverage degraded.",
+    "12 further targeted searches examined civilian impacts, displacement, aid, food, water, hospitals, ambulances, evacuations, fuel, crossings, detention, hostages, ceasefire and infrastructure.",
+    "WFP food-aid reductions reported 19 October and OCHA flood, water, child-protection and patient-evacuation statistics previously surfaced; no verified new nonduplicate item since 06:59:43 PDT.",
+    "This supplementary recall watch did not change primary Gaza production, approvals, public content, or scheduling."
+  ]
+}

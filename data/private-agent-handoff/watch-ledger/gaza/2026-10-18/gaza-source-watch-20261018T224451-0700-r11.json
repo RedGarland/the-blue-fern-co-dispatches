@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T224451-0700-r11",
+  "scheduled_for": "2026-10-18T22:44:51-07:00",
+  "started_at": "2026-10-18T22:40:43-07:00",
+  "completed_at": "2026-10-18T22:42:01-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T22:01:31-07:00",
+    "end": "2026-10-18T22:42:01-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production collection and publication remain authoritative.",
+    "OCHA OPT checked first. Its homepage latest visible update was dated 2026-10-09.",
+    "WHO checked next. Global oPt emergency page returned 404 and EMRO health-emergency page was inaccessible; direct healthcare coverage incomplete.",
+    "Performed 12 additional targeted searches across civilian casualties, displacement, aid, food, water, health facilities, ambulances, medical evacuations, crossings, infrastructure, detention, hostages, ceasefire, and documented civilian impact from military operations.",
+    "No in-window qualifying source-traceable nonduplicate Gaza development verified. Search results were largely older or unrelated.",
+    "The previously recorded 2026-10-18 AP report concerning WFP reductions was excluded as duplicate (https://apnews.com/article/793087dde3cb4435c6b771bae28faff3).",
+    "No production, publication, approval or schedule changes."
+  ]
+}

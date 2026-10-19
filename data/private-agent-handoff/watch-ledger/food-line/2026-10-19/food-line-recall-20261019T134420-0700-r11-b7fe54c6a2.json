@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261019T134420-0700-r11-b7fe54c6a2",
+  "scheduled_for": "2026-10-19T12:45:54-07:00",
+  "started_at": "2026-10-19T13:44:20-07:00",
+  "completed_at": "2026-10-19T13:46:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-19T12:43:19-07:00",
+    "end_at": "2026-10-19T13:46:30-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Supplementary bounded recall since last reported hourly search; older reports excluded except already-known findings used for deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "disruption_classes_checked": [
+      "only/sole/last/full-service grocery store loss or closure",
+      "emergency food distribution cancellation due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "unique_qualifying_signals": 0,
+    "excluded_examples": [
+      {
+        "name": "Mercy Soup Kitchen, Wyandanch NY",
+        "reason": "Duplicate of preceding 12:43 PT finding, not a new signal"
+      },
+      {
+        "name": "Spencer NY only grocery store fire",
+        "reason": "September 2026 historic report, outside observation window"
+      },
+      {
+        "name": "Stop & Shop and Hannaford cybersecurity-related digital shopping interruption",
+        "reason": "October 12 event, stores remain open; outside specified high-value miss classes"
+      }
+    ],
+    "freshness_caveat": "Search engine results overwhelmingly historical; absence of verified results does not prove no new disruption nationwide.",
+    "primary_collector_authority": "Production Food Line collector remains authoritative; not reconciled against production results.",
+    "editorial_state": "no approval, publication, schedule or task state changes"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T004451-0700-r11",
+  "scheduled_for": "2026-10-19T00:44:51-07:00",
+  "started_at": "2026-10-19T00:50:57-07:00",
+  "completed_at": "2026-10-19T00:52:32-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T23:53:46-07:00",
+    "end": "2026-10-19T00:52:32-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT home news checked first; newest visible update 2026-10-09.",
+    "WHO global URL returned 404; WHO regional OPT URL returned 502. Direct health-source coverage limited.",
+    "12 additional targeted searches completed covering casualty, displacement, aid, food, water, health services, infrastructure, crossings, detention, ceasefire and military developments.",
+    "Previous hourly search ended at 2026-10-18T23:53:46-07:00.",
+    "WFP cuts reported October 19 already identified in prior watch and excluded as duplicate.",
+    "No new verified nonduplicate development found within the window.",
+    "Supplementary watch only; production and authorization unchanged."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261019T034635-0700-r11-7d1b",
+  "scheduled_for": "2026-10-19T03:45:54-07:00",
+  "started_at": "2026-10-19T03:46:35-07:00",
+  "completed_at": "2026-10-19T03:47:10-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-19T02:47:17-07:00",
+    "end_at": "2026-10-19T03:47:10-07:00",
+    "prior_check_verification": "Prior local watch began at 02:47:17 PDT and completed at 02:49:48 PDT; conservative overlap includes the prior check to avoid a gap. Previous GitHub heartbeat was not persisted."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_status": "SUCCESS",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "new_qualifying_findings": 0,
+    "focus": [
+      "only/sole/last/full-service grocery store loss",
+      "disaster-canceled emergency food distributions",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruptions with immediate access consequences"
+    ],
+    "exclusions": [
+      "Spencer NY grocery store fire reported September 14, 2026 (outside observation window)",
+      "Arvada CO Safeway exit reported October 14, 2026; other grocery options remain and report predates window",
+      "Ruby's Pantry network closure reported April 1, 2026 (outside window)",
+      "October-November 2025 SNAP/WIC shutdown notices (outside window)",
+      "non-US Baker Lake food bank fire (excluded geographically)"
+    ],
+    "bounded_query_context": "12 targeted queries across grocery loss (3), disaster-canceled distributions (3), abrupt pantry/food-bank access loss (2), and official SNAP/WIC/EBT benefit interruptions (4); time-limited web search, with publication dates checked for returned candidates.",
+    "search_limitations": "Search indexing may lag; zero findings means none verified in this bounded supplementary check, not exhaustive nationwide absence.",
+    "production_collection_authoritative": true,
+    "no_publication_review_or_schedule_changes": true
+  }
+}

@@ -2029,7 +2029,14 @@ def render_archive_index_rss(
         detail_artifacts=[],
     )
     if pages_repo is not None:
-        reconcile_gaza_public_editions(root, site_root, dry_run=dry_run, wrote=wrote, pages_repo=pages_repo)
+        reconcile_gaza_public_editions(
+            root,
+            site_root,
+            dry_run=dry_run,
+            wrote=wrote,
+            pages_repo=pages_repo,
+            max_public_date=edition_date,
+        )
     dates = discover_edition_dates(site_root, pages_repo=pages_repo)
     if include_current and edition_date not in dates:
         dates = sorted([*dates, edition_date], reverse=True)

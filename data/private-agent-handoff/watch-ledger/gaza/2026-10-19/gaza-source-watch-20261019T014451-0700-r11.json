@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T014451-0700-r11",
+  "scheduled_for": "2026-10-19T01:44:51-07:00",
+  "started_at": "2026-10-19T01:44:35-07:00",
+  "completed_at": "2026-10-19T01:46:47-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T00:52:32-07:00",
+    "end": "2026-10-19T01:46:47-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT was checked first, via targeted site search and the official homepage; newest homepage news item was dated October 9, 2026. No verified new Gaza update within the observation window.",
+    "WHO was checked first, via targeted WHO site search and official global/regional pages; the regional OPT situation-report page returned HTTP 502 and the global emergency landing-page path returned HTTP 404. WHO healthcare source verification is incomplete.",
+    "12 additional targeted searches (beyond the initial OCHA/WHO checks) were completed, covering civilian casualties, displacement, aid/food/water access, healthcare/medical evacuation/fuel, infrastructure, crossings, detention/hostages, ceasefire and military operations with documented civilian effects.",
+    "Search results were mostly stale or outside Gaza; Reuters' October 19 WFP food-assistance cuts were already identified by the preceding watch and excluded as duplicate. AP October 16 commercial goods interruption was outside this watch's novelty window.",
+    "No additional traceable, nonduplicate Gaza development with support sufficient to establish novelty since the previous check was found.",
+    "Previous verified hourly heartbeat completed October 19, 2026 00:52:32 PDT.",
+    "Supplementary recall watch only; no production, publishing, approval or schedule changes."
+  ]
+}

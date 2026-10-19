@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261018T194522-0700",
+  "scheduled_for": "2026-10-18T19:45:22-07:00",
+  "started_at": "2026-10-18T19:43:40-07:00",
+  "completed_at": "2026-10-18T19:44:58-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-18T18:51:10-07:00",
+    "end_at": "2026-10-18T19:44:58-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production national Care Line collector remains authoritative.",
+    "CMS Public Notices checked first (https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices); newest listed notice 2026-10-09 Tender Home Health (CA), preceding this search window.",
+    "Twelve additional targeted web searches conducted, covering hospital/ED, maternity, rural emergency, ambulance/air-medical, dialysis, behavioral health, oncology, primary care, reopening, state official notices, and U.S. territories.",
+    "No qualifying independently verified new healthcare-access development first reported within 2026-10-18T18:51:10-07:00 to 2026-10-18T19:44:58-07:00. Search results mainly older coverage or out-of-scope developments.",
+    "Excluded 2026-10-16 Winchester Family Medicine clinic (NH) closure announcement as outside the new-check window; no repeat finding.",
+    "No publication, editorial authorization, changes to production collection, or changes to recurring task."
+  ]
+}

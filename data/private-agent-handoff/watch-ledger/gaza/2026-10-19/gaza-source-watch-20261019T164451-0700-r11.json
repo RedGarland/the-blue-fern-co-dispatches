@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T164451-0700-r11",
+  "scheduled_for": "2026-10-19T16:44:51-07:00",
+  "started_at": "2026-10-19T16:44:10-07:00",
+  "completed_at": "2026-10-19T16:45:32-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T15:44:51-07:00",
+    "end": "2026-10-19T16:45:32-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall-only run; daily production Gaza collector and publisher remain authoritative; no approval, publication, or schedule changes.",
+    "OCHA OPT checked first; https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026 is dated 19 October 2026 but describes developments principally 29 September–12 October, already surfaced and excluded as duplicates. Content retrievable during this run.",
+    "WHO checked second; indexed WHO and WHO EMRO material showed no new in-window Gaza health report; direct WHO EMRO situation-report landing resource returned an internal retrieval error, limiting verification of medical evacuations, hospital functioning, transport and fuel.",
+    "Twelve additional bounded targeted searches performed after OCHA/WHO: Reuters/AP civilian casualty reports; UN civilian impact; WHO hospitals and evacuation; UNRWA displacement; WFP food access; UNICEF water/children; ICRC hostages and medical transport; MSF healthcare; crossings and trucks; ceasefire negotiations; late Gaza casualty updates; ReliefWeb humanitarian developments.",
+    "Earlier October 19 Reuters report on gradual commercial shipment coordination and at least five reported Gaza deaths published at 15:48 UTC (08:48 PDT), well before observation window; no independent proof that shipments restarted within window. https://www.reuters.com/world/middle-east/israel-resume-commercial-shipments-gaza-after-hamas-fee-dispute-2026-10-19/",
+    "AP's October 19 rolling Mideast roundup describes four Gaza deaths in strikes, including two 17-year-olds in Khan Younis; publication/update time for the Gaza subsection could not be verified as within window, and casualties may overlap earlier Reuters report, so not classified as new. https://apnews.com/article/mideast-israel-palestinians-houthis-iran-october-19-2026-03d81c6dd9cf107482392105c21fc1e4",
+    "WFP October 19 funding-related reduction to food aid for approximately 500,000 Gazans previously surfaced, excluded as a recycled development.",
+    "No verified new nonduplicate in-window Gaza development; absence of verification is not evidence none occurred. Research status DEGRADED because direct WHO regional resource access failed.",
+    "Production and editorial publication approval, scheduling, and automation state unchanged."
+  ]
+}

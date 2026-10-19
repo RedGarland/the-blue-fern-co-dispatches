@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T194451-0700-r11",
+  "scheduled_for": "2026-10-18T19:44:51-07:00",
+  "started_at": "2026-10-18T19:46:26-07:00",
+  "completed_at": "2026-10-18T19:47:33-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T18:47:00-07:00",
+    "end": "2026-10-18T19:47:33-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Gaza collector and publisher remain authoritative and unchanged.",
+    "OCHA OPT homepage checked first (https://www.ochaopt.org/); latest listed update was October 9, 2026; no in-window new OCHA report observed.",
+    "WHO Eastern Mediterranean homepage checked second (https://www.emro.who.int/); request timed out. Direct regional healthcare coverage degraded.",
+    "Twelve additional targeted searches total (10 fast and 2 slow), covering civilian casualties, food/water assistance, healthcare and medical evacuation, displacement/infrastructure, crossings, detention/hostages, ceasefire and military operations affecting civilians.",
+    "Search results were predominantly older reports. The October 18 AP reporting about WFP reducing Gaza food support was already identified in an earlier watch and excluded as duplicate.",
+    "An October 18 Gaza City attack image caption on Reuters Connect surfaced, but it was marked around 18 hours earlier than this check and did not establish a new in-window development.",
+    "No sufficiently verified nonduplicate Gaza development was established since the prior 18:47 PDT check. Search engine publication-time precision remains a limitation.",
+    "No approval, publication, production, schedule or task-disable actions taken."
+  ]
+}

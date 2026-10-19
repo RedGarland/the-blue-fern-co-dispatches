@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261018T214451-0700-r11",
+  "scheduled_for": "2026-10-18T21:44:51-07:00",
+  "started_at": "2026-10-18T22:00:23-07:00",
+  "completed_at": "2026-10-18T22:01:31-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T20:48:29-07:00",
+    "end": "2026-10-18T22:01:31-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Gaza collection/publication is authoritative and unchanged.",
+    "Checked OCHA OPT and WHO first. OCHA OPT homepage (https://www.ochaopt.org/) showed October 9, 2026 as its latest visible news/update, with no new in-window Gaza item.",
+    "WHO global occupied Palestinian territory emergency page and WHO Eastern Mediterranean OPT health-emergencies page returned internal errors. Alternative WHO search results were dated September 24, 2026 or earlier. Direct WHO healthcare verification is incomplete.",
+    "Completed exactly 12 additional targeted web searches: six broad category-specific queries and six targeted publisher/source/category queries. Covered civilian casualties, displacement, aid/food/water access, healthcare/hospitals/ambulances/transport/fuel/medical evacuation, infrastructure, crossings, hostages/detention, ceasefire/negotiations, and military operations with documented civilian impact.",
+    "Previous independently verified heartbeat completed at 2026-10-18T20:48:29-07:00; anticipated 21:44:51 heartbeat file was absent at the specific expected path during precheck. Search covers from latest verified completion through this run.",
+    "AP October 18 article (https://apnews.com/article/mideast-israel-palestinians-houthis-october-18-2026-793087dde3cb4435c6b771bae28faff3) reiterated WFP reductions to 1.1 million recipients, previously recorded by an earlier Gaza watch; duplicate excluded.",
+    "Reuters Gaza commercial-goods interruption October 15 (https://www.reuters.com/world/middle-east/israel-says-commercial-goods-no-longer-entering-gaza-after-merchants-suspend-2026-10-15/) predated this search window and was excluded.",
+    "No fresh, source-traceable, nonduplicate in-Gaza development could be established within the observed window. Search indexing and missing direct WHO access limit negative-findings confidence.",
+    "No approvals, public postings, schedule changes, or production mutations performed."
+  ]
+}

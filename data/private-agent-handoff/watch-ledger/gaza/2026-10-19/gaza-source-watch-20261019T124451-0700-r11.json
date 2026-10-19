@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T124451-0700-r11",
+  "scheduled_for": "2026-10-19T12:44:51-07:00",
+  "started_at": "2026-10-19T12:47:21-07:00",
+  "completed_at": "2026-10-19T12:48:44-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T11:50:04-07:00",
+    "end": "2026-10-19T12:48:44-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall-only check; production Gaza daily collection, editorial approval and publication remain authoritative and unchanged.",
+    "OCHA OPT checked first: https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026 (published 2026-10-19, reporting principally 2026-09-29 through 2026-10-12); its displacement, water, healthcare and casualty findings were surfaced in earlier hourly checks and excluded as duplicate/recycled.",
+    "WHO checked second through site-restricted search and direct global emergency source; direct resource https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory returned HTTP 404, limiting direct healthcare coverage. Indexed WHO background did not establish a new in-window Gaza health development.",
+    "Exactly 12 subsequent targeted searches covered October 19 civilian casualties and Israeli operations, UN healthcare, WHO evacuations and hospitals, UNRWA displacement and aid, ICRC detainees/hostages and ambulances, WFP food aid, MSF, UNICEF water and children, ReliefWeb humanitarian reports, Gaza crossings and fuel, ceasefire negotiations, and infrastructure/civilian impacts.",
+    "Previously surfaced WFP reduction of monthly recipients from 1.6 million to 1.1 million excluded as duplicate; primary source https://www.wfp.org/videos/wfp-news-video-gaza-aid-cuts-forthemedia.",
+    "Reuters announcement to gradually resume commercial Gaza shipments and reporting of five deaths from strikes was published before the window; no verified within-window shipment resumption or independent new casualty incident. https://www.reuters.com/world/middle-east/israel-resume-commercial-shipments-gaza-after-hamas-fee-dispute-2026-10-19/",
+    "No new, independently attributable, nonduplicate Gaza civilian-impact, infrastructure, aid-access, displacement, or health-system development verified during this 2026-10-19 11:50:04–12:48:44 PDT window. This does not establish that no such event occurred.",
+    "No publication, approval, production, schedule, or automation-state change."
+  ]
+}

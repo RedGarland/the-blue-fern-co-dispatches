@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261019T055331-0700-r11-7c92a4",
+  "scheduled_for": "2026-10-19T05:45:54-07:00",
+  "started_at": "2026-10-19T05:53:31-07:00",
+  "completed_at": "2026-10-19T05:55:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-19T04:45:54-07:00",
+    "end_at": "2026-10-19T05:55:28-07:00",
+    "prior_check_verification": "Scheduled prior hourly slot used as boundary; prior run's durable completion could not be verified from current evidence."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "new_qualifying_findings": 0,
+    "focused_categories": [
+      "only/sole/last/full-service grocery store fire, loss, or closure",
+      "storm/flood/fire/outage/facility-damage cancellation of emergency food distributions",
+      "abrupt food pantry/food bank service closure or major access loss",
+      "new official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer NY only grocery store loss dated September 14; pre-existing."
+      },
+      {
+        "url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+        "reason": "October 7 cancellation of an October 10 distribution; outside this hourly window."
+      },
+      {
+        "url": "https://www.foodgatherers.org/foodresource/food-pantry-packard-health-main/2026-10-19/",
+        "reason": "Recurring calendar; older August closures and routine hours only, no new emergency reduction."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Previous-week Safeway chain exit in Arvada, not community's sole grocery store; other grocery options."
+      }
+    ],
+    "limitations": "Targeted web indexing is non-exhaustive and often returned older or evergreen pages; no verifiable newly reported disruption was located in this bounded check.",
+    "production_collection_authoritative": true,
+    "publication_or_review_actions": "none",
+    "scheduler_changes": "none"
+  }
+}

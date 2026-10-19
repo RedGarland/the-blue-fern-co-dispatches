@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T054451-0700-r11-8c2e97",
+  "scheduled_for": "2026-10-19T05:44:51-07:00",
+  "started_at": "2026-10-19T06:24:58-07:00",
+  "completed_at": "2026-10-19T06:27:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T04:51:33-07:00",
+    "end": "2026-10-19T06:27:58-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch; production collector/publisher remains authoritative.",
+    "OCHA OPT was checked first: 19 October 2026 report https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026 reviewed; its 29 September–12 October retrospective findings were already surfaced by the preceding watch, not counted again.",
+    "WHO checked first: 24 September remarks accessible, but WHO regional oPt index timed out and WHO emergency page retrieval was unavailable, reducing healthcare coverage.",
+    "Twelve additional targeted searches checked casualties, displacement, aid and food/water, medical capacity and evacuation, crossings, infrastructure, hostage/detention, ceasefire and military effects; reports from UNICEF, UNRWA, WFP, ICRC, PRCS, Reuters/AP were considered.",
+    "The 19 October WFP reductions and earlier OCHA data are duplicates; no verified nonduplicate discovery since 04:51 PDT.",
+    "Previous hourly check's four OCHA findings were not persisted in its own ledger due to a write failure; they were excluded from this hour's findings.",
+    "No public write, approval, scheduling change, or production mutation."
+  ]
+}

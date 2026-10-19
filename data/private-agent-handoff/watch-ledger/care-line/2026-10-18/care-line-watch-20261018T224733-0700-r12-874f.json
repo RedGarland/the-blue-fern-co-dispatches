@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261018T224733-0700-r12-874f",
+  "scheduled_for": "2026-10-18T22:45:22-07:00",
+  "started_at": "2026-10-18T22:47:33-07:00",
+  "completed_at": "2026-10-18T22:49:04-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-18T21:50:00-07:00",
+    "end_at": "2026-10-18T22:49:04-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; primary national production Care Line collector remains authoritative.",
+    "CMS Public Notices checked first. Initial official-site lookup failed but recovered by locating and checking https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Most recent listed notice remains 2026-10-09 Tender Home Health (CA); no new notice in the observation window.",
+    "Exactly 12 additional targeted searches checked hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency access, ambulances, air medical, reopening/restoration, official government notices, and U.S. territories. Results returned older items, broad trends and non-U.S. matches; no newly qualifying nonduplicate U.S./territory access changes confirmed during this window.",
+    "DEGRADED because initial CMS lookup and direct access attempts failed; subsequent official notice search succeeded. No verified positive findings.",
+    "No approval, publication, production collector modification, schedule change or task disabling."
+  ]
+}

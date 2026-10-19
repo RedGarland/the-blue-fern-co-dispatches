@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T224554-0700-r11-e3c82d1f",
+  "scheduled_for": "2026-10-18T22:45:54-07:00",
+  "started_at": "2026-10-18T22:50:42-07:00",
+  "completed_at": "2026-10-18T22:51:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T21:45:54-07:00",
+    "end": "2026-10-18T22:51:43-07:00",
+    "prior_observation_note": "Hourly scheduled boundary used; the last completed check visible in this conversation was 2026-10-18T19:48:47-07:00. Targeted queries included date-wide results to minimize missed publications."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only; the nationwide production Food Line collector remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_coverage_status": "SUCCESS",
+    "search_failures": 0,
+    "categories_checked": [
+      "only/sole/last/full-service community grocery-store closure/fire/disaster",
+      "weather/disaster/facility-caused canceled emergency food distributions",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruptions with immediate impacts"
+    ],
+    "result": "No new U.S. food-access disruption qualifying in the specified observation window independently verified. Search indexing lag may conceal recent local announcements.",
+    "notable_exclusions": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Relevant class, but September 14 incident is outside window."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "October 13 story concerns only Safeway brand location in Arvada, where other groceries remain; neither new nor only community grocery."
+      },
+      {
+        "url": "https://www.ajc.com/things-to-do/2026/01/winter-storm-threat-forces-atlanta-cancellations-closures-including-aquarium/",
+        "reason": "Food distribution postponement due to winter weather occurred January 2026, outside window."
+      }
+    ],
+    "approval_publication_schedule_mutations": "none"
+  }
+}

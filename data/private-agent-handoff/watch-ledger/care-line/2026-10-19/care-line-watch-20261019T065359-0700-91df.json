@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261019T065359-0700-91df",
+  "scheduled_for": "2026-10-19T06:45:22-07:00",
+  "started_at": "2026-10-19T06:53:59-07:00",
+  "completed_at": "2026-10-19T06:56:20-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T05:52:00-07:00",
+    "end": "2026-10-19T06:56:20-07:00",
+    "basis": "Since the prior hourly recall check ending approximately 05:52 PDT, with overlapping indexing lookback."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Care Line recall watch; national production collector remains authoritative.",
+    "CMS Public Notices checked first: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; latest posted notice dated 2026-10-09 (Tender Home Health, California); none added within search window.",
+    "Exactly 12 additional targeted search queries completed across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural services, ground/air ambulance services, restorations, and U.S. territories.",
+    "No confirmed newly published qualifying U.S./territorial service-access loss or concrete restoration since the previous check. Older events, proposals, background articles, foreign events, and ownership-only stories excluded.",
+    "Search indexes and individual local notices may lag; this bounded recall is not an exhaustive audit.",
+    "No approval, publication, schedule change, or disabling performed."
+  ]
+}

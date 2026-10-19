@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T084451-0700-r11",
+  "scheduled_for": "2026-10-19T08:44:51-07:00",
+  "started_at": "2026-10-19T08:44:58-07:00",
+  "completed_at": "2026-10-19T08:46:13-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T07:50:10-07:00",
+    "end": "2026-10-19T08:46:13-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; authoritative daily Gaza production collection/publication is unchanged.",
+    "Prior successful watch heartbeat at 2026-10-19T07:50:10-07:00 was read from ops/watch-ledger, and earlier 05:44 and 06:44 check receipts were inspected for deduplication.",
+    "OCHA OPT checked first: the 2026-10-19 publication 'Humanitarian Situation Report | 15 October 2026' (https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026) covers primarily 2026-09-29 to 2026-10-12; flood risk, water production reduction, child protection points, 58 evacuations, humanitarian food declines and reported casualties predate this window and were previously surfaced. The listed 14 October Gaza impact snapshot was also identified as previously listed.",
+    "WHO checked first: targeted WHO site search surfaced no verified report newly published in this interval; attempted global oPt emergency page returned HTTP 404 and WHO EMRO oPt information resource timed out, reducing direct healthcare verification.",
+    "Exactly 12 additional targeted searches covered Reuters/AP conflict-related civilian harm, PRCS ambulance/hospital, UNICEF children/displacement, UNRWA shelter/aid, WFP food aid, Gaza water/WASH, Gaza crossings and medical evacuations, hostage/detention and ceasefire, UN official conflict reporting, UN News, health facility/ambulance/fuel/dialysis capacity and civilian impact of military operations.",
+    "UN News search was blocked by robots.txt. Available results were older, out of scope, or prior duplicates. The 2026-10-19 WFP food reductions (1.6 million to 1.1 million people reached), the 2026-10-15/16 commercial cargo disruption, and earlier OCHA retrospective reports were previously identified and excluded.",
+    "No new, independently traceable, nonduplicate in-Gaza development with adequate publication/discovery timing was verified in the 07:50:10–08:46:13 PDT window. Limited direct WHO and UN News access precludes claiming comprehensive absence.",
+    "No approval, publication, production content, schedule, or task-enabled-state mutation performed."
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T235317-0700-r11-1b8c",
+  "scheduled_for": "2026-10-18T23:45:54-07:00",
+  "started_at": "2026-10-18T23:53:17-07:00",
+  "completed_at": "2026-10-18T23:54:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T22:45:54-07:00",
+    "end": "2026-10-18T23:54:24-07:00",
+    "prior_observation_note": "Previous scheduled hourly boundary used as approximate lower bound; late-indexed source coverage may differ."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary targeted recall watch only; the production nationwide collector remains authoritative.",
+    "targeted_web_search_count": 12,
+    "search_failures": 0,
+    "search_coverage_status": "SUCCESS",
+    "categories_checked": [
+      "only/sole/last/full-service local grocery loss/closure/fire/disaster",
+      "canceled emergency food distributions caused by severe weather, outages, fire, or damage",
+      "abrupt food bank/pantry closure or major access reduction",
+      "official SNAP/WIC/other food-assistance interruption causing immediate access loss"
+    ],
+    "result": "No newly qualifying U.S. food-access disruption independently verified for this hourly window; results could lag indexing.",
+    "notable_exclusions": [
+      {
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Only Safeway chain location in Arvada, not the community's only grocer, and announced days earlier."
+      },
+      {
+        "url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "Qualifying category in general, but reported October 7 and canceled October 10, before the prior hourly window."
+      },
+      {
+        "url": "https://coastsidehope.org/calendar/month/2026-10/",
+        "reason": "Routine weekend pantry closure, not an emergency suspension."
+      },
+      {
+        "url": "https://mainstreetdollars.com/11397/snap-purchase-limits-take-effect-november-1-in-montana-north-dakota-south-carolina-and-virginia-where-sugary-drinks-can-no-longer-be-bought-with-benefits/",
+        "reason": "Planned purchasing eligibility changes taking effect November 1, not a new immediate interruption."
+      }
+    ],
+    "approval_publication_schedule_mutations": "none"
+  }
+}

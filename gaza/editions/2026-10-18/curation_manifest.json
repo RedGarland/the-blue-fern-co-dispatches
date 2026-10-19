@@ -1,0 +1,235 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-18-002",
+    "title": "Woman reportedly killed east of Khan Younis",
+    "summary": "WAFA, citing medical sources, reports that on October 18 Wijdan Kamal Shurrab, 28, was killed by Israeli gunfire on al-Sikka Street east of Khan Younis.",
+    "category": "ground_development",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-18-wafa-176006-sikka-khanyounis-r2"
+    ],
+    "source_ids": [
+      "gaza-2026-10-18-wafa-176006-sikka-khanyounis-r2"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176006"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-18-wafa-176006-sikka-khanyounis-r2",
+        "title": "Woman reportedly killed east of Khan Younis",
+        "url": "https://english.wafa.ps/Pages/Details/176006",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA, citing medical sources, reports that on October 18 Wijdan Kamal Shurrab, 28, was killed by Israeli gunfire on al-Sikka Street east of Khan Younis.",
+        "event_date": "2026-10-18",
+        "location": "al-Sikka Street east of Khan Younis",
+        "development_type": "primary_report",
+        "affected_system": "ground_development",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-19T17:27:06.598161+00:00",
+    "relevance_terms_matched": [
+      "khan younis"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "ground_development",
+    "location": "al-Sikka Street east of Khan Younis",
+    "event_date": "2026-10-18",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-18-003",
+    "title": "Drone strike reported west of Gaza City",
+    "summary": "WAFA, citing medical sources, reports that on October 18 an Israeli drone strike on al-Rashid Street in al-Shalihat west of Gaza City left at least one person reportedly killed and several injured.",
+    "category": "ground_development",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-18-wafa-176010-shalihat-drone-r2"
+    ],
+    "source_ids": [
+      "gaza-2026-10-18-wafa-176010-shalihat-drone-r2"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176010"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-18-wafa-176010-shalihat-drone-r2",
+        "title": "Drone strike reported west of Gaza City",
+        "url": "https://english.wafa.ps/Pages/Details/176010",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA, citing medical sources, reports that on October 18 an Israeli drone strike on al-Rashid Street in al-Shalihat west of Gaza City left at least one person reportedly killed and several injured.",
+        "event_date": "2026-10-18",
+        "location": "al-Rashid Street, al-Shalihat, west of Gaza City",
+        "development_type": "primary_report",
+        "affected_system": "ground_development",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-19T17:27:06.598161+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "ground_development",
+    "location": "al-Rashid Street, al-Shalihat, west of Gaza City",
+    "event_date": "2026-10-18",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-18-001",
+    "title": "Funerals reported in al-Daraj on October 18",
+    "summary": "WAFA reports that large crowds attended funerals in Gaza City for remains recovered from rubble in al-Daraj. Caveat: the source does not specify when the remains were recovered or when those people died.",
+    "category": "ground_development",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-18-wafa-176004-daraj-recovery-r2"
+    ],
+    "source_ids": [
+      "gaza-2026-10-18-wafa-176004-daraj-recovery-r2"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176004"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-18-wafa-176004-daraj-recovery-r2",
+        "title": "Funerals reported in al-Daraj on October 18",
+        "url": "https://english.wafa.ps/Pages/Details/176004",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reports that large crowds attended funerals in Gaza City for remains recovered from rubble in al-Daraj. Caveat: the source does not specify when the remains were recovered or when those people died.",
+        "event_date": "2026-10-18",
+        "location": "al-Daraj, Gaza City",
+        "development_type": "primary_report",
+        "affected_system": "ground_development",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-19T17:27:06.598161+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "ground_development",
+    "location": "al-Daraj, Gaza City",
+    "event_date": "2026-10-18",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

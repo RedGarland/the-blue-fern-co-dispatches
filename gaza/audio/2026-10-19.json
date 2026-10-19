@@ -1,0 +1,62 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-10-19",
+  "generated_at": "2026-10-19T13:03:52.514449Z",
+  "audio_status": "openai_tts_request_failed",
+  "audio_file": null,
+  "audio_url": null,
+  "audio_mime_type": null,
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": "openai_tts_request_failed",
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 921,
+  "tts_input_word_count": 151,
+  "tts_story_count": 3,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": null,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-10-19T13:03:52.514418Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-10-19-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-19/",
+  "script_text": "This is the Gaza Dispatch audio briefing for October 19, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Cuts force World Food Programme to end support for half a million Palestinians in Gaza. Two-thirds of population face crisis levels of food insecurity and 200,000 people are in danger of famine. This was reported by The Guardian.\n\n2. Funding shortages force World Food Programme to cut aid to Gaza. The number of people helped by the UN agency in the Palestinian territory will drop by about a third - from 1.6 million to 1.1 million. This was reported by BBC News.\n\n3. WFP cuts aid to \u200c500,000 Palestinians in Gaza amid funding shortages. The UN agency says funding shortages threaten to reverse 'modest and fragile' progress on food security. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the October 19, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 3,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-10-19-guardian-world-bfacce00b034",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/oct/19/cuts-world-food-programme-end-support-palestinians-gaza",
+      "title": "Cuts force World Food Programme to end support for half a million Palestinians in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-10-19-bbc-middle-east-e816a5ea7538",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cm79plrvpl4vo?at_medium=RSS&at_campaign=rss",
+      "title": "Funding shortages force World Food Programme to cut aid to Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-10-19-aljazeera-middle-east-9cc7512c71b2",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/10/19/wfp-cuts-aid-to-500000-palestinians-in-gaza-amid-funding-shortages?traffic_source=rss",
+      "title": "WFP cuts aid to \u200c500,000 Palestinians in Gaza amid funding shortages"
+    }
+  ]
+}

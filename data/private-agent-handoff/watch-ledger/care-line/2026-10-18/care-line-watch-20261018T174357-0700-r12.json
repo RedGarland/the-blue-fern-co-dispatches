@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261018T174357-0700-r12",
+  "scheduled_for": "2026-10-18T17:43:57-07:00",
+  "started_at": "2026-10-18T17:43:57-07:00",
+  "completed_at": "2026-10-18T17:45:07-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-18T16:45:04-07:00",
+    "end_at": "2026-10-18T17:45:07-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; authoritative national production Care Line collection unchanged.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; newest listed notice is 2026-10-09 Tender Home Health (California), predating this watch window.",
+    "Completed 12 additional targeted searches covering hospital/ED, maternity, rural, psychiatric, dialysis, oncology, primary care, EMS/air medical, reopening, government, and U.S. territories.",
+    "No newly confirmed qualifying healthcare-access development within the observation window. Excluded older stories including Roseland labor/delivery suspension announced approximately 2026-10-13, plans without current access effects, and results outside U.S. and territories.",
+    "Search tools returned useful coverage; no known search failures. This heartbeat records findings in a supplementary watch only."
+  ]
+}

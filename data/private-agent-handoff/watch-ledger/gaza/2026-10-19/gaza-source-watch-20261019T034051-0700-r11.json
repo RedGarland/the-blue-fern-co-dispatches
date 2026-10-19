@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T034051-0700-r11",
+  "scheduled_for": "2026-10-19T03:44:51-07:00",
+  "started_at": "2026-10-19T03:40:51-07:00",
+  "completed_at": "2026-10-19T03:42:44-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T02:49:00-07:00",
+    "end": "2026-10-19T03:42:44-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production daily Gaza collector/publisher remains authoritative.",
+    "OCHA OPT checked first. Its homepage now lists 'Reported impact snapshot | Gaza Strip (14 October 2026)' with a 2026-10-19 posting date, whereas the preceding hourly check had shown 2026-10-09 as the latest listed item. Direct retrieval of the new snapshot failed because the page exceeds the browser's 4 MiB content limit. The snapshot's data and precise publication time could not be verified, and it is not asserted as a new incident.",
+    "WHO checked first alongside OCHA. WHO Eastern Mediterranean opt-news endpoint inaccessible; WHO global emergency page blocked by retrieval error. WHO site-search returned prior 2026-09-24 remarks but no verified new event within the window.",
+    "Twelve additional targeted searches completed, covering casualties, displacement, aid, WFP/UNRWA, food/water, hospitals, medical evacuation, fuel, infrastructure, crossings, detainees/hostages, ceasefire talks, and military operations with documented civilian impact. UN News search blocked by robots.txt.",
+    "2026-10-19 WFP reductions from 1.6 million to 1.1 million monthly aid recipients were already identified in prior checks and excluded as duplicate. 2026-10-15/16 commercial truck disruption also predates the window. West Bank-only events and 2025 date-matched items excluded.",
+    "No newly verified, traceable, nonduplicate in-Gaza development with adequate timing evidence was found during the bounded window. Source-access limitations prevent claiming comprehensive absence.",
+    "No approval, publication, policy, schedule, or production mutation performed."
+  ]
+}

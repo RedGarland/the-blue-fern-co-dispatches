@@ -1,9 +1,11 @@
 [
   {
-    "uid": "gaza-2026-10-19",
-    "updateDate": "2026-10-19T13:03:52.514449Z",
-    "titleText": "Gaza Dispatch October 19, 2026",
-    "mainText": "This is the Gaza Dispatch audio briefing for October 19, 2026. Here are the key source-backed developments from today's edition. 1. Cuts force World Food Programme to end support for half a million Palestinians in Gaza. Two-thirds of population face crisis levels of food insecurity and 200,000 people are in danger of famine. This was reported by The Guardian. 2. Funding shortages force World Food Programme to cut aid to Gaza. The number of people helped by the UN agency in the Palestinian territory will drop by about a third - from 1.6 million to 1.1 million. This was reported by BBC News. 3. WFP cuts aid to \u200c500,000 Palestinians in Gaza amid funding shortages. The UN agency says funding shortages threaten to reverse 'modest and fragile' progress on food security. This was reported by Al Jazeera. For the full source-backed dispatch, read the October 19, 2026 Gaza edition at dispatches.thebluefernco.com.",
-    "redirectionUrl": "https://dispatches.thebluefernco.com/gaza/audio/2026-10-19-transcript.html"
+    "uid": "gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4",
+    "updateDate": "2026-10-14T16:18:12.34414-07:00",
+    "titleText": "Correction — October 14, 2026",
+    "mainText": "Correction — October 14, 2026. The October 14, 2026 edition included a story from Al Jazeera: Colombia inaugurates embassy to Israel in Jerusalem. The saved source describes an event outside Gaza and does not support its placement as a core in-Gaza development. Its unsupported projection has been removed from the corrected edition. The October 14, 2026 edition included a story from Al Jazeera: UK restaurateur claims losses after video calling for Gaza destruction. The saved source describes an event outside Gaza and does not support its placement as a core in-Gaza development. Its unsupported projection has been removed from the corrected edition. The October 14, 2026 edition included a story from Haaretz: What's happening to women in Gaza now? - Haaretz. The saved evidence repeats a discovery headline without sufficient article detail for the published projection. The underlying article’s accuracy and relevance remain undetermined. Its unsupported projection has been removed from the corrected edition. No qualified stories remain in the corrected saved-input selection. The saved evidence does not establish that no news occurred.",
+    "redirectionUrl": "/gaza/audio/corrections/gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4.mp3",
+    "render_status": "pending_separate_approval",
+    "publication_authorized": false
   }
 ]

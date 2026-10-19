@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T114451-0700-r11",
+  "scheduled_for": "2026-10-19T11:44:51-07:00",
+  "started_at": "2026-10-19T11:49:22-07:00",
+  "completed_at": "2026-10-19T11:50:04-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T10:46:11-07:00",
+    "end": "2026-10-19T11:50:04-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT and WHO checked first, then 12 targeted searches; no new qualifying development verified in bounded window.",
+    "WHO regional source failed direct retrieval, so healthcare coverage degraded; OCHA and WHO global search were accessible.",
+    "Prior OCHA developments and WFP assistance cuts excluded as duplicates. Reuters commercial-shipment announcement published 08:48 PDT, before this window. https://www.reuters.com/world/middle-east/israel-resume-commercial-shipments-gaza-after-hamas-fee-dispute-2026-10-19/",
+    "Supplementary watch only; production authoritative. No publication, approval, or schedule alteration."
+  ]
+}

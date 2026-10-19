@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T064451-0700-r11",
+  "scheduled_for": "2026-10-19T06:44:51-07:00",
+  "started_at": "2026-10-19T06:57:31-07:00",
+  "completed_at": "2026-10-19T06:59:43-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T06:27:58-07:00",
+    "end": "2026-10-19T06:59:43-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only; production daily Gaza collector/publisher remains authoritative.",
+    "OCHA OPT explicitly checked first. Its 19 October 2026 Humanitarian Situation Report (reporting primarily 29 September–12 October) was reviewed in full: https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026. Earlier watcher checks had already surfaced four OCHA developments; no report item was treated as newly published within this observation window.",
+    "WHO explicitly checked first. The WHO global Gaza/oPt situation page was accessible at https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt, and WHO site search surfaced older materials, but WHO Eastern Mediterranean oPt news/index and infographic retrieval returned Internal Error. Healthcare-source coverage is incomplete; research status is DEGRADED.",
+    "Twelve additional targeted searches (maximum permitted) spanned civilian casualties/military operations, displacement/shelter, food/aid and WFP, water/infrastructure, hospitals/dialysis/fuel/medical evacuations, crossings, detention/hostages, and ceasefire negotiations. Primary humanitarian sources and Reuters/AP were prioritized; returned actionable news was old or already surfaced.",
+    "The 19 October Reuters reporting of WFP food assistance cuts (1.6 million to 1.1 million beneficiaries) predates this observation window and was previously identified. Earlier OCHA flood risk, 34% water-output decline, child-protection closures and 58 medical evacuations were excluded as previously surfaced; last persisted ledger run at 06:27:58 PDT reported no findings.",
+    "No new source-supported, nonduplicate qualifying development could be verified during 06:27:58–06:59:43 PDT on 19 October 2026. Search limitations prevent claiming comprehensive absence.",
+    "No publication, approval, production, policy, task schedule or task enabled-state changes were made."
+  ]
+}

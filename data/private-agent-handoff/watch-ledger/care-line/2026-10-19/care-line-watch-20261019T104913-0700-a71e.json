@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261019T104913-0700-a71e",
+  "scheduled_for": "2026-10-19T10:45:22-07:00",
+  "started_at": "2026-10-19T10:49:13-07:00",
+  "completed_at": "2026-10-19T10:51:39.392-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T09:48:39-07:00",
+    "end": "2026-10-19T10:51:39.392-07:00",
+    "basis": "Since prior hourly Care Line Watch completed check, with lag-aware search-index lookback."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Care Line collection remains authoritative.",
+    "Checked official CMS Public Notices first: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest displayed notice 2026-10-09 (Tender Home Health, CA); no new listed notice in observation window.",
+    "Completed exactly 12 additional targeted searches for hospital/ED/maternity, behavioral-health, rural/emergency, ambulance/air-medical, oncology/dialysis, primary-care, and service restoration/access changes, including U.S. territories.",
+    "No newly verified healthcare-access event originating within the current hourly observation window. Guam typhoon outpatient suspension and restoration found in lookback were documented before this observation interval (GRMC provider notices Oct 17-19, Guam time); excluded as already announced outside window.",
+    "Excluded access-neutral Summers County ARH parking/entrance works (hospital explicitly reports medical services unaffected), future construction proposals, and historical/overseas items.",
+    "Search indexing and notice timestamps can lag; absence of findings is not comprehensive national clearance.",
+    "No editorial approval, publication, schedule change, or task disabling."
+  ]
+}

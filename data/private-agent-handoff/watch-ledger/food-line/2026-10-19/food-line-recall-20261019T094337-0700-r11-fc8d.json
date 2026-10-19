@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261019T094337-0700-r11-fc8d",
+  "scheduled_for": "2026-10-19T09:43:37-07:00",
+  "started_at": "2026-10-19T09:43:37-07:00",
+  "completed_at": "2026-10-19T09:44:35-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "started_at": "2026-10-19T08:41:42-07:00",
+    "ended_at": "2026-10-19T09:44:35-07:00",
+    "note": "Since prior observed hourly watch; sources were screened for newly published or newly discovered current disruptions, not simply indexed/crawled."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_failures": 0,
+    "focus": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Weather/disaster/outage-related cancellation or suspension of emergency food distribution",
+      "Abrupt pantry or food-bank closure or severe access reduction",
+      "Official SNAP, WIC or food assistance interruption causing immediate loss of access"
+    ],
+    "exclusions": "Older local reports, undated content, routine aid promotion, guides, donation requests, unrelated outages and unverified cancellation causes were excluded; no incident with newly verified qualifying evidence in the bounded window.",
+    "authority": "Supplementary recall watch only; production collector is authoritative.",
+    "search_queries": [
+      "\"only grocery store\" closed fire October 19 2026 community",
+      "\"sole grocery store\" closing fire October 2026",
+      "\"last grocery store\" \"October 19\" 2026 closed",
+      "\"full-service grocery store\" closure fire October 2026 town",
+      "\"food distribution\" canceled storm October 19 2026 food bank",
+      "\"food pantry\" distribution canceled flooding October 2026",
+      "\"food bank\" \"distribution\" \"cancelled\" outage October 2026",
+      "\"food pantry\" \"closed\" abruptly October 19 2026",
+      "\"food bank\" services suspended \"October 19\" 2026",
+      "site:.gov SNAP benefits disrupted October 19 2026 system outage",
+      "site:.gov WIC service interruption October 19 2026",
+      "\"SNAP\" \"EBT\" outage benefits \"October 19, 2026\" state"
+    ]
+  }
+}

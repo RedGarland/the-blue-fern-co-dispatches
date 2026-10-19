@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261019T064554-0700-r11",
+  "scheduled_for": "2026-10-19T06:45:54-07:00",
+  "started_at": "2026-10-19T06:56:12-07:00",
+  "completed_at": "2026-10-19T06:58:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-19T05:45:54-07:00",
+    "end_at": "2026-10-19T06:58:29-07:00",
+    "basis": "Nominal previous hourly check; prior execution completion not independently verified. Queries also covered older indexed material, which was screened out."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall search; production nationwide collection remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "search_status": "SUCCESS",
+    "verified_new_qualifying_signals": 0,
+    "focus": [
+      "only/sole/last/full-service grocery-store loss",
+      "disaster-triggered cancellation of emergency food distribution",
+      "abrupt food bank/pantry closure or major access reduction",
+      "official SNAP/WIC/food-assistance service interruption with immediate consequences"
+    ],
+    "exclusions": [
+      "Older incidents outside hourly window",
+      "Routine schedules and weekly closure notices",
+      "San Bernardino County WIC Rancho Cucamonga office closure effective Oct 16, not new to this check and alternate sites available",
+      "Garfield Heights Ohio school food distribution cancellation announced Oct 14 with no supported disaster cause",
+      "Wheatsville food co-op planned Austin closure does not remove sole community full-service grocery option",
+      "Outdated 2025 shutdown SNAP/WIC disruptions returned in search"
+    ],
+    "freshness_limitation": "Search engines returned predominantly older material; absence of verified qualifying reports is not proof of absence of incidents.",
+    "search_query_buckets": [
+      "sole grocery closure/fire (3)",
+      "storm-related distribution suspensions (3)",
+      "pantry/food-bank loss (3)",
+      "official SNAP/WIC/EBT interruptions (3)"
+    ],
+    "repo": "RedGarland/the-blue-fern-co-dispatches",
+    "branch": "ops/watch-ledger",
+    "target_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-19/food-line-recall-20261019T064554-0700-r11.json",
+    "review_publication_schedule_changes": "none"
+  }
+}

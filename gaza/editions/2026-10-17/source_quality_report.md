@@ -1,0 +1,42 @@
+# Gaza Source Quality Report - 2026-10-17
+
+- Status: **limited_source_update**
+- Recommendation: **publish limited-source update**
+- Sources: 3 from 1 publisher
+- Publishers: WAFA
+- Categories: 1
+- All stories from one publisher: true
+- Core ground-development sources: 3
+- Context-only sources: 0
+- Claim-attributed sources: 0
+
+## Source families
+- other_public_media: 3
+
+## Fetch failures
+- ocha-opt-updates: no matching Gaza items for 2026-10-17
+- who-news: no matching Gaza items for 2026-10-17
+- bbc-middle-east: no matching Gaza items for 2026-10-17
+- bbc-gaza-health-query: HTTPError: HTTP Error 503: Service Unavailable
+- wafa-gaza-query: HTTPError: HTTP Error 503: Service Unavailable
+- wafa-gaza-casualty-locations-query: HTTPError: HTTP Error 503: Service Unavailable
+- wafa-gaza-displacement-tent-query: HTTPError: HTTP Error 503: Service Unavailable
+- wafa-gaza-motorbike-query: HTTPError: HTTP Error 503: Service Unavailable
+- wafa-gaza-health-infrastructure-query: HTTPError: HTTP Error 503: Service Unavailable
+- ocha-gaza-health-access-query: HTTPError: HTTP Error 503: Service Unavailable
+- who-gaza-health-capacity-query: HTTPError: HTTP Error 503: Service Unavailable
+- who-gaza-evacuation-query: HTTPError: HTTP Error 503: Service Unavailable
+- unicef-gaza-water-query: HTTPError: HTTP Error 503: Service Unavailable
+- elpais-gaza-humanitarian-query: HTTPError: HTTP Error 503: Service Unavailable
+- aljazeera-middle-east: no matching Gaza items for 2026-10-17
+- jpost-gaza-accountability-query: HTTPError: HTTP Error 503: Service Unavailable
+- ap-gaza-attribution-query: HTTPError: HTTP Error 503: Service Unavailable
+- aljazeera-board-of-peace-isf-query: HTTPError: HTTP Error 503: Service Unavailable
+- haaretz-gaza-query: HTTPError: HTTP Error 503: Service Unavailable
+- dirco-icj-query: HTTPError: HTTP Error 503: Service Unavailable
+
+## Warnings
+- All rendered public stories in this edition rely on sources from WAFA.
+- This is a limited-source update generated from 3 saved source records from 1 publisher. It should be read as a partial update, not a full daily briefing.
+- publisher diversity below warning threshold
+- source count below warning threshold

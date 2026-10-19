@@ -1,0 +1,241 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-17-003",
+    "title": "At least one Palestinian killed in al-Mawasi strike in Rafah; several injured, WAFA reports",
+    "summary": "WAFA reports at least one Palestinian killed and several injured in an Israeli drone strike on al-Mawasi in Rafah, citing a medical source in Gaza. No exact event time is asserted.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-17-wafa-175975-mawasi-4e71b6aa"
+    ],
+    "source_ids": [
+      "gaza-2026-10-17-wafa-175975-mawasi-4e71b6aa"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/175975"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-17-wafa-175975-mawasi-4e71b6aa",
+        "title": "At least one Palestinian killed in al-Mawasi strike in Rafah; several injured, WAFA reports",
+        "url": "https://english.wafa.ps/Pages/Details/175975",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reports at least one Palestinian killed and several injured in an Israeli drone strike on al-Mawasi in Rafah, citing a medical source in Gaza. No exact event time is asserted.",
+        "event_date": "2026-10-17",
+        "location": "Rafah, Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-19T00:49:03.062798+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "rafah"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Rafah, Gaza",
+    "event_date": "2026-10-17",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-17-002",
+    "title": "One Palestinian killed in drone strike on al-Baraka Street south of Deir al-Balah; several injured, WAFA reports",
+    "summary": "WAFA reports one Palestinian killed and several injured, some critically, after a drone struck civilians on al-Baraka Street south of Deir al-Balah. The headline says dozens injured while the body says several injured; no aggregate is inferred.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-17-wafa-175973-baraka-9a83d2c1"
+    ],
+    "source_ids": [
+      "gaza-2026-10-17-wafa-175973-baraka-9a83d2c1"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/175973"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-17-wafa-175973-baraka-9a83d2c1",
+        "title": "One Palestinian killed in drone strike on al-Baraka Street south of Deir al-Balah; several injured, WAFA reports",
+        "url": "https://english.wafa.ps/Pages/Details/175973",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reports one Palestinian killed and several injured, some critically, after a drone struck civilians on al-Baraka Street south of Deir al-Balah. The headline says dozens injured while the body says several injured; no aggregate is inferred.",
+        "event_date": "2026-10-17",
+        "location": "Deir al-Balah, Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-19T00:49:03.062798+00:00",
+    "relevance_terms_matched": [
+      "deir al-balah",
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Deir al-Balah, Gaza",
+    "event_date": "2026-10-17",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-17-001",
+    "title": "Palestinian killed and several others injured in al-Tuffah strike, WAFA reports",
+    "summary": "Reports differ on casualties in al-Tuffah, Gaza City: WAFA English reports one death; WAFA Arabic reports two deaths in al-Mashahira. Exact overlap is unresolved. Retained QNA also reports one killed and several injured in the same October 17 Saturday-morning neighborhood context; no figures are combined and neither account is treated as a later update.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 55,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-17-wafa-175967-tuffah-2b6f3c90"
+    ],
+    "source_ids": [
+      "gaza-2026-10-17-wafa-175967-tuffah-2b6f3c90"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/175967"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-17-wafa-175967-tuffah-2b6f3c90",
+        "title": "Palestinian killed and several others injured in al-Tuffah strike, WAFA reports",
+        "url": "https://english.wafa.ps/Pages/Details/175967",
+        "publisher": "WAFA",
+        "summary_or_snippet": "Reports differ on casualties in al-Tuffah, Gaza City: WAFA English reports one death; WAFA Arabic reports two deaths in al-Mashahira. Exact overlap is unresolved. Retained QNA also reports one killed and several injured in the same October 17 Saturday-morning neighborhood context; no figures are combined and neither account is treated as a later update.",
+        "event_date": "2026-10-17",
+        "location": "Gaza City, Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-19T00:49:03.062798+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 55,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Gaza City, Gaza",
+    "event_date": "2026-10-17",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

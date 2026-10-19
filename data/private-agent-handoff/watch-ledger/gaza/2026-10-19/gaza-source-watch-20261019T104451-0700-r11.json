@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T104451-0700-r11",
+  "scheduled_for": "2026-10-19T10:44:51-07:00",
+  "started_at": "2026-10-19T10:44:05-07:00",
+  "completed_at": "2026-10-19T10:46:11-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T09:51:00-07:00",
+    "end": "2026-10-19T10:46:11-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall check only; the production Gaza publisher/collector remains authoritative. No approval or publication undertaken.",
+    "OCHA OPT and WHO were checked first. OCHA published its Humanitarian Situation Report | 15 October 2026 and 14 October reported-impact snapshot on 19 October. The OCHA report covers primarily 29 September-12 October and was already surfaced in previous watch checks, so its contents were excluded as recycled. Source: https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+    "WHO Eastern Mediterranean oPt landing page returned HTTP 502. WHO global indexed content was accessible, but yielded no newly dated Gaza healthcare development within the bounded window; direct regional verification therefore remained incomplete.",
+    "Twelve additional targeted searches performed after the initial OCHA/WHO checks, covering casualties, humanitarian situation reports, UNRWA, WHO medical evacuation and hospitals, Reuters/AP ceasefire and civilian impact, ICRC, MSF, WFP, commercial shipment resumption, COGAT, and Rafah/Kerem Shalom crossing changes.",
+    "Reuters report of a decision to gradually resume commercial goods coordination was published 2026-10-19 at 15:48 UTC (08:48 PDT), before the prior check ended at 09:51 PDT; the report does not establish that actual shipments had resumed during this window. Source: https://www.reuters.com/world/middle-east/israel-resume-commercial-shipments-gaza-after-hamas-fee-dispute-2026-10-19/",
+    "The same Reuters report attributed five deaths in Gaza City and Khan Younis on 19 October to local health officials but did not verify that the attacks occurred or were first reported within the 09:51-10:46 PDT window. These were therefore not classified as within-window new findings; production should retain responsibility for event-level deduplication and verification.",
+    "Previously surfaced 19 October WFP reduction from 1.6 million to 1.1 million recipients, and 19 October OCHA report findings on flooding, drinking water and medical evacuations, excluded as already discovered.",
+    "No traceable, nonduplicate development was verified as having newly occurred or been published during this bounded window. This is not an assertion of comprehensive absence.",
+    "No scheduling, production, publication, or approval state was changed."
+  ]
+}

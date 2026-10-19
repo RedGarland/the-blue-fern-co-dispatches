@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261018T184454-0700-r11",
+  "scheduled_for": "2026-10-18T18:44:54-07:00",
+  "started_at": "2026-10-18T18:44:54-07:00",
+  "completed_at": "2026-10-18T18:46:09-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-18T17:45:00-07:00",
+    "end": "2026-10-18T18:44:54-07:00",
+    "interpretation": "Since prior hourly check; wider publication discovery (past 1–2 days) used to detect late-indexed sources, with candidates required to establish new disruption in the observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searched_categories": [
+      "sole/last/full-service grocery store loss, closure, fire or disaster",
+      "storm/flood/fire/outage/facility-damage food distribution cancellations",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food assistance interruptions with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "verified_new_qualifying_signals": 0,
+    "exclusions": "Search results were predominantly older incidents (2020–2025), unrelated recovery/openings, generic program reporting, donation/resource material, or undated/unconfirmed disruptions. None met new, documented U.S. access-loss evidence within the hourly search window.",
+    "limitation": "Supplementary targeted web-index recall check, not an exhaustive nationwide collector. Search indexing and publication timestamps may lag; no conclusion about primary production collection.",
+    "authority": "Production Food Line collection remains authoritative.",
+    "disposition": "No publication, approval, schedule change, or task disablement."
+  }
+}

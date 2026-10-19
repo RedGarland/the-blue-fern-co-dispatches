@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261019T044521-0700-r11-3f8ca2",
+  "scheduled_for": "2026-10-19T04:45:54-07:00",
+  "started_at": "2026-10-19T04:45:21-07:00",
+  "completed_at": "2026-10-19T04:47:05-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start_at": "2026-10-19T02:49:48-07:00",
+    "end_at": "2026-10-19T04:47:05-07:00",
+    "prior_check_verification": "Last recoverable completed watch ended at 02:49:48 PDT; intervening 03:45 check not verifiable from available records, so the window overlaps it conservatively."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "search_coverage": "SUCCESS",
+    "focus": [
+      "only/sole/last/full-service grocery store loss/closure/fire/disaster",
+      "storm/flood/fire/outage/damage canceled emergency food distributions",
+      "abrupt food pantry/food bank closure or major access reduction",
+      "official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "excluded_examples": [
+      "Spencer NY only-store fire published 2026-09-14; pre-window",
+      "Prodisee Pantry Stockton AL weather cancellation announced approximately 2026-10-09; pre-window",
+      "Decatur IL Salvation Army pantry calendar closures announced 2026-10-14; pre-window and no qualifying disruption cause",
+      "Older 2025 SNAP suspension stories, routine food assistance articles and food pantry notices"
+    ],
+    "search_window_risk": "Targeted web discovery is nonexhaustive and often surfaces prior reports; no fresh in-window incident independently verified.",
+    "queries": [
+      "\"only grocery store\" closed fire October 19 2026 community food access",
+      "\"sole grocery store\" fire closure October 18 19 2026",
+      "\"last grocery store\" closed October 2026 rural",
+      "\"only full-service grocery store\" closed fire October 2026",
+      "\"food distribution\" canceled storm October 19 2026 food bank",
+      "\"food pantry\" \"closed\" \"flood\" October 2026",
+      "\"food distribution\" \"cancelled\" hurricane October 18 2026",
+      "\"food bank\" \"suspended services\" fire outage October 2026",
+      "site:gov \"SNAP\" \"interruption\" \"October 19, 2026\" benefits",
+      "site:gov \"WIC\" \"closed\" \"October 19, 2026\" outage",
+      "\"SNAP benefits\" \"temporarily unavailable\" October 18 2026",
+      "\"food pantry\" \"closed\" \"October 18, 2026\" OR \"October 19, 2026\""
+    ],
+    "production_collection_authoritative": true,
+    "no_publication_review_or_schedule_changes": true
+  }
+}

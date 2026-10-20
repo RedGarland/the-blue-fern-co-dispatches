@@ -1,0 +1,20 @@
+{
+  "schema_version": "gaza-no-update-status-v1",
+  "date": "2026-10-20",
+  "classification": "no_publication_needed",
+  "message": "No new source-backed Gaza update was identified in the two checked saved records after cross-publisher event dedupe; this does not assert that no Gaza developments occurred.",
+  "run_completed_successfully": true,
+  "source_count": 2,
+  "public_story_count": 0,
+  "run_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\editions\\2026-10-20\\run_manifest.json",
+  "collection_report_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\editions\\2026-10-20\\collection_report.json",
+  "normal_edition_generated": false,
+  "checked_source_limit_note": "Only two preserved saved source records were checked; no-current-update does not mean no Gaza developments occurred.",
+  "source_input_sha256": "F20DA438E1519B4F215A8B8A41E9A4D9517D3B1F8786096EF41C384A963358D1",
+  "source_commit": "a8909086929d98bf4fe46cb324d19cada03daaf0",
+  "candidate_hash": "85c06c1ebc5652480f377b78cac4b93ea171af50eb89915ba5a7d7fe8c9d66e8",
+  "pages_baseline": "1e6033e86ebec0b0df57a1656dbe33ac95d9c58b",
+  "event_key": "wfp-gaza-october-2026-assistance-cut",
+  "prior_edition_date": "2026-10-19",
+  "prior_story_id": "gaza-story-2026-10-19-001"
+}

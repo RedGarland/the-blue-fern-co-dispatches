@@ -1,0 +1,37 @@
+{
+  "dispatch_slug": "food-line",
+  "package_title": "Dated backfill: food-access pressure reports from October 13–17, 2026",
+  "retrospective_notice": "These reports retain their October 13, October 15, and October 17 publication dates. They describe dated developments and are not new October 20 events.",
+  "items": [
+    {
+      "id": "food-backfill-2026-10-17-mpr-minnesota",
+      "report_date": "2026-10-17",
+      "headline": "Minnesota food shelves struggle to keep pace with rising visits",
+      "summary": "MPR News reported October 17 that Minnesota food shelves faced accelerating visits and extended hours without keeping pace with demand; Second Harvest Heartland said rising freight costs led it to trim other spending and reduce some produce purchases.",
+      "location": "Minnesota",
+      "publisher": "MPR News",
+      "source_url": "https://www.mprnews.org/story/2026/10/17/record-172-million-pounds-of-food-distributed-to-food-shelves-amid-high-inflation",
+      "source_published_at": "2026-10-17"
+    },
+    {
+      "id": "food-backfill-2026-10-15-wrdw-golden-harvest",
+      "report_date": "2026-10-15",
+      "headline": "Golden Harvest faces increased need as donated and federal food declines",
+      "summary": "WRDW/WAGT reported October 15 that Golden Harvest served 24 counties in Georgia and South Carolina amid increased need, empty warehouses, and reduced donated and federal commodity food.",
+      "location": "Georgia and South Carolina",
+      "publisher": "WRDW/WAGT",
+      "source_url": "https://www.wrdw.com/2026/10/15/finding-solutions-golden-harvest-battles-hunger-donations-drop-40/",
+      "source_published_at": "2026-10-15"
+    },
+    {
+      "id": "food-backfill-2026-10-13-pbs-pantry-demand",
+      "report_date": "2026-10-13",
+      "headline": "Food pantries report rising visits and shrinking reserves",
+      "summary": "PBS NewsHour reported October 13 that FeedMore saw visits rise 20% over the preceding year, while Moments of Hope saw visits double over two years and reserves fall from about two months at the start of the year to two weeks.",
+      "location": null,
+      "publisher": "PBS NewsHour",
+      "source_url": "https://www.pbs.org/video/snap-cuts-1791916975/",
+      "source_published_at": "2026-10-13"
+    }
+  ]
+}

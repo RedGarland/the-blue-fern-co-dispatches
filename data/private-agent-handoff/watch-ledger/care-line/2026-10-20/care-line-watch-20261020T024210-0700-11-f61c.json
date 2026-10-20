@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T024210-0700-11-f61c",
+  "scheduled_for": "2026-10-20T01:45:22-07:00",
+  "started_at": "2026-10-20T02:42:10-07:00",
+  "completed_at": "2026-10-20T02:42:27-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-19T22:44:10-07:00",
+    "end": "2026-10-20T02:42:27-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last confirmed prior watch observation in available history; expanded to cover catch-up gap."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary US and territories healthcare-access recall watch, production collector authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "new_notices_since_previous_watch": 0,
+      "notes": "Platinum Health Service IL October 19 and Reagan Medical Center GA October 15 previously reported; no subsequent notices found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_topics": [
+      "hospital and ED closures",
+      "maternity suspension",
+      "rural hospital emergency service loss",
+      "ambulance or EMS shutdown",
+      "air-medical base closure",
+      "dialysis closure",
+      "oncology closure",
+      "behavioral health suspension",
+      "primary care abrupt closure",
+      "service reopenings",
+      "official state and federal notices",
+      "US territory access changes"
+    ],
+    "result": "No newly verified qualifying access change in observation window. News search surfaced older US cases and an October 19 England maternity story excluded as non-US.",
+    "excluded": "Older previously reported developments, out-of-jurisdiction stories, proposals and uncertain effects excluded.",
+    "publication": "No approval, publication, schedule, or task changes."
+  }
+}

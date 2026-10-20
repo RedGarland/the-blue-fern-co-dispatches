@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261019T214859-0700-r11-65e7a0bb",
+  "scheduled_for": "2026-10-19T21:45:54-07:00",
+  "started_at": "2026-10-19T21:48:59-07:00",
+  "completed_at": "2026-10-19T21:50:48-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-19T19:43:36-07:00",
+    "end_at": "2026-10-19T21:50:48-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since latest visible prior completed supplementary watch heartbeat; gap greater than one hour because intervening heartbeat not evidenced."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "new_qualifying_signals": 0,
+    "search_engine_recency_days": 1,
+    "disruption_classes_checked": [
+      "only/sole/last/full-service community grocery store loss, closure, fire or disaster",
+      "emergency food distribution canceled/suspended by weather, outage or damage",
+      "abrupt food pantry/food bank closure or major access reduction",
+      "official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "targeted_queries": [
+      "\"only grocery store\" closed fire \"October 19\" 2026",
+      "\"last grocery store\" closes town \"October 19\" 2026",
+      "\"sole grocery store\" destroyed fire storm October 2026",
+      "\"food distribution\" canceled storm October 19 2026 food bank",
+      "\"food pantry\" \"closed\" \"October 19, 2026\" emergency",
+      "\"food bank\" \"temporarily closed\" \"October 19\" 2026",
+      "SNAP benefits interruption October 19 2026 EBT system outage official",
+      "WIC offices services closed October 19 2026 storm outage",
+      "\"October 19, 2026\" \"food pantry\" \"closed\" fire flood",
+      "\"Oct. 19, 2026\" \"food distribution\" canceled OR postponed storm",
+      "\"October 19, 2026\" grocery store \"only\" \"closed\" town",
+      "site:gov \"October 19, 2026\" SNAP WIC EBT outage suspended benefits"
+    ],
+    "excluded_examples": [
+      "2025 SNAP shutdown articles (not new)",
+      "2025 Nederland Colorado fire and grocery coverage (not new)",
+      "September 2026 Battlement Mesa and Eastport grocery closures (outside window)",
+      "October 19 Kauai Hawaii Foodbank additional emergency distributions (services added, not suspended; article published before this search window)",
+      "October 13 Arvada Safeway brand exit (other full-service grocery options exist; not a sole community grocery loss)",
+      "October 18 Wyandanch NY Mercy Soup Kitchen fire closure (already identified in earlier October 19 watch; duplicate)"
+    ],
+    "freshness_caveat": "Many indexed results were historical despite one-day recency filtering; no new verified qualifying signals found, not proof of nationwide absence.",
+    "primary_collector_authority": "Production collection remains authoritative; no production reconciliation performed.",
+    "persistence_status": "SUCCESS_PENDING_COMMIT_VERIFICATION",
+    "editorial_state": "No approvals, publication, schedule changes or task disablement."
+  }
+}

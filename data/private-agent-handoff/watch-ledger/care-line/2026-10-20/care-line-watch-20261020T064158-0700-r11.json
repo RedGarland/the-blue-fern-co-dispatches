@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T064158-0700-r11",
+  "scheduled_for": "2026-10-20T06:41:58-07:00",
+  "started_at": "2026-10-20T06:41:58-07:00",
+  "completed_at": "2026-10-20T06:43:36-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-20T05:45:24-07:00",
+    "end": "2026-10-20T06:43:36-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "bounded supplementary recall; production Care Line collector authoritative",
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date": "2026-10-19",
+    "cms_new_notices_since_prior_check": 0,
+    "additional_targeted_searches": 12,
+    "targeted_searches_completed": 12,
+    "research_status": "completed",
+    "qualifying_new_findings": 0,
+    "exclusions": [
+      "Previously reported CMS Platinum Health Service (Illinois) and Reagan Medical Center CLIA limitation (Georgia).",
+      "Previously reported Winchester Family Medicine (New Hampshire) closure.",
+      "Older incidents and previously scheduled closure proposals without new concrete access effect.",
+      "Routine outpatient expansion and staffing announcements that did not restore a lost essential service."
+    ],
+    "limitations": "Targeted web discovery is a recall supplement, not an exhaustive national collection."
+  }
+}

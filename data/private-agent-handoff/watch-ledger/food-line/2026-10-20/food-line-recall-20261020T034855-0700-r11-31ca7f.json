@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261020T034855-0700-r11-31ca7f",
+  "scheduled_for": "2026-10-20T03:45:54-07:00",
+  "started_at": "2026-10-20T03:48:55-07:00",
+  "completed_at": "2026-10-20T03:49:41-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-20T02:43:00-07:00",
+    "end": "2026-10-20T03:49:41-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior hourly check, with recent-days search lookback to account for indexing delays."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_failure_count": 0,
+    "categories_checked": [
+      "only/sole/last/full-service grocery-store loss, fire, disaster or closure",
+      "storm/flood/fire/outage/damage canceled emergency food distributions",
+      "abrupt pantry or food-bank shutdown/major reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "queries": [
+      "\"only grocery store\" closed fire October 19 2026 OR October 20 2026 community",
+      "\"sole grocery store\" OR \"last grocery store\" closed fire storm Oct 2026",
+      "\"only full-service grocery store\" closes October 2026 town",
+      "food distribution canceled today storm flooding October 20 2026 food bank",
+      "\"food distribution\" \"cancelled\" \"storm\" \"October 19\" 2026",
+      "\"food pantry\" \"closed\" \"October 19, 2026\" emergency",
+      "\"food bank\" \"closed\" \"flood\" \"October 19\" 2026",
+      "\"pantry\" suspended services fire damage October 2026",
+      "site:gov SNAP benefits suspended interruption October 19 2026 notice",
+      "site:gov WIC benefits unavailable system outage October 19 2026",
+      "October 20 2026 SNAP EBT outage benefits unable access state agency",
+      "October 19 2026 food distribution suspended power outage pantry closed local"
+    ],
+    "summary": "No newly verified qualifying U.S. food-access disruption surfaced in this bounded search. Results primarily covered older incidents or ineligible items. September 14 Spencer, NY sole-grocery loss; September 25 El Paso, TX food-bank storm closure; and 2025 SNAP shutdown stories were excluded as old, not new.",
+    "verification_limits": "Search indexing lag and non-exhaustive supplementary query scope; production nationwide collector remains authoritative.",
+    "duplicate_policy": "Previously identified incidents excluded; none promoted to pending review.",
+    "non_actions": "No approvals, publications, schedule modifications, or disabling."
+  }
+}

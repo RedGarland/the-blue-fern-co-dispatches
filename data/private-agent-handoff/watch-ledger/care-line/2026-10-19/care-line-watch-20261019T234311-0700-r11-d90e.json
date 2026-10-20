@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261019T234311-0700-r11-d90e",
+  "scheduled_for": "2026-10-19T22:45:22-07:00",
+  "started_at": "2026-10-19T23:43:11-07:00",
+  "completed_at": "2026-10-19T23:44:54-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T22:44:10-07:00",
+    "end": "2026-10-19T23:44:54-07:00",
+    "basis": "Since the preceding hourly Care Line recall watch. Targeted searches use a wider recency filter to account for indexing delay; outside-window or previously reported developments are excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary U.S. and territory healthcare-access recall watch; production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-10-19",
+      "result": "Latest CMS notice: Platinum Health Service (IL) 2026-10-19, followed by Reagan Medical Center (GA) 2026-10-15; both previously identified and reported in prior Care Line watch. No additional CMS notice newly identified since the last hourly check."
+    },
+    "additional_targeted_searches": 12,
+    "categories": [
+      "hospital and ED closure/suspension",
+      "maternity loss",
+      "rural/emergency service loss",
+      "ambulance and air-medical bases",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "primary care",
+      "restoration/reopening",
+      "CMS termination/rescission/CLIA",
+      "U.S. territories"
+    ],
+    "result": "No newly announced, independently substantiated qualifying healthcare-access change was identified in the observation window. Results mainly covered older closures, general analysis, proposed services, foreign events, and prior CMS notices.",
+    "excluded_examples": [
+      "Guam Memorial Hospital elective/nonemergency suspension reported October 16 (Guam emergency government notice); earlier than this hourly window.",
+      "Platinum Health Service (IL) Medicare termination notice dated October 19 and Reagan Medical Center (GA) CLIA limitation dated October 15 were already reported earlier on October 19."
+    ],
+    "limitations": [
+      "Publication/indexing lag; bounded recall watch cannot prove the absence of an event.",
+      "Specific service categories may have no newly indexed local reporting inside an hourly window."
+    ],
+    "source_refs": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://ghs.guam.gov/node/4352"
+    ]
+  }
+}

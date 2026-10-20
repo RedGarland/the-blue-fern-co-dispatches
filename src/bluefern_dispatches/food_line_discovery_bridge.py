@@ -7,7 +7,13 @@ from pathlib import Path
 from typing import Any
 
 from bluefern_dispatches.food_line_discovery_expansion import read_food_line_discovery_expansion_audit
-from bluefern_dispatches.food_line_sources import canonical_url, infer_map_category, validate_date
+from bluefern_dispatches.food_line_sources import (
+    canonical_url,
+    food_line_supported_geography_result,
+    food_line_geography_evidence_text,
+    infer_map_category,
+    validate_date,
+)
 
 DISPATCH_SLUG = "food-line"
 DISCOVERY_DIR_NAME = "discovery"
@@ -71,23 +77,25 @@ def _candidate_map_category(candidate: dict[str, Any], source_family: str) -> st
 
 
 def _infer_state(candidate: dict[str, Any]) -> str:
-    state_abbrev = _nonempty(candidate.get("state_abbrev") or candidate.get("state"))
-    if len(state_abbrev) == 2:
-        return state_abbrev.upper()
-    state = _nonempty(candidate.get("state_or_territory"))
-    if len(state) == 2:
-        return state.upper()
-    if state:
-        return "US"
-    return "US"
+    for key in ("event_state", "impact_state", "verified_event_state", "verified_state"):
+        state = _nonempty(candidate.get(key))
+        if state:
+            return state.upper()
+    return ""
 
 
 def _infer_location_name(candidate: dict[str, Any]) -> str:
-    for key in ("manual_fallback_location", "metro", "state_or_territory", "discovered_publisher"):
+    for key in (
+        "event_location",
+        "impact_location",
+        "verified_event_location",
+        "verified_location",
+        "manual_fallback_location",
+    ):
         value = _nonempty(candidate.get(key))
         if value:
             return value
-    return "United States"
+    return ""
 
 
 def _infer_source_family(candidate: dict[str, Any]) -> str:
@@ -118,6 +126,52 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
             traceability_status = "source_wrapper_only"
         else:
             traceability_status = "missing_url"
+    raw_country = _nonempty(candidate.get("country"))
+    raw_event_country = _nonempty(candidate.get("event_country"))
+    raw_impact_country = _nonempty(candidate.get("impact_country"))
+    raw_state = _nonempty(candidate.get("state"))
+    raw_event_state = _nonempty(candidate.get("event_state"))
+    raw_impact_state = _nonempty(candidate.get("impact_state"))
+    raw_location = _nonempty(candidate.get("location"))
+    raw_event_location = _nonempty(candidate.get("event_location"))
+    raw_impact_location = _nonempty(candidate.get("impact_location"))
+    raw_location_name = _nonempty(candidate.get("location_name"))
+    geography_basis = _nonempty(candidate.get("geography_evidence_basis"))
+    geography_text, geography_text_field, _ = food_line_geography_evidence_text(candidate)
+    geography_row = {
+        "country": raw_country,
+        "event_country": raw_event_country,
+        "impact_country": raw_impact_country,
+        "state": raw_state,
+        "event_state": raw_event_state,
+        "impact_state": raw_impact_state,
+        "location": raw_location,
+        "event_location": raw_event_location,
+        "impact_location": raw_impact_location,
+        "location_name": raw_location_name,
+        "evidence_text": geography_text,
+        "geography_evidence_basis": geography_basis,
+    }
+    geography_result = food_line_supported_geography_result(geography_row)
+    geography_blocker = (
+        "outside_food_line_us_territories_scope"
+        if geography_result["status"] == "outside"
+        else "food_line_event_geography_unverified"
+    )
+    public_claim_blockers = list(candidate.get("public_claim_blockers") or [])
+    if not geography_result["supported"] and geography_blocker not in public_claim_blockers:
+        public_claim_blockers.append(geography_blocker)
+    supported = bool(geography_result["supported"])
+    public_claim_eligible = bool(candidate.get("public_claim_eligible")) and supported
+    normalized_state = _nonempty(geography_result.get("normalized_state")) if supported else raw_state
+    normalized_location = _nonempty(geography_result.get("normalized_location_name")) if supported else raw_location_name
+    location_scope = _nonempty(geography_result.get("normalized_location_scope")) if supported else _nonempty(candidate.get("location_scope"))
+    output_country = _nonempty(geography_result.get("normalized_country")) if supported else raw_country
+    output_event_country = output_country if supported else raw_event_country
+    output_state = normalized_state if supported else raw_state
+    output_event_state = normalized_state if supported else raw_event_state
+    output_location = normalized_location if supported else raw_location_name
+    output_event_location = normalized_location if supported else raw_event_location
     bridge_row = {
         "source_record_id": _nonempty(candidate.get("candidate_id")),
         "title": title,
@@ -126,11 +180,30 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
         "published_at": publication_date,
         "retrieved_at": _nonempty(candidate.get("retrieved_at") or _utc_now()),
         "summary_or_snippet": _nonempty(candidate.get("manually_reviewed_summary") or candidate.get("pressure_evidence_summary") or candidate.get("discovered_title") or title),
+        "evidence_text": geography_text,
+        "exact_supporting_passage": geography_text,
+        "evidence_text_basis": geography_basis,
+        "source_body_text": geography_text if geography_basis else "",
         "source_type": "page",
         "source_family": source_family,
-        "state": _infer_state(candidate),
-        "location_name": _infer_location_name(candidate),
-        "location_scope": _nonempty(candidate.get("geographic_scope") or ("state_local" if _infer_state(candidate) != "US" else "national")),
+        "state": output_state,
+        "location_name": output_location,
+        "location_scope": location_scope,
+        "country": output_country,
+        "event_country": output_event_country,
+        "impact_country": raw_impact_country,
+        "event_state": output_event_state,
+        "impact_state": raw_impact_state,
+        "event_location": output_event_location,
+        "impact_location": raw_impact_location,
+        "query_state_hint": _nonempty(candidate.get("state_abbrev") or candidate.get("state_hint") or candidate.get("state_or_territory")),
+        "query_metro_hint": _nonempty(candidate.get("metro")),
+        "query_geographic_scope": _nonempty(candidate.get("geographic_scope")),
+        "food_line_geography_status": geography_result["status"],
+        "food_line_geography_reason": geography_result["reason"],
+        "food_line_geography_evidence_field": geography_result["evidence_field"] or geography_text_field,
+        "geography_evidence_basis": geography_result.get("geography_evidence_basis") or geography_basis,
+        "supported_product_geography": supported,
         "map_category": _candidate_map_category(candidate, source_family),
         "source_origin": _nonempty(candidate.get("discovery_channel") or "food_line_discovery"),
         "registry_status": "discovery_candidate",
@@ -177,8 +250,8 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
         "pressure_signal_hint": _nonempty(candidate.get("pressure_signal_hint")),
         "pressure_signal_type_hint": _nonempty(candidate.get("pressure_signal_type_hint")),
         "traceability_status": traceability_status,
-        "public_claim_eligible": bool(candidate.get("public_claim_eligible")),
-        "public_claim_blockers": list(candidate.get("public_claim_blockers") or []),
+        "public_claim_eligible": public_claim_eligible,
+        "public_claim_blockers": public_claim_blockers,
         "candidate_id": _nonempty(candidate.get("candidate_id")),
     }
     if manual_fallback:

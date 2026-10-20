@@ -18,6 +18,7 @@ from bluefern_dispatches.food_line_discovery_expansion import (
     run_food_line_discovery_expansion,
     validate_food_line_manual_fallback_record,
 )
+from scripts.process_food_line_current_intake import _build_review_queue
 
 
 def _rss_payload(items: list[dict[str, str]]) -> bytes:
@@ -76,6 +77,214 @@ def _write_direct_source_config(tmp_path: Path, direct_sources: list[dict[str, o
         "metros": [{"name": "Charlotte"}],
     }
     (config_dir / "discovery_expansion_config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
+
+
+def test_real_html_producer_uses_scoped_article_body_for_geography(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://example.org/news/foreign-food-pressure"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food pressure report",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "New York Monitor",
+                        "description": "food insecurity pressure is rising as pantry access tightens.",
+                        "pubDate": "Sun, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return (
+                "<html><head><title>Food pressure report</title>"
+                f"<link rel=\"canonical\" href=\"{article_url}\"></head>"
+                "<body><nav>New York, United States navigation and related stories</nav>"
+                "<main><article><h1>Food pressure report</h1>"
+                "<p>The article reports food insecurity in Amsterdam, Netherlands.</p>"
+                "</article></main><footer>United States footer</footer></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["source_body_extraction_basis"] == "source_body_scoped_article"
+    assert "Amsterdam, Netherlands" in candidate["source_body_text"]
+    assert "New York, United States navigation" not in candidate["source_body_text"]
+    assert candidate["geography_evidence_basis"] == "source_body"
+    assert candidate["food_line_geography_status"] == "outside"
+    assert candidate["public_claim_eligible"] is False
+    assert "outside_food_line_us_territories_scope" in candidate["public_claim_blockers"]
+
+
+def test_balanced_body_keeps_later_foreign_text_and_excludes_heading_attribution_through_queue(tmp_path: Path):
+    """Synthetic HTML fixture; no external source identity or public claim is asserted."""
+    edition_date = "2026-10-17"
+    article_url = "https://example.org/news/nested-foreign-food-pressure"
+    article_body = "Food banks in the Netherlands reported a supply shortage."
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food pressure report",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "NewYorkTimes",
+                        "description": "Food insecurity pressure is rising.",
+                        "pubDate": "Sat, 17 Oct 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return (
+                "<html><head><title>NewYorkTimes</title></head><body>"
+                "<!-- <article><p>Food banks in Arizona reported a shortage.</p></article> -->"
+                "<script>const hidden = '<article><p>Food banks in Arizona reported a shortage.</p></article>';</script>"
+                "<main><h1>New York Times</h1>"
+                "<div class=\"publisher\">New York, United States attribution</div>"
+                "<!-- <article><p>Food banks in Arizona reported a shortage.</p></article> -->"
+                "<template><template><article><p>Food banks in Arizona reported a shortage.</p></article></template>"
+                "<article><p>Food banks in Arizona reported a shortage after the nested template closes.</p></article>"
+                "</template>"
+                "<article><h2>NewYorkTimes</h2><h3>New York Times</h3><h4>New York Times</h4>"
+                "<h5>New York Times publisher</h5><h6>New York Times attribution</h6>"
+                "<img class=\"publisher\" src=\"publisher.png\">"
+                f"<p>{article_body}</p></article></main></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    assert candidate["source_body_extraction_basis"] == "source_body_scoped_article"
+    assert candidate["source_body_text"] == article_body
+    assert "New York" not in candidate["source_body_text"]
+    assert "Arizona" not in candidate["source_body_text"]
+    assert candidate["food_line_geography_status"] == "outside"
+    assert candidate["public_claim_eligible"] is False
+
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    (inbox / "nested-foreign.json").write_text(
+        json.dumps(
+            {
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": "nested-foreign-full-queue",
+                "edition_date": edition_date,
+                "findings": [candidate],
+            }
+        ),
+        encoding="utf-8",
+    )
+    queue = _build_review_queue(tmp_path, edition_date, inbox)
+    assert queue["items"] == []
+    assert queue["review_lifecycle"]["dispositions"] == {"rejected_with_reason": 1}
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "Food insecurity pressure rose as the pantry closed after reporting no food OR funding.",
+        "Food insecurity pressure rose as the pantry closed after residents said HELP ME find food.",
+        "Food insecurity pressure rose as the pantry closed after reporting AS needed support.",
+    ],
+)
+def test_nested_masthead_and_bare_codes_stay_unverified_through_producer_and_queue(tmp_path: Path, body: str):
+    edition_date = "2026-06-21"
+    article_url = "https://example.org/news/bare-code-food-pressure"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food pressure report",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "Example Monitor",
+                        "description": "food insecurity pressure is rising as pantry access tightens.",
+                        "pubDate": "Sun, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return (
+                "<html><head><title>Food pressure report</title>"
+                f"<link rel=\"canonical\" href=\"{article_url}\"></head>"
+                "<body><main><article>"
+                "<header>Oregon masthead and Maine navigation</header>"
+                "<div itemprop=\"articleBody\"><p>"
+                f"{body}"
+                "</p><aside>Arizona related story</aside>"
+                "<div class=\"related-stories\">North Carolina recommendation</div></div>"
+                "<footer>United States footer</footer></article></main></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate_path = Path(result["discovery_candidates_path"])
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))[0]
+    assert candidate["source_body_extraction_basis"] == "source_body_scoped_article_body"
+    assert candidate["source_body_text"] == body
+    assert "Oregon" not in candidate["source_body_text"]
+    assert "Maine" not in candidate["source_body_text"]
+    assert "Arizona" not in candidate["source_body_text"]
+    assert "North Carolina" not in candidate["source_body_text"]
+    assert candidate["food_line_geography_status"] == "unknown"
+    assert candidate["public_claim_eligible"] is False
+
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    intake_path = inbox / "nested-masthead.json"
+    intake_path.write_text(
+        json.dumps(
+            {
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": "nested-masthead",
+                "edition_date": edition_date,
+                "findings": [candidate],
+            }
+        ),
+        encoding="utf-8",
+    )
+    queue = _build_review_queue(tmp_path, edition_date, inbox)
+    assert queue["items"] == []
+    intake = json.loads(
+        (tmp_path / "data" / "dispatches" / "food-line" / "agent-intake" / edition_date / "nested-masthead.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert intake["candidate_rows"][0]["food_line_geography_status"] == "unknown"
+    assert intake["candidate_rows"][0]["eligible_for_review"] is False
+    assert "food_line_event_geography_unverified" in intake["candidate_rows"][0]["exclusion_reason"]
 
 
 def test_food_line_query_plan_covers_grocery_fire_and_state_snap_demand() -> None:
@@ -450,7 +659,7 @@ def test_food_line_discovery_expansion_preserves_article_trace_when_canonical_co
             return _html_article(
                 title="Pantry demand rising",
                 canonical=homepage_url,
-                body="Pantry demand is rising and more families need help.",
+                body="Pantry demand is rising and more families in the United States need help because the pantry is unable to supply food to everyone seeking assistance.",
             )
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -499,7 +708,7 @@ def test_food_line_discovery_expansion_resolves_google_news_wrapper_to_article_u
             return _html_article(
                 title="Summer hunger relief",
                 canonical=article_url,
-                body="Food banks prepare for increased need as school lets out.",
+                body="Food banks in the United States prepare for increased need as school lets out and are unable to supply food to everyone seeking assistance.",
             )
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -720,7 +929,7 @@ def test_food_line_discovery_expansion_wowt_record_demand_story_enters_review(tm
             return _html_article(
                 title="Omaha food programs see record demand as summer break eliminates school meals",
                 canonical=article_url,
-                body="Omaha food programs said they are seeing record demand as summer break eliminates school meals and more families need help.",
+                body="Omaha food programs in Nebraska said they are seeing record demand as summer break eliminates school meals, and are unable to meet all requests for school meals.",
             )
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -773,7 +982,7 @@ def test_food_line_discovery_expansion_indyweek_meal_price_story_enters_review(t
             return _html_article(
                 title="Wake school board passes meal price increase, creates task force to address cost",
                 canonical=article_url,
-                body="Wake school board passed a school meal price increase and created a task force to address meal costs and affordability for families.",
+                body="Wake school board in North Carolina passed a school meal price increase and created a task force to address meal costs and affordability for families.",
             )
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -823,7 +1032,7 @@ def test_food_line_discovery_expansion_health_cost_food_insecurity_story_enters_
             return _html_article(
                 title="Health care bills are fueling food insecurity for more households",
                 canonical=article_url,
-                body="Health care bills and medical debt are fueling food insecurity for more households as families struggle to afford both care and food.",
+                body="Health care bills and medical debt are fueling food insecurity for more households in the United States as families report they are unable to afford enough food.",
             )
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -877,7 +1086,7 @@ def test_food_line_discovery_expansion_new_york_fed_story_enters_review_via_cano
             return _html_article(
                 title="New York Fed says food insecurity is rising for more households",
                 canonical=article_url,
-                body="A New York Fed survey found food insecurity rising for more households as budgets remain strained.",
+                body="A New York Fed survey found food insecurity rising for more households in the United States as families report difficulty affording food.",
             )
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -1147,9 +1356,9 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
         if url == "https://news.google.com/rss/articles/CBMiHOME?oc=5":
             return f"<html><body><a href=\"{homepage_url}\">home</a></body></html>".encode("utf-8")
         if url == article_url:
-            return _html_article(title="Traceable article", canonical=article_url, body="Food bank demand is rising.")
+            return _html_article(title="Traceable article", canonical=article_url, body="Food bank demand is rising in the United States, and the pantry is unable to supply food to everyone seeking assistance.")
         if url == homepage_url:
-            return _html_article(title="Homepage only trace", canonical=homepage_url, body="Food pantry demand is rising.")
+            return _html_article(title="Homepage only trace", canonical=homepage_url, body="Food pantry demand is rising in the United States, and the pantry is unable to supply food to everyone seeking assistance.")
         raise AssertionError(f"unexpected fetch url: {url}")
 
     result = run_food_line_discovery_expansion(
@@ -1814,7 +2023,7 @@ def test_og_title_replaces_generic_page_chrome(tmp_path: Path):
                 "<meta property=\"og:title\" content=\"Pantry demand rises as SNAP delays hit families\">"
                 f"<link rel=\"canonical\" href=\"{article_url}\">"
                 "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
-                "</head><body><article><h1>Skip to content</h1><p>Food pantry demand is rising.</p></article></body></html>"
+                "</head><body><article><h1>Skip to content</h1><p>Food pantry demand is rising in the United States, and the pantry is unable to supply food to everyone seeking assistance.</p></article></body></html>"
             ).encode("utf-8")
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -1857,7 +2066,7 @@ def test_json_ld_headline_replaces_generic_page_chrome(tmp_path: Path):
                 "</script>"
                 f"<link rel=\"canonical\" href=\"{article_url}\">"
                 "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
-                "</head><body><p>Food pantry demand is rising.</p></body></html>"
+                "</head><body><article><p>Food pantry demand is rising in the United States, and the pantry is unable to supply food to everyone seeking assistance.</p></article></body></html>"
             ).encode("utf-8")
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -1897,7 +2106,7 @@ def test_article_h1_replaces_generic_page_chrome_when_meta_titles_are_generic(tm
                 "<meta name=\"twitter:title\" content=\"Blog\">"
                 f"<link rel=\"canonical\" href=\"{article_url}\">"
                 "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
-                "</head><body><article><h1>Pantries report a surge in summer demand</h1><p>Food pantry demand is rising.</p></article></body></html>"
+                "</head><body><article><h1>Pantries report a surge in summer demand</h1><p>Food pantry demand is rising in the United States, and the pantry is unable to supply food to everyone seeking assistance.</p></article></body></html>"
             ).encode("utf-8")
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -1935,7 +2144,7 @@ def test_document_title_is_only_used_after_better_headline_sources_fail(tmp_path
                 "<title>Food pantry demand rises in rural counties - Example News</title>"
                 f"<link rel=\"canonical\" href=\"{article_url}\">"
                 "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
-                "</head><body><p>Food pantry demand is rising.</p></body></html>"
+                "</head><body><article><p>Food pantry demand is rising in the United States, and the pantry is unable to supply food to everyone seeking assistance.</p></article></body></html>"
             ).encode("utf-8")
         raise AssertionError(f"unexpected fetch url: {url}")
 
@@ -2249,6 +2458,8 @@ def test_frac_style_candidate_derives_public_prose_from_source_evidence(tmp_path
             "summary_or_snippet": "FRAC warned that the USDA proposal would increase hunger for families and children.",
             "evidence_text": "Published June 21, 2026. FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
             "evidence_text_basis": "page_text_excerpt",
+            "source_body_text": "In the United States, FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+            "geography_evidence_basis": "source_body",
             "affected_groups": ["children", "SNAP households", "low-income households"],
         }
     )
@@ -2342,6 +2553,9 @@ def test_complete_source_backed_public_prose_fields_can_remain_public_eligible(t
         "reviewer_or_source_note": "Reviewed from source text.",
         "final_trace_url": article_url,
         "geographic_scope": "metro",
+        "event_state": "NC",
+        "source_body_text": "The source describes a Charlotte, North Carolina, food pantry serving families with children.",
+        "geography_evidence_basis": "source_body",
     }
 
     def fetcher(url: str, timeout: int = 15):
@@ -2439,6 +2653,8 @@ def test_traceable_local_news_record_spending_article_derives_safe_public_prose(
             "summary_or_snippet": "The Greater Boston Food Bank is set to invest another $5 million to break their food spending record in 2026 and distribute over 94 million meals across the region as need grows.",
             "evidence_text": "Greater Boston Food Bank to spend record-breaking $65M on food in 2026. The Greater Boston Food Bank is set to invest another $5 million to break their food spending record in 2026 and distribute over 94 million meals across the region as need grows.",
             "evidence_text_basis": "page_text_excerpt",
+            "source_body_text": "In the United States, the Greater Boston Food Bank is set to invest another $5 million to break their food spending record in 2026 and distribute over 94 million meals across the region as need grows.",
+            "geography_evidence_basis": "source_body",
             "pressure_type": "food bank demand pressure",
             "evidence_level": "background context",
             "freshness_role": "fresh_daily_signal",
@@ -2552,7 +2768,7 @@ def test_direct_rss_item_with_article_url_becomes_traceable(tmp_path: Path):
                 ]
             )
         if url == article_url:
-            return _html_article(title="Pantry demand rising", canonical=article_url, body="Food pantry demand is rising.")
+            return _html_article(title="Pantry demand rising", canonical=article_url, body="Food pantry demand is rising in the United States, and the pantry is unable to supply food to everyone seeking assistance.")
         raise AssertionError(url)
 
     result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
@@ -2609,7 +2825,7 @@ def test_direct_rss_prefers_feed_url_when_both_feed_and_page_are_configured(tmp_
                 ]
             )
         if url == article_url:
-            return _html_article(title="Pantry demand rising", canonical=article_url, body="Food pantry demand is rising.")
+            return _html_article(title="Pantry demand rising", canonical=article_url, body="Food pantry demand is rising in the United States, and the pantry is unable to supply food to everyone seeking assistance.")
         raise AssertionError(url)
 
     result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)

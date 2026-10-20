@@ -43,11 +43,60 @@ US_STATE_NAMES = {
     "south carolina", "south dakota", "tennessee", "texas", "utah", "vermont", "virginia", "washington",
     "west virginia", "wisconsin", "wyoming", "district of columbia",
 }
+US_TERRITORY_ABBREVIATIONS = {"PR", "GU", "VI", "AS", "MP"}
+US_TERRITORY_NAMES = {
+    "puerto rico",
+    "guam",
+    "u.s. virgin islands",
+    "us virgin islands",
+    "united states virgin islands",
+    "american samoa",
+    "northern mariana islands",
+    "commonwealth of the northern mariana islands",
+}
+US_COUNTRY_NAMES = {
+    "us",
+    "usa",
+    "u.s.",
+    "u.s.a.",
+    "united states",
+    "united states of america",
+}
 NON_US_GEOGRAPHY_TERMS = {
     "canada", "ontario", "hamilton, ontario", "toronto", "quebec", "british columbia", "alberta",
     "saskatchewan", "manitoba", "new brunswick", "nova scotia", "prince edward island",
-    "newfoundland and labrador",
+    "newfoundland and labrador", "netherlands", "the netherlands", "europe", "bangladesh",
+    "latin america", "the caribbean", "caribbean", "asia", "africa", "british virgin islands",
 }
+AMBIGUOUS_GEOGRAPHY_NAMES = {"georgia"}
+US_STATE_NAME_TO_ABBREVIATION = {
+    "alabama": "AL", "alaska": "AK", "arizona": "AZ", "arkansas": "AR", "california": "CA",
+    "colorado": "CO", "connecticut": "CT", "delaware": "DE", "florida": "FL", "georgia": "GA",
+    "hawaii": "HI", "idaho": "ID", "illinois": "IL", "indiana": "IN", "iowa": "IA",
+    "kansas": "KS", "kentucky": "KY", "louisiana": "LA", "maine": "ME", "maryland": "MD",
+    "massachusetts": "MA", "michigan": "MI", "minnesota": "MN", "mississippi": "MS", "missouri": "MO",
+    "montana": "MT", "nebraska": "NE", "nevada": "NV", "new hampshire": "NH", "new jersey": "NJ",
+    "new mexico": "NM", "new york": "NY", "north carolina": "NC", "north dakota": "ND", "ohio": "OH",
+    "oklahoma": "OK", "oregon": "OR", "pennsylvania": "PA", "rhode island": "RI",
+    "south carolina": "SC", "south dakota": "SD", "tennessee": "TN", "texas": "TX", "utah": "UT",
+    "vermont": "VT", "virginia": "VA", "washington": "WA", "west virginia": "WV", "wisconsin": "WI",
+    "wyoming": "WY", "district of columbia": "DC", "puerto rico": "PR", "guam": "GU",
+    "u.s. virgin islands": "VI", "us virgin islands": "VI", "united states virgin islands": "VI",
+    "american samoa": "AS", "northern mariana islands": "MP",
+    "commonwealth of the northern mariana islands": "MP",
+}
+US_STATE_ABBREVIATION_TO_NAME = {value: key for key, value in US_STATE_NAME_TO_ABBREVIATION.items()}
+FOOD_LINE_GEOGRAPHY_EVIDENCE_BASES = frozenset(
+    {
+        "source_body",
+        "source_body_text",
+        "source_body_excerpt",
+        "event_location_text",
+        "reviewer_verified_event_location",
+        "manual_source_text",
+        "operator_reviewed_exact_passage",
+    }
+)
 LOCAL_FAMILIES = {
     "local_news",
     "public_radio",
@@ -1913,28 +1962,318 @@ def _normalize_source_text(text: str, *, limit: int | None = None) -> str:
     return clean
 
 
-def food_line_is_supported_geography(row: dict[str, Any]) -> bool:
-    country = _normalize_source_text(str(row.get("country") or ""))
-    state = _normalize_source_text(str(row.get("state") or ""))
-    location_name = _normalize_source_text(str(row.get("location_name") or row.get("location") or ""))
-    combined = " ".join(part for part in (country, state, location_name) if part).lower()
+def _source_body_contains_geography_phrase(body: str, phrase: str) -> bool:
+    """Match a complete source-body geography phrase, never a substring.
 
-    if country and country.lower() not in {"us", "usa", "united states", "united states of america"}:
-        return False
-    if state:
-        state_upper = state.upper()
-        if state_upper in {"US", "USA"}:
-            return True
-        if state_upper in US_STATE_ABBREVIATIONS:
-            return True
-        if state.lower() in US_STATE_NAMES:
-            return True
-        if any(term in combined for term in NON_US_GEOGRAPHY_TERMS):
-            return False
-        return True
-    if any(term in combined for term in NON_US_GEOGRAPHY_TERMS):
-        return False
-    return True
+    Bare ``us`` is intentionally excluded by the caller: a pronoun must not
+    establish United States event geography.
+    """
+
+    return re.search(
+        rf"(?<![A-Za-z0-9]){re.escape(phrase)}(?![A-Za-z0-9])",
+        body,
+        flags=re.IGNORECASE,
+    ) is not None
+
+
+def _source_body_geography_matches(
+    body: str,
+    phrases: set[str] | tuple[str, ...],
+    *,
+    ignore_case: bool = True,
+) -> list[tuple[str, int, int]]:
+    """Return non-overlapping complete phrase matches, preferring longer phrases."""
+
+    matches: list[tuple[str, int, int]] = []
+    for phrase in sorted(set(phrases), key=lambda value: (-len(value), value.casefold())):
+        flags = re.IGNORECASE if ignore_case else 0
+        for found in re.finditer(
+            rf"(?<![A-Za-z0-9]){re.escape(phrase)}(?![A-Za-z0-9])",
+            body,
+            flags=flags,
+        ):
+            start, end = found.span()
+            if any(start >= existing_start and end <= existing_end for _, existing_start, existing_end in matches):
+                continue
+            matches.append((phrase, start, end))
+    return sorted(matches, key=lambda item: (item[1], -(item[2] - item[1]), item[0].casefold()))
+
+
+def food_line_geography_evidence_text(row: dict[str, Any]) -> tuple[str, str, str]:
+    """Return only explicitly provenance-bound source-body geography evidence.
+
+    Discovery metadata such as titles, publisher names, URLs, query text, and
+    generic summaries must never become event geography.  Callers must provide
+    a dedicated ``geography_evidence_basis`` before any passage is eligible for
+    geography classification.
+    """
+
+    basis = _normalize_source_text(row.get("geography_evidence_basis") or "").casefold()
+    if basis not in FOOD_LINE_GEOGRAPHY_EVIDENCE_BASES:
+        return "", "", ""
+    for key in (
+        "event_geography_text",
+        "geography_evidence_text",
+        "event_location_evidence",
+        "source_body_text",
+        "source_body_excerpt",
+        "exact_supporting_passage",
+        "evidence_text",
+    ):
+        value = _normalize_source_text(row.get(key) or "")
+        if value:
+            return value, key, basis
+    return "", "", basis
+
+
+def food_line_supported_geography_result(row: dict[str, Any]) -> dict[str, Any]:
+    """Classify explicit Food event/impact geography without guessing.
+
+    Publisher identity, query metadata, URL domains, and free-form metadata
+    are deliberately excluded.  A source-body geography phrase is accepted
+    only from the dedicated evidence fields below.  ``country`` is the
+    reported event or impact country.  Agent adapters may supply the more explicit
+    ``event_country``/``impact_country`` and ``event_state``/``impact_state``
+    fields while preserving query hints separately.
+    """
+
+    country_values = [
+        (_normalize_source_text(row.get(key) or ""), key)
+        for key in ("event_country", "impact_country", "country")
+        if _normalize_source_text(row.get(key) or "")
+    ]
+    state_values = [
+        (_normalize_source_text(row.get(key) or ""), key)
+        for key in ("event_state", "impact_state", "state")
+        if _normalize_source_text(row.get(key) or "")
+    ]
+    location_values = [
+        (_normalize_source_text(row.get(key) or ""), key)
+        for key in ("event_location", "impact_location", "location_name", "location")
+        if _normalize_source_text(row.get(key) or "")
+    ]
+    country = country_values[0][0] if country_values else ""
+    state = state_values[0][0] if state_values else ""
+    location_name = location_values[0][0] if location_values else ""
+    body, body_field, evidence_basis = food_line_geography_evidence_text(row)
+
+    def country_kind(value: str) -> str:
+        key = value.casefold()
+        if key in US_COUNTRY_NAMES:
+            return "us"
+        if key in NON_US_GEOGRAPHY_TERMS:
+            return "foreign"
+        return "unknown"
+
+    def state_info(value: str) -> tuple[str, str, str]:
+        key = value.casefold()
+        upper = value.upper()
+        if upper in US_STATE_ABBREVIATIONS or upper in US_TERRITORY_ABBREVIATIONS:
+            return "us", upper, US_STATE_ABBREVIATION_TO_NAME.get(upper, value).title()
+        if key in US_STATE_NAME_TO_ABBREVIATION:
+            abbreviation = US_STATE_NAME_TO_ABBREVIATION[key]
+            return "us", abbreviation, key.title()
+        if key in AMBIGUOUS_GEOGRAPHY_NAMES:
+            return "ambiguous", "", value
+        if key in NON_US_GEOGRAPHY_TERMS:
+            return "foreign", "", value
+        if upper in {"US", "USA"}:
+            return "country_marker", "", "United States"
+        return "unknown", "", value
+
+    def location_info(value: str) -> tuple[str, str, str, str]:
+        key = value.casefold()
+        if key in US_COUNTRY_NAMES:
+            return "us", "", "United States", "national"
+        if key in US_STATE_NAME_TO_ABBREVIATION and key not in AMBIGUOUS_GEOGRAPHY_NAMES:
+            abbreviation = US_STATE_NAME_TO_ABBREVIATION[key]
+            return "us", abbreviation, key.title(), "state_local"
+        if key in AMBIGUOUS_GEOGRAPHY_NAMES:
+            return "ambiguous", "", value, ""
+        if key in NON_US_GEOGRAPHY_TERMS:
+            return "foreign", "", value, ""
+        return "unknown", "", value, ""
+
+    def first_field(values: list[tuple[str, str]], preferred: set[str] | None = None) -> str:
+        if preferred:
+            for _, field in values:
+                if field in preferred:
+                    return field
+        return values[0][1] if values else ""
+
+    def result(
+        status: str,
+        reason: str,
+        evidence_field: str = "",
+        *,
+        normalized_country: str = "",
+        normalized_state: str = "",
+        normalized_location_name: str = "",
+        normalized_location_scope: str = "",
+    ) -> dict[str, Any]:
+        return {
+            "status": status,
+            "supported": status == "supported",
+            "reason": reason,
+            "country": country,
+            "state": state,
+            "location_name": location_name,
+            "evidence_field": evidence_field,
+            "geography_evidence_basis": evidence_basis,
+            "normalized_country": normalized_country,
+            "normalized_state": normalized_state,
+            "normalized_location_name": normalized_location_name,
+            "normalized_location_scope": normalized_location_scope,
+        }
+
+    country_kinds = [country_kind(value) for value, _ in country_values]
+    if "us" in country_kinds and "foreign" in country_kinds:
+        return result("unknown_conflicting", "conflicting_explicit_event_countries", first_field(country_values))
+    if "foreign" in country_kinds:
+        return result("outside", "event_country_not_us", first_field(country_values, {"event_country", "impact_country", "country"}))
+    if "unknown" in country_kinds:
+        return result("unknown", "unrecognized_event_country", first_field(country_values))
+    has_us_country = "us" in country_kinds
+
+    state_infos = [(*state_info(value), field) for value, field in state_values]
+    foreign_states = [entry for entry in state_infos if entry[0] == "foreign"]
+    unknown_states = [entry for entry in state_infos if entry[0] in {"unknown", "ambiguous"}]
+    us_states = [entry for entry in state_infos if entry[0] == "us"]
+    explicit_state_ids = {entry[1] for entry in us_states if entry[1]}
+    if len(explicit_state_ids) > 1:
+        return result("unknown_conflicting", "conflicting_explicit_event_states", us_states[0][3])
+    if foreign_states and (has_us_country or us_states):
+        return result("unknown_conflicting", "conflicting_explicit_event_geography", foreign_states[0][3])
+    if foreign_states:
+        return result("outside", "event_location_not_us", foreign_states[0][3])
+    if unknown_states and (has_us_country or us_states):
+        return result("unknown_conflicting", "us_event_with_unrecognized_state", unknown_states[0][3])
+    if unknown_states:
+        return result("unknown", "unrecognized_event_state", unknown_states[0][3])
+
+    location_infos = [(*location_info(value), field) for value, field in location_values]
+    foreign_locations = [entry for entry in location_infos if entry[0] == "foreign"]
+    ambiguous_locations = [entry for entry in location_infos if entry[0] == "ambiguous"]
+    us_locations = [entry for entry in location_infos if entry[0] == "us"]
+    explicit_location_ids = {
+        (entry[1] or entry[2].casefold())
+        for entry in us_locations
+    }
+    if us_states and us_locations:
+        state_ids = {entry[1] for entry in us_states if entry[1]}
+        location_state_ids = {entry[1] for entry in us_locations if entry[1]}
+        if location_state_ids and not location_state_ids.issubset(state_ids):
+            return result("unknown_conflicting", "conflicting_explicit_event_geography", us_states[0][3])
+    if len(explicit_location_ids) > 1:
+        return result("unknown_conflicting", "conflicting_explicit_event_locations", us_locations[0][4])
+    if foreign_locations and (has_us_country or us_states or us_locations):
+        return result("unknown_conflicting", "conflicting_explicit_event_geography", foreign_locations[0][4])
+    if foreign_locations:
+        return result("outside", "event_location_not_us", foreign_locations[0][4])
+    if ambiguous_locations and not (has_us_country or us_states):
+        return result("unknown", "ambiguous_event_location", ambiguous_locations[0][4])
+    if ambiguous_locations and has_us_country:
+        return result("unknown_conflicting", "ambiguous_event_location_with_us_country", ambiguous_locations[0][4])
+
+    # A trusted source-body contradiction must be assessed before allowing an
+    # explicit US field to make the row supported.  Preserve that contradiction
+    # through the adapter, retention, queue, and final validation handoffs.
+    if body and (has_us_country or us_states or us_locations):
+        body_foreign_hits = _source_body_geography_matches(body, NON_US_GEOGRAPHY_TERMS)
+        if body_foreign_hits:
+            return result(
+                "unknown_conflicting",
+                "source_text_conflicts_with_explicit_event_geography",
+                body_field,
+            )
+
+    if us_states:
+        normalized_state = us_states[0][1]
+        normalized_location = normalized_state and US_STATE_ABBREVIATION_TO_NAME.get(normalized_state, "").title()
+        if us_locations:
+            location_kind, location_state, location_value, location_scope, _ = us_locations[0]
+            if location_scope == "state_local" and location_state == normalized_state:
+                normalized_location = location_value
+        return result(
+            "supported",
+            "verified_us_state_or_territory",
+            us_states[0][3],
+            normalized_country="United States",
+            normalized_state=normalized_state,
+            normalized_location_name=normalized_location,
+            normalized_location_scope="state_local",
+        )
+    if has_us_country:
+        return result(
+            "supported",
+            "verified_us_event_country",
+            first_field(country_values),
+            normalized_country="United States",
+            normalized_location_name="United States",
+            normalized_location_scope="national",
+        )
+    if us_locations:
+        location_kind, location_state, location_value, location_scope, location_field = us_locations[0]
+        return result(
+            "supported",
+            "explicit_us_location",
+            location_field,
+            normalized_country="United States",
+            normalized_state=location_state,
+            normalized_location_name=location_value,
+            normalized_location_scope=location_scope,
+        )
+
+    # A source body can establish geography only when the passage has explicit
+    # source-body provenance.  Query hints, publisher/title text, URLs, and
+    # generic summaries are intentionally invisible here.
+    if body:
+        foreign_hits = _source_body_geography_matches(body, NON_US_GEOGRAPHY_TERMS)
+        body_us_country_terms = tuple(term for term in US_COUNTRY_NAMES if term not in {"us"})
+        us_country_hits = _source_body_geography_matches(body, body_us_country_terms)
+        ambiguous_hits = _source_body_geography_matches(body, AMBIGUOUS_GEOGRAPHY_NAMES)
+        body_state_name_terms = (set(US_STATE_NAMES) | set(US_TERRITORY_NAMES)) - AMBIGUOUS_GEOGRAPHY_NAMES
+        # Bare uppercase abbreviations are not reliable prose geography:
+        # ``OR`` and ``ME`` are ordinary words, and ``AS`` is a conjunction.
+        # Abbreviations are accepted only through explicit event/impact fields
+        # above; source-body evidence must spell out the geography.
+        body_state_matches = _source_body_geography_matches(body, body_state_name_terms)
+        state_matches = sorted(body_state_matches, key=lambda item: (item[1], -(item[2] - item[1]), item[0].casefold()))
+        state_infos = [(phrase, *state_info(phrase)) for phrase, _, _ in state_matches]
+        us_state_ids = {info[2] for info in state_infos if info[1] == "us" and info[2]}
+        if foreign_hits and (us_state_ids or us_country_hits):
+            return result("unknown_conflicting", "source_text_has_ambiguous_event_geographies", body_field)
+        if foreign_hits:
+            return result("outside", "source_text_identifies_non_us_event_geography", body_field)
+        if ambiguous_hits and not (us_state_ids or us_country_hits):
+            return result("unknown", "ambiguous_event_location", body_field)
+        if len(us_state_ids) > 1:
+            return result("unknown_conflicting", "multiple_source_text_us_states", body_field)
+        if len(us_state_ids) == 1:
+            normalized_state = next(iter(us_state_ids))
+            return result(
+                "supported",
+                "source_text_identifies_us_event_geography",
+                body_field,
+                normalized_country="United States",
+                normalized_state=normalized_state,
+                normalized_location_name=US_STATE_ABBREVIATION_TO_NAME[normalized_state].title(),
+                normalized_location_scope="state_local",
+            )
+        if us_country_hits:
+            return result(
+                "supported",
+                "source_text_identifies_us_event_geography",
+                body_field,
+                normalized_country="United States",
+                normalized_location_name="United States",
+                normalized_location_scope="national",
+            )
+    return result("unknown", "missing_or_ambiguous_event_geography")
+
+
+def food_line_is_supported_geography(row: dict[str, Any]) -> bool:
+    return bool(food_line_supported_geography_result(row)["supported"])
 
 
 FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES = (
@@ -2503,7 +2842,8 @@ def evaluate_food_line_pressure(
     pressure_signal = False
     pressure_reason = "insufficient specific pressure evidence"
     pressure_verification_status = "insufficient_evidence"
-    supported_geography = food_line_is_supported_geography(row)
+    geography_result = food_line_supported_geography_result(row)
+    supported_geography = bool(geography_result["supported"])
     blocked_by_source_purpose = source_purpose in SOURCE_PURPOSE_EVERGREEN_VALUES
     if blocked_by_source_purpose:
         pressure_verification_status = "demoted_context"
@@ -2533,7 +2873,11 @@ def evaluate_food_line_pressure(
             affected_groups = []
     if pressure_signal and not supported_geography:
         pressure_signal = False
-        pressure_reason = "outside product geography"
+        pressure_reason = (
+            "outside product geography"
+            if geography_result["status"] == "outside"
+            else "event geography unverified"
+        )
         pressure_verification_status = "demoted_context"
     if not pressure_signal:
         pressure_summary = ""
@@ -2636,6 +2980,9 @@ def evaluate_food_line_pressure(
         "source_role": source_role,
         "location_scope": location_scope,
         "supported_product_geography": supported_geography,
+        "food_line_geography_status": geography_result["status"],
+        "food_line_geography_reason": geography_result["reason"],
+        "food_line_geography_evidence_field": geography_result["evidence_field"],
         "source_role_allowed": source_role_allowed,
         "pressure_required": bool(pressure_required),
         "positive_keywords": positives,

@@ -20,6 +20,7 @@ def _source(evidence: str, **overrides: object) -> dict[str, object]:
         "canonical_source_url": "https://example.org/source",
         "publisher": "Example Operator",
         "exact_supporting_passage": evidence,
+        "event_country": "United States",
         "source_published_at": EDITION,
         "discovered_at": f"{EDITION}T12:00:00Z",
     }
@@ -149,6 +150,7 @@ def test_source_watch_shape_survives_normalization_without_inventing_publication
         "discovered_title": "Pantry suspension",
         "discovered_publisher": "Example Food Bank",
         "evidence_text": "The weekly pantry remains suspended indefinitely and had served 250 families.",
+        "exact_supporting_passage": "The weekly pantry remains suspended indefinitely and had served 250 families.",
         "pressure_summary": "A weekly distribution remains suspended.",
         "source_published_date": "",
         "retrieved_at": f"{EDITION}T12:00:00Z",
@@ -156,6 +158,7 @@ def test_source_watch_shape_survives_normalization_without_inventing_publication
         "source_role": "provider_signal",
         "location_name": "Palm Springs",
         "state_abbrev": "CA",
+        "event_state": "CA",
     }
     finding = adapt_food_line_agent_output([payload], agent_name="Food Line Source Watch", agent_run_id="run-1")[0]
     candidate = map_finding_to_food_line_candidate(finding, edition_date=EDITION)
@@ -204,9 +207,11 @@ def test_every_discovery_has_a_durable_disposition_and_duplicates_do_not_enter_r
         "discovered_title": "Pantry closes",
         "discovered_publisher": "Example News",
         "evidence_text": "The pantry closed permanently on September 5, 2026.",
+        "exact_supporting_passage": "The pantry closed permanently on September 5, 2026.",
         "source_published_date": EDITION,
         "location_name": "Example City",
         "state_abbrev": "CA",
+        "event_state": "CA",
     }
     invalid = {**good, "final_trace_url": "", "canonical_url": "", "source_url": "", "discovered_title": "Untraceable claim"}
     payload = {
@@ -248,9 +253,11 @@ def test_multiple_source_watch_exports_receive_unique_review_ranks(tmp_path: Pat
                     "discovered_title": f"Pantry {index} closes",
                     "discovered_publisher": "Example News",
                     "evidence_text": f"Pantry {index} closed permanently on September 5, 2026.",
+                    "exact_supporting_passage": f"Pantry {index} closed permanently on September 5, 2026.",
                     "source_published_date": EDITION,
                     "location_name": f"Example City {index}",
                     "state_abbrev": "CA",
+                    "event_state": "CA",
                 }
             ],
         }

@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261020T004451-0700-r11",
+  "scheduled_for": "2026-10-20T00:44:51-07:00",
+  "started_at": "2026-10-20T00:47:52-07:00",
+  "completed_at": "2026-10-20T00:49:33-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T23:50:00-07:00",
+    "end": "2026-10-20T00:49:33-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first. Latest accessible OCHA humanitarian situation report dated 19 October 2026 covers primarily 29 September–12 October; excluded as already known and outside new-event window. Source: https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+    "WHO checked first. WHO global search showed no newly dated report in the observation window; direct WHO EMRO OPT resources endpoint returned HTTP 502 and WHO global emergencies resource returned HTTP 404. Direct health-source coverage is degraded.",
+    "Completed exactly 12 additional targeted web searches: Reuters/AP casualties and ceasefire/crossings; UNRWA, WFP, UNICEF, MSF, ICRC, OCHA flash updates, Anadolu, and UN reporting.",
+    "Earlier Reuters reporting on commercial shipments and casualties, WFP reductions, and OCHA humanitarian conditions excluded as previously identified; Anadolu October 20 injury at a displaced tent near Khan Younis and killing of two people near Al-Shifa previously surfaced in earlier checks, not counted again.",
+    "No newly verifiable, nonduplicate developments established as first reported or occurring after the prior check.",
+    "The search-window start reflects the previous check's approximate 23:50 PDT completion as reported in the prior run; exact seconds were not independently verified because its GitHub heartbeat did not persist.",
+    "Supplementary recall only. No production, approval, publication, schedule, or policy changes."
+  ]
+}

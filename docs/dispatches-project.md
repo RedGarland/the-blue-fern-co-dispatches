@@ -175,6 +175,8 @@ For Gmail on port `587`, use STARTTLS with `SMTP_USE_SSL=0`. For Gmail on port `
 
 Exit codes: `0` means the pipeline succeeded and email was sent, or email was not requested. `1` means the pipeline failed but email was sent. `2` means email was requested but could not be sent. SMTP passwords must stay in environment variables or a credential manager, never in scheduled task arguments or logs.
 
+The guarded `scripts/run_gaza_daily_operator.py --email-report` wrapper treats reporting as an optional post-run notification only after a verified publication boundary. A report failure after `pages_push_ok: true`, or after post-only `LIVE_OK` with `PUBLISHED_AND_POSTED`/`ALREADY_POSTED`, is recorded as a warning and does not change publication status. A report failure before publication, after a failed social step, or during a dry run remains fatal. The operator writes the operational receipt after this reporting decision so its `details.email_status` matches the final result.
+
 ## Cascadia Dispatch Pipeline
 
 The Cascadia pipeline is standalone inside this repository. It is separate from the older FDA/Cascadia media pipeline and must not depend on that project structure. Cascadia is intentionally inactive: historical code, source configuration, public archive history, and reference commands are retained, but no production runner should be registered, enabled, or executed without explicit operator authorization.

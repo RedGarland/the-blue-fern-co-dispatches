@@ -10,11 +10,13 @@ from bluefern_dispatches.generator import build_site
 from bluefern_dispatches import generator as generator_module
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
 from bluefern_dispatches.gaza_audio import _audio_story_eligibility
+from scripts import run_gaza_dispatch as run_gaza_dispatch_module
 from scripts.run_gaza_dispatch import (
     _apply_written_public_story_filter,
     build_source_diversity_report,
     compute_gaza_source_adequacy,
     curate_stories,
+    _find_adjacent_public_editions,
     normalize_sources,
     render_gaza_edition,
     render_archive_index_rss,
@@ -3700,3 +3702,200 @@ def test_gaza_pages_history_preserves_retained_aggregate_and_audio_bytes(tmp_pat
     assert "2026-10-14" in validation_rss and "2026-10-17" in validation_rss
     for relative in ("gaza/audio/index.html", "gaza/audio/podcast.xml", "gaza/podcast.xml"):
         assert (validation_site / relative).read_bytes() == (pages / relative).read_bytes()
+
+
+def test_pages_backed_adjacent_edition_lookup_uses_public_history(tmp_path):
+    root = tmp_path / "source"
+    pages = tmp_path / "pages"
+    observed = []
+
+    def fake_discover(site_root, slug, *, pages_repo=None, **kwargs):
+        observed.append((site_root, slug, pages_repo))
+        return ["2026-10-20", "2026-10-18"]
+
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setattr(run_gaza_dispatch_module, "discover_public_edition_dates", fake_discover)
+    try:
+        result = _find_adjacent_public_editions(root, "2026-10-19", pages_repo=pages)
+    finally:
+        monkeypatch.undo()
+
+    assert result == ("2026-10-18", "2026-10-20")
+    assert observed == [(root / "output" / "site", "gaza", pages)]
+
+
+@pytest.mark.parametrize(
+    ("artifact_family", "only_dispatches", "expect_dispatches", "expect_date", "expect_pages_candidate"),
+    [
+        (None, ("gaza",), ("gaza",), "2026-10-19", True),
+        ("no-update", ("gaza",), (), "2026-10-19", True),
+        (None, ("food-line",), ("food-line",), "2026-10-19", False),
+        (None, ("gaza",), ("gaza",), None, False),
+    ],
+)
+def test_publish_pages_keeps_pages_candidate_scoped_to_gaza_history(
+    tmp_path,
+    monkeypatch,
+    artifact_family,
+    only_dispatches,
+    expect_dispatches,
+    expect_date,
+    expect_pages_candidate,
+):
+    root = tmp_path / "source"
+    pages = tmp_path / "pages"
+    site_root = root / "output" / "site"
+    (site_root / "gaza").mkdir(parents=True)
+    (site_root / "food-line").mkdir(parents=True)
+    (site_root / "gaza" / "index.html").write_text("source gaza", encoding="utf-8")
+    (site_root / "food-line" / "index.html").write_text("source food", encoding="utf-8")
+    (pages / "gaza").mkdir(parents=True)
+    (pages / "food-line").mkdir(parents=True)
+    (pages / "gaza" / "index.html").write_text("pages gaza", encoding="utf-8")
+    (pages / "food-line" / "index.html").write_text("pages food", encoding="utf-8")
+    candidate = tmp_path / "pages-backed-candidate"
+
+    build_calls = []
+    materialize_calls = []
+    validation_roots = []
+    history_roots = []
+    copy_roots = []
+    parity_roots = []
+    post_copy_roots = []
+
+    def fake_build_site(*args, **kwargs):
+        build_calls.append(kwargs)
+        return {
+            "errors": [],
+            "warnings": [],
+            "gaza_editions_discovered": [],
+            "gaza_archive_entries_written": [],
+            "gaza_editions_skipped": [],
+            "backfilled_public_editions": [],
+        }
+
+    def fake_materialize(site, pages_repo, temp_root, **kwargs):
+        materialize_calls.append((site, pages_repo, kwargs))
+        candidate.mkdir(parents=True, exist_ok=True)
+        return candidate
+
+    class FakeTemporaryDirectory:
+        def __init__(self, *args, **kwargs):
+            self.name = str(tmp_path / "temporary-publish-candidate")
+
+        def cleanup(self):
+            return None
+
+    def fake_validate_publish(root_arg, site_arg, pages_arg, **kwargs):
+        validation_roots.append(site_arg)
+        return [], []
+
+    def fake_history(pages_arg, site_arg, **kwargs):
+        history_roots.append(site_arg)
+        return []
+
+    def fake_copy(site_arg, pages_arg, **kwargs):
+        copy_roots.append(site_arg)
+        copied = ["gaza/index.html"] if "gaza" in only_dispatches else ["food-line/index.html"]
+        return copied, []
+
+    def fake_parity(root_arg, pages_arg, expect_date_arg, only_dispatches=(), site_root=None):
+        parity_roots.append(site_root)
+        return []
+
+    def fake_post_copy(pages_arg, site_arg, expect_date_arg, **kwargs):
+        post_copy_roots.append(site_arg)
+        return []
+
+    monkeypatch.setattr(generator_module, "build_site", fake_build_site)
+    monkeypatch.setattr(generator_module, "_materialize_gaza_dry_run_validation_site", fake_materialize)
+    monkeypatch.setattr(generator_module.tempfile, "TemporaryDirectory", FakeTemporaryDirectory)
+    monkeypatch.setattr(generator_module, "validate_pages_publish", fake_validate_publish)
+    monkeypatch.setattr(generator_module, "_gaza_public_surface_history_diagnostics", fake_history)
+    monkeypatch.setattr(generator_module, "_gaza_homepage_recent_edition_guard", lambda *args, **kwargs: {"ok": True, "reasons": []})
+    monkeypatch.setattr(generator_module, "discover_public_edition_dates", lambda *args, **kwargs: ["2026-10-19"])
+    monkeypatch.setattr(generator_module, "_validate_build_public_urls_expected_date", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator_module, "validate_pages_repo_copy_scope", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator_module, "validate_pages_copy_parity", fake_parity)
+    monkeypatch.setattr(generator_module, "validate_pages_repo_after_copy", fake_post_copy)
+    monkeypatch.setattr(generator_module, "copy_public_site_to_pages", fake_copy)
+    monkeypatch.setattr(generator_module, "refresh_shared_release_surfaces_from_pages_inventory", lambda *args, **kwargs: {"ok": True, "changed_surfaces": []})
+    monkeypatch.setattr(generator_module, "_remove_gaza_pages_no_update_for_published_edition", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator_module, "_gaza_no_update_publish_source_files", lambda *args, **kwargs: ([], []))
+    monkeypatch.setattr(generator_module, "remove_nested_duplicate_dispatch_paths", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator_module, "list_nested_duplicate_dispatch_paths", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator_module, "_git_porcelain_paths", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator_module, "maybe_commit_pages_repo", lambda *args, **kwargs: {"committed": False, "commit_sha": None, "committed_branch": None, "message": "no changes to commit"})
+
+    result = generator_module.publish_pages(
+        root,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        pages_branch="gh-pages",
+        expect_date=expect_date,
+        expect_dispatches=expect_dispatches,
+        only_dispatches=only_dispatches,
+        artifact_family=artifact_family,
+        visual_validation=False,
+    )
+
+    assert result["ok"] is True
+    assert build_calls and build_calls[0]["dry_run"] is False
+    assert bool(materialize_calls) is expect_pages_candidate
+    expected_root = candidate if expect_pages_candidate else site_root
+    assert validation_roots == [expected_root]
+    assert history_roots == ([expected_root] if "gaza" in only_dispatches else [])
+    assert copy_roots == [expected_root]
+    if artifact_family != "no-update":
+        assert parity_roots == [expected_root]
+        assert post_copy_roots == [expected_root]
+
+
+def test_gaza_copy_preserves_pages_flash_briefing_without_new_audio(tmp_path):
+    site_root = tmp_path / "site"
+    pages = tmp_path / "pages"
+    (site_root / "gaza" / "audio").mkdir(parents=True)
+    (pages / "gaza" / "audio").mkdir(parents=True)
+    (site_root / "gaza" / "audio" / "index.html").write_text("Audio archive", encoding="utf-8")
+    (pages / "gaza" / "audio" / "index.html").write_text("Audio archive", encoding="utf-8")
+    existing_flash = '[{"uid":"gaza-edition-correction-v1","redirectionUrl":"/gaza/audio/corrections/gaza-edition-correction-v1.mp3"}]\n'
+    (pages / "gaza" / "flash-briefing.json").write_text(existing_flash, encoding="utf-8")
+    (site_root / "gaza" / "flash-briefing.json").write_text('[{"uid":"gaza-2026-06-20","redirectionUrl":"/gaza/audio/2026-06-20.mp3"}]\n', encoding="utf-8")
+
+    copied, skipped = generator_module.copy_public_site_to_pages(
+        site_root,
+        pages,
+        dry_run=False,
+        only_dispatches=("gaza",),
+        gaza_publication_dates=(),
+    )
+
+    assert str(pages / "gaza" / "flash-briefing.json") not in copied
+    assert (pages / "gaza" / "flash-briefing.json").read_text(encoding="utf-8") == existing_flash
+    assert any("preserved Pages-owned Gaza flash briefing" in item for item in skipped)
+
+
+def test_gaza_copy_creates_flash_briefing_when_pages_target_is_absent(tmp_path):
+    site_root = tmp_path / "site"
+    pages = tmp_path / "pages"
+    (site_root / "gaza" / "audio").mkdir(parents=True)
+    (pages / "gaza" / "audio").mkdir(parents=True)
+    (site_root / "gaza" / "audio" / "index.html").write_text("Audio archive", encoding="utf-8")
+    (pages / "gaza" / "audio" / "index.html").write_text("Audio archive", encoding="utf-8")
+    source_flash = '[{"uid":"gaza-2026-06-20","redirectionUrl":"/gaza/audio/2026-06-20.mp3"}]\n'
+    (site_root / "gaza" / "flash-briefing.json").write_text(source_flash, encoding="utf-8")
+
+    copied, skipped = generator_module.copy_public_site_to_pages(
+        site_root,
+        pages,
+        dry_run=False,
+        only_dispatches=("gaza",),
+        gaza_publication_dates=(),
+    )
+
+    assert str(pages / "gaza" / "flash-briefing.json") in copied
+    assert (pages / "gaza" / "flash-briefing.json").read_text(encoding="utf-8") == source_flash
+    assert not any("preserved Pages-owned Gaza flash briefing" in item for item in skipped)

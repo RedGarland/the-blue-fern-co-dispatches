@@ -1,0 +1,81 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-19-001",
+    "title": "WFP reports October cuts to Gaza food assistance",
+    "summary": "WFP says October 2026 assistance covers 1.1 million people, down from 1.6 million in September 2026, with rations halved and fewer hot meals. The United Nations World Food Programme said on October 19, 2026 that funding shortages have forced it to reduce food assistance in Gaza by around one-third. WFP says it is supporting 1.1 million people in October 2026, down from 1.6 million in September 2026, and that food rations are half the previous allocation. The agency says daily hot meals have been reduced from 250,000 to 150,000 and that about 500,000 people have lost access to critical assistance. This preview reports WFP's announcement; it does not infer a different start date or claim the figures are independently measured.",
+    "category": "humanitarian food assistance",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-19-wfp-assistance-reduction-01"
+    ],
+    "source_ids": [
+      "gaza-2026-10-19-wfp-assistance-reduction-01"
+    ],
+    "source_urls": [
+      "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza"
+    ],
+    "publisher_names": [
+      "United Nations World Food Programme"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-19-wfp-assistance-reduction-01",
+        "title": "WFP reports October cuts to Gaza food assistance",
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "publisher": "United Nations World Food Programme",
+        "summary_or_snippet": "WFP says October 2026 assistance covers 1.1 million people, down from 1.6 million in September 2026, with rations halved and fewer hot meals. The United Nations World Food Programme said on October 19, 2026 that funding shortages have forced it to reduce food assistance in Gaza by around one-third. WFP says it is supporting 1.1 million people in October 2026, down from 1.6 million in September 2026, and that food rations are half the previous allocation. The agency says daily hot meals have been reduced from 250,000 to 150,000 and that about 500,000 people have lost access to critical assistance. This preview reports WFP's announcement; it does not infer a different start date or claim the figures are independently measured.",
+        "event_date": "2026-10-19",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "humanitarian food assistance",
+        "attribution": "United Nations World Food Programme",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-20T01:29:27.081502+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "humanitarian food assistance",
+    "location": "Gaza",
+    "event_date": "2026-10-19",
+    "attribution": "United Nations World Food Programme",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

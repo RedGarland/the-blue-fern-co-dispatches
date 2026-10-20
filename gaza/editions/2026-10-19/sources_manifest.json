@@ -1,0 +1,55 @@
+[
+  {
+    "source_record_id": "gaza-2026-10-19-wfp-assistance-reduction-01",
+    "source_id": "gaza-2026-10-19-wfp-assistance-reduction-01",
+    "title": "WFP reports October cuts to Gaza food assistance",
+    "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+    "canonical_url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+    "canonical_url_attempted": true,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "United Nations World Food Programme",
+    "published_at": "2026-10-19",
+    "retrieved_at": "2026-10-20T00:54:33.5867344Z",
+    "retrieved_local_date": "2026-10-19",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "WFP says October 2026 assistance covers 1.1 million people, down from 1.6 million in September 2026, with rations halved and fewer hot meals. The United Nations World Food Programme said on October 19, 2026 that funding shortages have forced it to reduce food assistance in Gaza by around one-third. WFP says it is supporting 1.1 million people in October 2026, down from 1.6 million in September 2026, and that food rations are half the previous allocation. The agency says daily hot meals have been reduced from 250,000 to 150,000 and that about 500,000 people have lost access to critical assistance. This preview reports WFP's announcement; it does not infer a different start date or claim the figures are independently measured.",
+    "source_type": "primary_public_statement",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian food assistance",
+    "reliability_tier": "primary-institutional",
+    "provider_id": "wfp-primary-verification",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Private renderer fixture derived from the separately verified WFP primary source and the reviewer-cleared candidate; the exact UTC observation time is retained in gaza-wfp-primary-observation-receipt-20261020.json and is not inherited from the preserved RSS evidence.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-10-19",
+    "used_in_story_ids": [
+      "gaza-story-2026-10-19-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 50,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|united nations world food programme|wfp reports october cuts to gaza food assistance|humanitarian food assistance|2026-10-19",
+    "title_fingerprint": "wfp reports october cuts to gaza food assistance",
+    "claim_fingerprint": "gaza|united nations world food programme|wfp reports october cuts to gaza food assistance|humanitarian food assistance|2026-10-19"
+  }
+]

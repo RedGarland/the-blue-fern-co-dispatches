@@ -5199,6 +5199,11 @@ def copy_public_site_to_pages(
         f"{pages_repo / '.git'}",
     ]
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
+    preserve_gaza_flash_briefing = gaza_only_publish and not _gaza_audio_publication_staged(
+        site_root,
+        pages_repo,
+        gaza_publication_dates=gaza_publication_dates,
+    )
     for source in collect_public_site_files(
         site_root,
         only_dispatches=only_dispatches,
@@ -5213,6 +5218,9 @@ def copy_public_site_to_pages(
         relative = source.relative_to(site_root).as_posix()
         if exclude_shared_release_surfaces and (relative == "index.html" or relative.startswith("dispatches/")):
             skipped.append(f"shared release surface owned by inventory refresh: {target}")
+            continue
+        if preserve_gaza_flash_briefing and relative == "gaza/flash-briefing.json":
+            skipped.append(f"preserved Pages-owned Gaza flash briefing without new audio: {target}")
             continue
         if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
             in_signal_scope = relative in {"signals/feed.xml", "care-line/signals/feed.xml"} or relative.startswith("events/")
@@ -5950,9 +5958,15 @@ def validate_pages_repo_copy_scope(
     return sorted(set(errors))
 
 
-def validate_pages_copy_parity(root: Path, pages_repo: Path, expect_date: str | None, only_dispatches: tuple[str, ...] = ()) -> list[str]:
+def validate_pages_copy_parity(
+    root: Path,
+    pages_repo: Path,
+    expect_date: str | None,
+    only_dispatches: tuple[str, ...] = (),
+    site_root: Path | None = None,
+) -> list[str]:
     errors: list[str] = []
-    site_root = root / "output" / "site"
+    site_root = site_root or (root / "output" / "site")
     if not expect_date:
         return errors
     gaza_files = [
@@ -6292,6 +6306,20 @@ def publish_pages(
             max_public_date=public_max_dates.get("gaza"),
             gaza_publication_dates=gaza_publication_dates,
         )
+    elif (not dry_run) and pages_repo.exists() and ((not only_dispatches) or ("gaza" in only_dispatches)):
+        # A normal non-dry Gaza publish must validate and copy against the
+        # same Pages-backed history candidate used by dry-run. The generated
+        # source tree can legitimately omit older public editions that still
+        # exist in Pages; copying it directly would shrink archive/RSS history
+        # and is correctly rejected by the history guard.
+        no_update_publish_temp = tempfile.TemporaryDirectory(prefix="bluefern-gaza-pages-publish-")
+        publish_site_root = _materialize_gaza_dry_run_validation_site(
+            site_root,
+            pages_repo,
+            Path(no_update_publish_temp.name),
+            max_public_date=public_max_dates.get("gaza"),
+            gaza_publication_dates=gaza_publication_dates,
+        )
     errors = list(build["errors"])
     errors.extend(artifact_family_errors)
     validation_errors, validation_warnings = validate_pages_publish(
@@ -6343,7 +6371,7 @@ def publish_pages(
         pages_gaza_audio_root = pages_repo / "gaza" / "audio"
         if not site_gaza_audio_root.exists() and pages_gaza_audio_root.exists():
             gaza_audio_root = pages_repo / "gaza"
-        gaza_validation_site_root = publish_site_root if no_update_publish else site_root
+        gaza_validation_site_root = publish_site_root if (no_update_publish or not dry_run) else site_root
         dry_run_validation_temp: tempfile.TemporaryDirectory[str] | None = None
         if dry_run and not no_update_publish and pages_repo.exists():
             dry_run_validation_temp = tempfile.TemporaryDirectory(prefix="bluefern-gaza-pages-dry-run-")
@@ -6459,7 +6487,7 @@ def publish_pages(
         if no_update_publish:
             shared_surface_refresh_planned = bool(shared_homepage_dispatch)
         copied, skipped = copy_public_site_to_pages(
-            publish_site_root if no_update_publish else site_root,
+            publish_site_root,
             pages_repo,
             dry_run=dry_run,
             only_dispatches=only_dispatches,
@@ -6516,13 +6544,21 @@ def publish_pages(
             )
         )
         if not dry_run and not no_update_publish:
-            errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
+            errors.extend(
+                validate_pages_copy_parity(
+                    root,
+                    pages_repo,
+                    expect_date,
+                    only_dispatches=only_dispatches,
+                    site_root=publish_site_root,
+                )
+            )
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
                 errors.extend(validate_cascadia_pages_copy_consistency(pages_repo, expect_date))
             errors.extend(
                 validate_pages_repo_after_copy(
                     pages_repo,
-                    site_root,
+                    publish_site_root,
                     expect_date,
                     expect_dispatches=expect_dispatches,
                     only_dispatches=only_dispatches,

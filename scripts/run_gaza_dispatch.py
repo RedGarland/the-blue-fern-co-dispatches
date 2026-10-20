@@ -1629,16 +1629,17 @@ def _story_claim_caveat(story: dict[str, Any], source: dict[str, Any] | None) ->
     return None
 
 
-def _find_adjacent_public_editions(root: Path, edition_date: str) -> tuple[str | None, str | None]:
-    editions_root = root / "output" / "site" / "gaza" / "editions"
-    if not editions_root.exists():
-        return None, None
+def _find_adjacent_public_editions(
+    root: Path,
+    edition_date: str,
+    pages_repo: Path | None = None,
+) -> tuple[str | None, str | None]:
     dates = sorted(
-        [
-            path.name
-            for path in editions_root.iterdir()
-            if path.is_dir() and DATE_RE.match(path.name) and (path / "index.html").exists()
-        ]
+        discover_public_edition_dates(
+            root / "output" / "site",
+            DISPATCH_SLUG,
+            pages_repo=pages_repo,
+        )
     )
     if not dates:
         return None, None
@@ -1900,7 +1901,11 @@ def render_gaza_edition(
     unique_publishers = sorted(
         {str(source.get("publisher") or "").strip() for source in sources if str(source.get("publisher") or "").strip()}
     )
-    prev_edition, next_edition = _find_adjacent_public_editions(ROOT, edition_date)
+    prev_edition, next_edition = _find_adjacent_public_editions(
+        root,
+        edition_date,
+        pages_repo=_default_pages_repo(root),
+    )
     friendly_edition_date = _format_public_date(edition_date) or edition_date
 
     def render_story(story: dict[str, Any]) -> None:

@@ -2,3 +2,8 @@
 .env -diff
 .env.* -diff
 .env.example diff
+data/agent-history/gaza/raw/81f4574dae4e26d5763697516bb096d13ae240a6801b235d8631d5e5d39682b4.json text eol=lf
+data/agent-history/gaza/normalized/81f4574dae4e26d5763697516bb096d13ae240a6801b235d8631d5e5d39682b4.json text eol=lf
+data/agent-history/gaza/reports/81f4574dae4e26d5763697516bb096d13ae240a6801b235d8631d5e5d39682b4.json text eol=lf
+data/agent-history/gaza/reviews/gaza-aug29-gz-01-corrected.json text eol=lf
+data/agent-history/gaza/reviews/decisions/81f4574dae4e26d576369751-3be0051cb989e45c43df.json text eol=lf

@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261020T124451-0700-r11",
+  "scheduled_for": "2026-10-20T12:44:51-07:00",
+  "started_at": "2026-10-20T12:47:23-07:00",
+  "completed_at": "2026-10-20T12:49:10-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-20T11:45:40-07:00",
+    "end": "2026-10-20T12:49:10-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall watch only. Production Gaza collector and publisher are authoritative. No publication, approval, production, task schedule or automation-state changes.",
+    "Explicit initial OCHA OPT search and homepage review: latest listed Gaza reporting was published on 19 October 2026, with no new OCHA OPT Gaza release during this observation window. https://www.ochaopt.org/",
+    "Explicit initial WHO search and regional page check: no verified new Gaza-health update. WHO EMRO OPT medical-evacuation page timed out (HTTP 400 wrapper) and regional news endpoint returned HTTP 502; direct regional WHO healthcare verification incomplete.",
+    "Exactly 12 additional targeted search queries: Reuters casualties/ceasefire; AP casualties; UN humanitarian briefing; UNICEF children/water/health; WHO news hospitals/evacuations; WAFA Gaza casualties; WFP aid; UNRWA; ICRC medical/water; MSF hospitals; crossings/medical evacuation/fuel; WAFA afternoon casualties.",
+    "Reviewed Reuters October 20 casualty account and AP rolling Middle East report. Gaza City couple, Khan Younis adolescent and Zeitoun fatality were all already covered by earlier watches; no separate newly verified incident in this window. Qatar negotiation commentary did not evidence a new implemented ceasefire or negotiation change.",
+    "Excluded prior-watch Wadi Gaza child fatality, Jabalia al-Balad fatality and Al-Bureij injury; October 19 WFP funding-related assistance cuts; and earlier commercial-shipment access reporting as duplicates or outside-window discoveries.",
+    "No new traceable nonduplicate finding verified by the end of this check. Search results do not prove no events occurred; ongoing indexed-publication lag and WHO regional access issues limit coverage.",
+    "GitHub ops/watch-ledger branch existence was independently confirmed via GitHub branch search. Heartbeat persistence attempted through the GitHub create_file connector."
+  ]
+}

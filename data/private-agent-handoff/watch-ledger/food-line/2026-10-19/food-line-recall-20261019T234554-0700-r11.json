@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261019T234554-0700-r11",
+  "scheduled_for": "2026-10-19T23:45:54-07:00",
+  "started_at": "2026-10-19T23:45:55-07:00",
+  "completed_at": "2026-10-19T23:46:31-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-19T22:51:00-07:00",
+    "end_at": "2026-10-19T23:46:31-07:00",
+    "timezone": "America/Los_Angeles",
+    "scope": "United States; new source notices since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_failures": 0,
+    "searched_classes": [
+      "only/sole/last/full-service community grocery closures or disaster losses",
+      "emergency food distribution suspension or cancellation from storm/flood/fire/outage/facility damage",
+      "abrupt pantry or food-bank service closures or major access reductions",
+      "official SNAP/WIC/food-assistance interruption with immediate access effect"
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire October 19 2026 community",
+      "\"sole grocery store\" fire closed October 19 2026",
+      "October 19 2026 \"food distribution\" canceled storm flood outage",
+      "October 19 2026 food pantry closed fire water damage abrupt",
+      "October 19 2026 food bank suspends services facility emergency",
+      "October 19 2026 SNAP benefits interrupted EBT outage state notice",
+      "October 19 2026 WIC clinic closed emergency interruption notice",
+      "October 20 2026 food pantry food distribution canceled closed disaster",
+      "site:facebook.com \"food pantry\" \"closed\" \"October 19, 2026\" flooding",
+      "\"food distribution\" \"cancelled\" \"October 19\" 2026 storm",
+      "\"grocery store\" \"only\" \"closed\" \"Oct 19, 2026\" local",
+      "site:gov \"SNAP\" \"October 19, 2026\" \"interruption\" EBT"
+    ],
+    "result_notes": "No source independently establishes a new qualifying disruption inside the hourly window. Results were older incidents, resource listings, donation/promotional articles or unrelated weather closures. Previously detected October 18 Wyandanch Mercy Soup Kitchen closure excluded as duplicate. Broad web indexing may lag official and local notices.",
+    "authority": "Supplementary discovery only; production Food Line collection remains authoritative.",
+    "publication_effects": "none; no approval, publication, schedule change or task disablement"
+  }
+}

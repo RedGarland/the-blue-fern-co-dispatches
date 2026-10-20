@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T144958-0700-r11-b6f0d",
+  "scheduled_for": "2026-10-20T14:45:22-07:00",
+  "started_at": "2026-10-20T14:49:58-07:00",
+  "completed_at": "2026-10-20T14:51:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "started_at": "2026-10-20T13:43:00-07:00",
+    "ended_at": "2026-10-20T14:51:24-07:00",
+    "timezone": "America/Los_Angeles",
+    "scope": "U.S. states and territories; supplementary high-value recall only"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Accessible; newest dated entry 2026-10-19 Platinum Health Service (IL) termination, previously identified. No newly dated 2026-10-20 notices observed."
+    },
+    "additional_targeted_searches": 12,
+    "topics": [
+      "hospital and ED closure/diversion",
+      "obstetrics/maternity",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "primary care",
+      "rural and emergency services",
+      "ambulance/EMS",
+      "air-medical bases",
+      "essential-service restoration",
+      "U.S. territories"
+    ],
+    "assessment": "No new qualifying and nonduplicate healthcare access changes confirmed in this bounded recall window. Search results mainly described prior events, proposals, non-U.S. events, or industry stories without concrete service change. Older items and prior watch findings excluded.",
+    "authority": "Supplementary recall watch; production Care Line national collection remains authoritative.",
+    "publication_authorized": false,
+    "reviewed": false
+  }
+}

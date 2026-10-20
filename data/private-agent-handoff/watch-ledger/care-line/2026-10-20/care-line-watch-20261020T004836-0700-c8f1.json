@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T004836-0700-c8f1",
+  "scheduled_for": "2026-10-20T00:45:22-07:00",
+  "started_at": "2026-10-20T00:48:36-07:00",
+  "completed_at": "2026-10-20T00:50:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T22:46:45-07:00",
+    "end": "2026-10-20T00:50:15-07:00",
+    "basis": "Conservative catch-up from the last confirmed prior watch completion in available history; intervening 23:45 watch result not visible."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Care Line national collector remains authoritative.",
+    "CMS Public Notices checked first: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest listed notices are 2026-10-19 Platinum Health Service (IL) termination and 2026-10-15 Reagan Medical Center (GA) CLIA limitation; both previously identified on 2026-10-19 and excluded as duplicates.",
+    "Exactly 12 additional targeted web searches covered hospital/ED/maternity, rural and emergency care, behavioral health, EMS, air-medical, dialysis, oncology, primary care, official state notices and restoration of prior lost services in U.S. and territories. No newly confirmed in-window qualifying change.",
+    "Expansion of helicopter service in Tennessee was excluded: new capacity was not a reopening of previously lost service. Older closures, out-of-country news, proposals and delayed-indexed older reports were excluded.",
+    "Potential search recall limitation: publication timestamps are not reliably indexed for every local and official source; this is not an exhaustive national collection.",
+    "No approvals, public changes, schedule changes, or disabling were performed."
+  ]
+}

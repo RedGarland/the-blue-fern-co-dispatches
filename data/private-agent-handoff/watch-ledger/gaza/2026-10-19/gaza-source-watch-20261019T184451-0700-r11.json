@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261019T184451-0700-r11",
+  "scheduled_for": "2026-10-19T18:44:51-07:00",
+  "started_at": "2026-10-19T18:44:07-07:00",
+  "completed_at": "2026-10-19T18:45:24-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-19T17:51:00-07:00",
+    "end": "2026-10-19T18:45:24-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary hourly recall only. Production Gaza collector/publisher remains authoritative; no approval, publication, schedule, or production changes.",
+    "OCHA OPT and WHO checked before twelve additional targeted searches. OCHA latest 19 October publication is the report titled Humanitarian Situation Report | 15 October 2026, covering mainly 29 September–12 October. Its flood risks, water decline, health disruption, medical evacuations, casualties, and food changes were surfaced by prior watches and excluded as repeat evidence: https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026.",
+    "WHO global emergency overview was retrievable at https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt, but WHO Eastern Mediterranean oPt page at https://www.emro.who.int/opt/index.html returned Internal Error, limiting direct regional healthcare coverage. Research therefore classified DEGRADED, not FAILED.",
+    "Twelve additional targeted searches covered Reuters/AP current civilian casualties, crossing/aid changes, UNRWA shelters/displacement, WFP food assistance, ICRC detainees/hostages, MSF hospitals/ambulances, UN humanitarian/water/fuel, Reuters ceasefire, overnight casualty reports, hospital and medical evacuations, Yellow Line operations, and UNISPAL.",
+    "The WFP announcement published 19 October reducing food assistance from 1.6 million to 1.1 million people, food rations, and hot meals was already identified by earlier watch runs and excluded as a duplicate: https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza.",
+    "Reuters 19 October report on resuming commercial shipment coordination and five deaths attributed to Gaza officials was identified before the previous completed check; no verifiable new delivery or incident during this window: https://www.reuters.com/world/middle-east/israel-resume-commercial-shipments-gaza-after-hamas-fee-dispute-2026-10-19/.",
+    "Current AP and Reuters articles about WFP aid cuts republish the same already discovered decision, and reporting on West Bank settler violence was excluded as out of Gaza scope.",
+    "No new nonduplicate, source-traceable Gaza developments verified to have occurred or first appeared between 17:51 and 18:45 PDT. Source retrieval and indexing are not exhaustive. The absence of findings does not establish an absence of events."
+  ]
+}

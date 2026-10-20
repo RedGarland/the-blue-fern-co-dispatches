@@ -3725,11 +3725,12 @@ def test_pages_backed_adjacent_edition_lookup_uses_public_history(tmp_path):
 
 
 @pytest.mark.parametrize(
-    ("artifact_family", "only_dispatches", "expect_dispatches", "expect_pages_candidate"),
+    ("artifact_family", "only_dispatches", "expect_dispatches", "expect_date", "expect_pages_candidate"),
     [
-        (None, ("gaza",), ("gaza",), True),
-        ("no-update", ("gaza",), (), True),
-        (None, ("food-line",), ("food-line",), False),
+        (None, ("gaza",), ("gaza",), "2026-10-19", True),
+        ("no-update", ("gaza",), (), "2026-10-19", True),
+        (None, ("food-line",), ("food-line",), "2026-10-19", False),
+        (None, ("gaza",), ("gaza",), None, False),
     ],
 )
 def test_publish_pages_keeps_pages_candidate_scoped_to_gaza_history(
@@ -3738,6 +3739,7 @@ def test_publish_pages_keeps_pages_candidate_scoped_to_gaza_history(
     artifact_family,
     only_dispatches,
     expect_dispatches,
+    expect_date,
     expect_pages_candidate,
 ):
     root = tmp_path / "source"
@@ -3822,6 +3824,7 @@ def test_publish_pages_keeps_pages_candidate_scoped_to_gaza_history(
     monkeypatch.setattr(generator_module, "_gaza_no_update_publish_source_files", lambda *args, **kwargs: ([], []))
     monkeypatch.setattr(generator_module, "remove_nested_duplicate_dispatch_paths", lambda *args, **kwargs: [])
     monkeypatch.setattr(generator_module, "list_nested_duplicate_dispatch_paths", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator_module, "_git_porcelain_paths", lambda *args, **kwargs: [])
     monkeypatch.setattr(generator_module, "maybe_commit_pages_repo", lambda *args, **kwargs: {"committed": False, "commit_sha": None, "committed_branch": None, "message": "no changes to commit"})
 
     result = generator_module.publish_pages(
@@ -3832,7 +3835,7 @@ def test_publish_pages_keeps_pages_candidate_scoped_to_gaza_history(
         commit=False,
         no_push=True,
         pages_branch="gh-pages",
-        expect_date="2026-10-19",
+        expect_date=expect_date,
         expect_dispatches=expect_dispatches,
         only_dispatches=only_dispatches,
         artifact_family=artifact_family,
@@ -3873,3 +3876,26 @@ def test_gaza_copy_preserves_pages_flash_briefing_without_new_audio(tmp_path):
     assert str(pages / "gaza" / "flash-briefing.json") not in copied
     assert (pages / "gaza" / "flash-briefing.json").read_text(encoding="utf-8") == existing_flash
     assert any("preserved Pages-owned Gaza flash briefing" in item for item in skipped)
+
+
+def test_gaza_copy_creates_flash_briefing_when_pages_target_is_absent(tmp_path):
+    site_root = tmp_path / "site"
+    pages = tmp_path / "pages"
+    (site_root / "gaza" / "audio").mkdir(parents=True)
+    (pages / "gaza" / "audio").mkdir(parents=True)
+    (site_root / "gaza" / "audio" / "index.html").write_text("Audio archive", encoding="utf-8")
+    (pages / "gaza" / "audio" / "index.html").write_text("Audio archive", encoding="utf-8")
+    source_flash = '[{"uid":"gaza-2026-06-20","redirectionUrl":"/gaza/audio/2026-06-20.mp3"}]\n'
+    (site_root / "gaza" / "flash-briefing.json").write_text(source_flash, encoding="utf-8")
+
+    copied, skipped = generator_module.copy_public_site_to_pages(
+        site_root,
+        pages,
+        dry_run=False,
+        only_dispatches=("gaza",),
+        gaza_publication_dates=(),
+    )
+
+    assert str(pages / "gaza" / "flash-briefing.json") in copied
+    assert (pages / "gaza" / "flash-briefing.json").read_text(encoding="utf-8") == source_flash
+    assert not any("preserved Pages-owned Gaza flash briefing" in item for item in skipped)

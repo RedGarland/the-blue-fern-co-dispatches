@@ -5199,10 +5199,15 @@ def copy_public_site_to_pages(
         f"{pages_repo / '.git'}",
     ]
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
-    preserve_gaza_flash_briefing = gaza_only_publish and not _gaza_audio_publication_staged(
-        site_root,
-        pages_repo,
-        gaza_publication_dates=gaza_publication_dates,
+    pages_flash_briefing = pages_repo / "gaza" / "flash-briefing.json"
+    preserve_gaza_flash_briefing = (
+        gaza_only_publish
+        and pages_flash_briefing.is_file()
+        and not _gaza_audio_publication_staged(
+            site_root,
+            pages_repo,
+            gaza_publication_dates=gaza_publication_dates,
+        )
     )
     for source in collect_public_site_files(
         site_root,
@@ -6306,12 +6311,19 @@ def publish_pages(
             max_public_date=public_max_dates.get("gaza"),
             gaza_publication_dates=gaza_publication_dates,
         )
-    elif (not dry_run) and pages_repo.exists() and ((not only_dispatches) or ("gaza" in only_dispatches)):
-        # A normal non-dry Gaza publish must validate and copy against the
-        # same Pages-backed history candidate used by dry-run. The generated
-        # source tree can legitimately omit older public editions that still
-        # exist in Pages; copying it directly would shrink archive/RSS history
-        # and is correctly rejected by the history guard.
+    elif (
+        (not dry_run)
+        and pages_repo.exists()
+        and gaza_publication_dates
+        and ((not only_dispatches) or ("gaza" in only_dispatches))
+    ):
+        # A normal non-dry Gaza publish with an explicit expected date must
+        # validate and copy against the same Pages-backed history candidate
+        # used by dry-run. The generated source tree can legitimately omit
+        # older public editions that still exist in Pages; copying it directly
+        # would shrink archive/RSS history and is correctly rejected by the
+        # history guard. Generic no-expect-date publishes retain the source
+        # root so their existing guards can decide whether to proceed.
         no_update_publish_temp = tempfile.TemporaryDirectory(prefix="bluefern-gaza-pages-publish-")
         publish_site_root = _materialize_gaza_dry_run_validation_site(
             site_root,

@@ -224,6 +224,87 @@ def test_gaza_official_follow_up_counts_as_material_update_not_duplicate():
     assert result.decisions[0]["watchlist_status"] == "material_follow_up"
 
 
+def test_gaza_major_update_without_material_evidence_is_skipped():
+    root = make_root()
+    prior = story(
+        "old",
+        "Alone in Gaza: Genocide leaves Palestinian man without family or a home",
+        "https://example.com/alone-in-gaza-prior",
+        summary="Earlier coverage described conditions in Gaza.",
+        publisher="Al Jazeera",
+        category="conflict",
+    )
+    write_prior_memory(root, prior, edition_date="2026-06-30", dispatch_slug="gaza")
+    candidate = story(
+        "new",
+        "Alone in Gaza: Genocide leaves Palestinian man without family or a home",
+        "https://example.com/alone-in-gaza-current",
+        summary="One man wanders Gaza in search of somewhere to sleep, having lost his family in an Israeli strike.",
+        publisher="Al Jazeera",
+        category="conflict",
+    )
+
+    result = dedupe_public_stories(root, "gaza", "2026-10-16", [candidate])
+
+    assert result.stories == []
+    decision = result.decisions[0]
+    assert decision["classification"] == "duplicate_skip"
+    assert decision["material_update"] is False
+    assert "non_material_major_update" in decision["duplicate_reasons"]
+
+
+def test_gaza_real_june_30_double_tap_record_does_not_match_alone_feature():
+    root = make_root()
+    pages_edition = root / "bluefern-dispatches-pages" / "gaza" / "editions" / "2026-06-30"
+    pages_edition.mkdir(parents=True, exist_ok=True)
+    # Exact prior row preserved from the Pages curation_manifest.json for
+    # gaza/editions/2026-06-30/.
+    pages_edition.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "gaza-story-2026-06-30-001",
+                    "title": "Man in Gaza survives double tap Israeli strike on vehicle",
+                    "summary": "",
+                    "category": "conflict",
+                    "story_scope": "core_gaza",
+                    "source_urls": [
+                        "https://www.aljazeera.com/video/newsfeed/2026/6/30/man-in-gaza-survives-double-tap-israeli-strike-on-vehicle?traffic_source=rss"
+                    ],
+                    "publisher_names": ["Al Jazeera"],
+                    "source_records": [
+                        {
+                            "source_record_id": "gaza-2026-06-30-aljazeera-middle-east-9a8bfbb7a44c",
+                            "title": "Man in Gaza survives double tap Israeli strike on vehicle",
+                            "url": "https://www.aljazeera.com/video/newsfeed/2026/6/30/man-in-gaza-survives-double-tap-israeli-strike-on-vehicle?traffic_source=rss",
+                            "publisher": "Al Jazeera",
+                            "summary_or_snippet": "Man in Gaza survives double tap Israeli strike on vehicle",
+                        },
+                    ],
+                    "included_in_public_summary": True,
+                    "public_rendered": True,
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    candidate = story(
+        "gaza-2026-10-16-aljazeera-middle-east-564d1d7f5a8e",
+        "Alone in Gaza: Genocide leaves Palestinian man without family or a home",
+        "https://www.aljazeera.com/features/2026/10/16/alone-in-gaza-genocide-leaves-palestinian-man-without-family-or-a-home?traffic_source=rss",
+        summary="One man wanders Gaza in search of somewhere to sleep, having lost his family in an Israeli strike.",
+        publisher="Al Jazeera",
+        category="conflict",
+    )
+
+    result = dedupe_public_stories(root, "gaza", "2026-10-16", [candidate])
+
+    assert len(result.stories) == 1
+    assert result.stories[0]["dedupe_classification"] == "new"
+    assert result.decisions[0]["prior_story_matched"] is None
+
+
 def test_gaza_ceasefire_implementation_shift_survives_duplicate_guard():
     root = make_root()
     prior = story(

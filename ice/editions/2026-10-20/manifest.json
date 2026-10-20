@@ -1,0 +1,16 @@
+{
+  "accepted_event_count": 1,
+  "collection_state": "healthy",
+  "collection_warning": null,
+  "dispatch": "ice",
+  "edition_date": "2026-10-20",
+  "editorial_decision": "ELIGIBLE_FOR_EDITION",
+  "editorial_decision_reason": "single consequential legal/policy/operational ICE event",
+  "generated_at": "2026-10-20T21:17:16Z",
+  "input_contract": "reviewed_canonical_events_only",
+  "non_public": false,
+  "public_side_effects": true,
+  "publication_status": "published",
+  "rendered_event_count": 1,
+  "review_exclusions": []
+}

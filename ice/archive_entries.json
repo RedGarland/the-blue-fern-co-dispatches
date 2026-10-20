@@ -1,15 +1,16 @@
 [
   {
-    "canonical_path": "/ice/editions/2026-10-11/",
+    "canonical_path": "/ice/editions/2026-10-20/",
     "collection_state": "healthy",
-    "edition_date": "2026-10-11",
+    "edition_date": "2026-10-20",
     "editorial_decision": "ELIGIBLE_FOR_EDITION",
-    "event_count": 3,
-    "guid": "bluefern-ice-2026-10-11",
+    "event_count": 1,
+    "guid": "bluefern-ice-2026-10-20",
     "highest_severity": "medium",
-    "href": "editions/2026-10-11/",
-    "non_public": true,
-    "source_count": 3,
-    "title": "ICE Dispatch — 2026-10-11"
+    "href": "editions/2026-10-20/",
+    "non_public": false,
+    "publication_status": "published",
+    "source_count": 2,
+    "title": "ICE Dispatch - 2026-10-20"
   }
 ]

@@ -1,0 +1,35 @@
+{
+  "dispatch": "ice",
+  "edition_date": "2026-10-20",
+  "events": [
+    {
+      "canonical_event_id": "ice-long-beach-gonzalez-2026-10-17",
+      "category": "legal_oversight_accountability",
+      "city": null,
+      "county": null,
+      "edition_relationship": "NEW EVENT",
+      "event_date": "2026-10-17",
+      "facility": null,
+      "geography_provenance": null,
+      "geography_source": null,
+      "latitude": null,
+      "location_precision": "unknown",
+      "longitude": null,
+      "map_readiness": "NOT_YET_MAPPABLE",
+      "severity": "medium",
+      "source_count": 2,
+      "state_or_territory": null,
+      "summary": "Long Beach Post reported on the Oct. 17 North Long Beach encounter, witness and video context, police-assisted medical care, Mayor Rex Richardson seeking federal answers, and disputed witness and ICE accounts, including an ICE spokesperson's minimum-force and vehicle-damage statements.",
+      "title": "Long Beach mayor seeks federal answers after disputed Oct. 17 ICE encounter"
+    }
+  ],
+  "filters": [
+    "date_range",
+    "category",
+    "severity",
+    "state_or_territory",
+    "event_type",
+    "facility"
+  ],
+  "non_public": false
+}

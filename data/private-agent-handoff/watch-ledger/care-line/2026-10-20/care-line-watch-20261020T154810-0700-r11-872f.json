@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T154810-0700-r11-872f",
+  "scheduled_for": "2026-10-20T15:45:22-07:00",
+  "started_at": "2026-10-20T15:48:10-07:00",
+  "completed_at": "2026-10-20T15:49:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-20",
+    "date_to": "2026-10-20",
+    "edition_date": "2026-10-20",
+    "start_at": "2026-10-20T13:43:00-07:00",
+    "end_at": "2026-10-20T15:49:58-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Official CMS Public Notices checked first; latest notice October 19 (previously seen). 12 additional targeted searches completed, no new confirmed findings. Previously reported Nebraska and Guam events deduplicated. A Guam government page timed out, leaving a narrow unverified coverage gap; DEGRADED. Production collection remains authoritative; no approval/publication/schedule change."
+}

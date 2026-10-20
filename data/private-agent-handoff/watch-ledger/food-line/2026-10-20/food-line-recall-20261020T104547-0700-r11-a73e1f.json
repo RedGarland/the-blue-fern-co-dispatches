@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261020T104547-0700-r11-a73e1f",
+  "scheduled_for": "2026-10-20T10:45:54-07:00",
+  "started_at": "2026-10-20T10:45:47-07:00",
+  "completed_at": "2026-10-20T10:46:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-20T08:51:00-07:00",
+    "end": "2026-10-20T10:46:32-07:00",
+    "timezone": "America/Los_Angeles",
+    "note": "Conservative lookback to most recent visible completed check; exact intervening ledger state not independently established."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary bounded recall watch only; production collector authoritative.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "coverage": [
+      "Sole/last/full-service grocery loss, closure, or fire",
+      "Weather/disaster-related emergency distribution cancellation or suspension",
+      "Abrupt pantry or food-bank closure or material access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "disposition": "No newly published, independently verified qualifying incident found within the bounded search window.",
+    "excluded": "Older reports; previously known incidents; relief-distribution promotion; store openings/renovations; ordinary grocery closures without sole/last access evidence; 2025 SNAP interruption reports.",
+    "material_limitations": "Search engines returned substantial older and off-topic material; no exhaustive nationwide collection or source-by-source official-site audit was attempted.",
+    "approvals_publication_schedule_changes": false
+  }
+}

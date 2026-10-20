@@ -1,6 +1,6 @@
 {
-  "schema_version": "care_line_private_retrospective_preview_v1",
-  "preview_status": "private_preview_only",
+  "schema_version": "care_line_public_retrospective_v1",
+  "publication_status": "published",
   "edition_event_period": "2026-09",
   "items": [
     {
@@ -11,7 +11,7 @@
       "source_publication_context": "Flatwater Free Press published October 13, 2026; News Channel Nebraska published September 21 and updated September 23, 2026.",
       "location": "Kearney, Nebraska",
       "pressure_type": "care_access",
-      "proposed_summary": "Flatwater Free Press reported on October 13 that Cambridge Court in Kearney closed in September 2026, requiring residents to relocate to other facilities or stay with family while seeking a local opening.",
+      "summary": "Flatwater Free Press reported on October 13 that Cambridge Court in Kearney closed in September 2026, requiring residents to relocate to other facilities or stay with family while seeking a local opening.",
       "limits": [
         "Do not state a displaced-resident total.",
         "Do not substitute DHHS licensed-bed capacity for resident displacement.",
@@ -35,10 +35,10 @@
         "public_august_retrospective": "no Cambridge Court, Kearney, or Nebraska match found in retrospective index or items",
         "decision": "one retrospective item; no duplicate promotion"
       },
-      "publication_status": "not_approved_not_published"
+      "publication_status": "published"
     }
   ],
-  "proposed_public_paths": [
+  "public_paths": [
     "care-line/source-based-retrospectives/care-line-september-2026-source-based-publication/index.html",
     "care-line/source-based-retrospectives/care-line-september-2026-source-based-publication/items.json"
   ]

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T014303-0700-f6b2",
+  "scheduled_for": "2026-10-20T00:45:22-07:00",
+  "started_at": "2026-10-20T01:43:03-07:00",
+  "completed_at": "2026-10-20T01:44:09-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-19T22:44:10-07:00",
+    "end": "2026-10-20T01:44:09-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "last previously documented completed check; no confirmation of intervening runs"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices index checked first on 2026-10-20 PDT: latest listed notices remain 2026-10-19 Platinum Health Service (IL) and 2026-10-15 Reagan Medical Center (GA). Both are already reported by an earlier watch and excluded as duplicates.",
+    "Exactly 12 additional targeted web searches were run for US/territory acute, maternity, behavioral health, dialysis, oncology, primary care, rural emergency, ambulance/air-medical, service restoration, and official CMS notices. Searches returned no new qualifying, corroborated development within the observation window.",
+    "Results contained many stale, foreign, prospective, or non-access-change stories, excluded from findings. No claim of exhaustive national coverage is made.",
+    "Supplementary recall only; production national Care Line collection remains authoritative. No editorial review, approval, publication, or schedule changes occurred."
+  ]
+}

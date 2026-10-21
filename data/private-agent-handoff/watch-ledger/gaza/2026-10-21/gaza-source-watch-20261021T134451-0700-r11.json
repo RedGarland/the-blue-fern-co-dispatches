@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T134451-0700-r11",
+  "scheduled_for": "2026-10-21T13:44:51-07:00",
+  "started_at": "2026-10-21T13:40:44-07:00",
+  "completed_at": "2026-10-21T13:42:01-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T12:43:19-07:00",
+    "end": "2026-10-21T13:42:01-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Official site checked first; latest displayed October 19, 2026.",
+    "who": "Official global page checked first; no in-window report; WHO EMRO site returned HTTP 502.",
+    "additional_targeted_search_count": 12,
+    "screened": "Older October 20 casualties and October 19 WFP aid changes excluded as repeats. Newly described strike on militant excluded without independently verified civilian impact.",
+    "limitations": "WHO regional health verification unavailable; indexing and publication-hour ambiguity remain.",
+    "authority": "Supplementary only; no approvals, publishing, production, or scheduling changes."
+  }
+}

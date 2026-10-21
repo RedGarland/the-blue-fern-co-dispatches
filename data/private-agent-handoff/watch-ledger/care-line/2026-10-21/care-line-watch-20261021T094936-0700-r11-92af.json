@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T094936-0700-r11-92af",
+  "scheduled_for": "2026-10-21T09:45:22-07:00",
+  "started_at": "2026-10-21T09:49:36-07:00",
+  "completed_at": "2026-10-21T09:51:00-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-21",
+    "date_to": "2026-10-21",
+    "edition_date": "2026-10-21",
+    "start_at": "2026-10-21T08:50:08-07:00",
+    "end_at": "2026-10-21T09:51:00-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary Care Line recall; production collection authoritative. CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; latest remains 2026-10-19 Platinum Health Service IL termination, previously known. Twelve targeted searches covered closure/suspension hospital, ED, maternity, dialysis, oncology, primary and behavioral care; EMS, air-medical, rural service loss, U.S. territories, and concrete reopening. news10.com search robots.txt blocked; remaining coverage usable (DEGRADED). No confirmed new in-window healthcare access changes. Prior completed watch end 2026-10-21T08:50:08-07:00. Excluded older plans and background, Preston County WV ambulance funding crisis without concrete loss, veterinary/non-U.S. items. No approvals, publication, schedule changes, or disabling."
+}

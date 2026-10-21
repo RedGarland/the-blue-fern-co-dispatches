@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T024522-0700-r11-6a83",
+  "scheduled_for": "2026-10-21T02:45:22-07:00",
+  "started_at": "2026-10-21T02:43:46-07:00",
+  "completed_at": "2026-10-21T02:47:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T01:44:00-07:00",
+    "end": "2026-10-21T02:47:00-07:00",
+    "timezone": "America/Los_Angeles",
+    "scope": "Newly reported U.S. and U.S. territory access changes since prior hourly check; supplementary recall only"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices directly checked first (https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices). Most recent posted notice dated 2026-10-19: Platinum Health Service, Illinois, termination; already identified in prior checks. No new CMS notice in search window.",
+    "12 additional targeted web searches completed: hospital/ED, rural emergency, maternity, behavioral health, dialysis, oncology, primary care, ground/air ambulance, service reopening, official rural closures, and territories. No newly announced or effective qualifying access change confirmed within window.",
+    "Search hits predominantly concerned older access changes, proposals, or general healthcare coverage; excluded as outside window or lacking concrete qualifying new effect. Search indexing may delay detection.",
+    "This watch is supplementary; production national Care Line collection remains authoritative. No approval, publication, schedule, or production modifications made."
+  ]
+}

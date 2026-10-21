@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T194544-0700-r11-27d1",
+  "scheduled_for": "2026-10-20T19:45:22-07:00",
+  "started_at": "2026-10-20T19:45:44-07:00",
+  "completed_at": "2026-10-20T19:47:06-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-20",
+    "date_to": "2026-10-20",
+    "edition_date": "2026-10-20",
+    "start_at": "2026-10-20T17:47:00-07:00",
+    "end_at": "2026-10-20T19:47:06-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first (official CMS page opened successfully); latest listed notice dated 2026-10-19, Platinum Health Service (IL), previously identified, and Reagan Medical Center (GA) CLIA limitation dated 2026-10-15 also previously identified. Twelve additional targeted searches completed on 2026-10-20, spanning hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency access, ground ambulance, air medical, restoration and U.S. territories. No newly verified qualifying U.S./territory access change found since last documented check at approximately 2026-10-20 17:47 PDT; retrieved items were stale, out of scope, proposal-only, or non-U.S. Last intervening 18:45 hourly receipt was not independently available, so used most recent documented check as lower bound. Supplementary recall watch only; production collection remains authoritative. No approvals, publication or schedule changes."
+}

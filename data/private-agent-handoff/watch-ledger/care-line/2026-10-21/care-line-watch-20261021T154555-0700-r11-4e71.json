@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T154555-0700-r11-4e71",
+  "scheduled_for": "2026-10-21T15:45:22-07:00",
+  "started_at": "2026-10-21T15:45:55-07:00",
+  "completed_at": "2026-10-21T15:47:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T14:47:00-07:00",
+    "end": "2026-10-21T15:47:26-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Bounded supplementary recall only; production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "new_notices": 0
+    },
+    "additional_targeted_searches": 12,
+    "searches_covered": [
+      "hospital/ED closure or suspension",
+      "maternity or obstetrics",
+      "ambulance and air-medical bases",
+      "dialysis",
+      "behavioral health",
+      "oncology",
+      "primary care and urgent care",
+      "rural service losses",
+      "essential service reopening/restoration",
+      "CMS terminations/CLIA/public notices"
+    ],
+    "exclusion_review": "Current results featured previously announced closures, ownership transactions with no demonstrated service change, new construction without operational restoration, non-U.S. events, and dated reports about historical service losses. No distinct new qualifying service change verified within the window.",
+    "coverage_limitation": "Search-index freshness and non-uniform regional coverage limit recall. Zero findings does not establish zero national events.",
+    "persistence_status": "SUCCESS",
+    "repository": "RedGarland/the-blue-fern-co-dispatches",
+    "branch": "ops/watch-ledger",
+    "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-21/care-line-watch-20261021T154555-0700-r11-4e71.json"
+  }
+}

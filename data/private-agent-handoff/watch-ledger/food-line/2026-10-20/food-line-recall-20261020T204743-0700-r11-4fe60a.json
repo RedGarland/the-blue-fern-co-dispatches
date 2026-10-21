@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261020T204743-0700-r11-4fe60a",
+  "scheduled_for": "2026-10-20T20:45:54-07:00",
+  "started_at": "2026-10-20T20:47:43-07:00",
+  "completed_at": "2026-10-20T20:49:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-20T19:47:50-07:00",
+    "end": "2026-10-20T20:49:24-07:00",
+    "timezone": "America/Los_Angeles",
+    "previous_watch_observed": "2026-10-20T19:47:50-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall search, not authoritative nationwide production collection.",
+    "Twelve targeted searches completed across sole/last/full-service grocery loss, disaster-related emergency distribution cancellation, abrupt pantry or food-bank service loss, and official SNAP/WIC/EBT immediate interruptions; no web search errors.",
+    "No new verified U.S. qualifying event was located in the observation window. Search-index latency and publication timestamps limit coverage.",
+    "Excluded unrelated, older, routine, or nonqualifying results: October 20 Wyandanch NY soup-kitchen fire story was published at 01:35 EDT, before the watch window; October 20 Laurel MS pantry reopening was published at 17:11 CDT, before the window and describes restored service; Wheatsville Austin closure was announced earlier and does not eliminate the only community grocery store; San Jose CA Safeway closure has no evidence it is the sole/full-service grocer; October 2025 SNAP shutdown articles were stale.",
+    "No approvals, publication, schedule changes, or primary collector alterations."
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T034451-0700-r11",
+  "scheduled_for": "2026-10-21T03:44:51-07:00",
+  "started_at": "2026-10-21T03:46:20-07:00",
+  "completed_at": "2026-10-21T03:50:20.882-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T02:45:52-07:00",
+    "end": "2026-10-21T03:50:20.882-07:00",
+    "scope": "Supplementary recall discovery since prior hourly watch, not first-publication-time gate; Gaza-only, production remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261021-hospital-generator-oil-supply-risk-176142",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176142",
+      "title": "Gaza medical sources warn generator oil shortage threatens electricity in critical hospital departments",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-10-21",
+      "publication_date": "2026-10-21",
+      "publication_time_local": "11:00",
+      "publication_timezone": "Asia/Hebron",
+      "event_date": null,
+      "location": "Gaza Strip, hospitals not individually named",
+      "affected_population_or_system": "Hospital backup generators, electricity supply to critical life-saving care departments, hospitalized patients",
+      "exact_supporting_passage": "Medical sources in Gaza have warned that dwindling supplies of oil needed to operate hospital generators threaten to disrupt electricity supplies to critical departments providing life-saving care.",
+      "source_type": "established_press_agency_report_attributing_medical_sources",
+      "classification": "new_to_watch",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "discovered_during": "2026-10-21T02:45:52-07:00 onward",
+        "publication_vs_window": "The WAFA 11:00 local Palestine article appears to precede this observation window; this is a recall finding discovered this run, not confirmed first-reported or newly occurring during the hour.",
+        "quantitative_detail": "WAFA says hospitals need over 2,500 liters of generator oil monthly.",
+        "corroborating_reporting_url": "https://www.aa.com.tr/tr/dunya/gazzedeki-saglik-bakanligi-hastane-jeneratorlerini-calistirmak-icin-gerekli-yakit-tukendi/4095269",
+        "qualification": "Anadolu describes the same Health Ministry warning as generator 'fuel' exhausted, but WAFA specifies generator oil; do not equate lubricating oil shortage with complete diesel-fuel depletion without primary confirmation.",
+        "independent_confirmation": false,
+        "dedupe_required": "Production must check whether this alert or precursor is already in the primary Gaza collector."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "research_status": "DEGRADED",
+    "first_sources_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest displayed reports dated 19 October 2026; none first published during observation window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated health-system bulletin found during observation window."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Direct regional health page inaccessible; reduced coverage."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_topics": [
+      "Early-21-October Gaza civilian casualties",
+      "Reuters Gaza casualties ceasefire",
+      "AP Gaza aid and strikes",
+      "United Nations Gaza humanitarian access",
+      "UNICEF water children displacement",
+      "WFP food assistance and crossings",
+      "ReliefWeb humanitarian reports",
+      "Palestine Red Crescent ambulances/medical evacuation",
+      "ICRC hostages detainees health response",
+      "Ceasefire/operations/civilian impact",
+      "WAFA Gaza healthcare",
+      "Anadolu Gaza casualties and hospitals"
+    ],
+    "excluded_or_not_counted": [
+      "October 20 Reuters and Anadolu civilian-casualty reporting overlaps previous watches.",
+      "October 19 WFP aid reductions already covered by preceding watches.",
+      "October 21 UNICEF Korea funding commitment describes planned aid, not yet verified in-Gaza service restoration.",
+      "October 21 Al Jazeera household food-hardship feature adds testimony to known food access pressures, not a separable time-bounded event."
+    ],
+    "limitations": [
+      "WHO EMRO returned HTTP 502.",
+      "Hospital oil shortage publication predates hourly interval; report is NEW_TO_WATCH only.",
+      "Generator oil vs diesel fuel terminology differs between WAFA and Anadolu; primary ministry statement not directly inspected.",
+      "Absence of other search results does not establish no events occurred; source publication indexing lag."
+    ],
+    "prior_ledger_run": "gaza-source-watch-20261021T024451-0700-r11",
+    "production_authority": "Supplementary research only; no approval, publication, schedule, task state, or primary production modification."
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T154554-0700-r11",
+  "scheduled_for": "2026-10-21T15:45:54-07:00",
+  "started_at": "2026-10-21T15:48:34-07:00",
+  "completed_at": "2026-10-21T22:50:10.014Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T14:49:36-07:00",
+    "end": "2026-10-21T22:50:10.014Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior reported supplementary run ended 2026-10-21 14:49:36 Pacific. Targeted for subsequent new reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_completed": 12,
+    "searches_failed": 0,
+    "source_fetch_failures": 1,
+    "bounded_queries": [
+      "\"only grocery store\" closed fire October 21 2026 town",
+      "\"last grocery store\" \"October 21, 2026\" closure",
+      "\"sole grocery store\" burned closed October 2026 United States",
+      "food pantry distribution canceled storm Wednesday October 21 2026",
+      "food bank distributions suspended flooding weather October 21 2026",
+      "food pantry closing immediately October 21 2026",
+      "site:gov SNAP benefits October 21 2026 interruption EBT outage notice",
+      "site:gov WIC October 21 2026 temporary outage interruption benefits",
+      "October 21 2026 \"food distribution\" canceled closed emergency outage today",
+      "October 21 2026 \"pantry\" \"closed\" \"due to\" fire flooding",
+      "October 21 2026 \"grocery store\" \"only\" \"closed\" storm fire",
+      "October 21 2026 SNAP EBT WIC benefits system unavailable outage official agency"
+    ],
+    "categories_checked": [
+      "Only/sole/last/full-service grocery store loss",
+      "Hazard-related emergency food distribution cancellation",
+      "Abrupt food pantry/food bank service reduction or closure",
+      "Official SNAP/WIC/food-assistance interruption"
+    ],
+    "notable_exclusions": [
+      {
+        "title": "Kauaʻi Hurricane Lowell recovery update",
+        "source_url": "https://kauainownews.com/2026/10/21/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Emergency food distribution is scheduled (not canceled). Closing hurricane resource centers not evidenced as food-pantry interruption."
+      },
+      {
+        "title": "Fluvanna County food pantry sees demand nearly double",
+        "source_url": "https://www.29news.com/2026/10/21/fluvanna-county-food-pantry-sees-demand-nearly-double-now-needs-donations/",
+        "reason": "Demand/depletion report but no confirmed abrupt closure or major access reduction. Direct page fetch returned Internal Error; searchable excerpt allowed exclusion."
+      }
+    ],
+    "result": "No new independently verified qualifying disruption since previous watch. Search coverage is bounded, non-exhaustive, and cannot establish a nationwide absence.",
+    "degraded_reason": "One direct source-page fetch returned Internal Error while the remaining web searches and source review were usable.",
+    "production_collection_authoritative": true,
+    "publication_authorized": false,
+    "review_only": true
+  }
+}

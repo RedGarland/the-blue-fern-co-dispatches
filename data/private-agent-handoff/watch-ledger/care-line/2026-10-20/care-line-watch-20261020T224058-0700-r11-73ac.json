@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T224058-0700-r11-73ac",
+  "scheduled_for": "2026-10-20T21:45:22-07:00",
+  "started_at": "2026-10-20T22:40:58-07:00",
+  "completed_at": "2026-10-20T22:42:48.391-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-20T21:50:00-07:00",
+    "end_at": "2026-10-20T22:42:48.391-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall watch only; production national collector authoritative. CMS Public Notices checked first (official page accessible; newest notice 2026-10-19 Platinum Health Service IL termination, previously identified; 2026-10-15 Reagan Medical Center GA CLIA limitation also known). Twelve additional targeted searches completed for U.S. hospital/ED/rural/maternity, behavioral health, dialysis, oncology, primary care, ambulance/air medical, emergency diversions and service restorations. No independently verified qualifying new access change in the prior hourly observation window. Excluded Oct. 20 Choate Mental Health proposed closure withdrawal (no implemented service change), ownership transactions, future plans, staffing-only reports, hospital cafeteria shutdown, older developments and non-U.S. reports. CMS source: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices."
+}

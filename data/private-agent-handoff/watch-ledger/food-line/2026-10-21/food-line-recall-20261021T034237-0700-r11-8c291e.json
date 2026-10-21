@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T034237-0700-r11-8c291e",
+  "scheduled_for": "2026-10-21T02:45:54-07:00",
+  "started_at": "2026-10-21T03:42:37-07:00",
+  "completed_at": "2026-10-21T03:43:49-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T01:47:08-07:00",
+    "end": "2026-10-21T03:43:49-07:00",
+    "basis": "End of last reported completed hourly check through the current observation; fresh reporting may be indexed with delay."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "mode": "supplementary_bounded_recall",
+    "production_collector_authoritative": true,
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "qualifying_new_signals_verified": 0,
+    "categories_checked": [
+      "Loss, closure, fire, or disaster affecting only/sole/last/full-service community grocery",
+      "Cancellation/suspension of emergency food distribution after weather, outage, or facility damage",
+      "Abrupt food-pantry or food-bank closure or major loss of service",
+      "Official SNAP/WIC/food-assistance disruption with immediate access consequences"
+    ],
+    "bounded_query_context": [
+      "Oct 20-21 2026 only/sole grocery closure/fire/flooding",
+      "Oct 20-21 2026 disaster-related distribution cancellation/suspension",
+      "Oct 20-21 2026 abrupt food pantry/bank closures",
+      "Oct 20-21 2026 official SNAP/WIC EBT outages or benefit interruptions"
+    ],
+    "screening_notes": "Excluded September rural grocery closures, September storm-affected food bank, older SNAP notices, October 14 advance notice of a two-day Oct 20/22 routine Decatur pantry closure, and earlier-known Oct 25 Austin food co-op closure (not sole store). No newly published, independently supported qualifying U.S. disruption verified within observation window.",
+    "limitation": "Bounded searches cannot establish nationwide absence; delayed indexing and direct notices outside indexed web coverage remain possible.",
+    "exclusions": "Out-of-window/previously known incidents, scheduled minor closures, nonsole grocery closure, donation appeals, resource guides, promotion, broad price stories, international items, duplicates."
+  }
+}

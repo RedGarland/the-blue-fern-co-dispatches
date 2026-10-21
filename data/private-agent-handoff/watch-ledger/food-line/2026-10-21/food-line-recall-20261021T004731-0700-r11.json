@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T004731-0700-r11",
+  "scheduled_for": "2026-10-21T00:45:54-07:00",
+  "started_at": "2026-10-21T00:47:31-07:00",
+  "completed_at": "2026-10-21T07:49:11.153Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-20T23:48:00-07:00",
+    "end": "2026-10-21T00:48:34-07:00",
+    "start_basis": "Approximate preceding watch completion; preceding completion observed at 23:46–23:48 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "supplementary_not_authoritative": true,
+    "production_collector_authoritative": true,
+    "targeted_web_searches_executed": 12,
+    "search_failures": 0,
+    "priority_classes": [
+      "only/sole/last/full-service grocery closure or disaster",
+      "emergency food distribution cancellation due to hazard",
+      "abrupt pantry or food-bank closure/major access reduction",
+      "official SNAP/WIC or food-assistance interruption with immediate effects"
+    ],
+    "searches": [
+      "\"only grocery store\" closed fire October 20 2026 October 21 2026",
+      "\"sole grocery store\" fire closure October 20 2026 USA",
+      "\"last grocery store\" closing October 20 2026 town",
+      "\"food distribution\" canceled storm October 20 2026 food bank",
+      "\"food pantry\" \"closed\" fire flooding October 20 2026",
+      "\"food bank\" \"suspended\" distribution October 20 2026",
+      "site:gov \"SNAP\" \"interruption\" October 20 2026 benefits",
+      "site:gov \"WIC\" \"service interruption\" October 20 2026",
+      "\"October 20, 2026\" \"food distribution\" \"cancelled\" storm",
+      "\"October 20, 2026\" \"food pantry\" \"closing\" OR \"closed\" services",
+      "\"October 20, 2026\" \"SNAP\" \"benefits\" \"suspended\" OR \"outage\"",
+      "\"October 20, 2026\" \"WIC\" \"outage\" OR \"interruption\" OR \"suspended\""
+    ],
+    "exclusions": "Search hits were older than the observation window, planned grocery additions or closures with alternative stores nearby, unrelated events, routine distribution calendars, or donation appeals. No source verified a new in-window qualifying disruption.",
+    "caveat": "Search-index latency means zero found is not proof zero events occurred nationally."
+  }
+}

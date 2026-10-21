@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T094250-0700-r11-81a50d",
+  "scheduled_for": "2026-10-21T08:45:54-07:00",
+  "started_at": "2026-10-21T09:42:50-07:00",
+  "completed_at": "2026-10-21T09:44:02-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T08:42:36-07:00",
+    "end": "2026-10-21T09:44:02-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "previous persisted Food Line watch completed_at in 2026-10-21T084150 ledger heartbeat"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "bounded supplementary recall; production nationwide collector remains authoritative",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "source_review": "Searched four priority categories; no verified new U.S. disruption with reporting timestamp in bounded window. Searches returned predominantly stale/unrelated reports.",
+    "excluded_near_matches": [
+      {
+        "url": "https://abc7ny.com/post/wyandanch-church-fire-shuts-down-soup-kitchen-serving-150-people-day/19955442/",
+        "reason": "Relevant fire-related soup-kitchen closure reported October 20, 2026, 01:35 ET (October 19, 22:35 PT), before this watch window."
+      },
+      {
+        "url": "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+        "reason": "Weather-related cancellation announced October 7; older than search window."
+      },
+      {
+        "url": "https://www.thecooldown.com/green-business/eastport-maine-grocery-store-closure-impact/",
+        "reason": "Sole-store closure report September 7; older than search window."
+      }
+    ],
+    "evaluated_categories": [
+      "only, sole, last, or full-service community grocery lost/closed or damaged",
+      "disaster- or outage-related emergency distribution cancellation or suspension",
+      "abrupt pantry or food-bank closure or major service reduction",
+      "new immediate official SNAP/WIC/food-assistance interruption"
+    ],
+    "bounded_query_context": {
+      "search_engine": "web search",
+      "queries_executed": 12,
+      "recency_days": 1,
+      "terms": [
+        "\"only grocery store\" fire closed October 21 2026 town United States",
+        "\"last grocery store\" closing October 21 2026 community",
+        "\"sole grocery store\" fire disaster closure October 2026",
+        "\"full-service grocery store\" closure October 21 2026 town",
+        "\"food distribution\" canceled storm October 21 2026",
+        "\"food pantry\" closed \"power outage\" October 21 2026",
+        "\"food bank\" distribution cancelled flooding October 21 2026",
+        "SNAP EBT WIC system outage October 21 2026 benefits interruption state agency",
+        "October 21 2026 emergency food distribution postponed canceled weather site:facebook.com",
+        "October 21 2026 food pantry food bank temporarily closed fire outage flood",
+        "October 21 2026 community only grocery store closes fire disaster food access",
+        "October 21 2026 SNAP WIC EBT benefits outage suspension notice site:gov"
+      ]
+    },
+    "exclusions": "Older incidents, donation drives, guides, routine promotion, policy-only speculation, unrelated outages, and duplicates excluded.",
+    "limitation": "Search recency filters and indexing are imperfect; zero verified finds does not establish zero real-world events."
+  }
+}

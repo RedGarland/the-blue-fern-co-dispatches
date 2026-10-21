@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T134522-0700-r11-0f21",
+  "scheduled_for": "2026-10-21T13:45:22-07:00",
+  "started_at": "2026-10-21T13:47:29-07:00",
+  "completed_at": "2026-10-21T13:48:48-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T12:45:22-07:00",
+    "end": "2026-10-21T13:48:48-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": "Checked first: latest October 19, 2026, Platinum Health Service IL, already known; no new October 21 notice.",
+    "additional_targeted_search_count": 12,
+    "screened": "Oct 21 KFF article reported Oct 2025 St. Mary's Sacred Heart maternity closure, excluded as old; no new qualifying access change confirmed.",
+    "limitations": "Search indexing is non-exhaustive and publication-hour information is often missing.",
+    "authority": "Supplementary recall watch only; production collection is authoritative. No approval, publication, or task changes."
+  }
+}

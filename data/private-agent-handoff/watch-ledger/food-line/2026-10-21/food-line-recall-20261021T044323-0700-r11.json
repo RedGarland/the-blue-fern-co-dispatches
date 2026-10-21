@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T044323-0700-r11",
+  "scheduled_for": "2026-10-21T03:45:54-07:00",
+  "started_at": "2026-10-21T04:43:23-07:00",
+  "completed_at": "2026-10-21T04:45:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T01:47:08-07:00",
+    "end": "2026-10-21T04:43:23-07:00",
+    "basis": "Last completed watch explicitly visible in conversation at 01:47:08 PT; newer intervening hourly heartbeat not confirmed, so bounded lookback covers this gap."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "mode": "supplementary_bounded_recall",
+    "production_collector_authoritative": true,
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "qualifying_new_signals_verified": 0,
+    "categories_checked": [
+      "sole/last/full-service grocery loss, closure, fire or disaster",
+      "emergency food distribution cancellation due to disaster, outage or facility damage",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC food-assistance interruption with immediate access consequences"
+    ],
+    "bounded_query_context": "Twelve targeted web searches limited to U.S. food-access disruption categories, focusing on Oct 20-21, 2026, using 2-day recency and explicit event/date terms; searched local news, official site:gov and provider terminology.",
+    "exclusions": "Historical/out-of-window reports, duplicate coverage, international items, donation appeals, routine promotions, guides, inflation reporting and unverified disruption claims.",
+    "result": "No qualifying newly reported event verified; search engine often resurfaced older stories despite recency controls. Negative result is not a claim of comprehensive absence.",
+    "persistence_target": {
+      "repository": "RedGarland/the-blue-fern-co-dispatches",
+      "branch": "ops/watch-ledger",
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-21/food-line-recall-20261021T044323-0700-r11.json"
+    }
+  }
+}

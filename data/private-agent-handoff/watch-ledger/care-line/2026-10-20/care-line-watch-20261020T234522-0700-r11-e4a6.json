@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T234522-0700-r11-e4a6",
+  "scheduled_for": "2026-10-20T23:45:22-07:00",
+  "started_at": "2026-10-20T23:50:06-07:00",
+  "completed_at": "2026-10-20T23:51:36.302-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-20",
+    "date_to": "2026-10-20",
+    "edition_date": "2026-10-20",
+    "start_at": "2026-10-20T21:50:00-07:00",
+    "end_at": "2026-10-20T23:50:06-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall watch only; production national collector remains authoritative. CMS Public Notices official index was checked first and loaded successfully; the newest visible notice was the already-known 2026-10-19 Illinois HHA termination, with Georgia CLIA limitation dated 2026-10-15; no new CMS item identified. Completed 12 additional targeted web searches spanning U.S. and territories: hospital/ED/maternity, rural/emergency, behavioral health, dialysis/oncology/primary care, ambulance/air-medical, governmental notices, and effective service restoration. No newly evidenced qualifying healthcare-access change since the last recorded 2026-10-20 21:50 PDT recall check. Older items and stories with only proposed changes or insufficient announcement recency were excluded; Waybridge Clinics' October 30 closure notice has no established publication time within the current window and was not counted. No editorial approval, publication, schedule or task change. This approximately two-hour catch-up window conservatively covers the gap from the last known completed check."
+}

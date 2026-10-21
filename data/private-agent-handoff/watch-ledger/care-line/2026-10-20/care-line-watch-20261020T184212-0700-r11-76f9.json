@@ -1,0 +1,20 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T184212-0700-r11-76f9",
+  "scheduled_for": "2026-10-20T18:41:41-07:00",
+  "started_at": "2026-10-20T18:42:12-07:00",
+  "completed_at": "2026-10-20T18:43:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-20T17:47:00-07:00",
+    "end_at": "2026-10-20T18:43:44-07:00",
+    "date_from": "2026-10-20",
+    "date_to": "2026-10-20",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first on the official CMS site; most recent notice is 2026-10-19 Platinum Health Service (Illinois), previously seen. Twelve additional targeted searches covered U.S. and territory hospital/ED, rural, maternity, behavioral health, dialysis, oncology, primary care, ambulance/air-medical, and essential-service restoration; no new qualifying development confirmed in the observation window. Older reports (Winchester Family Medicine, Dennys River ambulance closure, Roseland maternity, Guam restoration) and proposals/business stories excluded from new findings. Prior hourly completion approximated from last run notification at 17:47 PDT; source publishing timestamps do not establish any newer qualifying case. Production collection remains authoritative. No approvals, publication, schedule modification, or task disabling."
+}

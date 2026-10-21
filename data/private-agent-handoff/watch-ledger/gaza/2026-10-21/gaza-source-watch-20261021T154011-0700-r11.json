@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T154011-0700-r11",
+  "scheduled_for": "2026-10-21T15:44:51-07:00",
+  "started_at": "2026-10-21T15:40:11-07:00",
+  "completed_at": "2026-10-21T15:42:05.154-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T14:50:00-07:00",
+    "end": "2026-10-21T15:42:05.154-07:00",
+    "prior_check_basis": "Previous reported hourly check ended 2026-10-21T14:50 PDT; this is supplementary recall, not production intake."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "OCHA_OPT": "Checked first. Latest relevant report retrieved: published 2026-10-19; coverage period 2026-09-29 through 2026-10-12. No qualifying new event in window. https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+    "WHO": "Checked first. WHO global oPt page accessible, no new time-bounded report. WHO EMRO regional emergency situation reports timed out, reducing direct regional healthcare coverage. https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+    "additional_targeted_search_count": 12,
+    "source_access_issues": [
+      "WHO EMRO regional emergency situation reports: timeout",
+      "UNICEF Gulf press release full page retrieval: disabled; search excerpt available"
+    ],
+    "excluded": [
+      "2026-10-21 UNICEF water/nutrition and Republic of Korea healthcare/WASH funding announcements report prospective activities, not verified within-window service access or operational-capacity changes; exact release times unavailable.",
+      "Previously identified 2026-10-21 drone-strike casualties in Gaza City and al-Qarara, hospital generator oil shortage, child death reported after prior strike, and 2026-10-19 WFP cuts: prior-watch findings or recycled.",
+      "Search returns for 2025/September 2026 and unrelated Ukraine/Sudan news excluded."
+    ],
+    "confidence_limitations": "Search indexing can lag, and same-day articles lacking exact publication/event times cannot be assigned to the hourly window. No unverified or speculative item promoted to finding.",
+    "production_scope": "Supplementary recall only. No approval, publication, scheduler, or primary collector changes."
+  }
+}

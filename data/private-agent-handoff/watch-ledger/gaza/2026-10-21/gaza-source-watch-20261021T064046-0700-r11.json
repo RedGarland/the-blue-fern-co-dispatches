@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T064046-0700-r11",
+  "scheduled_for": "2026-10-21T06:44:51-07:00",
+  "started_at": "2026-10-21T06:40:46-07:00",
+  "completed_at": "2026-10-21T06:42:46-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T05:51:00-07:00",
+    "end": "2026-10-21T06:42:46-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "sources_checked": [
+      "OCHA OPT updates: accessible, latest 2026-10-19",
+      "WHO EMRO situation reports: timeout",
+      "WHO Health Cluster OPT: accessible, no new dated bulletin"
+    ],
+    "additional_targeted_search_count": 12,
+    "results": "No new qualifying traceable nonduplicate Gaza development identified. Prior hospital generator-oil warning, earlier casualties, and food aid reductions excluded.",
+    "limitations": [
+      "WHO regional report timed out",
+      "Inexact publication time on some reports"
+    ],
+    "production_authority": "Supplementary only; no editorial or scheduling changes."
+  }
+}

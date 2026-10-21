@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T104451-0700-r11",
+  "scheduled_for": "2026-10-21T10:44:51-07:00",
+  "started_at": "2026-10-21T10:42:34-07:00",
+  "completed_at": "2026-10-21T10:43:35-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T09:44:49-07:00",
+    "end": "2026-10-21T10:43:35-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "OCHA": "Checked first; latest Oct 19.",
+    "WHO": "Global accessible; EMRO OPT returned HTTP 502.",
+    "additional_targeted_search_count": 12,
+    "other": "WAFA home timed out; no new verified, nonduplicate event found; prior items excluded; primary production authoritative."
+  }
+}

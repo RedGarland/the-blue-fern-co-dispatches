@@ -65,6 +65,18 @@ def seed_ice(staging_root: Path) -> dict[str, bytes]:
     ice = staging_root / "ice"
     (ice / "editions" / "2026-09-01").mkdir(parents=True)
     (ice / "editions" / "2026-09-01" / "index.html").write_text("old edition 2026-09-01\n", encoding="utf-8")
+    (ice / "editions" / "2026-09-01" / "manifest.json").write_text(
+        json.dumps({
+            "dispatch": "ice",
+            "edition_date": "2026-09-01",
+            "accepted_event_count": 1,
+            "rendered_event_count": 1,
+        }),
+        encoding="utf-8",
+    )
+    (ice / "editions" / "2026-09-01" / "map_payload.json").write_text(
+        json.dumps({"events": []}), encoding="utf-8"
+    )
     entries = [{
         "edition_date": "2026-09-01",
         "title": "ICE Dispatch - 2026-09-01",
@@ -91,6 +103,7 @@ def test_eligible_staging_publication_writes_complete_ice_tree_and_receipt(tmp_p
         edition_date="2026-09-09",
         collection_state="healthy",
         staging_root=tmp_path,
+        first_publication=True,
         generated_at=NOW,
         source_commit="abc123",
     )
@@ -149,7 +162,7 @@ def test_insufficient_verified_evidence_is_exact_noop(tmp_path: Path) -> None:
 
 
 def test_degraded_collection_stages_with_explicit_warning(tmp_path: Path) -> None:
-    result = stage_ice_publication([event()], edition_date="2026-09-09", collection_state="degraded", staging_root=tmp_path, generated_at=NOW)
+    result = stage_ice_publication([event()], edition_date="2026-09-09", collection_state="degraded", staging_root=tmp_path, first_publication=True, generated_at=NOW)
 
     manifest = json.loads((tmp_path / "ice" / "editions" / "2026-09-09" / "manifest.json").read_text(encoding="utf-8"))
     assert result.status == "staged"
@@ -172,9 +185,9 @@ def test_collection_failed_is_exact_noop(tmp_path: Path) -> None:
 def test_archive_rss_and_index_are_monotonic_and_same_date_rerun_idempotent(tmp_path: Path) -> None:
     old_files = seed_ice(tmp_path)
 
-    first = stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    first = stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, history_baseline_root=tmp_path, generated_at=NOW)
     after_first = tree_hashes(tmp_path / "ice")
-    second = stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    second = stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, history_baseline_root=tmp_path, generated_at=NOW)
     after_second = tree_hashes(tmp_path / "ice")
 
     entries = json.loads((tmp_path / "ice" / "archive_entries.json").read_text(encoding="utf-8"))
@@ -194,7 +207,7 @@ def test_archive_only_gains_intended_new_entry(tmp_path: Path) -> None:
     seed_ice(tmp_path)
     before_entries = json.loads((tmp_path / "ice" / "archive_entries.json").read_text(encoding="utf-8"))
 
-    result = stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    result = stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, history_baseline_root=tmp_path, generated_at=NOW)
     after_entries = json.loads((tmp_path / "ice" / "archive_entries.json").read_text(encoding="utf-8"))
 
     assert result.status == "staged"
@@ -207,7 +220,7 @@ def test_rss_preserves_old_guid_and_adds_new_guid_once(tmp_path: Path) -> None:
     seed_ice(tmp_path)
     before_rss = (tmp_path / "ice" / "rss.xml").read_text(encoding="utf-8")
 
-    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, history_baseline_root=tmp_path, generated_at=NOW)
     after_rss = (tmp_path / "ice" / "rss.xml").read_text(encoding="utf-8")
 
     assert "bluefern-ice-2026-09-01" in before_rss
@@ -246,7 +259,7 @@ def test_map_payload_integrates_locations_without_duplicate_entries(tmp_path: Pa
         sources=[source("unmapped")],
     )
 
-    stage_ice_publication([exact, city, territory, unmapped], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    stage_ice_publication([exact, city, territory, unmapped], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, first_publication=True, generated_at=NOW)
     payload = json.loads((tmp_path / "ice" / "editions" / "2026-09-09" / "map_payload.json").read_text(encoding="utf-8"))
     by_id = {item["canonical_event_id"]: item for item in payload["events"]}
 
@@ -270,7 +283,7 @@ def test_update_correction_labels_and_source_lineage_survive_staging(tmp_path: P
         sources=[source("correction")],
     )
 
-    stage_ice_publication([update, correction], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    stage_ice_publication([update, correction], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, first_publication=True, generated_at=NOW)
     html = (tmp_path / "ice" / "editions" / "2026-09-09" / "index.html").read_text(encoding="utf-8")
     manifest = json.loads((tmp_path / "ice" / "editions" / "2026-09-09" / "manifest.json").read_text(encoding="utf-8"))
 
@@ -280,7 +293,7 @@ def test_update_correction_labels_and_source_lineage_survive_staging(tmp_path: P
 
 
 def test_link_integrity_rejects_live_style_internal_links(tmp_path: Path) -> None:
-    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, first_publication=True, generated_at=NOW)
 
     assert _validate_staging_links(tmp_path / "ice") == []
     (tmp_path / "ice" / "bad.html").write_text('<a href="/ice/editions/2026-09-09/">bad</a>', encoding="utf-8")
@@ -296,7 +309,7 @@ def test_unrelated_dispatches_are_not_touched(tmp_path: Path) -> None:
         (root / "rss.xml").write_text(f"{dispatch} rss\n", encoding="utf-8")
     before = {dispatch: tree_hashes(tmp_path / dispatch) for dispatch in ("gaza", "food-line", "care-line", "cascadia", "american-pressure")}
 
-    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, first_publication=True, generated_at=NOW)
 
     assert {dispatch: tree_hashes(tmp_path / dispatch) for dispatch in before} == before
 
@@ -310,6 +323,7 @@ def test_failure_after_candidate_generation_leaves_staging_tree_coherent(tmp_pat
         edition_date="2026-09-09",
         collection_state="healthy",
         staging_root=tmp_path,
+        history_baseline_root=tmp_path,
         generated_at=NOW,
         simulate_failure_after_candidate=True,
     )
@@ -323,14 +337,14 @@ def test_deterministic_rerun_from_scratch(tmp_path: Path) -> None:
     first_root = tmp_path / "first"
     second_root = tmp_path / "second"
 
-    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=first_root, generated_at=NOW)
-    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=second_root, generated_at=NOW)
+    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=first_root, first_publication=True, generated_at=NOW)
+    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=second_root, first_publication=True, generated_at=NOW)
 
     assert tree_hashes(first_root / "ice") == tree_hashes(second_root / "ice")
 
 
 def test_staging_storage_hygiene(tmp_path: Path) -> None:
-    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, generated_at=NOW)
+    stage_ice_publication([event()], edition_date="2026-09-09", collection_state="healthy", staging_root=tmp_path, first_publication=True, generated_at=NOW)
 
     total_bytes = sum(path.stat().st_size for path in tmp_path.rglob("*") if path.is_file())
     assert total_bytes < 250_000
@@ -353,6 +367,7 @@ def test_staging_cli_writes_no_public_side_effects(tmp_path: Path) -> None:
             "healthy",
             "--staging-root",
             str(tmp_path / "stage"),
+            "--first-publication",
             "--generated-at",
             NOW,
         ],

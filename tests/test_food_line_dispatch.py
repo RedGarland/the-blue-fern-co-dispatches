@@ -8428,8 +8428,13 @@ def test_food_line_source_collection_audit_records_rejected_candidate_with_reaso
     assert "resource-only" in audit["items"][0]["rejection_reason"]
 
 
-def test_food_line_source_collection_audit_mode_dry_run_does_not_publish(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
+def test_food_line_source_collection_audit_mode_dry_run_does_not_publish(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+):
     _ensure_assets(tmp_path)
+    monkeypatch.chdir(tmp_path)
     date = "2026-06-25"
     gold_set_path = _write_source_collection_gold_set(
         tmp_path,

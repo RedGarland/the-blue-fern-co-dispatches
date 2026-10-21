@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T074612-0700-r11-c5d4",
+  "scheduled_for": "2026-10-21T07:45:22-07:00",
+  "started_at": "2026-10-21T07:46:12-07:00",
+  "completed_at": "2026-10-21T07:47:46-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-21",
+    "date_to": "2026-10-21",
+    "edition_date": "2026-10-21",
+    "start_at": "2026-10-21T06:46:11-07:00",
+    "end_at": "2026-10-21T07:47:46-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall only; production national collection remains authoritative. CMS Public Notices checked first by direct official page (latest: 2026-10-19 Platinum Health Service IL, already known; no notices dated 2026-10-20 or 2026-10-21). Twelve additional targeted searches covered hospital/ED/rural care, maternity, behavioral health, dialysis/oncology/primary care, EMS/air-medical, and essential-service restoration. No newly substantiated concrete U.S./territory access change in the hourly window; excluded older changes, proposals, investment announcements, general policy items, non-U.S. reporting. One targeted search encountered robots.txt denial for wyomingnewsnow.tv, so source-specific coverage degraded but other search results and CMS remained available. No review approval, publication, or scheduling changes."
+}

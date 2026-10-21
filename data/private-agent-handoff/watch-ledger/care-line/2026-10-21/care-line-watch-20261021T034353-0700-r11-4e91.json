@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T034353-0700-r11-4e91",
+  "scheduled_for": "2026-10-21T03:45:22-07:00",
+  "started_at": "2026-10-21T03:43:53-07:00",
+  "completed_at": "2026-10-21T10:45:55.666Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T01:44:00-07:00",
+    "end": "2026-10-21T10:45:55.666Z",
+    "scope": "US states and territories"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "new_since_previous_check": false,
+      "access": "direct page accessible"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_classes": [
+      "hospital and emergency department",
+      "maternity",
+      "rural emergency care",
+      "ground ambulance and air-medical bases",
+      "dialysis",
+      "behavioral health",
+      "oncology",
+      "primary care",
+      "essential service reopening",
+      "US territories",
+      "official state health notices"
+    ],
+    "results": "No new, independently supportable qualifying U.S. or territory service-access changes were identified. Search returns were mostly older incidents, proposed changes, service expansions outside recall scope, and non-US developments.",
+    "limitations": "Bounded supplementary recall only; web indexing can lag. Production collector remains authoritative. Conservative overlapping window begins at last documented prior completed check, because an intervening durable heartbeat was not verified.",
+    "publication_actions": "none"
+  }
+}

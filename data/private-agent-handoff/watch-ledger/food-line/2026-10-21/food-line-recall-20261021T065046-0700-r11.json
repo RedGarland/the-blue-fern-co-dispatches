@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T065046-0700-r11",
+  "scheduled_for": "2026-10-21T06:45:54-07:00",
+  "started_at": "2026-10-21T06:50:46-07:00",
+  "completed_at": "2026-10-21T06:52:24.499-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T05:44:31-07:00",
+    "end": "2026-10-21T06:52:24.499-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "previous visible completed hourly watch through this execution"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary Food Line recall watch only; production collection remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "priority_classes_checked": [
+      "sole/only/last/full-service community grocery store loss",
+      "disaster-canceled emergency food distributions",
+      "abrupt pantry/food-bank service closure/access reduction",
+      "official new SNAP/WIC/food-assistance interruptions"
+    ],
+    "result": "No newly published qualifying U.S. disruption verified in the bounded window. Search indexes frequently returned 2025 shutdown articles or older context.",
+    "exclusions": [
+      "Older 2025 SNAP shutdown reporting and dated state advisories",
+      "October 20, 2026 D.C. SNAP analysis—not a new official immediate service interruption and before this window",
+      "October 20 South Knoxville new grocery opening—not loss of access",
+      "General economic, promotional, or non-U.S. material"
+    ],
+    "bounded_query_context": "12 web queries; recency 1–2 days; fresh local, official agency/provider notices, and direct-source results prioritized. Publication timestamp and disruption occurrence screened against Pacific window.",
+    "duplicate_screening": "Prior visible watch showed zero findings; no new qualifying event surfaced to compare against production queue.",
+    "github_persistence_target": {
+      "repository": "RedGarland/the-blue-fern-co-dispatches",
+      "branch": "ops/watch-ledger",
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-21/food-line-recall-20261021T065046-0700-r11.json"
+    }
+  }
+}

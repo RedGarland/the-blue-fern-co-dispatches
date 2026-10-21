@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T084819-0700-r11-7b52",
+  "scheduled_for": "2026-10-21T08:45:22-07:00",
+  "started_at": "2026-10-21T08:48:19-07:00",
+  "completed_at": "2026-10-21T08:50:08-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-21",
+    "date_to": "2026-10-21",
+    "edition_date": "2026-10-21",
+    "start_at": "2026-10-21T07:47:46-07:00",
+    "end_at": "2026-10-21T08:50:08-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary Care Line recall watch; production national collection authoritative. Previous successfully persisted watch completed at 2026-10-21T07:47:46-07:00. CMS Public Notices checked first, current latest is 2026-10-19 Platinum Health Service (IL) termination and prior 2026-10-15 Reagan Medical Center (GA) CLIA limitation; no newly dated notices. Twelve additional targeted searches (recency one day) covered hospital/ED closures, rural/emergency service loss, maternity, dialysis, oncology, behavioral health, ambulance/air-medical base losses, primary-care clinics, concrete restoration/reopening, U.S. territories, and health department enforcement. No verified new qualifying access change within this observation window. Excluded Choate Mental Health center application withdrawal with future proposed bed reductions (no effective change), ownership-only American Oncology Network transaction, new planned hospital, older rural ambulance planned closure, and unrelated/non-U.S. reports. All search categories returned usable results; zero confirmed qualifying developments. No approval, publication, schedule change, or task disabling."
+}

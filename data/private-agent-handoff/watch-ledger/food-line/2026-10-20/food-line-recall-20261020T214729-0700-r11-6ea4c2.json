@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261020T214729-0700-r11-6ea4c2",
+  "scheduled_for": "2026-10-20T21:45:54-07:00",
+  "started_at": "2026-10-20T21:47:29-07:00",
+  "completed_at": "2026-10-20T21:48:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-20T20:49:24-07:00",
+    "end": "2026-10-20T21:48:43-07:00",
+    "timezone": "America/Los_Angeles",
+    "previous_watch_observed": "2026-10-20T20:49:24-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; production nationwide collector remains authoritative.",
+    "12 targeted web searches completed with no tool/search errors. Categories checked: sole/last/full-service community grocery loss or disaster; storm/flood/fire/outage/facility-damage canceled emergency food distributions; abrupt pantry/food-bank closure or material service reduction; official SNAP/WIC/EBT immediate-access interruption.",
+    "No new U.S. qualifying food-access event verified in the time window. Query recency and date filters returned many previously reported or routine items; source-index delays and publication-time ambiguity limit completeness.",
+    "Excluded previously reported events: September Spencer NY only-grocery-store fire; October 7 Alabama storm-canceled distribution; August Hayward CA pantry closure; September Vermont Holland Food Shelf closure; October 20 Laurel MS pantry reopening; earlier 2025 federal SNAP shutdown reports. October 20 New Jersey chip-EBT rollout is routine enhancement, not an interruption.",
+    "Latest prior durable watch ledger record used for boundary: food-line-recall-20261020T204743-0700-r11-4fe60a, completed 20:49:24 PDT. No approval, publication, schedule modification, or primary collector mutation."
+  ]
+}

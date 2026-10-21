@@ -11,6 +11,8 @@ from typing import Any
 BASE_URL = "https://dispatches.thebluefernco.com"
 LATEST_DEVELOPMENTS_HEADING = "Current state by desk"
 ACTIVE_PRODUCTS = ("gaza", "food-line", "care-line")
+OPTIONAL_PRODUCTS = ("ice",)
+DISCOVERABLE_PRODUCTS = ACTIVE_PRODUCTS + OPTIONAL_PRODUCTS
 CARD_LIMIT = 7
 SECTION_RE = re.compile(
     r'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>(?:Latest published developments|Current state by desk)</h2></div><div class="edition-grid">.*?</div></section>',
@@ -35,6 +37,7 @@ PRODUCT_META: dict[str, dict[str, str]] = {
     "gaza": {"badge": "GAZA", "badge_class": "gaza", "publication_name": "Dispatches From Gaza"},
     "food-line": {"badge": "FOOD LINE", "badge_class": "food-line", "publication_name": "Food Line Dispatch"},
     "care-line": {"badge": "CARE LINE", "badge_class": "care-line", "publication_name": "Care Line"},
+    "ice": {"badge": "ICE", "badge_class": "ice-activity-and-consequences", "publication_name": "ICE Dispatch"},
     "cascadia": {"badge": "CASCADIA", "badge_class": "cascadia", "publication_name": "The Cascadia Briefing"},
     "american-pressure": {"badge": "AMERICAN PRESSURE", "badge_class": "american-pressure", "publication_name": "The American Pressure Dispatch"},
 }
@@ -123,6 +126,18 @@ def _format_status_source_count(count: int) -> str:
     return f"{count} source checked" if count == 1 else f"{count} sources checked"
 
 
+def _format_release_meta(release: PublicRelease) -> str:
+    if release.slug == "ice":
+        return (
+            f"{release.source_count} reviewed event"
+            if release.source_count == 1
+            else f"{release.source_count} reviewed events"
+        )
+    if release.type_label == "Current status":
+        return _format_status_source_count(release.source_count)
+    return _format_source_count(release.source_count)
+
+
 def _current_homepage_links(homepage_html: str) -> set[str]:
     return set(re.findall(r'<article class="edition-card[^"]*">.*?<h3><a href="([^"]+)">', homepage_html, re.DOTALL))
 
@@ -182,15 +197,22 @@ def _resolve_title(slug: str, edition_dir: Path, manifest: dict[str, Any]) -> st
     return ""
 
 
-def _resolve_summary(manifest: dict[str, Any]) -> str:
+def _resolve_summary(slug: str, edition_dir: Path, manifest: dict[str, Any]) -> str:
     for key in ("public_archive_subtitle", "public_summary", "deck", "summary", "description"):
         value = str(manifest.get(key) or "").strip()
         if value:
             return value
+    if slug == "ice":
+        text = (edition_dir / "index.html").read_text(encoding="utf-8", errors="replace")
+        match = re.search(r'<article class="ice-event-card"[^>]*>\s*<h2>(.*?)</h2>', text, re.DOTALL)
+        if match:
+            return html.unescape(re.sub(r"\s+", " ", match.group(1))).strip()
     return ""
 
 
 def _release_type_label(manifest: dict[str, Any]) -> str:
+    if str(manifest.get("dispatch") or "").strip().lower() == "ice":
+        return "Public pilot"
     values = " ".join(
         str(manifest.get(key) or "")
         for key in (
@@ -233,6 +255,9 @@ def _selected_supporting_source_count(edition_dir: Path) -> int:
 
 
 def _resolve_source_count(slug: str, edition_dir: Path, manifest: dict[str, Any]) -> int:
+    if slug == "ice":
+        count = _ice_event_count(manifest)
+        return count if count is not None else 0
     if slug == "gaza":
         selected = _positive_int(manifest.get("selected_supporting_source_count"))
         if selected:
@@ -254,7 +279,68 @@ def _resolve_source_count(slug: str, edition_dir: Path, manifest: dict[str, Any]
     return 0
 
 
+def _ice_event_count(manifest: dict[str, Any]) -> int | None:
+    if not all(key in manifest for key in ("rendered_event_count", "accepted_event_count")):
+        return None
+    values: list[int] = []
+    for key in ("rendered_event_count", "accepted_event_count"):
+        if key not in manifest:
+            continue
+        value = manifest.get(key)
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            return None
+        values.append(value)
+    if not values or len(set(values)) > 1:
+        return None
+    return values[0]
+
+
+def _ice_manifest_has_blocking_state(manifest: dict[str, Any]) -> bool:
+    release_fields = ("public_release_status", "publication_status", "public_release", "release_status")
+    pages_fields = ("pages_release_status", "pages_status")
+    state_fields = ("status", "disposition")
+    release_states: list[str] = []
+    pages_states: list[str] = []
+
+    def normalized_value(key: str) -> str | None:
+        if key not in manifest or manifest.get(key) is None:
+            return None
+        value = str(manifest.get(key)).strip()
+        if not value:
+            return None
+        return re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
+
+    for key in release_fields:
+        value = normalized_value(key)
+        if value is None:
+            continue
+        if value != "published":
+            return True
+        release_states.append(value)
+    for key in pages_fields:
+        value = normalized_value(key)
+        if value is None:
+            continue
+        if value not in {"synced", "not_synced"}:
+            return True
+        pages_states.append(value)
+    for key in state_fields:
+        value = normalized_value(key)
+        if value is None:
+            continue
+        if value not in {"published", "synced", "not_synced", "ok"}:
+            return True
+    validation_status = normalized_value("validation_status")
+    if validation_status is not None and validation_status != "ok":
+        return True
+    if len(set(release_states)) > 1 or len(set(pages_states)) > 1:
+        return True
+    return any(manifest.get(field) is True for field in INVALID_RELEASE_BOOLEAN_FIELDS)
+
+
 def _relative_url(slug: str, edition_date: str) -> str:
+    if slug == "ice":
+        return "/ice/"
     return f"/{slug}/editions/{edition_date}/"
 
 
@@ -267,6 +353,17 @@ def _public_url(slug: str, edition_date: str, manifest: dict[str, Any]) -> str:
 
 def _release_is_eligible(*, public_root: Path, verify_root: Path | None, slug: str, edition_date: str, manifest: dict[str, Any]) -> tuple[bool, str, str, bool]:
     release_status, pages_status = _published_status(manifest)
+    if slug == "ice":
+        if str(manifest.get("dispatch") or "").strip().lower() != "ice":
+            return False, release_status, pages_status, False
+        if _ice_manifest_has_blocking_state(manifest):
+            return False, release_status, pages_status, False
+        if manifest.get("public_rendered") is not True or _ice_event_count(manifest) is None:
+            return False, release_status, pages_status, False
+        if release_status and release_status != "published":
+            return False, release_status, pages_status, False
+        if release_status != "published" and pages_status != "synced":
+            return False, release_status, pages_status, False
     status_values = [release_status, pages_status, str(manifest.get("release_status") or ""), str(manifest.get("status") or ""), str(manifest.get("disposition") or "")]
     normalized_statuses = {re.sub(r"[^a-z0-9]+", "_", value.strip().lower()).strip("_") for value in status_values if value.strip()}
     has_terminal_status = any(
@@ -306,7 +403,7 @@ def discover_public_releases(public_root: Path, *, verify_root: Path | None = No
     today = as_of or date.today()
     represented = _current_homepage_links(homepage_html or "")
     releases: list[PublicRelease] = []
-    for slug in ACTIVE_PRODUCTS:
+    for slug in DISCOVERABLE_PRODUCTS:
         editions_root = public_root / slug / "editions"
         if not editions_root.exists():
             continue
@@ -317,13 +414,24 @@ def discover_public_releases(public_root: Path, *, verify_root: Path | None = No
                 continue
             if not (edition_dir / "index.html").exists():
                 continue
-            manifest = _parse_json(edition_dir / "edition_manifest.json") if (edition_dir / "edition_manifest.json").exists() else {}
+            if (edition_dir / "edition_manifest.json").exists():
+                try:
+                    manifest = _parse_json(edition_dir / "edition_manifest.json")
+                except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                    continue
+                if not isinstance(manifest, dict):
+                    continue
+            else:
+                manifest = {}
+            if slug == "ice" and str(manifest.get("edition_date") or "").strip() != edition_date:
+                continue
             eligible, release_status, pages_status, authorized = _release_is_eligible(public_root=public_root, verify_root=verify_root, slug=slug, edition_date=edition_date, manifest=manifest)
             if not eligible:
                 continue
             title = _resolve_title(slug, edition_dir, manifest)
             source_count = _resolve_source_count(slug, edition_dir, manifest)
-            if not title or source_count <= 0:
+            summary = _resolve_summary(slug, edition_dir, manifest)
+            if not title or source_count <= 0 or (slug == "ice" and not summary):
                 continue
             metadata = PRODUCT_META[slug]
             relative = _relative_url(slug, edition_date)
@@ -346,7 +454,7 @@ def discover_public_releases(public_root: Path, *, verify_root: Path | None = No
                     manifest_path=str(edition_dir / "edition_manifest.json") if (edition_dir / "edition_manifest.json").exists() else None,
                     authorized=authorized,
                     type_label=_release_type_label(manifest),
-                    summary=_resolve_summary(manifest),
+                    summary=summary,
                 )
             )
     gaza_status = _latest_gaza_no_update_release(public_root, today=today, represented=represented)
@@ -356,11 +464,11 @@ def discover_public_releases(public_root: Path, *, verify_root: Path | None = No
 
 
 def select_homepage_cards(releases: list[PublicRelease], *, limit: int = CARD_LIMIT) -> list[PublicRelease]:
-    by_slug: dict[str, list[PublicRelease]] = {slug: [] for slug in ACTIVE_PRODUCTS}
+    by_slug: dict[str, list[PublicRelease]] = {slug: [] for slug in DISCOVERABLE_PRODUCTS}
     for release in sorted(releases, key=lambda item: item.sort_key, reverse=True):
         by_slug.setdefault(release.slug, []).append(release)
     selected: list[PublicRelease] = []
-    for slug in ACTIVE_PRODUCTS:
+    for slug in DISCOVERABLE_PRODUCTS:
         if by_slug.get(slug):
             release = by_slug[slug][0]
             selected.append(release)
@@ -423,6 +531,8 @@ def select_effective_latest(releases: list[PublicRelease]) -> dict[str, PublicRe
 def _release_age_note(release: PublicRelease) -> str:
     if release.type_label == "Current status":
         return ""
+    if release.slug == "ice":
+        return "Public pilot, no social/audio."
     if release.age_days < OLDER_PUBLIC_RELEASE_DAYS:
         return ""
     return OLDER_PUBLIC_RELEASE_NOTE
@@ -452,10 +562,9 @@ def _render_latest_development_card(card: PublicRelease) -> str:
     card_classes = f"edition-card edition-card--{html.escape(card.badge_class)}"
     if card.type_label == "Current status":
         card_classes += " edition-card--status"
-    source_count = (
-        _format_status_source_count(card.source_count)
-        if card.type_label == "Current status"
-        else _format_source_count(card.source_count)
+    source_count = _format_release_meta(card)
+    provenance = "Based on reviewed source records" if card.slug == "ice" else (
+        "Based on daily source checks" if card.type_label == "Current status" else "Based on public source reporting"
     )
     return (
         f'<article class="{card_classes}">'
@@ -466,7 +575,7 @@ def _render_latest_development_card(card: PublicRelease) -> str:
         f'{publication_time}</p>'
         f'{summary_html}'
         f'{freshness_html}'
-        f'<p class="edition-provenance">{"Based on daily source checks" if card.type_label == "Current status" else "Based on public source reporting"}</p>'
+        f'<p class="edition-provenance">{html.escape(provenance)}</p>'
         f'<p class="edition-meta">{html.escape(source_count)}</p>'
         f"</article>"
     )
@@ -485,6 +594,8 @@ def render_homepage_from_template(template_html: str, cards: list[PublicRelease]
 
 def _release_date_line(release: PublicRelease) -> str:
     suffix = f" &middot; {html.escape(release.publication_time_text)}" if release.publication_time_text else ""
+    if release.slug == "ice":
+        suffix += " &middot; Public pilot, no social/audio"
     return f"{html.escape(release.publication_name)} &middot; {html.escape(_format_long_date(release.edition_date))}{suffix}"
 
 
@@ -522,11 +633,7 @@ def _replace_release_fields(card_html: str, release: PublicRelease, *, include_s
     if button_count != 1:
         raise ValueError(f"Read latest link not found for {release.slug}")
     if include_source_count:
-        source_count_text = (
-            _format_status_source_count(release.source_count)
-            if release.type_label == "Current status"
-            else _format_source_count(release.source_count)
-        )
+        source_count_text = _format_release_meta(release)
         updated, source_count = re.subn(r'<p class="edition-meta">.*?</p>', f'<p class="edition-meta">{html.escape(source_count_text)}</p>', updated, count=1, flags=re.DOTALL)
         if source_count != 1:
             raise ValueError(f"Source-count field not found for {release.slug}")
@@ -549,10 +656,47 @@ def _replace_latest_edition_card(template_html: str, release: PublicRelease) -> 
     updated, headline_count = re.subn(r'<h3><a href="[^"]+">.*?</a></h3>', headline, card, count=1, flags=re.DOTALL)
     if headline_count != 1:
         raise ValueError(f"Edition-grid headline field not found for {release.slug}")
+    if '<p class="edition-type">' in updated:
+        updated = re.sub(
+            r'<p class="edition-type">.*?</p>',
+            f'<p class="edition-type">{html.escape(release.type_label)}</p>',
+            updated,
+            count=1,
+            flags=re.DOTALL,
+        )
+    if release.summary and '<p class="edition-summary">' in updated:
+        updated, summary_count = re.subn(
+            r'<p class="edition-summary">.*?</p>',
+            f'<p class="edition-summary">{html.escape(release.summary)}</p>',
+            updated,
+            count=1,
+            flags=re.DOTALL,
+        )
+        if summary_count != 1 and release.slug == "ice":
+            raise ValueError(f"Edition-grid summary field not found for {release.slug}")
+    if release.slug == "ice":
+        updated, freshness_count = re.subn(
+            r'<p class="edition-freshness">.*?</p>',
+            '<p class="edition-freshness">Public pilot, no social/audio.</p>',
+            updated,
+            count=1,
+            flags=re.DOTALL,
+        )
+        if freshness_count != 1:
+            raise ValueError("Edition-grid ICE freshness field not found")
+        updated, provenance_count = re.subn(
+            r'<p class="edition-provenance">.*?</p>',
+            '<p class="edition-provenance">Based on reviewed source records</p>',
+            updated,
+            count=1,
+            flags=re.DOTALL,
+        )
+        if provenance_count != 1:
+            raise ValueError("Edition-grid ICE provenance field not found")
     updated, date_count = re.subn(r'<p class="edition-source">.*?</p>', f'<p class="edition-source">{_release_date_line(release)}</p>', updated, count=1, flags=re.DOTALL)
     if date_count != 1:
         raise ValueError(f"Edition-grid date field not found for {release.slug}")
-    updated, source_count = re.subn(r'<p class="edition-meta">.*?</p>', f'<p class="edition-meta">{html.escape(_format_source_count(release.source_count))}</p>', updated, count=1, flags=re.DOTALL)
+    updated, source_count = re.subn(r'<p class="edition-meta">.*?</p>', f'<p class="edition-meta">{html.escape(_format_release_meta(release))}</p>', updated, count=1, flags=re.DOTALL)
     if source_count != 1:
         raise ValueError(f"Edition-grid source-count field not found for {release.slug}")
     return template_html[: match.start()] + updated + template_html[match.end() :]
@@ -693,7 +837,7 @@ def _annotate_dispatch_card_public_state(card_html: str, slug: str, public_root:
 
 def annotate_shared_public_state(template_html: str, public_root: Path) -> str:
     refreshed = template_html
-    for slug in ACTIVE_PRODUCTS:
+    for slug in DISCOVERABLE_PRODUCTS:
         product_name = PRODUCT_META[slug]["publication_name"]
         if slug == "care-line":
             product_name = "The Care Line Dispatch"
@@ -768,10 +912,12 @@ def render_dispatch_directory_from_releases(
         and not _has_active_dispatch_card(template_html, target_release)
         and _is_legacy_target_dispatch_directory(template_html, target_release)
     )
-    slugs = (target_dispatch,) if target_dispatch and legacy_target_only else ACTIVE_PRODUCTS
-    missing = [slug for slug in slugs if slug not in latest]
-    if missing:
-        raise ValueError(f"No eligible public release found for active dispatches: {', '.join(missing)}")
+    if not legacy_target_only:
+        missing_core = [slug for slug in ACTIVE_PRODUCTS if slug not in latest]
+        if missing_core:
+            raise ValueError(f"No eligible public release found for active dispatches: {', '.join(missing_core)}")
+    available_slugs = tuple(slug for slug in DISCOVERABLE_PRODUCTS if slug in latest)
+    slugs = (target_dispatch,) if target_dispatch and legacy_target_only else available_slugs
     refreshed = template_html
     has_modern_active_cards = any(_has_active_dispatch_card(refreshed, latest[slug]) for slug in slugs)
     if has_modern_active_cards and not legacy_target_only:

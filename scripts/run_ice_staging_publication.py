@@ -27,6 +27,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--edition-date", required=True)
     parser.add_argument("--collection-state", default="healthy")
     parser.add_argument("--staging-root", type=Path, required=True)
+    parser.add_argument("--history-baseline-root", type=Path)
+    parser.add_argument("--first-publication", action="store_true")
     parser.add_argument("--generated-at")
     parser.add_argument("--decision-override")
     args = parser.parse_args(argv)
@@ -37,6 +39,8 @@ def main(argv: list[str] | None = None) -> int:
         edition_date=args.edition_date,
         collection_state=args.collection_state,
         staging_root=args.staging_root,
+        history_baseline_root=args.history_baseline_root,
+        first_publication=args.first_publication,
         generated_at=args.generated_at,
         source_commit=_source_commit(),
         decision_override=args.decision_override,

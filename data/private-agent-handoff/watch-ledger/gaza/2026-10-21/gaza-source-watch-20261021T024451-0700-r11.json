@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T024451-0700-r11",
+  "scheduled_for": "2026-10-21T02:44:51-07:00",
+  "started_at": "2026-10-21T02:43:23-07:00",
+  "completed_at": "2026-10-21T02:45:52-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T01:50:09.953-07:00",
+    "end": "2026-10-21T02:45:52-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "research_status": "DEGRADED",
+    "ocha_opt": "https://www.ochaopt.org/updates (accessible, no new report)",
+    "who_global": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt (accessible)",
+    "who_emro": "HTTP 502",
+    "targeted_searches": 12,
+    "exclusions": "October 20 Reuters casualties and prior WFP funding cuts",
+    "prior_ledger_run": "gaza-source-watch-20261021T014451-0700-r11",
+    "production_authority": "no approval publication or schedule changes"
+  }
+}

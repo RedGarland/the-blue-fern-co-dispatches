@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T024348-0700-r11",
+  "scheduled_for": "2026-10-21T02:45:54-07:00",
+  "started_at": "2026-10-21T02:43:48-07:00",
+  "completed_at": "2026-10-21T09:46:13.174Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T01:47:00-07:00",
+    "end": "2026-10-21T09:46:13.174Z",
+    "start_basis": "Prior hourly recall watch completed approximately 01:47 PDT on 2026-10-21; narrow supplementary discovery window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "supplementary_not_authoritative": true,
+    "production_collector_authoritative": true,
+    "targeted_web_searches_executed": 12,
+    "search_failures": 0,
+    "priority_classes": [
+      "Loss or disaster affecting a community's sole/last/full-service grocer",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank shutdown or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access effects"
+    ],
+    "searches": [
+      "October 21 2026 only grocery store closed fire community United States",
+      "October 21 2026 sole supermarket town closed flood storm",
+      "October 21 2026 last grocery store closure rural community food access",
+      "October 21 2026 emergency food distribution canceled storm flooding",
+      "October 21 2026 food pantry distribution canceled power outage fire",
+      "October 21 2026 food bank suspended distribution facility damage weather",
+      "October 21 2026 food pantry unexpectedly closed services halted access",
+      "October 21 2026 food bank closes distribution site abruptly families",
+      "October 21 2026 food pantry hours reduced emergency shut down",
+      "October 21 2026 state SNAP EBT benefits interrupted outage agency notice",
+      "October 21 2026 WIC interruption closed offices vouchers benefit emergency state",
+      "October 21 2026 SNAP processing delayed benefits unavailable state official alert"
+    ],
+    "exclusions": "No independently verified disruption newly published or confirmed within the prior-hour window. A 2026-10-20 Herriman, Utah, food-bus vandalism/food-services pause report predates the window and lacks evidence of a new in-window development; Food Lion online-service restoration likewise predates the window and falls outside defined miss classes. Routine food-pantry calendars, background policy reporting, charity appeals, and other stale or unrelated material excluded.",
+    "caveat": "Bounded web search with search-index latency is not exhaustive; zero discovered does not prove zero nationwide incidents."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261020T204806-0700-r11-b6e2",
+  "scheduled_for": "2026-10-20T20:45:22-07:00",
+  "started_at": "2026-10-20T20:48:06-07:00",
+  "completed_at": "2026-10-20T20:49:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-20T19:47:06-07:00",
+    "end_at": "2026-10-20T20:49:26-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first; latest item is 2026-10-19 Illinois termination, previously known. Twelve targeted searches covered hospital, ED, rural, maternity, behavioral, dialysis, oncology, primary care, ambulance, air medical, and U.S. territories. No newly verified qualifying service change; older or proposal-only stories excluded. Production collection authoritative."
+}

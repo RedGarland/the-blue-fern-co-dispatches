@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T074852-0700-r11-b9378e",
+  "scheduled_for": "2026-10-21T07:45:54-07:00",
+  "started_at": "2026-10-21T07:48:52-07:00",
+  "completed_at": "2026-10-21T07:51:37-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T05:44:31-07:00",
+    "end": "2026-10-21T07:51:37-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "last confirmed completed check visible in handoff; intervening runs not evidenced; widened to avoid gaps"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "bounded supplementary recall; production collection remains authoritative",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "source_access_failures": 1,
+    "query_focus": [
+      "only/sole/last/full-service grocery closure or fire",
+      "weather/disaster-canceled food distributions",
+      "abrupt pantry/food-bank closures or service reduction",
+      "official SNAP/WIC immediate interruption"
+    ],
+    "search_engine_recency_days": 2,
+    "search_result": "No newly published or newly effective qualifying disruption verified in the bounded observation interval.",
+    "notable_exclusions": [
+      {
+        "source_url": "https://www.the-sun.com/money/17182682/kenosha-food-bank-wisconsin-closing/",
+        "reason": "Oct. 21 article reports planned closure at end of 2026, not an abrupt current service cessation."
+      },
+      {
+        "source_url": "https://www.wkbw.com/niagara-county/very-excited-2-2m-rehabilitation-in-motion-to-reopen-wilson-lakeside-market",
+        "reason": "Reports rehabilitation of store closed since Jan. 2025, not a new loss."
+      },
+      {
+        "source_url": "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+        "reason": "Oct. 10 weather cancellation predates observation window."
+      }
+    ],
+    "degraded_reason": "One follow-up source page (NBC New York about a detained food-bank founder) returned 403. Search coverage remained useful, and the report did not itself establish a qualifying service closure.",
+    "duplicates_and_limitations": "Older incidents, routine promotion, resource guides, opinion and non-U.S. reports excluded. No production-feed comparison made; no primary collection or publication altered."
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T014451-0700-r11",
+  "scheduled_for": "2026-10-21T01:44:51-07:00",
+  "started_at": "2026-10-21T01:47:16-07:00",
+  "completed_at": "2026-10-21T01:50:09.953-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T00:42:40-07:00",
+    "end": "2026-10-21T01:50:09.953-07:00",
+    "scope": "Traceable new in-Gaza developments since previous hourly observation; supplementary recall only, production authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "research_status": "DEGRADED",
+    "first_sources_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed humanitarian situation report was published 2026-10-19 (report period 2026-09-29 through 2026-10-12); none posted within the observation window."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Regional resource unavailable; direct regional health verification incomplete."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza healthcare update during the observation window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_topics": [
+      "Civilian casualties October 21",
+      "Reuters Gaza ceasefire and casualties",
+      "AP Gaza strikes and aid",
+      "UN humanitarian aid access",
+      "ReliefWeb shelters and displacement",
+      "WHO healthcare and evacuation",
+      "UNICEF child casualties and water",
+      "WFP food and crossings",
+      "ICRC detainees and medical response",
+      "Gaza October 20 civilian impact and infrastructure",
+      "Gaza early October 21 medical and military developments",
+      "Al Jazeera October 21 Gaza"
+    ],
+    "coverage_summary": "No source-dated, nonduplicate in-Gaza development first verifiable during 2026-10-21T00:42:40-07:00 onward. Search returns largely October 20 and earlier events or older humanitarian reports. Negative search results do not establish that no such events occurred.",
+    "prior_ledger_run": "gaza-source-watch-20261021T004451-0700-r11",
+    "excluded_prior_or_nonqualifying": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-20/",
+        "reason": "October 20 Reuters casualties already excluded by previous completed watch; no proof of new reporting this hour."
+      },
+      {
+        "url": "https://apnews.com/article/mideast-yemen-saudi-israel-gaza-october-20-2026-6f69abd6470c9b43b75de7b223011486",
+        "reason": "Pre-dawn October 20 Gaza City apartment strike, not a new development this hour."
+      },
+      {
+        "url": "https://www.unicef.org/press-releases/childhood-defined-struggle-survival-gaza-strip",
+        "reason": "UNICEF briefing published October 16; historical aggregate statistics, not new this hour."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published October 19; predates observation window."
+      }
+    ],
+    "limitations": [
+      "WHO EMRO regional pages returned HTTP 502; WHO global overview was accessible.",
+      "Source publication timestamps often absent or outside the observation window.",
+      "Indexing lag may obscure overnight developments."
+    ],
+    "production_authority": "No approval, publication, primary collector, production schedule, or task state changes."
+  }
+}

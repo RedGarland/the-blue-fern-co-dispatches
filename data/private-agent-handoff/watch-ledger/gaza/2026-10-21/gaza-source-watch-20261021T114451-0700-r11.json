@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T114451-0700-r11",
+  "scheduled_for": "2026-10-21T11:44:51-07:00",
+  "started_at": "2026-10-21T11:49:20-07:00",
+  "completed_at": "2026-10-21T11:51:00-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T10:43:35-07:00",
+    "end": "2026-10-21T11:51:00-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; most recent listed news/updates dated 2026-10-19; no newly released Gaza item verified."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "WHO global Gaza/OPT page accessible; no new dated in-window publication. WHO EMRO OPT information resources timed out; some WHO regional healthcare detail could not be verified.",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "focus": "Casualties, displacement, aid/food/water access, health system, crossings, detention/hostages, negotiations and civilian impacts of military operations.",
+    "screened_items": [
+      {
+        "url": "https://www.aljazeera.com/features/2026/10/21/gaza-children-face-worsening-food-shortages-as-prices-rise-and-aid-is-cut",
+        "reason": "Today-dated feature describes pre-existing Oct 14 commercial-shipment restriction and Oct 19 WFP cuts; no independently verified new event or publication hour inside observation window."
+      },
+      {
+        "url": "https://www.reutersconnect.com/item/displaced-palestinians-demonstrate-outside-wfp-office-over-food-aid-cuts-in-gaza/dGFnOnJldXRlcnMuY29tLDIwMjY6bmV3c21sX09XQU5BQ0FBVklERU8yMDI2MTAyMTQyODE5Nzk3",
+        "reason": "Oct 21 demonstration in Deir al-Balah documented by Anadolu; event time unavailable and not a new humanitarian-impact change; Reuters Connect disclaims independent verification."
+      },
+      {
+        "url": "https://www.bernama.com/tv/news.php?id=2623496",
+        "reason": "Oct 21 coverage describes UN spokesperson's Oct 20 statement and Oct 19 displacement-site assessments; outside hourly window."
+      }
+    ],
+    "deduplication": "Previously identified generator/fuel shortages, Oct 19 WFP food-aid cuts, and earlier casualty claims excluded; no new verified qualifying event during window.",
+    "source_limitations": "WHO EMRO OPT resource timed out; fallback global WHO page was accessible. Source-search coverage otherwise useful. Search indexing and article publication time lag prevent exhaustive real-time assertions.",
+    "authority": "Supplementary recall only; primary production collection and editorial pipeline remain authoritative. No production changes, approvals, publishing or scheduling actions."
+  }
+}

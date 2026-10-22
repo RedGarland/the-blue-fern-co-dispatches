@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T104721-0700-r11",
+  "scheduled_for": "2026-10-22T10:44:51-07:00",
+  "started_at": "2026-10-22T10:47:21-07:00",
+  "completed_at": "2026-10-22T10:48:19-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T09:44:07-07:00",
+    "end": "2026-10-22T10:48:19-07:00",
+    "start_basis": "Verified completed_at of prior heartbeat gaza-source-watch-20261022T094202-0700-r11."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary Gaza recall watch only; production publisher/collector remains authoritative. No publication or approval actions.",
+    "initial_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Checked first; latest updates listing is 19 October 2026. No verified publication newly added in window."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Checked first; global WHO Gaza emergency overview accessible, no dated in-window update observed."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targets": [
+      "Gaza civilian casualties October 22",
+      "UNRWA",
+      "UNICEF",
+      "WFP",
+      "ICRC",
+      "MSF",
+      "Gaza October 22 reporting",
+      "Reuters",
+      "Associated Press",
+      "ReliefWeb",
+      "UN News",
+      "Gaza crossing, fuel and medical evacuations"
+    ],
+    "degraded_sources": [
+      {
+        "source": "WHO Eastern Mediterranean regional emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "failure": "HTTP 502 Bad Gateway",
+        "impact": "Incomplete regional health, hospital and medical evacuation verification."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "failure": "Web search blocked by robots.txt",
+        "impact": "UN News in-window coverage not independently checked."
+      }
+    ],
+    "assessed_exclusions": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Previously assessed by prior hourly watch; article published at 05:21 PDT, earlier than current window."
+      },
+      {
+        "url": "https://apnews.com/article/d7ebbcf1fd30cc608c9b9ed5126deb95",
+        "reason": "Previously reported WFP aid reductions dated October 20, not an in-window novelty."
+      },
+      {
+        "url": "https://www.unicef.org/press-releases/food-security-and-child-nutrition-crises-persist-gaza-despite-fragile-gains-due",
+        "reason": "July 2026 report, stale."
+      }
+    ],
+    "conclusion": "No new, verified, nonduplicate development supported within this hourly window. Search-index timeliness and regional WHO 502 leave residual coverage gaps. Zero findings does not prove zero events.",
+    "side_effects": "Exactly one watch-ledger JSON heartbeat attempted for this run; no production, publication, approval, or schedule changes."
+  }
+}

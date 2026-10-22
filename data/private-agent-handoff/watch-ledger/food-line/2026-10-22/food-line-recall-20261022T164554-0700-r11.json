@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T164554-0700-r11",
+  "scheduled_for": "2026-10-22T16:45:54-07:00",
+  "started_at": "2026-10-22T16:49:43-07:00",
+  "completed_at": "2026-10-22T16:50:56-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T15:45:54-07:00",
+    "end": "2026-10-22T16:49:43-07:00",
+    "basis": "Supplementary recall since prior scheduled hourly check; source claims reviewed for actual event and publication time, not merely discovery time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary high-value miss-class recall only; production nationwide collection remains authoritative.",
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "search_failures": 0,
+    "categories": [
+      "Closure, fire, disaster or permanent loss of sole, last, only or full-service community grocery",
+      "Weather, flood, fire, outage or damage cancellation of emergency food distribution",
+      "Abrupt food pantry or food-bank closure or material reduction in access",
+      "Official new SNAP or WIC benefit issuance, redemption or service interruption with immediate access consequences"
+    ],
+    "assessment": "No verified new qualifying incident in the bounded observation window. Results included stale articles from 2024–2025, Canadian or UK items, resource listings, and older incidents. Bronx Open Hand pantry suspension and Dubach municipal pantry closure were previously surfaced and excluded as duplicates; no new source-established escalation.",
+    "limitations": "Targeted web search is not exhaustive and results may lag local provider notices; no inferred incident time from undated articles.",
+    "excluded_categories": "Donation drives, resource guides, recipes, opinion, routine promotion, generic inflation, out-of-window incidents, non-U.S. incidents, and prior discoveries.",
+    "actions": "No approval, publication, scheduling or production collection changes."
+  }
+}

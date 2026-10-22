@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T074121-0700-r11",
+  "scheduled_for": "2026-10-22T07:44:51-07:00",
+  "started_at": "2026-10-22T07:41:21-07:00",
+  "completed_at": "2026-10-22T07:43:39-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T06:45:51-07:00",
+    "end": "2026-10-22T07:43:39-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Official OCHA OPT checked first; newest update was October 19.",
+    "who": "WHO global emergency page checked; WHO EMRO reports endpoint returned HTTP 502.",
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_topics": [
+      "OCHA access",
+      "UNRWA displacement",
+      "WFP food",
+      "UNICEF water",
+      "ICRC medical and detention",
+      "UN humanitarian",
+      "Reuters",
+      "AP",
+      "casualties",
+      "Anadolu",
+      "crossings and fuel",
+      "ceasefire and detention"
+    ],
+    "findings_basis": "No new, verified, nonduplicate, time-attributable in-Gaza development found since the last hourly heartbeat. Previously identified events excluded.",
+    "caveat": "WHO EMRO source failure degrades health-system coverage; production collector and publisher remain authoritative.",
+    "side_effects": "Ledger heartbeat only; no approval, publication or scheduling changes."
+  }
+}

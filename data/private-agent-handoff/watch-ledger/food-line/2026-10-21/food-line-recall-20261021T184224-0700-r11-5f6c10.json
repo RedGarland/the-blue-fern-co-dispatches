@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T184224-0700-r11-5f6c10",
+  "scheduled_for": "2026-10-21T18:45:54-07:00",
+  "started_at": "2026-10-21T18:42:24-07:00",
+  "completed_at": "2026-10-21T18:44:20-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T17:42:37-07:00",
+    "end": "2026-10-21T18:44:20-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior durable supplementary Food Line watch heartbeat completed 17:42:37 PDT. Newly published or newly verified food-access disruptions only; older and previously screened items excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_completed": 12,
+    "searches_failed": 0,
+    "sources_failed": 1,
+    "categories_checked": [
+      "Loss/fire/closure of only, sole, last or full-service grocery access",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, outage or facility damage",
+      "Abrupt food-bank or pantry closure or major reduction in access",
+      "Official SNAP, WIC or food-assistance interruption with immediate consequences"
+    ],
+    "bounded_queries": [
+      "\"only grocery store\" closed fire October 21 2026 town US",
+      "\"sole grocery store\" fire closure October 2026 local news",
+      "\"last grocery store\" closes October 21 2026 community",
+      "\"food distribution\" canceled storm flooding October 21 2026 food bank",
+      "\"food pantry\" \"closed\" \"October 21\" 2026 emergency",
+      "site:gov \"SNAP\" \"interruption\" \"October 21, 2026\" benefits",
+      "October 21 2026 food pantry closed abruptly residents services local",
+      "October 21 2026 food bank shut down distribution cancelled outage fire",
+      "October 21 2026 storm canceled food distribution food pantry counties",
+      "October 21 2026 grocery only supermarket town closing residents",
+      "October 21 2026 SNAP WIC benefits suspended EBT outage state agency",
+      "site:gov \"food assistance\" \"temporarily unavailable\" \"Oct\" \"2026\""
+    ],
+    "notable_exclusions": [
+      {
+        "source_url": "https://spectrumnews1.com/wi/milwaukee/news/2026/10/02/wisconsin-food-bank-closing-down-as-need-spikes",
+        "reason": "Kenosha Food Bank future end-of-2026 closure was reported October 2, 2026; October 21 syndication is not a newly verified signal in this window."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/10/21/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Confirms October 23 emergency distribution, not cancellation; previously screened."
+      },
+      {
+        "source_url": "https://www.the-sun.com/money/17185597/safeway-closing-san-jose-california-store-november/",
+        "reason": "November 13 San Jose retail closure not established as sole/last full-service community grocery access; previously screened."
+      },
+      {
+        "source_url": "https://ccda.net/catholic-charities-announces-closure-of-food-pantry-in-alexandria/",
+        "reason": "Previously announced planned October 22 closure; no new incident in observation window."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "source_url": "https://www.facebook.com/kenoshacountyfb/posts/pfbid0K6hbqDxFLnK2TM5EvmHRWZVdTc4fmDL3UEtCH2F6Q4cRH4aJFm2yYGZ2VH8K7XZCl",
+        "issue": "Direct provider Facebook notice throttled on fetch. Earlier Oct. 2 local reporting independently confirms announcement is stale; no material finding coverage lost."
+      }
+    ],
+    "search_result": "No new qualifying U.S. food-access disruption verified; coverage supplementary and non-exhaustive.",
+    "production_collection_authoritative": true,
+    "review_only": true,
+    "publication_authorized": false,
+    "approval_authorized": false
+  }
+}

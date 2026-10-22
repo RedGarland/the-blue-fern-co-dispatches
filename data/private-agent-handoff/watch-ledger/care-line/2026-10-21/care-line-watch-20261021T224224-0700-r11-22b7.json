@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T224224-0700-r11-22b7",
+  "scheduled_for": "2026-10-21T22:45:22-07:00",
+  "started_at": "2026-10-21T22:42:24-07:00",
+  "completed_at": "2026-10-21T22:44:45.280-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T21:47:00-07:00",
+    "end": "2026-10-21T22:44:45.280-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch; production Care Line collection is authoritative.",
+    "CMS Public Notices checked first; latest notice was 2026-10-19 (Platinum Health Service, IL). No newly dated official notice in window. https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "Exactly 12 targeted web searches covered hospital/ED/maternity/behavioral health/dialysis/oncology/primary care; rural emergency loss; ground and air EMS; restoration; U.S. territories.",
+    "No confirmed new qualifying change; Dennys River ambulance closure already identified, Uniontown maternity reopening dated 2024, ownership stories, proposals, opinions and out-of-scope reports excluded.",
+    "Web research successful, without material access failures."
+  ]
+}

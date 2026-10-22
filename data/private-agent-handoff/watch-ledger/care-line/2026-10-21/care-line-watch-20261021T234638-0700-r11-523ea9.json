@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T234638-0700-r11-523ea9",
+  "scheduled_for": "2026-10-21T23:45:22-07:00",
+  "started_at": "2026-10-21T23:46:38-07:00",
+  "completed_at": "2026-10-21T23:47:51-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T21:47:00-07:00",
+    "end": "2026-10-21T23:47:51-07:00",
+    "basis": "Prior completed hourly check ended approximately 2026-10-21 21:47 PDT; supplementary recall window to observation time, not primary collector coverage."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_collector_authority": "Production Care Line collector remains authoritative; this is supplementary recall only.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "latest_notice": "Platinum Health Service — Termination Notice — Illinois",
+      "new_in_window": false
+    },
+    "targeted_searches_completed": 12,
+    "research_result": "No new independently confirmed qualifying U.S. or territory access change identified since prior check.",
+    "covered_classes": [
+      "Hospital emergency/obstetric/behavioral-health/dialysis/oncology/primary care closures or suspensions",
+      "Rural or emergency access loss",
+      "Ambulance, air-medical and base closure",
+      "CMS provider terminations, rescissions, CLIA restrictions",
+      "Concrete reopening/restoration of essential services"
+    ],
+    "exclusion_policy": "Excluded older events, duplicate previously identified Provident Hospital ICU suspension, proposals without concrete access effect, unrelated non-U.S. items, ownership/business-only news, opinion and unsupported claims.",
+    "retrieval_caveat": "Targeted search engines yielded predominantly older/irrelevant results despite recency filters; no source access failure observed. No claim of exhaustive national coverage.",
+    "permissions": "No approval, publication, schedule change, or task disabling."
+  }
+}

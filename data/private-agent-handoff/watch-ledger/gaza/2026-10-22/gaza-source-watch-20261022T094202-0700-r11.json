@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T094202-0700-r11",
+  "scheduled_for": "2026-10-22T09:44:51-07:00",
+  "started_at": "2026-10-22T09:42:02-07:00",
+  "completed_at": "2026-10-22T09:44:07-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T08:45:00-07:00",
+    "end": "2026-10-22T09:44:07-07:00",
+    "start_basis": "Approximate end of the preceding completed hourly check, 08:45 PDT; the earlier watch heartbeat failed to persist."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only. Production Gaza daily publisher/collector remains authoritative; no publication or approval changes.",
+    "initial_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Checked first. Latest indexed update posted 2026-10-19; no new item in hourly window."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Checked first. Global health emergency page accessible; no verified in-window update."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "sources_checked": [
+      "OCHA OPT",
+      "WHO global",
+      "WHO Eastern Mediterranean regional situation reports",
+      "UNRWA",
+      "UNICEF",
+      "WFP",
+      "ICRC",
+      "Reuters",
+      "Associated Press",
+      "MSF",
+      "UN News"
+    ],
+    "degraded_sources": [
+      {
+        "source": "WHO Eastern Mediterranean regional emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "failure": "HTTP 502 Bad Gateway",
+        "impact": "Reduced hospital/medical-evacuation and health-functionality source coverage."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/",
+        "failure": "Search access blocked by robots.txt",
+        "impact": "Unable to independently review UN News same-day updates."
+      }
+    ],
+    "assessed_exclusions": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Reuters article time 2026-10-22 12:21 UTC (05:21 PDT), predating the hourly search window; separate Oct 22 casualty report was already flagged as unverified in the prior watch. Not treated as a new hourly development.",
+        "source_publication_at": "2026-10-22T05:21:00-07:00"
+      },
+      {
+        "url": "https://apnews.com/article/un-gaza-west-bank-food-funding-hunger-d7ebbcf1fd30cc608c9b9ed5126deb95",
+        "reason": "WFP funding-driven reduction was reported Oct 20 and was previously observed; excluded as recycled, not a new in-window development."
+      },
+      {
+        "url": "https://www.ochaopt.org/updates",
+        "reason": "No new in-window OCHA release."
+      }
+    ],
+    "conclusion": "No verified qualifying nonduplicate event with support for novelty within the bounded hourly window. Absence of findings is not evidence that no event occurred.",
+    "side_effects": "One watch-ledger heartbeat only; no publication, approval, schedule or production changes.",
+    "check_time_utc": "2026-10-22T16:44:07.542Z"
+  }
+}

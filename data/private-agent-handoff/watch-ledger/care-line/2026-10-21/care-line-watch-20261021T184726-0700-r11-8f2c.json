@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261021T184726-0700-r11-8f2c",
+  "scheduled_for": "2026-10-21T18:45:22-07:00",
+  "started_at": "2026-10-21T18:47:26-07:00",
+  "completed_at": "2026-10-21T18:48:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T17:44:00-07:00",
+    "end": "2026-10-21T18:48:53-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall check; production Care Line collector remains authoritative.",
+    "CMS Public Notices checked first: latest visible notice dated 2026-10-19 (Platinum Health Service, IL), previously identified; no newly dated CMS public notice within this window.",
+    "Twelve additional targeted web searches completed across hospital/ED/maternity/behavioral health/dialysis/oncology/primary care, emergency/rural service loss, ambulance/air medical, restoration and U.S. territories.",
+    "No verified new qualifying service change established in window. Previously reported 2026-10-13 Downeast Maine ambulance closure excluded as outside window; proposed or older closures, business-only stories and non-U.S. reports excluded.",
+    "CMS source: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+  ]
+}

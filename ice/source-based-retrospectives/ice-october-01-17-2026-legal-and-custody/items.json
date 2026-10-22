@@ -1,0 +1,11 @@
+{
+  "dispatch": "ice",
+  "edition_kind": "dated_source_based_retrospective",
+  "edition_date": "2026-10-22",
+  "title": "Legal and custody developments from October 1-17, 2026",
+  "disclaimer": "This dated retrospective preserves the dates and limits of the cited reports and filing. Allegations are attributed and are not presented as findings. It does not claim complete coverage of ICE activity.",
+  "items": [
+    {"id":"ice-audit-andrade-covarrubias-2026-10-17","reported_date":"2026-10-18","event_date":"2026-10-17","title":"Emiliano Andrade-Covarrubias died in ICE detention in Laredo","summary":"The Texas Tribune reported that Emiliano Andrade-Covarrubias, 56, died at the Rio Grande Processing Center in Laredo on October 17. The report cited his daughter and Rep. Henry Cuellar; family medical-care allegations are attributed and no cause of death is established.","sources":[{"publisher":"The Texas Tribune","date":"2026-10-18","modified":"2026-10-19","url":"https://www.texastribune.org/2026/10/18/migrant-found-dead-ice-laredo/"}]},
+    {"id":"ice-audit-renee-good-2026-01-07-2026-10-01","reported_date":"2026-10-01","event_date":"2026-01-07","title":"Federal complaint filed over a January Minneapolis shooting involving an ICE officer","summary":"On October 1, Brent Ganger, acting as trustee for Renée Good's next of kin, and Rebecca Good filed a federal complaint against the United States under the Federal Tort Claims Act over a January 7 Minneapolis shooting involving an ICE officer. Allegations and requested relief are not judicial findings.","sources":[{"publisher":"Filed federal complaint","date":"2026-10-01","url":"https://www.rblaw.net/assets/htmldocuments/ECF%201.%20Good_Complaint%20FTCA.pdf"}]}
+  ]
+}

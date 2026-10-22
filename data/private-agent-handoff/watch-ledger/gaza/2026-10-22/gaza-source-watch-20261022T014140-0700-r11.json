@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T014140-0700-r11",
+  "scheduled_for": "2026-10-22T01:44:51-07:00",
+  "started_at": "2026-10-22T01:41:40-07:00",
+  "completed_at": "2026-10-22T01:43:29.634-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T00:43:30-07:00",
+    "end": "2026-10-22T01:43:29.634-07:00",
+    "start_basis": "Verified prior watch heartbeat completed_at; 2026-10-22 00:43:30 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary Gaza recall only; production remains authoritative. Priority coverage: civilian casualties, displacement, aid, food/water, health, hospital/ambulance/transport/fuel/evacuations/capacity, infrastructure, crossings, detention/hostages, ceasefire/negotiations, and military operations with documented civilian impact.",
+    "ocha_opt": "Direct OCHA OPT homepage checked first. Latest listed report was published October 19, 2026 (report dated October 15, data primarily September 29–October 12). No new report in the observation window.",
+    "who": "Checked WHO official sources second. WHO global oPt emergency overview accessible; no new in-window Gaza health update. WHO Eastern Mediterranean Palestine site and emergency reports returned HTTP 502, so regional healthcare coverage was incomplete.",
+    "additional_targeted_search_count": 12,
+    "targeted_search_scope": "Reuters, AP, UNICEF, WFP, UNRWA, Palestine Red Crescent Society, Anadolu, WAFA, Al Jazeera, MSF, ICRC, crossings/ceasefire aid updates. Broad search retrieval returned mostly 2025 or older-2026 articles.",
+    "results": "No new, source-traceable, nonduplicate Gaza development could be verified as first reported since prior completed watch. Older or undated-hour casualty items and the October 21 UNICEF water/nutrition agreements were excluded as already seen.",
+    "exclusions": "Opinion, unsupported social claims, stale indexed articles, West Bank-only developments, unverified hourly freshness, recycled humanitarian announcements, and duplicates.",
+    "references": [
+      "https://www.ochaopt.org/",
+      "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+      "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+      "https://www.unicef.org/gulf/press-releases/unicef-and-international-islamic-charitable-organization-partner-restore-water",
+      "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza"
+    ],
+    "side_effects": "GitHub watch ledger heartbeat only; no approval, publication, production or schedule alteration."
+  }
+}

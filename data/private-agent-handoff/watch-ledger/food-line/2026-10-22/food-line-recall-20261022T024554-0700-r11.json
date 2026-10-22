@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T024554-0700-r11",
+  "scheduled_for": "2026-10-22T02:45:54-07:00",
+  "started_at": "2026-10-22T02:46:25-07:00",
+  "completed_at": "2026-10-22T02:48:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-22T01:45:54-07:00",
+    "end": "2026-10-22T02:48:04-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "One-hour lookback from scheduled occurrence; no independently verified prior-hour GitHub heartbeat available."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "bounded supplementary recall only; production collection remains authoritative",
+    "targeted_searches_completed": 12,
+    "targeted_searches_failed": 0,
+    "categories_checked": [
+      "Loss of sole/last/full-service local grocery store",
+      "Canceled storm/disaster/outage-related emergency food distribution",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "sources": "Search results reviewed for current local reporting, official provider and agency notices, and verified U.S. impact.",
+    "exclusions": "Older incidents and stale search results excluded, including Wyandanch NY Mercy Soup Kitchen fire reported 2026-10-20; no new qualifying event in observation window was confirmed.",
+    "limitations": "Web search indexing may lag local publication; this is not exhaustive nationwide coverage. No independently confirmed prior-hour receipt was retrieved.",
+    "publication_or_approval_actions": false
+  }
+}

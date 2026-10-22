@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T074734-0700-r11",
+  "scheduled_for": "2026-10-22T07:45:54-07:00",
+  "started_at": "2026-10-22T07:47:34-07:00",
+  "completed_at": "2026-10-22T07:49:33-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-22T06:51:08-07:00",
+    "through": "2026-10-22T07:49:33-07:00",
+    "since_basis": "Completion timestamp in last persisted hourly Food Line Source Watch heartbeat on ops/watch-ledger."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; primary nationwide production collection remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "classes_checked": [
+      "loss of only, sole, last, or full-service grocery",
+      "storm/flood/fire/outage/facility-damage cancellation of emergency food distributions",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "search_strategy": "12 recency-constrained, date-specific U.S. searches across four high-value miss classes; local/agency/provider evidence prioritized; tested published-date/event-date alignment against strict window.",
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire \"October 22, 2026\" town",
+      "\"last grocery store\" \"October 22\" 2026 closure",
+      "\"sole grocery\" fire closed \"Oct 22\" 2026",
+      "\"full-service grocery\" closing \"October 22, 2026\" food desert",
+      "\"food distribution\" canceled storm flood \"October 22, 2026\"",
+      "\"food pantry\" \"distribution canceled\" \"October 22\" 2026",
+      "\"food bank\" \"closed\" \"Oct 22, 2026\" emergency",
+      "\"food pantry\" \"suspend operations\" \"October 22, 2026\"",
+      "\"food bank\" \"service interruption\" \"October 22, 2026\"",
+      "SNAP EBT benefits outage \"October 22, 2026\" official",
+      "WIC services suspended interruption \"October 22, 2026\" official",
+      "food assistance benefits suspended \"October 22, 2026\" state"
+    ],
+    "duplicates_excluded": [
+      "Bronx Open Hand Food Pantry suspension (previously identified Oct 22, outside this window)",
+      "Dubach Louisiana municipal pantry discontinuation (previously identified Oct 22, outside this window)"
+    ],
+    "outside_window_or_nonqualifying_examples": [
+      "Spencer NY sole grocery store fire (Sep 2026)",
+      "Avondale Cincinnati full-service grocery closure (Jul 2026)",
+      "2025 SNAP/WIC shutdown reports",
+      "routine food distributions, assistance resource guides and donation announcements"
+    ],
+    "freshness_caveat": "No independently verified qualifying event or new official notice first occurring or published between 06:51:08 and this run's completion. Search indexing may lag local announcements.",
+    "review_status": "No new candidates",
+    "approvals_or_publication": false,
+    "task_modified": false
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T114915-0700-r11-b12",
+  "scheduled_for": "2026-10-22T11:45:54-07:00",
+  "started_at": "2026-10-22T11:49:15-07:00",
+  "completed_at": "2026-10-22T18:50:53.687Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-22T10:45:54-07:00",
+    "through": "2026-10-22T18:50:53.687Z",
+    "since_basis": "Scheduled previous hourly slot; prior watch completion was not independently verified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; production nationwide collector is authoritative.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "qualified_new_signals": 0,
+    "classes_checked": [
+      "Loss/fire/disaster/closure of only, sole, last, or full-service community grocery",
+      "Cancellation of emergency food distributions due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption causing immediate access loss"
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire town October 22 2026",
+      "\"sole grocery store\" \"closed\" OR \"fire\" October 22 2026",
+      "\"last grocery store\" closure October 22 2026 United States",
+      "\"full-service grocery store\" closed destroyed storm October 22 2026",
+      "\"food distribution\" canceled storm Thursday October 22 2026 food bank",
+      "\"food pantry\" \"closed\" \"flood\" OR \"fire\" October 22 2026",
+      "\"food bank\" \"suspend\" \"distribution\" October 22 2026",
+      "site:gov \"SNAP\" \"benefits\" \"interrupted\" October 22 2026",
+      "site:gov \"WIC\" \"closed\" \"outage\" October 22 2026",
+      "\"pantry\" \"permanently closed\" October 22 2026 food access",
+      "\"October 22, 2026\" \"food pantry\" \"shut down\" OR \"closed\" OR \"suspended\"",
+      "\"October 22, 2026\" \"food distribution\" \"canceled\" OR \"postponed\" OR \"suspended\""
+    ],
+    "exclusions": [
+      "September 11 and September 14 reports of Spencer, NY sole grocery-store fire predate watch window.",
+      "October 1 Toledo marketplace report mentions Paws & People pantry closure but predates watch window.",
+      "Previously flagged Bronx Open Hand and Dubach Louisiana pantry disruptions were not re-reported as new.",
+      "Earlier government-shutdown SNAP articles concern 2025, not a fresh October 22, 2026 interruption.",
+      "Donation drives, general resource lists, opinion, and routine programs excluded."
+    ],
+    "limitations": "Search-engine fresh local/provider indexing may lag. The preceding run's exact completion time was not confirmed; used scheduled hourly window.",
+    "github_branch": "ops/watch-ledger",
+    "github_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-22/food-line-recall-20261022T114915-0700-r11-b12.json"
+  }
+}

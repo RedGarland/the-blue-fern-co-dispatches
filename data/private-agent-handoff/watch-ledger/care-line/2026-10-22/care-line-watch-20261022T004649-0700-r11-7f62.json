@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T004649-0700-r11-7f62",
+  "scheduled_for": "2026-10-22T00:45:22-07:00",
+  "started_at": "2026-10-22T00:46:49-07:00",
+  "completed_at": "2026-10-22T00:49:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T23:47:51-07:00",
+    "end": "2026-10-22T00:49:00-07:00",
+    "basis": "Prior persisted completed Care Line Watch heartbeat."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "new_in_window": false
+    },
+    "additional_targeted_searches": 12,
+    "research_result": "No new qualifying developments confirmed during bounded review. Searches returned primarily older, duplicative, or unrelated coverage despite one-day recency settings.",
+    "exclusions": "Older or duplicate event; proposal without concrete effect; unrelated geography or business-only stories.",
+    "primary_collector_authority": "Production Care Line collection remains authoritative.",
+    "permissions": "No approvals, publication, schedule changes, or task disabling."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T074850-0700-r11-8e5c",
+  "scheduled_for": "2026-10-22T07:45:22-07:00",
+  "started_at": "2026-10-22T07:48:50-07:00",
+  "completed_at": "2026-10-22T07:51:10-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T06:54:00-07:00",
+    "end": "2026-10-22T07:51:10-07:00",
+    "basis": "Recall interval begins after prior hourly Care Line Watch completed near 06:54 PDT; newly surfaced information since then, excluding old reports and events without new access consequences."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "new_in_window": false
+    },
+    "additional_targeted_searches": 12,
+    "targeted_classes": [
+      "hospital and emergency department loss",
+      "maternity and obstetrics loss",
+      "rural emergency and hospital service",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "ambulance and EMS",
+      "air medical bases",
+      "primary care",
+      "US territories",
+      "abrupt reopening/restoration",
+      "government access-risk notices"
+    ],
+    "research_result": "No new verifiable, nonduplicative qualifying change identified after prior hourly check. Official CMS Public Notices latest notice remains October 19. Targeted searches returned predominantly older closures, announcements or out-of-scope stories.",
+    "exclusions": [
+      "Provident Hospital Cook County ICU suspension: published October 21, already surfaced by earlier Care Line Watch.",
+      "Spokane-area Rockwood clinic closures in October 22 reporting were announced in September and are prospective by end of year, not newly effective.",
+      "Previously reported closures and reopenings, proposed projects, ownership-only stories, non-U.S. articles."
+    ],
+    "limitations": "Bounded supplementary recall; search-index lag and publication-time ambiguity mean negative result is not proof of nationwide absence of events.",
+    "primary_collector_authority": "Production Care Line collection remains authoritative.",
+    "permissions": "No approvals, publication, schedule changes, or task disabling."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T064326-0700-r11",
+  "scheduled_for": "2026-10-22T06:44:51-07:00",
+  "started_at": "2026-10-22T06:43:26-07:00",
+  "completed_at": "2026-10-22T06:45:51-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T05:42:10-07:00",
+    "end": "2026-10-22T06:45:51-07:00",
+    "start_basis": "The most recent confirmed GitHub watch-ledger heartbeat (05:40 local run) recorded completed_at 05:42:10 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary Gaza recall watch only. Production collector/publisher authoritative; no publication, approval, production modification, schedule or task changes.",
+    "ocha_opt": "Checked official OCHA OPT homepage first. The newest visible Gaza report and impact snapshot were dated 19 Oct 2026, both older than this observation window; no in-window qualifying update verified.",
+    "who": "Checked WHO official conflict-in-Israel-and-oPt emergency page first. No in-window Gaza emergency or healthcare update visible.",
+    "who_emro": "WHO Eastern Mediterranean Gaza emergency-situation-reports page returned HTTP 502 Bad Gateway; regional verification of health services, medical evacuation and hospitals was incomplete.",
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_topics": [
+      "UNICEF Gaza water, children and aid",
+      "UNRWA displacement, shelters and aid",
+      "WFP food assistance and crossings",
+      "ICRC hospitals, ambulances and detainees",
+      "OCHA humanitarian access and crossings",
+      "WHO EMRO medical evacuation and hospitals",
+      "Reuters strikes, casualties and ceasefire",
+      "Associated Press hospital, displacement and aid",
+      "UN humanitarian and crossing developments",
+      "Overnight civilian casualty/strike reports",
+      "Rafah crossings, fuel and evacuation",
+      "Ceasefire, hostages and detention"
+    ],
+    "findings_basis": "No source-verified, newly reported, nonduplicate, time-attributable in-Gaza development found in the bounded observation window. Search results primarily returned earlier reports. Previously recorded October 21 casualties and UNICEF agreements were excluded.",
+    "sources_checked": [
+      "https://www.ochaopt.org/",
+      "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html"
+    ],
+    "exclusions": "Opinion, unsupported social claims, undated or time-indeterminate claims, recycled results, duplicates and non-Gaza incidents excluded.",
+    "source_coverage_caveat": "WHO EMRO HTTP 502 prevents full regional healthcare coverage; no_findings does not demonstrate the absence of new developments.",
+    "side_effects": "Exactly one intended new private watch-ledger heartbeat; no other writes."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T144517-0700-r11",
+  "scheduled_for": "2026-10-22T14:44:51-07:00",
+  "started_at": "2026-10-22T14:45:17-07:00",
+  "completed_at": "2026-10-22T14:46:42-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T13:49:36-07:00",
+    "end": "2026-10-22T14:46:42-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "initial_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; newest homepage update dated 2026-10-19; no in-window qualifying material."
+      },
+      {
+        "source": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502; regional health verification incomplete."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_search_scope": "Gaza civilian casualties, displacement, aid, fuel, hospitals, crossings, negotiations, and military operations with civilian impact; primary humanitarian and established reporting; recency filtered to 2026-10-22.",
+    "degraded_sources": [
+      {
+        "source": "WHO Eastern Mediterranean OPT",
+        "error": "HTTP 502"
+      },
+      {
+        "source": "ReliefWeb engine-oil report",
+        "url": "https://reliefweb.int/report/occupied-palestinian-territory/gaza-israeli-restrictions-engine-oil-are-crippling-humanitarian-response",
+        "error": "HTTP 403; item published 2026-10-22 but identified in an earlier watch and no post-window update verified"
+      }
+    ],
+    "excluded": [
+      "OCHA 2026-10-19 situation report: outside search window",
+      "2026-10-22 engine-oil report: previously noted before this window; full text inaccessible",
+      "Older Reuters/AP/UNICEF/WHO reports and recycled stories: outside window"
+    ],
+    "conclusion": "No independently verified new, nonduplicate, in-window Gaza developments; WHO regional and ReliefWeb access were degraded.",
+    "production_authority": "Supplementary recall only; production collector/publisher remains authoritative.",
+    "side_effects": "No approval, publication, primary production, or scheduling changes."
+  }
+}

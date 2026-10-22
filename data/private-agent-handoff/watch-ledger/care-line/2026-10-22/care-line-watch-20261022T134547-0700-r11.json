@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T134547-0700-r11",
+  "scheduled_for": "2026-10-22T13:45:22-07:00",
+  "started_at": "2026-10-22T13:45:47-07:00",
+  "completed_at": "2026-10-22T13:47:10-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-22T12:51:00-07:00",
+    "end": "2026-10-22T13:47:10-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since the prior documented hourly check, completed approximately 12:51 p.m. PDT."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line collection remains authoritative.",
+    "Checked official CMS Public Notices first (https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices); newest listed notice dated 2026-10-19, therefore no new CMS notice in this observation window.",
+    "Completed exactly 12 additional targeted web searches covering hospital/ED, maternity, behavioral health, rural care, ambulance/air-medical, dialysis, oncology, primary care, restorations, and territories.",
+    "No new qualifying nonduplicate U.S. or territory access loss or concrete restoration confirmed within the window.",
+    "Excluded older closures, proposed/funded future services without effective access change, non-U.S. Canadian ED disruptions, and unrelated news; no search errors materially impaired coverage.",
+    "No approval, publication, production collector changes, schedule changes, or disabling performed."
+  ]
+}

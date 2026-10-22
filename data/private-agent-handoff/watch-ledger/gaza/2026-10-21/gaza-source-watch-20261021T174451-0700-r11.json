@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T174451-0700-r11",
+  "scheduled_for": "2026-10-21T17:44:51-07:00",
+  "started_at": "2026-10-21T17:47:26-07:00",
+  "completed_at": "2026-10-21T17:48:36-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T16:47:00-07:00",
+    "end": "2026-10-21T17:48:36-07:00",
+    "start_basis": "Approximate completion of previous hourly check; preceding heartbeat write failed, so its exact end timestamp could not be read from GitHub."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only. Production collection, editorial review, authorization and publishing remain authoritative and unchanged.",
+    "ocha_opt": "Official Updates page accessed; latest visible item was published 2026-10-19 (report dated 2026-10-15); nothing in this observation window.",
+    "who": "WHO site search checked; latest relevant WHO item found dated 2026-09-24. Direct WHO EMRO regional situation-report page timed out (HTTP 400 timeout); one WHO global emergency URL yielded HTTP 404. Regional healthcare source coverage incomplete.",
+    "additional_targeted_search_count": 12,
+    "findings_assessment": "No new traceable qualifying Gaza event independently established within the observation window. Search hits included previously identified October 21 casualty incidents without verified new publication or occurrence time, and prior Oct 19-20 food-assistance reductions, crossing restrictions, and casualty reports. These were excluded to avoid recycled or duplicate findings.",
+    "search_limit_respected": true,
+    "operational_degradation": "WHO regional direct-page access timeout; remainder of OCHA and targeted searches usable.",
+    "publication_actions": "none",
+    "approvals": "none",
+    "schedule_changes": "none"
+  }
+}

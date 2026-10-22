@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T084621-0700-r11-d8a4",
+  "scheduled_for": "2026-10-22T08:45:22-07:00",
+  "started_at": "2026-10-22T08:46:21-07:00",
+  "completed_at": "2026-10-22T08:48:19.433-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T07:51:10-07:00",
+    "end": "2026-10-22T08:48:19.433-07:00",
+    "basis": "Supplementary recall since the verified previous hourly heartbeat, care-line-watch-20261022T074850-0700-r11-8e5c. Search results were screened for newly announced concrete access changes or newly surfaced official notice, excluding old and already detected events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "new_in_window": false
+    },
+    "additional_targeted_searches": 12,
+    "classes_checked": [
+      "hospital and emergency department closure/suspension",
+      "maternity and obstetric access",
+      "rural and emergency access",
+      "behavioral health",
+      "dialysis",
+      "oncology",
+      "ambulance and EMS",
+      "air medical base",
+      "primary care",
+      "US territories",
+      "concrete reopening or restoration",
+      "government/official notice"
+    ],
+    "research_result": "CMS Public Notices was accessible and showed no notice newer than October 19. Twelve targeted searches with one-day recency surfaced no newly verifiable, nonduplicative qualifying U.S. or territory loss/restoration in this recall window.",
+    "excluded_examples": [
+      "October 22 North Carolina juvenile justice behavioral-health unit is described as a new 10-bed service, not reopening a previously lost essential service.",
+      "October 22 Honeoye Falls urgent-care article concerns a proposed future facility without current access effect.",
+      "October 22 Mississippi rural-health grants do not document a newly effective closure, suspension or restoration.",
+      "Older closure/reopening articles and non-U.S. developments excluded; prior Provident Hospital ICU suspension already surfaced by earlier recall."
+    ],
+    "limitations": "Time-bounded supplementary indexed-web recall; coverage does not prove absence of events due to indexing and source-publication delays.",
+    "primary_collector_authority": "Production Care Line collector remains authoritative.",
+    "permissions": "No approval, publication, schedule alteration, or task disabling."
+  }
+}

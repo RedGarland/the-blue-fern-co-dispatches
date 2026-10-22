@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261021T194451-0700-r11",
+  "scheduled_for": "2026-10-21T19:44:51-07:00",
+  "started_at": "2026-10-21T19:46:07-07:00",
+  "completed_at": "2026-10-21T19:47:52-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-21T18:50:00-07:00",
+    "end": "2026-10-21T19:47:52-07:00",
+    "start_basis": "Previous hourly check completed approximately 18:50 PDT; exact timestamp not independently confirmed"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_scope": "Supplementary recall only; production daily collector/publisher remains authoritative.",
+    "first_party_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest homepage Gaza updates dated 2026-10-19, no new October 21 hourly item."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "result": "Requested WHO situation URL returned 404."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "WHO regional emergency situation reporting returned HTTP 502; global WHO September 24 coverage available but not new."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_topics": "WHO health/medical evacuation (2); civilian casualties; general Gaza incidents; OCHA; UNRWA; WFP; UNICEF; ICRC; Palestinian Red Crescent; ceasefire/crossings; Gaza evening strikes (10).",
+    "exclusions": "Search results were older than the hourly window, background pages, previously flagged casualties and hospital-generator fuel/oil shortages, duplicate earlier reports or lacking verifiable fresh event/publication time.",
+    "verification_limitations": "Search engine returned predominantly older items; WHO EMRO HTTP 502 prevented direct regional situation report verification. No source supports a newly qualifying development in this observation window.",
+    "deduplication": "Compared against prior conversation's 18:50 PDT no-findings check and earlier October 21 provisional events; no duplicates carried forward.",
+    "side_effects": "No approval, publication, production, schedule or automation changes."
+  }
+}

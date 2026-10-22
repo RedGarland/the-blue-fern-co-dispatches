@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T064903-0700-r11",
+  "scheduled_for": "2026-10-22T06:45:54-07:00",
+  "started_at": "2026-10-22T06:49:03-07:00",
+  "completed_at": "2026-10-22T06:51:08-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-22T05:53:37-07:00",
+    "through": "2026-10-22T06:51:08-07:00",
+    "since_basis": "Prior watch completed at 05:53:37 PT; strict hourly interval examined."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "watch_type": "Supplementary recall only; production collection authoritative.",
+    "categories_checked": [
+      "sole/last/full-service grocery closure or disaster",
+      "canceled storm/flood/fire/outage emergency food distribution",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "duplicates_excluded": [
+      "2026-10-22 Bronx Open Hand Food Pantry temporary closure (identified in prior check)",
+      "2026-10-22 Dubach Louisiana municipal pantry discontinuation (identified in prior check)",
+      "Kenosha Food Bank future closure (initially announced October 2)"
+    ],
+    "outside_window_exclusions": [
+      "Spencer NY only-grocery fire September 2026",
+      "Akron OH grocery store fire May 2026",
+      "2025 SNAP/WIC shutdown notices"
+    ],
+    "rejected_as_nonqualifying": [
+      "2026-10-22 school meal SNAP policy effects coverage lacks new verified hourly official suspension",
+      "routine pantry events, guides and schedule notices"
+    ],
+    "freshness_caveat": "No independently substantiated qualifying signal first reported or newly occurring during the bounded prior-check-to-now interval.",
+    "approval_or_publication": false,
+    "task_modified": false
+  }
+}

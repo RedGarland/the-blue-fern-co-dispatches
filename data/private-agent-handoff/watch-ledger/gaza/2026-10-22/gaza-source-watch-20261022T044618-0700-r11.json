@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T044618-0700-r11",
+  "scheduled_for": "2026-10-22T04:44:51-07:00",
+  "started_at": "2026-10-22T04:46:18-07:00",
+  "completed_at": "2026-10-22T04:48:06-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T03:50:00-07:00",
+    "end": "2026-10-22T04:48:06-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT: no in-window report found",
+      "WHO global page accessible, no in-window report found",
+      "WHO regional reporting: HTTP 502"
+    ],
+    "additional_targeted_search_count": 12,
+    "result": "No new qualifying nonduplicate development verified. Older reports excluded; exact publication times uncertain.",
+    "limitations": "Regional health coverage reduced. Supplementary recall only; production authoritative.",
+    "side_effects": "Watch-ledger heartbeat only."
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T214721-0700-6e2d1a",
+  "scheduled_for": "2026-10-21T21:45:54-07:00",
+  "started_at": "2026-10-21T21:47:21-07:00",
+  "completed_at": "2026-10-21T21:49:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T20:46:31-07:00",
+    "end": "2026-10-21T21:49:01-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starting immediately after prior supplementary check search-window end; new dated source evidence only; bounded search, not primary collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_completed": 12,
+    "searches_failed": 0,
+    "categories_checked": [
+      "Only/sole/last/full-service community grocery loss/closure/fire/disaster",
+      "Storm/flood/fire/outage/facility-damage food-distribution cancellations",
+      "Abrupt pantry or food-bank shutdown or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "bounded_queries": [
+      "October 21 2026 only grocery store fire closed rural community",
+      "October 21 2026 sole supermarket closed town disaster",
+      "October 21 2026 last full service grocery store shuts down community",
+      "October 21 2026 food pantry abruptly closed facility damage",
+      "October 21 2026 food bank suspension emergency distribution storm",
+      "October 21 2026 food distribution canceled flood severe weather",
+      "October 21 2026 food pantry closed fire flood power outage",
+      "site:gov \"October 21, 2026\" SNAP benefits interrupted system outage",
+      "site:gov \"October 21, 2026\" WIC system outage benefits",
+      "October 21 2026 EBT outage SNAP benefits delayed state agency",
+      "October 21 2026 food bank distributions canceled facility closure",
+      "October 21 2026 emergency food assistance interruption official state notice"
+    ],
+    "notable_exclusions": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Qualifying kind of grocery loss but September 11, outside observation window."
+      },
+      {
+        "source_url": "https://www.bangordailynews.com/2026/08/29/down-east/downeast-business/eastport-grocery-store-iga-close-next-week-joam40zk0w/",
+        "reason": "August 29 grocery closure story, previously published/outside window."
+      },
+      {
+        "source_url": "https://www.thecrimson.com/article/2026/3/26/allston-brighton-food-pantry-closure/",
+        "reason": "March food-pantry closure report about February event; outside window."
+      },
+      {
+        "source_url": "https://civileats.com/2026/10/21/in-west-virginia-federal-funding-cuts-leave-farmers-struggling-to-feed-communities/",
+        "reason": "October 21 contextual food-system funding coverage, not verified new immediate qualifying interruption."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/10/16/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "October 16 hurricane recovery information; not a newly verified canceled food distribution."
+      }
+    ],
+    "search_result": "No new U.S. food-access disruptions verified in the bounded supplementary observation window; search results mostly older, generic, or outside scope.",
+    "search_recency_caveat": "Search engine freshness filters returned older crawled pages. No claim of exhaustive coverage or of absence of disruptions.",
+    "production_collection_authoritative": true,
+    "review_only": true,
+    "approval_authorized": false,
+    "publication_authorized": false
+  }
+}

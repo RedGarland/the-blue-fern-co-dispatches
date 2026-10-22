@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T104508-0700-r11",
+  "scheduled_for": "2026-10-22T10:45:08-07:00",
+  "started_at": "2026-10-22T10:45:21-07:00",
+  "completed_at": "2026-10-22T10:47:06-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-22T09:52:00-07:00",
+    "through": "2026-10-22T10:47:06-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "scope": "Supplementary recall only; production collector authoritative.",
+    "priority_classes": [
+      "community sole grocery closure/disaster",
+      "disaster-cancelled distributions",
+      "abrupt pantry closures",
+      "official SNAP/WIC interruptions"
+    ],
+    "bounded_query_context": "12 searches of October 22 local news and official notices on grocery loss, food distribution cancellation, pantry closure, SNAP/WIC interruption.",
+    "exclusions": "Bronx/Dubach already seen; Kauai distribution proceeding; older incidents; Michigan future cancellations lack cause/timing.",
+    "new_qualifying_signals": 0,
+    "limitations": "Search indexing lag; initial GitHub create_file call rejected by safety checks.",
+    "review_or_publication": false
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T014314-0700-r11-c2d1e8",
+  "scheduled_for": "2026-10-22T01:45:54-07:00",
+  "started_at": "2026-10-22T01:43:14-07:00",
+  "completed_at": "2026-10-22T01:43:49-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-22T00:46:06-07:00",
+    "through": "2026-10-22T01:43:49-07:00",
+    "since_basis": "Previous completed watch's recorded search_window.through"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "search_outcome": "no_findings",
+    "focus_categories": [
+      "Loss, closure, fire or disaster affecting the only, sole, last or full-service grocery store",
+      "Canceled or suspended emergency food distributions due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "Official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "searches": "Twelve bounded targeted searches used source-date terms 2026-10-21/22 and a two-day recency preference.",
+    "freshness_caveat": "Search results were largely older incidents (September 2026 or earlier) or unrelated to the four narrow miss classes; no qualifying newly published or newly occurring U.S. disruption in this hourly window could be substantiated.",
+    "not_new": [
+      {
+        "title": "Spencer, NY grocery store fire",
+        "published_at": "2026-09-11",
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/"
+      },
+      {
+        "title": "Langley food bank closure after flooding",
+        "published_at": "2026-05-15",
+        "source_url": "https://www.whidbeynewstimes.com/2026/05/15/langley-food-back-temporarily-closed-after-flooding/"
+      }
+    ],
+    "production_collector_authoritative": true,
+    "side_effects": "No approval, publication, schedule change, or task disabling."
+  }
+}

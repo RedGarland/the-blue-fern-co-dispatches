@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261021T174126-0700-r11-91d20b",
+  "scheduled_for": "2026-10-21T17:45:54-07:00",
+  "started_at": "2026-10-21T17:41:26-07:00",
+  "completed_at": "2026-10-21T17:42:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-21T16:52:27-07:00",
+    "end": "2026-10-21T17:42:37-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since last recorded supplementary hourly check, using U.S. source publication or newly verified incident in window; broad indexed results were screened for dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_completed": 12,
+    "searches_failed": 0,
+    "categories_checked": [
+      "Only/sole/last/full-service community grocery store loss",
+      "Emergency distribution cancellation or suspension due to hazard",
+      "Abrupt food pantry or food bank service closure or material reduction",
+      "Official SNAP, WIC, or other food assistance interruption with immediate access impact"
+    ],
+    "bounded_queries": [
+      "\"only grocery store\" closed fire October 21 2026 community",
+      "\"sole grocery store\" \"October 21, 2026\" closure",
+      "\"last grocery store\" closing October 2026 town",
+      "food pantry closed unexpectedly today October 21 2026",
+      "food bank suspends distribution storm October 21 2026",
+      "food distribution canceled due to flooding power outage October 21 2026",
+      "SNAP EBT outage benefits suspended October 21 2026 state notice",
+      "WIC benefits service interruption October 21 2026 official notice",
+      "site:gov \"food distribution\" \"cancelled\" \"October 21, 2026\" storm",
+      "\"food pantry\" \"closed\" \"October 21, 2026\" flood fire",
+      "\"only grocery store\" \"October 2026\" \"closed\" \"United States\"",
+      "site:gov \"SNAP\" \"outage\" \"October 21, 2026\" benefits"
+    ],
+    "notable_exclusions": [
+      {
+        "source_url": "https://kauainownews.com/2026/10/21/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Announces Oct. 23 emergency food distribution, not cancellation; general hurricane resource centers ending service are not established as pantry/food bank access loss; previously screened."
+      },
+      {
+        "source_url": "https://www.the-sun.com/money/17185597/safeway-closing-san-jose-california-store-november/",
+        "reason": "Future San Jose retail closure, with no evidence it is the only/last/full-service grocery access in community; previously screened."
+      }
+    ],
+    "search_result": "No newly verified qualifying U.S. food-access disruption in bounded searches; non-exhaustive supplementary monitoring only.",
+    "production_collection_authoritative": true,
+    "review_only": true,
+    "publication_authorized": false
+  }
+}

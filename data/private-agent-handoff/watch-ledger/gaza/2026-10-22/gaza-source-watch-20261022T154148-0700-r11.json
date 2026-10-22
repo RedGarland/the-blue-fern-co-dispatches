@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T154148-0700-r11",
+  "scheduled_for": "2026-10-22T15:44:51-07:00",
+  "started_at": "2026-10-22T15:41:48-07:00",
+  "completed_at": "2026-10-22T15:43:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T14:46:42-07:00",
+    "end": "2026-10-22T15:43:30-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "initial_checks": [
+      "OCHA OPT checked; no updated in-window item",
+      "WHO Eastern Mediterranean access failed (HTTP 502)"
+    ],
+    "additional_targeted_search_count": 12,
+    "degraded_sources": [
+      "WHO Eastern Mediterranean (502)",
+      "UNRWA report #237 (403)",
+      "UN News search (robots blocked)"
+    ],
+    "excluded": [
+      "UNRWA #237 reports 7-20 October, publication hour unverified",
+      "WFP funding cut from October 19 already known"
+    ],
+    "conclusion": "No new in-window qualifying developments independently verified. Coverage degraded.",
+    "production_authority": "Supplementary watch only. No publishing or scheduling actions."
+  }
+}

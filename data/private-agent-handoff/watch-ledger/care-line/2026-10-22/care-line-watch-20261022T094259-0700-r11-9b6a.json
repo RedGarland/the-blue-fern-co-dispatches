@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T094259-0700-r11-9b6a",
+  "scheduled_for": "2026-10-22T09:45:22-07:00",
+  "started_at": "2026-10-22T09:42:59-07:00",
+  "completed_at": "2026-10-22T09:44:25.148-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T08:48:19.433-07:00",
+    "end": "2026-10-22T09:44:25.148-07:00",
+    "basis": "Supplementary recall since the last verified hourly Care Line Watch ledger heartbeat; newly surfaced prior events were eligible only if not previously detected."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "new_in_window": false
+    },
+    "additional_targeted_searches": 12,
+    "searches_recency_days": 2,
+    "classes_checked": [
+      "hospital and emergency department closures or suspensions",
+      "maternity and obstetric service loss",
+      "behavioral-health closures",
+      "dialysis and oncology services",
+      "primary-care closures",
+      "ambulance and EMS closures",
+      "air-medical base closures",
+      "rural emergency service loss",
+      "concrete reopenings and restorations",
+      "United States territories",
+      "official government access-risk notices"
+    ],
+    "research_result": "The official CMS Public Notices page was accessible and showed no notice after October 19, 2026. Twelve additional targeted searches surfaced no newly confirmed qualifying and nonduplicate U.S. or territory healthcare-access loss or restoration in the stated window.",
+    "excluded_examples": [
+      "Mississippi Rural Health Transformation grant funding: not an effective service loss or restoration.",
+      "Georgia emergency-department maternal care equipment initiative: not a documented current closure/suspension or restoration.",
+      "Foreign maternity-service suspensions and stale U.S. closure/reopening items: out of scope or outside recall window.",
+      "Provident Hospital ICU suspension and Dennys River ambulance closure were reported in prior checks; do not duplicate."
+    ],
+    "limitations": "Bounded indexed-web recall; a zero-result search does not rule out delayed indexing or omitted local notices. Primary production collection remains authoritative.",
+    "permissions": "No review approval, publication, schedule alteration or task disabling."
+  }
+}

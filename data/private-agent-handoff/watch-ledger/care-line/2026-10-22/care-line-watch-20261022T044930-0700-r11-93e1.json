@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T044930-0700-r11-93e1",
+  "scheduled_for": "2026-10-22T04:45:22-07:00",
+  "started_at": "2026-10-22T04:49:30-07:00",
+  "completed_at": "2026-10-22T04:51:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T03:47:00-07:00",
+    "end": "2026-10-22T04:51:30-07:00",
+    "basis": "Prior hourly Care Line Watch completed near 03:47 PDT; bounded recall search checks for newly surfaced evidence, with older event dates excluded unless newly reported."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-19",
+      "new_in_window": false
+    },
+    "additional_targeted_searches": 12,
+    "targeted_classes": [
+      "hospital and emergency department",
+      "maternity and obstetrics",
+      "rural emergency service",
+      "behavioral health",
+      "dialysis and oncology",
+      "primary care",
+      "EMS ambulance",
+      "air medical base",
+      "US territories",
+      "official government notices",
+      "service restorations",
+      "CMS CLIA and termination"
+    ],
+    "research_result": "No verifiable new, nonduplicative qualifying change found in the observation window. Search returns skewed toward older historical service losses and unrelated items despite recency constraint; no older result promoted to a new finding.",
+    "exclusions": [
+      "Earlier Provident Hospital ICU suspension reported in preceding watch; duplicate.",
+      "Older closures/reopenings and prospective proposals without newly confirmed access effect.",
+      "Non-US stories, unrelated news, and analysis-only stories."
+    ],
+    "limitations": "Supplementary recall watch, not an exhaustive collector; freshness and indexing limitations apply. Research searches executed successfully.",
+    "primary_collector_authority": "Production Care Line collection remains authoritative.",
+    "permissions": "No approvals, publication, schedule changes, or task disabling."
+  }
+}

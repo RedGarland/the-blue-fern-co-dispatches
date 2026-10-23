@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T054952-0700-r11",
+  "scheduled_for": "2026-10-23T05:44:51-07:00",
+  "started_at": "2026-10-23T05:49:52-07:00",
+  "completed_at": "2026-10-23T05:52:42.115-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T04:47:55.178-07:00",
+    "end": "2026-10-23T05:52:42.115-07:00",
+    "window_basis": "Start is completed_at of the prior verified Gaza Source Watch GitHub heartbeat; end is this run's observation timestamp. New means newly verified recall since prior execution, not proven first occurrence within window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261023-ap-bread-access-friday-recall-001",
+      "canonical_source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+      "title": "Palestinians in Gaza face bread shortages",
+      "publisher": "The Associated Press",
+      "source_date": "2026-10-23",
+      "publication_date": "2026-10-23",
+      "publication_time": null,
+      "event_date": "2026-10-23",
+      "event_time": null,
+      "location": "Gaza Strip; Gaza City resident cited",
+      "affected_population": "Civilian households seeking bread; number affected not verified",
+      "affected_system": "Bread supply, bakeries, food access, commercial food shipments",
+      "exact_supporting_passage": "Crowds gathered outside bakeries across Gaza on Friday, banging on metal doors and scrambling to obtain bags of bread.",
+      "source_type": "Established independent news reporting; direct on-the-ground observations and named resident testimony",
+      "classification": "new",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "first_verified_this_run": true,
+        "prior_watch_context": "Prior verified heartbeat documented the AP rolling link but marked it inaccessible and did not verify the Gaza bread access field observations. This run accessed the article directly.",
+        "why_qualifying": "AP reports Friday bakery crowds, difficulty obtaining bread, alleged bakery closures, and high flour prices—specific, attributable ground-level food-access disruption.",
+        "limits": "AP's individual rolling-update timestamp and exact bakery-observation hour were not available; cannot prove the underlying event began after the prior hourly check. WFP funding reduction announced 2026-10-19 is background, not a separate new finding. Treat as a recall candidate; production owns deduplication and publication.",
+        "related_context_url": "https://groups.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "discovery_window": "2026-10-23T04:47:55.178-07:00 to 2026-10-23T05:52:42.115-07:00"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "role": "Bounded supplementary recall only; production collector/publisher remains authoritative. No publication, approval, schedule, or production changes.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Available. Front page latest Gaza updates published 2026-10-19, no in-window dispatch."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Available. No fresh in-window health statement visible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway, regional source coverage incomplete."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Gaza recent civilian casualties via Reuters/AP",
+      "Hospital/medical evacuation and Palestinian Red Crescent",
+      "Humanitarian shipments and border crossings/WFP",
+      "Civilian impact near yellow line/displacement",
+      "Ceasefire/hostages/detention negotiations",
+      "Water, fuel, sewage infrastructure/UNICEF",
+      "AP latest Gaza casualty report",
+      "Reuters Gaza military civilian harm",
+      "UN Gaza humanitarian statements",
+      "UNICEF October 2026 public health/water",
+      "ICRC emergency health crossing",
+      "WFP Gaza food aid changes"
+    ],
+    "degraded_sources": [
+      "WHO EMRO occupied Palestinian territory news HTTP 502"
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Reuters filed 2026-10-22 12:21 UTC, prior to this watch window."
+      },
+      {
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Same AP rolling page: southern Gaza strike at least one person dead; civilian status unknown, already considered in previous watch; cumulative UNICEF 350+ child deaths has no demonstrated in-window change."
+      },
+      {
+        "url": "https://groups.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "WFP assistance and ration reductions announced 2026-10-19; background not new."
+      },
+      {
+        "url": "https://www.unicef.org/gulf/press-releases/unicef-and-international-islamic-charitable-organization-partner-restore-water",
+        "reason": "21 October partnership announcement predates interval and is future planned access rather than new on-ground provision."
+      },
+      {
+        "url": "https://apnews.com/article/f6646718072b4ff6929cff43297edd05",
+        "reason": "Hebron/West Bank incident outside in-Gaza scope."
+      }
+    ],
+    "source_quality": "Original source article directly read; exact passage captured. No unsupported social claims or opinion.",
+    "limitations": [
+      "Unable to prove AP rolling item's exact insertion time or whether primary production already ingested it; downstream dedupe required.",
+      "WHO regional source unavailable; global WHO remained accessible."
+    ],
+    "actions_not_taken": [
+      "approve",
+      "publish",
+      "modify production",
+      "alter schedule",
+      "disable task"
+    ]
+  }
+}

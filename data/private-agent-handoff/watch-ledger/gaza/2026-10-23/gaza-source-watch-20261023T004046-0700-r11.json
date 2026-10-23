@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T004046-0700-r11",
+  "scheduled_for": "2026-10-22T23:44:51-07:00",
+  "started_at": "2026-10-23T00:40:46-07:00",
+  "completed_at": "2026-10-23T00:42:12-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T23:42:00-07:00",
+    "end": "2026-10-23T00:42:12-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "initial_checks": [
+      "OCHA OPT homepage checked first: latest news/updates shown were dated 19 Oct 2026 or earlier; no verified in-window Gaza development. URL https://www.ochaopt.org/",
+      "WHO checked first: WHO emergencies situation URL returned 404 and WHO Eastern Mediterranean opt URL returned HTTP 502; healthcare coverage impaired. URLs https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory and https://www.emro.who.int/opt/"
+    ],
+    "additional_targeted_search_count": 12,
+    "sources_sought": [
+      "OCHA OPT",
+      "WHO",
+      "UNRWA",
+      "Reuters",
+      "Associated Press",
+      "UNICEF",
+      "World Food Programme",
+      "established regional reporting"
+    ],
+    "degraded_sources": [
+      "WHO Eastern Mediterranean HTTP 502",
+      "WHO selected emergencies situation URL HTTP 404"
+    ],
+    "excluded": [
+      "OCHA homepage reports latest shown as 19 Oct, outside search window.",
+      "WFP Gaza food assistance reduction report dated 20 Oct, previously known/outside search window: https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+      "Search hits concerning Gaza civilian casualties, hospital disruption, aid access, and ceasefire were dated before observation window; no independently verified in-window event."
+    ],
+    "conclusion": "No newly verified, traceable and nonduplicate high-value Gaza development in the search window. WHO endpoint problems degraded healthcare recall coverage. Search results were not treated as proof of absence.",
+    "prior_check_reference": "Previous reported watch window concluded approximately 2026-10-22T23:42:00-07:00; its heartbeat was reported not persisted.",
+    "production_authority": "Supplementary recall only; production collector/publisher remains authoritative. No approval, publication, schedule, or task-state changes."
+  }
+}

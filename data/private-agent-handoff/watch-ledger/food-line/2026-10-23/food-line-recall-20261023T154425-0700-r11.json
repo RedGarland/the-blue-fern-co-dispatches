@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T154425-0700-r11",
+  "scheduled_for": "2026-10-23T15:45:54-07:00",
+  "started_at": "2026-10-23T15:44:25-07:00",
+  "completed_at": "2026-10-23T15:45:35.473-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T14:44:25-07:00",
+    "end": "2026-10-23T15:44:25-07:00",
+    "interpretation": "Bounded preceding-hour recall search; exact prior successful ledger checkpoint not established. Historical material outside window excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_failures": 0,
+    "watch_type": "supplementary_recall_only",
+    "primary_collector": "production collection remains authoritative",
+    "categories_checked": [
+      "loss/fire/disaster closure of community's sole/last/full-service grocery",
+      "storm/flood/fire/outage/damage cancellation of emergency food distributions",
+      "abrupt pantry/food-bank closure or major service loss",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_queries": [
+      "\"only grocery store\" closed fire October 23 2026 town",
+      "\"sole grocery store\" shutdown fire October 2026",
+      "\"last grocery store\" closes community October 2026",
+      "\"food distribution\" canceled storm October 23 2026 pantry",
+      "\"food pantry\" closed flood fire October 23 2026",
+      "\"food bank\" distribution canceled due to weather October 2026",
+      "SNAP benefit interruption outage October 23 2026 state agency notice",
+      "WIC benefits outage suspended October 23 2026 official notice",
+      "food assistance benefits emergency interruption EBT October 23 2026",
+      "October 23 2026 \"food pantry\" suddenly closes access",
+      "site:gov October 23 2026 SNAP WIC EBT benefits outage interrupted emergency food assistance",
+      "October 23 2026 food pantry closed grocery store fire distribution cancelled local news United States"
+    ],
+    "screening_notes": "No newly verified in-window, qualifying disruptions surfaced. Returned grocery and distribution closures were from earlier dates; 2025 SNAP suspension stories were stale. Bastrop County Food Pantry's October 23 single-day closure with stated October 26 reopening was excluded because evidence did not establish an abrupt major service reduction or listed emergency cause.",
+    "limitations": "Search engine indexing and publication delays may miss sub-hour local notices. No independent production-collector reconciliation or previous heartbeat read was performed.",
+    "approvals_publication_schedule_changes": "none"
+  }
+}

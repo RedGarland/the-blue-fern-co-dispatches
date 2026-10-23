@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T104228-0700-r11-b7e2",
+  "scheduled_for": "2026-10-23T10:45:22-07:00",
+  "started_at": "2026-10-23T10:42:28-07:00",
+  "completed_at": "2026-10-23T10:43:45-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T09:49:11-07:00",
+    "end": "2026-10-23T10:43:45-07:00",
+    "basis": "Latest prior verified Care Line Watch heartbeat in ops/watch-ledger completed 2026-10-23 09:49:11 PDT."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked FIRST at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; newest listed notices remain the two 2026-10-22 entries: Interim Healthcare of the Central Valley (CA Medicare home-health termination) and Louisville Metro Health Dept Laboratory (KY CLIA limitation). Both were recalled on the prior day and excluded as duplicates. No new 2026-10-23 listing appeared.",
+    "Exactly 12 additional targeted web searches conducted after CMS, with recency constraints (mostly last 2 days), for U.S. hospital and emergency-department suspensions, maternity, behavioral health, dialysis and oncology, rural ED, ground ambulance/EMS, air-medical base, primary care, essential-service reopenings, state official actions, U.S. territories, and same-day local closures.",
+    "Search results yielded older previously known service losses, unrelated non-U.S. events, potential future risks and proposals, routine clinic relocation, and general reporting about healthcare financing. No new qualifying and adequately sourced U.S./territory access change was confirmed within the hourly window.",
+    "The temporary Doylestown Hospital (Pennsylvania) emergency department interruption on 2026-10-22 was already filed in the verified 2026-10-23 07:41 watch under finding_id care-line-pa-doylestown-ed-temporary-closure-20261022. No independently supported new reopening was found; excluded as duplicate.",
+    "This is supplementary recall only; production Care Line collection remains authoritative. No findings approved, published, or sent to production; schedule and task unchanged."
+  ]
+}

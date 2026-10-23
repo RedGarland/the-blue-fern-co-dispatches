@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T064638-0700-r11",
+  "scheduled_for": "2026-10-23T06:44:51-07:00",
+  "started_at": "2026-10-23T06:46:38-07:00",
+  "completed_at": "2026-10-23T06:48:29-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T05:52:42.115-07:00",
+    "end": "2026-10-23T06:48:29-07:00",
+    "window_basis": "Start is completed_at of previous verified Gaza Source Watch heartbeat; end is this run's completion-time observation. Recall means newly discovered verified developments, not necessarily incident occurrence within the hour."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only; production collection, deduplication, and publication remain authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Available, crawled today; latest homepage Gaza updates dated 2026-10-19. No new in-window bulletin."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Available, crawled today; no in-window oPt/Gaza health update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway; region-specific coverage unavailable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Reuters Friday Gaza civilian strikes and casualties",
+      "AP Friday Gaza humanitarian food and civilian effects",
+      "WFP food aid and border shipments",
+      "UNICEF water/infrastructure and child casualties",
+      "WHO health facilities, fuel and medical evacuation",
+      "PRCS/ICRC ambulances and medical disruption",
+      "UN Rafah crossing personnel and civilian return",
+      "UN/OCHA Rafah crossing evacuations",
+      "Ceasefire, hostage and detention negotiations",
+      "Bakeries/flour/famine reporting",
+      "Water/fuel/desalination interruptions",
+      "Friday civilian casualties and military operations"
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Bread access disruption already preserved in 05:52 previous watch heartbeat; excluded as duplicate."
+      },
+      {
+        "url": "https://www.arabnews.com/middle-east/gaza-residents-fear-renewed-famine-threat-as-food-supplies-dwindle-and-aid-shrinks-3007794",
+        "reason": "Published 2026-10-23 01:07 source-local clock, Thursday field observations; corroborates already logged bread/flour shortages and adds no separately timestamped in-window operational change."
+      },
+      {
+        "url": "https://www.newarab.com/news/gaza-faces-starvation-israel-blocks-commercial-trucks",
+        "reason": "Published October 23, based on Thursday bakery association statements and earlier commercial shipment restrictions; overlaps bread access finding from previous run."
+      },
+      {
+        "url": "https://www.dropsitenews.com/p/un-rafah-gaza-israel-php-flaws-websites-aipac-ends-endorsements",
+        "reason": "October 22 newsletter: reported planned mid-November UN withdrawal from handling returnees at Rafah rests on unnamed Palestinian negotiation source; UN response/corroboration not available. Significant lead but not independently verified as a completed in-window change."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Filed prior day; known earlier casualties, not new within recall interval."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-military-two-suspected-attackers-killed-after-shooting-attack-near-judea-2026-10-23/",
+        "reason": "Reports West Bank Hebron incident and responses; outside in-Gaza scope."
+      }
+    ],
+    "degraded_sources": [
+      "WHO EMRO oPt news endpoint HTTP 502"
+    ],
+    "source_quality": "Twelve targeted searches after OCHA OPT and WHO checks; prioritised original humanitarian releases and established reporting; no source established a novel verified in-Gaza qualifying development since the previous heartbeat.",
+    "limitations": [
+      "WHO EMRO regional endpoint unavailable.",
+      "A high-impact Rafah coordination allegation remains unconfirmed by UN or another primary source.",
+      "Search results can surface old items with misleadingly fresh crawler metadata; excluded by explicit publication/event dates."
+    ],
+    "actions_not_taken": [
+      "approve",
+      "publish",
+      "alter production",
+      "alter schedule",
+      "disable task"
+    ]
+  }
+}

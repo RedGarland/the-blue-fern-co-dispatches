@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T184320-0700-r11-18a4",
+  "scheduled_for": "2026-10-22T18:45:22-07:00",
+  "started_at": "2026-10-22T18:43:20-07:00",
+  "completed_at": "2026-10-22T18:45:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-22T17:46:00-07:00",
+    "end": "2026-10-22T18:45:37-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "since prior hourly supplementary check"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line national collection remains authoritative.",
+    "CMS Public Notices checked first using current CMS page; most recent entries were the October 22, 2026 Interim Healthcare of the Central Valley (CA) termination notice and Louisville Metro Health Department Laboratory (KY) CLIA limitation. Both were surfaced in the prior 16:42 PDT watch and remain excluded as duplicates. CMS: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "Twelve additional targeted web searches completed covering US and territories: hospital/ED, maternity, behavioral health, dialysis/oncology, rural emergency, air ambulance, EMS, primary care, reopening, territories, official notices, and local reporting. No newly confirmed qualifying development within the hourly window.",
+    "Search results disproportionately surfaced older events or prospective changes; excluded as outside interval or lacking effective current change. No approval or publication undertaken."
+  ]
+}

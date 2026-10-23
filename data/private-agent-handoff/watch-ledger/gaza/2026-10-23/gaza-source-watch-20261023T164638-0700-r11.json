@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T164638-0700-r11",
+  "scheduled_for": "2026-10-23T16:44:51-07:00",
+  "started_at": "2026-10-23T16:46:38-07:00",
+  "completed_at": "2026-10-23T16:47:31-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T15:50:55-07:00",
+    "end": "2026-10-23T16:47:31-07:00",
+    "window_basis": "Previous watch heartbeat completion (verified from ops/watch-ledger) through this run. Only newly traceable and nonduplicative Gaza developments qualify. First discovery/publication date is not proof of in-window event chronology."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall only. Primary daily Gaza production remains authoritative. No approval, publication, schedule modification, or production mutation.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Homepage latest posted Gaza situation reporting dated October 19, 2026 (covering October 15); no fresh in-window item."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated in-window Gaza health incident in current listed items."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502; direct regional health reporting could not be checked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:ochaopt.org Gaza 23 October 2026 humanitarian situation latest",
+      "site:who.int OR site:emro.who.int Gaza 23 October 2026 health hospital evacuation",
+      "site:unrwa.org Gaza 23 October 2026 aid shelter displacement update",
+      "site:wfp.org Gaza 23 October 2026 bakery food flour shipments",
+      "site:unicef.org Gaza October 23 2026 water sanitation children injuries",
+      "site:icrc.org Gaza 23 October 2026 hostages detainees hospital humanitarian",
+      "Gaza October 23 2026 Reuters afternoon ceasefire latest medical evac civilians",
+      "Gaza October 23 2026 Associated Press latest afternoon airstrikes civilians hospitals",
+      "site:palestinercs.org 23 October 2026 Gaza ambulance medical patients",
+      "Gaza 23 October 2026 Rafah Kerem Shalom crossing aid trucks reopen fuel",
+      "Gaza 23 October 2026 hospital ambulance medical evacuation fuel supplies latest",
+      "Gaza October 23 2026 latest 23 Friday deaths yellow line demolition displacement Israel"
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://www.middleeasteye.net/news/gaza-bakeries-shut-israel-blocks-flour-shipments",
+        "reason": "Dated October 23, but bread/bakery shortage belongs to previously identified October 23 AP bread access cluster; distinct new event and first-publication hour not verified."
+      },
+      {
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "October 19 WFP announcement; recycled outside the hourly window."
+      },
+      {
+        "url": "https://www.doctorswithoutborders.org/latest/msf-response-escalating-conflict-middle-east",
+        "reason": "Last updated October 21; historical Gaza medical supply constraints, not a new in-window development."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-military-two-suspected-attackers-killed-after-shooting-attack-near-judea-2026-10-23/",
+        "reason": "Current report is West Bank, not in-Gaza ground events; excluded."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published October 19; already available in prior watch."
+      }
+    ],
+    "degraded_sources": [
+      "WHO Eastern Mediterranean OPT news: HTTP 502 (continued source coverage gap)."
+    ],
+    "limitations": [
+      "Some searches returned older items even with recency filters.",
+      "In-window chronology and production deduplication could not be established for any additional candidate.",
+      "Initial noncanonical WHO emergency URL returned HTTP 404; official canonical WHO situation page was subsequently verified."
+    ],
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-23/gaza-source-watch-20261023T154924-0700-r11.json",
+      "result": "Independently fetched; one prior al-Masdar control-line candidate, no duplication recorded in this run."
+    },
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production modification",
+      "schedule modification",
+      "automation disabling"
+    ]
+  }
+}

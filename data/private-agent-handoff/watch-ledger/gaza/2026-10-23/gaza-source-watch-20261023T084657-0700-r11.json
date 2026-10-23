@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T084657-0700-r11",
+  "scheduled_for": "2026-10-23T08:44:51-07:00",
+  "started_at": "2026-10-23T08:46:57-07:00",
+  "completed_at": "2026-10-23T08:50:16-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T07:44:51-07:00",
+    "end": "2026-10-23T08:50:16-07:00",
+    "window_basis": "The prior nominal hourly checkpoint; exact completion of immediately preceding execution could not be independently enumerated. Previous verified Gaza heartbeat in available context completed 2026-10-23T05:52:42.115-07:00. This supplementary watch qualifies only newly evidenced developments and excludes earlier or duplicate reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_role": "Bounded supplementary Gaza recall; daily production collector/publisher is authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; most recent visible Gaza news/update items dated 2026-10-19, covering earlier dates. No newly qualifying hourly development."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no Gaza news item published in the searched hourly window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway; regional healthcare coverage incomplete."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Reuters civilian casualties/military operations/ceasefire",
+      "AP bread shortages and Gaza strike follow-up",
+      "WFP current food access and bakeries",
+      "UNICEF water/healthcare/displacement",
+      "AP Gaza rolling updates",
+      "Reuters current crossing and civilian-impact reporting",
+      "UN oPt humanitarian releases",
+      "ICRC hostages/detainees/medical evacuation",
+      "Gaza hospital/water/crossing/access reports",
+      "Palestinian Red Crescent ambulance and evacuation reports",
+      "Rafah/Kerem Shalom crossing aid/fuel",
+      "Gaza ceasefire/detention/hostage negotiation developments"
+    ],
+    "search_result": "No independently verified, distinct, in-window high-value Gaza development found. Sources returned older articles or evergreen pages, not qualifying new developments.",
+    "examined_but_excluded": [
+      {
+        "source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Previously logged bakery/bread shortage recall candidate; no independently verified new detail in current window. Direct AP page inaccessible via this run's browser."
+      },
+      {
+        "source_url": "https://www.arabnews.pk/middle-east/far-right-israeli-protesters-block-gaza-aid-trucks-as-food-shortages-persist-3004973",
+        "reason": "Updated 2026-10-22 20:31 (reported time), before current local search window; derivative reporting."
+      },
+      {
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Released 2026-10-19; retrospective reporting through 2026-10-12."
+      }
+    ],
+    "degradation": [
+      "WHO Eastern Mediterranean oPt news returned HTTP 502; WHO global page and OCHA OPT remained accessible."
+    ],
+    "limitations": [
+      "Search indexing may lag breaking local dispatches.",
+      "Latest previous Gaza ledger completion timestamp was not directly enumerable using available GitHub content lookup; start uses nominal hourly checkpoint.",
+      "Production deduplication state not accessed; no claim of complete coverage."
+    ],
+    "actions_not_taken": [
+      "approve",
+      "publish",
+      "alter production",
+      "alter schedule",
+      "disable task"
+    ]
+  }
+}

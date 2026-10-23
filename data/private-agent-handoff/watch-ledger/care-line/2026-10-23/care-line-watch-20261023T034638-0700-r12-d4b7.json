@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T034638-0700-r12-d4b7",
+  "scheduled_for": "2026-10-23T03:45:22-07:00",
+  "started_at": "2026-10-23T03:46:38-07:00",
+  "completed_at": "2026-10-23T03:47:47-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-22T23:45:00-07:00",
+    "end": "2026-10-23T03:47:47-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior Care Line recall watch completed at 2026-10-22T23:46:07-07:00; cover unobserved gap through this execution"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; production Care Line collection remains authoritative.",
+    "Official CMS Public Notices checked first: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest listed October 22, 2026 notices (Interim Healthcare of the Central Valley, CA; Louisville Metro Health Dept Laboratory, KY) already found in the October 22 afternoon watch; duplicate exclusions. No new October 23 notice listed at observation time.",
+    "Exactly 12 additional targeted web searches covered hospital/ED, maternity, behavioral health, oncology/dialysis, rural services, ambulance/air medical, territorial access changes, and service restoration. No new credible in-window qualifying development verified.",
+    "Excluded: Watsonville Community Hospital (CA) maternity/NICU potential closure, unimplemented proposal; Three Rivers Health (MI) temporary emergency-department entrance relocation, clinical services uninterrupted; Crozer-Chester Medical Center (PA) reopening discussion, no operator or concrete reopening; Canadian emergency department suspensions, out of geography; Waterview Heights (NY) closure article dated October 22, with earlier CMS termination notice, not a new in-window event.",
+    "Web search indexing does not guarantee immediate coverage of events announced within the approximately four-hour observation window; no source-specific persistent coverage failure detected.",
+    "No approvals, publications, schedule changes, or disabling."
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T174554-0700-r11-a61c73",
+  "scheduled_for": "2026-10-22T17:45:54-07:00",
+  "started_at": "2026-10-22T17:45:21-07:00",
+  "completed_at": "2026-10-22T17:47:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T16:45:54-07:00",
+    "end": "2026-10-22T17:47:28-07:00",
+    "basis": "Recall of source-established U.S. food-access disruption developments since the prior hourly check; excludes undated/stale and previously identified incidents."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary high-value miss-class recall only; primary production nationwide collector remains authoritative.",
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "search_failures": 0,
+    "categories": [
+      "Loss/closure/fire/disaster affecting sole, last, only or full-service grocery store",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distributions",
+      "Abrupt food pantry or food bank closure or material access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "assessment": "No newly verified qualifying U.S. signal within the bounded window. Targeted searches primarily surfaced older incidents and historical SNAP/WIC shutdown stories; no publication timestamp or fresh direct notice established a new in-window food-access disruption.",
+    "excluded": "Donation drives, resource guides, recipes, opinion, promotion, generic inflation, pre-window incidents, foreign/nonhuman food pantry incidents, and prior discoveries including Bronx Open Hand pantry and Dubach Louisiana pantry closure.",
+    "limitations": "Search-index freshness and source publication timestamps limit sensitivity; does not replace the primary production collector. All 12 targeted searches returned without reported search-tool failures.",
+    "actions": "No approval, publication, schedule, task-status or production collection modification."
+  }
+}

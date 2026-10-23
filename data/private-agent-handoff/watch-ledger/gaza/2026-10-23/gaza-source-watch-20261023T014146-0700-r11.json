@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T014146-0700-r11",
+  "scheduled_for": "2026-10-23T00:44:51-07:00",
+  "started_at": "2026-10-23T01:41:46-07:00",
+  "completed_at": "2026-10-23T01:43:40-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T00:42:12-07:00",
+    "end": "2026-10-23T01:43:40-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "prior_check_reference": "data/private-agent-handoff/watch-ledger/gaza/2026-10-23/gaza-source-watch-20261023T004046-0700-r11.json (ended 2026-10-23T00:42:12-07:00)",
+    "source_priority": "OCHA OPT and WHO searched first and their sites checked directly, followed by twelve targeted searches.",
+    "initial_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest homepage reports shown dated 19 October 2026 or earlier. No in-window Gaza update."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "result": "WHO situation endpoint unavailable (DisabledError); WHO site search returned no in-window Gaza update."
+      },
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; health recall coverage impaired."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "search_coverage": [
+      "OCHA OPT",
+      "WHO",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "Reuters",
+      "Associated Press",
+      "UN News",
+      "ICRC",
+      "MSF",
+      "Gaza in-window general casualty/ceasefire/aid developments",
+      "bakeries, flour supply and crossings"
+    ],
+    "degraded_sources": [
+      "WHO Eastern Mediterranean Gaza / OPT endpoint returned HTTP 502.",
+      "WHO situation URL could not be fetched.",
+      "UN News returned robots.txt block.",
+      "Palestine Chronicle full article returned HTTP 429, but corroborating WAFA, Arab News and search-extracted text were available."
+    ],
+    "excluded": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176174",
+        "reason": "Seven-bakery flour exhaustion and 48-hour closure warning reported 22 October 2026, outside the current observation window; verified but not newly in-window."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Four Gaza deaths reported 22 October 2026, predating observation window."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published 19 October 2026; events from 29 September–12 October; prior background."
+      },
+      {
+        "url": "https://apnews.com/article/d7ebbcf1fd30cc608c9b9ed5126deb95",
+        "reason": "WFP food assistance cuts published 20 October 2026, previously reported/outside window."
+      }
+    ],
+    "conclusion": "No newly verified traceable, nonduplicate high-value development found between 00:42:12 and 01:43:40 Pacific. Coverage is DEGRADED because WHO Gaza/OPT endpoint is unavailable and UN News is blocked; search absence is not evidence of event absence.",
+    "production_authority": "Supplementary recall only; authoritative production collector/publisher untouched. No approval, publication, schedule, or task-state changes."
+  }
+}

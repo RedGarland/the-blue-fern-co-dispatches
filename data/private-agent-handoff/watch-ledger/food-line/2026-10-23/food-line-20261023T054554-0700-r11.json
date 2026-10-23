@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-20261023T054554-0700-r11",
+  "scheduled_for": "2026-10-23T05:45:54-07:00",
+  "started_at": "2026-10-23T05:50:56-07:00",
+  "completed_at": "2026-10-23T12:53:09.749Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-23T04:45:54-07:00",
+    "end": "2026-10-23T05:50:56-07:00",
+    "timezone": "America/Los_Angeles",
+    "description": "Targeted recall for items newly reported since the preceding scheduled hourly slot; local-news and official notices searched with 1–2 day recency to accommodate indexing latency.",
+    "prior_hourly_heartbeat_verified": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "supplementary recall watch only; production nationwide collection is authoritative",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "categories_checked": [
+      "community's only/sole/last/full-service grocery store lost or closed",
+      "emergency food distribution canceled or suspended by disaster, outage, or facility damage",
+      "abrupt pantry/food-bank closure or material service reduction",
+      "official immediate SNAP/WIC/food-assistance access interruption"
+    ],
+    "result": "No qualifying new, source-verifiable signal identified during this run.",
+    "excluded": [
+      "old incidents or follow-up articles",
+      "resource guides, general distribution notices, analysis/opinion, and routine program news",
+      "out-of-country events and duplicates"
+    ],
+    "limitations": [
+      "Search-index freshness and sparse overnight local coverage limit negative assurance.",
+      "No authoritative previous-hour heartbeat was available to verify the exact last-success boundary."
+    ],
+    "publication_or_approval_performed": false
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T214154-0700-r11-5c31",
+  "scheduled_for": "2026-10-22T21:45:22-07:00",
+  "started_at": "2026-10-22T21:41:54-07:00",
+  "completed_at": "2026-10-22T21:43:51.383-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-22T20:50:27-07:00",
+    "end": "2026-10-22T21:43:51.383-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; 2026-10-22 entries for Interim Healthcare of the Central Valley and Louisville Metro Health Dept Laboratory already captured during previous watches; no new CMS notices.",
+    "12 additional targeted searches found no verified new in-window access changes; Dennys River Ambulance Service announcement dated October 21 is out-of-window.",
+    "Supplementary only; authoritative production collector unchanged. No approval, publication, or schedule changes."
+  ]
+}

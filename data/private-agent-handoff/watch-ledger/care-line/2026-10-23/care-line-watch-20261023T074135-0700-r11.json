@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T074135-0700-r11",
+  "scheduled_for": "2026-10-23T07:45:22-07:00",
+  "started_at": "2026-10-23T07:41:35-07:00",
+  "completed_at": "2026-10-23T07:44:25-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T23:46:00-07:00",
+    "end": "2026-10-23T07:44:25-07:00",
+    "basis": "Most recent completed watch explicitly visible in prior conversation was 2026-10-22 23:43–23:46 PDT; subsequent hourly outcomes are not verifiable from accessible persisted ledger."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-pa-doylestown-ed-temporary-closure-20261022",
+      "canonical_source_url": "https://centralbucksnews.com/news/doylestown-health-responds-to-emergency-department-incident/",
+      "title": "Doylestown Health responds to emergency department incident",
+      "publisher": "Central Bucks Now",
+      "exact_supporting_passage": "Emergency rooms at Doylestown Hospital were temporarily closed after a sprinkler head was damaged and activated, resulting in water affecting eight patient rooms and adjacent office space, a Doylestown Health spokesperson said in a statement to Central Bucks Now.",
+      "source_published_date": "2026-10-23",
+      "state": "PA",
+      "city": "Doylestown",
+      "county": "Bucks",
+      "territory": null,
+      "event_type": "temporary_closure",
+      "service_line": "emergency_department",
+      "access_consequences": "Temporary interruption of hospital emergency-room availability reported after an activated sprinkler damaged patient-care rooms; extent of diversion and current reopening status not established.",
+      "affected_population": "Emergency patients in the Doylestown/Bucks County hospital catchment; number unknown.",
+      "effective_date": "2026-10-22",
+      "announcement_date": "2026-10-22",
+      "confidence": "medium",
+      "source_role": "local_reporting_quoting_provider",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": [
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; latest entries remain the two 2026-10-22 notices for Interim Healthcare of the Central Valley (CA) and Louisville Metro Health Dept Laboratory (KY). Both previously reported, excluded as duplicates.",
+    "Twelve additional targeted web searches completed, covering ED/hospital, maternity, ambulance/air-medical, dialysis/oncology, behavioral health, primary care, restoration, rural service, territories, and government notices.",
+    "The original CMS URL returned an access error; the correct CMS Public Notices page was found and fully inspected. Central Bucks Now article requests returned HTTP 403; report's headline, date, and specific spokesperson-attributed supporting passage were available via indexed search/news excerpts, limiting verification and warranting DEGRADED status.",
+    "Doylestown incident itself began 2026-10-22, but follow-up local reporting first published/updated 2026-10-23 after the last visible completed watch. Include as a late-reported recall candidate, not as proof that the ER remains closed now.",
+    "Watsonville Community Hospital maternity/NICU deliberations and Greene County ambulance funding negotiations excluded as proposals without concrete service loss; Coastal Community Health Pooler October 30 closure excluded from this window because official page has no verifiable new announcement date. Older air-medical base closures excluded.",
+    "Production Care Line collection is authoritative; candidate has not been cross-checked against its reviewed/published ledger and remains pending_review. No approval, publishing, scheduling change, or disabling performed."
+  ]
+}

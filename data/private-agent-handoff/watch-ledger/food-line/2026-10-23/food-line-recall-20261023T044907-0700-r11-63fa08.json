@@ -1,0 +1,61 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T044907-0700-r11-63fa08",
+  "scheduled_for": "2026-10-23T04:45:54-07:00",
+  "started_at": "2026-10-23T04:49:07-07:00",
+  "completed_at": "2026-10-23T04:51:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "started_after": "2026-10-23T03:44:36-07:00",
+    "ended_at": "2026-10-23T04:51:11-07:00",
+    "prior_check_basis": "Verified most recent persisted Food Line recall heartbeat completed 2026-10-23T03:44:36-07:00 on ops/watch-ledger; overlapping indexed web reporting assessed for newness."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_role": "Bounded supplementary recall only; authoritative nationwide production collector unchanged.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "priority_miss_classes": [
+      "Only/sole/last/full-service community grocery loss, closure, fire or disaster",
+      "Storm, flood, fire, outage or damage cancellation/suspension of emergency food distribution",
+      "Abrupt pantry or food-bank closure/major immediate access reduction",
+      "New official SNAP/WIC/EBT or food assistance interruption with immediate access impact"
+    ],
+    "search_queries": [
+      "\"only grocery store\" (closed OR fire OR burned OR shutdown) \"October 23\" \"2026\"",
+      "\"last grocery store\" OR \"sole grocery store\" closed fire \"Oct 23\" 2026",
+      "\"full-service grocery\" closure fire \"October 22\" \"2026\" community",
+      "\"food distribution\" (cancelled OR canceled OR suspended) storm flood outage \"October 23\" 2026",
+      "\"food bank\" \"distribution cancelled\" weather fire \"October 23\" 2026",
+      "\"food pantry\" \"closed\" \"October 23\" \"2026\" emergency",
+      "site:gov \"SNAP\" \"benefits unavailable\" OR \"interrupted\" \"October 23\" 2026",
+      "site:gov \"WIC\" \"outage\" OR \"interruption\" \"October 23\" 2026",
+      "food pantry closed abruptly Oct 22 2026 community loss food access",
+      "Oct 23 2026 food bank food pantry distribution canceled storm outage local news",
+      "Oct 23 2026 SNAP WIC EBT outages benefit processing suspended state agency",
+      "Oct 22 2026 only grocery store in town closing fire full service supermarket lost"
+    ],
+    "search_engine_recency_days": "1-2",
+    "assessment": "No newly verified qualifying U.S. access disruption within the observed window. Search results primarily historical, out-of-scope, unrelated, or pre-window.",
+    "notable_exclusions": [
+      {
+        "source_url": "https://www.sfchronicle.com/bayarea/article/safeway-san-jose-richmond-closures-22489573.php",
+        "reason": "Reported upcoming San Jose supermarket closure on November 13; another Safeway within a mile; not a verified immediate only/full-service community access loss."
+      },
+      {
+        "source_url": "https://lincolnparishjournal.com/2026/10/22/dubach-council-closes-food-pantry-approves-litigation-settlement/",
+        "reason": "Dubach pantry closure publication Oct 22 predates the previous completed hourly check; not new in current window."
+      },
+      {
+        "source_url": "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+        "reason": "Historical pantry shutdown from April 2026."
+      }
+    ],
+    "limitations": "Bounded targeted web recall is not exhaustive; recency indexing frequently surfaces historical stories and excludes unindexed notices. No finding is not proof of no disruptions.",
+    "side_effects": "No approval, publication, schedule, task status, or primary collector mutation."
+  }
+}

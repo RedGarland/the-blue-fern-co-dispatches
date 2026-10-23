@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T144552-0700-r11",
+  "scheduled_for": "2026-10-23T14:44:51-07:00",
+  "started_at": "2026-10-23T14:45:52-07:00",
+  "completed_at": "2026-10-23T14:46:54-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T13:45:30.059-07:00",
+    "end": "2026-10-23T14:46:54-07:00",
+    "window_basis": "From independently read-back verified prior supplementary watch heartbeat completed_at to current check. Source dates and actual event times assessed independently; discovery inside the interval is not proof of event occurrence."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary bounded Gaza recall watch only; primary production collector and publisher remain authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest prominently listed situation report published 19 October 2026 and covers mostly 29 September–12 October; no new dated Gaza update verified since prior hourly check."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new dated Gaza health update verified in the observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; regional first-party emergency situation reports could not be checked directly."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Reuters October 23 military operations, strikes and civilian casualties",
+      "AP October 23 casualty and bakery updates",
+      "WFP Gaza bakeries/flour/food access",
+      "UNICEF children, water, health and displacement",
+      "ICRC health and detainees",
+      "MSF hospital, fuel and medical evacuation",
+      "October 23 late Gaza casualties, ceasefire and military operations",
+      "October 23 afternoon Gaza hospitals, ambulance access and crossings",
+      "United Nations humanitarian updates",
+      "ReliefWeb new situation reports",
+      "UNRWA operational situation reports",
+      "Gaza water, infrastructure, fuel and displacement"
+    ],
+    "examined_but_excluded": [
+      {
+        "canonical_source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "AP rolling report accessible; Friday strikes reportedly killed three people (two Gaza City, one southern Gaza) but the identical casualty cluster was already evaluated in the 11:45 PDT ledger. Civilian status and event/update timing for this window not independently verified. Bread queues, bakery closures, and commercial food delays duplicate verified 05:52 PDT finding."
+      },
+      {
+        "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Original publication October 22 and events Thursday; outside observation window and previously considered."
+      },
+      {
+        "canonical_source_url": "https://www.reuters.com/world/middle-east/world-food-programme-cuts-aid-500000-palestinians-gaza-citing-funding-shortages-2026-10-19/",
+        "reason": "WFP aid reduction announced October 19 and already covered by prior watches."
+      },
+      {
+        "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published October 19, primarily earlier reporting period."
+      },
+      {
+        "canonical_source_url": "https://www.reuters.com/world/middle-east/israel-military-two-suspected-attackers-killed-after-shooting-attack-near-judea-2026-10-23/",
+        "reason": "West Bank/Hebron, excluded from in-Gaza scope."
+      }
+    ],
+    "degradation": [
+      "WHO Eastern Mediterranean regional situation reports endpoint returned HTTP 502. Direct regional Gaza healthcare reporting remained incomplete; other humanitarian sources and established reporting were searchable."
+    ],
+    "result": "No new independently traceable, nonduplicate qualifying Gaza development verified since 13:45:30 PDT. This is not evidence that none occurred.",
+    "limitations": [
+      "Supplementary recall search and previous ledgers are not a production live candidate queue deduplication check.",
+      "Search engine indexing and undated rolling story updates may delay verification of breaking developments."
+    ],
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production mutation",
+      "schedule change",
+      "disable watch"
+    ]
+  }
+}

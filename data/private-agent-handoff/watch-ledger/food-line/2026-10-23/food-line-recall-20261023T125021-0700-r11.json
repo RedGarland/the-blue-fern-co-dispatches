@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T125021-0700-r11",
+  "scheduled_for": "2026-10-23T12:45:54-07:00",
+  "started_at": "2026-10-23T12:50:21-07:00",
+  "completed_at": "2026-10-23T12:51:39-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T11:45:54-07:00",
+    "end": "2026-10-23T12:45:54-07:00",
+    "observation_date": "2026-10-23"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "supplementary_bounded_recall",
+    "production_collection_authoritative": true,
+    "web_searches_completed": 12,
+    "web_searches_failed": 0,
+    "priority_classes": [
+      "sole/last/full-service grocery loss by closure/fire/disaster",
+      "emergency distribution cancelation/suspension due to hazard or facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruptions with immediate access consequences"
+    ],
+    "result": "No newly published, confirmed qualifying U.S. disruption attributable to the specified hourly interval was found in 12 targeted fresh-web searches. Search results were dominated by older events; old or non-disruption items were excluded. This is not a claim of exhaustive national coverage.",
+    "duplicates_and_exclusions": "Historical events, donation drives, resource guides, broad commentary, routine program promotion, non-U.S. items, and undated/unverified results excluded.",
+    "bounded_query_context": [
+      "only grocery store closed fire Oct 23",
+      "last grocery store closes fire Oct 2026",
+      "sole grocery store fire Oct 23",
+      "food pantry canceled distribution storm flooding Oct 23",
+      "food bank suspended distribution power outage Oct 23",
+      "SNAP benefits outage interruption Oct 23 state agency",
+      "food pantry closed Oct 23 storm",
+      "food bank closed Oct 23 fire flood",
+      "food distribution canceled Oct 23",
+      "WIC interruption Oct 23 benefits",
+      "SNAP EBT outage Oct 23",
+      "grocery store closing Oct 23 only"
+    ]
+  }
+}

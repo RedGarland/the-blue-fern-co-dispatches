@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T094720-0700-r11-d641",
+  "scheduled_for": "2026-10-23T09:45:22-07:00",
+  "started_at": "2026-10-23T09:47:20-07:00",
+  "completed_at": "2026-10-23T09:49:11-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T07:44:25-07:00",
+    "end": "2026-10-23T09:49:11-07:00",
+    "basis": "Start from latest directly verified Care Line Watch heartbeat on ops/watch-ledger (07:44:25 PDT); no later completed heartbeat was independently verifiable in this run."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked FIRST: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices ; newest notices were two dated 2026-10-22 (Interim Healthcare of the Central Valley, CA home health termination; Louisville Metro Health Dept Laboratory, KY CLIA limitation), both previously reported and excluded as duplicates. No 2026-10-23 notice was displayed.",
+    "Exactly 12 additional targeted searches conducted with a last-2-day freshness filter for major U.S. closures/service loss or restoration, ED, maternity, behavioral health, rural/emergency services, ambulance/air-medical bases, dialysis, oncology, primary care, and official notices; territories also checked using a 7-day freshness search. No new qualifying nonduplicate access change confirmed.",
+    "Doylestown Hospital temporary ED interruption in Pennsylvania reported on October 23 was already entered in prior confirmed 07:41 watch heartbeat under finding_id care-line-pa-doylestown-ed-temporary-closure-20261022; no supported reopening or additional access change confirmed. Indexed news was available, but direct article fetch returned DisabledError (prior run also documented HTTP 403).",
+    "October 23 Reedley Community Hospital lease ballot reporting excluded: potential lease proposal with no current service change. August 7 Bonney Lake ED lockdown closure excluded as stale. Other retrieved hits were overseas, advisory/proposal, or unrelated.",
+    "GitHub directory URL inspection via web returned DisabledError; authenticated GitHub connector successfully read the prior heartbeat. Such source-access limitations make research DEGRADED without precluding useful coverage. A subsequent readback of this newly created heartbeat is required to establish durable persistence.",
+    "This is a bounded supplementary recall watch, not the authoritative production Care Line collector. No approval, publication, schedule update, or task disabling performed."
+  ]
+}

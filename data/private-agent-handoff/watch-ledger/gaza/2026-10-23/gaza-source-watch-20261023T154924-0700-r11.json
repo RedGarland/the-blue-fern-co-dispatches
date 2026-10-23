@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T154924-0700-r11",
+  "scheduled_for": "2026-10-23T15:44:51-07:00",
+  "started_at": "2026-10-23T15:49:24-07:00",
+  "completed_at": "2026-10-23T15:50:55-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T14:44:51-07:00",
+    "end": "2026-10-23T15:50:55-07:00",
+    "window_basis": "Nominal previous hourly scheduled check through current observation. The latest ledger file individually verified was completed 2026-10-23T10:46:16-07:00; intervening heartbeat inventory could not be enumerated by available connector. Newly discovered reporting is not proof the event occurred or was first published after 14:44 PDT."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261023-al-masdar-yellow-line-residential-impact-001",
+      "canonical_source_url": "https://www.middleeastmonitor.com/20261023-3-palestinians-killed-others-injured-in-fresh-israeli-attacks-on-gaza/",
+      "title": "Reports of military control-line marker movement into residential areas east of al-Masdar, Gaza",
+      "publisher": "Middle East Monitor (reproducing Anadolu Agency reporting)",
+      "source_date": "2026-10-23",
+      "publication_date": "2026-10-23",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "East of al-Masdar village, near Ibn Zaydoun intersection, central Gaza Strip",
+      "affected_population": "Residents and families whose homes are near the shifted control-line markers; count not reported",
+      "affected_system": "Residential access, land use, civilian housing and agricultural land near military control line",
+      "exact_supporting_passage": "Residents were surprised to find the blocks among their homes near the Ibn Zaydoun intersection",
+      "source_type": "Secondary republication of Anadolu Agency on-the-ground reporting attributed to unnamed local witnesses",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-10-23T15:50:55-07:00",
+        "first_verified_in_this_run": true,
+        "specific_reported_development": "Local sources said military control markers were moved about 500 meters overnight to locations amid homes east of al-Masdar. The same report described ongoing leveling of farmland and demolitions of evacuated homes in the east of central Gaza.",
+        "why_qualifying": "A described shift of markers amid inhabited residential locations and contemporaneous destruction of civilian homes/farmland constitutes documented civilian-impact military activity rather than a bare report of troop movements.",
+        "source_limitations": "Single news account republishing Anadolu with unnamed local sources. Exact event date, first-publication time, residents' displacement count, and independent official corroboration are unknown. Requires primary-production deduplication and verification before use. It may have been visible to an intervening watch; connector did not expose branch directory listing.",
+        "prior_watch_comparison": "Not present in independently readable 10:46 PDT ledger; prior hourly 14:45 PDT ledger not independently located. Classification new means a recall candidate first observed this run, not verified chronologically new since the preceding check.",
+        "related_context_url": null
+      }
+    }
+  ],
+  "coverage_notes": {
+    "role": "Supplementary recall only; primary daily Gaza production pipeline is authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Homepage accessible; latest Gaza situation report listed as published October 19, 2026; no newer in-window report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Current global situation page accessible; no dated new in-window Gaza health development."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502, regional medical/evacuation source coverage incomplete."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "WHO Gaza latest health reporting (recovery from initial outdated WHO link)",
+      "OCHA OPT Gaza latest humanitarian updates",
+      "UNRWA Gaza aid and shelter",
+      "WFP bakery/flour/food access",
+      "UNICEF water/children/hospitals",
+      "ICRC hostage/detention/medical access",
+      "Palestinian Red Crescent ambulance and casualties",
+      "Reuters Gaza ceasefire/aid/civilian harm",
+      "AP Gaza civilian impacts",
+      "Rafah/Kerem Shalom crossing shipments",
+      "Gaza hospital/ambulance/medical evacuation/fuel",
+      "Gaza October 23 strikes/casualties/civilian impact"
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://petra.gov.jo/en/news/palestinian-killed-others-injured-in-israeli-drone-strike-in-southern-gaza",
+        "reason": "Published Oct 23 at 09:56 Jordan local time (outside nominal current hourly window); civilian status of bicycle-target fatality not verified; earlier strikes already considered by prior recall."
+      },
+      {
+        "url": "https://www.middleeastmonitor.com/20261023-3-palestinians-killed-others-injured-in-fresh-israeli-attacks-on-gaza/",
+        "reason": "Same article's separate casualty claims do not identify civilian status; no independent in-window chronology; only residential impact is recorded as candidate."
+      },
+      {
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "October 19 announcement already known; excluded as recycled."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published October 19; not an in-window new report."
+      }
+    ],
+    "degraded_sources": [
+      "WHO EMRO occupied Palestinian territory news HTTP 502",
+      "Latest previous-hour GitHub watch-ledger contents not listable with available connector; earlier 10:46 PDT heartbeat independently read."
+    ],
+    "limitations": [
+      "Breaking report publication hours not reliably available; cannot prove new within the strict nominal hourly window.",
+      "The candidate is not an authorization or publication recommendation; primary production must deduplicate and substantiate.",
+      "Newswire searches often returned older articles despite date constraints.",
+      "Initial noncanonical WHO URL returned 404; corrected official WHO page was accessible."
+    ],
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production collector modification",
+      "schedule modification",
+      "automation disabling"
+    ]
+  }
+}

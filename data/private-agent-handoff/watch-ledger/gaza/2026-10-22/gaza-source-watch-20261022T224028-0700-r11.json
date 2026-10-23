@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T224028-0700-r11",
+  "scheduled_for": "2026-10-22T22:44:51-07:00",
+  "started_at": "2026-10-22T22:40:28-07:00",
+  "completed_at": "2026-10-22T22:41:56-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T21:45:40-07:00",
+    "end": "2026-10-22T22:41:56-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "checks": [
+      "OCHA OPT latest October 19; WHO searched first."
+    ],
+    "additional_targeted_search_count": 12,
+    "degraded_sources": [
+      "WHO EMRO endpoint HTTP 502"
+    ],
+    "excluded": [
+      "Older reporting and duplicates"
+    ],
+    "conclusion": "No verified in-window new development. Supplemental watch only."
+  }
+}

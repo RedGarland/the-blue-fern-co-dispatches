@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T124307-0700-r11-f5e2",
+  "scheduled_for": "2026-10-23T12:45:22-07:00",
+  "started_at": "2026-10-23T12:43:07-07:00",
+  "completed_at": "2026-10-23T12:45:08-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T11:49:08-07:00",
+    "end": "2026-10-23T12:45:08-07:00",
+    "basis": "Prior verified Care Line Watch heartbeat on ops/watch-ledger completed at 2026-10-23 11:49:08 PDT."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices on 2026-10-23. Latest listed notices remain the three 2026-10-23 home-health-agency terminations: My Families Healthcare (CA, CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673), and Moonlight Home Health Care Inc (OH, CCN 369006). All three are already recorded as pending-review findings in the preceding verified 11:47 PDT watch; no additional CMS notices were listed.",
+    "Exactly 12 additional bounded targeted web searches completed after the CMS check: emergency department interruptions; maternity/labor and delivery suspensions; rural hospital/ED closures; ambulance/air-medical closures; inpatient behavioral health suspensions; dialysis closures; oncology care closures; primary-care clinic closures; ED service restorations; hospital diversions/suspensions; U.S. territories; and CMS termination/CLIA/rescission notices. Searches returned no newly corroborated, nonduplicate qualifying healthcare-access development in the observation window.",
+    "Excluded previously identified CMS October 22 and October 23 notices as duplicates; excluded historical closures, future-only reopening plans, U.S.-external reports, commentary/opinion, and non-concrete proposals. Prior Doylestown Hospital PA ED interruption remains a previously recalled event; no new independently verified reopening was established in these checks.",
+    "Scope is supplementary recall only; the production national Care Line collector is authoritative. No editorial approval, publication, schedule, or task changes made."
+  ]
+}

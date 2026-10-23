@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T074554-0700-r11",
+  "scheduled_for": "2026-10-23T07:45:54-07:00",
+  "started_at": "2026-10-23T07:45:00-07:00",
+  "completed_at": "2026-10-23T07:46:45-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-23T06:44:08-07:00",
+    "end_at": "2026-10-23T07:46:45-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the verified completion of the most recent prior persisted Food Line recall heartbeat (run ending at 06:44:08 PDT). Indexing may lag; 1-day-recency queries were used to capture late-indexed local and official notices."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only. Production nationwide Food Line collector remains authoritative.",
+    "12 targeted web searches performed; 0 search failures. Coverage: only/sole/last/full-service grocer closures or fires; disaster/outage-related emergency distribution cancellations; abrupt pantry/food-bank closure or major service reductions; new official SNAP/WIC assistance interruptions.",
+    "No newly verified qualifying U.S. disruption with a source showing fresh notice or immediate access impact within this run's verified interval.",
+    "Candidate rejected as stale: September 14, 2026 Spencer, NY sole grocery store fire (WBNG); August 29, 2026 Eastport, ME sole grocery store closure (Bangor Daily News).",
+    "Candidate rejected as stale and not yet an abrupt closure: October 19, 2026 Provo, UT Community Action Services & Food Bank funding appeal to remain operating.",
+    "Search results also contained routine scheduled pantry openings, historic October 2025 SNAP interruption articles, generic resource links and unrelated current pages. No admissible new official 2026 SNAP/WIC interruption was evidenced.",
+    "Searches were bounded and cannot prove the absence of unindexed or delayed notices. No inference that production collector captured or missed individual items.",
+    "No approvals, publication, schedule changes, or task disabling."
+  ]
+}

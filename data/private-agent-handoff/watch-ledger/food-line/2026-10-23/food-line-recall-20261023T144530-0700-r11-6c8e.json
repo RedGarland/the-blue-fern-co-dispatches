@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T144530-0700-r11-6c8e",
+  "scheduled_for": "2026-10-23T14:45:54-07:00",
+  "started_at": "2026-10-23T14:45:34-07:00",
+  "completed_at": "2026-10-23T14:45:58-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-23T13:45:54-07:00",
+    "end": "2026-10-23T14:45:54-07:00",
+    "timezone": "America/Los_Angeles",
+    "description": "Since the prior hourly scheduled check; verified recent reporting against this strict window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch; production nationwide collector remains authoritative.",
+    "targeted_search_count": 12,
+    "search_failures": 0,
+    "classes_checked": [
+      "Loss/fire/closure of the only, last, sole, or full-service grocery store",
+      "Weather/disaster/outage-canceled emergency food distribution",
+      "Abrupt pantry/food-bank service closure or material access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate effects"
+    ],
+    "result": "No newly published, source-supported qualifying U.S. disruption could be verified in the specified hour.",
+    "notable_exclusions": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Qualifying type but originally published September 14, outside lookback."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/10/22/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Oct 23 refreshed recovery bulletin announces an emergency food distribution, not a cancellation."
+      },
+      {
+        "source_url": "https://www.wtxl.com/northeast-tallahassee/local-food-pantry-forced-to-cancel-distribution-due-to-severe-lack-of-resources",
+        "reason": "Older article (approximately six months old), not a new event in this hour."
+      }
+    ],
+    "source_limitations": "Time-indexed search returned older articles and refreshed rolling coverage; absent a time-stamped new interruption, these were excluded. Supplementary searches do not establish nationwide absence."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261022T184521-0700-r11",
+  "scheduled_for": "2026-10-22T18:45:54-07:00",
+  "started_at": "2026-10-22T18:45:21-07:00",
+  "completed_at": "2026-10-22T18:47:17-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T17:47:28-07:00",
+    "end": "2026-10-22T18:47:17-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall only; production collector authoritative.",
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "search_failures": 0,
+    "source_fetch_failures": 1,
+    "categories": [
+      "Sole/full-service grocery closure",
+      "Emergency distribution cancellation",
+      "Abrupt food pantry/food bank closure",
+      "Official SNAP/WIC access interruption"
+    ],
+    "assessment": "No new confirmed in-window qualifying signals. A pantry lease dispute described possible future closure without an actual current service reduction; existing Dubach pantry closure is a previously discovered duplicate.",
+    "degraded_reason": "One older scheduled-closure source returned HTTP 403 when opened. Search coverage remained usable.",
+    "actions": "No approval, publication, schedule modification, or task disabling."
+  }
+}

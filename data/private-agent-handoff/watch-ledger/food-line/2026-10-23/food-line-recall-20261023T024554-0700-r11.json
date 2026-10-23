@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T024554-0700-r11",
+  "scheduled_for": "2026-10-23T02:45:54-07:00",
+  "started_at": "2026-10-23T02:49:31-07:00",
+  "completed_at": "2026-10-23T02:51:17.408-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "started_after": "2026-10-23T01:45:54-07:00",
+    "ended_at": "2026-10-23T02:51:17.408-07:00",
+    "prior_check_basis": "Previous hourly scheduled boundary; completion of prior run not independently verified because prior heartbeat unavailable."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_role": "Supplementary recall only; primary production collection is authoritative.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "target_classes": [
+      "Loss or disaster affecting a community's sole/last/full-service grocery store",
+      "Storm/flood/fire/outage/damage-related emergency food distribution cancellations",
+      "Abrupt pantry or food-bank closure or major service reduction",
+      "Official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "search_queries": [
+      "\"only grocery store\" \"closed\" October 22 2026 rural community",
+      "\"sole grocery store\" fire October 22 2026 town",
+      "\"last grocery store\" closing \"October 23\" 2026",
+      "\"food distribution\" \"canceled\" storm October 22 2026",
+      "\"food pantry\" distribution canceled flood fire storm October 23 2026",
+      "\"food bank\" \"distribution\" \"suspended\" \"October 22\" 2026",
+      "\"food pantry\" \"closed\" unexpectedly October 22 2026",
+      "\"food bank\" \"temporarily closed\" outage October 22 2026",
+      "\"food pantry\" \"services suspended\" October 2026",
+      "site:gov \"SNAP\" \"interruption\" \"October 22, 2026\"",
+      "site:gov \"WIC\" \"system outage\" \"October 22, 2026\"",
+      "site:gov \"EBT\" \"benefits\" \"unavailable\" \"October 23, 2026\""
+    ],
+    "search_engine_recency_days": 1,
+    "assessment": "No newly verified qualifying disruption found. Returned results were overwhelmingly historical or off-scope; items without evidence of publication in the checked hourly window were not treated as new.",
+    "exclusions": "Historical incidents, donation drives, guides, promotional pieces, opinion, generic inflation, and irrelevant/out-of-country reports excluded.",
+    "limitations": "Bounded search is not exhaustive; search engine recency filter returned many older reports. Results were not treated as proof of absence.",
+    "side_effects": "No approvals, publications, production collector changes, scheduling changes, or task disabling."
+  }
+}

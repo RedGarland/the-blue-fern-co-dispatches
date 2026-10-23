@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T044325-0700-r11-7d52",
+  "scheduled_for": "2026-10-23T04:45:22-07:00",
+  "started_at": "2026-10-23T04:43:25-07:00",
+  "completed_at": "2026-10-23T04:44:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T23:46:00-07:00",
+    "end": "2026-10-23T04:43:25-07:00",
+    "rationale": "From the most recent documented prior completed supplemental check, rather than assuming unverified intervening hourly checks."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch; production Care Line collection is authoritative.",
+    "cms_public_notices": "Checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices . The latest entries were dated 2026-10-22 (Interim Healthcare of the Central Valley and Louisville Metro Health Dept Laboratory); both were documented in the prior watch and excluded as duplicates. No entry dated 2026-10-23 appeared.",
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital emergency department interruption",
+      "maternity",
+      "behavioral health",
+      "dialysis oncology",
+      "primary care rural clinic",
+      "ambulance service",
+      "air medical bases",
+      "emergency service restorations",
+      "US territories"
+    ],
+    "exclusion_summary": "No newly corroborated, nonduplicate concrete access change. Watsonville maternity possibility remains a proposal; earlier 2026-10-22 CMS notices were already captured. Search results about ownership, proposals, and out-of-country facilities were excluded.",
+    "limitations": "Targeted web search is bounded and not exhaustive; indexing delays are possible. Previous documented supplemental run completed approximately 2026-10-22T23:46-07:00; intervening hourly results could not be established from conversation history.",
+    "search_result": "No qualifying new developments independently confirmed."
+  }
+}

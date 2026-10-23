@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T134314-0700-r11",
+  "scheduled_for": "2026-10-23T13:44:51-07:00",
+  "started_at": "2026-10-23T13:43:14-07:00",
+  "completed_at": "2026-10-23T13:45:30.059-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T12:45:18.183-07:00",
+    "end": "2026-10-23T13:45:30.059-07:00",
+    "window_basis": "Latest verified Gaza supplemental watch ledger completed_at to this run. Publication and event dates considered separately. Search-time discovery is not proof of occurrence during this window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Bounded supplementary recall only; primary production Gaza collector/publisher authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest listed OCHA Gaza humanitarian situation report dated 2026-10-19 with report period through 2026-10-12; no new in-window Gaza update verified."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new dated Gaza health update in-window visible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; first-party regional health reporting unavailable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "October 23 Gaza civilian casualties and strikes (Reuters/AP)",
+      "AP October 23 bakery, hospital and medical evacuation",
+      "Reuters October 23 crossing, civilian casualties and truce",
+      "UN official humanitarian developments",
+      "UNICEF child health, food and water",
+      "WFP bakeries and flour",
+      "UNRWA humanitarian updates",
+      "ICRC healthcare access and detention",
+      "MSF hospital and medicine/fuel",
+      "ReliefWeb situation reports",
+      "October 23 bakery and WFP-specific follow-ups",
+      "October 23 Gaza deaths, ceasefire and hospitals"
+    ],
+    "examined_but_excluded": [
+      {
+        "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "OCHA report published 2026-10-19, not within watch window."
+      },
+      {
+        "canonical_source_url": "https://www.arabnews.pk/middle-east/gaza-residents-fear-renewed-famine-threat-as-food-supplies-dwindle-and-aid-shrinks-3005008",
+        "reason": "Published October 23 03:07, describes prior Thursday interviews and flour risk already represented in verified prior bakery recall finding; no newly confirmed change since 12:45 PDT."
+      },
+      {
+        "canonical_source_url": "https://english.ahram.org.eg/NewsContent/58/1262/580688/War-on-Gaza/War-on-Gaza/Israeli-fires-in-Gaza-kill-one-person,-two-in-West.aspx",
+        "reason": "AP-reprinted Gaza fatal strike occurred October 23 morning, previously flagged; civilian status unclear, outside watch observation window. West Bank incidents excluded."
+      },
+      {
+        "canonical_source_url": "https://english.ahram.org.eg/News/580625.aspx",
+        "reason": "Egyptian Red Crescent aid convoy departed 2026-10-22; delivery into Gaza not verified and predates window."
+      },
+      {
+        "canonical_source_url": "https://english.ahram.org.eg/News/580474.aspx",
+        "reason": "October 20 casualty incidents; previously reportable period, not in-window."
+      },
+      {
+        "canonical_source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Direct AP rolling coverage inaccessible during this watch; no verifiable new version-specific Gaza event since prior watch."
+      }
+    ],
+    "degradation": [
+      "WHO Eastern Mediterranean regional situation reports endpoint returned HTTP 502, leaving direct regional Gaza healthcare verification incomplete.",
+      "AP October 23 rolling article could not be fetched directly; syndication and previous ledger used where possible."
+    ],
+    "result": "No new independently traceable, qualifying, nonduplicate Gaza development verified since 12:45:18 PDT. This does not establish no events occurred.",
+    "limitations": [
+      "Breaking items may be indexed late; search yielded older reports despite October 23 targeting.",
+      "Deduplication against last verified supplemental watch ledger, not production live candidate queue.",
+      "Persistent regional WHO endpoint failure is unchanged from preceding hourly runs."
+    ],
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production mutation",
+      "schedule change",
+      "disable watch"
+    ]
+  }
+}

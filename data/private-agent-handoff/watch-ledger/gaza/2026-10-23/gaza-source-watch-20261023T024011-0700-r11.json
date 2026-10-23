@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T024011-0700-r11",
+  "scheduled_for": "2026-10-23T01:44:51-07:00",
+  "started_at": "2026-10-23T02:40:11-07:00",
+  "completed_at": "2026-10-23T02:42:13-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T01:40:11-07:00",
+    "end": "2026-10-23T02:42:13-07:00",
+    "window_basis": "Previous hourly observation approximated at 01:40 PDT; preceding ledger heartbeat not independently located."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "initial_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Available. Homepage latest news dated October 19, 2026; no in-window Gaza report identified."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Available. No new in-window report shown."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway; regional verification limited."
+      }
+    ],
+    "additional_targeted_search_count": 10,
+    "targeted_search_classes": [
+      "aid/food/water",
+      "civilian casualties",
+      "healthcare/medical evacuation",
+      "ceasefire/hostages/crossings",
+      "OCHA displacement",
+      "WFP food assistance",
+      "ICRC detention/healthcare",
+      "UNICEF children/water",
+      "military operations civilian impact",
+      "casualty/infrastructure reporting"
+    ],
+    "degraded_sources": [
+      "WHO Eastern Mediterranean oPt news HTTP 502"
+    ],
+    "excluded": [
+      "OCHA humanitarian situation report dated October 19, 2026 (older than window).",
+      "WFP aid-reduction reporting published October 19, 2026 (older than window).",
+      "Generic WHO global emergency page does not describe in-window event."
+    ],
+    "conclusion": "No verified new, source-traceable in-window Gaza development identified from bounded checks. WHO regional reporting endpoint could not be independently accessed. No publication or approval.",
+    "production_authority": "Supplementary recall watch only; production remains authoritative.",
+    "observation_sources": [
+      "https://www.ochaopt.org/",
+      "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "https://www.emro.who.int/opt/news/"
+    ]
+  }
+}

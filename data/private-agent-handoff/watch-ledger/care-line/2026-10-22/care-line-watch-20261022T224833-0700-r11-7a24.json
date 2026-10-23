@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261022T224833-0700-r11-7a24",
+  "scheduled_for": "2026-10-22T22:45:22-07:00",
+  "started_at": "2026-10-22T22:48:33-07:00",
+  "completed_at": "2026-10-23T05:50:50.455Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-22T20:47:10-07:00",
+    "end": "2026-10-23T05:50:50.455Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last prior execution time confirmed in available task history; an intermediate hourly result could not be verified."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; primary national production collection remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; current 2026-10-22 notices for Interim Healthcare of the Central Valley (CA) and Louisville Metro Health Dept Laboratory (KY) were already identified in a prior watch; no new official CMS notice found.",
+    "Exactly 12 additional targeted web searches performed across hospital/ED/maternity, dialysis, ambulance/air-medical, behavioral health, rural care, and restoration categories.",
+    "Watsonville Community Hospital maternity/NICU news excluded: potential decision only, no confirmed service change.",
+    "Christ Community Health Services East Jackson telehealth-only Oct 23 snippet not independently confirmed on fetched primary page; excluded as a possible short routine change.",
+    "No new qualifying, nonduplicate events verified in the bounded search window."
+  ]
+}

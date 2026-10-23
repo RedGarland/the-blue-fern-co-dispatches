@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T104521-0700-r11",
+  "scheduled_for": "2026-10-23T10:44:51-07:00",
+  "started_at": "2026-10-23T10:45:21-07:00",
+  "completed_at": "2026-10-23T10:46:16-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T09:46:52.648-07:00",
+    "end": "2026-10-23T10:46:16-07:00",
+    "window_basis": "Prior verified Gaza watch ledger completed_at through this supplementary watch; publication/event timestamps were checked when available. Discovery within this interval does not establish that an underlying event occurred within it."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_role": "Supplementary recall only. Production is authoritative; no changes to primary collection, publishing or approvals.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications",
+        "result": "Accessible; newest listed OCHA Gaza humanitarian situation report published 2026-10-19, with reporting period ending 2026-10-12. No publication verified since the prior hourly check."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; WHO latest news and regional links did not show a new dated in-window Gaza healthcare development."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway. Regional healthcare source verification incomplete."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Reuters/AP October 23 Gaza civilian casualties and military impacts",
+      "UN Gaza food, water and aid developments",
+      "WFP bakery, flour and commercial food access",
+      "UNICEF child healthcare, water and displacement",
+      "ICRC hostage, detention, medical evacuation and crossings",
+      "Palestinian Red Crescent ambulance and medical incidents",
+      "Reuters October 23 ceasefire and crossings",
+      "AP October 23 Gaza reporting",
+      "Reuters October 23 Gaza and hostage/crossing follow-ups",
+      "AP October 23 rolling Gaza news and civilian consequences",
+      "Hospital, fuel and medical evacuation developments",
+      "Water, desalination, displacement and infrastructure damage"
+    ],
+    "examined_but_excluded": [
+      {
+        "canonical_source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Earlier October 23 Gaza bread/bakery development already recorded in verified 05:52 PDT recall heartbeat; no independently verified new update. Direct article fetch not accessible in this check."
+      },
+      {
+        "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published October 19 with earlier event/reporting period, not an in-window new development."
+      },
+      {
+        "canonical_source_url": "https://www.wfp.org/stories/middle-east-conflict-fuels-bread-shortage-hungry-gaza",
+        "reason": "May 5 2026 background report, not an in-window new development."
+      },
+      {
+        "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-18-gaza-patient-crossings-rafah-halted-palestinian-2026-02-04/",
+        "reason": "February 4 2026 report; outside observation window."
+      }
+    ],
+    "degradation": [
+      "WHO Eastern Mediterranean regional news endpoint returned HTTP 502; regional healthcare monitoring incomplete.",
+      "Direct access to AP October 23 rolling report was unavailable; accessible index snippets and prior watch ledger used to avoid duplicate findings."
+    ],
+    "result": "No new independently verified, nonduplicate, source-traceable Gaza developments identified since prior watch heartbeat. This does not establish an absence of events.",
+    "limitations": [
+      "Search indexing of breaking reporting may lag.",
+      "Did not access primary production collector's live queue; compared against prior verified recall ledger and prior finding.",
+      "Search results returned numerous older articles despite date constraints."
+    ],
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production mutation",
+      "schedule change",
+      "task disabling"
+    ]
+  }
+}

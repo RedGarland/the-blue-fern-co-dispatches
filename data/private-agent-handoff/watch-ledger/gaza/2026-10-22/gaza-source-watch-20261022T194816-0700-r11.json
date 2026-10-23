@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261022T194816-0700-r11",
+  "scheduled_for": "2026-10-22T19:44:51-07:00",
+  "started_at": "2026-10-22T19:48:16-07:00",
+  "completed_at": "2026-10-22T19:49:16-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-22T18:51:00-07:00",
+    "end": "2026-10-22T19:49:16-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "initial_checks": [
+      "OCHA OPT: no in-window report",
+      "WHO global: no in-window update"
+    ],
+    "additional_targeted_search_count": 12,
+    "degraded_sources": [
+      "WHO Eastern Mediterranean HTTP 502",
+      "UN News blocked"
+    ],
+    "excluded": [
+      "Reuters October 22 at 05:21 PDT: outside window",
+      "UNICEF October 20 statement: outside window"
+    ],
+    "conclusion": "No verified new in-window developments; coverage degraded.",
+    "production_authority": "Supplementary only. No publication or approval."
+  }
+}

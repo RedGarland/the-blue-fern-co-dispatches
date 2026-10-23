@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T104554-0700-r11",
+  "scheduled_for": "2026-10-23T10:45:54-07:00",
+  "started_at": "2026-10-23T10:48:16-07:00",
+  "completed_at": "2026-10-23T10:49:21-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-23T09:45:54-07:00",
+    "end": "2026-10-23T10:48:16-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Nominal previous scheduled hourly check; last successful prior checkpoint could not be verified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall watch; production nationwide collection remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_errors": 0,
+    "miss_classes": [
+      "Loss of a community's only/last/full-service grocery store after fire, disaster or closure",
+      "Emergency food distribution cancellation or suspension caused by storm, flood, fire, outage or damage",
+      "Abrupt food pantry/food bank shutdown or material reduction in access",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No newly published and independently verifiable qualifying disruptions found within the nominal prior-hour window.",
+    "freshness_limitations": "Search indexing surfaced multiple older events (May–September 2026), one Oct 21 pre-announced Kenosha Food Bank closure effective end of 2026, and an Oct 23 SNAP proposed rule without a current access interruption. These were excluded. A negative result is not proof of comprehensive nationwide absence.",
+    "exclusions": "Excluded stale incidents, deferred future closure, rule proposal, donation drives, resource guides, promotions, opinion, non-disruption results and duplicates.",
+    "no_editorial_action": true
+  }
+}

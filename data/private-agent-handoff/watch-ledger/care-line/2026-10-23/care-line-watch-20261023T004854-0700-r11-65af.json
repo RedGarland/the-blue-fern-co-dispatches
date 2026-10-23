@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T004854-0700-r11-65af",
+  "scheduled_for": "2026-10-23T00:45:22-07:00",
+  "started_at": "2026-10-23T00:48:54-07:00",
+  "completed_at": "2026-10-23T00:50:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-22T23:46:07-07:00",
+    "end": "2026-10-23T00:50:53-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "completion of previous Care Line Watch execution"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production Care Line collector remains authoritative.",
+    "CMS Public Notices checked first on 2026-10-23 (America/Los_Angeles): https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Most recent notices were 2026-10-22 Interim Healthcare of the Central Valley (CA) and Louisville Metro Health Department Laboratory (KY), previously reported; excluded as duplicates.",
+    "12 additional targeted searches completed: hospital emergency-department closure, maternity closure, rural ED loss, behavioral health suspension, ground ambulance loss, air-medical base loss, dialysis loss, oncology loss, primary-care closure, restoration/reopening, service closures with Oct 23 effective date, and US territories.",
+    "No confirmed new qualifying in-window development found. Excluded old notices, future proposals without realized access effect, service-neutral construction and ownership stories, and restatement of previously known losses.",
+    "No approval, publication, or scheduling changes performed."
+  ]
+}

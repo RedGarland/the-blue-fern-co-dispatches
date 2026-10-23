@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T134909-0700-r11-c7b1",
+  "scheduled_for": "2026-10-23T13:45:22-07:00",
+  "started_at": "2026-10-23T13:49:09-07:00",
+  "completed_at": "2026-10-23T13:50:38-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T12:45:08-07:00",
+    "end": "2026-10-23T13:50:38-07:00",
+    "basis": "Most recent verified prior Care Line Watch heartbeat on ops/watch-ledger completed at 2026-10-23 12:45:08 PDT."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first using https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Its newest listings remain the three 2026-10-23 home-health-agency termination notices: My Families Healthcare (CA, CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673), and Moonlight Home Health Care Inc (OH, CCN 369006); all were recorded as pending-review findings in the verified 11:47 PDT watch and excluded as duplicates. No newer official CMS notices were listed.",
+    "All three individual CMS notice landing pages were accessible and confirmed the same provider, CCN, action, date, and jurisdiction. Linked primary notice PDFs were not opened because the actions were previously recalled and no new event was identified.",
+    "Exactly 12 additional targeted searches completed after the initial CMS check: hospital/ED interruptions; maternity/labor and delivery; rural emergency-service closures; inpatient behavioral health; dialysis; oncology; primary care; ground ambulance; air-medical bases; Doylestown ED restoration; U.S. territories; and state enforcement/license orders. No newly corroborated, nonduplicate healthcare-access change in the observation window.",
+    "Excluded historical and out-of-window events, mere future proposals, outside-U.S. reporting, and duplicate Doylestown Hospital PA temporary ED closure (October 22; reported October 23). No verified new restoration was found. Oakland 911 emergency call/dispatch restoration reported October 23 was completed before this window and is not a new facility or ambulance-base closure.",
+    "The first attempted legacy CMS page path was inaccessible; the authoritative current CMS Public Notices page and all three relevant notice landing pages were retrieved successfully, so substantive source coverage was preserved. This is a supplementary recall check only; production Care Line collection remains authoritative. No editorial approval, publication, schedule, or automation changes occurred."
+  ]
+}

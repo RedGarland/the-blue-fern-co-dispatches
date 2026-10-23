@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T044540-0700-r11",
+  "scheduled_for": "2026-10-23T04:44:51-07:00",
+  "started_at": "2026-10-23T04:45:40-07:00",
+  "completed_at": "2026-10-23T04:47:55.178-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T03:43:05.282-07:00",
+    "end": "2026-10-23T04:47:55.178-07:00",
+    "window_basis": "From completed_at of prior verified Gaza Source Watch heartbeat gaza-source-watch-20261023T034024-0700-r11.json through this check (Pacific Daylight Time)."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall check only; production remains authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Available; latest front-page entries dated 2026-10-19; no new Gaza material in interval."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Available; no new Gaza health update during interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway; regional healthcare-source check degraded."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Gaza civilian casualties 23 October via AP/hospitals",
+      "Gaza strike/casualty reporting via Reuters/AP",
+      "UNICEF children, water and displacement",
+      "WFP food assistance and access",
+      "UNRWA displacement and shelter",
+      "ICRC hospital, detention and medical evacuation",
+      "ReliefWeb health, fuel, crossings and water",
+      "United Nations ceasefire, crossings, humanitarian access",
+      "Rafah/Kerem Shalom crossing and negotiations",
+      "Gaza hospitals, ambulances, fuel, evacuations and water",
+      "AP rolling 23 October Gaza/Nasser hospital incident follow-up",
+      "23 October strike corroboration and civilian status"
+    ],
+    "degraded_sources": [
+      "WHO Eastern Mediterranean oPt news endpoint returned 502 Bad Gateway"
+    ],
+    "other_limitations": [
+      "Direct AP rolling report inaccessible; search-index snippet available but not enough to determine publication/incident timing or civilian status."
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://apnews.com/article/6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "AP 2026-10-23 rolling report describes at least one death in southern Gaza; no reliably established civilian status or occurrence/publication time after 03:43 PDT; already considered in previous watch."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Reuters article dated 2026-10-22 12:21 UTC, before prior check."
+      },
+      {
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "Published 2026-10-19; previously known food-aid cuts, not in-window."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published 2026-10-19 and covers older reporting period."
+      },
+      {
+        "url": "https://apnews.com/article/f6646718072b4ff6929cff43297edd05",
+        "reason": "2026-10-23 report concerns Hebron/West Bank, outside in-Gaza scope."
+      }
+    ],
+    "conclusion": "No verified, traceable, nonduplicate in-Gaza humanitarian or civilian-impact development confidently attributable to the interval. WHO regional source failure limits healthcare coverage; continued recheck warranted.",
+    "exact_search_limit_respected": true,
+    "actions_not_taken": [
+      "publication",
+      "approval",
+      "production modification",
+      "schedule modification"
+    ]
+  }
+}

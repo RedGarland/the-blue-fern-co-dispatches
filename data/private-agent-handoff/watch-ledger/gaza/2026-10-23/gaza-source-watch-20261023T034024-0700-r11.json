@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T034024-0700-r11",
+  "scheduled_for": "2026-10-23T02:44:51-07:00",
+  "started_at": "2026-10-23T03:40:24-07:00",
+  "completed_at": "2026-10-23T03:43:05.282-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T02:42:13-07:00",
+    "end": "2026-10-23T03:43:05.282-07:00",
+    "window_basis": "Start is the completed_at of the preceding verified hourly ledger heartbeat gaza-source-watch-20261023T024011-0700-r11.json."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Available; newest site news entries dated 2026-10-19. No in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Available; no in-window global WHO item."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway; regional health verification unavailable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "civilian casualties/strikes",
+      "UNICEF children/water",
+      "WFP food assistance",
+      "UNRWA aid/displacement",
+      "ICRC healthcare/detention",
+      "OCHA Gaza access",
+      "Reuters casualties/ceasefire",
+      "AP hospitals/evacuation",
+      "crossings/ceasefire talks",
+      "water/infrastructure",
+      "overnight Gaza civilian casualties",
+      "UN humanitarian health/access"
+    ],
+    "degraded_sources": [
+      "WHO Eastern Mediterranean oPt news: 502 Bad Gateway"
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Published 2026-10-22 12:21 UTC, substantially before previous check; not a new item in this watch window."
+      },
+      {
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "AP rolling report mentions a Friday-morning strike in southern Gaza killing at least one person, citing Nasser Hospital. Civilian status and precise incident/publication timing not verified; unable to establish a new qualifying civilian-impact development after 02:42:13 PDT."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published 2026-10-19, older than observation window."
+      },
+      {
+        "url": "https://apnews.com/article/d7ebbcf1fd30cc608c9b9ed5126deb95",
+        "reason": "WFP food-aid reduction covered 2026-10-20; prior development."
+      }
+    ],
+    "conclusion": "No sufficiently time-bounded, independently traceable, nonduplicate new Gaza civilian-impact or humanitarian-service development established within the previous hourly interval. Some Friday-morning reporting requires later timing/civilian-status corroboration. WHO regional endpoint failure degrades health-source coverage.",
+    "production_authority": "Supplementary recall only; no approval, publication, schedule, or production change.",
+    "exact_search_limit_respected": true
+  }
+}

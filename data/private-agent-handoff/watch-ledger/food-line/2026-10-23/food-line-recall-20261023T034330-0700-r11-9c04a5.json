@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T034330-0700-r11-9c04a5",
+  "scheduled_for": "2026-10-23T03:45:54-07:00",
+  "started_at": "2026-10-23T03:43:30-07:00",
+  "completed_at": "2026-10-23T03:44:36-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "started_after": "2026-10-23T02:51:17.408-07:00",
+    "ended_at": "2026-10-23T03:44:36-07:00",
+    "prior_check_basis": "Verified prior completed heartbeat on ops/watch-ledger, 2026-10-23T02:51:17.408-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_role": "Bounded supplementary recall; nationwide production Food Line collection remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_failures": 0,
+    "priority_miss_classes": [
+      "Closure/fire/disaster affecting a community's sole, only, last, or full-service grocery store",
+      "Storm/flood/fire/outage/facility-damage cancellation of emergency food distributions",
+      "Abrupt pantry/food-bank shutdown or major access reduction",
+      "Official SNAP/WIC/food-assistance service interruption with immediate access impact"
+    ],
+    "search_queries": [
+      "\"only grocery store\" \"closed\" \"October 22\" \"2026\" town",
+      "\"sole grocery store\" fire OR destroyed \"October 23\" \"2026\"",
+      "\"last grocery store\" \"shutting down\" October 2026 rural town",
+      "\"food distribution\" canceled storm \"October 22\" 2026",
+      "\"food pantry\" distribution cancelled flood fire storm \"October 23\" 2026",
+      "\"food bank\" \"distribution suspended\" weather \"October 22\" 2026",
+      "\"food pantry\" \"closing immediately\" October 2026",
+      "\"food bank\" closed \"power outage\" October 22 2026",
+      "\"pantry\" \"services suspended\" \"October 23\" 2026",
+      "site:gov SNAP emergency benefits interrupted \"October 22\" 2026",
+      "site:gov WIC outage benefits \"October 23\" 2026",
+      "site:gov EBT benefits unavailable October 23 2026 outage"
+    ],
+    "search_engine_recency_days": 1,
+    "assessment": "No independently verified U.S. food-access disruption first reported during the prior-check-to-current observation window matching the four classes.",
+    "notable_exclusions": [
+      {
+        "title": "Dubach council closes food pantry",
+        "source_url": "https://lincolnparishjournal.com/2026/10/22/dubach-council-closes-food-pantry-approves-litigation-settlement/",
+        "reason": "Published October 21/22, 2026, before the prior hourly check; not a new in-window signal."
+      },
+      {
+        "title": "Kauaʻi Hurricane Lowell recovery notice",
+        "source_url": "https://kauainownews.com/2026/10/22/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Announces an upcoming Oct. 23 emergency food distribution, not a canceled or suspended distribution."
+      }
+    ],
+    "exclusions": "Excluded old incidents, routine temporary calendar closures, donation/promotion, food resource guides, opinion, generic inflation, foreign results, and duplicates.",
+    "limitations": "Search recency frequently surfaced old articles; this watch is not exhaustive and no-findings does not imply no disruptions exist.",
+    "side_effects": "No review decisions, approvals, publication, production collector changes, schedule changes, or disabling."
+  }
+}

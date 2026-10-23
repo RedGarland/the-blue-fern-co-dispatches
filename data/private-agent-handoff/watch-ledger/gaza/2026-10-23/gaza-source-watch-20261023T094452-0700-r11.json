@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T094452-0700-r11",
+  "scheduled_for": "2026-10-23T09:44:51-07:00",
+  "started_at": "2026-10-23T09:44:52-07:00",
+  "completed_at": "2026-10-23T09:46:52.648-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T08:50:16-07:00",
+    "end": "2026-10-23T09:46:52.648-07:00",
+    "window_basis": "Exact completed_at of the previously verified Gaza watch ledger heartbeat, through completion of this supplementary search. First discovered within the window does not imply event first occurred within it."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_role": "Bounded supplementary recall only; production Gaza collector and publisher remain authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "result": "Targeted OCHA search returned its 15 October situation report published 19 October and covering earlier developments. OCHA homepage direct open timed out; no new in-window OCHA item independently verified."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; emergency overview and current linked news did not yield any in-window Gaza healthcare development."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway; healthcare-specific regional coverage incomplete."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Reuters 23 October Gaza civilian casualties and healthcare/military impact",
+      "AP and Reuters 23 October bread, bakeries and aid updates",
+      "UN Gaza 23 October humanitarian food/water/health updates",
+      "WFP 23 October Gaza food access, bakeries and shipments",
+      "UNICEF 23 October water, child health and displacement",
+      "Gaza crossings, medical evacuations, hospital fuel and supplies",
+      "Reuters 23 October Gaza casualty, crossing and ceasefire follow-up",
+      "AP 23 October Gaza ground reports and civilian impacts",
+      "ICRC 23 October detainee, hostage and medical-evacuation activity",
+      "Palestinian Red Crescent 23 October ambulance/medical incidents",
+      "23 October Gaza aid crossing, commercial shipment and bread access",
+      "23 October Gaza military operations, ceasefire and civilian protection"
+    ],
+    "examined_but_excluded": [
+      {
+        "canonical_source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Gaza bakery/bread-access report was already logged as a recall finding in the verified 05:52 PDT heartbeat; no independently verified new detail during this window."
+      },
+      {
+        "canonical_source_url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "reason": "Evergreen food-emergency summary; no independently timestamped new in-window development."
+      },
+      {
+        "canonical_source_url": "https://www.reuters.com/world/middle-east/israel-resume-commercial-shipments-gaza-after-hamas-fee-dispute-2026-10-19/",
+        "reason": "19 October commercial shipment announcement, before the requested window."
+      },
+      {
+        "canonical_source_url": "https://apnews.com/article/f6646718072b4ff6929cff43297edd05",
+        "reason": "23 October military attack was in Hebron/West Bank, outside in-Gaza scope."
+      },
+      {
+        "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published 19 October, reporting earlier period; not a new hourly finding."
+      }
+    ],
+    "degradation": [
+      "WHO Eastern Mediterranean occupied Palestinian territory news endpoint returned HTTP 502.",
+      "OCHA OPT homepage direct retrieval timed out; OCHA situation report was still retrievable through indexed results."
+    ],
+    "result": "No distinct, source-traceable, nonduplicate high-value development was verified as newly discoverable after the prior hourly heartbeat.",
+    "limitations": [
+      "Breaking developments may not yet be indexed by search engines.",
+      "Primary production's live deduplication queue was not accessed; prior verified recall heartbeat used for local deduplication."
+    ],
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production mutation",
+      "schedule change",
+      "task disabling"
+    ]
+  }
+}

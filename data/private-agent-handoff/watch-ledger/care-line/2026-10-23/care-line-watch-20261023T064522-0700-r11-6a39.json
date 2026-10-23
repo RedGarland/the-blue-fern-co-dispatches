@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T064522-0700-r11-6a39",
+  "scheduled_for": "2026-10-23T06:45:22-07:00",
+  "started_at": "2026-10-23T06:45:22-07:00",
+  "completed_at": "2026-10-23T06:47:36-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-23T05:45:22-07:00",
+    "end": "2026-10-23T06:45:22-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "immediately preceding hourly slot; prior persisted heartbeat not verified"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Care Line recall watch only; primary production national collector remains authoritative.",
+    "CMS Public Notices checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices; newest notices dated 2026-10-22 (Interim Healthcare of the Central Valley, CA, and Louisville Metro Health Dept Laboratory, KY), already found by earlier watch and excluded as duplicates. No newer CMS public notices.",
+    "12 additional targeted web searches performed on Oct 22–23, 2026, covering hospital/ED, maternity, rural and behavioral health, dialysis, oncology, primary care, ambulance, air-medical, reopening, territories, and access loss. Results were stale, unrelated, outside U.S. scope, nonqualifying, or previously identified.",
+    "Excluded an October 16 Winchester Family Medicine closure in New Hampshire as outside the current observation window; October 23 South Los Angeles access-pressure analysis showed no discrete service closure or suspension; Oct 23 Kauai hurricane update gave no new essential healthcare service closure or reopening.",
+    "No new source-supported, in-window, nonduplicate qualifying development confirmed. Search indexing may lag live local or official notices.",
+    "No approval, publication, schedule alteration, or task disabling performed."
+  ]
+}

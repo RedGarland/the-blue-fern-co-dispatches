@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T114311-0700-r11",
+  "scheduled_for": "2026-10-23T11:44:51-07:00",
+  "started_at": "2026-10-23T11:43:11-07:00",
+  "completed_at": "2026-10-23T11:45:09.053-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T10:46:16-07:00",
+    "end": "2026-10-23T11:45:09.053-07:00",
+    "window_basis": "Previous verified Gaza supplementary-watch heartbeat completed_at through this execution. Publication/event times, where available, were evaluated separately; discovery in-window does not by itself imply incident occurred in-window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_role": "Bounded supplementary recall only; production collector and publisher remain authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications",
+        "result": "Accessible. Latest listing dated 19 October 2026, covering events through 12 October; no newly issued Gaza report identified during watch window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new in-window dated Gaza health update on the WHO situation page."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean regional oPt",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "HTTP 502 Bad Gateway. Direct regional healthcare verification impaired."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Reuters October 23 Gaza civilian deaths, strikes and ceasefire",
+      "AP October 23 Gaza humanitarian and aid reporting",
+      "UN October 23 Gaza food, water and civilians",
+      "WFP October 23 Gaza bread, flour, aid changes",
+      "AP October 23 Gaza rolling report",
+      "Reuters October 23 Gaza negotiations and crossings",
+      "UNICEF October 23 Gaza children, water and aid",
+      "ICRC October 23 Gaza detainees, evacuation and crossings",
+      "AP Gaza City 23 October two fatalities and Shifa hospital",
+      "Palestine Red Crescent 23 October ambulance and medical incidents",
+      "Gaza hospital medical evacuation fuel and Rafah changes",
+      "Gaza desalination, displacement, infrastructure damage and access"
+    ],
+    "examined_but_excluded": [
+      {
+        "canonical_source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "AP rolling report includes Friday Gaza City strike killing two people and southern strike killing one. Southern strike already surfaced in previous watches; civilian status and incident/update timing for Gaza City fatalities not established, so cannot qualify as a new documented civilian-impact development within this narrow window."
+      },
+      {
+        "canonical_source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "AP bread queues, flour-price rise, bakery closures and commercial food shipment limits overlap verified October 23 05:52 PDT recall finding; duplicate."
+      },
+      {
+        "canonical_source_url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "October 19/20 WFP food assistance cuts already reported before this interval."
+      },
+      {
+        "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published October 19, reporting primarily September 29–October 12; not new this interval."
+      }
+    ],
+    "degradation": [
+      "WHO Eastern Mediterranean oPt news endpoint returned HTTP 502. Partial regional health-source coverage; continuing known fault rather than a new outage."
+    ],
+    "result": "No independently verified, nonduplicate Gaza development with adequately established civilian impact and in-window freshness found. Absence of findings does not imply absence of events.",
+    "limitations": [
+      "Rolling AP report carries no verifiable item-level update time; strict temporal qualification unavailable.",
+      "Web-search date filtering surfaced numerous old results.",
+      "Did not inspect authoritative production intake/collector; duplication was checked against latest verified watch ledger and prior documented recall finding."
+    ],
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production mutation",
+      "schedule change",
+      "task disabling"
+    ]
+  }
+}

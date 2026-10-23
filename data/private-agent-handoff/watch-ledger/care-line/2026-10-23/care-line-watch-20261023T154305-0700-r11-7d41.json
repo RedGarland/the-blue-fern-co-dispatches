@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T154305-0700-r11-7d41",
+  "scheduled_for": "2026-10-23T15:43:05-07:00",
+  "started_at": "2026-10-23T15:43:05-07:00",
+  "completed_at": "2026-10-23T15:43:48-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-23T14:49:44-07:00",
+    "end": "2026-10-23T15:43:48-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S. and territory Care Line recall watch; primary production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "new_notices_since_prior_check": 0,
+      "latest_notice_date": "2026-10-23",
+      "excluded_as_already_identified": [
+        "My Families Healthcare (CA, CCN 758151)",
+        "1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673)",
+        "Moonlight Home Health Care Inc (OH, CCN 369006)"
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "search_coverage": [
+      "hospital/ED temporary closure and reopening",
+      "maternity and pediatric inpatient suspensions",
+      "rural emergency care changes",
+      "behavioral health inpatient changes",
+      "dialysis/oncology infusion changes",
+      "primary-care clinic changes",
+      "ambulance service changes",
+      "air-medical base changes",
+      "U.S. territory emergency service changes",
+      "official hospital and health-department access notices"
+    ],
+    "duplicates_excluded": [
+      "Doylestown Hospital temporary ED closure (previous watch 2026-10-23 07:41 PDT)",
+      "Mass General Brigham Home Hospital three-campus planned suspension (previous watch 2026-10-23 14:48 PDT)",
+      "Mass Eye and Ear general pediatric inpatient admissions ending (previous watch 2026-10-23 14:48 PDT)"
+    ],
+    "excluded_nonqualifying": [
+      "Proposals without concrete effective service change",
+      "Older or out-of-country results",
+      "Ownership and business coverage without access consequences",
+      "Opinion and unsupported social claims"
+    ],
+    "result": "No new qualifying, nonduplicate healthcare-access development established within the observation window.",
+    "limitations": "Targeted web search is an indexed supplementary recall sample; absence of new results does not establish nationwide completeness. No source/search hard failures reported."
+  }
+}

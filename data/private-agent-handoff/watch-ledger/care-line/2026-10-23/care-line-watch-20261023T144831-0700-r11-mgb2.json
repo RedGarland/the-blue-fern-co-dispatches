@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T144831-0700-r11-mgb2",
+  "scheduled_for": "2026-10-23T14:45:22-07:00",
+  "started_at": "2026-10-23T14:48:31-07:00",
+  "completed_at": "2026-10-23T14:49:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T13:50:38-07:00",
+    "end": "2026-10-23T14:49:44-07:00",
+    "basis": "Last verified Care Line Watch heartbeat on ops/watch-ledger completed 2026-10-23 13:50:38 PDT; candidate article dated October 23 lacks a publication clock-time, so these are newly surfaced recall candidates, not asserted newly occurring within the hour."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261023-ma-mgb-home-hospital-multisite-pause",
+      "canonical_source_url": "https://www.bostonglobe.com/2026/10/23/business/mass-general-brigham-layoffs/",
+      "title": "Mass General Brigham to pause Home Hospital service at three campuses and reduce program capacity",
+      "publisher": "The Boston Globe",
+      "exact_supporting_passage": "its clinical operations will be indefinitely paused",
+      "source_published_date": "2026-10-23",
+      "state": "MA",
+      "city": null,
+      "county": null,
+      "territory": null,
+      "event_type": "hospital_at_home_service_suspension_and_capacity_reduction",
+      "service_line": "hospital_at_home_acute_care",
+      "access_consequences": "Mass General Brigham confirmed November 2026 service changes: indefinitely pause Home Hospital clinical operations at Salem Hospital (Salem), Newton-Wellesley Hospital (Newton), and Brigham and Women's Faulkner Hospital (Boston); retain service focused on Massachusetts General Hospital and Brigham and Women's Hospital with eventual capacity no more than 30 concurrent patients, down from a reported 70 in August 2024. The exact implementation day and patient-transfer effects are unknown. This is a confirmed announced service change, not evidence of an already completed suspension.",
+      "affected_population": "Patients who would otherwise qualify for acute hospital-level care at home through the affected Massachusetts hospitals; number of directly affected patients unknown.",
+      "effective_date": null,
+      "announcement_date": "2026-10-23",
+      "confidence": "high_for_confirmed_decision; future_implementation_date_day_unknown",
+      "source_role": "strong_local_reporting_internal_memo_and_health_system_spokesperson",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    },
+    {
+      "finding_id": "care-line-20261023-ma-mass-eye-ear-general-peds-inpatient-end",
+      "canonical_source_url": "https://www.bostonglobe.com/2026/10/23/business/mass-general-brigham-layoffs/",
+      "title": "Mass Eye and Ear to stop general pediatric inpatient admissions to its 10th-floor unit by January 1",
+      "publisher": "The Boston Globe",
+      "exact_supporting_passage": "Mass Eye and Ear will end general pediatric inpatient admissions",
+      "source_published_date": "2026-10-23",
+      "state": "MA",
+      "city": "Boston",
+      "county": "Suffolk",
+      "territory": null,
+      "event_type": "pediatric_inpatient_service_line_suspension",
+      "service_line": "general_pediatric_inpatient",
+      "access_consequences": "Mass Eye and Ear's general pediatric inpatient admissions to its 10th-floor unit will end by January 1, 2027. The health system plans to redirect general pediatric inpatients to Newton-Wellesley Hospital, Wentworth-Douglass Hospital, Massachusetts General Hospital, and other Mass General Brigham for Children locations. This is a defined inpatient-service discontinuation with alternate destinations; exact last admission date and realized impacts remain unverified.",
+      "affected_population": "Children requiring general inpatient pediatric care at Mass Eye and Ear; caseload unknown.",
+      "effective_date": "2027-01-01",
+      "announcement_date": "2026-10-23",
+      "confidence": "high_for_announced_end_of_admissions; exact_last_admission_date_on_or_before_2027-01-01",
+      "source_role": "strong_local_reporting_internal_document",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": [
+    "CMS Public Notices checked FIRST: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest listed actions still the October 23 home-health provider termination notices for My Families Healthcare (CA CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA CCN 559673), and Moonlight Home Health Care Inc (OH CCN 369006). All three were logged as pending-review findings earlier today and excluded as duplicates. October 22 notices were also excluded as duplicates.",
+    "Exactly 12 additional targeted web searches were completed, covering US hospitals/ED diversions, maternity, rural emergency services, behavioral health, dialysis, oncology, primary care, ground EMS, air medical bases, hospital reopening, and U.S. territories.",
+    "Two distinct access-risk decisions were newly surfaced in The Boston Globe's October 23 report based on MGB internal documents and an MGB spokesperson. Publication time is not provided by the accessible article; these are newly discovered recall findings, not proof that the plans were announced in the precise 13:50–14:49 hourly window. Both changes have concrete specified access effects and planned implementation periods. They must be reviewed before any publication; operations have not yet been confirmed suspended.",
+    "Excluded a 5:52 a.m. October 23 Illinois Choate report because it describes a proposed psychiatric-bed reduction, challenged and projected into 2027, without verified already-effective service loss; excluded advocacy, historical/foreign events, and a Virgin Islands sponsored retirement announcement lacking verified service closure. Previously recalled Doylestown Hospital ED interruption was not re-entered.",
+    "Supplementary recall only; production Care Line collector is authoritative. No approval, publication, schedule, or task modification occurred."
+  ]
+}

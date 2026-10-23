@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T054209-0700-r11-e3f4",
+  "scheduled_for": "2026-10-23T05:45:22-07:00",
+  "started_at": "2026-10-23T05:42:09-07:00",
+  "completed_at": "2026-10-23T05:43:58.921-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-22T23:45:00-07:00",
+    "end": "2026-10-23T05:43:58.921-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "last documented completed supplementary check; gap extends beyond nominal hourly interval because no intermediate verified heartbeat available"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Care Line recall watch only; primary production collection remains authoritative.",
+    "CMS Public Notices explicitly checked first at https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Latest notices remain October 22: Interim Healthcare of the Central Valley (CA) Medicare termination and Louisville Metro Health Dept Laboratory (KY) CLIA limitation; both already surfaced by preceding watch, excluded as duplicates.",
+    "Exactly 12 additional targeted web searches checked hospital/ED, maternity, rural emergency care, behavioral health, dialysis, oncology, primary care, ground EMS, air medical, essential service restoration, health department closure, and US territories. No new substantiated qualifying in-window developments identified.",
+    "Excluded prospective or threatened service changes without concrete effect, new/expanded clinics without restoration of a lost essential service, analyses and non-US events.",
+    "Research searches did not establish exhaustive real-time coverage; no approval, publication, schedule change or disable action taken."
+  ]
+}

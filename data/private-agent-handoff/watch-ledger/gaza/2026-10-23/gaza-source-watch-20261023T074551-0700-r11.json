@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T074551-0700-r11",
+  "scheduled_for": "2026-10-23T07:44:51-07:00",
+  "started_at": "2026-10-23T07:45:51-07:00",
+  "completed_at": "2026-10-23T07:48:21.438-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T06:48:29-07:00",
+    "end": "2026-10-23T07:48:21.438-07:00",
+    "window_basis": "Start is completed_at of the latest verified preceding watch-ledger run (06:46:38 run); end is the bounded current observation. Recall also considers newly confirmed older incidents, with deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only. Primary production Gaza collector, editorial gates, deduplication and publication are authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed Gaza situation report and impact snapshot dated October 19, 2026; no newly dated in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated October 23 Gaza clinical, medical evacuation, fuel or health system bulletin identified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "result": "HTTP 502 Bad Gateway; region-specific reporting unavailable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "Reuters October 23 civilian casualties and strikes",
+      "AP October 23 civilian deaths, displacement and strikes",
+      "UN October 23 aid and crossings",
+      "WFP October 23 food, bread and flour",
+      "UNICEF October 23 water and children",
+      "WHO October 23 hospitals, fuel, evacuation",
+      "ICRC and Palestinian Red Crescent ambulances, hospitals",
+      "Reuters ceasefire negotiations and detainee/hostage consequences",
+      "Rafah/Kerem Shalom crossings and medical evacuations",
+      "Hostages, prisoners, detention",
+      "Water supply, power, fuel and physical infrastructure",
+      "New October 23 operations affecting civilians"
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published October 19; already pre-existing and not an hourly-new report."
+      },
+      {
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "reason": "Undated/live WFP emergency overview repeats previously documented aid cuts, bakery support and entry restrictions. No independently timestamped operational change since prior run."
+      },
+      {
+        "url": "https://www.unicef.org/appeals/state-of-palestine",
+        "reason": "September 2026 appeal; older humanitarian situation and needs."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "Dated October 22 and already identified in prior runs; excluded as recycled casualty reporting."
+      },
+      {
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Earlier Gaza bread/flour access recall candidate already in the 05:49 watch ledger; direct AP article retrieval blocked in this run, and no verified novel update established."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "source": "WHO EMRO oPt news",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "error": "HTTP 502"
+      },
+      {
+        "source": "AP October 23 rolling article",
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "error": "Page inaccessible through web retrieval; previous heartbeat supports deduplication."
+      }
+    ],
+    "source_quality": "OCHA and WHO explicitly checked first; twelve additional bounded targeted queries. No new, source-traceable, nonduplicate high-priority in-Gaza development was confirmed. This is not evidence of zero incidents.",
+    "actions_not_taken": [
+      "approve",
+      "publish",
+      "production change",
+      "schedule change",
+      "disable automation"
+    ]
+  }
+}

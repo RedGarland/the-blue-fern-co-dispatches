@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T084114-0700-r11",
+  "scheduled_for": "2026-10-23T08:45:22-07:00",
+  "started_at": "2026-10-23T08:41:14-07:00",
+  "completed_at": "2026-10-23T08:42:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T07:44:25-07:00",
+    "end": "2026-10-23T08:42:46-07:00",
+    "basis": "Prior successfully persisted Care Line Watch completed at 07:44:25 PDT; query window extends through this run's completion."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first: https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices. Most recent listings remain two notices dated 2026-10-22 (Interim Healthcare of the Central Valley, CA; Louisville Metro Health Dept Laboratory, KY), both already recalled in earlier watch; no new notice observed.",
+    "Twelve additional targeted web searches completed (four hospital/ED, maternity, ground ambulance, and air-medical; four dialysis, rural ED, behavioral-health and oncology; four government closure notices, primary-care interruption, reopening/restoration, and US territories). No new, adequately supported qualifying access change in window.",
+    "Prior Pennsylvania Doylestown emergency-department sprinkler incident (2026-10-22, reported 2026-10-23) already present in previous heartbeat, excluded as duplicate; reopening status not newly confirmed.",
+    "Search responses included outdated news, unrelated accidents, marketing and proposals, not countable service changes. Some web result publication metadata was unreliable or irrelevant; no qualifying candidates were supported.",
+    "This is supplementary recall only. Production Care Line collection remains authoritative. No approval, publication, schedule mutation or automation disable performed."
+  ]
+}

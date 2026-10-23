@@ -1,0 +1,20 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T164422-0700-r11",
+  "scheduled_for": "2026-10-23T16:45:54-07:00",
+  "started_at": "2026-10-23T16:44:22-07:00",
+  "completed_at": "2026-10-23T16:45:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-23T15:45:54-07:00",
+    "date_to": "2026-10-23T16:45:15-07:00",
+    "edition_date": "2026-10-23",
+    "timezone": "America/Los_Angeles",
+    "prior_check_basis": "hourly schedule; previous authoritative ledger check not independently confirmed"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall search, not production collection. Exactly 12 targeted fresh-web searches completed for sole/last/full-service grocery losses, storm/fire/outage food-distribution cancellations, abrupt pantry/food-bank access closures, and new official SNAP/WIC/food-assistance interruptions. No newly published, directly corroborated qualifying disruption in the target hour. Retrieved items mostly dated earlier; a Texas SNAP enrollment/backlog story published 2026-10-23 05:00 local was outside the window and did not establish a newly issued official interruption. Excluded stale disruptions, resource/promotion stories, generic food-policy coverage, and duplicates. Search-index freshness limits completeness. No editorial approval, publishing, schedule change or task disabling."
+}

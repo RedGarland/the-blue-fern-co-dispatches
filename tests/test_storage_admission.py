@@ -8,6 +8,7 @@ import pytest
 
 from fixture_lifecycle import FixtureRun, FixtureRunRegistry, _identity
 from scripts import test_storage_admission, validation_profiles
+from scripts.test_storage_admission import estimate_tree_bytes
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +36,31 @@ def test_projected_copy_space_is_added_to_reserve(tmp_path, monkeypatch):
     )
     with pytest.raises(RuntimeError, match="projected"):
         test_storage_admission.require_copy_capacity(tmp_path, source)
+
+
+def test_cumulative_two_copy_admission_preserves_one_reserve(tmp_path, monkeypatch):
+    source_a = tmp_path / "source-a"
+    source_b = tmp_path / "source-b"
+    source_a.mkdir()
+    source_b.mkdir()
+    (source_a / "a.bin").write_bytes(b"a" * 400)
+    (source_b / "b.bin").write_bytes(b"b" * 400)
+    free = test_storage_admission.DEFAULT_MIN_FREE_BYTES + 799
+    monkeypatch.setattr(
+        test_storage_admission.shutil,
+        "disk_usage",
+        lambda path: SimpleNamespace(free=free),
+    )
+
+    # Each independent admission fits, but the two copies together do not.
+    test_storage_admission.require_copy_capacity(tmp_path, source_a)
+    test_storage_admission.require_copy_capacity(tmp_path, source_b)
+    projected = estimate_tree_bytes(source_a) + estimate_tree_bytes(source_b)
+    with pytest.raises(RuntimeError, match="projected"):
+        test_storage_admission.require_test_root_capacity(
+            tmp_path,
+            projected_bytes=projected,
+        )
 
 
 def test_unknown_capacity_fails_closed(tmp_path, monkeypatch):
@@ -132,16 +158,31 @@ def test_legacy_allocators_use_registered_tmp_path_lifecycle():
     assert "require_copy_capacity" in care_dispatch
 
 
-def test_remaining_repository_local_allocators_are_explicitly_inventoried():
-    remaining = {
-        "tests/test_cascadia_pipeline.py": (40,),
-        "tests/test_care_line_discovery.py": (31,),
-        "tests/test_american_pressure_dispatch.py": (12, 56, 73, 88),
+def test_remaining_repository_local_allocators_match_dynamic_inventory():
+    expected = {
+        "tests/test_cascadia_pipeline.py",
+        "tests/test_care_line_discovery.py",
+        "tests/test_american_pressure_dispatch.py",
     }
-    for relative, lines in remaining.items():
-        source = (ROOT / relative).read_text(encoding="utf-8")
-        assert 'output / "test-runs"' in source or 'output" / "test-runs"' in source
-        assert all(line > 0 for line in lines)
+    found = set()
+    for path in (ROOT / "tests").glob("test_*.py"):
+        normalized = " ".join(path.read_text(encoding="utf-8").split())
+        if (
+            ' / "output" / "test-runs"' in normalized
+            or " / 'output' / 'test-runs'" in normalized
+        ):
+            found.add(path.relative_to(ROOT).as_posix())
+    assert found == expected, (
+        "repository-local test-runs allocator inventory changed; "
+        f"review new paths before relying on the repository-volume stopgap: {sorted(found)}"
+    )
+
+
+def test_direct_pytest_session_gate_checks_both_volumes():
+    source = (ROOT / "tests" / "conftest.py").read_text(encoding="utf-8")
+    assert "def pytest_sessionstart" in source
+    assert "require_test_root_capacity(ROOT)" in source
+    assert "explicit_test_root()" in source
 
 
 def _recorded_fixture(tmp_path, *, setup_complete: bool, call_outcome: str):

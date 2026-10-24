@@ -9,7 +9,11 @@ import pytest
 
 import bluefern_dispatches.generator as generator
 from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
-from scripts.test_storage_admission import require_copy_capacity, require_test_root_capacity
+from scripts.test_storage_admission import (
+    estimate_tree_bytes,
+    require_copy_capacity,
+    require_test_root_capacity,
+)
 
 from bluefern_dispatches.generator import (
     BASE_URL,
@@ -210,10 +214,13 @@ def built_site(request, tmp_path_factory, built_site_template):
     register_fixture_root(request, test_root, parent_group="built-site-template")
     work = test_root / "repo"
     backup_root = test_root / "dispatches-bluefern-backups"
-    # Admit both full copies before either copy begins; retain the reserve on
-    # the destination volume even when the source trees are on another volume.
+    # Admit both full copies before either copy begins; retain one reserve
+    # after their combined projected size, even when the source trees are on
+    # another volume.
     require_copy_capacity(test_root, template_work)
     require_copy_capacity(test_root, template_backup_root)
+    combined_projected_bytes = estimate_tree_bytes(template_work) + estimate_tree_bytes(template_backup_root)
+    require_test_root_capacity(test_root, projected_bytes=combined_projected_bytes)
     shutil.copytree(template_work, work)
     shutil.copytree(template_backup_root, backup_root)
     mark_fixture_setup_complete(request, test_root)

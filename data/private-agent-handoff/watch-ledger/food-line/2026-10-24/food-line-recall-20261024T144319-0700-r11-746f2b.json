@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T144319-0700-r11-746f2b",
+  "scheduled_for": "2026-10-24T14:45:54-07:00",
+  "started_at": "2026-10-24T14:43:19-07:00",
+  "completed_at": "2026-10-24T14:44:42.030-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T13:43:19-07:00",
+    "end_at": "2026-10-24T14:44:42.030-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative 60-minute hourly overlap from current run start; exact preceding heartbeat completion could not be enumerated through available GitHub directory listing actions."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; primary nationwide Food Line production collection remains authoritative.",
+    "12 targeted web searches, all completed without query errors, covering sole/last/full-service grocery loss or fire/disaster, storm/fire/flood/outage cancellation of food distribution, abrupt pantry/food-bank service reductions, and official immediate SNAP/WIC/food assistance interruptions.",
+    "No new qualifying U.S. food-access disruption was independently verifiable within the bounded Pacific observation window. Returned results were chiefly historical, background, unrelated, or nonqualifying. Notably, September 14 Spencer NY only-grocery fire, April Ruby's Pantry closures, earlier WIC outage, and prior-year SNAP shutdown articles were excluded as stale.",
+    "A recently crawled Kauai Hurricane Lowell recovery article dated October 23 describes recovery from September 7; it did not establish a new qualifying loss/cancellation during this watch window.",
+    "The exact prior hourly heartbeat completion could not be listed through available GitHub actions; conservative overlap was used and no new positive findings were advanced.",
+    "No approvals, publication, schedule changes, automation disabling, or production collector changes."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T224137-0700-r11-3e91c0",
+  "scheduled_for": "2026-10-23T22:45:54-07:00",
+  "started_at": "2026-10-23T22:41:37-07:00",
+  "completed_at": "2026-10-23T22:43:11-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-23T21:48:25-07:00",
+    "end_at": "2026-10-23T22:43:11-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at the most recent persisted supplementary Food Line recall heartbeat completion; nominal 22:45:54 schedule slot was supplied by the automation runtime and falls several minutes after its reported invocation."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only; production nationwide Food Line collection remains authoritative.",
+    "12 targeted web searches (8 fast, 4 deeper), with no search-query errors; covered sole/last/full-service grocery store losses, storm/fire/flood canceled emergency distributions, abrupt food-bank/pantry access losses, and newly official SNAP/WIC interruptions.",
+    "No newly verifiable qualifying U.S. disruptions were confirmed within the specified since-prior-check observation window; older and retrospective articles, resource guides, relief announcements without canceled services, and irrelevant program stories were excluded.",
+    "Potentially material, UNVERIFIED lead: Utah Food Bank indexed Facebook notice headed 'Monument Valley Pantry Temporary Closure Notice Due to the flooding situation in ...' (https://www.facebook.com/utahfoodbank/posts/1615517747274277/). Source timestamp and precise duration could not be recovered; not asserted new since prior check or included in findings.",
+    "An October 21 Klagetoh, Arizona weather-related distribution cancellation is outside the hourly window (https://www.facebook.com/StAnnesMissionKlagetoh/posts/due-to-forecast-threat-of-extensive-rain-in-the-klagetoh-area-on-wednesday-and-a/1148352670869071/). An October 22 WIC clinic closure notice is likewise outside the window (https://www.facebook.com/LivCoHealthIL/posts/wic-clinic-closure-noticethe-livingston-county-health-departments-wic-clinic-wil/1895962308395317/).",
+    "DEGRADED: direct source fetches of these three Facebook posts were throttled/inaccessible; provider home page (https://www.utahfoodbank.org/) did not supply a dated corroboration of the Monument Valley notice. Search coverage succeeded but timing/primary-text verification for this lead was not possible.",
+    "October 23 Texas SNAP backlog reporting (published around 05:00) is outside the window and describes an existing backlog, not a new official benefit interruption (https://www.ksat.com/news/texas/2026/10/23/texas-snap-participation-drops-to-a-17-year-low-as-the-feds-tighten-eligibility/).",
+    "No approvals, publication, production collector edits, schedule changes, or task disabling."
+  ]
+}

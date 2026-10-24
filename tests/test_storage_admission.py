@@ -160,7 +160,8 @@ def test_legacy_allocators_use_registered_tmp_path_lifecycle():
 
 
 def _has_repository_test_run_path(source: str) -> bool:
-    tree = ast.parse(source)
+    # Some repository test files are UTF-8-with-BOM; ast.parse expects the BOM removed.
+    tree = ast.parse(source.lstrip("\ufeff"))
     for node in ast.walk(tree):
         if not isinstance(node, ast.BinOp) or not isinstance(node.op, ast.Div):
             continue
@@ -187,6 +188,11 @@ def test_remaining_repository_local_allocators_match_dynamic_inventory():
         "tests/test_gaza_operator_status.py",
         "tests/test_add_gaza_manual_source.py",
         "tests/test_gaza_manual_source_repair.py",
+        "tests/test_gaza_audio_republish.py",
+        "tests/test_gaza_command_center.py",
+        "tests/test_gaza_daily_operator.py",
+        "tests/test_american_pressure_runner.py",
+        "tests/test_publish_gaza_historical.py",
     }
     found = {
         path.relative_to(ROOT).as_posix()

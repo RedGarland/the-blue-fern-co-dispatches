@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T214731-0700-r11",
+  "scheduled_for": "2026-10-23T21:45:54-07:00",
+  "started_at": "2026-10-23T21:47:31-07:00",
+  "completed_at": "2026-10-23T21:48:25-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-23T20:45:54-07:00",
+    "end_at": "2026-10-23T21:48:25-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Bounded since the preceding hourly schedule slot; exact preceding completed check was not verified. Search also examined recently indexed material to account for reporting delay."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production nationwide Food Line collection remains authoritative.",
+    "12 targeted web searches completed (8 fast and 4 deeper searches), covering all four high-value miss classes: sole/last/full-service grocery store loss, disaster-canceled emergency distributions, abrupt food pantry/bank access reductions, and new official SNAP/WIC interruptions.",
+    "No verified, newly published qualifying disruptions were found in the search window. Search-result recency and indexing dates were checked against article publication/event dates where available.",
+    "Excluded Oct 23 Kauaʻi Hurricane Lowell recovery roundup: it announces an operating emergency food distribution, not a canceled one (https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/).",
+    "Excluded Oct 23 Texas SNAP enrollment/backlog news: retrospective trend and processing delays without a newly announced official service interruption within this hourly window (https://www.ksat.com/news/texas/2026/10/23/texas-snap-participation-drops-to-a-17-year-low-as-the-feds-tighten-eligibility/).",
+    "Excluded Alexandria, VA pantry closure as previously announced in September, operating through October 22; not a new signal since this hourly check (https://ccda.net/catholic-charities-announces-closure-of-food-pantry-in-alexandria/).",
+    "Excluded San Jose Safeway closure as not sole/full-service grocery loss, with another Safeway under one mile away (https://www.sfchronicle.com/bayarea/article/safeway-san-jose-richmond-closures-22489573.php).",
+    "No approvals, publication, primary collector changes, schedule changes, or task disabling."
+  ]
+}

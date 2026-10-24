@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T154509-0700-r11-2ec9b4",
+  "scheduled_for": "2026-10-24T15:45:54-07:00",
+  "started_at": "2026-10-24T15:45:09-07:00",
+  "completed_at": "2026-10-24T15:46:16.321-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T14:44:42.030-07:00",
+    "end_at": "2026-10-24T15:46:16.321-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completion timestamp of previous persisted hourly heartbeat on 2026-10-24; fresh-source discovery checked for new U.S. food-access disruptions during this interval."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only. Authoritative nationwide Food Line production collection unchanged.",
+    "12 targeted web searches completed without query failures. Focused on community sole/last/full-service grocery loss, disaster-canceled emergency distributions, abrupt pantry/food-bank interruption, and official SNAP/WIC/food-assistance access outages.",
+    "No independently verified new qualifying U.S. disruption published or newly established within the prior-heartbeat-to-current Pacific observation interval.",
+    "October 24 San Juan River flooding in northwest New Mexico was visible as broader disaster reporting but searches did not verify a qualifying pantry/distribution/grocery/benefit-service interruption; excluded.",
+    "Most returned coverage was historical, background, unrelated, or generic guidance (including earlier grocery fires and historical SNAP outages). Did not promote stale or weakly corroborated leads.",
+    "No review approval, publication, scheduling changes, automation disabling, or production collection changes."
+  ]
+}

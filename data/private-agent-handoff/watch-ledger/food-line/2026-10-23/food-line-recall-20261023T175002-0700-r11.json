@@ -1,0 +1,38 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T175002-0700-r11",
+  "scheduled_for": "2026-10-23T17:45:54-07:00",
+  "started_at": "2026-10-23T17:50:02-07:00",
+  "completed_at": "2026-10-23T17:50:56.304-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T16:45:54-07:00",
+    "end": "2026-10-23T17:50:56.304-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall watch only. Production nationwide collector remains authoritative.",
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "search_failures": 0,
+    "source_fetch_failures": 0,
+    "priority_categories": [
+      "Only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "Storm, flood, fire, outage or facility-damage cancellation of emergency food distributions",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "bounded_query_context": "12 targeted searches, recency=1 day, U.S., Oct. 23, 2026 Pacific: 3 sole-grocery, 3 emergency-distribution/weather, 3 pantry/service, 3 SNAP/WIC/EBT interruption; returned candidate local and provider items reviewed.",
+    "assessment": "No independently verified new qualifying event within the prior-hour check window. Oct. 23 Kauai Hurricane Lowell notice confirmed an emergency food distribution was scheduled, not canceled; excluded. Other prominent matches described disruptions from September 2026 or earlier, proposed/potential SNAP interruptions in 2025, or routine recovery guides. Search indexing and publication latency limit exhaustive hour-by-hour coverage.",
+    "excluded_candidate_urls": [
+      "https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+      "https://wwmt.com/news/local/allegan-county-food-pantry-to-close-permanently-next-week-211-assistance-board-directors",
+      "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/"
+    ],
+    "actions": "No approval, publication, schedule change, or task disabling."
+  }
+}

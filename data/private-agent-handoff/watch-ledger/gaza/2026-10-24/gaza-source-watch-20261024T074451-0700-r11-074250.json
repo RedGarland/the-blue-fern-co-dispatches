@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T074451-0700-r11-074250",
+  "scheduled_for": "2026-10-24T07:44:51-07:00",
+  "started_at": "2026-10-24T07:42:50-07:00",
+  "completed_at": "2026-10-24T07:44:38-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T06:44:19-07:00",
+    "end": "2026-10-24T07:44:38-07:00",
+    "basis": "Starts from completed_at of latest independently retrieved ops/watch-ledger Gaza hourly heartbeat scheduled 06:44:51 PDT. An event must be newly and traceably verified in the window or a distinct material follow-up; older published accounts, unclear event timing, and West Bank material excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only, not the production collector or publisher. Production remains authoritative; no approval/publication/schedule/automation actions.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; homepage's latest Gaza impact snapshot and situation report dated October 19, 2026, not newly published in the window."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed Gaza humanitarian report and impact snapshot posted October 19, 2026."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Regional Office",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "result": "Direct reporting endpoint returned HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO global emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; listed regional Gaza health news and published reports predate October 24 window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 24 2026 7am PDT Gaza civilians aid Israeli strikes wounded Saturday morning",
+      "site:reuters.com/world/middle-east/ Gaza October 24 2026 civilians killed ceasefire crossings humanitarian",
+      "site:apnews.com/article/ Gaza October 24 2026 Saturday hospital killed civilians food aid",
+      "site:unrwa.org Gaza October 24 2026 displacement supplies shelter",
+      "site:wfp.org Gaza October 24 2026 bread bakeries flour aid crossing",
+      "site:unicef.org Gaza October 24 2026 water health children shelter",
+      "Gaza Strip October 24 2026 morning casualties attack Saturday medical workers 24 October",
+      "site:icrc.org Gaza October 24 2026 hostage detainee medical hospital",
+      "site:msf.org Gaza October 24 2026 medical evacuation hospital ambulance",
+      "site:palestinercs.org 24 October 2026 Gaza ambulance medics",
+      "site:reliefweb.int/report/occupied-palestinian-territory 24 Oct 2026 Gaza humanitarian crossing",
+      "Gaza Saturday Oct 24 2026 morning 7am update AP Reuters AFP airstrike civilians killed food water crossings ceasefire"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food/water access",
+      "healthcare functioning/hospitals/ambulances/transport/fuel/medical evacuation",
+      "infrastructure damage",
+      "crossings",
+      "detention/hostages",
+      "ceasefire negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "examined_but_excluded": [
+      {
+        "publisher": "Anadolu Agency syndicated in Yeni Şafak English",
+        "title": "2 Palestinians, including woman, killed in Gaza",
+        "url": "https://en.yenisafak.com/world/2-palestinians-including-woman-killed-in-gaza-3724755",
+        "source_publication_date": "2026-10-24",
+        "page_publication_display": "15:24, 24/10/2026",
+        "publication_timing_assessment": "15:24 Turkey time corresponds to about 05:24 PDT, before prior heartbeat completed at 06:44 PDT (subject to publisher timezone assumption). No independently evidenced new follow-up inside current watch window.",
+        "details": "Medical sources described Fatima Abu Laban shot dead in Beit Lahia, another woman wounded, and Mohammed Anan al-Rawagh killed and three injured in al-Rimal Gaza City. Substantive, traceable Gaza reporting, but article predates the window; not counted as new.",
+        "reason": "Outside this bounded window, and no verifiable in-window follow-up; can be assessed by production source coverage separately."
+      },
+      {
+        "publisher": "Associated Press",
+        "title": "Israel imposes closures in a West Bank city, and other Mideast news",
+        "url": "https://apnews.com/article/mideast-news-october-24-2026-707ad41a79d384ff4715902ce3d60df5",
+        "source_publication_date": "2026-10-24",
+        "details": "Rolling report repeats at least one Gaza City strike fatality with injuries but no section-level update or event clock time and no independent civilian-status verification.",
+        "reason": "The same rolling report was already excluded by the previous hourly watch; no verifiable new follow-up. West Bank coverage excluded."
+      },
+      {
+        "publisher": "Reuters",
+        "title": "Around 1,200 Palestinians are displaced in Hebron as Israel begins military operation",
+        "url": "https://www.reuters.com/world/middle-east/around-1200-palestinians-are-displaced-hebron-israel-begins-military-operation-2026-10-24/",
+        "source_publication_date": "2026-10-24",
+        "reason": "West Bank incident, not an in-Gaza ground development."
+      },
+      {
+        "publisher": "World Food Programme",
+        "title": "Funding cuts force WFP to drastically reduce lifesaving assistance in Gaza",
+        "url": "https://friends.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "source_publication_date": "2026-10-19",
+        "reason": "Older food-aid reductions, repeatedly documented prior; not new."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean Regional Office",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "observed": "HTTP 502 Bad Gateway",
+        "impact": "Direct region-specific Gaza hospital, ambulance, functional health service and medical-evacuation updates could not be verified from WHO EMRO. WHO global and OCHA accessible; material but bounded coverage degradation."
+      },
+      {
+        "publisher": "WHO global emergency alternate URL",
+        "url": "https://www.who.int/news-room/emergencies/situations/emergency-situation-in-the-occupied-palestinian-territory",
+        "observed": "Fetcher DisabledError",
+        "impact": "Alternate path inaccessible; official WHO global conflict page still available."
+      }
+    ],
+    "finding_assessment": "OCHA OPT and WHO were explicitly examined before twelve additional targeted searches. No distinct in-window, traceable, nonduplicate, qualifying Gaza development was confirmed. Earlier Anadolu detail about two Gaza fatalities is recorded as a potential prior-window recall miss, not as an in-window finding. WHO regional endpoint remains unavailable; classify DEGRADED, not FAILED.",
+    "limitations": [
+      "This is a bounded web recall, not proof that no incident occurred. Search indexing and rolling reports lag and can obscure section-level timing.",
+      "Prior-run heartbeat was independently read from ops/watch-ledger; no guessed time window.",
+      "No pages, public content, protected production, approval, scheduling, or automation changes."
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T064451-0700-r11-064231.json",
+      "completed_at": "2026-10-24T06:44:19-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false
+  }
+}

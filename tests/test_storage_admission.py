@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
-from scripts import test_storage_admission
+from fixture_lifecycle import FixtureRun, FixtureRunRegistry, _identity
+from scripts import test_storage_admission, validation_profiles
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +21,20 @@ def test_low_space_admission_fails_closed(tmp_path, monkeypatch):
     )
     with pytest.raises(RuntimeError, match="admission refused"):
         test_storage_admission.require_test_root_capacity(tmp_path)
+
+
+def test_projected_copy_space_is_added_to_reserve(tmp_path, monkeypatch):
+    source = tmp_path / "source"
+    source.mkdir()
+    payload = source / "asset.bin"
+    payload.write_bytes(b"x" * 1024)
+    monkeypatch.setattr(
+        test_storage_admission.shutil,
+        "disk_usage",
+        lambda path: SimpleNamespace(free=test_storage_admission.DEFAULT_MIN_FREE_BYTES + 1023),
+    )
+    with pytest.raises(RuntimeError, match="projected"):
+        test_storage_admission.require_copy_capacity(tmp_path, source)
 
 
 def test_unknown_capacity_fails_closed(tmp_path, monkeypatch):
@@ -46,18 +62,93 @@ def test_project_test_root_uses_configured_root(tmp_path, monkeypatch):
     assert test_storage_admission.explicit_test_root() == tmp_path.resolve()
 
 
+def test_validation_profile_requires_explicit_root(monkeypatch):
+    monkeypatch.delenv(test_storage_admission.TEST_ROOT_ENV, raising=False)
+    with pytest.raises(RuntimeError, match="must explicitly name"):
+        validation_profiles.make_pytest_basetemp("profile")
+
+
+def test_validation_profile_uses_configured_root(tmp_path, monkeypatch):
+    monkeypatch.setenv(test_storage_admission.TEST_ROOT_ENV, str(tmp_path))
+    monkeypatch.setattr(
+        test_storage_admission.shutil,
+        "disk_usage",
+        lambda path: SimpleNamespace(free=test_storage_admission.DEFAULT_MIN_FREE_BYTES),
+    )
+    base = validation_profiles.make_pytest_basetemp("profile")
+    assert base.parent == tmp_path.resolve()
+
+
+def test_launcher_validates_root_and_uses_collision_resistant_child():
+    wrapper = (ROOT / "scripts" / "run_pytest_safe.ps1").read_text(encoding="utf-8")
+    assert "ReparsePoint" in wrapper
+    assert "[guid]::NewGuid()" in wrapper
+    assert "DISPATCHES_TEST_ROOT" in wrapper
+
+
 def test_legacy_allocators_use_registered_tmp_path_lifecycle():
-    for relative in ("tests/test_story_dedupe.py", "tests/test_gaza_backfill.py", "tests/test_gaza_sources.py"):
+    for relative in (
+        "tests/test_story_dedupe.py",
+        "tests/test_gaza_backfill.py",
+        "tests/test_gaza_sources.py",
+        "tests/test_dispatches_site.py",
+        "tests/test_gaza_dispatch_generation.py",
+        "tests/test_run_daily_gaza.py",
+        "tests/test_care_line_dispatch.py",
+    ):
         text = (ROOT / relative).read_text(encoding="utf-8")
         assert 'repo / "output" / "test-runs"' not in text
         assert "register_fixture_root" in text
         assert "tmp_path_factory" in text
+        assert "mark_fixture_setup_complete" in text
+    backfill = (ROOT / "tests" / "test_gaza_backfill.py").read_text(encoding="utf-8")
+    story = (ROOT / "tests" / "test_story_dedupe.py").read_text(encoding="utf-8")
+    dispatch_site = (ROOT / "tests" / "test_dispatches_site.py").read_text(encoding="utf-8")
+    care_dispatch = (ROOT / "tests" / "test_care_line_dispatch.py").read_text(encoding="utf-8")
+    assert "require_copy_capacity" in backfill
+    assert "require_copy_capacity" in story
+    assert "require_copy_capacity" in dispatch_site
+    assert "require_copy_capacity" in care_dispatch
 
 
-def test_validation_entrypoints_have_no_temp_fallback():
-    validation = (ROOT / "scripts" / "validation_profiles.py").read_text(encoding="utf-8")
-    wrapper = (ROOT / "scripts" / "run_pytest_safe.ps1").read_text(encoding="utf-8")
-    assert "DISPATCHES_TEST_ROOT" in validation
-    assert "DISPATCHES_TEST_ROOT" in wrapper
-    assert "tempfile.gettempdir" not in validation
-    assert "$env:TEMP" not in wrapper
+def _recorded_fixture(tmp_path, *, setup_complete: bool, call_outcome: str):
+    basetemp = tmp_path
+    root = basetemp / "fixture"
+    root.mkdir()
+    reports = {
+        phase: SimpleNamespace(outcome=("passed" if phase != "call" else call_outcome), wasxfail=False)
+        for phase in ("setup", "call", "teardown")
+    }
+    registry = FixtureRunRegistry()
+    registry.basetemp = basetemp
+    registry.basetemp_identity = _identity(basetemp)
+    record = FixtureRun(
+        root=root,
+        nodeid="tests/test_storage_admission.py::fixture",
+        basetemp=basetemp,
+        setup_complete=setup_complete,
+        reports=reports,
+        root_identity=_identity(root),
+        ancestor_identities=((basetemp, _identity(basetemp)), (root, _identity(root))),
+        cleanup=shutil.rmtree,
+    )
+    registry.records.append(record)
+    return registry, root
+
+
+def test_completed_fixture_is_cleaned(tmp_path):
+    registry, root = _recorded_fixture(tmp_path, setup_complete=True, call_outcome="passed")
+    registry.finalize()
+    assert not root.exists()
+
+
+def test_failed_fixture_is_retained(tmp_path):
+    registry, root = _recorded_fixture(tmp_path, setup_complete=True, call_outcome="failed")
+    registry.finalize()
+    assert root.exists()
+
+
+def test_setup_incomplete_fixture_is_retained(tmp_path):
+    registry, root = _recorded_fixture(tmp_path, setup_complete=False, call_outcome="passed")
+    registry.finalize()
+    assert root.exists()

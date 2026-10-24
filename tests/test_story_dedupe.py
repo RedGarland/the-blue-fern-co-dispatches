@@ -7,7 +7,8 @@ import pytest
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 from bluefern_dispatches.cascadia_render import render_cascadia_edition
 from scripts.run_gaza_dispatch import run_gaza_dispatch
-from fixture_lifecycle import register_fixture_root
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_copy_capacity, require_test_root_capacity
 
 
 @pytest.fixture()
@@ -15,8 +16,11 @@ def story_root(request, tmp_path_factory):
     repo = Path(__file__).resolve().parents[1]
     root = tmp_path_factory.mktemp("story-dedupe")
     register_fixture_root(request, root)
+    require_copy_capacity(root, repo / "assets")
     shutil.copytree(repo / "assets", root / "assets")
+    require_test_root_capacity(root, projected_bytes=8192)
     (root / "data" / "records").mkdir(parents=True)
+    mark_fixture_setup_complete(request, root)
     return root
 
 @pytest.fixture()

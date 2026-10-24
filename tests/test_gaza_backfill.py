@@ -6,17 +6,21 @@ import uuid
 from pathlib import Path
 
 from scripts import backfill_gaza_dispatch, dispatches_status
-from fixture_lifecycle import register_fixture_root
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_copy_capacity, require_test_root_capacity
 
 
 def _make_root(request, tmp_path_factory) -> Path:
     repo = Path(__file__).resolve().parents[1]
     root = tmp_path_factory.mktemp("gaza-backfill")
     register_fixture_root(request, root)
+    require_copy_capacity(root, repo / "assets")
     shutil.copytree(repo / "assets", root / "assets")
+    require_test_root_capacity(root, projected_bytes=8192)
     (root / "data" / "records").mkdir(parents=True, exist_ok=True)
     for name in ("dispatches", "editions", "sources", "records", "curation_decisions", "detail_packages", "story_memory"):
         (root / "data" / "records" / f"{name}.json").write_text("[]", encoding="utf-8")
+    mark_fixture_setup_complete(request, root)
     return root
 
 

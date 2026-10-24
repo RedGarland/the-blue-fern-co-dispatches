@@ -65,7 +65,8 @@ class FixtureRunRegistry:
             if _is_redirect(self.basetemp):
                 raise ValueError(f"pytest basetemp must not be a redirect: {self.basetemp}")
             self.basetemp_identity = _identity(self.basetemp)
-            require_test_root_capacity(self.basetemp)
+        assert self.basetemp is not None
+        require_test_root_capacity(self.basetemp)
         lexical_root = root.absolute()
         if not lexical_root.is_dir() or _is_redirect(lexical_root):
             raise ValueError(f"fixture root must be a real directory created before registration: {root}")

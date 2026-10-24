@@ -2,13 +2,15 @@
 import shutil
 import re
 import subprocess
-import uuid
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 import bluefern_dispatches.generator as generator
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_copy_capacity, require_test_root_capacity
+
 from bluefern_dispatches.generator import (
     BASE_URL,
     CASCADIA_LOGO_ASSET,
@@ -89,8 +91,20 @@ def add_cascadia_dispatch_edition(work: Path, edition_date: str) -> None:
     )
 
 
+def registered_site_work_root(request, tmp_path_factory, prefix: str = "dispatches-site") -> Path:
+    repo = Path(__file__).parent.parent
+    work = tmp_path_factory.mktemp(prefix)
+    register_fixture_root(request, work)
+    require_copy_capacity(work, repo / "assets")
+    copy_repo_assets(repo, work)
+    require_test_root_capacity(work, projected_bytes=16384)
+    mark_fixture_setup_complete(request, work)
+    return work
+
+
 def copy_repo_assets(repo: Path, work: Path) -> None:
     assets_root = repo / "assets"
+    require_copy_capacity(work.parent, assets_root)
     work_assets = work / "assets"
     work_assets.mkdir(parents=True, exist_ok=True)
     for asset in assets_root.iterdir():
@@ -100,6 +114,7 @@ def copy_repo_assets(repo: Path, work: Path) -> None:
 
 def copy_care_line_data(repo: Path, work: Path) -> None:
     source_root = repo / "data" / "dispatches" / "care-line"
+    require_copy_capacity(work, source_root)
     target_root = work / "data" / "dispatches" / "care-line"
     shutil.copytree(source_root, target_root)
 
@@ -314,10 +329,8 @@ def test_favicon_assets_are_copied_and_linked_from_public_html(built_site):
         assert_favicon_links(read(page))
 
 
-def test_build_adds_favicons_to_existing_public_edition_html(monkeypatch):
-    repo = Path(__file__).parent.parent
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
-    copy_repo_assets(repo, work)
+def test_build_adds_favicons_to_existing_public_edition_html(monkeypatch, request, tmp_path_factory):
+    work = registered_site_work_root(request, tmp_path_factory, "dispatches-favicon")
     old_edition = work / "output" / "site" / "cascadia" / "editions" / "2026-04-26"
     old_edition.mkdir(parents=True)
     (old_edition / "index.html").write_text(
@@ -499,10 +512,8 @@ def test_detention_watch_links_have_no_malformed_paths(built_site):
         assert "/cascadia/cascadia/detention-watch" not in html
 
 
-def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch):
-    repo = Path(__file__).parent.parent
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
-    copy_repo_assets(repo, work)
+def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch, request, tmp_path_factory):
+    work = registered_site_work_root(request, tmp_path_factory, "dispatches-synthetic")
     stale_daily = work / "output" / "site" / "cascadia" / "editions" / "2026-05-04"
     stale_daily.mkdir(parents=True)
     (stale_daily / "index.html").write_text("<html>daily</html>", encoding="utf-8")
@@ -4295,10 +4306,8 @@ def test_gaza_public_link_consistency_blocks_dead_no_update_edition_link(tmp_pat
     assert any("gaza no-update date rendered as clickable edition" in error for error in errors)
 
 
-def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
-    repo = Path(__file__).parent.parent
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
-    copy_repo_assets(repo, work)
+def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch, request, tmp_path_factory):
+    work = registered_site_work_root(request, tmp_path_factory, "dispatches-cascadia")
     add_cascadia_dispatch_edition(work, "2026-05-10")
     monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-10")
 

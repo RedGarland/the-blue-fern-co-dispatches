@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T034451-0700-r11-034112",
+  "scheduled_for": "2026-10-24T03:44:51-07:00",
+  "started_at": "2026-10-24T03:41:12-07:00",
+  "completed_at": "2026-10-24T03:44:13.368-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T02:45:31-07:00",
+    "end": "2026-10-24T03:44:13.368-07:00",
+    "basis": "Prior watch completion as independently verified in ops/watch-ledger latest preceding 2026-10-24 02:44:51 scheduled heartbeat. Only demonstrably new publication, event, or new substantive change within the window qualifies; undated updates excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary daily collector and publisher remain authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Read successfully; top listed Gaza/OCHA updates dated 19 Oct 2026, no newly listed update during window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Read successfully; no newly dated Gaza health report in window; latest listed regional item predates window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct fetch failed with 400 Internal Error: timeout; regional healthcare and medical evacuation direct checking unavailable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 24 2026 Saturday early morning casualties attacks civilians Reuters AP updates",
+      "site:reuters.com/world/middle-east/ Gaza \"October 24, 2026\" aid ceasefire civilians",
+      "site:apnews.com/article/ Gaza \"October 24, 2026\" strike bread aid",
+      "site:wfp.org Gaza \"24 October 2026\" food bakery aid crossing",
+      "site:unrwa.org Gaza \"24 October 2026\" displacement shelter aid",
+      "site:unicef.org Gaza \"24 October 2026\" water health children",
+      "site:icrc.org Gaza \"October 24, 2026\" prisoner hostages medical evac",
+      "site:msf.org Gaza \"24 October 2026\" hospital ambulance fuel",
+      "site:palestinercs.org Gaza \"24/10/2026\" ambulance medevac",
+      "site:reliefweb.int Gaza \"24 Oct 2026\" humanitarian report crossings health displacement",
+      "site:un.org Gaza \"23 October 2026\" overnight aid ceasefire briefing",
+      "Gaza late October 23 early October 24 2026 new \"Saturday\" \"Gaza\" ceasefire strike hospital food water crossing"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food/water access",
+      "healthcare disruptions",
+      "hospital functionality and capacity",
+      "ambulances, medical transport and evacuations",
+      "fuel and medical supplies",
+      "infrastructure damage",
+      "crossings",
+      "detention and hostages",
+      "ceasefire and negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "previously_known_or_excluded": [
+      {
+        "description": "OCHA 15 October humanitarian report posted 19 October",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Earlier reporting period; not an in-window development."
+      },
+      {
+        "description": "Reuters 19 October WFP food assistance cuts",
+        "url": "https://www.reuters.com/world/middle-east/world-food-programme-cuts-aid-500000-palestinians-gaza-citing-funding-shortages-2026-10-19/",
+        "reason": "Previously established; no verified newly dated substantive change."
+      },
+      {
+        "description": "23 October reported bread shortages and Al-Masdar control-line movement",
+        "url": null,
+        "reason": "Already captured by previous 23 October recall heartbeats; no verified new update."
+      },
+      {
+        "description": "Previously discussed 23 October AP rolling Gaza strike report",
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Neither new in-window timing nor reported civilian impact verified; excluded."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "observed": "Direct request timed out (fetch tool reported 400 Internal Error); previous watch observed HTTP 502.",
+        "impact": "Regional hospital, medical-evacuation and health-capacity reporting not directly verifiable in this pass despite accessible WHO global page and OCHA."
+      }
+    ],
+    "finding_assessment": "OCHA OPT and WHO explicitly checked first, followed by exactly 12 targeted searches. No verifiably new, sourced, in-Gaza, nonduplicate development detected since prior completed hourly watch. Most search results were older or tangential.",
+    "limitations": [
+      "Search indexing and source reporting lag can conceal emerging incidents.",
+      "A source outage is not evidence of no healthcare developments.",
+      "No publication, approval, production changes, schedule changes or automation changes."
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T024451-0700-r11.json",
+      "completed_at": "2026-10-24T02:45:31-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false
+  }
+}

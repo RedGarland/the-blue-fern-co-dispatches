@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T144313-0700-r11-kingston1",
+  "scheduled_for": "2026-10-24T14:45:22-07:00",
+  "started_at": "2026-10-24T14:43:13-07:00",
+  "completed_at": "2026-10-24T14:45:47.345-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T13:47:46-07:00",
+    "end": "2026-10-24T14:45:47.345-07:00",
+    "basis": "Since the latest verified hourly Care Line watch completion, including previously unrecorded late-reported concrete access decisions; source announcement itself may predate the window."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261007-ny-kingston-childrens-home-residential-treatment-announced-closure",
+      "canonical_source_url": "https://www.timesunion.com/hudsonvalley/news/article/childrens-home-kingston-closing-january-2027-22484538.php",
+      "title": "Children’s Home of Kingston to close programs in January",
+      "publisher": "Times Union (Hudson Valley)",
+      "exact_supporting_passage": "The facility notified state agencies on Oct. 7 that it would voluntarily close, with a projected date in January.",
+      "source_published_date": "2026-10-22",
+      "state": "NY",
+      "city": "Kingston",
+      "county": "Ulster",
+      "territory": null,
+      "event_type": "announced_youth_residential_behavioral_health_treatment_closure",
+      "service_line": "residential_behavioral_health_and_therapeutic_youth_care",
+      "access_consequences": "New York OCFS and Education Department confirmed an October 7 voluntary-closure notification for the 26 Grove Street program, with an anticipated January 2027 closure. About 18 youths in intensive residential treatment and educational programs require continuity planning/alternative placements. Actual closure and specific effective day are not verified. The operator described regulatory work as ongoing.",
+      "affected_population": "About 18 boys ages 10–22 with trauma, emotional or behavioral challenges in residential and day programs; website describes residential capacity for up to 24 youths.",
+      "effective_date": null,
+      "announcement_date": "2026-10-07",
+      "confidence": "moderate_high_for_announced_closure; not_yet_effective",
+      "source_role": "strong_local_reporting_citing_NY_OCFS_and_NYSED_confirmations_plus_provider_program_description",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "scope": "Bounded supplementary healthcare-access recall for U.S., DC and territories; authoritative production Care Line collector unchanged.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "No October 24 listings. October 23 My Families Healthcare (CA, 758151), 1ST AIDE HOME HEALTH AGENCY (CA, 559673) and Moonlight Home Health Care Inc (OH, 369006) already in earlier watches."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital ED temporary closure and ambulance diversion Oct 24",
+      "maternity/L&D suspension Oct 24",
+      "rural ED or hospital closure Oct 24",
+      "ground ambulance shutdown Oct 24",
+      "air-medical base closure Oct 24",
+      "dialysis center closure Oct 24",
+      "Becker's Oct 24 hospital closure",
+      "local news clinic closure Oct 24",
+      "ED suspension or restoration Oct 24",
+      "psychiatric/behavioral care service loss Oct 24",
+      "oncology and primary care closure Oct 24",
+      "ambulance service closures Oct 23–24"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T134539-0700-r11-6d3e",
+      "previous_completed_at": "2026-10-24T13:47:46-07:00",
+      "verified_read": true,
+      "intervening_watches": "Compared 12:45 and 13:45 watch files identified from branch commit comparison; neither recorded the Kingston closure."
+    },
+    "source_notes": "Times Union report dated October 22 confirmed agency notice dated October 7; reporter quotes official NY OCFS and NYSED responses. Provider site independently establishes that residential program delivers intensive therapeutic treatment for youths with trauma, mental illness and behavioral needs. This is a late-reported recall candidate newly found by this check, NOT a newly occurring closure or a definite January effective date.",
+    "other_checked_sources": "Provider residential treatment program: https://www.chkingston.org/programs/residential-program/ .",
+    "exclusions": "Discarded old closures (Roseland maternity Oct 31 previously announced Sep 30; September air-medical base loss; old rural hospital and behavioral-unit closures), Greene County IL ambulance funding dispute without enacted access loss, unrelated reopenings and generic scheduled office closures; CMS Oct 23 notices excluded as already logged.",
+    "limitations": "One multi-domain local-news search returned robots.txt blocking for wjhl.com; other targeted searches and official CMS worked. DEGRADED rather than FAILED per source/search-failure handling. Exact prior-day article publication time and final program closure day unknown. Bounded search is not comprehensive national monitoring.",
+    "controls": "No editorial approval, publication, production collector operation, schedule change, or task disabling."
+  }
+}

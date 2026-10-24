@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T044950-0700-r11-a7c624",
+  "scheduled_for": "2026-10-24T04:45:54-07:00",
+  "started_at": "2026-10-24T04:49:50-07:00",
+  "completed_at": "2026-10-24T04:51:58.056-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T03:48:01-07:00",
+    "end_at": "2026-10-24T04:51:58.056-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completed_at of most recent verified preceding hourly Food Line watch heartbeat on ops/watch-ledger."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value Food Line recall only; production nationwide collection remains authoritative.",
+    "12 targeted web searches completed with no reported search errors, using recency=2 days and explicit October 23-24, 2026 terms; all four requested miss classes covered.",
+    "Only/sole/last/full-service grocery closure or disaster: recent-window search results did not establish a new qualifying disruption; older incidents and prospective closures excluded.",
+    "Emergency food-distribution cancellation from storm/flood/fire/outage/facility damage: no newly verified disruption in the bounded window; older September 25 El Paso storm closure and October 2 canceled distribution excluded.",
+    "Abrupt food pantry or food bank closure / major reduction: no qualifying new verified disruption in the bounded window; older and routine short scheduled closures excluded.",
+    "Official SNAP/WIC assistance interruption with immediate access consequence: no qualifying new interruption identified. October 23 USDA SNAP EBT proposed security rule does not interrupt benefits, and October 22 Oregon SNAP-Ed education program closure predates window and does not itself establish immediate benefit interruption.",
+    "Search indexing may lag overnight and absence of matched reports does not prove absence of disruptions.",
+    "No approvals, publication, schedule or production collector changes, or task disabling."
+  ]
+}

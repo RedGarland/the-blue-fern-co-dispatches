@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T164225-0700-r11-164325",
+  "scheduled_for": "2026-10-24T16:42:25-07:00",
+  "started_at": "2026-10-24T16:42:25-07:00",
+  "completed_at": "2026-10-24T16:44:03.312-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T15:46:17.461-07:00",
+    "end": "2026-10-24T16:44:03.312-07:00",
+    "basis": "From last independently read durable watch heartbeat completion through this observed run; discovery timestamps alone do not establish novelty."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only. The production publisher/collector remains authoritative. No publication, approval, schedule, or automation changes.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T154451-0700-r11-154340.json",
+      "completed_at": "2026-10-24T15:46:17.461-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "GitHub connector fetch_file on ops/watch-ledger"
+    },
+    "source_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest visible updates dated 19 October 2026 (Gaza situation report and impact snapshot); none new in observation window."
+      },
+      {
+        "publisher": "WHO (global)",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new dated Gaza-specific health, hospital, ambulance, or medical-evacuation change identified in-window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, direct regional verification unavailable."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Timed out (400 fetch timeout); no regional report directly verifiable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza Oct 24 2026 late afternoon 24 October 2026 22:00 GMT civilians killed latest",
+      "site:reuters.com/world/middle-east/ Gaza October 24 2026 23:00 UTC ceasefire killed civilians",
+      "site:apnews.com Gaza October 24 2026 updated afternoon Israeli fire casualties",
+      "site:english.wafa.ps/Pages/Details/ Gaza October 24 2026 evening injuries attacks after 17:00",
+      "site:aa.com.tr/en/middle-east Gaza 24 October 2026 late evening soldiers displaced homes",
+      "site:aljazeera.com/news/2026/10/24/ Gaza killed strikes medical hospital ceasefire",
+      "site:wfp.org/news Gaza October 24 2026 aid food supply fuel ceasefire",
+      "site:unicef.org/press-releases Gaza October 24 2026 children water health",
+      "site:icrc.org/en Gaza 24 October 2026 hostages detainees medical access",
+      "site:msf.org Gaza October 24 2026 ambulance hospital medical fuel attacks",
+      "site:unrwa.org Gaza October 24 2026 food shelter aid crossings",
+      "\"Gaza\" \"October 24, 2026\" \"afternoon\" killed injured shelters crossing live reports"
+    ],
+    "classes_checked": [
+      "civilian casualties and military activity with documented civilian impact",
+      "displacement and shelter",
+      "aid access, humanitarian crossings and deliveries",
+      "food and water access",
+      "healthcare and hospital function, ambulances, transport, fuel and medical evacuations",
+      "infrastructure damage",
+      "detention and hostages",
+      "ceasefire and negotiation changes"
+    ],
+    "excluded_context": [
+      {
+        "source": "OCHA OPT humanitarian situation report dated 15 October, issued 19 October 2026",
+        "reason": "Prior-period baseline, not in-window publication or development.",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026"
+      },
+      {
+        "source": "WAFA 24 October morning casualty report",
+        "reason": "Already examined and excluded as nonnew in immediately preceding verified heartbeat.",
+        "url": "https://english.wafa.ps/Pages/Details/176219"
+      },
+      {
+        "source": "Anadolu 20 October Gaza casualties",
+        "reason": "Predates watch window.",
+        "url": "https://mobile.aa.com.tr/en/middle-east/israeli-attacks-kill-7-palestinians-including-2-children-in-gaza/4094066"
+      },
+      {
+        "source": "Older AP/Reuters, UNICEF, WFP, ICRC, MSF and UNRWA material",
+        "reason": "Search matches were older reports or lacked verifiable in-window publication/event changes."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "endpoint": "https://www.emro.who.int/opt/",
+        "observation": "HTTP 502",
+        "impact": "Direct Gaza regional health verification incomplete."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean situation reports",
+        "endpoint": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "observation": "Fetch timeout",
+        "impact": "Latest regional reports not directly checked."
+      }
+    ],
+    "assessment": "OCHA OPT and WHO checked first. Exactly 12 additional targeted web searches conducted, each using a one-day recency filter. No traceable, nonduplicate Gaza development with verified event or material update after the previous heartbeat completion was identified. WHO regional access degraded, so finding count is not evidence that no incidents occurred.",
+    "scheduled_for_basis": "Runtime invocation timestamp; a separate nominal schedule occurrence time was not supplied to this execution.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

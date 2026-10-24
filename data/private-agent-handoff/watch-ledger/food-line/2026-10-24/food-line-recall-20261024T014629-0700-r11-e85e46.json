@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T014629-0700-r11-e85e46",
+  "scheduled_for": "2026-10-24T01:45:54-07:00",
+  "started_at": "2026-10-24T01:46:29-07:00",
+  "completed_at": "2026-10-24T01:47:27-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T00:47:20-07:00",
+    "end_at": "2026-10-24T01:47:27-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From the latest verified preceding hourly supplementary watch heartbeat completed_at to the end of this watch. Search queries included October 23-24 reports and a 2-day recency filter on final searches to allow indexing lag; older events were excluded."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; the production nationwide Food Line collector remains authoritative.",
+    "Exactly 12 targeted web searches completed successfully: three sole/last/full-service grocery loss queries, three emergency distribution weather/fire/outage cancellation queries, three abrupt pantry or food-bank closure/reduction queries, and three SNAP/WIC/EBT interruption queries (some categories overlap). No search errors.",
+    "No new qualifying food-access disruption published or verified in the observation window. Retrieved apparent matches were older events (e.g., September 2026 Spencer NY grocery fire and El Paso TX food bank storm damage, or October 2025 SNAP shutdown reports), unrelated reopenings, or resource/promotional content; excluded.",
+    "The previously noted Utah Food Bank Monument Valley Pantry social notice remained unverified as to publication/closure date and was not promoted into a new finding. This run did not newly establish its recency.",
+    "Search-index freshness and very short observation window constrain recall; this is not proof of zero nationwide events.",
+    "No approval, publication, production collector modification, schedule change, or task disabling."
+  ]
+}

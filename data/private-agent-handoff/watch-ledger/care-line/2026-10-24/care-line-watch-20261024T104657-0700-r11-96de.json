@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T104657-0700-r11-96de",
+  "scheduled_for": "2026-10-24T10:45:22-07:00",
+  "started_at": "2026-10-24T10:46:57-07:00",
+  "completed_at": "2026-10-24T10:48:25.067-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T09:46:11-07:00",
+    "end": "2026-10-24T10:48:25.067-07:00",
+    "basis": "Since preceding verified hourly supplementary Care Line watch completion; preceding publication dates considered for late-indexed recall candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S., District of Columbia, and territories access-loss/restoration recall. Primary national Care Line production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "result": "No October 24 entries; October 23 provider terminations (My Families Healthcare CA 758151, 1ST AIDE HOME HEALTH AGENCY CA 559673, Moonlight Home Health Care Inc OH 369006) and earlier notices already recorded."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "U.S. hospital emergency department temporary shutdown/reopening October 24",
+      "Maternity and labor delivery unit interruption October 23–24",
+      "Rural ambulance/EMS station closure or suspension October 24",
+      "Air-medical base closure October 23–24",
+      "Psychiatric/behavioral inpatient closure October 24",
+      "Dialysis center abrupt closure October 23–24",
+      "Oncology infusion/treatment interruption October 23–24",
+      "Rural emergency hospital suspension October 24",
+      "Primary-care/urgent-care abrupt closure October 24",
+      "Essential emergency department reopening October 24",
+      "State/local government hospital closure/suspension notices October 24",
+      "Puerto Rico, Guam, U.S. Virgin Islands healthcare facility suspension October 23–24"
+    ],
+    "duplicate_check": {
+      "preceding_run_id": "care-line-watch-20261024T094507-0700-r11-cms0",
+      "preceding_completed_at": "2026-10-24T09:46:11-07:00",
+      "source_branch": "ops/watch-ledger",
+      "source_directory": "data/private-agent-handoff/watch-ledger/care-line/2026-10-24",
+      "previously_recorded_cases": "October 23 CMS provider terminations, Dennys River Ambulance (ME), Princeton urgent-care (KY), Vista Medical Center East (IL), Rehabilitation Hospital of Rhode Island, Carle Normal (IL), Massachusetts service reductions."
+    },
+    "findings_note": "No newly verified and nonduplicate qualifying healthcare-access event emerged from the bounded research. Search results were overwhelmingly old, overseas or without concrete service change.",
+    "exclusions": "Excluded older events, overseas stories, predictions or proposed changes without effective access consequences, business-only material, opinion, and earlier watch cases.",
+    "limitations": "Targeted search results often returned older material despite recency constraints. Not an exhaustive national survey; no source/tool failures identified in the completed 12 searches. CMS Public Notices and preceding ledger heartbeat were accessible.",
+    "controls": "No approval, publication, production collection changes, schedule modifications, or task disabling."
+  }
+}

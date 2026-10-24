@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T134403-0700-r11-7c2a90",
+  "scheduled_for": "2026-10-24T13:45:54-07:00",
+  "started_at": "2026-10-24T13:44:03-07:00",
+  "completed_at": "2026-10-24T13:45:57.500-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T12:44:35-07:00",
+    "end_at": "2026-10-24T13:45:57.500-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last persisted supplementary Food Line run completed 2026-10-24T12:44:35-07:00. Only newly reported or occurring disruptions since that checkpoint qualify. A one- to two-day search-engine retrieval lookback was used to mitigate indexing delays; crawl and result freshness do not establish event freshness."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; the nationwide production Food Line collector remains authoritative.",
+    "12 targeted web searches completed (limit 12) without query execution failures: 4 sole/last/full-service grocery loss/fire/closure; 3 storm, flood, fire or outage cancellations of emergency food distributions; 3 abrupt food pantry/food bank closure or access reduction; 2 official SNAP/WIC/EBT interruption searches. Queries targeted October 24, 2026 and recent agency or local reporting.",
+    "No newly verified U.S. food-access disruption in any of the four qualifying classes was established within the observation window.",
+    "Excluded outdated or nonqualifying results including the September 2026 Spencer, NY only-grocery fire; October 7 announcement of an October 10 Prodisee Pantry canceled Stockton, AL distribution; old Ruby's Pantry closures; and legacy SNAP shutdown/EBT outage articles.",
+    "An October 24 Kauaʻi Now daily Hurricane Lowell recovery digest described longstanding September storm recovery and service restoration, but did not establish a newly canceled food distribution or other qualifying access disruption during this window.",
+    "The previously noted Utah Food Bank Monument Valley Pantry flood notice could not be established as newly published in the observation window; it was not promoted into findings.",
+    "No approval, publication, production collector modification, schedule change, or disabling. Successful no-findings run requires no user notification."
+  ]
+}

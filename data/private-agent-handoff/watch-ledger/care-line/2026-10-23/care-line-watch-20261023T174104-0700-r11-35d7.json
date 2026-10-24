@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T174104-0700-r11-35d7",
+  "scheduled_for": "2026-10-23T17:45:22-07:00",
+  "started_at": "2026-10-23T17:41:04-07:00",
+  "completed_at": "2026-10-23T17:41:49-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T16:46:20-07:00",
+    "end": "2026-10-23T17:41:49-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed at 16:46:20 PDT; included newly indexed recall reports while rejecting already recorded items."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S. and U.S.-territory healthcare-access recall check; authoritative production collector unchanged.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "previously_recorded_notices_excluded": [
+        "My Families Healthcare (CA, CCN 758151)",
+        "1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673)",
+        "Moonlight Home Health Care Inc (OH, CCN 369006)"
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital emergency department closure or diversion",
+      "maternity/labor and delivery suspension",
+      "rural hospital emergency service loss",
+      "psychiatric/behavioral health admission suspensions",
+      "dialysis center closures",
+      "oncology treatment and infusion service disruption",
+      "ambulance service or base closure",
+      "air-medical base closure",
+      "primary-care clinic closure",
+      "emergency-department reopening",
+      "healthcare access changes in U.S. territories",
+      "official U.S. healthcare service suspension notices"
+    ],
+    "prior_findings_excluded": [
+      "Vista Medical Center East (IL) anesthesia suspension",
+      "Rehabilitation Hospital of Rhode Island (RI) temporary closure",
+      "Carle Normal on College (IL) temporary clinic closure",
+      "2026-10-23 CMS notices",
+      "Doylestown Hospital ED sprinkler incident",
+      "Mass General Brigham Home Hospital and Mass Eye and Ear announced service reductions"
+    ],
+    "results": "No new qualifying, source-confirmed, nonduplicate access changes identified in the defined window. Returned coverage included historical, foreign, proposed-only and irrelevant results, which were excluded.",
+    "limitations": "Targeted web discovery is not exhaustive; publication indexing lag can expose older events during future recall watches. No material access error observed for CMS listing or targeted searches.",
+    "execution_controls": "No approval, publication, schedule change, or task disabling."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T004953-0700-r11-dennys1",
+  "scheduled_for": "2026-10-24T00:45:22-07:00",
+  "started_at": "2026-10-24T00:49:53-07:00",
+  "completed_at": "2026-10-24T00:53:11.000-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T23:48:25.579-07:00",
+    "end": "2026-10-24T00:53:11.000-07:00",
+    "basis": "From completion of latest independently verified prior hourly supplementary watch. Include late-indexed earlier-dated reporting only when the underlying event is new to the ledger; earlier publication is not treated as an event that occurred in this hour."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-me-dennys-river-ambulance-end-2026-11-30",
+      "canonical_source_url": "https://www.wabi.tv/2026/10/23/longtime-emts-retirement-ends-maines-only-all-volunteer-ambulance-service/",
+      "title": "Dennys River Ambulance Service to cease operations November 30 after volunteer retirements",
+      "publisher": "WABI-TV",
+      "exact_supporting_passage": "The Dennys River Ambulance Service will stop operating on Nov. 30 due to a lack of volunteers.",
+      "source_published_date": "2026-10-23",
+      "state": "Maine",
+      "city": "Dennysville",
+      "county": "Washington County",
+      "territory": null,
+      "event_type": "ambulance_service_closure",
+      "service_line": "Emergency medical services; 911 ambulance response and transport",
+      "access_consequences": "Local volunteer ambulance provider will cease service; nearby Lubec and Eastport services are identified as alternatives, with potential longer ambulance response and transport times. Exact successor coverage arrangements are unconfirmed.",
+      "affected_population": "Residents of Dennysville and Pembroke and the Edmund, Marion, and Cathance townships in Washington County, Maine",
+      "effective_date": "2026-11-30",
+      "announcement_date": "2026-10-23",
+      "confidence": "high",
+      "source_role": "local_reporting",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "source_published_time": "2026-10-23T18:00:00-04:00",
+      "observation_note": "Original local report published 15:00 PDT Oct. 23, before the prior hourly interval, but discovered and checked against Oct. 23 supplementary ledger in this recall; event is a firm future cessation decision, not yet an operational closure."
+    }
+  ],
+  "coverage_notes": {
+    "scope": "Supplementary high-value healthcare-access recall across U.S. states and territories only. Production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "previously_recorded": "October 23 My Families Healthcare (CA), 1ST AIDE HOME HEALTH AGENCY (CA), Moonlight Home Health Care Inc (OH); October 22 notices previously recorded."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital emergency department closure or suspension",
+      "maternity labor and delivery service loss",
+      "rural hospital emergency service loss",
+      "behavioral or psychiatric inpatient suspension",
+      "dialysis clinic closure",
+      "oncology or infusion closure",
+      "ambulance EMS cessation",
+      "air medical helicopter base suspension",
+      "urgent and primary-care abrupt closure",
+      "concrete hospital ED restoration",
+      "Puerto Rico and U.S. territory hospital emergencies",
+      "state health department service suspension notices"
+    ],
+    "prior_ledger_verified": "2026-10-23T23:48:25.579-07:00 completion; Oct 23 ledger directory contained 24 files. All 10:00-23:00 hourly entries checked for positive findings; no prior Dennys River finding was present.",
+    "candidate_exclusions": "Older, non-U.S., speculative, proposed-only, and previously captured closure stories excluded. Oct 23 CMS notices excluded as already logged.",
+    "source_limitations": "WABI original report accessible; no direct county closure notice obtained. WABI publication precedes the search interval; discovery is a recall, not a new-hour incident. Reported November 30 closure is future-effective, not a confirmed completed shutdown. Web search index surfaces stale and out-of-country results.",
+    "controls": "No review approval, publication, schedule modification, or task disabling performed."
+  }
+}

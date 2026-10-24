@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T004451-0700-r11",
+  "scheduled_for": "2026-10-24T00:44:51-07:00",
+  "started_at": "2026-10-24T00:47:29-07:00",
+  "completed_at": "2026-10-24T00:49:55.917-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T23:44:07.390-07:00",
+    "end": "2026-10-24T00:49:55.917-07:00",
+    "basis": "Start is completed_at of the latest independently retrieved Gaza Source Watch heartbeat on ops/watch-ledger. End is this execution's completion. Newness requires a verifiable in-window event or publication, or demonstrably new substantive details; rolling updates and older incidents are not assumed new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production remains authoritative. No publisher, approval, or public-content changes.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; homepage's latest Gaza publications dated 19 Oct 2026."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed report dated 19 Oct 2026; no newly dated report in window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502; regional WHO reporting not directly accessible."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, but no newly dated Gaza health event in the requested window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 24 2026 early Saturday overnight civilian casualties airstrike ceasefire Reuters AP",
+      "site:unrwa.org Gaza 23 October 2026 midnight 24 update displacement aid",
+      "site:wfp.org Gaza October 23 24 2026 bakeries bread flour trucks",
+      "site:unicef.org Gaza October 23 24 2026 water infrastructure children health",
+      "site:icrc.org Gaza October 23 24 2026 detention hostages medical evacuation",
+      "site:reliefweb.int Gaza October 24 2026 WHO OCHA hospital crossing humanitarian latest",
+      "October 24 2026 Gaza Israel ceasefire overnight aid bakeries hospitals civilians Saturday published",
+      "October 23 2026 Friday night Gaza new strike kills civilians Associated Press Saturday October 24",
+      "site:reuters.com/world/middle-east/ Gaza October 24 2026 truce crossing aid",
+      "site:palestinercs.org 24/10/2026 Gaza ambulance hospitals",
+      "site:un.org 23 October 2026 Gaza press briefing humanitarian aid",
+      "Gaza 24 October 2026 overnight displaced families Israeli control line bakeries flour new report"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food/water access",
+      "healthcare and hospital/ambulance/transport/fuel/medevac/functioning capacity",
+      "civilian infrastructure",
+      "crossings",
+      "detention/hostages",
+      "ceasefire/negotiations",
+      "military operations affecting civilians"
+    ],
+    "excluded_or_previously_known": [
+      {
+        "description": "AP rolling October 23 Mideast report cites three fatalities from two strikes in southern Gaza and Gaza City",
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Incidents occurred Friday; exact publication/update and event times relative to the prior 23:44 PDT heartbeat are not established. Civilian status is also not established. Do not upgrade a recycled Friday report to a new hourly finding."
+      },
+      {
+        "description": "Bread and commercial-bakery closures/shortages",
+        "url": "https://www.middleeasteye.net/news/gaza-bakeries-shut-israel-blocks-flour-shipments",
+        "reason": "Same class as already recorded October 23 AP bread-shortage candidate; no verified distinctly new impact or in-window source time."
+      },
+      {
+        "description": "Al-Masdar reported shift of control-line markers and demolition near residential property",
+        "url": null,
+        "reason": "Previously recorded October 23 watch candidate, without verified new independent change."
+      },
+      {
+        "description": "West Bank Hebron attacks and restrictions",
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Outside the in-Gaza remit even though prominent in fresh search results."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP 502 Bad Gateway",
+        "impact": "Direct regional health, hospital, medical-evacuation and capacity verification incomplete; WHO global and OCHA OPT remain accessible."
+      }
+    ],
+    "finding_assessment": "Twelve targeted searches and initial OCHA OPT/WHO checks found no independently verified, source-traceable, substantively new Gaza development with support that it arose since the prior hourly check. Older articles, rolling reports, and previously known humanitarian impacts excluded.",
+    "limitations": [
+      "Search indexing and syndicated reporting may omit new developments; zero verified findings is not evidence no event occurred.",
+      "AP rolling story does not provide precise per-item update times or confirmed civilian status.",
+      "WHO regional 502 persisted across checks; DEGRADED is source-coverage-specific rather than a total watch failure."
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-23/gaza-source-watch-20261023T234053-0700-r11-9c4f.json",
+      "completed_at": "2026-10-23T23:44:07.390-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false
+  }
+}

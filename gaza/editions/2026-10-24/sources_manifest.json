@@ -1,0 +1,54 @@
+[
+  {
+    "source_record_id": "gaza-2026-10-24-wafa-176200",
+    "source_id": "gaza-2026-10-24-wafa-176200",
+    "title": "WAFA report (source title not captured)",
+    "url": "https://english.wafa.ps/Pages/Details/176200",
+    "canonical_url": "https://english.wafa.ps/Pages/Details/176200",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "original_publisher_url_present_html_canonical_not_verified",
+    "wrapper_url": null,
+    "publisher": "WAFA",
+    "published_at": "2026-10-23",
+    "retrieved_at": "2026-10-24T22:35:45Z",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "WAFA reported two Palestinians killed and others injured in an October 23 strike in Al-Nasr, western Gaza City.",
+    "source_type": "manual",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Source record retained from a same-day recovery evidence review captured at 2026-10-24T22:35:45Z; the displayed publication date is preserved without inferring a timezone or origin fetch.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-10-24",
+    "used_in_story_ids": [
+      "gaza-story-2026-10-24-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 36,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|wafa|two palestinians killed and others injured in strike in al nasr western gaza city|conflict|2026-10-23",
+    "title_fingerprint": "two palestinians killed and others injured in strike in al nasr western gaza city",
+    "claim_fingerprint": "gaza|wafa|two palestinians killed and others injured in strike in al nasr western gaza city|conflict|2026-10-23",
+    "editorial_title": "Two Palestinians killed and others injured in strike in Al-Nasr, western Gaza City",
+    "source_title_status": "original source title not captured; title is explicitly editorial"
+  }
+]

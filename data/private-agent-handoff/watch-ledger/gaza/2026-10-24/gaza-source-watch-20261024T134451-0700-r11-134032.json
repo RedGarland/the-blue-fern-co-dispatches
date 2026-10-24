@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T134451-0700-r11-134032",
+  "scheduled_for": "2026-10-24T13:44:51-07:00",
+  "started_at": "2026-10-24T13:40:32-07:00",
+  "completed_at": "2026-10-24T13:43:16.704-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T12:42:46.936-07:00",
+    "end": "2026-10-24T13:43:16.704-07:00",
+    "basis": "Previous independently retrieved watch heartbeat completion through current bounded observation. Require newly dated event or material new verified follow-up; older publication and search crawl date alone do not establish novelty."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production daily collector/publisher authoritative. No approvals, publication, production or schedule changes.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T124451-0700-r11-124058.json",
+      "completed_at": "2026-10-24T12:42:46.936-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "source_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest listed items dated 19 October 2026; no newly dated in-window report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; generic crisis overview and linked items older than the window; no verified in-window event."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean (oPt)",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; direct regional health, hospital and medical evacuation updates unavailable."
+      }
+    ],
+    "primary_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation 24 October 2026 latest update",
+      "site:who.int Gaza October 24 2026 health medical evacuation WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:reuters.com/world/middle-east Gaza \"October 24, 2026\" civilians killed hospital ceasefire",
+      "site:apnews.com/article/ Gaza Oct 24 2026 Saturday new attacks humanitarian aid ceasefire",
+      "site:afp.com Gaza 24 October 2026 civilian deaths Israeli military strikes",
+      "site:wfp.org Gaza 24 October 2026 food aid trucks access bakery distribution",
+      "site:icrc.org Gaza October 24 2026 hostages detainees hospitals medical evacuation",
+      "site:unicef.org Gaza October 24 2026 water children displacement",
+      "site:unrwa.org Gaza 24 October 2026 shelters displaced families supplies",
+      "site:msf.org Gaza October 24 2026 hospital ambulance fuel medical evacuation",
+      "site:english.wafa.ps \"24 October 2026\" Gaza killed wounded displaced",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza 24 October 2026 access crossings hospitals",
+      "site:who.int \"24 October 2026\" Gaza health evacuation hospital",
+      "Gaza October 24 2026 19:40 UTC 20:40 UTC new civilian casualties crossings negotiations Reuters AP"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties and military actions with documented civilian impact",
+      "displacement and shelter",
+      "humanitarian aid and crossings",
+      "food and safe water access",
+      "hospitals, health capacity, ambulances and medical evacuation",
+      "fuel and infrastructure",
+      "detentions/hostages",
+      "ceasefire and negotiations"
+    ],
+    "examined_but_excluded": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published 19 October and covers prior weeks; known baseline, not a new hourly event."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/resources/reports/unrwa-situation-report-237-humanitarian-crisis-gaza-strip-and-occupied-west-bank",
+        "reason": "Report published approximately 22 October and covers 7–20 October; not new to the observation window. Direct retrieval 403."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/press-releases/childhood-defined-struggle-survival-gaza-strip",
+        "reason": "Published 16 October; no in-window new event."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-october-24-2026-707ad41a79d384ff4715902ce3d60df5",
+        "reason": "Previously tracked rolling report; inaccessible to direct fetch. No newly timestamped Gaza update independently verified."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "observed": "502 Bad Gateway",
+        "impact": "Cannot directly confirm regional hospital, ambulance, medical evacuation or healthcare capacity changes."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/resources/reports/unrwa-situation-report-237-humanitarian-crisis-gaza-strip-and-occupied-west-bank",
+        "observed": "403 Forbidden",
+        "impact": "Could not directly inspect known older report, though indexed title/date available."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-october-24-2026-707ad41a79d384ff4715902ce3d60df5",
+        "observed": "Direct article inaccessible",
+        "impact": "Unable to verify whether previously seen rolling story was revised during this hour."
+      }
+    ],
+    "assessment": "Twelve additional targeted queries plus initial OCHA and WHO checks did not independently establish a new, traceable, nonduplicate in-Gaza development in the observation window. Search indexing and inaccessible regional/rolling endpoints limit recall; absence of findings does not imply no event occurred.",
+    "publication_actions": "none",
+    "production_authorization": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T204829-0700-r11",
+  "scheduled_for": "2026-10-23T20:44:51-07:00",
+  "started_at": "2026-10-23T20:48:29-07:00",
+  "completed_at": "2026-10-23T20:49:33-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T19:47:22-07:00",
+    "end": "2026-10-23T20:49:33-07:00",
+    "window_basis": "From prior independently verified supplementary watch heartbeat completion to this watch completion; source/event time must be verified for an in-window positive finding."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "role": "Supplementary recall; primary production Gaza collector and publisher remain authoritative.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-23/gaza-source-watch-20261023T194605-0700-r11.json",
+      "completed_at": "2026-10-23T19:47:22-07:00",
+      "readback": "verified"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; homepage latest Gaza impact snapshot and situation report dated October 19, 2026; no newly timestamped in-window item."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no Gaza-specific new dated release during the observation window."
+      },
+      {
+        "publisher": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/information-resources/",
+        "result": "HTTP 503 Service Unavailable; WHO regional healthcare/medevac coverage degraded."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 23 2026 evening 20:00 PDT aid crossings ceasefire civilians Reuters latest",
+      "Gaza October 23 2026 Friday evening Associated Press civilian casualties strike hostages aid",
+      "site:unrwa.org Gaza \"23 October 2026\" displacement shelter food water",
+      "site:wfp.org Gaza \"23 October 2026\" bakeries flour food supply",
+      "site:unicef.org/press-releases \"Gaza\" \"23 October 2026\"",
+      "site:icrc.org/en \"Gaza\" \"23 October 2026\" released detained medical",
+      "site:palestinercs.org \"Gaza\" \"23 October 2026\" ambulance",
+      "site:un.org/sg/en/content/sg/press-encounter \"Gaza\" \"23 October 2026\"",
+      "Gaza latest October 24 2026 03:00 UTC October 23 2026 casualties aid attack",
+      "Gaza \"October 23, 2026\" \"late Friday\" strikes aid Rafah ceasefire",
+      "Gaza Oct 24 2026 Saturday 03:00 GMT strikes Friday 23 October civilians aid medical",
+      "Gaza Friday 23 October 2026 20:00 PDT late update two killed Shifa city civilian strikes Reuters"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties and displacement",
+      "aid access and food/bread/flour",
+      "water access",
+      "hospital and ambulance functioning",
+      "fuel and medical evacuation",
+      "infrastructure and crossings",
+      "hostages/detention",
+      "ceasefire negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "examined_but_unqualified": [
+      {
+        "canonical_source_url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "publisher": "Associated Press",
+        "note": "Friday October 23 rolling report describes three killed in two Gaza strikes (one in southern Gaza and two in Gaza City), but article lacks verifiable section timestamps and civilian status; the southern strike was already surfaced in prior checks. Cannot establish a new post-19:47 PT development, so excluded, not considered disproven."
+      },
+      {
+        "canonical_source_url": "https://www.egypttoday.com/Article/1/150220/Egypt-prepares-more-than-60-ambulances-at-Rafah-crossing-for",
+        "publisher": "Egypt Today citing Al-Qahera News",
+        "note": "October 23 at 07:07 GMT article describes ambulances at Egypt's Rafah side and arrival of injured Palestinians; published ~17 hours before window, not a fresh hourly change."
+      },
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176174",
+        "publisher": "WAFA",
+        "note": "October 22 warnings about seven remaining Gaza bakeries and flour shortage predate watch window and overlap prior bread recall finding."
+      },
+      {
+        "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "publisher": "Reuters",
+        "note": "October 22 casualties predate the current hourly window."
+      },
+      {
+        "note": "October 23 reports about Hebron/West Bank and Jordan excluded because outside in-Gaza ground-development scope."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "source": "WHO EMRO occupied Palestinian territory information-resources endpoint",
+        "http_status": 503,
+        "impact": "Direct regional medical-evacuation, hospital, staffing and clinical-supply verification unavailable; global WHO, OCHA and targeted reporting searches available."
+      }
+    ],
+    "search_result": "No newly verified, nonduplicate, in-Gaza development could be placed inside the hourly window with sufficient support. This is not evidence that no incident occurred; rolling articles and indexing delays constrain precision.",
+    "changes_not_performed": [
+      "approval",
+      "publication",
+      "primary pipeline mutation",
+      "schedule change",
+      "automation disabling"
+    ]
+  }
+}

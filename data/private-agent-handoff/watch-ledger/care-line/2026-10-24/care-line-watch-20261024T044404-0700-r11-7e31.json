@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T044404-0700-r11-7e31",
+  "scheduled_for": "2026-10-24T04:45:22-07:00",
+  "started_at": "2026-10-24T04:44:04-07:00",
+  "completed_at": "2026-10-24T04:45:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T03:45:22-07:00",
+    "end": "2026-10-24T04:45:40-07:00",
+    "basis": "Previous nominal hourly schedule slot to current research completion. Supplementary recall includes recent late-indexed sources but excludes previously identified events; last completed actual check in this interval was not independently enumerated."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S. and territory healthcare-access recall, not primary collection. Production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "prior_recorded_notices": "2026-10-23 My Families Healthcare CA CCN 758151, 1ST AIDE HOME HEALTH AGENCY CA CCN 559673, Moonlight Home Health Care Inc OH CCN 369006; 2026-10-22 entries recorded earlier."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "Hospital and ED closure/suspension 2026-10-23/24",
+      "Maternity and labor/delivery closure 2026-10-23/24",
+      "Ambulance EMS base closure and rural response loss",
+      "Rural hospital emergency service closure",
+      "October 23 hospital emergency cessation reporting",
+      "October 23 primary care urgent-care closures",
+      "October 23 dialysis and oncology closure",
+      "October 23 EMS suspension",
+      "October 23/24 emergency service reopening/restoration",
+      "Behavioral health inpatient suspension",
+      "Official government October 23 healthcare suspensions",
+      "Puerto Rico Guam Virgin Islands territory emergency care loss"
+    ],
+    "candidate_exclusions": [
+      "Watsonville Community Hospital (CA): October 23 reporting documents potential maternity/NICU closure, but no final decision or concrete newly effective loss; exclude proposal.",
+      "Dennys River Ambulance Service (ME): November 30 planned closure already recorded in 2026-10-24T00:49 prior heartbeat; exclude duplicate.",
+      "Other results were historical, non-U.S., policy/proposed, or did not establish a concrete new service-access change."
+    ],
+    "prior_ledger_reference": "Verified 2026-10-24T00:49:53-07:00 heartbeat via GitHub connector; other intervening hourly entries were not enumerated. Since no new positive findings were identified, this does not prevent negative conclusion within bounded search.",
+    "source_limitations": "Search results included stale, out-of-region, and proposal-only stories despite recent-date terms. No source retrieval failures in the CMS-first check or 12 targeted searches.",
+    "controls": "No editorial approval, publication, schedule modification, or automation disabling performed."
+  }
+}

@@ -79,11 +79,32 @@ def test_validation_profile_uses_configured_root(tmp_path, monkeypatch):
     assert base.parent == tmp_path.resolve()
 
 
-def test_launcher_validates_root_and_uses_collision_resistant_child():
+def test_launcher_validates_both_test_and_repository_volumes():
     wrapper = (ROOT / "scripts" / "run_pytest_safe.ps1").read_text(encoding="utf-8")
     assert "ReparsePoint" in wrapper
     assert "[guid]::NewGuid()" in wrapper
     assert "DISPATCHES_TEST_ROOT" in wrapper
+    assert "Repository-volume admission refused" in wrapper
+
+
+def test_validation_profile_admits_repository_and_selected_roots(tmp_path, monkeypatch):
+    selected = tmp_path / "selected"
+    selected.mkdir()
+    monkeypatch.setenv(test_storage_admission.TEST_ROOT_ENV, str(selected))
+    calls = []
+
+
+    def fake_admit(path, **kwargs):
+        calls.append(Path(path).resolve())
+        return Path(path).resolve()
+
+
+    monkeypatch.setattr(validation_profiles, "require_test_root_capacity", fake_admit)
+    monkeypatch.setattr(validation_profiles, "explicit_test_root", lambda root=None: selected.resolve())
+    base = validation_profiles.make_pytest_basetemp("profile")
+    assert base.parent == selected.resolve()
+    assert Path(__file__).resolve().parents[1] in calls
+    assert selected.resolve() in calls
 
 
 def test_legacy_allocators_use_registered_tmp_path_lifecycle():
@@ -109,6 +130,18 @@ def test_legacy_allocators_use_registered_tmp_path_lifecycle():
     assert "require_copy_capacity" in story
     assert "require_copy_capacity" in dispatch_site
     assert "require_copy_capacity" in care_dispatch
+
+
+def test_remaining_repository_local_allocators_are_explicitly_inventoried():
+    remaining = {
+        "tests/test_cascadia_pipeline.py": (40,),
+        "tests/test_care_line_discovery.py": (31,),
+        "tests/test_american_pressure_dispatch.py": (12, 56, 73, 88),
+    }
+    for relative, lines in remaining.items():
+        source = (ROOT / relative).read_text(encoding="utf-8")
+        assert 'output / "test-runs"' in source or 'output" / "test-runs"' in source
+        assert all(line > 0 for line in lines)
 
 
 def _recorded_fixture(tmp_path, *, setup_complete: bool, call_outcome: str):

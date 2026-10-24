@@ -78,6 +78,8 @@ def get_profile(name: str) -> ValidationProfile:
 
 
 def make_pytest_basetemp(prefix: str, root: Path | None = None) -> Path:
+    repo_root = Path(__file__).resolve().parents[1]
+    require_test_root_capacity(repo_root)
     test_root = explicit_test_root(root)
     require_test_root_capacity(test_root)
     unique = f"{prefix}-{os.getpid()}-{int(time.time() * 1000)}"

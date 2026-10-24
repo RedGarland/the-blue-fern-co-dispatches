@@ -23,6 +23,15 @@ if ($drive.Free -lt $minFreeBytes) {
 }
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
+$repoInfo = Get-Item -LiteralPath $repoRoot -Force -ErrorAction Stop
+if (($repoInfo.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+    throw "Repository root must not be a redirect or reparse point: $repoRoot"
+}
+$repoDriveName = (Split-Path -Qualifier $repoRoot).TrimEnd("").TrimEnd(":")
+$repoDrive = Get-PSDrive -Name $repoDriveName -ErrorAction Stop
+if ($repoDrive.Free -lt $minFreeBytes) {
+    throw "Repository-volume admission refused: $repoRoot has $($repoDrive.Free) bytes free; $minFreeBytes required."
+}
 $pythonExe = Join-Path $repoRoot ".venv\Scripts\python.exe"
 
 if (-not $PytestArgs -or $PytestArgs.Count -eq 0) {

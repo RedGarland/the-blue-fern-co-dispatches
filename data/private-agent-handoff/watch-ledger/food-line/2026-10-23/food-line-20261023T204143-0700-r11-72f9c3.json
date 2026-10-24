@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-20261023T204143-0700-r11-72f9c3",
+  "scheduled_for": "2026-10-23T20:41:43-07:00",
+  "started_at": "2026-10-23T20:41:43-07:00",
+  "completed_at": "2026-10-23T20:42:38-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-23T19:41:43-07:00",
+    "end": "2026-10-23T20:41:43-07:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-10-23",
+    "basis": "rolling one-hour window; exact previous-run completion unavailable"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; authoritative production collection not modified.",
+    "searches_attempted": 12,
+    "searches_failed": 0,
+    "priority_classes": [
+      "Sole/only/last/full-service community grocery loss, closure, fire, or disaster",
+      "Weather, disaster, power, or facility-caused cancellation/suspension of emergency food distributions",
+      "Abrupt food pantry/food bank service closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access effects"
+    ],
+    "findings_qualification": "No new, source-verifiable qualifying disruption found within the one-hour observation window.",
+    "source_review_exclusion": [
+      {
+        "url": "https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Article reports an emergency food distribution scheduled for Oct. 23, not a canceled or suspended distribution; excluded as routine/resource information."
+      }
+    ],
+    "exclusions": "Donation drives, resource guides, routine program promotion, recipes, opinion, generic inflation, stale reporting, and duplicates.",
+    "limitations": "Web-search discovery is not exhaustive; many search hits predated the one-hour interval. No production-ledger synchronization or publication action performed."
+  }
+}

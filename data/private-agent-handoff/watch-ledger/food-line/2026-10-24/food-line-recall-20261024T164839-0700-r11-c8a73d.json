@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T164839-0700-r11-c8a73d",
+  "scheduled_for": "2026-10-24T16:45:54-07:00",
+  "started_at": "2026-10-24T16:48:39-07:00",
+  "completed_at": "2026-10-24T16:49:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T15:46:16.321-07:00",
+    "end_at": "2026-10-24T16:49:30-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Bounded supplementary recall since completion of the prior persisted hourly heartbeat; prior completed_at read directly from ops/watch-ledger."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Food Line recall watch only; nationwide production collection remains authoritative.",
+    "12 targeted web searches completed without query failures, spanning sole/last/full-service grocery closures or disasters, storm/flood/fire/outage cancellation of emergency food distribution, abrupt pantry or food-bank access reduction, and official SNAP/WIC/EBT benefit interruptions.",
+    "No newly verifiable qualifying U.S. food-access disruption was established in the Pacific observation window ending 2026-10-24 16:49.",
+    "An October 24 report on Wheatsville Food Co-op's planned closure in Austin did not establish loss of a community's sole/last/full-service grocery; excluded as out of scope.",
+    "Kauaʻi October 23-24 recovery articles concern September 7 Hurricane Lowell; no newly confirmed food distribution or pantry cancellation established in this window.",
+    "Searches also retrieved September 2026 Spencer NY grocery fire and October-November 2025 SNAP shutdown stories; excluded as stale.",
+    "No review approvals, publication, production collection changes, schedule changes, or disabling."
+  ]
+}

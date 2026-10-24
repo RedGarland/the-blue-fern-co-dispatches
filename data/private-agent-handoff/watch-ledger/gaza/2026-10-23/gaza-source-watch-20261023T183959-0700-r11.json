@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T183959-0700-r11",
+  "scheduled_for": "2026-10-23T18:44:51-07:00",
+  "started_at": "2026-10-23T18:39:59-07:00",
+  "completed_at": "2026-10-24T01:41:03.573Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T17:47:44.033-07:00",
+    "end": "2026-10-24T01:41:03.573Z",
+    "window_basis": "Previous verified hourly watch heartbeat completion through current observation. Publication/event hour and independent newness were required for a strictly new finding."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch, not the authoritative daily Gaza production collector or publisher.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-23/gaza-source-watch-20261023T174626-0700-r11.json",
+      "completed_at": "2026-10-23T17:47:44.033-07:00",
+      "readback": "verified",
+      "outcome": "no_findings"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "result": "Home page latest linked Gaza items both dated 19 October 2026, including reported-impact snapshot as of 14 October and 15 October situation report. Nothing newly dated within the watch window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "accessible",
+        "result": "WHO conflict overview accessible; listed updates and regional news did not provide a new dated Gaza medical/evacuation development within the watch window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean occupied Palestinian territory news",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP 502",
+        "result": "Official regional medical and evacuation coverage could not be directly checked; material source gap."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 23 2026 18:00 PDT latest Reuters civilian casualties ceasefire crossings",
+      "Gaza October 23 2026 AP live latest Friday hospitals civilians airstrikes 2026",
+      "site:unrwa.org Gaza October 23 2026 displacement aid access Friday",
+      "site:wfp.org Gaza October 23 2026 bakery flour bread shipments hunger",
+      "site:unicef.org Gaza October 23 2026 water children hospital new",
+      "site:icrc.org Gaza October 23 2026 hostages detainees humanitarian relief",
+      "site:palestinercs.org Gaza October 23 2026 ambulance rescue emergency",
+      "site:ochaopt.org Gaza October 23 2026 humanitarian new report",
+      "site:who.int OR site:emro.who.int Gaza October 23 2026 medical evacuation fuel trauma hospital",
+      "Gaza October 23 2026 Rafah Kerem Shalom crossings aid trucks commercial food latest",
+      "Gaza Friday October 23 2026 nighttime airstrikes yellow line displacement civilians",
+      "Gaza October 23 2026 Al Jazeera AFP Reuters healthcare electricity desalination new developments"
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://www.washingtonpost.com/business/2026/10/23/mideast-news-october-23-2026/1190993e-cebf-11f1-ac04-9f58578a68b4_story.html",
+        "reason": "AP rolling report was dated 23 October 2026 19:43 EDT (16:43 PDT, before the previous 17:47 PDT heartbeat). Gaza fatalities included two Gaza City deaths and one southern Gaza death, but the article does not establish civilian status. Prior hourly ledger already discussed the same casualty report."
+      },
+      {
+        "url": "https://www.middleeasteye.net/news/gaza-bakeries-shut-israel-blocks-flour-shipments",
+        "reason": "Previously considered October 23 bakery/flour shortage cluster; opening the page timed out this run, but no distinct first reported in-window food access event is verified."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "OCHA report posted October 19, 2026; preexisting source."
+      },
+      {
+        "url": "https://www.middleeastmonitor.com/20261023-3-palestinians-killed-others-injured-in-fresh-israeli-attacks-on-gaza/",
+        "reason": "Al-Masdar residential/control-line candidate already recorded in the 15:49 PDT watch, so duplicate."
+      },
+      {
+        "url": "https://www.unicef.org/press-releases/childhood-defined-struggle-survival-gaza-strip",
+        "reason": "UNICEF 16 October statement, outside search window."
+      }
+    ],
+    "source_failures": [
+      "WHO Eastern Mediterranean occupied Palestinian territory endpoint HTTP 502, repeated external service unavailability.",
+      "Middle East Eye article open timed out; this does not block other established reporting or OCHA/WHO global coverage."
+    ],
+    "outcome_explanation": "No traceable, newly reported and nonduplicative in-Gaza development meeting strict hourly novelty and civilian-impact criteria was confirmed. No-findings does not imply nothing happened.",
+    "schedule_observation": "Invocation began about five minutes before the nominal 18:44:51 PDT scheduled_for timestamp; timestamps preserve those observed values rather than retroactively asserting another occurrence.",
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production modification",
+      "schedule change",
+      "automation disablement"
+    ]
+  }
+}

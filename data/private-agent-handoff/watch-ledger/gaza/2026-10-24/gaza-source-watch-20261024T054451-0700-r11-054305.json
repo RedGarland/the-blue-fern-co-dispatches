@@ -1,0 +1,131 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T054451-0700-r11-054305",
+  "scheduled_for": "2026-10-24T05:44:51-07:00",
+  "started_at": "2026-10-24T05:43:05-07:00",
+  "completed_at": "2026-10-24T05:44:37-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T04:45:45-07:00",
+    "end": "2026-10-24T05:44:37-07:00",
+    "basis": "Start is the latest confirmed previous hourly Gaza Source Watch heartbeat completed_at (04:44:51 scheduled run), inspected directly on ops/watch-ledger. Require independently traceable in-window event/publication or substantive follow-up; do not infer novelty from search recency."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; daily production collector/publisher authoritative. No publication, approval, or schedule changes.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest featured Gaza situation report and impact snapshot posted October 19, not new in window."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed Gaza reports and snapshots dated October 19; no October 24 updates."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "Direct endpoint timed out; regional healthcare coverage incomplete."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean homepage",
+        "url": "https://www.emro.who.int/",
+        "result": "Direct endpoint timed out."
+      },
+      {
+        "publisher": "WHO global occupied Palestinian territory emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no Gaza-specific new event or report in window. Latest global and regional links predating window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 24 2026 early morning latest strikes civilians injured killed ceasefire Saturday",
+      "site:reuters.com/world/middle-east/ Gaza \"October 24, 2026\" strike aid crossings",
+      "site:apnews.com/article/ Gaza \"October 24, 2026\" civilians ceasefire humanitarian",
+      "site:unrwa.org \"24 October 2026\" Gaza aid displacement",
+      "site:wfp.org Gaza \"24 October 2026\" bakeries wheat flour crossings",
+      "site:unicef.org Gaza \"24 October 2026\" water children health",
+      "site:icrc.org Gaza \"24 October 2026\" detainees hostages ambulances",
+      "site:msf.org Gaza \"24 October 2026\" hospital care evacuation",
+      "site:palestinercs.org Gaza \"24 October 2026\" ambulance injured",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"24 Oct 2026\" Gaza situation",
+      "site:un.org \"24 October 2026\" Gaza humanitarian aid crossings ceasefire",
+      "Gaza October 24 2026 morning civilian casualties Rafah crossing hospital food water AP AFP Reuters"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food and drinking water access",
+      "hospitals, ambulances, fuel, functioning medical capacity, medical evacuation",
+      "civilian infrastructure",
+      "crossings",
+      "detention/hostages",
+      "ceasefire negotiations",
+      "military operations with substantiated civilian impact"
+    ],
+    "examined_but_excluded": [
+      {
+        "title": "Gaza faces renewed famine risk as flour shortages force bakeries to close",
+        "url": "https://en.abna24.com/news/1881803/Gaza-faces-renewed-famine-risk-as-flour-shortages-force-bakeries",
+        "publisher": "ABNA / Palestine Info",
+        "publication_date": "2026-10-24",
+        "reason": "Article gives 08:20 without a verified timezone or within-window timestamp. Syndicates earlier bakery closures and shortages including ten of seventeen closed/seven operating, already described before window. No independently verified new change since previous hourly check."
+      },
+      {
+        "title": "Israel says commercial goods no longer entering Gaza",
+        "url": "https://www.reuters.com/world/middle-east/israel-says-commercial-goods-no-longer-entering-gaza-after-merchants-suspend-2026-10-15/",
+        "publisher": "Reuters",
+        "publication_date": "2026-10-15",
+        "reason": "Prior reporting, no new in-window change."
+      },
+      {
+        "title": "UN says Gaza malnutrition gains fragile as commercial supplies halt",
+        "url": "https://www.reuters.com/world/middle-east/un-says-gaza-malnutrition-gains-fragile-commercial-supplies-halt-2026-10-16/",
+        "publisher": "Reuters",
+        "publication_date": "2026-10-16",
+        "reason": "Prior reporting; not new."
+      },
+      {
+        "title": "OCHA OPT humanitarian situation report 15 October",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "publisher": "OCHA OPT",
+        "publication_date": "2026-10-19",
+        "reason": "Describes earlier period; not in hourly interval."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean Regional Office",
+        "urls": [
+          "https://www.emro.who.int/",
+          "https://www.emro.who.int/pse/palestine-news/"
+        ],
+        "observed": "Fetch timeout on both direct URLs in this run; previous run reported HTTP 502.",
+        "impact": "No direct regional WHO update verification for Gaza health facilities, ambulances, evacuation and functional service capacity. WHO global page and OCHA OPT were accessible."
+      }
+    ],
+    "finding_assessment": "Primary OCHA OPT and WHO sources checked first; twelve further targeted source/category searches identified no independently verified new, nonduplicate in-Gaza development within 04:45:45–05:44:37 America/Los_Angeles. Earlier bakery shortage coverage recurred without a verified fresh incident.",
+    "limitations": [
+      "Search discovery and source posts can lag real-world events; no findings means no confirmed new recall candidates, not no events.",
+      "Regional WHO direct source is inaccessible; report DEGRADED rather than FAILED because alternate primary/global and reporting coverage succeeded.",
+      "Search engine recency is not proof of publication or incident date."
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T044451-0700-r11-044249.json",
+      "completed_at": "2026-10-24T04:45:45-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false
+  }
+}

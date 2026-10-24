@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T194747-0700-r11-princeton1",
+  "scheduled_for": "2026-10-23T19:45:22-07:00",
+  "started_at": "2026-10-23T19:47:47-07:00",
+  "completed_at": "2026-10-23T19:49:30.826-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T16:46:20-07:00",
+    "end": "2026-10-23T19:49:30.826-07:00",
+    "basis": "Last explicitly verified heartbeat available to this run completed 2026-10-23T16:46:20-07:00. Could not list all intervening 17:xx/18:xx branch records, so exact prior-hour continuity and cross-ledger deduplication remain unverified. This is a newly surfaced recall candidate; the reported service closure predates this run and is not represented as first occurring within this window."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261023-ky-princeton-fast-pace-urgent-care-permanent-closure",
+      "canonical_source_url": "https://www.wpkyonline.com/2026/10/23/fast-pace-health-urgent-care-closing-princeton-clinic/news-edge/",
+      "title": "Fast Pace Health permanently closes Princeton urgent-care clinic on October 23",
+      "publisher": "WPKY / News Edge",
+      "exact_supporting_passage": "A staff member at the clinic confirmed the facility will permanently close at 6:00 p.m. Friday, October 23.",
+      "source_published_date": "2026-10-23",
+      "state": "KY",
+      "city": "Princeton",
+      "county": "Caldwell",
+      "territory": null,
+      "event_type": "rural_urgent_care_permanent_closure",
+      "service_line": "urgent_care_walk_in_xray_laboratory_telehealth",
+      "access_consequences": "The Princeton clinic was slated to close permanently at 6:00 p.m. CDT (4:00 p.m. PDT) October 23, eliminating this location's seven-day extended-hours walk-in urgent care, on-site X-ray and lab access. Local staff pointed patients to Fast Pace clinics in Hopkinsville and Madisonville. Closure is staff-confirmed by local reporting; no independent post-closing operational verification was available.",
+      "affected_population": "Princeton and surrounding Caldwell County residents seeking urgent, non-life-threatening illness or injury care; exact patient census and alternate local capacity unknown.",
+      "effective_date": "2026-10-23",
+      "announcement_date": "2026-10-23",
+      "confidence": "high_for_staff_confirmed_closure_announcement; actual_postclosure_status_unverified",
+      "source_role": "strong_local_reporting_based_on_direct_clinic_staff_confirmation",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "scope": "Supplementary U.S./territory high-value healthcare-access recall, not the authoritative production Care Line collector.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "previously_recorded_notices": [
+        "My Families Healthcare (CA 758151)",
+        "1ST AIDE HOME HEALTH AGENCY (CA 559673)",
+        "Moonlight Home Health Care Inc (OH 369006)"
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "temporary hospital ED closures",
+      "maternity service suspension",
+      "rural emergency service loss",
+      "ambulance provider closure",
+      "air-medical base suspension",
+      "dialysis and oncology changes",
+      "behavioral-health psychiatric inpatient changes",
+      "primary care closures",
+      "hospital emergency service reopening",
+      "urgent-care rural closure",
+      "Puerto Rico hospital/ambulance service loss",
+      "restored hospital services"
+    ],
+    "previously_identified_findings_excluded": [
+      "Vista Medical Center East anesthesia-service suspension (IL)",
+      "Rehabilitation Hospital of Rhode Island evacuation (RI)",
+      "Carle Normal on College closure (IL)",
+      "October 23 CMS home-health termination notices (CA and OH)",
+      "Doylestown ED sprinkler-related closure (PA)",
+      "Mass General Brigham Home Hospital changes (MA)",
+      "Mass Eye and Ear pediatric inpatient cessation (MA)"
+    ],
+    "nonqualifying_exclusions": [
+      "Watsonville Hospital potential maternity shutdown: no concrete change yet",
+      "Crystal Clinic Warren orthopaedic office closure: outside prioritized essential service lines",
+      "newly opened cancer clinics: no verified restoration of previously lost essential service",
+      "Washington behavioral-health closure-prevention grant: funding notice, not actual service loss"
+    ],
+    "reason_for_degraded": "Could not independently enumerate intervening ops/watch-ledger hourly records and thus cannot certify this late-reported candidate is not already in a later, unseen check. Twelve additional targeted web searches and CMS check nevertheless completed. Research is otherwise usable.",
+    "source_access": "WPKY original article and CMS index accessible. No individual qualifying source fetch failed.",
+    "candidate_caveat": "WPKY gives publication date only, not publication time; source staff reported 6:00 p.m. local effective time. Treat as pending-review newly surfaced recall, not a proven new announcement in the latest hour.",
+    "execution_controls": "No editorial approval, publication, schedule change, or task disabling."
+  }
+}

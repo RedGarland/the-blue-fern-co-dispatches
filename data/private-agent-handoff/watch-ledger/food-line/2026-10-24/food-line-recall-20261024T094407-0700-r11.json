@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T094407-0700-r11",
+  "scheduled_for": "2026-10-24T09:45:54-07:00",
+  "started_at": "2026-10-24T09:44:07-07:00",
+  "completed_at": "2026-10-24T09:45:50.377-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T08:44:13-07:00",
+    "end_at": "2026-10-24T09:45:50.377-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at the previous persisted supplementary Food Line recall heartbeat completed_at; recency-2-day overlap was used for discovery, but positive findings required newly established access consequences since the last check."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary U.S. high-value miss-class recall only; production Food Line nationwide collection remains authoritative.",
+    "Completed 12 targeted web searches total (10 recency-two-day and 2 date-specific), with no query transport failures. Four categories covered: sole/last/full-service grocery-store losses, weather/disaster-related canceled emergency distributions, abrupt pantry/food-bank access closures, and official SNAP/WIC/EBT interruptions.",
+    "No verifiable new qualifying food-access disruption reported or becoming effective since the prior completed hourly check. Search results were predominantly earlier 2025/2026 incidents, resource/event guides, scheduled distributions, and general benefit articles without a new official interruption.",
+    "Excluded as outside this window: Spencer, NY sole-store fire (published September 14, 2026; https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/); HCCM canceled Bethany distribution dated October 2, 2026 (https://hccm.org/get-help/fresh-food-for-all.html); older central Ohio weather-related pantry closures (January 28, 2026; https://spectrumnews1.com/oh/columbus/news/2026/01/28/snowstorm-strains-food-pantries).",
+    "October 24 distributions listed in Baltimore, Florence, Tucson and elsewhere were scheduled and not reported canceled; excluded. No official newly dated SNAP/WIC/EBT disruption was verified in the window.",
+    "Index lag and limited regional search recall mean no-findings is not proof of zero real-world incidents.",
+    "No approval, publication, schedule edit, disabling, or change to the production collector."
+  ]
+}

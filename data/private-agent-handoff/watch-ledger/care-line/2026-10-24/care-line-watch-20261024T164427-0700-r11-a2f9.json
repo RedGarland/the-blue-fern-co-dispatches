@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T164427-0700-r11-a2f9",
+  "scheduled_for": "2026-10-24T16:45:22-07:00",
+  "started_at": "2026-10-24T16:44:27-07:00",
+  "completed_at": "2026-10-24T16:45:30.373-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T15:44:27.720-07:00",
+    "end": "2026-10-24T16:45:30.373-07:00",
+    "basis": "Since prior verified hourly watch completion (October 24 at 15:44:27 PDT), with late-reported previously unseen concrete access changes eligible only if not already recorded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S., DC, and territories healthcare-access recall watch; production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "CMS Public Notices checked before all targeted searches. No October 24 notices as of observation. Three October 23 HHA termination notices in California and Ohio were previously logged, excluded as duplicates."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "October 24 hospital emergency department temporary closure/ambulance diversion",
+      "October 24 maternity and labor-delivery closure/suspension",
+      "October 24 rural primary care and urgent care clinic closure",
+      "October 24 ambulance/EMS shutdown or base closure",
+      "October 24 air-medical/helicopter base suspension",
+      "October 24 dialysis facility closure",
+      "October 24 inpatient psychiatric/behavioral healthcare unit closure",
+      "October 24 oncology/infusion care closure",
+      "October 24 rural hospital emergency department reduction",
+      "October 24 emergency department restoration/reopening",
+      "October 23-24 healthcare closures in Puerto Rico, Guam, and US Virgin Islands",
+      "October 24 local reporting hospital suspension/trauma/ambulance changes"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T154250-0700-r11-42bc",
+      "previous_completed_at": "2026-10-24T15:44:27.720-07:00",
+      "verified_read": true,
+      "duplicate_notes": "Prior ledger already records the October 23 CMS terminations, Illinois Vista trauma loss, Maine Dennys River EMS closure, and New York Kingston residential care closure; older results excluded."
+    },
+    "exclusions": "Recent indexed reports on Roseland maternity suspension, Prime Healthcare OB suspensions, Tehama air ambulance closure, and other earlier service losses are not newly established and/or already known. October 23 Piggott Community Hospital cancer center opening is a new service, not a restoration/reopening of previously lost essential care, so outside this recall watch scope. Kula Hospital restoration plans have no effective reopening date and emergency department remains closed. Generic risk articles, proposals, business-only changes, and stale reports excluded.",
+    "limitations": "Twelve targeted fresh-news searches returned predominantly older articles rather than newly dated qualifying events. Search coverage is bounded and does not establish absence of unindexed events. No material source retrieval failure observed.",
+    "controls": "No editorial approval, publication, production collector, schedule, or task changes.",
+    "material_degradation": false
+  }
+}

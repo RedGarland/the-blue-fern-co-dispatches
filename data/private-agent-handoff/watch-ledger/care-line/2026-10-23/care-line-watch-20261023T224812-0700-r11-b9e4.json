@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T224812-0700-r11-b9e4",
+  "scheduled_for": "2026-10-23T22:45:22-07:00",
+  "started_at": "2026-10-23T22:48:12-07:00",
+  "completed_at": "2026-10-23T22:49:25.636-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T19:49:30.826-07:00",
+    "end": "2026-10-23T22:49:25.636-07:00",
+    "basis": "Recall lookback starts at latest directly verified earlier Care Line Watch heartbeat. Exact intermediate hourly coverage could not be independently enumerated; candidate screening excludes previously recorded reports and events without concrete access effects."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary U.S. and territories healthcare-access recall; production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "previously_recorded_notices": [
+        "My Families Healthcare (CA, CCN 758151)",
+        "1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673)",
+        "Moonlight Home Health Care Inc (OH, CCN 369006)"
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "emergency department closure and diversion",
+      "hospital maternity suspension",
+      "rural emergency loss",
+      "behavioral health inpatient suspension",
+      "dialysis service closure",
+      "oncology treatment interruption",
+      "urgent and primary care closure",
+      "air ambulance base closure",
+      "EMS ambulance service suspension",
+      "essential hospital service reopening",
+      "official hospital service suspension",
+      "October 23 hospital/clinic/ambulance closure"
+    ],
+    "candidate_exclusions": [
+      "Greene County, IL/Boyd Memorial Hospital ambulance service: existing service continues through November 9; future contract dispute only, not a completed access change.",
+      "Older reports and previous-hour findings, including Princeton KY urgent care closure, October 23 CMS terminations, Vista Medical Center East IL anesthesia-service interruption, Rhode Island rehab evacuation, and Massachusetts program reduction announcements.",
+      "Kula Hospital HI reopening: restoration plan without effective reopening date."
+    ],
+    "limitations": [
+      "Search index provided largely older/irrelevant results; no qualifying new verified changes surfaced.",
+      "Intermediate Care Line Watch hourly ledger records were not completely enumerated, so exact hour-by-hour duplicate verification is limited."
+    ],
+    "source_urls": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.myjournalcourier.com/news/article/greene-county-ambulance-bid-boyd-memorial-dispute-22486173.php",
+      "https://mauinow.com/2026/09/22/state-maui-health-and-kaiser-permanente-announce-restoration-and-reopening-plans-for-kula-hospital/"
+    ],
+    "publication_or_approval_actions": "none",
+    "schedule_changed": false
+  }
+}

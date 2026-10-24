@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import shutil
 from pathlib import Path
 from types import SimpleNamespace
@@ -158,20 +159,42 @@ def test_legacy_allocators_use_registered_tmp_path_lifecycle():
     assert "require_copy_capacity" in care_dispatch
 
 
+def _has_repository_test_run_path(source: str) -> bool:
+    tree = ast.parse(source)
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.BinOp) or not isinstance(node.op, ast.Div):
+            continue
+        parts = []
+        current = node
+        while isinstance(current, ast.BinOp) and isinstance(current.op, ast.Div):
+            if not isinstance(current.right, ast.Constant) or not isinstance(current.right.value, str):
+                parts = []
+                break
+            parts.insert(0, current.right.value)
+            current = current.left
+        if parts[-2:] == ["output", "test-runs"]:
+            return True
+    return False
+
+
 def test_remaining_repository_local_allocators_match_dynamic_inventory():
     expected = {
         "tests/test_cascadia_pipeline.py",
         "tests/test_care_line_discovery.py",
         "tests/test_american_pressure_dispatch.py",
+        "tests/test_american_pressure_backfill.py",
+        "tests/test_american_pressure_sources.py",
+        "tests/test_gaza_operator_status.py",
+        "tests/test_add_gaza_manual_source.py",
+        "tests/test_gaza_manual_source_repair.py",
     }
-    found = set()
-    for path in (ROOT / "tests").glob("test_*.py"):
-        normalized = " ".join(path.read_text(encoding="utf-8").split())
-        if (
-            ' / "output" / "test-runs"' in normalized
-            or " / 'output' / 'test-runs'" in normalized
-        ):
-            found.add(path.relative_to(ROOT).as_posix())
+    found = {
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / "tests").glob("test_*.py")
+        if path != Path(__file__).resolve() and _has_repository_test_run_path(
+            path.read_text(encoding="utf-8")
+        )
+    }
     assert found == expected, (
         "repository-local test-runs allocator inventory changed; "
         f"review new paths before relying on the repository-volume stopgap: {sorted(found)}"
@@ -182,7 +205,23 @@ def test_direct_pytest_session_gate_checks_both_volumes():
     source = (ROOT / "tests" / "conftest.py").read_text(encoding="utf-8")
     assert "def pytest_sessionstart" in source
     assert "require_test_root_capacity(ROOT)" in source
-    assert "explicit_test_root()" in source
+    assert "validate_pytest_basetemp" in source
+
+
+def test_direct_pytest_basetemp_rejects_other_volume(tmp_path):
+    configured = tmp_path / "configured"
+    configured.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    with pytest.raises(RuntimeError, match="inside configured test root"):
+        test_storage_admission.validate_pytest_basetemp(outside, configured)
+
+
+def test_direct_pytest_basetemp_requires_explicit_path(tmp_path):
+    configured = tmp_path / "configured"
+    configured.mkdir()
+    with pytest.raises(RuntimeError, match="--basetemp"):
+        test_storage_admission.validate_pytest_basetemp(None, configured)
 
 
 def _recorded_fixture(tmp_path, *, setup_complete: bool, call_outcome: str):

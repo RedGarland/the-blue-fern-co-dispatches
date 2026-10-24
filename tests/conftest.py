@@ -1,7 +1,11 @@
 import sys
 from pathlib import Path
 
-from scripts.test_storage_admission import explicit_test_root, require_test_root_capacity
+from scripts.test_storage_admission import (
+    explicit_test_root,
+    require_test_root_capacity,
+    validate_pytest_basetemp,
+)
 
 pytest_plugins = ("fixture_lifecycle",)
 
@@ -16,4 +20,6 @@ def pytest_sessionstart(session):
     # Direct pytest invocation must enforce the same two-volume admission as
     # the safe launcher; callers cannot bypass it by invoking pytest directly.
     require_test_root_capacity(ROOT)
-    explicit_test_root()
+    configured_root = explicit_test_root()
+    basetemp = getattr(session.config.option, "basetemp", None)
+    validate_pytest_basetemp(basetemp, configured_root)

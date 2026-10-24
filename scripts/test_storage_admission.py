@@ -78,3 +78,18 @@ def explicit_test_root(root: Path | None = None, *, env_name: str = TEST_ROOT_EN
     if not raw:
         raise RuntimeError(f"{env_name} must explicitly name a writable project test root")
     return require_test_root_capacity(Path(raw))
+
+
+def validate_pytest_basetemp(basetemp: Path | None, configured_root: Path) -> Path:
+    """Validate an explicit pytest basetemp before pytest allocates fixtures."""
+    if basetemp is None or not str(basetemp).strip():
+        raise RuntimeError("pytest --basetemp must explicitly name a child of DISPATCHES_TEST_ROOT")
+    root = Path(configured_root).expanduser().resolve(strict=True)
+    candidate = Path(basetemp).expanduser().absolute().resolve(strict=False)
+    if candidate == root or root not in candidate.parents:
+        raise RuntimeError(
+            f"pytest --basetemp must be inside configured test root {root}: {candidate}"
+        )
+    admission_target = candidate if candidate.exists() else candidate.parent
+    require_test_root_capacity(admission_target)
+    return candidate

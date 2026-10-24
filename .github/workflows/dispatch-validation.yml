@@ -41,6 +41,7 @@ jobs:
         run: |
           test_root="$RUNNER_TEMP/bluefern-pytest-validation"
           mkdir -p "$test_root"
+          export DISPATCHES_TEST_ROOT="$test_root"
           echo "DISPATCHES_TEST_ROOT=$test_root" >> "$GITHUB_ENV"
           python - <<'PY'
           import os

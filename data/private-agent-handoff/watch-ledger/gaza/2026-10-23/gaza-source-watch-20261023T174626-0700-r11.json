@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T174626-0700-r11",
+  "scheduled_for": "2026-10-23T17:44:51-07:00",
+  "started_at": "2026-10-23T17:46:26-07:00",
+  "completed_at": "2026-10-24T00:47:44.033Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T16:44:51-07:00",
+    "end": "2026-10-24T00:47:44.033Z",
+    "window_basis": "Nominal prior hourly schedule through current observation. Prior confirmed readable heartbeat was completed 2026-10-23T15:50:55-07:00; a subsequent 16:44 hourly ledger could not be independently enumerated, so a strict novelty comparison is incomplete."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; primary Gaza production collector and publisher remain authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "result": "Most recent Gaza situation report displayed dated 19 October 2026, reporting conditions as of 15 October; no new in-window report."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "accessible",
+        "result": "Official conflict/health situation page available; no newly dated Gaza health incident during the observation window."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP 502",
+        "result": "Regional health reporting endpoint unavailable; medical coverage incomplete."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_classes": [
+      "OCHA OPT Gaza October 23 aid/crossings/casualties",
+      "WHO October 23 hospitals and medical evacuation",
+      "UNRWA aid/displacement",
+      "WFP bakeries/flour/shipments",
+      "ICRC detention/hostages",
+      "UNICEF water, child and hospital updates",
+      "Reuters civilian casualties/humanitarian access",
+      "AP current Gaza reporting",
+      "Palestine Red Crescent medical and ambulance updates",
+      "Rafah/Kerem Shalom crossings",
+      "Hospital disruption/evacuation/fuel",
+      "Ceasefire/military operations and documented civilian impact"
+    ],
+    "examined_but_not_qualified": [
+      {
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "19 October WFP announcement already known; recycled."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published 19 October; not a new in-window update."
+      },
+      {
+        "url": "https://www.washingtonpost.com/business/2026/10/23/mideast-news-october-23-2026/1190993e-cebf-11f1-ac04-9f58578a68b4_story.html",
+        "reason": "AP rolling report discusses Gaza deaths on 23 October, but civilian status and first reporting time are not verified; earlier checks had already considered same-day strikes. Bakery shortages were recorded in a prior heartbeat."
+      },
+      {
+        "url": "https://www.unicef.org/gulf/press-releases/unicef-and-international-islamic-charitable-organization-partner-restore-water",
+        "reason": "21 October UNICEF project announcement, outside current window."
+      },
+      {
+        "url": "https://www.middleeastmonitor.com/20261023-3-palestinians-killed-others-injured-in-fresh-israeli-attacks-on-gaza/",
+        "reason": "Control-line relocation was already recorded as candidate in confirmed 15:49-15:50 PDT heartbeat; not new to this run."
+      }
+    ],
+    "coverage_degradation": [
+      "WHO Eastern Mediterranean Gaza reporting endpoint HTTP 502 (persistent external restriction).",
+      "Exact prior hourly GitHub watch-ledger run could not be enumerated, limiting deduplication/chronological novelty checks."
+    ],
+    "outcome_explanation": "No independently verifiable, newly reported, nonduplicate Gaza development meeting the requested civilian-impact and traceability thresholds was established in this bounded watch. This is not an assertion that no such development occurred.",
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production pipeline modification",
+      "schedule change",
+      "automation disablement"
+    ]
+  }
+}

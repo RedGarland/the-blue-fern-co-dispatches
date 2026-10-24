@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T124451-0700-r11-124058",
+  "scheduled_for": "2026-10-24T12:44:51-07:00",
+  "started_at": "2026-10-24T12:40:58-07:00",
+  "completed_at": "2026-10-24T19:42:46.936-00:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T11:48:30.908-07:00",
+    "end": "2026-10-24T19:42:46.936-00:00",
+    "basis": "End of previous independently retrieved hourly watch heartbeat through end of this watch. Require source-backed new Gaza event or documented in-window follow-up; date-only search metadata or older rolling articles do not establish novelty."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production collector/publisher remains authoritative; no approvals or publication changes.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T114451-0700-r11-114355.json",
+      "completed_at": "2026-10-24T11:48:30.908-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; homepage latest news listing dated 19 October 2026; no item newly dated within the recall interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Regional Office - occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct fetch failed with HTTP 502, limiting verification of local health, hospital and medical evacuation developments."
+      },
+      {
+        "publisher": "WHO global conflict situation",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; linked news/region updates older than watch window; no dated new in-window healthcare event."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed publication 19 October 2026."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 24 2026 latest 19:00 UTC civilian casualties hospitals Israel strikes ceasefire Reuters",
+      "site:apnews.com/article/mideast-news-october-24-2026 Gaza hospital strike food Saturday updates",
+      "site:reliefweb.int Gaza October 24 2026 situation casualties water fuel access crossings",
+      "site:who.int Gaza 24 October 2026 hospitals medical evacuation healthcare medical transport",
+      "site:wfp.org Gaza 24 October 2026 aid bakeries trucks crossing October",
+      "site:ochaopt.org Gaza October 24 2026 humanitarian updates situation food shelter",
+      "site:unrwa.org Gaza October 24 2026 displaced shelters food water deliveries",
+      "site:icrc.org Gaza October 24 2026 hostages detainees medevac Red Cross",
+      "site:msf.org Gaza 24 October 2026 hospital casualties shelter clinics October",
+      "site:reuters.com/world/middle-east/ Gaza October 24 2026 Saturday latest deadly strike aid civilian",
+      "Gaza October 24 2026 11 am to 1 pm PDT ceasefire negotiations crossings civilians killed hospital AP AFP",
+      "site:english.wafa.ps 24 October 2026 Gaza Saturday injured killed hospital Rafah 24/October"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties and military activity with documented civilian impact",
+      "displacement and shelter",
+      "aid and crossings",
+      "food/water",
+      "healthcare/ambulances/hospital capacity/medical evacuation",
+      "infrastructure/fuel",
+      "detainees/hostages",
+      "ceasefire negotiations"
+    ],
+    "examined_but_excluded": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published 19 October; historical humanitarian baseline, not an hourly development."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "reason": "General standing overview and older linked updates; no independently dated in-window event."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-october-24-2026-707ad41a79d384ff4715902ce3d60df5",
+        "reason": "Rolling page was already considered by previous watch; direct re-check currently inaccessible; cannot establish a newly updated Gaza incident or in-window event timing."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "observed": "HTTP 502 Bad Gateway",
+        "impact": "Direct regional health/hospital/medevac verification unavailable; global WHO and OCHA checked successfully."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-october-24-2026-707ad41a79d384ff4715902ce3d60df5",
+        "observed": "Web fetch inaccessible",
+        "impact": "Could not independently check whether older rolling AP report was amended during this hour."
+      }
+    ],
+    "assessment": "No new traceable nonduplicate in-Gaza event or material in-window follow-up independently verified during this bounded watch. Twelve targeted queries returned mostly historical or irrelevant results; this is not proof that no events happened. OCHA and WHO global accessible, WHO regional and AP rolling page degraded.",
+    "publication_actions": "none",
+    "production_authorization": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

@@ -173,9 +173,27 @@ def _has_repository_test_run_path(source: str) -> bool:
                 break
             parts.insert(0, current.right.value)
             current = current.left
-        if parts[-2:] == ["output", "test-runs"]:
+        if parts[-2:] != ["output", "test-runs"]:
+            continue
+        roots = {
+            node.id
+            for node in ast.walk(current)
+            if isinstance(node, ast.Name)
+        }
+        # Only count repository-root allocations, not synthetic tmp_path fixtures.
+        if "repo" in roots or "__file__" in roots:
             return True
     return False
+
+
+def test_inventory_distinguishes_repository_and_fixture_roots():
+    assert _has_repository_test_run_path('repo / "output" / "test-runs" / "x"')
+    assert _has_repository_test_run_path(
+        'Path(__file__).resolve().parents[1] / "output" / "test-runs" / "x"'
+    )
+    assert not _has_repository_test_run_path(
+        'tmp_path / "output" / "test-runs" / "x"'
+    )
 
 
 def test_remaining_repository_local_allocators_match_dynamic_inventory():

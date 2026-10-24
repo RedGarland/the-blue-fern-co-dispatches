@@ -1,0 +1,55 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T094507-0700-r11-cms0",
+  "scheduled_for": "2026-10-24T09:45:22-07:00",
+  "started_at": "2026-10-24T09:45:07-07:00",
+  "completed_at": "2026-10-24T09:46:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T08:46:56-07:00",
+    "end": "2026-10-24T09:46:11-07:00",
+    "basis": "Since the previous verified hourly supplementary watch completion; preceding publication dates checked only for late-indexed recall candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall for concrete U.S., DC, and territorial healthcare access losses/restorations; production Care Line national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "previously_recorded": "2026-10-23 notices for My Families Healthcare (CA 758151), 1ST AIDE HOME HEALTH AGENCY (CA 559673) and Moonlight Home Health Care Inc (OH 369006); 2026-10-22 notices also previously identified.",
+      "result": "No October 24 CMS notices or newly identified listed notices."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "Hospital emergency department closures or suspensions dated October 24",
+      "Maternity/labor-and-delivery unit service loss October 23-24",
+      "Rural ambulance/EMS shutdown October 24",
+      "Behavioral-health inpatient closures October 23-24",
+      "Dialysis center closures October 23-24",
+      "Rural urgent/primary-care clinic closure October 24",
+      "Local hospital emergency closure reporting October 24",
+      "Ambulance service county-level closures October 24",
+      "Air-medical base suspension October 23",
+      "Oncology and infusion treatment suspension October 24",
+      "Emergency department service restoration October 24",
+      "Territorial hospital/emergency service suspensions October 23"
+    ],
+    "duplicate_check": {
+      "previous_run_id": "care-line-watch-20261024T084609-0700-r11-8c56",
+      "previous_completed_at": "2026-10-24T08:46:56-07:00",
+      "repository_branch": "ops/watch-ledger",
+      "records_present_today_at_check": 9,
+      "previously_recorded_examples": "CMS Oct 22-23 notices; Dennys River Ambulance, Princeton Fast Pace Health, Vista Medical Center East, Rehabilitation Hospital of Rhode Island, Carle Normal and Massachusetts system service reductions."
+    },
+    "result": "No new, verified, nonduplicate healthcare-access change identified in the bounded recall.",
+    "exclusions": "Predominantly older incidents, foreign locations, predictions/proposals without concrete access impact, policy/opinion material, business-only stories and incidents covered by prior watch records.",
+    "limitations": "Twelve searches had limited yield and some older matches despite recent filters; this is not exhaustive coverage. CMS was reachable, 12 targeted queries returned, and prior GitHub watch directory and immediately preceding heartbeat were accessible.",
+    "controls": "No editorial approval, publication, production collector change, scheduling change or task disabling."
+  }
+}

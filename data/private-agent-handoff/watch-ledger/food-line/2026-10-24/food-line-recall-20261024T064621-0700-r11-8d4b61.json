@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T064621-0700-r11-8d4b61",
+  "scheduled_for": "2026-10-24T06:45:54-07:00",
+  "started_at": "2026-10-24T06:46:21-07:00",
+  "completed_at": "2026-10-24T13:48:08.333+00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T05:50:40-07:00",
+    "end_at": "2026-10-24T13:48:08.333+00:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Exact completed_at of immediately preceding successfully persisted 05:45-slot watch record, through this run. Search-engine indexing can lag event occurrence; no claim of exhaustive nationwide detection."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only; the production nationwide Food Line collector remains authoritative.",
+    "Twelve bounded fresh targeted web searches completed; eight focused on last/only grocery loss, severe-weather food distribution cancellations and sudden pantry closure, and four on official SNAP/WIC/EBT access interruptions. No search transport failures observed.",
+    "Query 1: \"only grocery store\" fire closed \"October 23\" \"2026\" (recency 2d).",
+    "Query 2: \"sole grocery store\" shut down town \"October 24\" 2026 (recency 2d).",
+    "Query 3: \"last grocery store\" fire closure October 2026 rural community (recency 3d).",
+    "Query 4: \"food distribution\" canceled storm flood \"October 24\" \"2026\" (recency 2d).",
+    "Query 5: \"food bank\" emergency distribution canceled \"October 23\" \"2026\" (recency 2d).",
+    "Query 6: \"food pantry\" closed flooding power outage \"October 24\" \"2026\" (recency 2d).",
+    "Query 7: \"food pantry\" abruptly closed services \"October 23\" \"2026\" (recency 2d).",
+    "Query 8: \"food bank\" temporarily closed \"October 24\" \"2026\" (recency 2d).",
+    "Query 9: site:gov \"SNAP\" \"benefits\" \"interrupted\" \"October 23, 2026\" (recency 2d).",
+    "Query 10: site:gov \"WIC\" \"closed\" \"October 24, 2026\" benefits (recency 2d).",
+    "Query 11: \"EBT\" \"outage\" \"October 24\" \"2026\" state benefits (recency 2d).",
+    "Query 12: \"SNAP\" \"benefits delayed\" \"October 23, 2026\" official state agency (recency 2d).",
+    "No new U.S. disruption meeting the four strict miss classes was corroborated as published or taking effect after 2026-10-24T05:50:40-07:00. Results were mostly outdated 2025 shutdown-related SNAP/WIC posts, routine programs, or grocery-closure stories from earlier in 2026.",
+    "A Texas SNAP processing-backlog report published October 23, 2026 (https://www.ksat.com/news/texas/2026/10/23/texas-snap-participation-drops-to-a-17-year-low-as-the-feds-tighten-eligibility/) was excluded: outside the bounded window and did not report a newly announced official interruption in the window.",
+    "An August 13 North Charleston full-service grocery closure (https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/) was excluded as stale.",
+    "Fresh-result coverage is limited by search indexing and the tight hourly observation window; absence of verified hits does not establish absence of disruption.",
+    "No review approvals, public publication, modifications to the production collector, task schedule changes, or task disabling."
+  ]
+}

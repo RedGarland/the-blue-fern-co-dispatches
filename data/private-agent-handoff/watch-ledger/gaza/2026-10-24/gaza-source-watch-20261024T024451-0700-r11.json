@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T024451-0700-r11",
+  "scheduled_for": "2026-10-24T02:44:51-07:00",
+  "started_at": "2026-10-24T02:44:00-07:00",
+  "completed_at": "2026-10-24T02:45:31-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T01:45:52-07:00",
+    "end": "2026-10-24T02:45:31-07:00",
+    "basis": "Independently fetched latest prior Gaza Source Watch heartbeat on ops/watch-ledger; only substantively new, traceable publication/event/verified developments qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall. Production daily collector and publisher remain authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest homepage Gaza situation updates dated 19 October 2026, no newly listed qualifying hourly update."
+      },
+      {
+        "publisher": "WHO global Gaza emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible using canonical WHO-homepage link. No new 24 October Gaza report or verified hourly medical event visible; listed Gaza-region material predates watch window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; direct regional health reporting inaccessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:ochaopt.org Gaza October 24 2026 humanitarian situation update casualties crossing",
+      "site:who.int Gaza October 24 2026 health hospital medical evacuation emergency update",
+      "site:emro.who.int/opt Gaza October 24 2026 healthcare hospitals medical evacuation",
+      "site:unrwa.org Gaza October 24 2026 aid displacement shelter access",
+      "site:wfp.org Gaza October 24 2026 bread flour food aid crossings",
+      "site:unicef.org Gaza October 24 2026 water sanitation children healthcare",
+      "site:icrc.org Gaza October 24 2026 detention hostages ambulance civilian hospitals",
+      "site:reuters.com/world/middle-east/ Gaza October 24 2026 ceasefire casualties aid civilians",
+      "site:apnews.com/article Gaza October 24 2026 strikes civilians ceasefire food hospital",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza October 24 2026 displacement health aid",
+      "site:msf.org Gaza October 24 2026 health hospitals attacks medical teams",
+      "Gaza October 24 2026 overnight October 23 2026 latest civilian casualties Rafah crossings aid ceasefire Israeli operations Reuters AP"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties",
+      "displacement",
+      "humanitarian access",
+      "food and water access",
+      "healthcare and hospital functioning",
+      "ambulance and transport",
+      "medical evacuation",
+      "fuel and essential capacity",
+      "civilian infrastructure damage",
+      "crossings",
+      "detention and hostages",
+      "ceasefire and negotiations",
+      "military activity with verified civilian impact"
+    ],
+    "useful_readable_sources": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "note": "Latest 19 October listing references earlier reporting period; not newly qualifying."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "note": "WHO Gaza emergency landing page accessible; no new specific hourly update."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "note": "Background food assistance and supply restrictions without independently verifiable new-in-window timestamp."
+      }
+    ],
+    "previously_known_or_excluded": [
+      {
+        "description": "WFP food aid reductions and bread shortages",
+        "reason": "Prior 20–23 October developments; no verified new in-window change."
+      },
+      {
+        "description": "Al-Masdar control-line movement and residential/agricultural impact",
+        "reason": "Previously captured as 23 October recall candidate; no new verified follow-up."
+      },
+      {
+        "description": "Prior 23 October AP rolling Gaza strike coverage",
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "reason": "Not established to concern a newly verified in-window incident with civilian impact; direct article fetch denied."
+      },
+      {
+        "description": "Older OCHA, WHO, UNRWA and UNICEF reports",
+        "reason": "Publication/event times outside the 01:45:52–02:45:31 PDT watch window."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "observed": "HTTP 502",
+        "impact": "Regional Gaza-specific healthcare, hospital function and medical-evacuation direct verification incomplete despite global WHO and alternate humanitarian coverage."
+      },
+      {
+        "publisher": "Associated Press legacy rolling report",
+        "url": "https://apnews.com/article/mideast-news-october-23-2026-6424dff433a4f99f00cac2328de0f7a4",
+        "observed": "Direct article access unavailable in this tool",
+        "impact": "Unable to independently review this previously known rolling article, but targeted AP search and other outlets checked."
+      }
+    ],
+    "finding_assessment": "No traceable, nonduplicate, substantively new Gaza development verified since the prior hourly check. Primary OCHA and WHO checked first; 12 additional targeted searches. DEGRADED because WHO Eastern Mediterranean endpoint remained inaccessible.",
+    "limitations": [
+      "Zero verified findings is not evidence no incident occurred.",
+      "Search indexing and source update timestamps may lag events.",
+      "No approval, publication, production, schedule or automation changes."
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T014451-0700-r11.json",
+      "completed_at": "2026-10-24T01:45:52-07:00",
+      "outcome": "no_findings",
+      "status": "DEGRADED",
+      "commit": "35ce5ff777560ad7cb0a4503e8eda20aeb7e28ee"
+    },
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T114451-0700-r11-114355",
+  "scheduled_for": "2026-10-24T11:44:51-07:00",
+  "started_at": "2026-10-24T11:43:55-07:00",
+  "completed_at": "2026-10-24T11:48:30.908-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T10:45:39.470-07:00",
+    "end": "2026-10-24T11:48:30.908-07:00",
+    "basis": "Prior independently fetched Gaza watch heartbeat completed_at (10:44 scheduled watch); only new, traceable in-window material developments or evidenced follow-ups qualify; dates shown in search results are not sufficient evidence of event or publication timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Primary Gaza collection/publication and its editorial gates remain authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T104451-0700-r11-104353.json",
+      "completed_at": "2026-10-24T10:45:39.470-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest site-listed Gaza impact snapshot and humanitarian update posted 19 October 2026; no new in-window material."
+      },
+      {
+        "publisher": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct fetch failed: 502 Bad Gateway, limiting direct regional health verification."
+      },
+      {
+        "publisher": "WHO global situation page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; page has background information and older resources but no newly dated health-service/medevac event in the window."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent site-listed update posted 19 October; no new in-window report."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 24 2026 latest civilian casualties strikes injuries 18:00 UTC Reuters",
+      "site:apnews.com/article/ Gaza October 24 2026 Saturday aid casualties strike crossing afternoon",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza 24 October 2026 water health food access",
+      "site:who.int Gaza October 24 2026 hospital ambulances medical evacuation healthcare disruption",
+      "Gaza \"24 October 2026\" \"aid\" \"killed\" \"hospital\" Saturday latest",
+      "Reuters Gaza October 24 2026 latest civilian injuries Gaza Saturday ceasefire crossing",
+      "October 24 2026 Gaza Saturday latest food bread bakeries water WFP UNRWA",
+      "site:msf.org Gaza October 2026 October 24 medical clinics ambulance hospitals patients evacuation",
+      "site:wfp.org Gaza October 24 2026 2026-10-24 crossings humanitarian convoy flour bread distribution",
+      "site:unrwa.org Gaza October 24 2026 evacuation displaced shelters sanitation water",
+      "site:icrc.org Gaza October 24 2026 detainees hostages evacuations ambulance medical patients",
+      "site:english.wafa.ps 24 October 2026 Gaza Saturday killed injured civilians displacement hospitals October 24 afternoon"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties and documented civilian impact",
+      "displacement",
+      "aid access and crossings",
+      "food, bread, water and sanitation",
+      "healthcare, hospitals, functioning capacity, ambulance, medical transport, fuel, medical evacuations",
+      "infrastructure",
+      "detention and hostages",
+      "ceasefire and negotiation changes"
+    ],
+    "examined_but_excluded": [
+      {
+        "publisher": "Associated Press",
+        "title": "Israel imposes closures across a West Bank city after attacks, and other Mideast news",
+        "url": "https://apnews.com/article/mideast-news-october-24-2026-707ad41a79d384ff4715902ce3d60df5",
+        "reason": "Rolling October 24 story has an Israeli strike reportedly killing at least one person in Gaza City, but precise event/section publication time, civilian status, and novelty versus earlier watches cannot be verified; prior watch already examined this rolling article. West Bank developments excluded."
+      },
+      {
+        "publisher": "Reuters",
+        "title": "World Food Programme cuts aid to 500,000 Palestinians in Gaza, citing funding shortages",
+        "url": "https://www.reuters.com/world/middle-east/world-food-programme-cuts-aid-500000-palestinians-gaza-citing-funding-shortages-2026-10-19/",
+        "publication_date": "2026-10-19",
+        "reason": "Previously documented food-assistance cuts; predates the hourly recall window."
+      },
+      {
+        "publisher": "Reuters",
+        "title": "Israeli fire kills four people in Gaza, medics say",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "publication_date": "2026-10-22",
+        "reason": "Older incident already within previous watch coverage."
+      },
+      {
+        "publisher": "Reuters",
+        "title": "Around 1,200 Palestinians are displaced in Hebron as Israel begins military operation",
+        "url": "https://www.reuters.com/world/middle-east/around-1200-palestinians-are-displaced-hebron-israel-begins-military-operation-2026-10-24/",
+        "publication_date": "2026-10-24",
+        "reason": "West Bank/Hebron, not an in-Gaza development."
+      },
+      {
+        "publisher": "UNRWA",
+        "title": "Situation Report #231 on Gaza and occupied West Bank",
+        "url": "https://www.unrwa.org/resources/reports/unrwa-situation-report-231-humanitarian-crisis-gaza-strip-and-occupied-west-bank",
+        "reason": "Historical July 2026 coverage, not an in-window development."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean Regional Office",
+        "url": "https://www.emro.who.int/opt/",
+        "observed": "502 Bad Gateway",
+        "impact": "Cannot directly cross-check latest regional hospital capacity, medical transport, health-service or medical-evacuation updates. WHO global and OCHA remained accessible; watch DEGRADED rather than FAILED."
+      }
+    ],
+    "assessment": "No independently established new, nonduplicate in-Gaza development since the latest verified 10:45:39 PDT heartbeat. Twelve additional targeted searches completed after OCHA OPT and WHO first checks. Search indexing delays and an undated rolling AP update limit recall; this does not establish that no events occurred.",
+    "publication_actions": "none",
+    "production_authorization": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

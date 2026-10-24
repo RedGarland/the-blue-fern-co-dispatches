@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T034609-0700-r11-8e24c7",
+  "scheduled_for": "2026-10-24T03:45:54-07:00",
+  "started_at": "2026-10-24T03:46:09-07:00",
+  "completed_at": "2026-10-24T03:48:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T02:45:54-07:00",
+    "end_at": "2026-10-24T03:48:01-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Nominal preceding hourly check to current observation; preceding 02:45:54 completion could not be verified from the available prior heartbeat reference."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value Food Line recall watch only; nationwide production collection remains authoritative.",
+    "12 targeted web searches completed (fast search), no search errors; classes covered: sole/only/full-service grocery closure or damage, canceled weather/disaster emergency distributions, abrupt pantry/food-bank service reduction, and official SNAP/WIC interruption.",
+    "No new U.S. qualifying event with verified occurrence or announcement inside the observation window. Search results surfaced predominantly older incidents, resource/promotional content, past SNAP disruptions, or speculative future grocery loss; excluded.",
+    "Indexed October 24 Austin JD's Supermarket/rail article concerns possible future closure rather than an actual food-access interruption; not a positive finding.",
+    "Search freshness/indexing is incomplete by nature, especially at local overnight hours; this watch is not an assertion that no disruptions occurred.",
+    "No approvals, publications, changes to production collector, schedule modifications, or task disabling."
+  ]
+}

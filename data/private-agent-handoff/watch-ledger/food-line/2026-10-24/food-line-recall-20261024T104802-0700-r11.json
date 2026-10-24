@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T104802-0700-r11",
+  "scheduled_for": "2026-10-24T10:45:54-07:00",
+  "started_at": "2026-10-24T10:48:02-07:00",
+  "completed_at": "2026-10-24T10:50:06.755-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T09:45:50.377-07:00",
+    "end_at": "2026-10-24T10:50:06.755-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at the latest preceding persisted Food Line Source Watch heartbeat completed_at; recency-three-day search overlap used for discovery, but findings require a newly substantiated disruption since the previous check."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary U.S. high-value recall watch only; production nationwide Food Line collection remains authoritative.",
+    "12 targeted fast web searches total (three per miss class; recency three days and specific October 24, 2026 date terms); no query transport failures. Covered only/last/full-service grocery-store losses; canceled storm/flood/fire/outage emergency distributions; abrupt pantry/food-bank closures or major reductions; official new SNAP/WIC/EBT assistance interruptions.",
+    "No newly verifiable qualifying food-access interruption was found during this bounded observation window. Search results skewed toward older closures, earlier SNAP disruptions, scheduled food distributions, resource guides, and unrelated news.",
+    "Kauaʻi Now hurricane recovery reporting dated October 23 (https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/) reports an emergency food distribution taking place, not canceled; excluded. Other returned examples predated this run, including Illinois WIC system outage reported months earlier and 2025 SNAP shutdown coverage.",
+    "The previous hourly check had no findings. Indexing latency and bounded search mean absence of newly verified findings does not establish absence of all real-world disruptions.",
+    "No approval, publication, schedule change, task disabling, or production-collector mutation."
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T024049-0700-r11-cc72",
+  "scheduled_for": "2026-10-24T02:45:22-07:00",
+  "started_at": "2026-10-24T02:40:49-07:00",
+  "completed_at": "2026-10-24T02:42:07-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T01:42:56-07:00",
+    "end": "2026-10-24T02:42:07-07:00",
+    "basis": "Since completed_at of the latest verified Care Line Watch ledger; searched October 23-24 sources for newly indexed high-value access changes, excluding prior captured and unchanged/contingent reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S. and territories healthcare-access recall watch; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "previously_reported": "2026-10-23: My Families Healthcare (CA, 758151), 1ST AIDE HOME HEALTH AGENCY (CA, 559673), Moonlight Home Health Care Inc (OH, 369006). October 22 notices also previously recorded."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "October 24 hospital emergency department closure or suspension",
+      "October 23 hospital emergency department diversion",
+      "October 23 maternity/labor-and-delivery suspension",
+      "October 23 rural hospital emergency loss or reopening",
+      "October 23 dialysis closure",
+      "October 23 oncology/cancer center closure",
+      "October 23 behavioral-health inpatient suspension",
+      "October 23 primary/urgent care clinic closure",
+      "October 23 ambulance/EMS coverage cessation",
+      "October 23 air-medical helicopter base suspension",
+      "October 24 hospital ED restoration or reopening",
+      "October 23 U.S. territory hospital/ambulance/clinic service loss"
+    ],
+    "prior_ledger_verified": {
+      "run_id": "care-line-watch-20261024T014035-0700-r11-4f7c",
+      "completed_at": "2026-10-24T01:42:56-07:00",
+      "outcome": "no_findings"
+    },
+    "excluded": [
+      "Previously recorded CMS October 22-23 notices; Vista Medical Center East anesthesia suspension, Rhode Island rehabilitation evacuation, Carle Normal closure, Princeton urgent care closure, and Dennys River Ambulance closure.",
+      "Watsonville hospital maternity closure only being considered, without concrete adopted service change.",
+      "VNA Carol Stream primary-care location moving nearby with uninterrupted service and unchanged hours.",
+      "Crystal Clinic Warren orthopedic office closure outside prioritized essential-service classes.",
+      "Butler/Forward Township ambulance coverage change effective October 1, outside recent window.",
+      "Detroit Medical Center/Meridian insurer network termination contingent on unresolved negotiations, not yet effective.",
+      "Unrelated ownership, expansion proposals, commentary, general outages explicitly reported not to affect clinical care, and unsupported claims."
+    ],
+    "result": "No independently supported, newly identified nonduplicate qualifying access change in the bounded watch window.",
+    "limitations": "Targeted web search is not nationally exhaustive; source indexing may lag. No CMS check or targeted search materially failed.",
+    "controls": "No publication, review approval, production collection mutation, schedule change, or task disabling."
+  }
+}

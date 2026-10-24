@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T114857-0700-r11-7261c65a",
+  "scheduled_for": "2026-10-24T11:45:54-07:00",
+  "started_at": "2026-10-24T11:48:57-07:00",
+  "completed_at": "2026-10-24T11:51:09-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T10:45:54-07:00",
+    "end_at": "2026-10-24T11:51:09-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Nominal preceding hourly check to this run completion; prior-run ledger listing was not accessible, so the immediately preceding schedule slot is used as the conservative hourly boundary."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only. The primary nationwide Food Line production collector remains authoritative.",
+    "Completed exactly 12 targeted web searches without reported search errors: 3 for sole/last/only grocery-store closures or fire; 3 for canceled emergency food distributions after disasters, flood, storm, or outage; 3 for abrupt pantry/food-bank closure or major reduction; 3 for official SNAP/WIC/food-assistance interruption or EBT outages.",
+    "No newly verified qualifying disruption with evidence of onset or announcement within the October 24, 2026 10:45-11:50 Pacific observation window. Search freshness metadata was checked against article/event dates; older and unrelated results excluded.",
+    "Excluded older already-reported events, possible future grocery closures without current access loss, routine food distribution announcements, resource guides, donation solicitations, generic policy commentary, 2025 federal shutdown SNAP articles, and stale 2026 WIC outage coverage.",
+    "Known prior Utah Food Bank Monument Valley Pantry flooding/closure lead from October 23 remains unverified and was not reasserted as a new finding in this run.",
+    "Public GitHub tree/API listing was inaccessible through browser and container channels, but the authenticated GitHub file connector is available for exact-path durable ledger writing and read-back.",
+    "No approval, publication, production collection changes, schedule changes, or task disabling."
+  ]
+}

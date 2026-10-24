@@ -1,6 +1,4 @@
 import json
-import shutil
-import uuid
 import gzip
 import urllib.error
 from pathlib import Path
@@ -11,6 +9,8 @@ from bluefern_dispatches import gaza_sources
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 from scripts.run_gaza_dispatch import curate_stories, normalize_sources
 from scripts import check_gaza_sources
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_test_root_capacity
 
 
 def _rss_payload(items: list[dict[str, str]]) -> bytes:
@@ -86,14 +86,12 @@ def write_two_feed_config(root: Path) -> Path:
 
 
 @pytest.fixture()
-def work_root():
-    repo = Path(__file__).resolve().parents[1]
-    root = repo / "output" / "test-runs" / uuid.uuid4().hex / "sources"
-    root.mkdir(parents=True)
-    try:
-        yield root
-    finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+def work_root(request, tmp_path_factory):
+    root = tmp_path_factory.mktemp("gaza-sources")
+    register_fixture_root(request, root)
+    require_test_root_capacity(root, projected_bytes=8192)
+    mark_fixture_setup_complete(request, root)
+    yield root
 
 
 def test_sources_yml_loads(work_root):

@@ -1,6 +1,5 @@
 ﻿import json
 import shutil
-import uuid
 from pathlib import Path
 
 import pytest
@@ -11,6 +10,9 @@ from bluefern_dispatches import generator as generator_module
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
 from bluefern_dispatches.gaza_audio import _audio_story_eligibility
 from scripts import run_gaza_dispatch as run_gaza_dispatch_module
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_copy_capacity, require_test_root_capacity
+
 from scripts.run_gaza_dispatch import (
     _apply_written_public_story_filter,
     build_source_diversity_report,
@@ -89,12 +91,16 @@ def test_written_palestinian_development_survives_unrelated_audio_sidebar() -> N
     assert [story["story_id"] for story in excluded] == ["uk-newsletter", "unconfirmed-consulate", "sidebar-only"]
 
 
-def make_work_root(repo: Path) -> Path:
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+def make_work_root(request, tmp_path_factory, repo: Path) -> Path:
+    work = tmp_path_factory.mktemp("gaza-generation")
+    register_fixture_root(request, work)
+    require_copy_capacity(work, repo / "assets")
     shutil.copytree(repo / "assets", work / "assets")
+    require_test_root_capacity(work, projected_bytes=16384)
     (work / "data" / "records").mkdir(parents=True)
     for name in ("dispatches", "editions", "sources", "records", "curation_decisions", "detail_packages"):
         (work / "data" / "records" / f"{name}.json").write_text("[]", encoding="utf-8")
+    mark_fixture_setup_complete(request, work)
     return work
 
 
@@ -285,9 +291,9 @@ def test_gaza_archive_rss_index_include_pages_public_editions_despite_local_no_u
     assert 'href="editions/2026-10-03/">Gaza update 2026-10-03</a>' in index
 
 
-def test_manual_source_generation_writes_public_edition_and_manifests(monkeypatch):
+def test_manual_source_generation_writes_public_edition_and_manifests(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     backup_root = work / "output" / "test-backups" / "gaza"
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", backup_root)
     manual_path = write_manual_sources(work, "2026-04-30")
@@ -310,9 +316,9 @@ def test_manual_source_generation_writes_public_edition_and_manifests(monkeypatc
     assert "source_record_id" in read(edition_dir / "sources_manifest.json")
 
 
-def test_four_sources_one_publisher_renders_limited_source_update_with_top_note(monkeypatch):
+def test_four_sources_one_publisher_renders_limited_source_update_with_top_note(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     records = []
     for idx in range(1, 5):
@@ -345,9 +351,9 @@ def test_four_sources_one_publisher_renders_limited_source_update_with_top_note(
     assert "Lead Development" not in html
 
 
-def test_limited_source_warning_uses_plural_publishers_for_two_publishers(monkeypatch):
+def test_limited_source_warning_uses_plural_publishers_for_two_publishers(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     records = []
     for idx in range(1, 5):
@@ -403,9 +409,9 @@ def test_source_adequacy_does_not_claim_all_saved_sources_are_one_publisher_when
     assert not any("All saved source records" in warning for warning in adequacy["warnings"])
 
 
-def test_aljazeera_sources_produce_non_empty_source_family_classification(monkeypatch):
+def test_aljazeera_sources_produce_non_empty_source_family_classification(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = []
     for idx in range(1, 4):
@@ -433,9 +439,9 @@ def test_aljazeera_sources_produce_non_empty_source_family_classification(monkey
     assert int(family_counts.get("news_media", 0)) >= 1
 
 
-def test_anadolu_manual_source_is_classified_as_regional_wire_and_rendered(monkeypatch):
+def test_anadolu_manual_source_is_classified_as_regional_wire_and_rendered(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -574,9 +580,9 @@ def test_new_arab_drone_strike_qualifies_as_core_ground_development():
     assert stories[0]["core_ground_development"] is True
 
 
-def test_i24news_military_claim_renders_claim_attribution_caveat(monkeypatch):
+def test_i24news_military_claim_renders_claim_attribution_caveat(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -628,9 +634,9 @@ def test_i24news_military_claim_renders_claim_attribution_caveat(monkeypatch):
     assert "based primarily on an IDF statement" in html
 
 
-def test_gaza_adjacent_context_source_does_not_satisfy_core_ground_threshold(monkeypatch):
+def test_gaza_adjacent_context_source_does_not_satisfy_core_ground_threshold(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -671,9 +677,9 @@ def test_gaza_adjacent_context_source_does_not_satisfy_core_ground_threshold(mon
     assert "2026-05-31" not in rss_xml
 
 
-def test_gaza_no_update_keeps_latest_actual_edition_and_is_idempotent(monkeypatch):
+def test_gaza_no_update_keeps_latest_actual_edition_and_is_idempotent(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     edition_dir = work / "output" / "site" / "gaza" / "editions" / "2026-05-30"
     edition_dir.mkdir(parents=True)
@@ -712,9 +718,9 @@ def test_gaza_no_update_keeps_latest_actual_edition_and_is_idempotent(monkeypatc
     assert archive_html.count('class="no-update"') == 1
 
 
-def test_gaza_later_actual_edition_supersedes_no_update_status(monkeypatch):
+def test_gaza_later_actual_edition_supersedes_no_update_status(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     for edition_date in ("2026-05-30", "2026-06-01"):
         edition_dir = work / "output" / "site" / "gaza" / "editions" / edition_date
@@ -752,9 +758,9 @@ def test_gaza_later_actual_edition_supersedes_no_update_status(monkeypatch):
     assert archive_html.count('class="no-update"') == 1
 
 
-def test_gaza_no_update_not_written_for_zero_source_failure(monkeypatch):
+def test_gaza_no_update_not_written_for_zero_source_failure(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(work, "2026-05-31", [])
 
@@ -764,9 +770,9 @@ def test_gaza_no_update_not_written_for_zero_source_failure(monkeypatch):
     assert not (work / "output" / "site" / "gaza" / "status" / "no-updates" / "2026-05-31.json").exists()
 
 
-def test_gaza_no_update_not_written_for_validation_failure_without_no_publication_evidence(monkeypatch):
+def test_gaza_no_update_not_written_for_validation_failure_without_no_publication_evidence(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     wrote: list[str] = []
     ok = render_gaza_no_update_from_preserved_artifacts(work, "2026-05-31", dry_run=False, wrote=wrote)
@@ -774,9 +780,9 @@ def test_gaza_no_update_not_written_for_validation_failure_without_no_publicatio
     assert wrote == []
 
 
-def test_gaza_no_update_can_render_from_preserved_artifacts(monkeypatch):
+def test_gaza_no_update_can_render_from_preserved_artifacts(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -812,9 +818,9 @@ def test_gaza_no_update_can_render_from_preserved_artifacts(monkeypatch):
     assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-31" / "index.html").exists()
 
 
-def test_gaza_normal_edition_generation_preserves_same_day_no_update_marker(monkeypatch):
+def test_gaza_normal_edition_generation_preserves_same_day_no_update_marker(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     status_path = work / "output" / "site" / "gaza" / "status" / "no-updates" / "2026-05-31.json"
     status_path.parent.mkdir(parents=True, exist_ok=True)
@@ -844,9 +850,9 @@ def test_gaza_normal_edition_generation_preserves_same_day_no_update_marker(monk
     assert (work / "output" / "site" / "gaza" / "editions" / "2026-05-31" / "index.html").exists()
 
 
-def test_source_manifest_carries_attribution_mode_and_claim_status(monkeypatch):
+def test_source_manifest_carries_attribution_mode_and_claim_status(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -900,9 +906,9 @@ def test_source_manifest_carries_attribution_mode_and_claim_status(monkeypatch):
     assert aa_row["claim_status"] == "reported_public_source"
 
 
-def test_provider_no_matches_with_manual_same_publisher_marks_discovery_gap(monkeypatch):
+def test_provider_no_matches_with_manual_same_publisher_marks_discovery_gap(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -975,9 +981,9 @@ def test_provider_no_matches_with_manual_same_publisher_marks_discovery_gap(monk
     assert alj_diag["manual_backfill_source"] == ["alj-2026-05-31-gap-001"]
 
 
-def test_eight_plus_sources_four_publishers_render_daily_briefing(monkeypatch):
+def test_eight_plus_sources_four_publishers_render_daily_briefing(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     publishers = ["Reuters", "AP", "BBC", "UN News", "Reuters", "AP", "BBC", "UN News"]
     records = []
@@ -1006,9 +1012,9 @@ def test_eight_plus_sources_four_publishers_render_daily_briefing(monkeypatch):
     assert "limited-source update generated" not in html.lower()
 
 
-def test_fewer_than_three_sources_does_not_render_as_normal_daily_briefing(monkeypatch):
+def test_fewer_than_three_sources_does_not_render_as_normal_daily_briefing(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     records = []
     for idx in range(1, 3):
@@ -1039,9 +1045,9 @@ def test_fewer_than_three_sources_does_not_render_as_normal_daily_briefing(monke
     assert "Daily briefing / May 27, 2026" not in html
 
 
-def test_june_21_related_wishah_records_render_as_limited_source_update_with_clean_summary(monkeypatch):
+def test_june_21_related_wishah_records_render_as_limited_source_update_with_clean_summary(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -1094,9 +1100,9 @@ def test_june_21_related_wishah_records_render_as_limited_source_update_with_cle
     assert "after. Israel killed him in Gaza" not in transcript
 
 
-def test_source_quality_reports_and_manual_template_written_for_limited_source(monkeypatch):
+def test_source_quality_reports_and_manual_template_written_for_limited_source(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = []
     for idx in range(1, 5):
@@ -1128,18 +1134,18 @@ def test_source_quality_reports_and_manual_template_written_for_limited_source(m
     assert payload["source_quality_status"] == "limited_source_update"
 
 
-def test_missing_manual_sources_fail_safely(monkeypatch):
+def test_missing_manual_sources_fail_safely(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
 
     with pytest.raises(FileNotFoundError):
         run_gaza_dispatch(work, "2026-04-30", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
 
 
-def test_invalid_source_record_does_not_invent_sources(monkeypatch):
+def test_invalid_source_record_does_not_invent_sources(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -1172,9 +1178,9 @@ def test_invalid_source_record_does_not_invent_sources(monkeypatch):
     assert manifest_payload["story_count"] == 0
 
 
-def test_zero_source_run_refuses_public_generation_and_keeps_failure_non_public(monkeypatch):
+def test_zero_source_run_refuses_public_generation_and_keeps_failure_non_public(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(work, "2026-05-13", [])
 
@@ -1200,9 +1206,9 @@ def test_zero_source_run_refuses_public_generation_and_keeps_failure_non_public(
     assert report["provider_failures"][0]["source_id"] == "manual_sources_json"
 
 
-def test_collection_report_includes_provider_attempted_success_counts(monkeypatch):
+def test_collection_report_includes_provider_attempted_success_counts(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(work, "2026-05-15")
     result = run_gaza_dispatch(work, "2026-05-15", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
@@ -1214,9 +1220,9 @@ def test_collection_report_includes_provider_attempted_success_counts(monkeypatc
     assert report["final_story_count"] >= 1
 
 
-def test_collection_report_carries_provider_rejection_diagnostics(monkeypatch):
+def test_collection_report_carries_provider_rejection_diagnostics(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(work, "2026-05-15")
     ctx_path = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "source_collection_context.json"
@@ -1284,9 +1290,9 @@ def test_collection_report_carries_provider_rejection_diagnostics(monkeypatch):
     assert report["provider_diagnostics"][0]["items_with_gaza_terms"] == 3
 
 
-def test_collection_report_tracks_source_window_and_later_same_day_updates(monkeypatch):
+def test_collection_report_tracks_source_window_and_later_same_day_updates(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     monkeypatch.setattr("scripts.run_gaza_dispatch.utc_now", lambda: "2026-06-22T19:06:00+00:00")
     rows = [
@@ -1374,9 +1380,9 @@ def test_collection_report_tracks_source_window_and_later_same_day_updates(monke
     assert run_manifest["contains_post_edition_date_update"] is True
 
 
-def test_prior_date_rerun_excludes_next_day_retrieval_by_default_and_keeps_same_day_update(monkeypatch):
+def test_prior_date_rerun_excludes_next_day_retrieval_by_default_and_keeps_same_day_update(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -1445,9 +1451,9 @@ def test_prior_date_rerun_excludes_next_day_retrieval_by_default_and_keeps_same_
     assert collection_report["post_edition_date_sources_included"] is False
 
 
-def test_prior_date_override_includes_next_day_retrieval_and_records_manifest_fields(monkeypatch):
+def test_prior_date_override_includes_next_day_retrieval_and_records_manifest_fields(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -1514,9 +1520,9 @@ def test_prior_date_override_includes_next_day_retrieval_and_records_manifest_fi
     assert edition_manifest["post_edition_date_source_count"] == 1
 
 
-def test_current_day_run_can_still_use_same_day_retrievals(monkeypatch):
+def test_current_day_run_can_still_use_same_day_retrievals(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -1563,9 +1569,9 @@ def test_current_day_run_can_still_use_same_day_retrievals(monkeypatch):
     assert collection_report["contains_post_edition_date_update"] is False
 
 
-def test_collection_report_does_not_flag_later_same_day_update_for_single_batch(monkeypatch):
+def test_collection_report_does_not_flag_later_same_day_update_for_single_batch(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     monkeypatch.setattr("scripts.run_gaza_dispatch.utc_now", lambda: "2026-06-20T13:00:00+00:00")
     rows = [
@@ -1613,9 +1619,9 @@ def test_collection_report_does_not_flag_later_same_day_update_for_single_batch(
     assert len(report["retrieval_batches"]) == 1
 
 
-def test_zero_story_run_refuses_public_generation(monkeypatch):
+def test_zero_story_run_refuses_public_generation(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     repeated = [
         {
@@ -1642,9 +1648,9 @@ def test_zero_story_run_refuses_public_generation(monkeypatch):
     assert not site_edition.exists()
 
 
-def test_review_candidates_never_create_public_story(monkeypatch):
+def test_review_candidates_never_create_public_story(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(work, "2026-05-16", [])
     ctx_path = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-16" / "source_collection_context.json"
@@ -1680,9 +1686,9 @@ def test_review_candidates_never_create_public_story(monkeypatch):
     assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-16" / "index.html").exists()
 
 
-def test_archive_rss_latest_and_shared_records(monkeypatch):
+def test_archive_rss_latest_and_shared_records(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     backup_root = work / "output" / "test-backups" / "gaza"
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", backup_root)
     write_manual_sources(work, "2026-04-30")
@@ -1733,9 +1739,9 @@ def test_archive_rss_latest_and_shared_records(monkeypatch):
     assert (backup_root / "2026-05-01" / "sources_manifest.json").exists()
 
 
-def test_repeated_cross_edition_sources_fail_cleanly_and_write_dedupe_report(monkeypatch):
+def test_repeated_cross_edition_sources_fail_cleanly_and_write_dedupe_report(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     repeated = [
         {
@@ -1774,9 +1780,9 @@ def test_repeated_cross_edition_sources_fail_cleanly_and_write_dedupe_report(mon
     assert report["suppressed_candidate_count"] >= 1
 
 
-def test_dedupe_report_is_rewritten_for_current_run(monkeypatch):
+def test_dedupe_report_is_rewritten_for_current_run(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(work, "2026-05-10")
     dedupe_path = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "dedupe_report.json"
@@ -1791,9 +1797,9 @@ def test_dedupe_report_is_rewritten_for_current_run(monkeypatch):
     assert "sentinel" not in payload
 
 
-def test_preserved_seed_path_runs_cross_edition_dedupe_and_refuses_repeated_publish(monkeypatch):
+def test_preserved_seed_path_runs_cross_edition_dedupe_and_refuses_repeated_publish(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     prior_edition = work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-11"
     prior_edition.mkdir(parents=True, exist_ok=True)
     repeated = [
@@ -1845,9 +1851,9 @@ def test_preserved_seed_path_runs_cross_edition_dedupe_and_refuses_repeated_publ
     assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-12" / "index.html").exists()
 
 
-def test_suppressed_gaza_editions_are_not_listed_in_archive_index_or_rss(monkeypatch):
+def test_suppressed_gaza_editions_are_not_listed_in_archive_index_or_rss(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     repeated = [
         {
@@ -1890,9 +1896,9 @@ def test_suppressed_gaza_editions_are_not_listed_in_archive_index_or_rss(monkeyp
     assert "2026-05-11" not in rss
 
 
-def test_valid_source_backed_edition_remains_public(monkeypatch):
+def test_valid_source_backed_edition_remains_public(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(work, "2026-05-09")
     result = run_gaza_dispatch(work, "2026-05-09", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
@@ -1900,9 +1906,9 @@ def test_valid_source_backed_edition_remains_public(monkeypatch):
     assert (work / "output" / "site" / "gaza" / "editions" / "2026-05-09" / "index.html").exists()
 
 
-def test_zero_source_or_zero_story_gaza_editions_are_not_listed(monkeypatch):
+def test_zero_source_or_zero_story_gaza_editions_are_not_listed(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
 
     write_manual_sources(work, "2026-05-09")
@@ -1942,9 +1948,9 @@ def test_zero_source_or_zero_story_gaza_editions_are_not_listed(monkeypatch):
     assert "2026-05-11" not in rss
 
 
-def test_rendered_gaza_html_strips_escaped_feed_markup(monkeypatch):
+def test_rendered_gaza_html_strips_escaped_feed_markup(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -1974,9 +1980,9 @@ def test_rendered_gaza_html_strips_escaped_feed_markup(monkeypatch):
     assert "Continue reading..." not in html
 
 
-def test_manual_sources_apply_topical_relevance_filter(monkeypatch):
+def test_manual_sources_apply_topical_relevance_filter(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -2031,9 +2037,9 @@ def test_manual_sources_apply_topical_relevance_filter(monkeypatch):
     assert "secret mission to rescue the UN" in html
 
 
-def test_non_gaza_palestinian_developments_are_excluded_and_gaza_top_story_remains(monkeypatch):
+def test_non_gaza_palestinian_developments_are_excluded_and_gaza_top_story_remains(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -2135,9 +2141,9 @@ def test_non_gaza_palestinian_developments_are_excluded_and_gaza_top_story_remai
     assert report["story_selection_excluded_reason_counts"]["unverified_gaza_event_location"] >= 2
 
 
-def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_fields(monkeypatch):
+def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_fields(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -2206,9 +2212,9 @@ def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_f
     assert "unknown" not in html_two
 
 
-def test_manual_equatorial_guinea_asylum_story_rejected_as_no_palestinian_anchor(monkeypatch):
+def test_manual_equatorial_guinea_asylum_story_rejected_as_no_palestinian_anchor(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -2249,9 +2255,9 @@ def test_manual_equatorial_guinea_asylum_story_rejected_as_no_palestinian_anchor
     assert "Equatorial Guinea" not in html
 
 
-def test_2026_05_25_off_topic_liveblog_cannot_be_gaza_top_story_and_thin_blocks_without_override(monkeypatch):
+def test_2026_05_25_off_topic_liveblog_cannot_be_gaza_top_story_and_thin_blocks_without_override(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -2306,9 +2312,9 @@ def test_2026_05_25_off_topic_liveblog_cannot_be_gaza_top_story_and_thin_blocks_
     assert "Court extends detention of Gaza flotilla activists" in html
 
 
-def test_source_diversity_report_written_with_stage_counts(monkeypatch):
+def test_source_diversity_report_written_with_stage_counts(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -2372,9 +2378,9 @@ def test_source_diversity_report_written_with_stage_counts(monkeypatch):
     assert report["warning_severity"] == "info"
 
 
-def test_source_diversity_warning_triggers_for_five_stories_two_publishers(monkeypatch):
+def test_source_diversity_warning_triggers_for_five_stories_two_publishers(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     rows = [
         {
@@ -2717,9 +2723,9 @@ def test_invalid_raw_record_rejected_with_clear_reason():
     assert any("missing required fields: url" in err for err in errors)
 
 
-def test_source_diversity_report_includes_stage_drop_reasons(monkeypatch):
+def test_source_diversity_report_includes_stage_drop_reasons(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     repeated = [
         {
@@ -2794,9 +2800,9 @@ def test_source_diversity_report_includes_stage_drop_reasons(monkeypatch):
     assert any(row["source_record_id"] == "guardian-live-001" and "incidental_liveblog_or_domestic_politics_without_ground_development" in str(row["reason"]) for row in drops["curation_exclusions"])
 
 
-def test_source_diversity_report_includes_skipped_source_explanations(monkeypatch):
+def test_source_diversity_report_includes_skipped_source_explanations(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(work, "2026-05-26")
     ctx_path = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-26" / "source_collection_context.json"
@@ -2901,8 +2907,8 @@ def test_story_cleanup_drops_paragraph_that_exactly_repeats_headline():
     assert any(item.get("reason") == "summary_repeats_headline_or_is_malformed" for item in rejected)
 
 
-def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monkeypatch):
-    root = make_work_root(Path(__file__).resolve().parents[1])
+def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(request, tmp_path_factory, monkeypatch):
+    root = make_work_root(request, tmp_path_factory, Path(__file__).resolve().parents[1])
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", root / "output" / "backups" / "gaza")
     source_dir = root / "data" / "dispatches" / "gaza" / "sources" / "2026-06-20"
     source_dir.mkdir(parents=True)
@@ -3005,9 +3011,9 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert 'href="https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"' in transcript
 
 
-def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_trailing_fragments(monkeypatch):
+def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_trailing_fragments(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -3109,9 +3115,9 @@ def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_tra
     assert "ceasefire Israel and Hamas agreed to" in html
 
 
-def test_npr_detention_summary_repairs_allows_period_in_public_html(monkeypatch):
+def test_npr_detention_summary_repairs_allows_period_in_public_html(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -3152,9 +3158,9 @@ def test_npr_detention_summary_repairs_allows_period_in_public_html(monkeypatch)
     assert "allows Israel to hold Palestinians" in html
 
 
-def test_summary_keeps_complete_sentence_and_drops_bad_trailing_fragment(monkeypatch):
+def test_summary_keeps_complete_sentence_and_drops_bad_trailing_fragment(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -3203,9 +3209,9 @@ def test_summary_keeps_complete_sentence_and_drops_bad_trailing_fragment(monkeyp
     assert guardian_block.split("<p><strong>Context:</strong>", 1)[0].count("<p>") >= 2
 
 
-def test_board_of_peace_sentence_is_repaired_in_edition_and_audio(monkeypatch):
+def test_board_of_peace_sentence_is_repaired_in_edition_and_audio(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -3268,9 +3274,9 @@ def test_board_of_peace_sentence_is_repaired_in_edition_and_audio(monkeypatch):
     assert "the Board of Peace falters, and Israel expands control of the enclave" in transcript
 
 
-def test_summary_with_only_bad_fragment_gets_title_fallback_and_today_read_not_empty(monkeypatch):
+def test_summary_with_only_bad_fragment_gets_title_fallback_and_today_read_not_empty(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     write_manual_sources(
         work,
@@ -3325,9 +3331,9 @@ def test_render_gaza_edition_shows_transcript_audio_callout_when_transcript_exis
     assert "<audio controls" not in html
 
 
-def test_written_gaza_edition_excludes_newsletter_sidebar_lebanon_and_ambiguous_palestinian_rows(monkeypatch):
+def test_written_gaza_edition_excludes_newsletter_sidebar_lebanon_and_ambiguous_palestinian_rows(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     edition_date = "2026-06-05"
     write_manual_sources(
@@ -3482,9 +3488,9 @@ def test_render_gaza_edition_omits_audio_callout_when_no_audio_artifacts(tmp_pat
     assert "/gaza/audio/" not in html
 
 
-def test_run_gaza_dispatch_preserves_audio_callout_when_audio_artifacts_exist(monkeypatch):
+def test_run_gaza_dispatch_preserves_audio_callout_when_audio_artifacts_exist(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     edition_date = "2026-05-31"
     audio_dir = work / "output" / "site" / "gaza" / "audio"
@@ -3518,9 +3524,9 @@ def test_run_gaza_dispatch_preserves_audio_callout_when_audio_artifacts_exist(mo
     assert "/gaza/audio/podcast.xml" in html
 
 
-def test_gaza_public_prose_cleans_sentence_stitching_in_html(monkeypatch):
+def test_gaza_public_prose_cleans_sentence_stitching_in_html(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     edition_date = "2026-06-16"
     write_manual_sources(
@@ -3579,9 +3585,9 @@ def test_gaza_public_prose_cleans_sentence_stitching_in_html(monkeypatch):
     assert "between israel and the militant group hamas" in lowered
 
 
-def test_gaza_public_prose_collapses_same_event_ceasefire_reports_and_preserves_traceability(monkeypatch):
+def test_gaza_public_prose_collapses_same_event_ceasefire_reports_and_preserves_traceability(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = make_work_root(repo)
+    work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
     edition_date = "2026-06-18"
     records = [

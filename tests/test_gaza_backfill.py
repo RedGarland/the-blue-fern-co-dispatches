@@ -6,15 +6,21 @@ import uuid
 from pathlib import Path
 
 from scripts import backfill_gaza_dispatch, dispatches_status
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_copy_capacity, require_test_root_capacity
 
 
-def _make_root() -> Path:
+def _make_root(request, tmp_path_factory) -> Path:
     repo = Path(__file__).resolve().parents[1]
-    root = repo / "output" / "test-runs" / uuid.uuid4().hex / "gaza-backfill"
+    root = tmp_path_factory.mktemp("gaza-backfill")
+    register_fixture_root(request, root)
+    require_copy_capacity(root, repo / "assets")
     shutil.copytree(repo / "assets", root / "assets")
+    require_test_root_capacity(root, projected_bytes=8192)
     (root / "data" / "records").mkdir(parents=True, exist_ok=True)
     for name in ("dispatches", "editions", "sources", "records", "curation_decisions", "detail_packages", "story_memory"):
         (root / "data" / "records" / f"{name}.json").write_text("[]", encoding="utf-8")
+    mark_fixture_setup_complete(request, root)
     return root
 
 
@@ -67,8 +73,8 @@ def _stub_git(monkeypatch, *, root: Path, pages: Path, pages_branch: str = "gh-p
     monkeypatch.setattr(dispatches_status, "run_git", fake)
 
 
-def test_backfill_one_date_with_fresh_fixture_candidates_succeeds():
-    root = _make_root()
+def test_backfill_one_date_with_fresh_fixture_candidates_succeeds(request, tmp_path_factory):
+    root = _make_root(request, tmp_path_factory)
     try:
         _write_manual(root, "2026-05-10", [_record("2026-05-10", "a")])
         report = backfill_gaza_dispatch.run_backfill(
@@ -84,11 +90,12 @@ def test_backfill_one_date_with_fresh_fixture_candidates_succeeds():
         assert report["completed_dates"] == ["2026-05-10"]
         assert report["failed_dates"] == []
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        # The shared fixture lifecycle owns cleanup and retains failed evidence.
+        pass
 
 
-def test_backfill_zero_candidates_fails_safely_and_unlinked():
-    root = _make_root()
+def test_backfill_zero_candidates_fails_safely_and_unlinked(request, tmp_path_factory):
+    root = _make_root(request, tmp_path_factory)
     try:
         _write_manual(root, "2026-05-11", [])
         report = backfill_gaza_dispatch.run_backfill(
@@ -106,11 +113,12 @@ def test_backfill_zero_candidates_fails_safely_and_unlinked():
         assert row["public_exposed"] is False
         assert row["archive_linked"] is False
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        # The shared fixture lifecycle owns cleanup and retains failed evidence.
+        pass
 
 
-def test_backfill_all_duplicate_candidates_fails_safely_and_unlinked():
-    root = _make_root()
+def test_backfill_all_duplicate_candidates_fails_safely_and_unlinked(request, tmp_path_factory):
+    root = _make_root(request, tmp_path_factory)
     try:
         repeated = _record("2026-05-10", "dup", url="https://news.google.com/rss/articles/abc?url=https%3A%2F%2Freuters.com%2Fstory")
         _write_manual(root, "2026-05-10", [repeated])
@@ -127,11 +135,12 @@ def test_backfill_all_duplicate_candidates_fails_safely_and_unlinked():
         assert row["generated"] is False
         assert row["archive_linked"] is False
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        # The shared fixture lifecycle owns cleanup and retains failed evidence.
+        pass
 
 
-def test_multi_date_backfill_continues_only_with_allow_partial():
-    root = _make_root()
+def test_multi_date_backfill_continues_only_with_allow_partial(request, tmp_path_factory):
+    root = _make_root(request, tmp_path_factory)
     try:
         _write_manual(root, "2026-05-10", [_record("2026-05-10", "a")])
         # 2026-05-11 missing on purpose
@@ -159,9 +168,10 @@ def test_multi_date_backfill_continues_only_with_allow_partial():
         assert blocked["ok"] is False
         assert blocked["completed_dates"] == ["2026-05-10"]
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        # The shared fixture lifecycle owns cleanup and retains failed evidence.
+        pass
 
-    root = _make_root()
+    root = _make_root(request, tmp_path_factory)
     try:
         _write_manual(root, "2026-05-10", [_record("2026-05-10", "a")])
         _write_manual(
@@ -189,7 +199,8 @@ def test_multi_date_backfill_continues_only_with_allow_partial():
         assert partial["completed_dates"] == ["2026-05-10", "2026-05-12"]
         assert "2026-05-11" in partial["failed_dates"]
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        # The shared fixture lifecycle owns cleanup and retains failed evidence.
+        pass
 
 
 def test_date_range_runs_chronologically():
@@ -197,8 +208,8 @@ def test_date_range_runs_chronologically():
     assert dates == ["2026-05-10", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14"]
 
 
-def test_backfill_report_written_outside_output_site():
-    root = _make_root()
+def test_backfill_report_written_outside_output_site(request, tmp_path_factory):
+    root = _make_root(request, tmp_path_factory)
     try:
         _write_manual(root, "2026-05-10", [_record("2026-05-10", "a")])
         report = backfill_gaza_dispatch.run_backfill(
@@ -208,11 +219,12 @@ def test_backfill_report_written_outside_output_site():
         assert report_path.exists()
         assert "output\\site\\" not in str(report_path).lower()
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        # The shared fixture lifecycle owns cleanup and retains failed evidence.
+        pass
 
 
-def test_archive_rss_only_include_valid_source_backed_dates():
-    root = _make_root()
+def test_archive_rss_only_include_valid_source_backed_dates(request, tmp_path_factory):
+    root = _make_root(request, tmp_path_factory)
     try:
         _write_manual(root, "2026-05-10", [_record("2026-05-10", "a")])
         _write_manual(root, "2026-05-11", [])
@@ -231,11 +243,12 @@ def test_archive_rss_only_include_valid_source_backed_dates():
         assert "2026-05-10" in archive and "2026-05-10" in rss
         assert "2026-05-11" not in archive and "2026-05-11" not in rss
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        # The shared fixture lifecycle owns cleanup and retains failed evidence.
+        pass
 
 
-def test_dispatches_status_ok_when_failed_folders_unlinked(monkeypatch):
-    root = _make_root()
+def test_dispatches_status_ok_when_failed_folders_unlinked(monkeypatch, request, tmp_path_factory):
+    root = _make_root(request, tmp_path_factory)
     try:
         (root / "scripts").mkdir(parents=True, exist_ok=True)
         (root / "scripts" / "run_american_pressure_dispatch.py").write_text('result = {"live_fetch_enabled": False}\n', encoding="utf-8")
@@ -251,7 +264,8 @@ def test_dispatches_status_ok_when_failed_folders_unlinked(monkeypatch):
         status = dispatches_status.build_status(root, pages)
         assert status["ok"] is True
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        # The shared fixture lifecycle owns cleanup and retains failed evidence.
+        pass
 
 
 def test_no_push_command_exists_in_backfill_script():

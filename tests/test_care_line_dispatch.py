@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import shutil
-import uuid
 from pathlib import Path
 
 from bluefern_dispatches.care_line_sources import (
@@ -19,24 +18,32 @@ from bluefern_dispatches.care_line_sources import (
 )
 from bluefern_dispatches.care_line_render import render_care_line_edition_body
 from bluefern_dispatches.generator import build_site
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_copy_capacity, require_test_root_capacity
 
 
 def _copy_care_line_data(repo: Path, work: Path) -> None:
     source_root = repo / "data" / "dispatches" / "care-line"
+    require_copy_capacity(work, source_root)
     target_root = work / "data" / "dispatches" / "care-line"
     shutil.copytree(source_root, target_root)
 
 
 def _copy_assets(repo: Path, work: Path) -> None:
+    require_copy_capacity(work, repo / "assets")
     shutil.copytree(repo / "assets", work / "assets")
 
 
-def _work_root() -> Path:
+def _work_root(request, tmp_path_factory) -> Path:
     repo = Path(__file__).resolve().parents[1]
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "care-line"
-    work.mkdir(parents=True, exist_ok=True)
+    work = tmp_path_factory.mktemp("care-line")
+    register_fixture_root(request, work)
+    require_copy_capacity(work, repo / "assets")
     _copy_assets(repo, work)
+    require_copy_capacity(work, repo / "data" / "dispatches" / "care-line")
     _copy_care_line_data(repo, work)
+    require_test_root_capacity(work, projected_bytes=16384)
+    mark_fixture_setup_complete(request, work)
     return work
 
 
@@ -74,9 +81,9 @@ def test_care_line_registry_and_manual_sources_validate():
     assert resource_row["verification_status"] == "resource-only baseline"
 
 
-def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monkeypatch):
+def test_care_line_build_renders_public_edition_and_excludes_stale_signals(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = _work_root()
+    work = _work_root(request, tmp_path_factory)
     backup_root = work / "backup"
     monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-23")
 
@@ -193,9 +200,9 @@ def test_care_line_historical_backfill_labels_event_and_source_dates():
     assert "Gary, IN | 2026-08-23" not in body
 
 
-def test_care_line_build_renders_no_current_update_edition_and_lists_it(monkeypatch):
+def test_care_line_build_renders_no_current_update_edition_and_lists_it(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = _work_root()
+    work = _work_root(request, tmp_path_factory)
     backup_root = work / "backup"
     monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-06-19")
 
@@ -242,9 +249,9 @@ def test_care_line_build_renders_no_current_update_edition_and_lists_it(monkeypa
     assert report["qualified_public_claim_count"] == 0
 
 
-def test_care_line_approved_release_renders_limited_source_public_edition(monkeypatch):
+def test_care_line_approved_release_renders_limited_source_public_edition(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    work = _work_root()
+    work = _work_root(request, tmp_path_factory)
     backup_root = work / "backup"
     monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-08-09")
 

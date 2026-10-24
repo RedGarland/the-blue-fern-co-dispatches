@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T124231-0700-r11-b224fc",
+  "scheduled_for": "2026-10-24T12:45:54-07:00",
+  "started_at": "2026-10-24T12:42:31-07:00",
+  "completed_at": "2026-10-24T12:44:35-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T11:51:09-07:00",
+    "end_at": "2026-10-24T12:44:35-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "The most recent persisted supplementary Food Line heartbeat completed at 11:51:09 Pacific; searches assessed reporting for new disruptions since that checkpoint. Search-engine recency of two days is retrieval scope, not eligibility."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only; nationwide production Food Line collection remains authoritative.",
+    "Exactly 12 targeted web searches were completed with no reported query failures: 3 sole/last/full-service grocery loss, 2 storm/fire/flood canceled emergency food distribution, 2 abrupt pantry/food-bank service reductions, 3 SNAP/WIC/EBT official interruption, and 2 final targeted cross-category October 24 queries.",
+    "No newly verified qualifying U.S. disruption was established as announced or occurring since the 11:51:09 Pacific prior heartbeat. Results primarily led to old reports, older closures, historic shutdown-related SNAP/WIC articles, and unrelated stories.",
+    "Excluded a September 14 Spencer, NY sole grocery store fire; an October 7 Alabama pantry weather cancellation; September closure of the Clark's Market in Battlement Mesa, CO; and other old/non-qualifying reporting. Article dates and actual event dates were distinguished from crawl recency.",
+    "The earlier Utah Food Bank Monument Valley Pantry flood-related notice was not established as a new post-window signal and remains outside findings pending direct dated verification.",
+    "No user notification for this successful no-findings run. No approval, publishing, collector modification, schedule change, or disabling."
+  ]
+}

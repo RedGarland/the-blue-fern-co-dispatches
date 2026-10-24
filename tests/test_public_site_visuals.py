@@ -492,6 +492,10 @@ def test_pages_publish_blocks_commit_when_visual_validation_fails(tmp_path: Path
     work = tmp_path / "repo"
     work.mkdir()
     pages_repo = _make_pages_root(tmp_path / "pages-fixture")
+    # The generator's synthetic-repository path requires an explicit
+    # lightweight .git marker; without it, git status probes the temp folder
+    # as a real repository and obscures the visual-validation assertion.
+    (pages_repo / ".git").mkdir()
     site_root = work / "output" / "site"
     shutil.copytree(pages_repo, site_root)
 

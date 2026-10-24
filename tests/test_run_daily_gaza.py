@@ -3,7 +3,6 @@ import json
 import ssl
 import shutil
 import subprocess
-import uuid
 from pathlib import Path
 
 import pytest
@@ -11,17 +10,21 @@ import pytest
 import scripts.publish_gaza_historical as historical
 import scripts.run_gaza_daily_operator as operator
 import scripts.run_daily_gaza as daily
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_test_root_capacity
 
 
-def make_root(repo: Path) -> Path:
-    root = repo / "output" / "test-runs" / uuid.uuid4().hex / "daily"
-    root.mkdir(parents=True)
+def make_root(request, tmp_path_factory, repo: Path) -> Path:
+    root = tmp_path_factory.mktemp("gaza-daily")
+    register_fixture_root(request, root)
+    require_test_root_capacity(root, projected_bytes=8192)
     (root / "logs").mkdir()
     pages = root / "bluefern-dispatches-pages"
     pages.mkdir()
     assets = root / "assets"
     assets.mkdir(parents=True, exist_ok=True)
     (assets / "gaza-logo.png").write_bytes(b"png")
+    mark_fixture_setup_complete(request, root)
     return root
 
 
@@ -150,16 +153,13 @@ def live_response(body: str, status: int = 200):
 
 
 @pytest.fixture()
-def isolated(monkeypatch):
+def isolated(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
-    root = make_root(repo)
+    root = make_root(request, tmp_path_factory, repo)
     monkeypatch.setattr(daily, "ROOT", root)
     monkeypatch.setattr(daily, "DEFAULT_PAGES_REPO", root / "bluefern-dispatches-pages")
     monkeypatch.setattr(historical, "ROOT", root)
-    try:
-        yield root
-    finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+    yield root
 
 
 def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, capsys):

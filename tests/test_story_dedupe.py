@@ -1,6 +1,5 @@
 import json
 import shutil
-import uuid
 from pathlib import Path
 
 import pytest
@@ -8,19 +7,25 @@ import pytest
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 from bluefern_dispatches.cascadia_render import render_cascadia_edition
 from scripts.run_gaza_dispatch import run_gaza_dispatch
-
-
-def make_root() -> Path:
-    repo = Path(__file__).resolve().parents[1]
-    root = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
-    shutil.copytree(repo / "assets", root / "assets")
-    (root / "data" / "records").mkdir(parents=True)
-    return root
+from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root
+from scripts.test_storage_admission import require_copy_capacity, require_test_root_capacity
 
 
 @pytest.fixture()
-def cascadia_work_root():
-    root = make_root()
+def story_root(request, tmp_path_factory):
+    repo = Path(__file__).resolve().parents[1]
+    root = tmp_path_factory.mktemp("story-dedupe")
+    register_fixture_root(request, root)
+    require_copy_capacity(root, repo / "assets")
+    shutil.copytree(repo / "assets", root / "assets")
+    require_test_root_capacity(root, projected_bytes=8192)
+    (root / "data" / "records").mkdir(parents=True)
+    mark_fixture_setup_complete(request, root)
+    return root
+
+@pytest.fixture()
+def cascadia_work_root(story_root):
+    root = story_root
     (root / "data" / "dispatches" / "cascadia").mkdir(parents=True, exist_ok=True)
     return root
 
@@ -94,8 +99,8 @@ def write_prior_memory(root: Path, prior_story: dict, edition_date: str = "2026-
     path.write_text(json.dumps([row], indent=2), encoding="utf-8")
 
 
-def test_exact_url_duplicate_skipped():
-    root = make_root()
+def test_exact_url_duplicate_skipped(story_root):
+    root = story_root
     prior = story("old", "Aid convoy enters Gaza", "https://example.com/story")
     write_prior_memory(root, prior)
 
@@ -106,8 +111,8 @@ def test_exact_url_duplicate_skipped():
     assert result.report["duplicate_skipped"][0]["public_rendered"] is False
 
 
-def test_normalized_url_duplicate_skipped():
-    root = make_root()
+def test_normalized_url_duplicate_skipped(story_root):
+    root = story_root
     prior = story("old", "Aid convoy enters Gaza", "https://www.example.com/story?utm_source=x")
     write_prior_memory(root, prior)
 
@@ -117,8 +122,8 @@ def test_normalized_url_duplicate_skipped():
     assert "exact_or_normalized_source_url" in result.report["duplicate_skipped"][0]["duplicate_reasons"]
 
 
-def test_same_title_different_source_merged_within_edition():
-    root = make_root()
+def test_same_title_different_source_merged_within_edition(story_root):
+    root = story_root
     first = story("a", "Hospital fuel warning issued", "https://example.com/a", publisher="Publisher A")
     second = story("b", "Hospital fuel warning issued", "https://example.org/b", publisher="Publisher B")
 
@@ -129,8 +134,8 @@ def test_same_title_different_source_merged_within_edition():
     assert result.report["duplicate_groups"]
 
 
-def test_gaza_flotilla_same_event_titles_merge_into_one_group():
-    root = make_root()
+def test_gaza_flotilla_same_event_titles_merge_into_one_group(story_root):
+    root = story_root
     a = story(
         "a",
         "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
@@ -161,8 +166,8 @@ def test_gaza_flotilla_same_event_titles_merge_into_one_group():
     assert all(item.get("public_rendered") is False for item in merged_decisions)
 
 
-def test_gaza_ceasefire_casualty_repeated_reports_merge_into_one_group():
-    root = make_root()
+def test_gaza_ceasefire_casualty_repeated_reports_merge_into_one_group(story_root):
+    root = story_root
     first = story(
         "a",
         "Israel has killed more than 1,000 people in Gaza since ceasefire",
@@ -195,8 +200,8 @@ def test_gaza_ceasefire_casualty_repeated_reports_merge_into_one_group():
     assert len([item for item in result.decisions if item.get("include_decision") == "merge_into_existing"]) == 2
 
 
-def test_gaza_official_follow_up_counts_as_material_update_not_duplicate():
-    root = make_root()
+def test_gaza_official_follow_up_counts_as_material_update_not_duplicate(story_root):
+    root = story_root
     prior = story(
         "old",
         "Board of Peace outlines Gaza ceasefire roadmap",
@@ -224,8 +229,8 @@ def test_gaza_official_follow_up_counts_as_material_update_not_duplicate():
     assert result.decisions[0]["watchlist_status"] == "material_follow_up"
 
 
-def test_gaza_ceasefire_implementation_shift_survives_duplicate_guard():
-    root = make_root()
+def test_gaza_ceasefire_implementation_shift_survives_duplicate_guard(story_root):
+    root = story_root
     prior = story(
         "old",
         "Board of Peace outlines Gaza ceasefire roadmap",
@@ -254,8 +259,8 @@ def test_gaza_ceasefire_implementation_shift_survives_duplicate_guard():
     assert result.decisions[0]["watchlist_status"] == "material_follow_up"
 
 
-def test_gaza_board_of_peace_follow_up_survives_cross_edition_duplicate_guard():
-    root = make_root()
+def test_gaza_board_of_peace_follow_up_survives_cross_edition_duplicate_guard(story_root):
+    root = story_root
     prior = story(
         "old",
         "Board of Peace outlines Gaza ceasefire roadmap",
@@ -284,8 +289,8 @@ def test_gaza_board_of_peace_follow_up_survives_cross_edition_duplicate_guard():
     assert result.decisions[0]["watchlist_status"] == "material_follow_up"
 
 
-def test_gaza_distinct_developments_stay_separate_even_with_shared_gaza_israel_terms():
-    root = make_root()
+def test_gaza_distinct_developments_stay_separate_even_with_shared_gaza_israel_terms(story_root):
+    root = story_root
     first = story(
         "a",
         "Patients die in Gaza waiting for medical evacuations Israel keeps blocking",
@@ -310,8 +315,8 @@ def test_gaza_distinct_developments_stay_separate_even_with_shared_gaza_israel_t
     assert {story_row["story_id"] for story_row in result.stories} == {"a", "b"}
 
 
-def test_same_normalized_title_without_material_update_skipped():
-    root = make_root()
+def test_same_normalized_title_without_material_update_skipped(story_root):
+    root = story_root
     prior = story("old", "Washington bridge inspection program", "https://example.com/old", summary="Officials described a bridge inspection program.", category="Transportation")
     write_prior_memory(root, prior, edition_date="2026-05-03", dispatch_slug="cascadia")
     candidate = story("new", "Update: Washington bridge inspection program", "https://example.com/new", summary="Officials described a bridge inspection program.", category="Transportation", region_scope="WA", state_hint="WA")
@@ -325,8 +330,8 @@ def test_same_normalized_title_without_material_update_skipped():
     assert skipped["include_decision"] == "skip"
 
 
-def test_same_topic_without_material_update_skipped():
-    root = make_root()
+def test_same_topic_without_material_update_skipped(story_root):
+    root = story_root
     prior = story("old", "Washington bridge inspection program", "https://example.com/old", summary="Officials described a bridge inspection program.", category="Transportation")
     write_prior_memory(root, prior, edition_date="2026-05-03", dispatch_slug="cascadia")
     candidate = story("new", "Washington bridge inspection program", "https://example.com/new", summary="Officials described a bridge inspection program with background context.", category="Transportation", region_scope="WA", state_hint="WA")
@@ -339,8 +344,8 @@ def test_same_topic_without_material_update_skipped():
     assert result.report["duplicate_skipped"][0]["material_update"] is False
 
 
-def test_pages_repo_prior_curation_is_used_for_july_4_wrapper_duplicate():
-    root = make_root()
+def test_pages_repo_prior_curation_is_used_for_july_4_wrapper_duplicate(story_root):
+    root = story_root
     pages_edition = root / "bluefern-dispatches-pages" / "gaza" / "editions" / "2026-07-03"
     pages_edition.mkdir(parents=True, exist_ok=True)
     pages_edition.joinpath("curation_manifest.json").write_text(
@@ -380,8 +385,8 @@ def test_pages_repo_prior_curation_is_used_for_july_4_wrapper_duplicate():
     assert skipped["prior_story_matched"] == "prior"
 
 
-def test_same_topic_new_official_source_included_as_material_continuation():
-    root = make_root()
+def test_same_topic_new_official_source_included_as_material_continuation(story_root):
+    root = story_root
     prior = story("old", "Washington bridge inspection program", "https://example.com/old", summary="Officials described a bridge inspection program.", category="Transportation")
     write_prior_memory(root, prior, edition_date="2026-05-03", dispatch_slug="cascadia")
     candidate = story(
@@ -404,8 +409,8 @@ def test_same_topic_new_official_source_included_as_material_continuation():
     assert "new_official_or_public_agency_source" in result.stories[0]["material_update_reasons"]
 
 
-def test_same_topic_new_geography_included_as_material_continuation():
-    root = make_root()
+def test_same_topic_new_geography_included_as_material_continuation(story_root):
+    root = story_root
     prior = story("old", "Regional wildfire smoke advisory", "https://example.com/old", summary="Officials described wildfire smoke advisories.", category="Public safety")
     write_prior_memory(root, prior, edition_date="2026-05-03", dispatch_slug="cascadia")
     candidate = story("new", "Regional wildfire smoke advisory", "https://example.com/new", summary="Officials described wildfire smoke advisories for Oregon.", category="Public safety", region_scope="OR", state_hint="OR")
@@ -416,8 +421,8 @@ def test_same_topic_new_geography_included_as_material_continuation():
     assert "new_geography" in result.stories[0]["material_update_reasons"]
 
 
-def test_same_topic_update_verb_included_as_material_continuation():
-    root = make_root()
+def test_same_topic_update_verb_included_as_material_continuation(story_root):
+    root = story_root
     prior = story("old", "Oregon wildfire season planning", "https://example.com/old", summary="Officials discussed wildfire season planning.", category="Public safety")
     write_prior_memory(root, prior, edition_date="2026-05-03", dispatch_slug="cascadia")
     candidate = story("new", "Oregon declares wildfire readiness order", "https://example.com/new", summary="Officials declared a new wildfire readiness order.", category="Public safety", region_scope="OR", state_hint="OR")
@@ -429,8 +434,8 @@ def test_same_topic_update_verb_included_as_material_continuation():
     assert "update_term_in_title_or_snippet" in result.stories[0]["material_update_reasons"]
 
 
-def test_major_update_retained():
-    root = make_root()
+def test_major_update_retained(story_root):
+    root = story_root
     prior = story("old", "Oregon wildfire evacuation route planning", "https://example.com/old", summary="Officials discussed evacuation route planning.", category="Public safety")
     write_prior_memory(root, prior, edition_date="2026-05-03", dispatch_slug="cascadia")
     candidate = story("new", "Oregon wildfire evacuation route planning", "https://example.com/new", summary="Officials announced new evacuation route orders for several communities.", category="Public safety")
@@ -442,8 +447,8 @@ def test_major_update_retained():
     assert result.report["major_updates"]
 
 
-def test_skipped_candidate_report_and_memory_update_counts():
-    root = make_root()
+def test_skipped_candidate_report_and_memory_update_counts(story_root):
+    root = story_root
     prior = story("old", "Washington bridge inspection program", "https://example.com/old", summary="Officials described a bridge inspection program.", category="Transportation")
     write_prior_memory(root, prior, edition_date="2026-05-03", dispatch_slug="cascadia")
     skipped = story("skip", "Washington bridge inspection program", "https://example.com/skip", summary="Officials described a bridge inspection program.", category="Transportation", region_scope="WA", state_hint="WA")
@@ -473,8 +478,8 @@ def test_skipped_candidate_report_and_memory_update_counts():
     assert new_rows[0]["latest_classification"] in {"continuing_development", "major_update"}
 
 
-def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch):
-    root = make_root()
+def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch, story_root):
+    root = story_root
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", root / "output" / "backups" / "gaza")
     source_dir = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-08"
     source_dir.mkdir(parents=True)
@@ -538,8 +543,8 @@ def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch
     assert (root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-08" / "dedupe_report.json").exists()
 
 
-def test_gaza_run_merges_flotilla_same_event_and_keeps_unrelated_story(monkeypatch):
-    root = make_root()
+def test_gaza_run_merges_flotilla_same_event_and_keeps_unrelated_story(monkeypatch, story_root):
+    root = story_root
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", root / "output" / "backups" / "gaza")
     source_dir = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-18"
     source_dir.mkdir(parents=True)

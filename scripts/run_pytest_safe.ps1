@@ -3,7 +3,35 @@ param(
     [string[]]$PytestArgs
 )
 
+$testRoot = [Environment]::GetEnvironmentVariable("DISPATCHES_TEST_ROOT")
+if ([string]::IsNullOrWhiteSpace($testRoot)) {
+    throw "DISPATCHES_TEST_ROOT must explicitly name a project test root; refusing TEMP fallback."
+}
+if (-not (Test-Path -LiteralPath $testRoot -PathType Container)) {
+    throw "Configured DISPATCHES_TEST_ROOT does not exist: $testRoot"
+}
+$rootInfo = Get-Item -LiteralPath $testRoot -Force -ErrorAction Stop
+if (($rootInfo.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+    throw "Configured DISPATCHES_TEST_ROOT must not be a redirect or reparse point: $testRoot"
+}
+$resolvedTestRoot = $rootInfo.FullName
+$driveName = (Split-Path -Qualifier $resolvedTestRoot).TrimEnd("").TrimEnd(":")
+$drive = Get-PSDrive -Name $driveName -ErrorAction Stop
+$minFreeBytes = 2GB
+if ($drive.Free -lt $minFreeBytes) {
+    throw "Test-root admission refused: $resolvedTestRoot has $($drive.Free) bytes free; $minFreeBytes required."
+}
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
+$repoInfo = Get-Item -LiteralPath $repoRoot -Force -ErrorAction Stop
+if (($repoInfo.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+    throw "Repository root must not be a redirect or reparse point: $repoRoot"
+}
+$repoDriveName = (Split-Path -Qualifier $repoRoot).TrimEnd("").TrimEnd(":")
+$repoDrive = Get-PSDrive -Name $repoDriveName -ErrorAction Stop
+if ($repoDrive.Free -lt $minFreeBytes) {
+    throw "Repository-volume admission refused: $repoRoot has $($repoDrive.Free) bytes free; $minFreeBytes required."
+}
 $pythonExe = Join-Path $repoRoot ".venv\Scripts\python.exe"
 
 if (-not $PytestArgs -or $PytestArgs.Count -eq 0) {
@@ -23,10 +51,19 @@ else {
     }
 }
 
-$ts = Get-Date -Format "yyyyMMdd-HHmmss"
-$baseTemp = Join-Path $env:TEMP "bluefern-pytest-$ts"
+$ts = Get-Date -Format "yyyyMMdd-HHmmssfff"
+$baseTemp = Join-Path $resolvedTestRoot ("bluefern-pytest-{0}-{1}" -f $ts, [guid]::NewGuid().ToString("N"))
+$rootPrefix = $resolvedTestRoot.TrimEnd("\") + "\"
+$fullBaseTemp = [System.IO.Path]::GetFullPath($baseTemp)
+if (-not $fullBaseTemp.StartsWith($rootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Computed pytest basetemp escaped DISPATCHES_TEST_ROOT: $fullBaseTemp"
+}
+if (Test-Path -LiteralPath $fullBaseTemp) {
+    throw "Computed pytest basetemp already exists: $fullBaseTemp"
+}
 
-Write-Host "Using pytest basetemp: $baseTemp"
+Write-Host "Using pytest basetemp: $fullBaseTemp"
+$baseTemp = $fullBaseTemp
 
 Push-Location $repoRoot
 try {

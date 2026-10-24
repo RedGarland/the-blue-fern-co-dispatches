@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-import tempfile
+from scripts.test_storage_admission import explicit_test_root, require_test_root_capacity
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -77,9 +77,13 @@ def get_profile(name: str) -> ValidationProfile:
     return VALIDATION_PROFILES[name]
 
 
-def make_pytest_basetemp(prefix: str) -> Path:
+def make_pytest_basetemp(prefix: str, root: Path | None = None) -> Path:
+    repo_root = Path(__file__).resolve().parents[1]
+    require_test_root_capacity(repo_root)
+    test_root = explicit_test_root(root)
+    require_test_root_capacity(test_root)
     unique = f"{prefix}-{os.getpid()}-{int(time.time() * 1000)}"
-    path = Path(tempfile.gettempdir()) / unique
+    path = test_root / unique
     path.mkdir(parents=True, exist_ok=True)
     return path
 

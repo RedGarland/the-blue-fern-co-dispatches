@@ -2142,9 +2142,9 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
         source is not None
         and source.source_id == "wafa-gaza-casualty-locations-query"
         and source.publisher.strip().lower() == "wafa"
-        and ("?'?? ????" in haystack or "??? ????" in haystack)
-        and "?????" in haystack
-        and any(term in haystack for term in ("?????", "??????"))
+        and ("ח'אן יונס" in haystack or "חאן יונס" in haystack)
+        and "שלושה" in haystack
+        and any(term in haystack for term in ("נהרגו", "הרוגים"))
     ):
         return True, "wafa_hebrew_al_qarara_query_match"
     if any(marker in weak_markers for marker in WEAK_ONLY_GAZA_PATTERNS) and not (strong_title or strong_url or substantive_ground):

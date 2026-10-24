@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T124549-0700-r11-a71e",
+  "scheduled_for": "2026-10-24T12:45:22-07:00",
+  "started_at": "2026-10-24T12:45:49-07:00",
+  "completed_at": "2026-10-24T12:47:17-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T11:49:15-07:00",
+    "end": "2026-10-24T12:47:17-07:00",
+    "basis": "Since preceding verified supplementary Care Line heartbeat completion, with prior-day reporting inspected only to identify previously unrecorded late-indexed access changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary bounded recall across United States, District of Columbia, Puerto Rico, Guam, U.S. Virgin Islands, Northern Mariana Islands and American Samoa; primary production Care Line national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "findings": "Current page has no October 24 notices. October 23 termination notices for My Families Healthcare (CA, CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673), and Moonlight Home Health Care Inc (OH, CCN 369006) were reported in prior supplemental watch."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "U.S. hospital emergency department temporarily closed / diverted ambulance October 24",
+      "Maternity/labor-delivery closure or suspension October 24",
+      "Rural ambulance and EMS shutdowns October 24",
+      "Air medical/helicopter base suspensions October 24",
+      "Dialysis and oncology treatment center closure October 24",
+      "Inpatient behavioral health service closure October 24",
+      "Health clinic indefinite closure / disrupted appointments October 24",
+      "Emergency department reopening after closure October 24",
+      "Hospital trauma / anesthesia interruption October 23–24",
+      "Urgent care / primary care effective closures October 24",
+      "State/local official service-suspension/closure notice October 24",
+      "Puerto Rico, Guam, U.S. Virgin Islands service suspensions October 23–24"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T114718-0700-r11-vistatrauma",
+      "previous_completed_at": "2026-10-24T11:49:15-07:00",
+      "previous_finding_id": "care-line-20261023-il-waukegan-vista-medical-center-east-trauma-designation-revoked",
+      "source_directory": "data/private-agent-handoff/watch-ledger/care-line/2026-10-24"
+    },
+    "exclusions": "Excluded prior Vista trauma-designation revocation and anesthesia disruption; prior Doylestown ED interruption; prior CMS notices; Kula Hospital restoration funding without concrete opening date; older UAB Callahan ED-to-urgent-care conversion; older/foreign events, forecasts, and proposals without a newly concrete access effect.",
+    "search_result_quality": "Searches heavily returned older or overseas stories despite recency bounds. No newly verified nonduplicate qualifying U.S. or territory healthcare-access change found in this bounded search.",
+    "limitations": "Initial outdated CMS Public Notices URL (/compliance-enforcement/public-notices) was inaccessible; canonical /certification-compliance/public-notices was successfully retrieved and checked. DEGRADED records that one initial source-access attempt failed, although essential CMS coverage was recovered. Recall watch is not comprehensive.",
+    "controls": "No approvals, publishing, primary collector actions, schedule change, or task disabling."
+  }
+}

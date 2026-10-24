@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T084223-0700-r11-8eeb17",
+  "scheduled_for": "2026-10-24T08:45:54-07:00",
+  "started_at": "2026-10-24T08:42:23-07:00",
+  "completed_at": "2026-10-24T08:44:13-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T07:44:43.941-07:00",
+    "end_at": "2026-10-24T08:44:13-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is immediately preceding persisted Food Line recall watch completed_at on 2026-10-24; search uses recency 2 days to catch late indexing but includes only newly established qualifying access disruptions since the previous watch."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only. Production nationwide Food Line collector remains authoritative.",
+    "Completed 12 targeted web searches (recency 2 days) spanning only/sole/last grocery store loss; storm/flood/outage-related canceled emergency food distributions; abrupt pantry or food bank closures; official SNAP/WIC/EBT access interruptions. All searches returned responses without transport failures.",
+    "Search 1: \"only grocery store\" fire OR closure October 24 2026 town.",
+    "Search 2: \"sole grocery store\" burned OR closed October 24 2026.",
+    "Search 3: \"last grocery store\" closing OR fire October 23 24 2026.",
+    "Search 4: \"food distribution\" canceled OR postponed storm October 24 2026 United States.",
+    "Search 5: \"food distribution\" suspended OR cancelled flood power outage October 24 2026.",
+    "Search 6: \"food bank\" emergency distribution canceled weather October 24 2026.",
+    "Search 7: \"food pantry\" temporarily closed \"October 24\" \"2026\".",
+    "Search 8: \"food pantry\" suspended service fire flood storm \"October 23\" \"2026\".",
+    "Search 9: \"food bank\" \"closed\" \"power outage\" \"October 24\" 2026.",
+    "Search 10: site:gov \"SNAP\" \"service interruption\" \"October 24, 2026\".",
+    "Search 11: site:gov \"WIC\" \"closed\" OR \"outage\" \"October 24, 2026\".",
+    "Search 12: \"EBT\" \"outage\" OR \"benefits delayed\" \"October 24\" 2026 state.",
+    "No new U.S. food-access disruption meeting the four priority classes was corroborated as newly reported or effective between 2026-10-24T07:44:43.941-07:00 and this run's completion time.",
+    "An Oct. 23 Kauaʻi recovery bulletin (https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/) describes a scheduled emergency food distribution (not a cancellation); excluded.",
+    "An Oct. 24 Foodbank of Santa Barbara County article (https://www.thecooldown.com/sustainable-food/food-bank-santa-barbara-county-rising-needs/) describes earlier funding cuts and continued service, not a new abrupt access closure; excluded.",
+    "Results also contained stale 2025 SNAP-shutdown stories and earlier-2026 grocery losses. Strict hourly dating and index lag limit recall; no-result does not mean absence of disruptions.",
+    "No approval, public publication, schedule change, task disabling, or production collector modification."
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T084609-0700-r11-8c56",
+  "scheduled_for": "2026-10-24T08:45:22-07:00",
+  "started_at": "2026-10-24T08:46:09-07:00",
+  "completed_at": "2026-10-24T08:46:56-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T07:44:58.551-07:00",
+    "end": "2026-10-24T08:46:56-07:00",
+    "basis": "Since prior verified completed hourly supplemental Care Line watch; scanned Oct 23-24 late-indexed articles only as recall candidates, not necessarily newly occurring events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary healthcare-access recall watch covering U.S. states, DC and territories. Primary national Care Line production collection is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "most_recent_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "previously_recorded": "My Families Healthcare (CA 758151), 1ST AIDE HOME HEALTH AGENCY (CA 559673), Moonlight Home Health Care Inc (OH 369006), all Oct 23; Oct 22 notices also recorded.",
+      "result": "Live CMS notices table showed no Oct 24 entries and no newly recorded notices."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "Oct 24 US hospital/ED closures and reopenings",
+      "Oct 23 US hospital ED closure, diversion and suspension",
+      "Oct 23 maternity/labor and delivery suspension",
+      "Oct 23 rural hospital and emergency department loss",
+      "Oct 24 ambulance/EMS closure or shutdown",
+      "Oct 23 air ambulance base closure",
+      "Oct 23 dialysis center access loss",
+      "Oct 23 cancer/oncology infusion closure",
+      "Oct 23 psychiatric and behavioral health inpatient loss",
+      "Oct 24 urgent or primary care clinic closure",
+      "Oct 24 ED reopening/restoration",
+      "Oct 23 US territories healthcare service disruption"
+    ],
+    "prior_ledger_verification": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T074225-0700-r11-f71c",
+      "previous_completed_at": "2026-10-24T07:44:58.551-07:00",
+      "current_day_records_listed": 8,
+      "excluded_prior_events": "Dennys River Ambulance (ME), Princeton urgent care (KY), Vista Medical Center East (IL), Rehabilitation Hospital of Rhode Island (RI), Carle Normal (IL), Massachusetts hospital-at-home and pediatric decisions, CMS October 22-23 notices."
+    },
+    "result": "No concrete, independently verified, qualifying nonduplicate new service disruption or restoration found.",
+    "exclusions": "Hits primarily older 2026 or earlier incidents, non-U.S. locations, pending proposals without concrete access effects, and already logged events; excluded general business, opinion, and service-risk-only commentary.",
+    "limitations": "Search relevance was noisy despite 1-2-day recency constraints. This bounded recall does not establish exhaustive national or territorial coverage. CMS page, all 12 searches, and prior-run GitHub ledger retrieval succeeded.",
+    "controls": "No approvals, publishing, primary production collector modification, schedule changes or task disabling."
+  }
+}

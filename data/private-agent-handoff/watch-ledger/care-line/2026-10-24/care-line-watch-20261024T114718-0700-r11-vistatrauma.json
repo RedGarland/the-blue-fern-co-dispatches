@@ -1,0 +1,77 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T114718-0700-r11-vistatrauma",
+  "scheduled_for": "2026-10-24T11:45:22-07:00",
+  "started_at": "2026-10-24T11:47:18-07:00",
+  "completed_at": "2026-10-24T11:49:15-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T10:48:25.067-07:00",
+    "end": "2026-10-24T11:49:15-07:00",
+    "basis": "Since preceding verified supplementary Care Line hourly heartbeat completion; late-reported concrete developments considered for bounded recall when previously unrecorded."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261023-il-waukegan-vista-medical-center-east-trauma-designation-revoked",
+      "canonical_source_url": "https://www.lakemchenryscanner.com/2026/10/24/state-revokes-trauma-center-designation-for-vista-medical-center-east-in-waukegan-for-2nd-time-in-less-than-3-years/",
+      "title": "State revokes trauma center designation for Vista Medical Center East in Waukegan for 2nd time in less than 3 years",
+      "publisher": "Lake and McHenry County Scanner",
+      "exact_supporting_passage": "The state revoked the trauma center designation for Vista Medical Center East in Waukegan Friday",
+      "source_published_date": "2026-10-24",
+      "state": "IL",
+      "city": "Waukegan",
+      "county": "Lake",
+      "territory": null,
+      "event_type": "trauma_center_designation_revocation",
+      "service_line": "emergency_trauma",
+      "access_consequences": "Illinois Department of Public Health revoked the Level 2 trauma-center designation effective October 23, 2026. EMS agencies must update trauma-destination protocols; ambulances with seriously injured patients must use other, farther trauma centers. This is a separate, confirmed downstream loss beyond the previously recorded October 22 anesthesia-service suspension.",
+      "affected_population": "Patients with serious traumatic injuries requiring ambulance transport in Waukegan and nearby Lake County communities.",
+      "effective_date": "2026-10-23",
+      "announcement_date": "2026-10-23",
+      "confidence": "high",
+      "source_role": "local_reporting_citing_state_IDPH_memo",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S., DC, and U.S. territories healthcare access-loss/restoration recall. Primary Care Line production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "CMS current list has no 2026-10-24 entry. October 23 notices for My Families Healthcare (CA 758151), 1ST AIDE HOME HEALTH AGENCY (CA 559673), and Moonlight Home Health Care Inc (OH 369006) were previously captured."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital emergency room temporary closure/reopening Oct 24",
+      "maternity/labor-and-delivery unit suspension Oct 23–24",
+      "rural hospital emergency department closure Oct 24",
+      "ambulance service shutdown and EMS coverage Oct 23–24",
+      "air-medical base closures/suspensions Oct 23–24",
+      "rural urgent care and primary-care clinic closures Oct 24",
+      "behavioral-health inpatient service closure Oct 23–24",
+      "dialysis center closure or suspension Oct 23–24",
+      "oncology and infusion treatment interruption Oct 24",
+      "Illinois Vista trauma designation revocation state memo",
+      "emergency department reopening and service restoration Oct 24",
+      "territorial hospital/clinic/ambulance suspensions Oct 23–24"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T104657-0700-r11-96de",
+      "previous_completed_at": "2026-10-24T10:48:25.067-07:00",
+      "previous_outcome": "no_findings",
+      "prior_related_case": "Vista Medical Center East anesthesia-service suspension Oct 22 was previously recorded; Oct 23 state trauma designation revocation is separately verified and not the same action."
+    },
+    "source_notes": "Sam Borcia reporting dated October 24 quotes an October 23 Illinois Department of Public Health EMS memo by division chief Kristofer Tackett; primary underlying memo not directly retrieved. Newspaper reports concrete revocation and ambulance destination consequences, not merely a threatened action. Prior October 23 report described designation review, not revocation.",
+    "exclusions": "Excluded older cases, duplicate October 23 CMS notices, speculative closures, ownership-only reports, older territory storm-related suspensions, and restorations without effective service date.",
+    "limitations": "An initial outdated/incorrect CMS Public Notices URL returned an access error, then the canonical CMS Public Notices page was successfully retrieved. Marked DEGRADED under the one-source failure rule; core official-notice coverage recovered. Targeted searches yielded mostly older material; this is not exhaustive surveillance.",
+    "controls": "No editorial approval, publishing, production collector change, schedule modification, or task disabling."
+  }
+}

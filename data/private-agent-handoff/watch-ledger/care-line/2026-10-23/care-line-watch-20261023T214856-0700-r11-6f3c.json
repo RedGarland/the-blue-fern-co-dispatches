@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T214856-0700-r11-6f3c",
+  "scheduled_for": "2026-10-23T21:45:22-07:00",
+  "started_at": "2026-10-23T21:48:56-07:00",
+  "completed_at": "2026-10-23T21:49:56-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T20:46:46.461-07:00",
+    "end": "2026-10-23T21:49:56-07:00",
+    "basis": "The preceding durable Care Line supplementary heartbeat completed at 20:46:46.461 PDT on October 23, 2026. Late-indexed reports of earlier events were also considered; only newly surfaced, nonduplicate qualifying developments would be carried forward."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary U.S. and territories high-value healthcare-access recall; production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "excluded_as_previously_recorded": [
+        "My Families Healthcare — CA — CCN 758151 — 2026-10-23",
+        "1ST AIDE HOME HEALTH AGENCY — CA — CCN 559673 — 2026-10-23",
+        "Moonlight Home Health Care Inc — OH — CCN 369006 — 2026-10-23"
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "Hospital emergency department interruption or reopening",
+      "Maternity labor-and-delivery suspension",
+      "Rural emergency hospital closure/service loss",
+      "Behavioral health psychiatric admissions suspension",
+      "Dialysis service loss",
+      "Oncology services suspension",
+      "Ambulance and EMS provider shutdown",
+      "Air-medical base or service suspension",
+      "Urgent-care and primary-care closure",
+      "Concrete emergency department restoration",
+      "Puerto Rico emergency and ambulance service loss",
+      "Guam, U.S. Virgin Islands, and American Samoa essential service interruptions"
+    ],
+    "prior_ledger_verified": "2026-10-23T20:46:46.461-07:00; prior outcome no_findings; entire 2026-10-23 watch-ledger directory enumerated to determine latest heartbeat.",
+    "no_findings_basis": "No newly surfaced, qualifying and nonduplicate U.S./territory healthcare-access development was verifiable using CMS Public Notices and the 12 bounded targeted searches.",
+    "exclusions": "Results included older closures, foreign events, unrelated service categories, and proposed or aspirational reopenings without newly effective service restoration.",
+    "limitations": "Search-engine coverage is incomplete for low-indexed local notices, and publication timestamps are not consistently available. Absence of findings is not proof of nationwide absence.",
+    "execution_controls": "No approvals, publications, production collector changes, schedule changes, or task disabling."
+  }
+}

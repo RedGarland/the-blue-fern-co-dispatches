@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.care_line.curation_manifest.public.v1",
+  "dispatch": "care-line",
+  "edition_date": "2026-10-22",
+  "candidate_id": "care-line-dmas-gender-dysphoria-coverage-2026-10-13",
+  "event_effective_date": "2026-10-13",
+  "event_type": "coverage_cancellation",
+  "service_line": "coverage_access",
+  "geographic_scope": "jurisdiction_wide",
+  "state": "VA",
+  "currentness": {
+    "classification": "CURRENT_EVENT",
+    "basis": "newly_effective",
+    "age_days_at_edition": 9,
+    "allowed_window_days": [-120, 31]
+  },
+  "source_status": "official_primary_sources",
+  "traceability_status": "traceable_by_public_source_urls",
+  "reader_limitation": "This report describes the posted DMAS bulletin and Federal Register rule; current enforcement and a certified current court docket were not independently verified.",
+  "content_limits": [
+    "Attribute implementation to DMAS and the federal rule.",
+    "Keep Medicaid under-18 and CHIP under-19 boundaries distinct.",
+    "Limit continued federal participation to existing cross-sex hormone-therapy recipients.",
+    "Do not claim universal private or state-only coverage exclusion.",
+    "Do not claim current legal enforcement or a certified current docket."
+  ]
+}

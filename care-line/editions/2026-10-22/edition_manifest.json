@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.care_line.edition_manifest.public.v1",
+  "dispatch": "care-line",
+  "edition_date": "2026-10-22",
+  "headline": "Virginia Medicaid coverage changes take effect for specified gender-dysphoria services",
+  "candidate_id": "care-line-dmas-gender-dysphoria-coverage-2026-10-13",
+  "chronology": {
+    "source_rule_publication_date": "2026-08-13",
+    "source_announcement_date": "2026-09-24",
+    "event_effective_date": "2026-10-13",
+    "binding": "event_effective_date"
+  },
+  "content_limits": [
+    "Attribute implementation to DMAS and the federal rule.",
+    "Keep Medicaid under-18 and CHIP under-19 boundaries distinct.",
+    "Limit continued federal participation to existing cross-sex hormone-therapy recipients.",
+    "Do not claim universal private or state-only coverage exclusion.",
+    "Do not claim current legal enforcement or a certified current docket."
+  ],
+  "source_status": "official_primary_sources",
+  "traceability_status": "traceable_by_public_source_urls"
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T204553-0700-r11-6e92",
+  "scheduled_for": "2026-10-23T20:45:22-07:00",
+  "started_at": "2026-10-23T20:45:53-07:00",
+  "completed_at": "2026-10-23T20:46:46.461-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T19:49:30.826-07:00",
+    "end": "2026-10-23T20:46:46.461-07:00",
+    "basis": "Previous verified supplementary Care Line heartbeat completed at 19:49:30.826 PDT; this is a bounded newly surfaced recall watch, not a guarantee that all reporting was first published within the hour."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary national and U.S.-territory healthcare-access recall. Production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "newest_notice_date": "2026-10-23",
+      "newly_identified_notices": 0,
+      "duplicates_excluded": [
+        "My Families Healthcare, CA, CCN 758151, 2026-10-23",
+        "1ST AIDE HOME HEALTH AGENCY, CA, CCN 559673, 2026-10-23",
+        "Moonlight Home Health Care Inc, OH, CCN 369006, 2026-10-23"
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital/ED temporary closures and reopenings",
+      "maternity/labor and delivery suspension",
+      "rural emergency-service loss",
+      "behavioral-health facility service cessation",
+      "dialysis clinic closure",
+      "oncology service suspension",
+      "ambulance, EMS and air-medical base loss",
+      "urgent-care/primary-care closures",
+      "concrete hospital ED service restoration",
+      "Puerto Rico service suspensions",
+      "Guam and U.S. Virgin Islands service interruptions",
+      "follow-up restoration on recently recorded PA, IL and RI disruptions"
+    ],
+    "excluded": {
+      "previously_reported": "October 23 CMS terminations and previously recorded October 23 closure/suspension candidates, including Princeton KY urgent care, Vista Medical Center East IL, Rehabilitation Hospital of Rhode Island RI, Doylestown Hospital PA and Carle Normal on College IL.",
+      "nonqualifying": "Proposed reopening funds without restored operations; prior-month announcements and long-standing healthcare closures; non-U.S. stories; opinion/background; unrelated business transactions."
+    },
+    "no_findings_basis": "No new qualifying, nonduplicate U.S. or territory healthcare-access change was verified in the bounded search results. CMS index had no new entries beyond prior watch.",
+    "limitations": "Search results were frequently older than the requested interval. This supplemental check cannot establish that every local event reported during the interval was indexed and discoverable.",
+    "execution_controls": "No approval, publication, schedule modification, or task disabling."
+  }
+}

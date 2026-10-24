@@ -1,0 +1,59 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261023T184830-0700-r11-6e72",
+  "scheduled_for": "2026-10-23T18:45:22-07:00",
+  "started_at": "2026-10-23T18:48:30-07:00",
+  "completed_at": "2026-10-24T01:49:27.775+00:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T16:46:20-07:00",
+    "end": "2026-10-24T01:49:27.775+00:00",
+    "basis": "Last independently readable prior Care Line Watch heartbeat completed at 16:46:20 PDT. An intervening 17:45 hour's heartbeat could not be identified from the supplied history, so the recall window conservatively starts at the last verified checkpoint. This is a supplementary recall watch, not production collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary U.S. and territories access-change recall; production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "duplicate_notices": [
+        "My Families Healthcare (CA CCN 758151)",
+        "1ST AIDE HOME HEALTH AGENCY (CA CCN 559673)",
+        "Moonlight Home Health Care Inc (OH CCN 369006)"
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital/ED closure and reopening",
+      "maternity unit closure",
+      "rural emergency service loss",
+      "ambulance provider closure",
+      "air-medical base suspension",
+      "dialysis or oncology access loss",
+      "hospital and outpatient clinical closures",
+      "ED ambulance diversion",
+      "behavioral-health inpatient closures",
+      "essential-service reopening",
+      "primary-care service loss",
+      "inpatient service suspension"
+    ],
+    "exclusions": [
+      "Previously identified October 23 CMS provider termination notices",
+      "Previously identified Doylestown Hospital emergency-department sprinkler incident (no confirmed new reopening)",
+      "Previously identified Mass General Brigham Home Hospital and Mass Eye and Ear service plans",
+      "Previously identified Vista Medical Center East anesthesia suspension, Rhode Island rehab evacuation, and Carle Normal clinic incident",
+      "Watsonville Community Hospital maternity/NICU closure remains a proposal without concrete service effect",
+      "Randolph Health payroll delays do not establish a patient-service change",
+      "Older unrelated service events, non-US reports, ownership-only stories, opinion, and unsupported claims"
+    ],
+    "source_access_limitation": "An obsolete CMS Public Notices URL could not be opened, but the current canonical CMS Public Notices page was read successfully. A direct follow-up open of Doylestown incident reporting returned a tool error; the already known incident was not re-recorded and no reopening was verified. Conservatively marked DEGRADED for this isolated follow-up source-access failure.",
+    "material_failure": false,
+    "execution_controls": "No approvals, publication, schedule changes or task disabling."
+  }
+}

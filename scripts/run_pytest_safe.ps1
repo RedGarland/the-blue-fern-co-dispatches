@@ -3,6 +3,21 @@ param(
     [string[]]$PytestArgs
 )
 
+$testRoot = [Environment]::GetEnvironmentVariable("DISPATCHES_TEST_ROOT")
+if ([string]::IsNullOrWhiteSpace($testRoot)) {
+    throw "DISPATCHES_TEST_ROOT must explicitly name a project test root; refusing TEMP fallback."
+}
+if (-not (Test-Path -LiteralPath $testRoot -PathType Container)) {
+    throw "Configured DISPATCHES_TEST_ROOT does not exist: $testRoot"
+}
+$resolvedTestRoot = (Resolve-Path -LiteralPath $testRoot -ErrorAction Stop).Path
+$driveName = (Split-Path -Qualifier $resolvedTestRoot).TrimEnd("").TrimEnd(":")
+$drive = Get-PSDrive -Name $driveName -ErrorAction Stop
+$minFreeBytes = 2GB
+if ($drive.Free -lt $minFreeBytes) {
+    throw "Test-root admission refused: $resolvedTestRoot has $($drive.Free) bytes free; $minFreeBytes required."
+}
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $pythonExe = Join-Path $repoRoot ".venv\Scripts\python.exe"
 
@@ -24,7 +39,7 @@ else {
 }
 
 $ts = Get-Date -Format "yyyyMMdd-HHmmss"
-$baseTemp = Join-Path $env:TEMP "bluefern-pytest-$ts"
+$baseTemp = Join-Path $resolvedTestRoot "bluefern-pytest-$ts"
 
 Write-Host "Using pytest basetemp: $baseTemp"
 

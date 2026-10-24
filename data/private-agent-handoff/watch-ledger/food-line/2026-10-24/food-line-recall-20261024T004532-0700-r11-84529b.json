@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T004532-0700-r11-84529b",
+  "scheduled_for": "2026-10-24T00:45:54-07:00",
+  "started_at": "2026-10-24T00:45:32-07:00",
+  "completed_at": "2026-10-24T00:47:20-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-23T22:43:11-07:00",
+    "end_at": "2026-10-24T00:47:20-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the latest previously verified persisted supplementary heartbeat completion. Window widened beyond a nominal hour because a subsequent hourly heartbeat has not been independently verified; search recency was 1 day, with older events excluded."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production nationwide Food Line collection remains authoritative.",
+    "12 targeted fresh web searches (all fast), with no search-query failures; covered loss of sole/last/full-service grocery stores, canceled emergency distributions from weather/fire/outages, abrupt pantry/food-bank closure, and new official SNAP/WIC/EBT interruptions.",
+    "No verifiably new qualifying U.S. food-access disruption identified within the bounded observation window. Indexed results were predominantly older incidents, unrelated closures, resource notices, or existing SNAP changes; excluded rather than re-reported.",
+    "October 23 Four Corners flooding was reported in AP (https://apnews.com/article/8ced1bb2e1ae213c3b0a5cf4eb72d166), but no identifiable pantry distribution cancellation or other food-service interruption was evidenced in the retrieved report.",
+    "Unresolved preexisting lead: Utah Food Bank's indexed 'Monument Valley Pantry Temporary Closure' notice (https://www.facebook.com/utahfoodbank/posts/1615517747274277/). A new direct fetch failed with DisabledError and the official provider homepage (https://www.utahfoodbank.org/) did not corroborate its date or closure duration. Not classified as new or entered as a positive finding.",
+    "DEGRADED: one direct provider social-post fetch was inaccessible; searches and other retrieved sources remained usable. No verified positive signal, publication, approval, production collector modification, schedule change, or task disabling."
+  ]
+}

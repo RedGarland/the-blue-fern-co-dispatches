@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T054849-0700-r11-5e4c92",
+  "scheduled_for": "2026-10-24T05:45:54-07:00",
+  "started_at": "2026-10-24T05:48:49-07:00",
+  "completed_at": "2026-10-24T05:50:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T04:45:54-07:00",
+    "end_at": "2026-10-24T05:50:40-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Nominal prior hourly check slot through this run's completion. The preceding exact completion timestamp was not independently resolved; this supplementary window is not evidence of historical coverage continuity."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production nationwide Food Line collector remains authoritative.",
+    "12 targeted fresh web searches completed (all fast; none reported a search failure) across (1) only/sole/last/full-service grocery loss, (2) storm/flood/fire/outage-related canceled food distributions, (3) abrupt pantry/food-bank closures or major service reduction, and (4) new official SNAP/WIC/EBT interruptions.",
+    "Targeted bounded search queries: \"only grocery store\" closed fire Oct 23 2026 town; \"sole grocery store\" fire closure October 2026 food access; \"last grocery store\" closes October 23 2026 community; \"food distribution\" \"canceled\" flooding storm October 23 2026; \"food pantry\" \"closed\" \"flooding\" Oct 23 2026; \"food bank\" \"distribution\" canceled storm October 24 2026; \"food pantry\" \"temporarily closed\" damage October 23 2026; \"food bank\" \"services suspended\" October 23 2026; site:gov SNAP benefits outage interruption October 23 2026; site:gov WIC offices closed benefits interruption Oct 23 2026; 2026 October 23 EBT system outage SNAP state food stamps beneficiaries; \"full-service grocery store\" shuttered October 23 2026 rural.",
+    "No newly verified U.S. qualifying loss/interruption published or newly effective in the bounded search window. Search results predominantly surfaced older events, unrelated store openings, resource/program stories, or ongoing benefit-policy effects without a new official immediate interruption.",
+    "Examples excluded as outside the hourly window: September 11 Spencer, NY grocery-store fire (https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/) and September 25 El Paso food-bank flood interruption (https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/). A search-indexed October 21 republication describes a preexisting Clark's Market closure, not a new October 24 event.",
+    "The prior positively fetched watch ledger heartbeat was from October 23 at 22:43:11 PDT; records possibly created after it were not enumerated. Accordingly, no claim is made that this single bounded check bridges any unverified earlier intervals.",
+    "No review approvals, publication, primary-collector modifications, schedule change, or task disabling."
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T064451-0700-r11-064231",
+  "scheduled_for": "2026-10-24T06:44:51-07:00",
+  "started_at": "2026-10-24T06:42:31-07:00",
+  "completed_at": "2026-10-24T06:44:19-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T05:44:37-07:00",
+    "end": "2026-10-24T06:44:19-07:00",
+    "basis": "Starts at completed_at from latest independently retrieved 05:44:51-scheduled Gaza Source Watch heartbeat on ops/watch-ledger, not the last visible user-facing run. A verifiable newly published or materially new in-Gaza event/follow-up is required; uncertain timing or civilian impact is not counted."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not primary collection/publishing; production remains authoritative.",
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT homepage",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Top Gaza situation report and impact snapshot posted October 19, not new in the window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/palestine/",
+        "result": "Direct endpoint returned HTTP 502 Bad Gateway; direct regional Gaza health coverage unavailable."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed updates dated October 19; none in current window."
+      },
+      {
+        "publisher": "WHO global conflict emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated in-window Gaza health report on main page or listed regional news."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza \"October 24, 2026\" Saturday morning Israeli strikes civilians killed injured ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza October 24 2026 Saturday aid ceasefire crossings civilians",
+      "site:apnews.com/article/ Gaza October 24 2026 Saturday strikes food bakeries casualties",
+      "site:wfp.org Gaza October 24 2026 flour bread food aid update",
+      "site:unrwa.org Gaza October 24 2026 humanitarian displacement shelter aid",
+      "site:unicef.org Gaza October 24 2026 water sanitation health children",
+      "site:icrc.org Gaza October 24 2026 medical evacuation hostages detainees",
+      "site:msf.org Gaza October 24 2026 hospital fuel ambulance care",
+      "site:palestinercs.org Gaza 24 October 2026 ambulance casualties",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza 24 Oct 2026 humanitarian response crossings",
+      "site:un.org Gaza 24 October 2026 aid negotiation ceasefire humanitarian briefing",
+      "Gaza October 24 2026 6am Gaza City Khan Younis Rafah civilians strike aid bread medical October 24"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties",
+      "displacement",
+      "humanitarian aid access",
+      "food and water access",
+      "healthcare/hospitals/ambulances/medical evacuation/fuel/functioning capacity",
+      "infrastructure damage",
+      "crossings",
+      "detention and hostages",
+      "ceasefire and negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "examined_but_excluded": [
+      {
+        "title": "Israel imposes closures across a West Bank city after attacks, and other Mideast news",
+        "publisher": "Associated Press via Audacy",
+        "url": "https://www.audacy.com/talk1370/news/world/mideast-news-october-24-2026-707ad41a79d384ff4715902ce3d60df5",
+        "source_publication_date": "2026-10-24",
+        "published_at": "2026-10-24T03:48:00-04:00",
+        "details": "Rolling report includes an Israeli strike Saturday killing at least one person in Gaza City and injuring others, according to Shifa Hospital health officials.",
+        "reason": "Rolling report initially published 00:48 PDT, before window; no section-level edit time or specific incident time proving novelty after 05:44 PDT. Civilian status of victim/injured not established. Excluded pending distinct in-window corroboration."
+      },
+      {
+        "title": "Israeli Attacks Kill Five In Gaza on Friday",
+        "publisher": "International Middle East Media Center",
+        "url": "https://imemc.org/article/israeli-attacks-kill-five-in-gaza-on-friday/",
+        "source_publication_date": "2026-10-24",
+        "details": "Search result refers to five deaths on Friday October 23.",
+        "reason": "Previous-day event, without verified time that this report contains materially new information within hourly window. Direct article fetch returned HTTP 429; not qualified."
+      },
+      {
+        "title": "Funding cuts force WFP to drastically reduce lifesaving assistance in Gaza",
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "source_publication_date": "2026-10-19",
+        "reason": "Older, previously documented aid reduction, not an in-window change."
+      },
+      {
+        "title": "Prior Gaza bakery shortage/Al-Masdar control-line reports",
+        "publisher": null,
+        "url": null,
+        "source_publication_date": "2026-10-23",
+        "reason": "Already captured or considered in October 23 recall heartbeats; no new traceable update."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean Regional Office",
+        "url": "https://www.emro.who.int/palestine/",
+        "observed": "HTTP 502 Bad Gateway",
+        "impact": "Direct regional facility, ambulance, health-service, and evacuation reports could not be independently checked; WHO global and OCHA were accessible."
+      },
+      {
+        "publisher": "International Middle East Media Center",
+        "url": "https://imemc.org/article/israeli-attacks-kill-five-in-gaza-on-friday/",
+        "observed": "HTTP 429 Too Many Requests",
+        "impact": "Could not independently inspect timing, sourcing, and differentiation of previous-day casualties."
+      }
+    ],
+    "finding_assessment": "OCHA OPT and WHO checked first; 12 additional targeted searches produced no verifiable in-window, nonduplicate development meeting the Gaza watch criteria. AP rolling report contained Saturday Gaza strike with one death and injuries but lacks event/update timing and civilian-status verification; excluded rather than guessing.",
+    "limitations": [
+      "Search indexing lag and rolling-page revisions can conceal an in-window update.",
+      "WHO regional health source outage materially reduces direct health coverage, so status DEGRADED rather than FAILED; alternative sources remain available.",
+      "Do not treat a search result as proof of a newly timed event.",
+      "No approvals, publications, production, schedule, or automation changes."
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T054451-0700-r11-054305.json",
+      "completed_at": "2026-10-24T05:44:37-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false
+  }
+}

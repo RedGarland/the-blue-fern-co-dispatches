@@ -47,6 +47,28 @@ def test_terminal_contract_preserves_incomplete_capped_and_fails_closed() -> Non
     assert payload["status"] != "zero_result_completion"
 
 
+def test_main_legacy_bounded_path_returns_nonzero_for_capped_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(expansion, "build_food_line_discovery_query_plan", lambda *args: _query_plan(1380))
+    monkeypatch.setattr(expansion, "run_food_line_discovery_expansion", lambda *args, **kwargs: _result())
+
+    code = expansion.main(["--date", "2026-10-24", "--run-id", "bounded-cli"])
+
+    assert code == 1
+    terminal = json.loads(capsys.readouterr().out)
+    assert terminal["status"] == expansion.INCOMPLETE_CAPPED_STATUS
+    assert terminal["ok"] is False
+    state = json.loads(
+        (tmp_path / "data" / "dispatches" / "food-line" / "discovery-runs" / "2026-10-24" / "bounded-cli" / "run-state.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert state["resumable"] is False
+    assert state["next_action"] == "Plan-bound continuation required before intake."
+
+
 def test_write_state_files_records_deferred_partition_and_manual_gate(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

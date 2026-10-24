@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T084451-0700-r11-084247",
+  "scheduled_for": "2026-10-24T08:44:51-07:00",
+  "started_at": "2026-10-24T08:42:47-07:00",
+  "completed_at": "2026-10-24T08:45:24.840-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T07:44:38-07:00",
+    "end": "2026-10-24T08:45:24.840-07:00",
+    "basis": "Start from completed_at of latest independently fetched hourly Gaza watch ledger, scheduled 07:44:51 PDT. Recall-only: accept only newly verifiable in-window developments or material fresh follow-ups; exclude recycled accounts, unknown timings and non-Gaza context."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; NOT primary daily Gaza collection/publishing. Production remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T074451-0700-r11-074250.json",
+      "completed_at": "2026-10-24T07:44:38-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest Gaza humanitarian situation report and impact snapshot posted October 19; no newly dated Gaza update within current window."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent update October 19; no 24 October in-window item."
+      },
+      {
+        "publisher": "WHO EMRO occupied Palestinian territory situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "result": "Direct HTTP 502 Bad Gateway; regional health reporting coverage unavailable."
+      },
+      {
+        "publisher": "WHO global conflict emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Current overview with older news and report references; no newly dated in-window health development."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza Saturday October 24 2026 morning 8am PDT Gaza City civilian deaths injured strike displacement",
+      "site:reuters.com/world/middle-east/ Gaza Oct 24 2026 Saturday morning casualties aid crossings ceasefire",
+      "site:apnews.com/article Gaza October 24 2026 morning civilians hospital aid crossing bread",
+      "site:wfp.org Gaza October 24 2026 food flour bakeries border aid",
+      "site:unrwa.org Gaza October 24 2026 displacement shelter aid access",
+      "site:unicef.org Gaza October 24 2026 water children sanitation hospital",
+      "site:msf.org Gaza October 24 2026 hospital medical evacuation doctors fuel ambulance casualties",
+      "site:icrc.org Gaza October 24 2026 prisoners hostages medical wounded detainees",
+      "site:palestinercs.org Gaza October 24 2026 ambulance rescue 24 October",
+      "site:reliefweb.int/report/occupied-palestinian-territory 24 Oct 2026 Gaza aid humanitarian crossing hospital",
+      "site:un.org Gaza October 24 2026 Saturday ceasefire negotiations crossings aid delivery",
+      "Gaza Saturday October 24 2026 8 am Gaza City Beit Lahia Al-Masdar Khan Younis civilian killed hospital AFP Anadolu medical"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food and water access",
+      "healthcare disruption and hospitals",
+      "ambulance/medical transport/fuel/medical evacuation/functioning capacity",
+      "infrastructure damage",
+      "crossings",
+      "detention and hostages",
+      "ceasefire and negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "examined_but_excluded": [
+      {
+        "publisher": "Associated Press",
+        "title": "Israel imposes closures across a West Bank city, and other Mideast news",
+        "url": "https://apnews.com/article/mideast-news-october-24-2026-707ad41a79d384ff4715902ce3d60df5",
+        "reason": "Rolling item with Gaza City strike and injuries had already been examined in prior watches. No verified new section timestamp or civilian status establishing in-window novel incident; direct fetch unavailable this run."
+      },
+      {
+        "publisher": "Anadolu Agency / Yeni Şafak",
+        "title": "2 Palestinians, including woman, killed in Gaza",
+        "url": "https://en.yenisafak.com/world/2-palestinians-including-woman-killed-in-gaza-3724755",
+        "reason": "Previously documented by 07:44 PDT heartbeat as pre-window October 24 report. No distinct traceable follow-up verified; direct fetch unavailable this run."
+      },
+      {
+        "publisher": "UNICEF USA",
+        "title": "UNICEF Aids Children Caught in Water and Sanitation Crisis in Gaza",
+        "url": "https://www.unicefusa.org/stories/unicef-aids-children-caught-water-and-sanitation-crisis-gaza",
+        "publication_date": "2024-07-19",
+        "reason": "Search result misleadingly labeled yesterday; opened article explicitly dated July 19, 2024, so excluded as recycled historical item."
+      },
+      {
+        "publisher": "Reuters",
+        "title": "Israeli fire kills four people in Gaza, medics say",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "publication_date": "2026-10-22",
+        "reason": "Older reporting, predates window; no independent newly evidenced follow-up."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean Regional Office",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "observed": "HTTP 502 Bad Gateway",
+        "impact": "Regional WHO hospital capacity, health-service disruptions, ambulance and medical evacuation updates not directly verifiable; WHO global site and OCHA remained accessible, so classify DEGRADED not FAILED."
+      }
+    ],
+    "assessment": "Primary OCHA OPT and WHO checked before exactly 12 additional targeted searches. No newly and traceably verified qualifying in-Gaza development inside 07:44:38 to completed_at. Search indexing lag, rolling story edit timing and continuing regional WHO outage limit recall; no claim that no incidents occurred.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

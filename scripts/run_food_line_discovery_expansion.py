@@ -29,6 +29,7 @@ from bluefern_dispatches.food_line_discovery_expansion import (
 RUN_STATE_SCHEMA = "food_line_bounded_run_state_v1"
 QUERY_PLAN_SCHEMA = "food_line_bounded_query_plan_v1"
 NONFATAL_COMPLETED_WITH_EXCLUSIONS = "completed_with_exclusions"
+INCOMPLETE_CAPPED_STATUS = "incomplete_capped"
 
 
 def _utc_now() -> str:
@@ -39,6 +40,11 @@ def _terminal_status(result: dict[str, object]) -> str:
     raw_status = str(result.get("status") or "").strip()
     if bool(result.get("timed_out")) or raw_status == "timed_out":
         return "timeout"
+    # A bounded run that intentionally left plan rows deferred is not a
+    # completed zero-result run.  Preserve the durable state so the scheduler
+    # can keep the manual continuation gate closed.
+    if raw_status == INCOMPLETE_CAPPED_STATUS:
+        return INCOMPLETE_CAPPED_STATUS
     if bool(result.get("ok")) and raw_status == NONFATAL_COMPLETED_WITH_EXCLUSIONS:
         return NONFATAL_COMPLETED_WITH_EXCLUSIONS
     if not bool(result.get("ok")):
@@ -71,20 +77,24 @@ def _terminal_contract_result(
     if timed_out is None:
         timed_out = bool(payload.get("timed_out")) or str(payload.get("status") or "") == "timed_out"
     status = _terminal_status({**payload, "timed_out": timed_out})
+    incomplete_capped = status == INCOMPLETE_CAPPED_STATUS
     if error_type is None:
         error_type = str(payload.get("error_type") or "").strip() or None
     if error_message is None:
         error_message = str(payload.get("error_message") or payload.get("error") or "").strip() or None
-    if not bool(payload.get("ok")) and not error_type:
+    contract_ok = bool(payload.get("ok")) and not incomplete_capped
+    if not contract_ok and not error_type:
         error_type = status
-    if not bool(payload.get("ok")) and not error_message:
+    if incomplete_capped and not error_message:
+        error_message = "plan-bound continuation required before intake"
+    elif not contract_ok and not error_message:
         error_message = status.replace("_", " ")
     if status == NONFATAL_COMPLETED_WITH_EXCLUSIONS and bool(payload.get("ok")):
         payload.setdefault("child_outcome_classification", NONFATAL_COMPLETED_WITH_EXCLUSIONS)
         payload.setdefault("fatal_error", "")
     return {
         **payload,
-        "ok": bool(payload.get("ok")),
+        "ok": contract_ok,
         "status": status,
         "edition_date": edition_date,
         "run_id": run_id,
@@ -347,8 +357,8 @@ def _write_state_files(root: Path, edition_date: str, run_id: str, result: dict[
     (run_dir / "query-plan.json").write_text(json.dumps(plan_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (run_dir / "run-state.json").write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return {
-        "ok": bool(result.get("ok")),
         **result,
+        "ok": bool(result.get("ok")) and state["status"] != INCOMPLETE_CAPPED_STATUS,
         "run_state_path": str(run_dir / "run-state.json"),
         "query_plan_path": str(run_dir / "query-plan.json"),
         "query_plan_sha256": plan_payload["query_plan_sha256"],
@@ -407,7 +417,7 @@ def _write_timed_out_state_files(
             "path": str(root / "status" / "food-line" / "runtime" / "agent-inbox"),
             "sha256": "",
         },
-        "next_action": "No collection action required.",
+        "next_action": "Plan-bound continuation required before intake.",
     }
     run_dir = root / "data" / "dispatches" / "food-line" / "discovery-runs" / edition_date / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -617,4 +627,6 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
 

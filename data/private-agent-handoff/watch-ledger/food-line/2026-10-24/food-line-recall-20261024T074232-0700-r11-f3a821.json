@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T074232-0700-r11-f3a821",
+  "scheduled_for": "2026-10-24T07:45:54-07:00",
+  "started_at": "2026-10-24T07:42:32-07:00",
+  "completed_at": "2026-10-24T07:44:43.941-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T06:48:08.333-07:00",
+    "end_at": "2026-10-24T07:44:43.941-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From immediately preceding persisted Food Line supplementary watch completed_at (2026-10-24T13:48:08.333+00:00), through this run; limited to newly identifiable qualifying source notices during this observation window."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production nationwide Food Line collector remains authoritative.",
+    "12 targeted web searches completed (recency 2 days) across four audit miss classes: loss of sole/last/full-service grocery store; weather/disaster-related cancellations of emergency food distribution; abrupt food pantry/food-bank service closure or major access reduction; newly official SNAP/WIC/EBT assistance interruptions with immediate access consequences.",
+    "Queries 1–3: only grocery store closed fire community October 24 2026; sole grocery store closed OR fire October 2026; last grocery store shutdown OR fire October 23 2026.",
+    "Queries 4–6: food distribution canceled storm October 24 2026; food distribution cancelled flooding October 23 2026; food distribution suspended power outage October 2026.",
+    "Queries 7–9: food pantry closed October 24 2026 emergency; food bank temporarily closed damage October 2026; food pantry suspended services October 2026.",
+    "Queries 10–12: site:gov SNAP benefits interruption October 24 2026; site:gov WIC service interruption October 23 2026; site:gov SNAP EBT outage October 24 2026.",
+    "No newly verified qualifying U.S. disruption dated within 2026-10-24 06:48–07:43 PDT was identified. Results were primarily stale 2025 SNAP-shutdown stories, summer 2026 grocery-fire reports, and irrelevant or non-U.S. items.",
+    "Stale sole-store grocery loss example: Spencer, New York Shur Fine Food Mart fire reported 2026-09-14 (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/); excluded as outside observation window.",
+    "Searches produced response results without transport errors. Tight hourly windows and search-index publication lag mean absence of confirmed hits is not proof of complete U.S. coverage.",
+    "No editorial approval, publication, schedule modification, task disabling, or production collector change."
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T024554-0700-r11",
+  "scheduled_for": "2026-10-24T02:45:54-07:00",
+  "started_at": "2026-10-24T02:45:27-07:00",
+  "completed_at": "2026-10-24T02:47:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-24T01:45:54-07:00",
+    "end": "2026-10-24T02:47:04-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous nominal hourly check; last completed hourly run not independently confirmed. Searched newly indexed October 23-24 material and screened against prior-check recency."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "collection_role": "Bounded supplementary recall watch; production collector authoritative.",
+    "targeted_searches": 12,
+    "search_failures": 0,
+    "categories_checked": [
+      "sole/last/full-service grocery loss or closure",
+      "storm/fire/outage-driven canceled emergency distribution",
+      "abrupt food pantry or food bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No newly verified qualifying U.S. food-access interruption in the bounded window.",
+    "excluded_examples": [
+      {
+        "url": "https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "October 23 emergency food distribution was scheduled, not canceled or suspended."
+      }
+    ],
+    "limitations": "Search engine returned many older reports despite date-filtered queries. No exhaustive nationwide coverage is implied. Previous hourly run timestamp and current production collector state were not independently verified.",
+    "review_publication": "No approval, publication, schedule, or task state changes."
+  }
+}

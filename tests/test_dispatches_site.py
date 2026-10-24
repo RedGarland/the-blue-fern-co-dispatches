@@ -210,6 +210,10 @@ def built_site(request, tmp_path_factory, built_site_template):
     register_fixture_root(request, test_root, parent_group="built-site-template")
     work = test_root / "repo"
     backup_root = test_root / "dispatches-bluefern-backups"
+    # Admit both full copies before either copy begins; retain the reserve on
+    # the destination volume even when the source trees are on another volume.
+    require_copy_capacity(test_root, template_work)
+    require_copy_capacity(test_root, template_backup_root)
     shutil.copytree(template_work, work)
     shutil.copytree(template_backup_root, backup_root)
     mark_fixture_setup_complete(request, test_root)

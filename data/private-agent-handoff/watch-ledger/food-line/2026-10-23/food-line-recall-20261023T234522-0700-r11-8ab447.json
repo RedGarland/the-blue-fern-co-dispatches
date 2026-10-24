@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261023T234522-0700-r11-8ab447",
+  "scheduled_for": "2026-10-23T23:45:54-07:00",
+  "started_at": "2026-10-23T23:45:22-07:00",
+  "completed_at": "2026-10-23T23:47:01.863-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-23T22:43:11-07:00",
+    "end_at": "2026-10-23T23:47:01.863-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the completed_at timestamp in the immediately preceding persisted supplementary watch heartbeat; end is this check completion."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; the production nationwide Food Line collector remains authoritative.",
+    "Executed exactly 12 targeted web searches (10 fast, 2 deeper) in the four approved miss classes: sole/last/full-service grocery loss, disaster-canceled emergency food distributions, abrupt pantry/food-bank service loss, and immediate official SNAP/WIC access interruption. No search tool failures.",
+    "No new U.S. disruption within the since-prior-check observation window met the evidence and timing thresholds. Search results were dominated by historical or undated stories, so no positive finding was inferred from article recrawls.",
+    "A Bastrop County Food Pantry Facebook notice says it will close Friday October 23 and resume Monday October 26; it was indexed approximately two days earlier and does not show a new abrupt major service reduction within this window. Excluded: https://www.facebook.com/BastropCountyFoodPantry/posts/the-food-pantry-will-be-closed-on-friday-october-23-2026-and-returning-to-our-re/1557122356456201/ .",
+    "Utah Food Bank's Monument Valley Pantry flooding-closure notice was identified by the preceding watch, remains timing-unverified, and was not counted again: https://www.facebook.com/utahfoodbank/posts/1615517747274277/ .",
+    "October 23 Four Corners-region flood reporting establishes disaster conditions but not a verified new cancellation of emergency food distributions or closure of food access in the observation window: https://apnews.com/article/8ced1bb2e1ae213c3b0a5cf4eb72d166 .",
+    "No approvals, publication, primary collector alterations, schedule changes, or task disabling occurred."
+  ]
+}

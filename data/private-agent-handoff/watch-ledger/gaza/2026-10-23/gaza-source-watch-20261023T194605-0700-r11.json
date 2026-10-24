@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261023T194605-0700-r11",
+  "scheduled_for": "2026-10-23T19:44:51-07:00",
+  "started_at": "2026-10-23T19:46:05-07:00",
+  "completed_at": "2026-10-23T19:47:22-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-23T18:41:03.573-07:00",
+    "end": "2026-10-23T19:47:22-07:00",
+    "window_basis": "Prior verified hourly Gaza Source Watch heartbeat completion through this observation; exact source publication/event times required to qualify as strictly new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza production pipeline remains authoritative.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-23/gaza-source-watch-20261023T183959-0700-r11.json",
+      "completed_at": "2026-10-23T18:41:03.573-07:00",
+      "outcome": "no_findings",
+      "readback": "verified"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Home page most recent listed Gaza situation/report update published 19 October 2026; no in-window dated new finding."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new Gaza healthcare, medevac, fuel or facility update dated within the observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean regional",
+        "url": "https://www.emro.who.int/opt/information-resources/",
+        "result": "HTTP 502 Bad Gateway; regional source verification degraded."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 23 2026 Friday evening October 24 ceasefire civilians latest Reuters AP strikes aid",
+      "site:unrwa.org Gaza 23 October 2026 food water displacement",
+      "site:wfp.org Gaza 23 October 2026 bakery flour aid",
+      "site:unicef.org Gaza 23 October 2026 water sanitation hospitals",
+      "Gaza October 23 2026 Friday Reuters new civilian fatalities hospitals operations ceasefire",
+      "Gaza October 23 2026 Friday Associated Press latest Gaza food aid Israeli strikes negotiations",
+      "site:icrc.org Gaza 23 October 2026 hostages detainees medical evacuation",
+      "site:palestinercs.org Gaza 23 October 2026 ambulance attack rescue",
+      "Gaza 23 October 2026 24 October 2026 Rafah Kerem Shalom crossing aid trucks evening",
+      "Gaza 23 October 2026 hospital fuel medical evacuation functioning ambulance October latest",
+      "site:reliefweb.int Gaza 23 Oct 2026 update civilians displacement health aid",
+      "site:un.org Gaza 23 October 2026 daily briefing humanitarian Israeli operation"
+    ],
+    "covered_miss_classes": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food and water access",
+      "healthcare and medevac",
+      "hospital/ambulance/transport/fuel/functioning capacity",
+      "infrastructure and crossings",
+      "detention/hostages",
+      "ceasefire/negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "excluded_or_previously_known": [
+      {
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "WFP Gaza funding-cut release dated October 19, outside current window and already recorded by prior checks."
+      },
+      {
+        "url": "https://www.middleeastmonitor.com/20261023-3-palestinians-killed-others-injured-in-fresh-israeli-attacks-on-gaza/",
+        "reason": "October 23 al-Masdar residential control-line candidate already preserved in October 23 15:49 PDT watch; duplicate."
+      },
+      {
+        "url": "https://www.middleeasteye.net/news/gaza-bakeries-shut-israel-blocks-flour-shipments",
+        "reason": "Gaza bakeries/flour access cluster considered in previous watch(s); no separately substantiated new in-window change."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Published October 19; older OCHA source."
+      },
+      {
+        "url": "https://www.thenationalnews.com/news/mena/2026/09/27/gazas-hospitals-face-shutdown-as-generators-fail-and-fuel-runs-short/",
+        "reason": "Dated September 27, preexisting hospital generator/fuel constraint."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "source": "WHO EMRO occupied Palestinian territory site",
+        "status": "HTTP 502",
+        "impact": "Official WHO regional health, hospital, evacuation and supply reporting not directly verified; alternative global WHO and established outlets remained searchable."
+      }
+    ],
+    "findings_explanation": "No newly published or timed, traceable, nonduplicative in-Gaza development verified after prior heartbeat completion. Search results included October 19 WFP aid cuts, previously observed October 23 bread and al-Masdar reporting, older hospital/fuel stories, and West Bank-only developments, none qualifying for this supplementary watch.",
+    "limitations": [
+      "Search indexing and undated rolling reports may conceal breaking developments; no-findings is not proof that nothing occurred.",
+      "Regional WHO access failure limits healthcare coverage, not all research.",
+      "No production deduplication action undertaken; prior watch ledger was checked for continuity."
+    ],
+    "actions_not_taken": [
+      "approval",
+      "publication",
+      "production collector modification",
+      "schedule modification",
+      "automation disabling"
+    ]
+  }
+}

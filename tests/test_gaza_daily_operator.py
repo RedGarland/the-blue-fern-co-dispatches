@@ -174,6 +174,17 @@ def test_no_publishable_source_run_is_operator_success(
     _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
     monkeypatch.setattr(
         operator,
+        "_run_command",
+        lambda *_args, **_kwargs: type(
+            "Completed", (), {
+                "returncode": 0,
+                "stdout": json.dumps({"local_pages_copy_ok": True, "pages_commit_ok": True}),
+                "stderr": "",
+            }
+        )(),
+    )
+    monkeypatch.setattr(
+        operator,
         "_capture_daily_run",
         lambda run_args: (
             1,
@@ -184,6 +195,10 @@ def test_no_publishable_source_run_is_operator_success(
                 "generation_ok": False,
                 "validation_ok": False,
                 "tests_ok": False,
+                "source_coverage_status": "complete_no_qualifying_records",
+                "collection_completion_status": "complete_no_qualifying_records",
+                "no_update_eligible": True,
+                "no_update_status_written": True,
                 "errors": [error_message],
             },
             "{}",
@@ -191,14 +206,14 @@ def test_no_publishable_source_run_is_operator_success(
     )
     result = operator.run_operator(args)
     assert result["ok"] is True
-    assert result["operator_status"] == "NO_PUBLICATION_NEEDED"
+    assert result["operator_status"] == "NO_UPDATE_LOCAL_PUBLISH_READY"
 
 
 def test_zero_story_curation_refusal_is_expected_no_publication_without_push(
     isolated: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     args = operator.parse_args(
-        ["--date", "2026-08-30", "--skip-audio", "--push", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+        ["--date", "2026-08-30", "--skip-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
     )
     _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
     monkeypatch.setattr(
@@ -213,6 +228,10 @@ def test_zero_story_curation_refusal_is_expected_no_publication_without_push(
                 "generation_ok": False,
                 "validation_ok": False,
                 "tests_ok": True,
+                "source_coverage_status": "complete_no_qualifying_records",
+                "collection_completion_status": "complete_no_qualifying_records",
+                "no_update_eligible": True,
+                "no_update_status_written": True,
                 "errors": ["No source-backed Gaza stories survived curation/dedupe; refusing public edition generation."],
             },
             "{}",
@@ -221,7 +240,13 @@ def test_zero_story_curation_refusal_is_expected_no_publication_without_push(
     monkeypatch.setattr(
         operator,
         "_run_command",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("Pages push must not run")),
+        lambda *_args, **_kwargs: type(
+            "Completed", (), {
+                "returncode": 0,
+                "stdout": json.dumps({"local_pages_copy_ok": True, "pages_commit_ok": True}),
+                "stderr": "",
+            }
+        )(),
     )
     monkeypatch.setattr(
         operator,
@@ -232,14 +257,14 @@ def test_zero_story_curation_refusal_is_expected_no_publication_without_push(
     result = operator.run_operator(args)
 
     assert result["ok"] is True
-    assert result["operator_status"] == "NO_PUBLICATION_NEEDED"
+    assert result["operator_status"] == "NO_UPDATE_LOCAL_PUBLISH_READY"
     assert result["public_story_count"] == 0
     assert result["pages_commit_sha"] is None
     assert result["pages_push_ok"] is None
     assert result["remote_tree_verify_ok"] is None
-    assert result["next_action"] == "No dispatch was published because no new source-backed Gaza update qualified."
+    assert result["next_action"].startswith("Push from the Pages repo or rerun with --push.")
     email_body = operator._build_email_body(result)
-    assert "operator_status: NO_PUBLICATION_NEEDED" in email_body
+    assert "operator_status: NO_UPDATE_LOCAL_PUBLISH_READY" in email_body
     assert "operator_status: FAILED" not in email_body
 
 
@@ -264,6 +289,9 @@ def test_no_substantive_ground_refusal_is_success_with_publication_flags_and_pre
                 "generation_ok": False,
                 "validation_ok": False,
                 "tests_ok": True,
+                "source_coverage_status": "complete_no_qualifying_records",
+                "collection_completion_status": "complete_no_qualifying_records",
+                "no_update_eligible": True,
                 "pages_commit_sha": None,
                 "no_update_status_written": True,
                 "no_update_status_path": str(isolated / "output" / "site" / "gaza" / "status" / "no-updates" / "2026-08-31.json"),
@@ -952,3 +980,4 @@ def test_wrapper_passes_arguments_with_array_invocation() -> None:
     assert "'--date', $Date" in text
     assert "& $PythonExe @pythonArgs" in text
     assert "Invoke-Expression" not in text
+

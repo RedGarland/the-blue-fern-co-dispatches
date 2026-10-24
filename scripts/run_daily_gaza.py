@@ -385,6 +385,39 @@ def _is_manual_supplement_record(record: dict[str, Any]) -> bool:
     )
 
 
+def _combined_source_coverage_status(
+    *,
+    source_mode: str,
+    auto_status: str,
+    auto_records: list[dict[str, Any]],
+    final_records: list[dict[str, Any]],
+    manual_valid: bool,
+    manual_input_present: bool,
+    manual_input_invalid: bool,
+) -> tuple[str, bool]:
+    """Return terminal coverage after optional manual records are merged.
+
+    Manual records can add qualifying items, but they cannot make an incomplete
+    auto collection complete.  Conversely, a complete auto no-match run plus
+    valid manual records is a complete run with qualifying records.
+    """
+    if source_mode != "both":
+        if auto_status == "complete_no_qualifying_records":
+            return auto_status, True
+        if auto_status == "complete_with_qualifying_records":
+            return auto_status, False
+        return auto_status or "unknown", False
+    if auto_status.startswith("incomplete_") or auto_status == "unknown":
+        return auto_status if auto_status.startswith("incomplete_") else "incomplete_auto_collection", False
+    if manual_input_present and manual_input_invalid:
+        return "incomplete_manual_input", False
+    if final_records or auto_records or auto_status == "complete_with_qualifying_records":
+        return "complete_with_qualifying_records", False
+    if manual_valid or not manual_input_present:
+        return "complete_no_qualifying_records", True
+    return "incomplete_manual_input", False
+
+
 def collect_or_load_sources(
     args: argparse.Namespace,
     summary: dict[str, Any],
@@ -404,7 +437,10 @@ def collect_or_load_sources(
         except Exception as exc:
             if args.source_mode == "manual":
                 summary["errors"].append(str(exc))
-                return manual_path, []
+                summary["source_coverage_status"] = "incomplete_manual_input"
+                summary["collection_completion_status"] = "incomplete_manual_input"
+                summary["no_update_eligible"] = False
+                return manual_path, [], None
             tried_invalid_manual = True
             warning = manual_source_invalid_message(manual_path, str(exc), args.date, skipped=True)
             summary["warnings"].append(warning)
@@ -413,7 +449,10 @@ def collect_or_load_sources(
             if errors:
                 if args.source_mode == "manual":
                     summary["errors"].extend(errors)
-                    return manual_path, []
+                    summary["source_coverage_status"] = "incomplete_manual_input"
+                    summary["collection_completion_status"] = "incomplete_manual_input"
+                    summary["no_update_eligible"] = False
+                    return manual_path, [], None
                 tried_invalid_manual = True
                 reason = "; ".join(errors)
                 warning = manual_source_invalid_message(manual_path, reason, args.date, skipped=True)
@@ -427,6 +466,10 @@ def collect_or_load_sources(
                 if args.source_mode == "manual":
                     summary["source_file"] = str(manual_path)
                     summary["source_count"] = len(manual_records)
+                    manual_status = "complete_with_qualifying_records" if manual_records else "complete_no_qualifying_records"
+                    summary["source_coverage_status"] = manual_status
+                    summary["collection_completion_status"] = manual_status
+                    summary["no_update_eligible"] = not bool(manual_records)
                     _write_collection_context(
                         args.date,
                         {
@@ -437,6 +480,12 @@ def collect_or_load_sources(
                             "provider_failures": [] if manual_records else [{"source_id": "manual_sources_json", "reason": "zero_candidates", "status": "no_candidates"}],
                             "provider_diagnostics": [{"source_id": "manual_sources_json", "status": "ok" if manual_records else "no_candidates", "raw_candidates": len(manual_records)}],
                             "stage_counts": {"registry_sources": 1, "enabled_providers_configured": 1, "providers_attempted": 1, "providers_successful": 1 if manual_records else 0, "raw_candidates": len(manual_records)},
+                            "providers_fetch_succeeded": ["manual_sources_json"],
+                            "providers_no_matches": [] if manual_records else ["manual_sources_json"],
+                            "no_match_source_ids": [] if manual_records else [{"source_id": "manual_sources_json", "reason": "zero_candidates"}],
+                            "source_coverage_status": manual_status,
+                            "collection_completion_status": manual_status,
+                            "no_update_eligible": not bool(manual_records),
                             "raw_candidate_count": len(manual_records),
                             "accepted_candidate_count_before_dedupe": len(manual_records),
                             **build_gaza_collection_timing_metadata(manual_records, args.date),
@@ -446,6 +495,9 @@ def collect_or_load_sources(
 
     if args.source_mode == "manual":
         summary["errors"].append(f"manual source file is required: {manual_path}")
+        summary["source_coverage_status"] = "incomplete_manual_input"
+        summary["collection_completion_status"] = "incomplete_manual_input"
+        summary["no_update_eligible"] = False
         return manual_path, [], None
 
     log_line(log_path, "Running auto source collection.")
@@ -464,6 +516,9 @@ def collect_or_load_sources(
             summary["warnings"].append(f"auto source collection unavailable; using manual sources only: {exc}")
             summary["source_file"] = str(manual_path)
             summary["source_count"] = len(manual_records)
+            summary["source_coverage_status"] = "incomplete_provider_failures"
+            summary["collection_completion_status"] = "incomplete_provider_failures"
+            summary["no_update_eligible"] = False
             _write_collection_context(
                 args.date,
                 {
@@ -471,9 +526,15 @@ def collect_or_load_sources(
                     "providers_configured": ["manual_sources_json"],
                     "providers_attempted": ["manual_sources_json"],
                     "providers_successful": ["manual_sources_json"],
-                    "provider_failures": [],
+                    "provider_failures": [{"source_id": "auto_collection", "reason": str(exc)}],
                     "provider_diagnostics": [{"source_id": "manual_sources_json", "status": "ok", "raw_candidates": len(manual_records)}],
                     "stage_counts": {"registry_sources": 1, "enabled_providers_configured": 1, "providers_attempted": 1, "providers_successful": 1, "raw_candidates": len(manual_records)},
+                    "providers_fetch_succeeded": ["manual_sources_json"],
+                    "providers_no_matches": [],
+                    "no_match_source_ids": [],
+                    "source_coverage_status": "incomplete_provider_failures",
+                    "collection_completion_status": "incomplete_provider_failures",
+                    "no_update_eligible": False,
                     "raw_candidate_count": len(manual_records),
                     "accepted_candidate_count_before_dedupe": len(manual_records),
                     "enabled_auto_provider_count": 0,
@@ -482,12 +543,24 @@ def collect_or_load_sources(
             )
             return manual_path, manual_records, None
         summary["errors"].append(str(exc))
+        summary["source_coverage_status"] = "incomplete_auto_collection"
+        summary["collection_completion_status"] = "incomplete_auto_collection"
+        summary["no_update_eligible"] = False
         return None, [], None
     summary["warnings"].extend(collected.get("warnings", []))
     summary["errors"].extend(collected.get("errors", []))
     summary["failed_source_ids"].extend(collected.get("failed_source_ids", []))
     summary["source_count"] = int(collected.get("source_count") or 0)
+    summary["source_coverage_status"] = str(collected.get("source_coverage_status") or "unknown")
+    summary["collection_completion_status"] = str(collected.get("collection_completion_status") or "unknown")
+    summary["no_update_eligible"] = bool(collected.get("no_update_eligible"))
     if not collected.get("ok") and args.source_mode == "auto":
+        if not collected.get("sources") and summary["source_coverage_status"] != "complete_no_qualifying_records":
+            incomplete_message = (
+                f"Source collection incomplete ({summary['source_coverage_status']}); no-update status is not justified."
+            )
+            if incomplete_message not in summary["errors"]:
+                summary["errors"].append(incomplete_message)
         return None, [], None
     auto_records = list(collected.get("sources") or [])
     records = list(auto_records)
@@ -503,10 +576,22 @@ def collect_or_load_sources(
     providers_attempted = list(collected.get("providers_attempted") or [])
     providers_successful = list(collected.get("providers_successful") or [])
     provider_failures = list(collected.get("failed_source_ids") or [])
+    no_match_source_ids = list(collected.get("no_match_source_ids") or [])
+    providers_fetch_succeeded = list(collected.get("providers_fetch_succeeded") or [])
+    providers_no_matches = list(collected.get("providers_no_matches") or [])
     provider_diagnostics = list(collected.get("provider_diagnostics") or [])
     if args.source_mode == "both":
         providers_configured = [*providers_configured, "manual_sources_json"]
         providers_attempted = [*providers_attempted, "manual_sources_json"]
+        if manual_valid:
+            providers_fetch_succeeded = sorted(set([*providers_fetch_succeeded, "manual_sources_json"]))
+            if manual_records:
+                providers_successful = sorted(set([*providers_successful, "manual_sources_json"]))
+            else:
+                providers_no_matches = sorted(set([*providers_no_matches, "manual_sources_json"]))
+                no_match_source_ids.append({"source_id": "manual_sources_json", "reason": "zero_candidates"})
+        elif tried_invalid_manual:
+            provider_failures.append({"source_id": "manual_sources_json", "reason": "invalid_manual_input"})
         if manual_valid and manual_records:
             providers_successful = sorted(set([*providers_successful, "manual_sources_json"]))
         provider_diagnostics.append(
@@ -517,7 +602,28 @@ def collect_or_load_sources(
             log_line(log_path, change)
         if preserve_errors:
             summary["errors"].extend(preserve_errors)
+            summary["source_coverage_status"] = "incomplete_manual_input"
+            summary["collection_completion_status"] = "incomplete_manual_input"
+            summary["no_update_eligible"] = False
             return source_path, records, None
+    final_coverage_status, final_no_update_eligible = _combined_source_coverage_status(
+        source_mode=args.source_mode,
+        auto_status=str(collected.get("source_coverage_status") or "unknown"),
+        auto_records=auto_records,
+        final_records=records,
+        manual_valid=manual_valid,
+        manual_input_present=manual_path.exists(),
+        manual_input_invalid=tried_invalid_manual,
+    )
+    summary["source_coverage_status"] = final_coverage_status
+    summary["collection_completion_status"] = final_coverage_status
+    summary["no_update_eligible"] = final_no_update_eligible
+    if not records and final_coverage_status != "complete_no_qualifying_records":
+        incomplete_message = (
+            f"Source collection incomplete ({final_coverage_status}); no-update status is not justified."
+        )
+        if incomplete_message not in summary["errors"]:
+            summary["errors"].append(incomplete_message)
     if len(records) > 0:
         if args.source_mode == "both":
             source_path = write_source_records(ROOT, args.date, records, "manual_sources.json")
@@ -540,6 +646,12 @@ def collect_or_load_sources(
             "providers_attempted": providers_attempted,
             "providers_successful": providers_successful,
             "provider_failures": provider_failures,
+            "no_match_source_ids": no_match_source_ids,
+            "providers_fetch_succeeded": providers_fetch_succeeded,
+            "providers_no_matches": providers_no_matches,
+            "source_coverage_status": summary["source_coverage_status"],
+            "collection_completion_status": summary["collection_completion_status"],
+            "no_update_eligible": summary["no_update_eligible"],
             "provider_diagnostics": provider_diagnostics,
             "global_source_cap_exclusions": list(collected.get("global_source_cap_exclusions") or []),
             "skipped_providers": list(collected.get("skipped_providers") or []),
@@ -698,7 +810,7 @@ def verify_live_public_urls(edition_date: str, public_urls: dict[str, str], cach
             and edition_date in body
             and (
                 "Limited-source update" in body
-                or "Today’s Read" in body
+                or "Today's Read" in body
                 or "Today's Read" in body
                 or "Source Mix" in body
             )
@@ -1103,6 +1215,12 @@ def main(argv: list[str] | None = None) -> int:
         log_line(log_path, f"Source validation failed: {summary['errors']}")
         return finish(1)
     if source_path is None or not records:
+        coverage_status = str(summary.get("source_coverage_status") or "unknown")
+        if coverage_status != "complete_no_qualifying_records":
+            summary["no_update_eligible"] = False
+            summary["errors"].append(
+                f"Source collection incomplete ({coverage_status}); no-update status is not justified."
+            )
         summary["errors"].append("No valid traceable Gaza sources were collected or loaded; refusing to publish.")
         log_line(log_path, "No valid source records; stopping before generation.")
         return finish(1)
@@ -1456,3 +1574,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

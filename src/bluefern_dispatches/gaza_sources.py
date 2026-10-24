@@ -257,6 +257,8 @@ TLS_FAILURE_REASON = "tls_certificate_verification_failed"
 LOS_ANGELES_TZ = ZoneInfo("America/Los_Angeles")
 GOOGLE_NEWS_RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
 GOOGLE_NEWS_RSS_HEBREW_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=he&gl=IL&ceid=IL:he"
+GOOGLE_NEWS_TRANSIENT_HTTP_STATUS_CODES = frozenset({503})
+GOOGLE_NEWS_TRANSIENT_RETRY_DELAYS_SECONDS = (1.0, 2.0)
 
 
 @dataclass(frozen=True)
@@ -1016,6 +1018,32 @@ def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str,
         backend_pref = "auto"
 
     result = _python_fetch() if backend_pref in {"auto", "python"} else None
+    attempt_count = 1 if result is not None else 0
+    retry_count = 0
+    if (
+        result is not None
+        and _is_google_news_rss(url)
+        and result.get("status_code") in GOOGLE_NEWS_TRANSIENT_HTTP_STATUS_CODES
+    ):
+        for delay in GOOGLE_NEWS_TRANSIENT_RETRY_DELAYS_SECONDS:
+            time_module.sleep(delay)
+            retry_count += 1
+            attempt_count += 1
+            result = _python_fetch()
+            if result.get("ok") or result.get("status_code") not in GOOGLE_NEWS_TRANSIENT_HTTP_STATUS_CODES:
+                break
+    if result is not None:
+        result["attempt_count"] = attempt_count
+        result["retry_count"] = retry_count
+        result["transient_retry_status"] = (
+            "recovered"
+            if retry_count and result.get("ok")
+            else "exhausted"
+            if retry_count and result.get("status_code") in GOOGLE_NEWS_TRANSIENT_HTTP_STATUS_CODES
+            else "terminal_non_transient"
+            if retry_count
+            else "not_needed"
+        )
     if result is not None and result["ok"]:
         return result
     if backend_pref == "python":
@@ -1037,6 +1065,9 @@ def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str,
                 "content_encoding": "",
                 "content_bytes": body,
                 "content_text": None,
+                "attempt_count": attempt_count + 1,
+                "retry_count": retry_count,
+                "transient_retry_status": "fallback_recovered",
             }
         except Exception as exc:  # noqa: BLE001
             failure = str(exc)
@@ -1052,6 +1083,9 @@ def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str,
                 "backend_used": "curl",
                 "content_bytes": None,
                 "content_text": None,
+                "attempt_count": attempt_count + 1,
+                "retry_count": retry_count,
+                "transient_retry_status": "fallback_failed",
             }
 
     return result or {
@@ -2108,9 +2142,9 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
         source is not None
         and source.source_id == "wafa-gaza-casualty-locations-query"
         and source.publisher.strip().lower() == "wafa"
-        and ("ח'אן יונס" in haystack or "חאן יונס" in haystack)
-        and "שלושה" in haystack
-        and any(term in haystack for term in ("נהרגו", "הרוגים"))
+        and ("?'?? ????" in haystack or "??? ????" in haystack)
+        and "?????" in haystack
+        and any(term in haystack for term in ("?????", "??????"))
     ):
         return True, "wafa_hebrew_al_qarara_query_match"
     if any(marker in weak_markers for marker in WEAK_ONLY_GAZA_PATTERNS) and not (strong_title or strong_url or substantive_ground):
@@ -2914,6 +2948,7 @@ def collect_gaza_sources(
     warnings: list[str] = []
     errors: list[str] = []
     failed_source_ids: list[dict[str, str]] = []
+    no_match_source_ids: list[dict[str, str]] = []
     manual_path = manual_source_path(root, edition_date)
     if prefer_manual and manual_path.exists():
         try:
@@ -2933,6 +2968,29 @@ def collect_gaza_sources(
                 "errors": errors,
                 "failed_source_ids": failed_source_ids,
                 "source_mode_used": "manual",
+                "stage_counts": {
+                    "registry_sources": 1,
+                    "enabled_providers_configured": 1,
+                    "providers_attempted": 1,
+                    "providers_successful": 1 if manual_records else 0,
+                    "providers_fetch_succeeded": 1,
+                    "providers_with_accepted_records": 1 if manual_records else 0,
+                    "providers_no_matches": 0 if manual_records else 1,
+                    "providers_failed": 0,
+                    "raw_candidates": len(manual_records),
+                    "normalized_candidates": len(manual_records),
+                    "accepted_before_rank": len(manual_records),
+                },
+                "providers_fetch_succeeded": ["manual_sources_json"],
+                "providers_no_matches": [] if manual_records else ["manual_sources_json"],
+                "no_match_source_ids": (
+                    []
+                    if manual_records
+                    else [{"source_id": "manual_sources_json", "reason": "zero_candidates"}]
+                ),
+                "source_coverage_status": "complete_with_qualifying_records" if manual_records else "complete_no_qualifying_records",
+                "collection_completion_status": "complete_with_qualifying_records" if manual_records else "complete_no_qualifying_records",
+                "no_update_eligible": not bool(manual_records),
             }
         warnings.append(f"manual_sources.json was present but invalid: {'; '.join(manual_errors)}")
 
@@ -2945,14 +3003,22 @@ def collect_gaza_sources(
     provider_diagnostics: list[dict[str, Any]] = []
     skipped_providers: list[dict[str, Any]] = []
     working_providers: list[str] = []
+    fetch_successful_providers: list[str] = []
     rejected_by_reason: dict[str, int] = {}
     review_candidates: list[dict[str, Any]] = []
-    enabled_provider_count = sum(1 for item in definitions if item.source_state == "enabled" and item.type == "rss")
+    eligible_provider_types = {"rss", "google_news_rss", OCHA_REPORT_INDEX_TYPE}
+    enabled_provider_count = sum(
+        1 for item in definitions if item.source_state == "enabled" and item.type in eligible_provider_types
+    )
     stage_counts: dict[str, int] = {
         "registry_sources": len(definitions),
         "enabled_providers_configured": enabled_provider_count,
         "providers_attempted": 0,
         "providers_successful": 0,
+        "providers_fetch_succeeded": 0,
+        "providers_with_accepted_records": 0,
+        "providers_no_matches": 0,
+        "providers_failed": 0,
         "raw_candidates": 0,
         "normalized_candidates": 0,
         "accepted_before_rank": 0,
@@ -3048,6 +3114,7 @@ def collect_gaza_sources(
         elif _is_ocha_source(source) and canonicalize_url(fetch_url) != canonicalize_url(OCHA_REPORT_INDEX_URL):
             warnings.append(f"{source.source_id}: untrusted_ocha_report_index")
             failed_source_ids.append({"source_id": source.source_id, "reason": "untrusted_ocha_report_index"})
+            stage_counts["providers_failed"] += 1
             provider_diagnostics.append(
                 {
                     "source_id": source.source_id,
@@ -3066,6 +3133,7 @@ def collect_gaza_sources(
         if not str(fetch_url or "").strip():
             warnings.append(f"{source.source_id}: missing_fetch_url")
             failed_source_ids.append({"source_id": source.source_id, "reason": "missing_fetch_url"})
+            stage_counts["providers_failed"] += 1
             provider_diagnostics.append(
                 {
                     "source_id": source.source_id,
@@ -3120,6 +3188,9 @@ def collect_gaza_sources(
             fetch = fetch_feed_payload(source.source_id, fetch_url)
         diag["backend_used"] = str(fetch.get("backend_used") or "python")
         diag["tls_error"] = bool(fetch.get("tls_error"))
+        diag["fetch_attempt_count"] = int(fetch.get("attempt_count") or 0)
+        diag["fetch_retry_count"] = int(fetch.get("retry_count") or 0)
+        diag["transient_retry_status"] = str(fetch.get("transient_retry_status") or "not_recorded")
         if not fetch.get("ok"):
             reason = str(fetch.get("failure_reason") or "feed_fetch_failed")
             if diag["tls_error"] and reason == TLS_FAILURE_REASON:
@@ -3135,6 +3206,7 @@ def collect_gaza_sources(
                     "exception_type": fetch.get("exception_type"),
                 }
             )
+            stage_counts["providers_failed"] += 1
             diag["status"] = "failed"
             diag["error"] = reason
             diag["status_code"] = fetch.get("status_code")
@@ -3167,6 +3239,7 @@ def collect_gaza_sources(
                     "exception_type": type(exc).__name__,
                 }
             )
+            stage_counts["providers_failed"] += 1
             diag["status"] = "failed"
             diag["error"] = reason
             diag["status_code"] = fetch.get("status_code")
@@ -3174,6 +3247,8 @@ def collect_gaza_sources(
             diag["rejected_counts"]["rejected_parse_error"] = int(diag["rejected_counts"].get("rejected_parse_error", 0)) + 1
             provider_diagnostics.append(diag)
             continue
+        stage_counts["providers_fetch_succeeded"] += 1
+        fetch_successful_providers.append(source.source_id)
         for item_index, item in enumerate(items):
             if int(diag.get("accepted") or 0) >= int(diag["provider_candidate_cap"]):
                 diag["items_not_inspected_after_provider_candidate_cap"] = len(items) - item_index
@@ -3252,9 +3327,13 @@ def collect_gaza_sources(
             diag["accepted"] = int(diag.get("accepted", 0)) + 1
         if len(records) > source_record_start:
             stage_counts["providers_successful"] += 1
+            stage_counts["providers_with_accepted_records"] += 1
             working_providers.append(source.source_id)
         if len(records) == source_record_start:
-            failed_source_ids.append({"source_id": source.source_id, "reason": f"no matching Gaza items for {edition_date}"})
+            stage_counts["providers_no_matches"] += 1
+            no_match_source_ids.append(
+                {"source_id": source.source_id, "reason": f"no matching Gaza items for {edition_date}"}
+            )
             if diag.get("status") == "ok":
                 diag["status"] = "no_matches"
         rejected_counts = dict(diag.get("rejected_counts") or {})
@@ -3290,6 +3369,23 @@ def collect_gaza_sources(
     stage_counts["accepted_before_global_source_cap"] = int(stage_counts["accepted_before_rank"])
     stage_counts["excluded_by_global_source_cap"] = len(global_cap_exclusions)
     stage_counts["final_retained_sources"] = len(records)
+    expected_provider_ids = {
+        item.source_id
+        for item in definitions
+        if item.source_state == "enabled" and item.type in {"rss", "google_news_rss", OCHA_REPORT_INDEX_TYPE}
+    }
+    completed_provider_ids = set(fetch_successful_providers) | {item.get("source_id") for item in no_match_source_ids}
+    if failed_source_ids:
+        source_coverage_status = "incomplete_provider_failures"
+    elif not expected_provider_ids:
+        source_coverage_status = "incomplete_no_enabled_providers"
+    elif expected_provider_ids and not expected_provider_ids.issubset(completed_provider_ids):
+        source_coverage_status = "incomplete_provider_attempts"
+    elif records:
+        source_coverage_status = "complete_with_qualifying_records"
+    else:
+        source_coverage_status = "complete_no_qualifying_records"
+    no_update_eligible = source_coverage_status == "complete_no_qualifying_records"
     validation_errors = validate_source_records(records, min_sources=min_sources)
     errors.extend(validation_errors)
     source_file = None
@@ -3307,15 +3403,25 @@ def collect_gaza_sources(
         "warnings": warnings,
         "errors": errors,
         "failed_source_ids": failed_source_ids,
+        "no_match_source_ids": no_match_source_ids,
         "source_mode_used": "auto",
         "stage_counts": stage_counts,
         "lookback_start_date": lookback_start.isoformat(),
         "lookback_end_date": lookback_end.isoformat(),
         "provider_diagnostics": provider_diagnostics,
         "rejected_by_reason": rejected_by_reason,
-        "providers_configured": [item.source_id for item in definitions if item.source_state == "enabled" and item.type == "rss"],
+        "providers_configured": [
+            item.source_id
+            for item in definitions
+            if item.source_state == "enabled" and item.type in eligible_provider_types
+        ],
         "providers_attempted": [row.get("source_id") for row in provider_diagnostics if row.get("status") != "skipped"],
         "providers_successful": sorted(set(working_providers)),
+        "providers_fetch_succeeded": sorted(set(fetch_successful_providers)),
+        "providers_no_matches": sorted({item["source_id"] for item in no_match_source_ids}),
+        "source_coverage_status": source_coverage_status,
+        "collection_completion_status": source_coverage_status,
+        "no_update_eligible": no_update_eligible,
         "skipped_providers": skipped_providers,
         "working_providers": sorted(set(working_providers)),
         "global_source_cap_exclusions": [
@@ -3336,3 +3442,4 @@ def collect_gaza_sources(
         ][:25],
         "review_candidates": review_candidates[:25],
     }
+

@@ -73,7 +73,7 @@ PLACEHOLDER_TRACEABILITY_HINTS = (
     "generator run",
 )
 LIVE_RETRY_DELAYS = (0, 15, 30, 60, 60, 60, 60, 60, 60, 60, 60, 60)
-LIVE_MARKERS = ("Dispatches From Gaza", "Today's Read", "Todayâ€™s Read", "Limited-source update", "Source Mix")
+LIVE_MARKERS = ("Dispatches From Gaza", "Today's Read", "Today�?Ts Read", "Limited-source update", "Source Mix")
 
 
 def validate_date(value: str) -> str:
@@ -428,6 +428,24 @@ def _json_summary_from_stdout(output: str) -> dict[str, Any]:
     if match:
         summary = json.loads(match.group(1))
     return summary
+
+
+def _verified_no_update_summary(summary: dict[str, Any]) -> bool:
+    """Return true only for an explicitly complete, no-qualifying-records run."""
+    coverage_fields = (
+        summary.get("source_coverage_status"),
+        summary.get("collection_completion_status"),
+    )
+    if any(value != "complete_no_qualifying_records" for value in coverage_fields):
+        return False
+    if summary.get("no_update_eligible") is not True:
+        return False
+    if summary.get("no_update_status_written") is not True:
+        return False
+    return not any(
+        "source collection incomplete" in str(error).lower()
+        for error in summary.get("errors") or []
+    )
 
 
 def _daily_args(
@@ -866,6 +884,21 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
             for item in errors
         )
         if no_publication:
+            if not _verified_no_update_summary(summary):
+                result["ok"] = False
+                result["operator_status"] = "UPSTREAM_INCOMPLETE"
+                result["generation_ok"] = False
+                result["validation_ok"] = False
+                result["next_action"] = (
+                    "Threshold-blocked generation had incomplete or unverified source coverage; "
+                    "no-update publication was not authorized."
+                )
+                cleanup = _clean_source_generated_artifacts()
+                result["commands_run"].extend(cleanup["commands"])
+                result["cleanup_status"] = cleanup["status"]
+                result["source_repo_status_after"] = _git_status_branch(ROOT)
+                result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+                return result
             result["ok"] = True
             result["operator_status"] = "NO_PUBLICATION_NEEDED"
             result["generation_ok"] = True
@@ -1176,3 +1209,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

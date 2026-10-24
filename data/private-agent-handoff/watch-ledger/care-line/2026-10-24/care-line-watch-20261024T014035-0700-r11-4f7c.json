@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T014035-0700-r11-4f7c",
+  "scheduled_for": "2026-10-24T01:45:22-07:00",
+  "started_at": "2026-10-24T01:40:35-07:00",
+  "completed_at": "2026-10-24T01:42:56-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T00:53:11-07:00",
+    "end": "2026-10-24T01:42:56-07:00",
+    "basis": "From the completed_at timestamp in the last verified hourly supplementary ledger. Late-indexed prior reporting considered only when it establishes a previously unrecorded concrete event."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary U.S.-and-territories high-value healthcare-access recall; production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "duplicate_notices": "October 23 California My Families Healthcare (758151), California 1ST AIDE HOME HEALTH AGENCY (559673), and Ohio Moonlight Home Health Care Inc (369006) already present in prior watch findings. October 22 notices also previously recorded."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "Hospital emergency department closure, temporary diversion and reopening",
+      "Labor and delivery or maternity unit suspension",
+      "Rural hospital emergency or critical access service loss",
+      "Psychiatric or behavioral-health inpatient unit closure",
+      "Dialysis or oncology clinic closure",
+      "Primary-care or urgent-care abrupt closure",
+      "Emergency medical service or ambulance provider cessation",
+      "Air ambulance or medical helicopter base closure",
+      "Hospital emergency department care interruption and diversion",
+      "Concrete reopening/restoration of hospital or ambulance services",
+      "Puerto Rico, Guam, USVI and Pacific U.S. territories service disruption",
+      "State public health agency facility/service suspension notices"
+    ],
+    "prior_ledger_verified": {
+      "run_id": "care-line-watch-20261024T004953-0700-r11-dennys1",
+      "completed_at": "2026-10-24T00:53:11-07:00",
+      "finding_id": "care-line-me-dennys-river-ambulance-end-2026-11-30"
+    },
+    "result": "No qualifying, independently supported, nonduplicate new development surfaced within bounded searches. CMS newest listed notices remain dated October 23.",
+    "excluded": "Previously captured CMS terminations and Dennys River ambulance closure; older service changes; non-U.S. reports; pending proposals, advocacy and risk-only commentary; pet emergency hospitals; infrastructure-only road impacts; ownership-only stories.",
+    "limitations": "Targeted search rankings were noisy, frequently surfacing older, Canadian or unrelated material; broad search cannot establish national exhaustiveness. No targeted search or CMS fetch failed.",
+    "controls": "No approval, publication, schedule adjustment, task disabling, or modification of production collection."
+  }
+}

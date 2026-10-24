@@ -45,6 +45,7 @@ SOURCE_RECEIPT_SCHEMA = "food_line_source_watch_receipt_v1"
 INTAKE_RECEIPT_SCHEMA = "food_line_current_intake_receipt_v1"
 ATTENTION_SCHEMA = "food_line_operator_attention_v1"
 INITIALIZING_STATUS = "initializing"
+INCOMPLETE_CAPPED_STATUS = "incomplete_capped"
 RUNNING_STATUS = "running"
 BLOCKED_OVERLAPPING_STATUS = "blocked_overlapping_run"
 UPSTREAM_NOT_INITIALIZED_STATUS = "source_watch_not_initialized"
@@ -1282,7 +1283,9 @@ def run_resume(args: argparse.Namespace) -> int:
             raise _command_error("source-watch status inspection", status_result)
         command_exit = 0
         resume_status = "resume_not_required"
-        if not collection_qualifies(state):
+        if state.get("status") == INCOMPLETE_CAPPED_STATUS and not bool(state.get("resumable")):
+            resume_status = "continuation_required"
+        elif not collection_qualifies(state):
             if state.get("status") not in RESUMABLE_COLLECTION_STATUSES or not bool(state.get("resumable")):
                 raise SchedulerError(f"source-watch state is not qualifying or resumable: {state.get('status')}")
             with source_lock(layout, edition_date, "status-resume", stale_minutes=args.stale_lock_minutes, run_id=str(record.get("run_id") or "")):
@@ -1594,3 +1597,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

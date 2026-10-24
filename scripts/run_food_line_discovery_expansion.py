@@ -258,6 +258,35 @@ def _bounded_state_from_result(
     direct_source_count = int(result.get("direct_source_count") or result.get("source_count") or 0)
     queries_completed = int(result.get("queries_completed") if result.get("queries_completed") is not None else (0 if timed_out else len(query_plan)))
     queries_timed_out = int(result.get("queries_timed_out") if result.get("queries_timed_out") is not None else (1 if timed_out else 0))
+    queries_failed = int(result.get("queries_failed") if result.get("queries_failed") is not None else 0)
+    query_plan_available_count = int(
+        result.get("query_plan_available_count")
+        if result.get("query_plan_available_count") is not None
+        else len(query_plan)
+    )
+    query_plan_bounded_count = int(
+        result.get("query_plan_bounded_count")
+        if result.get("query_plan_bounded_count") is not None
+        else len(query_plan)
+    )
+    queries_deferred = int(
+        result.get("queries_deferred")
+        if result.get("queries_deferred") is not None
+        else max(0, query_plan_available_count - query_plan_bounded_count)
+    )
+    queries_attempted = int(
+        result.get("queries_processed_this_invocation")
+        if result.get("queries_processed_this_invocation") is not None
+        else queries_completed + queries_failed + queries_timed_out
+    )
+    incomplete_capped = discovery_ok and queries_deferred > 0
+    if incomplete_capped:
+        status = "incomplete_capped"
+    coverage_ratio = (
+        1.0
+        if query_plan_available_count == 0
+        else min(1.0, queries_completed / query_plan_available_count)
+    )
     state = {
         "schema_version": RUN_STATE_SCHEMA,
         "run_id": run_id,
@@ -265,13 +294,16 @@ def _bounded_state_from_result(
         "started_at": _utc_now(),
         "completed_at": _utc_now(),
         "status": status,
-        "resumable": bool(result.get("resumable")) or timed_out,
+        "resumable": (bool(result.get("resumable")) or timed_out) and not incomplete_capped,
         "resume_count": int(resume_count),
         "partitions_total": 1,
-        "partitions_completed": int(result.get("partitions_completed") if result.get("partitions_completed") is not None else (0 if timed_out else 1)),
-        "queries_total": len(query_plan),
+        "partitions_completed": int(result.get("partitions_completed") if result.get("partitions_completed") is not None else (0 if timed_out or incomplete_capped else 1)),
+        "queries_total": query_plan_available_count,
+        "queries_bounded": query_plan_bounded_count,
         "queries_completed": queries_completed,
-        "queries_failed": int(result.get("queries_failed") if result.get("queries_failed") is not None else 0),
+        "queries_deferred": queries_deferred,
+        "queries_remaining": max(0, query_plan_available_count - queries_attempted),
+        "queries_failed": queries_failed,
         "queries_timed_out": queries_timed_out,
         "candidates_discovered": candidate_count or direct_source_count,
         "query_plan_sha256": plan_payload["query_plan_sha256"],
@@ -281,19 +313,21 @@ def _bounded_state_from_result(
             "direct_source_coverage_threshold": 0.75,
         },
         "coverage": {
-            "required_success_ratio": 0.0 if timed_out else 1.0,
-            "direct_success_ratio": 0.0 if timed_out else 1.0,
+            "required_success_ratio": 0.0 if timed_out else coverage_ratio,
+            "direct_success_ratio": 0.0 if timed_out else coverage_ratio,
         },
         "agent_export": {
             "status": "success_with_exclusions"
             if status == "completed_with_exclusions"
+            else "blocked_incomplete_collection"
+            if incomplete_capped
             else "success"
             if discovery_ok and not timed_out
             else "blocked_incomplete_collection",
             "path": str(Path(result.get("agent_export_path") or (root / "status" / "food-line" / "runtime" / "agent-inbox"))),
             "sha256": str(result.get("agent_export_sha256") or hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()),
         },
-        "next_action": "No collection action required.",
+        "next_action": "Plan-bound continuation required before intake." if incomplete_capped else "No collection action required.",
     }
     return state, plan_payload
 
@@ -583,3 +617,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

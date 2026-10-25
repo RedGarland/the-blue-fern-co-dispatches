@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T154232-0700-r11-20261025T224232Z",
+  "scheduled_for": "2026-10-25T15:44:51-07:00",
+  "started_at": "2026-10-25T15:42:32-07:00",
+  "completed_at": "2026-10-25T15:45:14-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T14:46:58-07:00",
+    "end": "2026-10-25T15:45:14-07:00",
+    "basis": "Previous confirmed ops/watch-ledger completed_at to current observation. In Gaza local time this spans approximately 26 October 00:46 to 01:44 EEST. Include only newly verified, traceable, nonduplicate in-window developments; newly crawled old reports do not qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; production daily publisher remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T144456-0700-r11-20261025T214658Z.json",
+      "completed_at": "2026-10-25T14:46:58-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Fetched from ops/watch-ledger at the beginning of this run."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest visible update dated 19 October 2026; no new in-window update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. News and regional-link listings show no Gaza-specific in-window release."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct fetch timed out."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "Direct fetch timed out."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza \"26/October/2026\" killed injured midnight",
+      "site:english.wafa.ps Gaza \"25/October/2026\" \"23:\" OR \"22:\" airstrike casualties",
+      "site:reuters.com/world/middle-east/ Gaza October 25 2026 latest civilian casualties aid ceasefire evening",
+      "site:apnews.com/article/ gaza October 25 2026 overnight Israel strike hospital aid",
+      "site:unrwa.org \"25 October 2026\" Gaza aid shelter displaced update",
+      "site:unicef.org \"25 October 2026\" Gaza children killed water health",
+      "site:wfp.org Gaza \"25 October 2026\" distribution food aid update",
+      "site:palestine.un.org \"25 October 2026\" Gaza medical evacuation crossing aid",
+      "site:aljazeera.com/news/2026/10/25/ Gaza after 9 pm UTC October 25 2026 new strikes deaths",
+      "site:aa.com.tr/en/middle-east Gaza October 26 2026 early morning latest civilians Israeli forces",
+      "site:icrc.org Gaza 25 October 2026 detainees lists visits medical evacuation",
+      "Gaza 26 October 2026 00:00 local hospital killed overnight fuel aid crossing ceasefire latest"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000?pageNumber=0",
+        "result": "Search-index listing shows latest Gaza-specific report at 25 October 19:33 Palestinian local time, predating prior heartbeat; directly opened listing served an older subset, so freshness was corroborated with search listing."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/10/25/seven-killed-in-gaza-as-israel-targets-university-campus-and-other-sites",
+        "result": "Direct article retrieval inaccessible; incident and aggregate had been reviewed in previous watch. No independently verified new in-window timestamp."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties; military activity with documented civilian effects",
+      "displacement; damaged homes and civilian infrastructure",
+      "aid access; food, water, fuel and crossings",
+      "healthcare and hospitals; ambulance, transport and medical evacuation",
+      "detention and hostages; ceasefire and negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "Direct fetch timeout",
+        "impact": "Reduced primary regional healthcare verification."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "Direct fetch timeout",
+        "impact": "Reduced direct regional health, hospital and evacuation update verification."
+      }
+    ],
+    "excluded_or_not_counted": [
+      {
+        "publisher": "WAFA",
+        "reason": "25 October 19:33 Palestinian-local Gaza report and earlier reports precede the prior completed heartbeat."
+      },
+      {
+        "publisher": "AP",
+        "reason": "25 October multi-topic roundup included Gaza casualties and detainee-list context but no verifiable new in-window event or publication time; Gaza casualty aggregate previously considered."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "reason": "Same-day university-campus and aggregate casualties already considered in earlier watches; direct article inaccessible for new changes."
+      },
+      {
+        "reason": "Other retrieved items were older, outside Gaza, background-only, or lacked verifiable in-window chronology or primary support."
+      }
+    ],
+    "assessment": "No qualifying new traceable, independently verified, nonduplicate Gaza development established within the bounded window. WHO regional endpoints timed out, so DEGRADED rather than FAILED. No findings does not imply no incidents.",
+    "publication_actions": "none",
+    "production_authorization": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

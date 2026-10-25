@@ -1,0 +1,42 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T055324-0700-r11-20261025T125324Z",
+  "scheduled_for": "2026-10-25T05:45:54-07:00",
+  "started_at": "2026-10-25T05:50:03-07:00",
+  "completed_at": "2026-10-25T05:53:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T04:45:54-07:00",
+    "end_at": "2026-10-25T05:53:24-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "One-hour schedule-derived recall window through execution completion. The immediately preceding Food Line heartbeat completion was not independently resolved this run; no claim of exhaustive hourly coverage."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value miss-class recall only; production nationwide Food Line collector remains authoritative.",
+    "12 targeted web searches completed, recency 2 days, focused on only/sole/last/full-service grocery loss, disaster-canceled emergency food distributions, abrupt pantry/food-bank access reduction, and official SNAP/WIC/EBT interruptions.",
+    "Search results contained no verifiable U.S. qualifying report demonstrably new within the one-hour observation window. Older events and unrelated donation drives, routine promotions, guides, and non-U.S. stories were excluded.",
+    "Examples of excluded stale stories: Sept. 11, 2026 Spencer NY only-grocery fire; Oct. 7, 2026 Prodisee Pantry weather cancellation; earlier food-bank closures and 2025 federal SNAP interruption coverage.",
+    "The October 24 Dallas Project 75216 and Clearwater BBC Food Pantry closure reports referenced in prior Food Line heartbeats were not reintroduced as new signals.",
+    "Search indexing may miss fresh provider social-media notices, especially overnight local time; absence of a matching result is not evidence of nationwide absence.",
+    "No source-fetch or web-search tool errors during this bounded search. No approval, publication, production-collector, or schedule changes."
+  ],
+  "search_query_count": 12,
+  "search_queries": [
+    "\"only grocery store\" OR \"sole grocery store\" closed fire October 25 2026 community",
+    "\"last grocery store\" OR \"only supermarket\" shutdown fire October 24 25 2026",
+    "food pantry closed unexpectedly October 25 2026 food shortage",
+    "food bank food distribution canceled flooding storm October 25 2026",
+    "food pantry distribution canceled weather October 24 25 2026",
+    "SNAP benefits interruption outage October 25 2026 state agency",
+    "WIC benefit outage closed offices October 25 2026 official",
+    "food bank pantry emergency closure October 25 2026 wildfire flood",
+    "site:facebook.com \"food pantry\" \"closed\" \"October 25, 2026\"",
+    "\"food pantry\" \"closed\" \"October 24, 2026\" \"food\"",
+    "\"food distribution\" \"cancelled\" \"October 25\" 2026",
+    "site:gov \"SNAP\" \"October 25, 2026\" outage OR interruption"
+  ]
+}

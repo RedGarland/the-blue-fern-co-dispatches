@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T194647-0700-r11-194647",
+  "scheduled_for": "2026-10-24T19:45:54-07:00",
+  "started_at": "2026-10-24T19:46:47-07:00",
+  "completed_at": "2026-10-24T19:48:16-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T18:40:00-07:00",
+    "end_at": "2026-10-24T19:48:16-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative overlap around preceding nominal hourly check (18:45:54 PT); exact preceding completion was not independently confirmed from a current-day ledger listing."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only; production nationwide Food Line collector remains authoritative.",
+    "12 targeted web searches total (4 fast, 8 deeper), focused on only/sole/last/full-service grocery closures or fires, disrupted emergency food distributions, abrupt pantry/food-bank closures, and official SNAP/WIC interruptions. All searches returned results; most hits were historical, out of scope, or not newly dated.",
+    "No qualifying new U.S. food-access disruption could be verified as newly announced within the bounded since-prior-hour observation window.",
+    "Potentially qualifying but NOT proven new since prior check: Dallas, Texas, Project 75216 Bread of Life Food Pantry provider notice says 'Due to low inventory, the Project 75216 Bread of Life Food Pantry will be CLOSED Saturday, October 24, 2026.' Original church Facebook post: https://www.facebook.com/MarsalisAvenueCOC/posts/-important-food-pantry-update-due-to-low-inventory-the-project-75216-bread-of-li/1566611755496861/ ; separate indexed provider Instagram https://www.instagram.com/project75216/ reproduces message. Provider post creation time could not be verified, and closure is for a Saturday earlier than the current evening check; excluded pending timestamp/deduplication.",
+    "DEGRADED: Facebook and Instagram direct-source access was throttled, preventing verification of publication timestamp and surrounding provider context for the Dallas lead. This is partial source-access degradation, not a failure of all searches.",
+    "Older/irrelevant items excluded, including October 23 federal EBT-security proposed rule (not an immediate SNAP outage), prior hurricane recovery notices, and previous-year SNAP-shutdown warnings.",
+    "No approvals, publications, production collection changes, schedule changes, or task disabling occurred."
+  ]
+}

@@ -114,14 +114,20 @@ This PR implements that source-only interface in three pieces:
   runtime-root separation, and optional atomic pointer target, then supports a
   check-only receipt or a guarded process launch. It never changes the
   tracked checkout or scheduler.
-- `scripts/run_gaza_daily_operator.py` now separates `SOURCE_ROOT` from
-  `BLUEFERN_RUNTIME_ROOT`, and rebinds the imported daily/publish modules so
-  source code comes from the immutable tree while data, output, logs, Pages,
-  credentials, and receipts remain under the original runner root.
+- `scripts/run_gaza_daily_operator.py` remains a source-only change in this
+  branch. Its separate `run_gaza_dispatch.py` generation-child change is not
+  part of the immutable two-file replacement set and is not claimed as repaired
+  or deployed by this mechanism.
 
-The launcher requires an explicit test root and writes its activation receipt
-outside both roots. The implementation is source-only and disposable-fixture
-tested; it does not create or activate a production release in this PR.
+The immutable launcher accepts only a strict, explicitly bound
+`--post-bluesky-only` argument contract (date, approved-text file/hash, and
+expected handle/DID, with optional `--dry-run`). It rejects generation,
+collection, audio, email, manual-source, push, skip, force, and unknown modes
+before starting a subprocess. Pointer updates and launches use the same
+explicit coordination lock for the selected release lifetime. The launcher
+requires an explicit test root and writes its activation receipt outside both
+roots. The implementation is source-only and disposable-fixture tested; it
+does not create or activate a production release in this PR.
 
 The proposed manifest is intentionally explicit and machine-checkable:
 

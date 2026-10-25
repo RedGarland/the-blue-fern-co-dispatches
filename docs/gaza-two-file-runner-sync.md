@@ -105,15 +105,23 @@ overlay, built and reviewed before any runner change:
    release. It never copies backup files into the Git checkout and never
    changes the protected branch.
 
-The smallest source interface needed for this design is therefore an
-immutable-release builder, a Gaza-only pointer/launcher contract, and tests
-for tree equality, manifest/hash binding, path containment, atomic pointer
-replacement, backup/activation failure, and rollback. The existing operator
-must additionally accept an explicit runtime-root value while retaining its
-source/import root; otherwise running from an overlay relocates
-`data/`, `output/`, logs, and other runtime state. That interface change is
-part of the reviewed source design, not an instruction to modify a runner in
-place.
+This PR implements that source-only interface in three pieces:
+
+- `scripts/build_gaza_two_file_release.py` materializes Git blobs from a
+  pinned base commit, substitutes exactly the two reviewed blobs, and proves
+  every other tracked entry is unchanged before writing the manifest.
+- `scripts/run_gaza_immutable_release.py` verifies the manifest, release tree,
+  runtime-root separation, and optional atomic pointer target, then supports a
+  check-only receipt or a guarded process launch. It never changes the
+  tracked checkout or scheduler.
+- `scripts/run_gaza_daily_operator.py` now separates `SOURCE_ROOT` from
+  `BLUEFERN_RUNTIME_ROOT`, and rebinds the imported daily/publish modules so
+  source code comes from the immutable tree while data, output, logs, Pages,
+  credentials, and receipts remain under the original runner root.
+
+The launcher requires an explicit test root and writes its activation receipt
+outside both roots. The implementation is source-only and disposable-fixture
+tested; it does not create or activate a production release in this PR.
 
 The proposed manifest is intentionally explicit and machine-checkable:
 
@@ -155,9 +163,10 @@ missing manifest evidence, or a runtime-root mismatch. Activation and
 rollback receipts must include the release ID, source/base heads, file hashes,
 pointer before/after, and process result.
 
-This is a source interface and review contract. It does not authorize creating
-the release directory, changing a pointer, changing a scheduled task, or
-running the operator. Those remain separate activation actions.
+These tools implement the source-side mechanism and check-only proof. They do
+not authorize creating a release under `C:\BlueFernRunner`, changing a live
+pointer, changing a scheduled task, or running the operator against production.
+Those remain separate activation actions.
 
 An isolated full release lineage is the alternative: provision a separate
 Gaza checkout pinned to a reviewed full protected commit and switch the Gaza
@@ -174,10 +183,11 @@ runner-local preflight and deployment proof.
 
 ## Validation and CI evidence
 
-The focused suite contains source checks plus real temporary-Git tests for
-forward apply, backup byte integrity, backup failure, descendant rollback, and
-non-descendant rollback refusal. The test suite must run with an explicit
-temporary root; no production checkout is used.
+The focused suite contains source checks, immutable builder/manifest/launcher
+tests, and real temporary-Git tests for forward apply, backup byte integrity,
+backup failure, descendant rollback, and non-descendant rollback refusal. The
+test suite must run with an explicit temporary root; no production checkout is
+used.
 
 The PR head currently has no Actions run or commit status, while a prior head
 of the same workflow has a completed successful run and `validate` status. The

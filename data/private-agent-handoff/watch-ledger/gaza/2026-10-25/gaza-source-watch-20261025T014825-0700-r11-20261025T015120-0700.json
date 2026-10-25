@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T014825-0700-r11-20261025T015120-0700",
+  "scheduled_for": "2026-10-25T01:44:51-07:00",
+  "started_at": "2026-10-25T01:48:25-07:00",
+  "completed_at": "2026-10-25T01:51:20-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T00:50:25-07:00",
+    "end": "2026-10-25T01:51:20-07:00",
+    "basis": "Immediately preceding GitHub-verified Gaza Source Watch completion to this check, using America/Los_Angeles; in-window qualification requires independently verifiable event or new published source. Earlier/undated/recycled material excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall and handoff only; production Gaza daily publisher/collector remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T004852-0700-r11-20261025T075025.json",
+      "completed_at": "2026-10-25T00:50:25-07:00",
+      "status": "DEGRADED",
+      "verified_via": "GitHub connector fetch_file on ops/watch-ledger; compare_commits confirmed most recent Gaza heartbeat since 23:50 October 24."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed Gaza humanitarian updates published 19 October 2026, outside observation window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated in-window Gaza health service or emergency bulletin."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Fetch timeout (upstream unavailable)."
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Fetch timeout (upstream unavailable)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:reuters.com/world/middle-east Gaza October 25 2026 overnight casualties airstrikes ceasefire aid",
+      "site:apnews.com/article/gaza October 25 2026 overnight ceasefire killed strikes Palestinians",
+      "site:news.un.org Gaza October 25 2026 humanitarian crossings displacement aid",
+      "site:aljazeera.com/news/2026/10/25 Gaza ceasefire attacks casualties early Sunday",
+      "site:english.wafa.ps Gaza Sunday October 25 2026 killed injured overnight humanitarian",
+      "site:unicef.org Gaza October 25 2026 children displaced water food hospitals",
+      "site:wfp.org/news Gaza October 24 25 2026 food deliveries aid distribution crossings",
+      "site:msf.org Gaza 24 October 2026 25 October hospital ambulance medical evacuation",
+      "site:icrc.org Gaza October 24 25 2026 detainees hostages medical evacuations crossing",
+      "site:unrwa.org Gaza 24 25 October 2026 shelter water distributions humanitarian",
+      "Gaza Rafah Kerem Shalom crossing fuel medical evacuation overnight October 25 2026",
+      "Gaza October 25 2026 01:00 local civilians wounded killed ceasefire overnight Gaza City Khan Younis Reuters"
+    ],
+    "search_recency_days": 1,
+    "classes_checked": [
+      "civilian casualties; military operations with documented civilian impact",
+      "displacement, shelter and civilian infrastructure",
+      "humanitarian aid delivery, food and water access, crossings and fuel",
+      "hospital/healthcare capacity, ambulance/transport/medical evacuation functionality",
+      "detention and hostages",
+      "ceasefire and negotiation changes"
+    ],
+    "excluded_context": [
+      {
+        "url": "https://www.unicef.org/press-releases/statement-unicef-regional-director-middle-east-and-north-africa-edouard-beigbeder-ongoing-killings-children-across-gaza-strip",
+        "date": "2026-10-22",
+        "reason": "Search-linked UNICEF statement predates window; not qualifying as new."
+      },
+      {
+        "url": "https://www.doctorswithoutborders.org/latest/msf-response-escalating-conflict-middle-east",
+        "date": "2026-10-22",
+        "reason": "Broad regional reporting from days before window; no specific in-window newly verifiable Gaza development."
+      },
+      {
+        "url": "https://apnews.com/article/israel-palestinians-hamas-war-gaza-ceasefire-explainer-f6c105e8f72d8b478d78312142d888ed",
+        "date": "2026-10",
+        "reason": "Ceasefire-anniversary explainer predates window; recycled context."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean regional OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "timeout",
+        "impact": "Independent direct regional healthcare service status verification unavailable."
+      },
+      {
+        "publisher": "WHO EMRO emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "timeout",
+        "impact": "Direct emergency medical and evacuation updates unavailable; WHO global accessible."
+      },
+      {
+        "publisher": "UN News targeted search",
+        "url": "https://news.un.org/",
+        "error": "robots.txt blocked",
+        "impact": "Direct UN News discovery limited; other primary humanitarian sources accessible."
+      }
+    ],
+    "assessment": "No newly published or independently verifiable in-window nonduplicate qualifying Gaza development identified across 12 targeted searches after OCHA/WHO checks. This cannot prove no event occurred. WHO regional access is persistently degraded from previous runs; UN News robots restriction also seen in earlier run; no additional current operational failure detected. Bounded search cap met.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

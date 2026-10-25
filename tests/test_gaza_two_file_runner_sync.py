@@ -424,6 +424,22 @@ def test_report_path_inside_target_is_rejected_and_receipt_falls_back_safely(tmp
     assert report["production_state_mutated"] is False
 
 
+def test_report_path_with_missing_nested_ancestors_uses_platform_safe_walk(tmp_path):
+    report_path = tmp_path / "artifact-parent" / "missing-child" / "report.json"
+    result, report = _run_controller(
+        tmp_path,
+        "valid",
+        CURRENT_PROTECTED_HEAD,
+        report_path=report_path,
+    )
+    assert result.returncode == 0
+    assert report["result"] == "PLAN_READY_TO_FAST_FORWARD"
+    assert report_path.is_file()
+    assert "DirectorySeparatorChar" in SCRIPT
+    assert "AltDirectorySeparatorChar" in SCRIPT
+    assert "while ($probe -and -not (Test-Path -LiteralPath $probe))" in SCRIPT
+
+
 def test_valid_reviewed_forward_or_rollback_plan_binds_its_exact_blobs(tmp_path):
     rollback_head = "b" * 40
     rollback_operator = "c" * 40

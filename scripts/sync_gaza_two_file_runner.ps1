@@ -59,12 +59,22 @@ function Normalize-GitPath {
 function Get-StatusSnapshot {
     $result = Invoke-Git -Arguments @("status", "--porcelain=v1", "--untracked-files=all")
     $byPath = [ordered]@{}
+    $content = [ordered]@{}
     foreach ($raw in @($result.Output -split "`r?`n")) {
         if (-not $raw -or $raw.Length -lt 4) { continue }
         $path = Normalize-GitPath $raw.Substring(3)
         $byPath[$path] = $raw.Substring(0, 2)
+        $absolute = [IO.Path]::GetFullPath((Join-Path $TargetRoot ($path -replace '/', '\')))
+        $targetPrefix = [IO.Path]::GetFullPath($TargetRoot).TrimEnd('\') + '\'
+        if (-not $absolute.StartsWith($targetPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Status path escapes TargetRoot: $path"
+        }
+        if (-not (Test-Path -LiteralPath $absolute -PathType Leaf)) {
+            throw "Status path is not a regular file: $path"
+        }
+        $content[$path] = Get-Sha256 -Path $absolute
     }
-    return [pscustomobject]@{ Raw = $byPath; Paths = @($byPath.Keys | Sort-Object) }
+    return [pscustomobject]@{ Raw = $byPath; Content = $content; Paths = @($byPath.Keys | Sort-Object) }
 }
 
 function Get-IncomingPaths {
@@ -103,6 +113,33 @@ function Assert-BackupRoot {
         throw "BackupRoot must not be inside TargetRoot."
     }
     if ($backupFull -eq $targetFull) { throw "BackupRoot must be separate from TargetRoot." }
+    Assert-SafeArtifactPath -Path $Root -Label "BackupRoot"
+}
+
+function Assert-SafeArtifactPath {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Label
+    )
+    $full = [IO.Path]::GetFullPath($Path)
+    $targetFull = [IO.Path]::GetFullPath($TargetRoot).TrimEnd('\') + '\'
+    if ($full.StartsWith($targetFull, [StringComparison]::OrdinalIgnoreCase) -or
+        $full.Equals($targetFull.TrimEnd('\'), [StringComparison]::OrdinalIgnoreCase)) {
+        throw "$Label must not be inside TargetRoot: $Path"
+    }
+    $probe = $full
+    if (-not (Test-Path -LiteralPath $probe)) {
+        $probe = Split-Path -Parent $probe
+    }
+    while ($probe -and (Test-Path -LiteralPath $probe)) {
+        $item = Get-Item -LiteralPath $probe -Force
+        if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+            throw "$Label resolves through a reparse point: $probe"
+        }
+        $parent = Split-Path -Parent $probe
+        if ($parent -eq $probe) { break }
+        $probe = $parent
+    }
 }
 
 function Write-JsonReport {
@@ -111,6 +148,7 @@ function Write-JsonReport {
         $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
         $script:ReportPath = Join-Path $env:TEMP "gaza-two-file-sync-$stamp.json"
     }
+    Assert-SafeArtifactPath -Path $ReportPath -Label "ReportPath"
     $parent = Split-Path -Parent $ReportPath
     if ($parent) { New-Item -ItemType Directory -Force -Path $parent | Out-Null }
     $Report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $ReportPath -Encoding UTF8
@@ -131,10 +169,13 @@ $report = [ordered]@{
     after_head = $null
     incoming_paths = @()
     before_status = $null
+    before_content = $null
     after_status = $null
     backup_manifest = $null
     result = "BLOCKED"
     production_state_mutated = $false
+    production_state_mutation_status = "not_attempted"
+    merge_attempted = $false
     public_side_effects = $false
     collection_triggered = $false
     publication_triggered = $false
@@ -157,6 +198,7 @@ try {
     if (-not (Test-Path -LiteralPath (Join-Path $TargetRoot ".git"))) {
         throw "TargetRoot is not a Git checkout/worktree: $TargetRoot"
     }
+    if ($ReportPath) { Assert-SafeArtifactPath -Path $ReportPath -Label "ReportPath" }
     if ($Apply) {
         if (-not $BackupRoot) { throw "BackupRoot is required with -Apply." }
         Assert-BackupRoot -Root $BackupRoot
@@ -187,6 +229,7 @@ try {
 
     $status = Get-StatusSnapshot
     $report.before_status = $status.Raw
+    $report.before_content = $status.Content
     $incoming = @(Get-IncomingPaths)
     $report.incoming_paths = $incoming
     $outside = @($incoming | Where-Object { $_ -notin $AllowedPaths })
@@ -215,21 +258,28 @@ try {
     }
     else {
         $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
-        $backupDir = Join-Path $BackupRoot "gaza-two-file-$stamp"
-        New-Item -ItemType Directory -Force -Path $backupDir | Out-Null
+        $backupDir = Join-Path $BackupRoot ("gaza-two-file-{0}-{1}" -f $stamp, [guid]::NewGuid().ToString("N"))
+        New-Item -ItemType Directory -Path $backupDir -ErrorAction Stop | Out-Null
         $backupEntries = @()
         foreach ($path in $AllowedPaths) {
-            $source = Join-Path $TargetRoot ($path -replace '/', '\\')
+            $source = Join-Path $TargetRoot ($path -replace '/', '\')
             if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
                 throw "Cannot back up missing target file: $source"
             }
-            $destination = Join-Path $backupDir ($path -replace '/', '\\')
+            $destination = Join-Path $backupDir ($path -replace '/', '\')
             New-Item -ItemType Directory -Force -Path (Split-Path -Parent $destination) | Out-Null
-            Copy-Item -LiteralPath $source -Destination $destination -Force
+            $sourceHash = Get-Sha256 -Path $source
+            if (Test-Path -LiteralPath $destination) { throw "Backup destination already exists: $destination" }
+            Copy-Item -LiteralPath $source -Destination $destination
+            $backupHash = Get-Sha256 -Path $destination
+            if (($sourceHash.sha256 -ne $backupHash.sha256) -or ($sourceHash.bytes -ne $backupHash.bytes)) {
+                throw "Backup byte verification failed for $path"
+            }
             $backupEntries += [ordered]@{
                 path = $path
                 backup_path = $destination
-                file = Get-Sha256 -Path $source
+                source_file = $sourceHash
+                backup_file = $backupHash
             }
         }
         $manifest = [ordered]@{
@@ -250,10 +300,19 @@ try {
         if ((Invoke-Git -Arguments @("branch", "--show-current")).Output -ne $TargetBranch) { throw "Target branch changed before apply." }
         if ((Invoke-Git -Arguments @("rev-parse", "HEAD")).Output -ne $beforeHead) { throw "Target HEAD changed before apply." }
         $lateStatus = Get-StatusSnapshot
-        if (($lateStatus.Paths -join "`n") -ne ($status.Paths -join "`n")) { throw "Target dirty-state paths changed before apply." }
+        if (($lateStatus.Raw | ConvertTo-Json -Compress) -ne ($status.Raw | ConvertTo-Json -Compress) -or
+            ($lateStatus.Content | ConvertTo-Json -Compress) -ne ($status.Content | ConvertTo-Json -Compress)) {
+            throw "Target dirty-state paths, statuses, or contents changed before apply."
+        }
         if ((Invoke-Git -Arguments @("rev-parse", "origin/$TargetBranch")).Output -ne $ExpectedProtectedHead) { throw "Protected head changed before apply." }
 
+        $report.merge_attempted = $true
         $null = Invoke-Git -Arguments @("merge", "--ff-only", $ExpectedProtectedHead)
+        # A successful merge command has already changed the checkout. Mark it
+        # before any post-merge read/verification so a later failure cannot be
+        # misreported as a non-mutating block.
+        $report.production_state_mutated = $true
+        $report.production_state_mutation_status = "mutated_unverified"
         $afterHead = (Invoke-Git -Arguments @("rev-parse", "HEAD")).Output
         if ($afterHead -ne $ExpectedProtectedHead) { throw "Fast-forward completed at unexpected HEAD: $afterHead" }
         $report.production_state_mutated = $true
@@ -265,11 +324,16 @@ try {
         $unexpected = @($afterStatus.Paths | Where-Object { $_ -notin $status.Paths })
         if ($unexpected.Count -gt 0) { throw "Unexpected post-apply dirty paths: $($unexpected -join ', ')" }
         $report.after_head = $afterHead
+        $report.production_state_mutation_status = "mutated_verified"
         $report.result = "APPLY_COMPLETE"
     }
 }
 catch {
     $report.error = $_.Exception.Message
+    if ($report.merge_attempted -and -not $report.production_state_mutated) {
+        $report.production_state_mutated = $null
+        $report.production_state_mutation_status = "unknown"
+    }
     if ($report.result -notin @("APPLY_COMPLETE", "FULL_SOURCE_ADVANCEMENT_REQUIRED")) {
         $report.result = "BLOCKED"
     }

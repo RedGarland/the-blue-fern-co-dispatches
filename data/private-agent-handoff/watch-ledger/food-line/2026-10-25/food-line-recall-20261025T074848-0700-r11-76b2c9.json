@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T074848-0700-r11-76b2c9",
+  "scheduled_for": "2026-10-25T07:45:54-07:00",
+  "started_at": "2026-10-25T07:48:48-07:00",
+  "completed_at": "2026-10-25T07:51:08+00:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T06:49:47-07:00",
+    "end_at": "2026-10-25T07:51:08+00:00-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the prior completed hourly watch heartbeat on ops/watch-ledger; end is this observation completion."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; nationwide production Food Line collection remains authoritative and unchanged.",
+    "Completed exactly 12 targeted web searches (three per miss class, with 2–3-day recency requests), covering sole/last/full-service grocery loss, weather/disaster-related canceled emergency food distributions, abrupt pantry/food-bank closure or major access reduction, and official SNAP/WIC/EBT interruptions.",
+    "No independently verifiable qualifying disruption newly announced or occurring in this bounded hourly window was found.",
+    "Search results predominantly surfaced non-current 2019–2025 closures, previous-month grocery losses, 2025 SNAP shutdown reports, unrelated foreign/airline suspensions, and generic food-program coverage; excluded for age, geography, or topic.",
+    "The October 23 Kaua‘i hurricane recovery roundup discusses earlier September damage without verifying a new food distribution cancellation during this hour; excluded.",
+    "Previously reviewed October 24 pantry-closure leads were not recounted without fresh corroborated developments.",
+    "Searches returned usable results without a material source/search failure; fresh-hour coverage is limited by search-engine indexing.",
+    "No editorial approval, publication, production collector change, schedule modification, or automation disabling occurred."
+  ]
+}

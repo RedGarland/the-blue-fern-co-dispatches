@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T155056-0700-r11-34be2a",
+  "scheduled_for": "2026-10-25T15:45:54-07:00",
+  "started_at": "2026-10-25T15:50:56-07:00",
+  "completed_at": "2026-10-25T15:53:27.576-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T14:46:16.795-07:00",
+    "end_at": "2026-10-25T15:53:27.576-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From prior persisted Food Line Source Watch heartbeat completed_at on ops/watch-ledger to current observation; newly surfaced sources still require independently evidenced publication or event timing."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "engine": "fast",
+    "focus_classes": [
+      "Loss, closure, fire or disaster affecting only, sole, last, or full-service grocery store in a community",
+      "Canceled or suspended emergency distributions from storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "Official SNAP/WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire October 25 2026 town",
+      "\"sole grocery store\" shutdown fire October 2026 community",
+      "\"last grocery store\" closed October 24 25 2026",
+      "\"full-service grocery store\" closed flooding October 2026",
+      "\"food distribution\" canceled storm flooding October 25 2026",
+      "\"food bank\" \"distribution\" cancelled power outage Oct 2026",
+      "\"food pantry\" \"closed\" \"October 25, 2026\" food shortage",
+      "\"food pantry\" \"temporarily closed\" flooding fire October 2026",
+      "site:gov \"SNAP\" \"outage\" \"October 25, 2026\"",
+      "site:gov \"WIC\" \"interruption\" October 25 2026 benefits",
+      "October 25 2026 food pantry food bank canceled distribution closure storm flooding power outage Sunday",
+      "October 25 2026 SNAP WIC EBT benefits service interruption outage official state"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall only; production nationwide Food Line collection remains authoritative.",
+    "Twelve targeted web searches completed across four prioritized failure classes; the web search tool reported no search-level errors.",
+    "No newly published U.S. source verified a qualifying food-access disruption arising since the preceding hourly watch.",
+    "Grocery examples (Spencer NY fire, Eastport ME closure, North Charleston SC closure) were published in September or August 2026, outside the window; other sole-store search hits were still older or concerned continued operation.",
+    "Pantry distribution disruptions (Columbus GA March 2026; Allston-Brighton MA February/March 2026) predated the watch; storm-related coverage was mostly aid provision, not cancellation of food access.",
+    "Official benefit interruption queries predominantly surfaced October 2025 government-shutdown notices and older 2026 EBT outages, not a new verified October 25 2026 disruption.",
+    "Publication time and search indexing lag may hide localized announcements; no_findings means no independently verified new qualifying signal, not proof of no disruption.",
+    "No approval, publication, production collector change, schedule change or task disabling occurred."
+  ]
+}

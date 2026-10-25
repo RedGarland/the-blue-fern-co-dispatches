@@ -1,0 +1,55 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T105021-0700-r11-supp12",
+  "scheduled_for": "2026-10-25T10:45:22-07:00",
+  "started_at": "2026-10-25T10:50:21-07:00",
+  "completed_at": "2026-10-25T10:52:21.245-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T09:50:42.683-07:00",
+    "end": "2026-10-25T10:52:21.245-07:00",
+    "basis": "Since the previous verified Care Line supplementary watch completion; newly found older cases screened for novelty and deduplicated. National production Care Line remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall for US states, DC and territories: hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care interruptions, emergency or rural care loss, ambulance/air medical/base shutdown, CMS provider/CLIA notices, and already-effective essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS Public Notices list retrieved before the general searches. Newest are the three 2026-10-23 home-health termination notices for My Families Healthcare (CA; CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA; CCN 559673), and Moonlight Home Health Care Inc (OH; CCN 369006), all logged October 23. No Oct 24 or Oct 25 CMS notices were listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 25, 2026\" hospital emergency department closed suspended service US",
+      "\"October 24, 2026\" hospital emergency department diverting ambulances suspended services",
+      "\"October 25, 2026\" hospital labor delivery maternity unit closure announced",
+      "\"October 24, 2026\" behavioral health psychiatric hospital facility closing patients",
+      "\"October 24, 2026\" primary care urgent care clinic closed patients rural",
+      "\"October 24, 2026\" ambulance EMS air medical helicopter base closure service",
+      "dialysis center \"October 24, 2026\" suspended services patients United States",
+      "oncology cancer treatment clinic \"October 24, 2026\" closure patients United States",
+      "hospital emergency services reopened restored \"October 25, 2026\" US",
+      "site:gov hospital emergency services suspended closed \"October 24, 2026\" OR \"October 25, 2026\"",
+      "Puerto Rico Guam Virgin Islands hospital closure emergency ambulance October 24 25 2026",
+      "\"October 25, 2026\" hospital clinic shut down abruptly patients care services"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261025T094828-0700-r11-5c9e",
+      "completed_at": "2026-10-25T09:50:42.683-07:00",
+      "branch": "ops/watch-ledger",
+      "verified_read": true,
+      "preceding_outcome": "no_findings"
+    },
+    "source_review": "Twelve targeted searches returned no newly substantiated, nonduplicate US/territory changes. Recent Vista Medical Center East trauma revocation/anesthesia interruption and Oct 9 dialysis interruption were already captured; October CMS entries are unchanged. Results mainly reflected historical closures, foreign incidents, policy commentary, or unfunded/proposed re-openings rather than effective restorations.",
+    "exclusions": "Excluded duplicates, historical cases without a new access consequence, speculative financing or business-only changes, uncompleted reopening plans, opinion, and out-of-scope international reports.",
+    "limitations": "Search-index latency and Sunday local-reporting gaps may conceal events; no material CMS/site access or search failure observed. Bounded recall is not comprehensive national collection.",
+    "material_degradation": false,
+    "controls": "No editorial approval, publication, production mutation, scheduling change, or task disablement."
+  }
+}

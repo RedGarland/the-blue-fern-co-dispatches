@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T114823-0700-r11-7e4c",
+  "scheduled_for": "2026-10-25T11:45:22-07:00",
+  "started_at": "2026-10-25T11:48:23-07:00",
+  "completed_at": "2026-10-25T11:49:42-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T10:52:21.245-07:00",
+    "end": "2026-10-25T11:49:42-07:00",
+    "basis": "Since prior verified supplementary Care Line watch completion. Older surfaced items screened for recall novelty and duplicates; production national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary U.S., DC, territory recall only: hospital/ED/maternity/behavioral health/dialysis/oncology/primary care loss; rural/emergency services; EMS and air medical; CMS provider/CLIA access-risk notices; effective essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Canonical CMS Public Notices page checked before targeted discovery. Latest items remain three October 23 home-health termination notices (My Families Healthcare CA 758151, 1ST AIDE HOME HEALTH AGENCY CA 559673, Moonlight Home Health Care Inc OH 369006); each already captured in prior watch. No October 24/25 notice on retrieved official listing.",
+      "access_note": "One attempted outdated CMS URL failed; canonical URL retrieved successfully and supplied complete relevant recent notice listing."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department suspended services closure reopening October 25 2026 USA",
+      "hospital ICU emergency ambulance diversion service closure October 24 25 2026",
+      "maternity labor delivery unit closing hospital October 25 2026 announcement",
+      "mental health behavioral psychiatric treatment center closure October 24 25 2026",
+      "rural primary care clinic urgent care closure October 24 25 2026",
+      "ambulance EMS air medical helicopter base closing October 24 25 2026",
+      "dialysis treatment hospital inpatient dialysis suspended patients October 25 2026",
+      "oncology chemotherapy cancer clinic treatment center closure suspended October 24 25 2026",
+      "hospital emergency department reopened operations restored October 25 2026 United States",
+      "site:gov hospital emergency maternity ambulance service suspended October 25 2026",
+      "Puerto Rico US Virgin Islands Guam American Samoa hospital clinic ambulance shutdown October 2026",
+      "hospital clinic closes Oct 25 2026 patients service closure local news"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261025T105021-0700-r11-supp12",
+      "completed_at": "2026-10-25T10:52:21.245-07:00",
+      "verified_read": true,
+      "preceding_outcome": "no_findings",
+      "branch": "ops/watch-ledger"
+    },
+    "source_review": "Twelve bounded targeted searches surfaced no newly substantiated nonduplicate U.S./territory healthcare-access change in this window. Results were predominantly older U.S. closures, international incidents, proposals, or background articles. CMS official listing had no new entry. No finding meets evidence and novelty thresholds.",
+    "exclusions": "Excluded earlier-dated known closures, out-of-scope foreign reports, proposed but not effective restorations, opinion, conjecture, ownership-only stories, and unsupported impact claims.",
+    "limitations": "Search indexing latency and weekend local-reporting gaps may miss developments; bounded recall does not replace production collector. Canonical CMS source accessible despite a stale-path retrieval failure.",
+    "material_degradation": false,
+    "controls": "No approval, publication, primary collector mutation, schedule changes, or task disablement."
+  }
+}

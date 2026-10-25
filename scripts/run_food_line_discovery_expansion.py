@@ -107,6 +107,40 @@ def _terminal_contract_result(
     }
 
 
+def _export_allowed(root: Path, edition_date: str, run_id: str, result: dict[str, object]) -> bool:
+    if not bool(result.get("ok")):
+        return False
+    query_plan = build_food_line_discovery_query_plan(root, edition_date)
+    state, _ = _bounded_state_from_result(
+        root=root,
+        edition_date=edition_date,
+        run_id=run_id,
+        query_plan=query_plan,
+        result=result,
+    )
+    if state["status"] == INCOMPLETE_CAPPED_STATUS or state["counter_integrity_status"] != "valid":
+        return False
+    if state["coverage"]["required_success_ratio"] < state["options"]["required_coverage_threshold"]:
+        return False
+    if state["coverage"]["direct_success_ratio"] < state["options"]["direct_source_coverage_threshold"]:
+        return False
+    return True
+
+
+def _result_counters_valid(result: dict[str, object]) -> bool:
+    required = ("queries_attempted", "queries_succeeded", "queries_failed", "queries_timed_out")
+    if any(result.get(key) is None for key in required):
+        return False
+    attempted = int(result["queries_attempted"])
+    if attempted != int(result["queries_succeeded"]) + int(result["queries_failed"]) + int(result["queries_timed_out"]):
+        return False
+    direct_attempted = result.get("direct_source_fetch_attempt_count")
+    direct_succeeded = result.get("direct_source_fetch_success_count")
+    if direct_attempted is None or direct_succeeded is None:
+        return False
+    return 0 <= int(direct_succeeded) <= int(direct_attempted)
+
+
 def _atomic_write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary_name = tempfile.mkstemp(dir=str(path.parent), prefix=".tmp-")
@@ -267,6 +301,22 @@ def _bounded_state_from_result(
     candidate_count = int(result.get("candidate_count") or result.get("public_eligible_candidate_count") or 0)
     direct_source_count = int(result.get("direct_source_count") or result.get("source_count") or 0)
     queries_completed = int(result.get("queries_completed") if result.get("queries_completed") is not None else (0 if timed_out else len(query_plan)))
+    queries_succeeded = int(
+        result.get("queries_succeeded")
+        if result.get("queries_succeeded") is not None
+        else max(0, queries_completed - int(result.get("queries_failed") or 0) - int(result.get("queries_timed_out") or 0))
+    )
+    counter_fields_present = all(result.get(key) is not None for key in ("queries_attempted", "queries_succeeded", "queries_failed", "queries_timed_out"))
+    counter_total = queries_succeeded + int(result.get("queries_failed") or 0) + int(result.get("queries_timed_out") or 0)
+    counters_consistent = counter_fields_present and int(result.get("queries_attempted") or 0) == counter_total and int(result.get("queries_attempted") or 0) == queries_completed
+    counter_integrity_status = "valid" if counters_consistent else "missing_or_inconsistent"
+    direct_attempted = int(result.get("direct_source_fetch_attempt_count") or 0)
+    direct_succeeded = int(result.get("direct_source_fetch_success_count") or 0)
+    direct_fields_present = result.get("direct_source_fetch_attempt_count") is not None and result.get("direct_source_fetch_success_count") is not None
+    direct_consistent = direct_fields_present and 0 <= direct_succeeded <= direct_attempted
+    direct_ratio = 1.0 if direct_attempted == 0 and direct_consistent else (direct_succeeded / direct_attempted if direct_consistent and direct_attempted else 0.0)
+    if not direct_consistent:
+        counter_integrity_status = "missing_or_inconsistent"
     queries_timed_out = int(result.get("queries_timed_out") if result.get("queries_timed_out") is not None else (1 if timed_out else 0))
     queries_failed = int(result.get("queries_failed") if result.get("queries_failed") is not None else 0)
     query_plan_available_count = int(
@@ -290,6 +340,8 @@ def _bounded_state_from_result(
         else queries_completed + queries_failed + queries_timed_out
     )
     incomplete_capped = discovery_ok and queries_deferred > 0
+    if not counters_consistent and not incomplete_capped:
+        status = "collection_failure"
     if incomplete_capped:
         status = "incomplete_capped"
     coverage_ratio = (
@@ -311,33 +363,39 @@ def _bounded_state_from_result(
         "queries_total": query_plan_available_count,
         "queries_bounded": query_plan_bounded_count,
         "queries_completed": queries_completed,
+        "queries_succeeded": queries_succeeded,
+        "counter_integrity_status": counter_integrity_status,
         "queries_deferred": queries_deferred,
         "queries_remaining": max(0, query_plan_available_count - queries_attempted),
         "queries_failed": queries_failed,
         "queries_timed_out": queries_timed_out,
         "candidates_discovered": candidate_count or direct_source_count,
         "query_plan_sha256": plan_payload["query_plan_sha256"],
-        "final_error": "" if discovery_ok else str(result.get("errors") or result.get("error") or "discovery expansion failed"),
+        "final_error": (
+            "query disposition counters missing or inconsistent"
+            if counter_integrity_status != "valid"
+            else "" if discovery_ok else str(result.get("errors") or result.get("error") or "discovery expansion failed")
+        ),
         "options": {
             "required_coverage_threshold": 0.90,
             "direct_source_coverage_threshold": 0.75,
         },
         "coverage": {
-            "required_success_ratio": 0.0 if timed_out else coverage_ratio,
-            "direct_success_ratio": 0.0 if timed_out else coverage_ratio,
+            "required_success_ratio": 0.0 if timed_out or not counters_consistent else min(1.0, queries_succeeded / max(1, query_plan_available_count)),
+            "direct_success_ratio": 0.0 if timed_out or not counters_consistent or not direct_consistent else min(1.0, direct_ratio),
         },
         "agent_export": {
             "status": "success_with_exclusions"
-            if status == "completed_with_exclusions"
+            if status == "completed_with_exclusions" and counter_integrity_status == "valid"
             else "blocked_incomplete_collection"
             if incomplete_capped
             else "success"
-            if discovery_ok and not timed_out
+            if discovery_ok and not timed_out and counter_integrity_status == "valid"
             else "blocked_incomplete_collection",
             "path": str(Path(result.get("agent_export_path") or (root / "status" / "food-line" / "runtime" / "agent-inbox"))),
             "sha256": str(result.get("agent_export_sha256") or hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()),
         },
-        "next_action": "Plan-bound continuation required before intake." if incomplete_capped else "No collection action required.",
+        "next_action": "Plan-bound continuation required before intake." if status == INCOMPLETE_CAPPED_STATUS else "Repair collection counters before intake." if counter_integrity_status != "valid" else "No collection action required.",
     }
     return state, plan_payload
 
@@ -356,9 +414,11 @@ def _write_state_files(root: Path, edition_date: str, run_id: str, result: dict[
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "query-plan.json").write_text(json.dumps(plan_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (run_dir / "run-state.json").write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    state_ok = state["status"] in {"success", "completed", "completed_with_exclusions", "zero_result_completion"} and state["counter_integrity_status"] == "valid"
     return {
         **result,
-        "ok": bool(result.get("ok")) and state["status"] != INCOMPLETE_CAPPED_STATUS,
+        "ok": bool(result.get("ok")) and state_ok,
+        "status": state["status"],
         "run_state_path": str(run_dir / "run-state.json"),
         "query_plan_path": str(run_dir / "query-plan.json"),
         "query_plan_sha256": plan_payload["query_plan_sha256"],
@@ -371,6 +431,8 @@ def _write_state_files(root: Path, edition_date: str, run_id: str, result: dict[
         "queries_completed": state["queries_completed"],
         "queries_failed": state["queries_failed"],
         "queries_timed_out": state["queries_timed_out"],
+        "counter_integrity_status": state["counter_integrity_status"],
+        "final_error": state["final_error"],
         "candidates_discovered": state["candidates_discovered"],
     }
 
@@ -480,8 +542,15 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
     if args.status_run:
         if not run_id:
             raise ValueError("--status-run requires a run identifier")
+        run_dir = _find_run_dir(root, run_id, args.date)
         state = _read_state(root, run_id, args.date)
-        return {"ok": True, **state}
+        return {
+            "ok": True,
+            **state,
+            "run_id": str(state.get("run_id") or run_id),
+            "edition_date": str(state.get("edition_date") or args.date or run_dir.parent.name),
+            "run_state_path": str(run_dir / "run-state.json"),
+        }
     if not run_id:
         raise ValueError("legacy bounded discovery requires --run-id or --resume-run")
     if not args.date:
@@ -506,7 +575,7 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
             dry_run=bool(args.dry_run),
             resume_from_query_index=resume_from_query_index,
         )
-        if args.export_agent_inbox:
+        if args.export_agent_inbox and _export_allowed(root, edition_date, run_id, result):
             result = dict(result)
             export = _export_agent_inbox(
                 root,
@@ -536,7 +605,7 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         resume_from_query_index=resume_from_query_index,
         runtime_deadline=runtime_deadline,
     )
-    if args.export_agent_inbox:
+    if args.export_agent_inbox and _export_allowed(root, edition_date, run_id, result):
         result = dict(result)
         export = _export_agent_inbox(
             root,
@@ -549,7 +618,7 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         result["agent_export_path"] = export["path"]
         result["agent_export_sha256"] = export["sha256"]
     wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
-    if not wrapped["ok"] and not bool(result.get("timed_out")):
+    if not wrapped["ok"] and not bool(result.get("timed_out")) and wrapped.get("status") != INCOMPLETE_CAPPED_STATUS:
         wrapped["status"] = "collection_failure"
     return _terminal_contract_result(
         wrapped,
@@ -605,7 +674,23 @@ def main(argv: list[str] | None = None) -> int:
                 public_claim_lookahead_days=args.public_claim_lookahead_days,
                 dry_run=bool(args.dry_run),
             )
-        result = _terminal_contract_result(result, edition_date=args.date, run_id=str(args.run_id or ""))
+            if int(result.get("queries_deferred") or 0) > 0:
+                result = {**result, "ok": False, "status": INCOMPLETE_CAPPED_STATUS}
+            elif not _result_counters_valid(result):
+                result = {
+                    **result,
+                    "ok": False,
+                    "status": "collection_failure",
+                    "error_type": "collection_failure",
+                    "error_message": "query disposition counters missing or inconsistent",
+                    "final_error": "query disposition counters missing or inconsistent",
+                    "agent_export": {"status": "blocked_incomplete_collection", "path": None, "sha256": None},
+                }
+        result = _terminal_contract_result(
+            result,
+            edition_date=str(result.get("edition_date") or args.date or ""),
+            run_id=str(result.get("run_id") or args.run_id or ""),
+        )
     except Exception as exc:  # noqa: BLE001
         result = _terminal_contract_result(
             {
@@ -627,6 +712,7 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 
 

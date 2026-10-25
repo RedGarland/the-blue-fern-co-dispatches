@@ -67,7 +67,23 @@ def test_actual_status_run_cli_reads_capped_state(tmp_path):
 
 
 def test_actual_status_run_cli_preserves_state_without_date_argument(tmp_path):
+    run_dir = tmp_path / "data" / "dispatches" / "food-line" / "discovery-runs" / "2026-10-24" / "cli-capped"
+    run_dir.mkdir(parents=True, exist_ok=True)
+    (run_dir / "run-state.json").write_text(
+        json.dumps({"status": "incomplete_capped", "resumable": False, "edition_date": "2026-10-24"}),
+        encoding="utf-8",
+    )
     command = [sys.executable, str(ROOT / "scripts" / "run_food_line_discovery_expansion.py"), "--status-run", "cli-capped", "--run-id", "cli-capped"]
+    completed = subprocess.run(command, cwd=tmp_path, text=True, capture_output=True, check=False)
+    assert completed.returncode == 1, completed.stderr or completed.stdout
+    payload = json.loads(completed.stdout)
+    assert payload["status"] == "incomplete_capped"
+    assert payload["edition_date"] == "2026-10-24"
+    assert payload["run_state_path"].replace("/", "\\").endswith("cli-capped\\run-state.json")
+
+
+def test_actual_status_run_cli_missing_state_fails_closed(tmp_path):
+    command = [sys.executable, str(ROOT / "scripts" / "run_food_line_discovery_expansion.py"), "--status-run", "missing", "--run-id", "missing"]
     completed = subprocess.run(command, cwd=tmp_path, text=True, capture_output=True, check=False)
     assert completed.returncode == 1, completed.stderr or completed.stdout
     payload = json.loads(completed.stdout)
@@ -446,14 +462,6 @@ def test_actual_valid_state_keeps_success_and_export_control(tmp_path, monkeypat
     finally:
         wrapper.build_food_line_discovery_query_plan = old_plan
         wrapper.run_food_line_discovery_expansion = old_run
-
-
-if __name__ == "__main__":
-    tests = [value for name, value in globals().items() if name.startswith("test_")]
-    for test in tests:
-        test()
-        print(f"PASS {test.__name__}")
-    print(f"{len(tests)} integration regressions passed")
 
 
 

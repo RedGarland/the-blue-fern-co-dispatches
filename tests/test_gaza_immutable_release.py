@@ -18,8 +18,8 @@ def _git(cwd: Path, *args: str) -> str:
     return result.stdout.strip()
 
 
-def _synthetic_manifest(tmp_path: Path):
-    release = tmp_path / "release"
+def _synthetic_manifest(tmp_path: Path, name: str = "release"):
+    release = tmp_path / name
     release.mkdir()
     files = {
         ALLOWED_PATHS[0]: (
@@ -37,7 +37,7 @@ def _synthetic_manifest(tmp_path: Path):
     entries = {path: git_blob_sha(data) for path, data in files.items()}
     manifest = {
         "schema_version": "bluefern.gaza_immutable_release.v1",
-        "release_id": "fixture-release",
+        "release_id": f"fixture-{name}",
         "base_commit": "a" * 40,
         "replacement_commit": "b" * 40,
         "changed_paths": list(ALLOWED_PATHS),
@@ -56,7 +56,7 @@ def _synthetic_manifest(tmp_path: Path):
         "runtime_root_contract": "BLUEFERN_RUNTIME_ROOT",
         "activation": "unactivated",
     }
-    manifest_path = tmp_path / "fixture-manifest.json"
+    manifest_path = tmp_path / f"{name}-manifest.json"
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     return release, manifest_path
 
@@ -289,10 +289,12 @@ def test_builder_cli_invocation_completes_end_to_end(tmp_path):
 
 
 def test_pointer_activation_and_rollback_are_atomic_and_bound(tmp_path):
-    release, manifest = _synthetic_manifest(tmp_path)
+    release, manifest = _synthetic_manifest(tmp_path, "release-one")
+    second_release, second_manifest = _synthetic_manifest(tmp_path, "release-two")
     runtime = tmp_path / "runner"
     runtime.mkdir()
     pointer = tmp_path / "active" / "release.txt"
+    outcome = tmp_path / "receipts" / "pointer.json"
     first = set_release_pointer(
         pointer=pointer,
         release_root=release,
@@ -301,10 +303,23 @@ def test_pointer_activation_and_rollback_are_atomic_and_bound(tmp_path):
         expected_manifest_sha256=file_sha256(manifest),
         expected_base_commit="a" * 40,
         expected_replacement_commit="b" * 40,
+        outcome_receipt=outcome,
     )
     assert first["before"] is None
     assert Path(first["after"]) == release.resolve()
-    second = rollback_release_pointer(
+    second = set_release_pointer(
+        pointer=pointer,
+        release_root=second_release,
+        runtime_root=runtime,
+        manifest=second_manifest,
+        expected_manifest_sha256=file_sha256(second_manifest),
+        expected_base_commit="a" * 40,
+        expected_replacement_commit="b" * 40,
+        expected_current_release=release,
+        outcome_receipt=outcome,
+    )
+    assert Path(second["after"]) == second_release.resolve()
+    rolled_back = rollback_release_pointer(
         pointer=pointer,
         release_root=release,
         runtime_root=runtime,
@@ -312,9 +327,32 @@ def test_pointer_activation_and_rollback_are_atomic_and_bound(tmp_path):
         expected_manifest_sha256=file_sha256(manifest),
         expected_base_commit="a" * 40,
         expected_replacement_commit="b" * 40,
-        expected_current_release=release,
+        expected_current_release=second_release,
+        outcome_receipt=outcome,
     )
-    assert Path(second["after"]) == release.resolve()
+    assert Path(rolled_back["after"]) == release.resolve()
+    assert json.loads(outcome.read_text(encoding="utf-8"))["after"] == str(release.resolve())
+
+
+def test_pointer_update_refuses_a_competing_writer_lock(tmp_path):
+    release, manifest = _synthetic_manifest(tmp_path)
+    runtime = tmp_path / "runner"
+    runtime.mkdir()
+    pointer = tmp_path / "active" / "release.txt"
+    lock = pointer.with_name(pointer.name + ".lock")
+    lock.parent.mkdir(parents=True)
+    lock.write_text("other-writer", encoding="ascii")
+    with pytest.raises(ValueError, match="already in progress"):
+        set_release_pointer(
+            pointer=pointer,
+            release_root=release,
+            runtime_root=runtime,
+            manifest=manifest,
+            expected_manifest_sha256=file_sha256(manifest),
+            expected_base_commit="a" * 40,
+            expected_replacement_commit="b" * 40,
+            outcome_receipt=tmp_path / "receipts" / "pointer.json",
+        )
 
 
 def test_path_guard_rejects_external_symlink_before_resolution(tmp_path):
@@ -328,3 +366,56 @@ def test_path_guard_rejects_external_symlink_before_resolution(tmp_path):
     with pytest.raises(ValueError, match="reparse point"):
         assert_outside(link / "missing" / "artifact", [tmp_path / "runtime"], "artifact")
 
+
+def test_generation_child_uses_runtime_root_and_dry_run_has_no_public_effects(tmp_path):
+    source_root = Path(__file__).resolve().parents[1]
+    child = source_root / "scripts" / "run_gaza_dispatch.py"
+    if not child.is_file():
+        pytest.skip("generation child is unavailable in this private fixture workspace")
+    runtime = tmp_path / "runtime"
+    manual = runtime / "data" / "dispatches" / "gaza" / "sources" / "2026-10-25" / "manual_sources.json"
+    manual.parent.mkdir(parents=True)
+    manual.write_text(json.dumps([
+        {
+            "source_record_id": "fixture-runtime-binding",
+            "title": "A bounded fixture source",
+            "url": "https://www.reuters.com/world/example-fixture",
+            "publisher": "Reuters",
+            "published_at": "2026-10-25T12:00:00Z",
+            "retrieved_at": "2026-10-25T12:01:00Z",
+            "summary_or_snippet": "A bounded fixture source for runtime-root validation.",
+            "source_type": "manual",
+            "region_scope": "Gaza",
+            "category_hint": "conflict",
+            "reliability_tier": "A",
+        }
+    ]), encoding="utf-8")
+    env = os.environ.copy()
+    env.update({
+        "BLUEFERN_RUNTIME_ROOT": str(runtime),
+        "PYTHONPATH": os.pathsep.join([str(source_root), str(source_root / "src")]),
+        "PYTHONDONTWRITEBYTECODE": "1",
+    })
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(child),
+            "--date", "2026-10-25",
+            "--historical",
+            "--from-manual-sources",
+            "--all",
+            "--dry-run",
+        ],
+        cwd=str(runtime),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    lines = [line for line in result.stdout.splitlines() if line.strip()]
+    assert lines, result.stderr
+    payload = json.loads(lines[-1])
+    assert Path(payload["manual_source_path"]).resolve() == manual.resolve()
+    assert str(source_root.resolve()) not in str(Path(payload["manual_source_path"]).resolve())
+    assert payload["dry_run"] is True
+    assert not (runtime / "output" / "site").exists()

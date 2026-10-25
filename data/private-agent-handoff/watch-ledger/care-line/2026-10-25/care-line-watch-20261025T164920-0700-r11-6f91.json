@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T164920-0700-r11-6f91",
+  "scheduled_for": "2026-10-25T16:45:22-07:00",
+  "started_at": "2026-10-25T16:49:20-07:00",
+  "completed_at": "2026-10-25T16:51:50.612-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T15:45:43-07:00",
+    "end": "2026-10-25T16:51:50.612-07:00",
+    "basis": "Previous verified supplementary Care Line heartbeat completed 2026-10-25 15:45:43 PDT. Bounded recall screened recent indexed reporting for newly identifiable nonduplicate access changes. Production national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S., DC and territories; hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care losses or restorations, emergency/rural access, ambulance/air-medical closures, CMS termination/rescission/CLIA actions.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "official_page_accessed": true,
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Current CMS official page retrieved and read. Latest notices remained the three 2026-10-23 HHA terminations: My Families Healthcare CA CCN 758151, 1ST AIDE HOME HEALTH AGENCY CA CCN 559673, Moonlight Home Health Care Inc OH CCN 369006. These were already in prior Care Line watch records. No Oct 24–25 notice found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 25 2026 hospital emergency department closed suspended temporarily shut down local news",
+      "October 25 2026 labor delivery maternity unit closure emergency services hospital access",
+      "October 25 2026 rural hospital emergency room no longer available lost service",
+      "October 25 2026 ambulance EMS closure cease responding county station",
+      "October 25 2026 United States hospital closed emergency room hours services suspended confirmed this weekend",
+      "October 24 25 2026 air medical helicopter base ambulance service closure operations local news",
+      "October 24 25 2026 inpatient psychiatric behavioral health clinic closing suspension services",
+      "October 24 25 2026 dialysis oncology chemotherapy outpatient clinic suspended treatments closed",
+      "October 25 2026 clinic closed patients health care United States",
+      "October 25 2026 reopened emergency department hospital United States",
+      "October 25 2026 hospital health department temporary closure services Puerto Rico Guam CNMI US Virgin Islands",
+      "October 25 2026 state department health emergency service suspension hospital approval ICU October 2026"
+    ],
+    "previous_heartbeat": {
+      "branch": "ops/watch-ledger",
+      "run_id": "care-line-watch-20261025T154315-0700-r11-cms12-0f1a",
+      "completed_at": "2026-10-25T15:45:43-07:00",
+      "verified_read": true,
+      "prior_outcome": "no_findings"
+    },
+    "screening": "Twelve category-specific searches surfaced no clearly new and nonduplicate U.S. or territory change in clinical access after prior completed watch. All apparent matches were older events, previously logged CMS notices, policy/proposals without effective service change, service-risk analyses, or non-U.S. results.",
+    "excluded_examples": [
+      "Seeley Lake, Montana Partnership Health Center clinic announced 2026-09-03 for Oct 31; no new Oct 25 operational change demonstrated.",
+      "Guam regional facilities' typhoon Champi clinic interruptions dated Oct 16–20, outside hourly change window.",
+      "Columbia Memorial Hospital Hudson, NY conversion application remains proposed/pending, not a concrete current clinical loss.",
+      "Red Bluff, California PHI air-ambulance base closed mid-September; not newly changed.",
+      "October 23 CMS HHA termination notices were reported in earlier watch records."
+    ],
+    "source_failures": [
+      "Obsolete CMS public-notices URL /medicare/provider-enrollment-and-certification/surveycertemergprep/public-notices was inaccessible; recovered the correct official CMS Public Notices page and verified the current entries before performing any additional targeted searches."
+    ],
+    "limitations": "Bounded recall is not exhaustive. Local weekend publication and search-index delay may lead to later recalls; full national production intake was not accessed or modified.",
+    "material_degradation": false,
+    "controls": "No editorial approval, publication, schedule change, disabling, or production collector alteration."
+  }
+}

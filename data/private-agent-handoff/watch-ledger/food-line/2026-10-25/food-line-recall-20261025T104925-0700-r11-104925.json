@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T104925-0700-r11-104925",
+  "scheduled_for": "2026-10-25T10:45:54-07:00",
+  "started_at": "2026-10-25T10:49:25-07:00",
+  "completed_at": "2026-10-25T10:51:18.701-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T09:50:01-07:00",
+    "end_at": "2026-10-25T10:51:18.701-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified supplementary Food Line heartbeat completion through the current watch completion; publication/event time must be established inside this window to qualify as a new signal."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded Food Line recall watch only; production nationwide collector remains authoritative.",
+    "12 targeted web searches completed: sole/only/full-service grocery-store loss or fire; weather/disaster/outage-related emergency food distribution cancellation; abrupt pantry/food-bank closure or loss of service; and official SNAP/WIC/EBT benefit interruption. No individual search failure reported.",
+    "Applied October 24–25, 2026 keyword searches and two-day recency settings; newness was evaluated against the previous verified heartbeat completion at 09:50:01 PDT.",
+    "Results did not establish a qualifying disruption newly published or newly announced in the one-hour observation window. Grocery-fire and sole-store-loss matches referred to earlier dates (e.g. Spencer, NY September 11–14); SNAP/WIC shutdown matches referred to 2025 or earlier 2026; pantry notices were stale, routine scheduling, or relocations rather than newly announced disruptions.",
+    "Potential historical pantry access leads in earlier heartbeats were not re-promoted as new events without a verified first publication time.",
+    "Search index freshness and social-media visibility limit completeness; no inference that no incidents happened nationwide.",
+    "Excluded donations, routine distributions, resource listings, recipes, opinion, general inflation, international cases, and duplicate/old incidents.",
+    "No approval, publication, schedule modification, production collector mutation, or task disablement performed."
+  ]
+}

@@ -136,6 +136,7 @@ def test_check_only_launcher_preserves_runtime_and_writes_receipt(tmp_path):
         expected_base_commit=runtime_head,
         expected_replacement_commit="b" * 40,
         expected_runtime_head=runtime_head,
+        activation_lock=tmp_path / "coordination" / "gaza.lock",
     )
     assert result["activation"] == "validated_only"
     assert result["public_side_effects"] is False
@@ -170,6 +171,7 @@ def test_launcher_child_execution_reports_effects_unknown_and_keeps_runtime_root
         expected_base_commit=runtime_head,
         expected_replacement_commit=payload["replacement_commit"],
         expected_runtime_head=runtime_head,
+        activation_lock=tmp_path / "coordination" / "gaza.lock",
     )
     assert result["activation"] == "process_completed"
     assert result["public_side_effects"] is None
@@ -208,6 +210,7 @@ def test_launcher_rejects_release_inside_runtime_root(tmp_path):
             expected_base_commit="a" * 40,
             expected_replacement_commit="b" * 40,
             expected_runtime_head="c" * 40,
+            activation_lock=tmp_path / "coordination" / "gaza.lock",
         )
 
 

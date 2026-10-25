@@ -2,6 +2,8 @@
 param(
     [switch]$Apply,
     [Parameter(Mandatory = $true)][string]$ExpectedProtectedHead,
+    [Parameter(Mandatory = $true)][string]$ExpectedOperatorBlob,
+    [Parameter(Mandatory = $true)][string]$ExpectedBlueskyBlob,
     [string]$TargetBranch = "add/pages-repo-default",
     [string]$TargetRoot = "C:\BlueFernRunner\GazaDispatchesCurrent6",
     [string]$BackupRoot = "",
@@ -19,8 +21,8 @@ $AllowedPaths = @(
     "src/bluefern_dispatches/bluesky_post.py"
 )
 $ExpectedBlobs = [ordered]@{
-    "scripts/run_gaza_daily_operator.py" = "9ab8b65401805aec00ded19ed1939bfe949f9ac3"
-    "src/bluefern_dispatches/bluesky_post.py" = "aa01f332e2c017a8d003a6bd1a985a1273ef5626"
+    "scripts/run_gaza_daily_operator.py" = $ExpectedOperatorBlob
+    "src/bluefern_dispatches/bluesky_post.py" = $ExpectedBlueskyBlob
 }
 
 function Invoke-Git {
@@ -40,7 +42,10 @@ function Invoke-Git {
     if (-not $AllowFailure -and $code -ne 0) {
         throw ('git -C "{0}" {1} failed ({2}): {3}' -f $TargetRoot, ($Arguments -join ' '), $code, ($output -join ' '))
     }
-    return [pscustomobject]@{ ExitCode = $code; Output = ($output -join "`n").Trim() }
+    # Preserve leading porcelain status whitespace. Trimming here turns
+    # ` M path` into `M path`, which makes the path parser drop its first
+    # character and can bypass the dirty approved-path guard.
+    return [pscustomobject]@{ ExitCode = $code; Output = ($output -join "`n") }
 }
 
 function Normalize-GitPath {
@@ -141,6 +146,11 @@ try {
     if (-not $ExpectedProtectedHead -or $ExpectedProtectedHead -notmatch '^[0-9a-f]{40}$') {
         throw "ExpectedProtectedHead must be a full 40-character commit SHA."
     }
+    foreach ($blob in @($ExpectedOperatorBlob, $ExpectedBlueskyBlob)) {
+        if (-not $blob -or $blob -notmatch '^[0-9a-f]{40}$') {
+            throw "Expected runtime blobs must be full 40-character Git blob SHAs."
+        }
+    }
     if (-not (Test-Path -LiteralPath $TargetRoot -PathType Container)) {
         throw "Gaza TargetRoot is missing: $TargetRoot"
     }
@@ -181,6 +191,7 @@ try {
     $report.incoming_paths = $incoming
     $outside = @($incoming | Where-Object { $_ -notin $AllowedPaths })
     if ($outside.Count -gt 0) {
+        $report.result = "FULL_SOURCE_ADVANCEMENT_REQUIRED"
         throw "Protected revision is broader than the approved two-file scope: $($outside -join ', ')"
     }
     if ($beforeHead -ne $ExpectedProtectedHead -and $incoming.Count -eq 0) {
@@ -259,7 +270,9 @@ try {
 }
 catch {
     $report.error = $_.Exception.Message
-    if ($report.result -ne "APPLY_COMPLETE") { $report.result = "BLOCKED" }
+    if ($report.result -notin @("APPLY_COMPLETE", "FULL_SOURCE_ADVANCEMENT_REQUIRED")) {
+        $report.result = "BLOCKED"
+    }
 }
 finally {
     $report.completed_at = (Get-Date).ToUniversalTime().ToString("o")

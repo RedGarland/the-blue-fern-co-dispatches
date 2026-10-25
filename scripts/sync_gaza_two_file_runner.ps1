@@ -116,12 +116,13 @@ function Get-Sha256 {
 
 function Assert-BackupRoot {
     param([Parameter(Mandatory = $true)][string]$Root)
-    $targetFull = [IO.Path]::GetFullPath($TargetRoot).TrimEnd('\') + '\'
-    $backupFull = [IO.Path]::GetFullPath($Root).TrimEnd('\') + '\'
-    if ($backupFull.StartsWith($targetFull, [StringComparison]::OrdinalIgnoreCase)) {
+    $targetFull = [IO.Path]::GetFullPath($TargetRoot)
+    $targetPrefix = $targetFull.TrimEnd([char[]]@([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)) + [IO.Path]::DirectorySeparatorChar
+    $backupFull = [IO.Path]::GetFullPath($Root)
+    if ($backupFull.StartsWith($targetPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+        $backupFull.Equals($targetFull, [StringComparison]::OrdinalIgnoreCase)) {
         throw "BackupRoot must not be inside TargetRoot."
     }
-    if ($backupFull -eq $targetFull) { throw "BackupRoot must be separate from TargetRoot." }
     Assert-SafeArtifactPath -Path $Root -Label "BackupRoot"
 }
 
@@ -131,14 +132,17 @@ function Assert-SafeArtifactPath {
         [Parameter(Mandatory = $true)][string]$Label
     )
     $full = [IO.Path]::GetFullPath($Path)
-    $targetFull = [IO.Path]::GetFullPath($TargetRoot).TrimEnd('\') + '\'
-    if ($full.StartsWith($targetFull, [StringComparison]::OrdinalIgnoreCase) -or
-        $full.Equals($targetFull.TrimEnd('\'), [StringComparison]::OrdinalIgnoreCase)) {
+    $targetFull = [IO.Path]::GetFullPath($TargetRoot)
+    $targetPrefix = $targetFull.TrimEnd([char[]]@([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)) + [IO.Path]::DirectorySeparatorChar
+    if ($full.StartsWith($targetPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+        $full.Equals($targetFull, [StringComparison]::OrdinalIgnoreCase)) {
         throw "$Label must not be inside TargetRoot: $Path"
     }
     $probe = $full
-    if (-not (Test-Path -LiteralPath $probe)) {
-        $probe = Split-Path -Parent $probe
+    while ($probe -and -not (Test-Path -LiteralPath $probe)) {
+        $parent = Split-Path -Parent $probe
+        if ($parent -eq $probe) { break }
+        $probe = $parent
     }
     while ($probe -and (Test-Path -LiteralPath $probe)) {
         $item = Get-Item -LiteralPath $probe -Force

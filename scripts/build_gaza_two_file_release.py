@@ -10,14 +10,20 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from scripts.gaza_immutable_release import (
     ALLOWED_PATHS,
     SCHEMA_VERSION,
+    SUPPORTED_TREE_MODE,
+    SUPPORTED_TREE_TYPE,
     assert_outside,
     assert_safe_existing_ancestors,
     git_blob_sha,
@@ -51,18 +57,26 @@ def _validate_sha(value: str, label: str) -> str:
     return value
 
 
-def _base_tree(source_root: Path, base_head: str) -> dict[str, str]:
-    names = _git_text(source_root, "ls-tree", "-r", "--name-only", base_head).splitlines()
-    tree: dict[str, str] = {}
-    for path in names:
-        path = path.strip()
-        if not path:
+def _parse_tree_line(line: str) -> tuple[str, dict[str, str]]:
+    header, path = line.split("\t", 1)
+    mode, entry_type, blob = header.split(" ", 2)
+    return path, {"mode": mode, "type": entry_type, "blob": blob}
+
+
+def _base_tree(source_root: Path, base_head: str) -> dict[str, dict[str, str]]:
+    lines = _git_text(source_root, "ls-tree", "-r", "--full-tree", base_head).splitlines()
+    tree: dict[str, dict[str, str]] = {}
+    for line in lines:
+        if not line.strip():
             continue
-        tree[path] = _git_text(source_root, "rev-parse", f"{base_head}:{path}")
+        path, entry = _parse_tree_line(line)
+        if entry["type"] != SUPPORTED_TREE_TYPE or entry["mode"] != SUPPORTED_TREE_MODE:
+            raise ValueError(f"unsupported Git tree entry mode/type: {path}")
+        tree[path] = entry
     return tree
 
 
-def _materialize_git_tree(source_root: Path, tree: dict[str, str], destination: Path) -> None:
+def _materialize_git_tree(source_root: Path, tree: dict[str, dict[str, str]], destination: Path) -> None:
     # Read blobs directly instead of using `git archive`: Windows Git can
     # apply checkout newline conversion to archive output, which would break
     # exact blob verification.
@@ -72,7 +86,7 @@ def _materialize_git_tree(source_root: Path, tree: dict[str, str], destination: 
             raise ValueError(f"unsafe Git tree path: {path}")
         target = destination / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(_git_bytes(source_root, "cat-file", "blob", f"{tree[path]}"))
+        target.write_bytes(_git_bytes(source_root, "cat-file", "blob", tree[path]["blob"]))
 
 
 def _write_replacement(source_root: Path, head: str, path: str, destination: Path) -> bytes:
@@ -125,6 +139,12 @@ def build_release(
     operator_text = replacements[ALLOWED_PATHS[0]].decode("utf-8")
     if "BLUEFERN_RUNTIME_ROOT" not in operator_text or "SOURCE_ROOT" not in operator_text:
         raise ValueError("replacement operator lacks the immutable-release runtime-root interface")
+    replacement_tree = _base_tree(source_root, replacement_head)
+    for path in ALLOWED_PATHS:
+        if path not in replacement_tree:
+            raise ValueError(f"replacement tree is missing an allowlisted runtime path: {path}")
+        if replacement_tree[path]["type"] != SUPPORTED_TREE_TYPE or replacement_tree[path]["mode"] != tree[path]["mode"]:
+            raise ValueError(f"replacement changes unsupported Git entry mode/type: {path}")
 
     # The complete tree must be exactly the base tree except for the two blobs.
     actual_tree: dict[str, str] = {}
@@ -137,7 +157,7 @@ def build_release(
         if path in expected_replacements:
             if actual_tree[path] != expected_replacements[path]:
                 raise ValueError(f"replacement was not installed: {path}")
-        elif actual_tree[path] != tree[path]:
+        elif actual_tree[path] != tree[path]["blob"]:
             raise ValueError(f"unapproved tree change: {path}")
     if set(actual_tree) != set(tree):
         raise ValueError("release tree file set differs from the pinned base tree")
@@ -153,6 +173,10 @@ def build_release(
         "changed_paths": list(ALLOWED_PATHS),
         "replacement_blobs": expected_replacements,
         "tree_entries": actual_tree,
+        "tree_metadata": {
+            path: {"mode": tree[path]["mode"], "type": tree[path]["type"]}
+            for path in tree
+        },
         "tree_verification": {
             "base_tree_entries": len(tree),
             "unchanged_entries_verified": True,
@@ -164,7 +188,13 @@ def build_release(
     }
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    verify_release_manifest(manifest_path, release_root, require_unactivated=True)
+    verify_release_manifest(
+        manifest_path,
+        release_root,
+        require_unactivated=True,
+        expected_base_commit=base_head,
+        expected_replacement_commit=replacement_head,
+    )
     return payload
 
 
@@ -176,11 +206,11 @@ def main() -> int:
     parser.add_argument("--operator-blob", required=True)
     parser.add_argument("--bluesky-blob", required=True)
     parser.add_argument("--release-root", type=Path, required=True)
-    parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--manifest", dest="manifest_path", type=Path, required=True)
     parser.add_argument("--release-id", required=True)
     args = parser.parse_args()
     payload = build_release(**vars(args))
-    print(json.dumps({"ok": True, "release_id": payload["release_id"], "manifest": str(args.manifest)}))
+    print(json.dumps({"ok": True, "release_id": payload["release_id"], "manifest": str(args.manifest_path)}))
     return 0
 
 

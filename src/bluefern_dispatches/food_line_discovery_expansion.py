@@ -3540,6 +3540,34 @@ def _append_manual_fallbacks(candidates: list[dict[str, Any]], manual_fallback_r
     return added
 
 
+def _query_disposition_counts(query_rows: list[dict[str, Any]], *, timed_out: bool = False) -> dict[str, int]:
+    """Partition attempted rows without counting deadline state twice."""
+    attempted = len(query_rows)
+    timed_out_rows = sum(
+        1
+        for row in query_rows
+        if bool(row.get("query_timed_out")) or "TimeoutError" in _nonempty(row.get("query_error"))
+    )
+    failed = sum(
+        1
+        for row in query_rows
+        if (
+            (
+                _nonempty(row.get("discovery_channel")) != "google_news_rss"
+                and _nonempty(row.get("direct_fetch_status")) not in {"", "ok"}
+            )
+            or _nonempty(row.get("query_error"))
+        )
+        and not (bool(row.get("query_timed_out")) or "TimeoutError" in _nonempty(row.get("query_error")))
+    )
+    return {
+        "queries_attempted": attempted,
+        "queries_succeeded": max(0, attempted - failed - timed_out_rows),
+        "queries_failed": failed,
+        "queries_timed_out": timed_out_rows,
+    }
+
+
 def run_food_line_discovery_expansion(
     root: Path,
     edition_date: str,
@@ -3700,6 +3728,8 @@ def run_food_line_discovery_expansion(
             result_row["query_url"] = query_url
             result_row["query_error"] = query_error
             if query_error or not payload:
+                if not query_error and not payload:
+                    result_row["query_error"] = "EmptyResponseError: empty response body"
                 query_rows.append(result_row)
                 continue
             try:
@@ -4566,7 +4596,10 @@ def run_food_line_discovery_expansion(
     direct_source_count = len(query_rows) - sum(1 for row in query_rows if _nonempty(row.get("discovery_channel")) == "google_news_rss")
     direct_source_fetch_attempt_count = sum(1 for row in query_rows if _nonempty(row.get("discovery_channel")) != "google_news_rss")
     direct_source_fetch_success_count = sum(
-        1 for row in query_rows if _nonempty(row.get("discovery_channel")) != "google_news_rss" and not _nonempty(row.get("query_error"))
+        1
+        for row in query_rows
+        if _nonempty(row.get("discovery_channel")) != "google_news_rss"
+        and _nonempty(row.get("direct_fetch_status")) == "ok"
     )
     direct_source_fetch_failure_count = max(0, direct_source_fetch_attempt_count - direct_source_fetch_success_count)
     for row in candidates:
@@ -4623,7 +4656,8 @@ def run_food_line_discovery_expansion(
             if _nonempty(row.get("query_family")) and query_family_counts[_nonempty(row.get("query_family"))] <= 0
         }
     )
-    discovery_ok = not timed_out
+    dispositions = _query_disposition_counts(query_rows, timed_out=timed_out)
+    discovery_ok = not timed_out and (query_plan_available_count == 0 or dispositions["queries_succeeded"] > 0)
     has_exclusions = bool(blocked_fetch_count or direct_source_fetch_failure_count or google_news_resolution_failure_count)
     dominant_source_warning = ""
     if candidate_count > 0 and direct_source_counts:
@@ -4668,7 +4702,7 @@ def run_food_line_discovery_expansion(
     audit_json_path = audit_dir / DISCOVERY_AUDIT_JSON_FILE
     audit_md_path = audit_dir / DISCOVERY_AUDIT_MD_FILE
     audit_summary = {
-        "ok": not timed_out,
+        "ok": discovery_ok,
         "dispatch_slug": DISPATCH_SLUG,
         "edition_date": date_text,
         "generated_at": discovered_at,
@@ -4693,8 +4727,8 @@ def run_food_line_discovery_expansion(
         "queries_processed_this_invocation": queries_processed_this_invocation,
         "queries_completed": queries_completed,
         "queries_remaining": queries_remaining,
-        "queries_failed": 0,
-        "queries_timed_out": 1 if timed_out else 0,
+        **dispositions,
+        "query_success_ratio": dispositions["queries_succeeded"] / max(1, query_plan_available_count),
         "candidate_count": candidate_count,
         "timed_out": timed_out,
         "duplicate_count": duplicate_count,
@@ -5052,3 +5086,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

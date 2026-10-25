@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T074051-0700-r11-fresenius1",
+  "scheduled_for": "2026-10-25T07:45:22-07:00",
+  "started_at": "2026-10-25T07:40:51-07:00",
+  "completed_at": "2026-10-25T07:48:19.378-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T06:46:04.477-07:00",
+    "end": "2026-10-25T07:48:19.378-07:00",
+    "basis": "Since latest verified supplementary watch completion; older, previously unlogged high-value service losses may be retained as late-discovered recall candidates, but are explicitly labeled as historical. Production national collector is authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-il-vista-east-fresenius-inpatient-dialysis-pause-reported-20261009",
+      "canonical_source_url": "https://www.lakemchenryscanner.com/2026/10/24/state-revokes-trauma-center-designation-for-vista-medical-center-east-in-waukegan-for-2nd-time-in-less-than-3-years/",
+      "title": "Fresenius Kidney Care paused inpatient dialysis services at Vista Medical Center East",
+      "publisher": "Lake and McHenry County Scanner",
+      "exact_supporting_passage": "Fresenius Kidney Care told Lake and McHenry County Scanner on October 9 that it had paused inpatient dialysis services at the hospital",
+      "source_published_date": "2026-10-24",
+      "state": "IL",
+      "city": "Waukegan",
+      "county": "Lake",
+      "territory": null,
+      "event_type": "inpatient_dialysis_service_suspension",
+      "service_line": "inpatient_dialysis",
+      "access_consequences": "Fresenius confirmed to local reporting on October 9 that it had paused inpatient dialysis at Vista Medical Center East because contractual issues had not been resolved. This is a separate clinical service loss from the October 22 anesthesia suspension and October 23 trauma-center revocation. The precise effective date, whether alternative dialysis coverage is available, and whether dialysis resumed by October 25 are not established. This is a historical late-recall candidate, NOT evidence of a new service change during October 25 06:46–07:47 PDT.",
+      "affected_population": "Hospitalized patients who need inpatient dialysis at Vista Medical Center East in Waukegan and surrounding Lake County; patient counts and alternate arrangements unknown.",
+      "effective_date": null,
+      "announcement_date": "2026-10-09",
+      "confidence": "medium",
+      "source_role": "strong_local_reporting_quoting_direct_provider_statement",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "scope": "Supplementary recall for U.S. states and territories, not the authoritative production national collector. Focused on essential hospital, ED, maternity, behavioral health, dialysis, oncology, primary care, rural EMS and air-medical losses, CMS provider/CLIA notices and concrete restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS index verified first; latest three HHA terminations on October 23 were already logged. No new October 24–25 notices."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "ED temporary closures October 24–25",
+      "rural hospital emergency suspensions",
+      "maternity/obstetrics closures",
+      "behavioral-health treatment closure",
+      "dialysis/oncology infusion clinic closure",
+      "primary-care/urgent-care closure",
+      "ground ambulance service loss",
+      "air-medical/base service suspension",
+      "state health department hospital suspension",
+      "essential service reopenings",
+      "Puerto Rico/Guam/U.S. Virgin Islands disruptions",
+      "trauma designation/essential hospital service termination"
+    ],
+    "prior_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261025T064415-0700-r11-94bd",
+      "previous_completed_at": "2026-10-25T06:46:04.477-07:00",
+      "previous_heartbeat_verified_read": true,
+      "deduplication": "The prior October 25 records and October 9–10 supplementary records did not contain this inpatient dialysis finding; the separately recorded Vista anesthesia (October 23) and trauma (October 24) findings were inspected, neither recorded Fresenius inpatient dialysis. Full October 11–22 ledger and the authoritative production collector were not exhaustively checked; duplicate risk remains, so candidate is pending review."
+    },
+    "source_details": "October 24 strong local reporting carries a direct October 9 Fresenius provider statement. Report and pause predate the current hourly interval by over two weeks; current service-restoration status and exact first effective date unknown. This is a distinct service-line recall candidate rather than a newly occurring closure.",
+    "exclusions": "CMS notices from October 23 and Vista trauma/anesthesia previously logged; no additional new October 25 closures or restarts substantiated by 12 targeted searches. Non-U.S., historical unrelated, speculative proposals and ownership-only items excluded.",
+    "limitations": "Search was comprehensive within its 12-query cap, but results were dominated by stale reports. Historical deduplication across October 11–22 and the authoritative production collector could not be fully established; marked DEGRADED instead of overclaiming novelty.",
+    "material_degradation": true,
+    "controls": "No approval, public publication, schedule edits, or disabling."
+  }
+}

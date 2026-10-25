@@ -280,11 +280,16 @@ def launch(
     manifest = assert_outside(manifest, [runtime_root], "manifest")
     receipt = assert_outside(receipt, [runtime_root], "receipt")
     activation_lock = assert_outside(activation_lock, [runtime_root], "activation lock")
-    _assert_distinct_paths({
+    named_paths = {
         "manifest": manifest,
         "receipt": receipt,
         "activation_lock": activation_lock,
-    })
+    }
+    if release_pointer is not None:
+        named_paths["release_pointer"] = release_pointer
+    if release_root is not None:
+        named_paths["release_root"] = release_root
+    _assert_distinct_paths(named_paths)
     assert_safe_existing_ancestors(activation_lock)
     with _activation_lock(activation_lock):
         if release_pointer is not None:

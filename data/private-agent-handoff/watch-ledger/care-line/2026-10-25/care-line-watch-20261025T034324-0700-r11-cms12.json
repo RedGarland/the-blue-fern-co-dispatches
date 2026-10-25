@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T034324-0700-r11-cms12",
+  "scheduled_for": "2026-10-25T03:45:22-07:00",
+  "started_at": "2026-10-25T03:43:24-07:00",
+  "completed_at": "2026-10-25T03:45:29.241-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T02:44:10-07:00",
+    "end": "2026-10-25T03:45:29.241-07:00",
+    "basis": "Since the previous verified supplementary Care Line heartbeat, with late-indexed cases considered only when new and nonduplicate; primary national production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded U.S. states, DC and territories recall: hospital/ED/maternity/behavioral health/dialysis/oncology/primary care closures or suspensions; emergency/rural service loss; ambulance/air-medical/base reductions; CMS provider termination/rescission and CLIA notices; concrete essential-service reopenings.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "newly_identified_notice_count": 0,
+      "previously_recorded_latest_notices": [
+        "My Families Healthcare (CA, CCN 758151)",
+        "1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673)",
+        "Moonlight Home Health Care Inc (OH, CCN 369006)"
+      ],
+      "details": "CMS official notices index accessed and checked. Its latest rows remain October 23 notices recorded in an earlier watch."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "October 25 hospital emergency department closure/suspension in the U.S.",
+      "October 24 temporary hospital ED closure",
+      "October 24 maternity/labor delivery loss",
+      "October 24 rural hospital emergency service or ambulance diversion",
+      "October 24 psychiatric or behavioral health suspension",
+      "October 24 dialysis center closure/transfer",
+      "October 24 oncology clinic closure",
+      "October 24 primary-care and urgent-care access closure",
+      "October 24 ambulance/EMS service closure",
+      "October 24 air ambulance/helicopter base suspension",
+      "October 24 ED/hospital essential-service reopening",
+      "October 24 U.S. territories hospital/emergency-healthcare change"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261025T024241-0700-r11-6f32",
+      "completed_at": "2026-10-25T02:44:10-07:00",
+      "verified_via_github_read": true
+    },
+    "exclusions": "Canada (Nicola Valley Hospital emergency department interruption) is out of geographic scope; Watsonville maternity service closure remains a proposed future decision; Doylestown ED interruption, Dennys River ambulance closure and other older U.S. items are already recorded or fall outside the window; no additional concrete, nonduplicate access change established.",
+    "findings_explanation": "No new qualifying nonduplicate healthcare-access development substantiated in the bounded CMS-first plus 12-targeted-search recall check; search results are not proof of nationwide absence.",
+    "limitations": "Initial attempt to open a superseded CMS URL failed with a tool access error; official canonical CMS Public Notices URL was then retrieved successfully. The recovered failed path is logged as a DEGRADED source-access event, without loss of CMS notice coverage. Search indexing lag and restricted coverage may hide cases.",
+    "material_degradation": false,
+    "controls": "No editorial approval, publication, schedule change, task disabling, or production-collector mutation."
+  }
+}

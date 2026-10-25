@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T224035-0700-r11-2240c",
+  "scheduled_for": "2026-10-24T22:45:22-07:00",
+  "started_at": "2026-10-24T22:40:35-07:00",
+  "completed_at": "2026-10-24T22:41:38-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T21:49:13.592-07:00",
+    "end": "2026-10-24T22:41:38-07:00",
+    "basis": "Since most recent verified hourly Care Line supplementary watch completion; late-indexed unrecorded material access changes considered and previously logged events excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall of healthcare-access loss and concrete restoration in all 50 U.S. states, District of Columbia and U.S. territories; production Care Line national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Canonical CMS Public Notices page opened and checked before 12 targeted searches; no October 24 additions. October 23 terminations of My Families Healthcare (CA, CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673) and Moonlight Home Health Care Inc (OH, CCN 369006) were previously recorded."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "October 24 2026 hospital emergency-department closure",
+      "October 24 2026 hospital maternity or labor-and-delivery suspension",
+      "October 24 2026 ambulance/EMS service closure",
+      "October 24 2026 urgent care clinic closure",
+      "October 24 2026 behavioral health inpatient/psychiatric service loss",
+      "October 24 2026 dialysis/oncology services closure",
+      "October 24 2026 rural hospital ED closure",
+      "October 24 2026 air-medical/helicopter/base closure",
+      "October 24 2026 emergency department reopening/restoration",
+      "October 23 2026 hospital suspension late-reported closure",
+      "October 24 2026 healthcare service losses in Puerto Rico, Guam, USVI",
+      "October 24 2026 primary-care clinic/health center closure"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T214739-0700-r11-1a42",
+      "previous_completed_at": "2026-10-24T21:49:13.592-07:00",
+      "verified_read": true,
+      "details": "Compared 14:43 run to branch head and enumerated seven subsequent Care Line JSONs. Retrieved previous 21:47 and 20:43 run records; both no_findings, and prior Oct 23 CMS notices were excluded."
+    },
+    "exclusions": "Searches returned predominantly older U.S. service changes, Canadian emergency-department closures, previously known Doylestown/Vista events, Roseland labor-and-delivery reporting from the prior week, proposals and stories without new concrete access effect. No distinct new verified event or effective service restoration identified.",
+    "limitations": "An obsolete alternative CMS overview URL returned an internal access error; the official canonical CMS Public Notices page was independently retrieved and fully checked. Useful coverage remained, so DEGRADED rather than FAILED. Search index results were mostly older or foreign. Bounded recall cannot prove national absence of unindexed events.",
+    "material_degradation": false,
+    "controls": "No editorial approval, publication, primary national collector edits, task schedule change or disabling. Exactly one durable run heartbeat requested for this run."
+  }
+}

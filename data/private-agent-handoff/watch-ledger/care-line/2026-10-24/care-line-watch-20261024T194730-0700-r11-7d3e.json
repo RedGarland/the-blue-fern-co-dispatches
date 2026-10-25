@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T194730-0700-r11-7d3e",
+  "scheduled_for": "2026-10-24T19:45:22-07:00",
+  "started_at": "2026-10-24T19:47:30-07:00",
+  "completed_at": "2026-10-24T19:48:57.492-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T18:50:28.341-07:00",
+    "end": "2026-10-24T19:48:57.492-07:00",
+    "basis": "Since the previous independently verified hourly Care Line watch completion; late-reported high-value recall considered with deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall for U.S. states, District of Columbia, and U.S. territories. Production Care Line national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS Public Notices page checked first and reopened; no October 24 notice. Existing October 23 terminations (My Families Healthcare CA CCN 758151, 1ST AIDE HOME HEALTH AGENCY CA CCN 559673, Moonlight Home Health Care Inc OH CCN 369006) already logged."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "October 24 hospital emergency department temporary closures and restorations",
+      "October 24 labor/delivery maternity service loss",
+      "October 24 inpatient behavioral-health/psychiatric service suspension",
+      "October 24 dialysis facility shutdown",
+      "October 24 oncology/cancer center closure",
+      "October 24 rural hospital, primary-care and urgent-care closures",
+      "October 24 ground ambulance/EMS service shutdown",
+      "October 24 air-medical or helicopter ambulance base shutdown",
+      "October 24 trauma-designation and emergency access changes",
+      "October 24 hospital emergency or maternity reopening",
+      "October 24 U.S. territories (PR, Guam, USVI) hospital/clinic/EMS changes",
+      "October 24 broad healthcare facility closures and service suspensions"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T184852-0700-r11-aa6e",
+      "previous_completed_at": "2026-10-24T18:50:28.341-07:00",
+      "verified_read": true,
+      "details": "Verified branch contents and retrieved previous hourly heartbeat; prior run reported no findings."
+    },
+    "exclusions": "Searches largely returned older previously covered stories (Illinois trauma changes; prior ambulance/air base and dialysis closures), mere proposals (Kula Hospital proposed restoration/reopening), and non-U.S. stories. None established a new, concrete and nonduplicate access change since the prior hourly check.",
+    "limitations": "Twelve bounded search queries returned numerous older/irrelevant results; lack of indexed qualifying news does not establish absence of U.S. healthcare-access changes. No material CMS/search failure observed.",
+    "material_degradation": false,
+    "controls": "No approvals, publications, schedule changes, task disabling, or changes to production Care Line collection."
+  }
+}

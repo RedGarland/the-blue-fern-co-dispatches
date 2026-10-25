@@ -135,9 +135,24 @@ def _normalize_repo_path(path: str) -> str:
 
 
 def _run_command(args: list[str], *, cwd: Path = ROOT) -> subprocess.CompletedProcess[str]:
+    # In immutable mode, subordinate Python scripts must resolve from the
+    # pinned release tree rather than the old scripts under the runtime cwd.
+    command = list(args)
+    if _runtime_root_value:
+        for index, value in enumerate(command):
+            if value.endswith(".py") and not Path(value).is_absolute():
+                candidate = SOURCE_ROOT / value
+                if candidate.is_file():
+                    command[index] = str(candidate)
+    child_env = os.environ.copy()
+    if _runtime_root_value:
+        child_env["PYTHONPATH"] = os.pathsep.join(
+            [str(SOURCE_ROOT), str(SRC), child_env.get("PYTHONPATH", "")]
+        )
     return subprocess.run(
-        args,
+        command,
         cwd=str(cwd),
+        env=child_env,
         capture_output=True,
         text=True,
         encoding="utf-8",

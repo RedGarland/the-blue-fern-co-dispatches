@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import shutil
 import stat
 import subprocess
@@ -144,7 +145,7 @@ elif args[:2] == ["merge-base", "--is-ancestor"]:
     return fake_bin
 
 
-def _run_controller(tmp_path: Path, mode: str, expected_head: str, *, operator_blob=OPERATOR_BLOB, bluesky_blob=BLUESKY_BLOB):
+def _run_controller(tmp_path: Path, mode: str, expected_head: str, *, operator_blob=OPERATOR_BLOB, bluesky_blob=BLUESKY_BLOB, report_path: Path | None = None):
     powershell = _powershell()
     if not powershell:
         import pytest
@@ -156,7 +157,7 @@ def _run_controller(tmp_path: Path, mode: str, expected_head: str, *, operator_b
         path = target / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(f"# fixture: {relative}\n", encoding="utf-8")
-    report = tmp_path / "report.json"
+    report = report_path or (tmp_path / "report.json")
     fake_bin = _fake_git_bin(tmp_path)
     env = os.environ.copy()
     env.update(
@@ -191,8 +192,15 @@ def _run_controller(tmp_path: Path, mode: str, expected_head: str, *, operator_b
         text=True,
         check=False,
     )
-    assert report.exists(), result.stdout + result.stderr
-    return result, json.loads(report.read_text(encoding="utf-8-sig"))
+    if report.exists():
+        return result, json.loads(report.read_text(encoding="utf-8-sig"))
+    # Unsafe report paths are rejected and the controller must fall back to a
+    # safe temporary receipt rather than writing inside the production root.
+    matches = re.findall(r"Report:\s*(.+)", result.stdout)
+    assert matches, result.stdout + result.stderr
+    safe_report = Path(matches[-1].strip())
+    assert safe_report.exists()
+    return result, json.loads(safe_report.read_text(encoding="utf-8-sig"))
 
 
 def test_actual_old_baseline_fails_closed_on_full_source_divergence(tmp_path):
@@ -397,6 +405,22 @@ def test_first_porcelain_dirty_entry_is_not_truncated(tmp_path):
     assert report["result"] == "BLOCKED"
     assert "Approved source paths are already dirty: scripts/run_gaza_daily_operator.py" in report["error"]
     assert "Approved source paths are already dirty: cripts/run_gaza_daily_operator.py" not in report["error"]
+    assert report["production_state_mutated"] is False
+
+
+def test_report_path_inside_target_is_rejected_and_receipt_falls_back_safely(tmp_path):
+    target = tmp_path / "gaza-runner"
+    unsafe_report = target / "unsafe-report.json"
+    result, report = _run_controller(
+        tmp_path,
+        "valid",
+        CURRENT_PROTECTED_HEAD,
+        report_path=unsafe_report,
+    )
+    assert result.returncode == 2
+    assert not unsafe_report.exists()
+    assert report["report_path_rejected"] == str(unsafe_report)
+    assert "ReportPath" in report["error"]
     assert report["production_state_mutated"] is False
 
 

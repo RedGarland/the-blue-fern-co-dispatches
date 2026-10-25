@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T114753-0700-r11-114753",
+  "scheduled_for": "2026-10-25T11:45:54-07:00",
+  "started_at": "2026-10-25T11:47:53-07:00",
+  "completed_at": "2026-10-25T11:49:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T10:51:18.701-07:00",
+    "end_at": "2026-10-25T11:49:11-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completed_at of most recent verified preceding supplementary Food Line heartbeat, read from ops/watch-ledger."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall watch; production nationwide collector remains authoritative. No production collector changes.",
+    "12 targeted web searches completed with 2-day recency setting (no individual search errors), grouped 3 per class: sole/only/last grocery-store loss or disaster; canceled emergency food distribution due to storm/flood/outage; abrupt pantry/food-bank closure or access reduction; official SNAP/WIC/EBT benefit interruption.",
+    "Search strings: \"only grocery store\" closed fire town October 25 2026; \"last grocery store\" closing town October 2026; \"sole grocery\" \"fire\" \"October\" 2026 community; \"food distribution\" \"canceled\" storm October 25 2026; \"food distribution\" \"cancelled\" flooding outage October 2026; site:facebook.com \"food distribution\" canceled due to weather \"October 25\" 2026; \"food pantry\" \"closed\" \"October 25\" 2026 emergency; \"food bank\" \"temporarily closed\" flood fire October 2026; \"pantry\" \"closed\" \"lack of food\" October 25 2026; site:gov \"SNAP\" \"benefits\" \"interruption\" October 25 2026; site:gov \"WIC\" \"outage\" \"October 2026\" benefits; \"EBT\" \"system down\" \"SNAP\" October 25 2026 state.",
+    "No primary or official source result established a new qualifying service interruption first reported within the observation window. Representative nonqualifying matches were Spencer, NY sole grocery fire of Sept 11, 2026; Decatur, IL pantry routine Oct 20/22 closure for processing applications; San Jose, CA pantry dispute reported Oct 6, 2026; and SNAP interruption reports dating to 2025.",
+    "Search result freshness was weak despite the 2-day recency parameter; this is a discovery limitation, not evidence that no new U.S. disruptions occurred. No specific relevant source retrieval failed.",
+    "Excluded donation drives, resource guides, recipes, opinion, routine program promotion, generic inflation, international cases, stale events, and duplicates.",
+    "No approval, publication, schedule modification, task disablement, or public editorial mutation performed."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T124650-0700-r11-124650",
+  "scheduled_for": "2026-10-25T12:45:54-07:00",
+  "started_at": "2026-10-25T12:46:50-07:00",
+  "completed_at": "2026-10-25T12:48:38-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T11:49:11-07:00",
+    "end_at": "2026-10-25T12:48:38-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completed_at of the last verified preceding supplementary Food Line heartbeat on ops/watch-ledger."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary Food Line recall watch only; production nationwide collector remains authoritative.",
+    "12 targeted web searches completed, no reported search/tool errors; three searches for each audited high-value miss class: sole/only/last grocery-store closure or fire; storm/flood/outage/disaster cancellation of emergency food distributions; abrupt pantry/food-bank loss of service; official SNAP/WIC/EBT benefit access interruption.",
+    "Queries (all recency=2 days): October 25 2026 'only grocery store' closed fire rural community; October 25 2026 'sole grocery store' 'fire' OR closed; October 24 25 2026 'last grocery store' closed community; October 25 2026 'food distribution' canceled storm flooding; October 25 2026 'food pantry' 'closed' flooding storm; October 25 2026 'food bank' 'distribution' 'cancelled' power outage; October 25 2026 'food pantry' 'temporarily closed' access; October 25 2026 'food bank' 'suspended services' closure; October 25 2026 pantry closed food shortage provider; October 25 2026 SNAP benefits access interrupted EBT outage state notice; October 25 2026 WIC benefits interrupted offices closed notice; October 25 2026 'food assistance' 'suspended' emergency agency notice.",
+    "No qualifying new disruption with a verifiable first-source announcement/published timestamp since the prior heartbeat completion at 11:49:11 PDT was found. Visible near matches were old (Spencer, NY grocery fire Sept 2026; pantry closures from earlier 2026; SNAP interruptions principally from Oct/Nov 2025), out of scope, or did not establish an immediate new access interruption.",
+    "Search result freshness was weak despite recency filters; absence of a newly verified signal does not establish absence of incidents nationwide. No failed source fetch specific to a qualifying signal.",
+    "Excluded donation drives, resource guides, recipes, opinion, routine program promotion, generic inflation, duplicates, old events, and international results.",
+    "No approval, publication, schedule change, task disablement, or primary collector mutation performed."
+  ]
+}

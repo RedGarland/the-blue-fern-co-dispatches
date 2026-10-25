@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T124234-0700-r11-20261025T194234Z",
+  "scheduled_for": "2026-10-25T12:44:51-07:00",
+  "started_at": "2026-10-25T12:42:34-07:00",
+  "completed_at": "2026-10-25T12:45:09-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T11:48:06.177-07:00",
+    "end": "2026-10-25T12:45:09-07:00",
+    "basis": "Prior independently read GitHub ledger completed_at through current observation. Require in-window publication or newly traceable in-window discovery; reject earlier or duplicate stories."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only. Primary Gaza collection and publication remain authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T114556-0700-r11-20261025T184806177Z.json",
+      "completed_at": "2026-10-25T11:48:06.177-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Read directly from GitHub ops/watch-ledger before this run."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed Gaza publications dated 19 October 2026; none newly published in the observation window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new dated Gaza health update on emergency landing page."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"25/October/2026\" 21:00 22:00 killed injured",
+      "site:reuters.com/world/middle-east/ Gaza October 25 2026 ceasefire strikes civilians Sunday latest",
+      "site:apnews.com/article/ Gaza October 25 2026 Israeli attack civilians Sunday",
+      "site:aa.com.tr/en/middle-east/ Gaza October 25 2026 evening civilians killed wounded",
+      "site:aljazeera.com/news/2026/10/25/ Gaza ceasefire killed humanitarian October 25 2026",
+      "site:wfp.org OR site:unrwa.org Gaza \"25 October 2026\" aid food crossings",
+      "site:unicef.org OR site:un.org Gaza \"25 October 2026\" displacement water infrastructure",
+      "site:msf.org OR site:palestinercs.org Gaza \"25 October 2026\" hospital ambulance fuel medical evacuation",
+      "site:icrc.org Gaza \"25 October 2026\" detainees hostages prisoners exchange",
+      "Gaza Rafah Kerem Shalom crossing medical evacuations fuel October 25 2026 latest",
+      "Gaza ceasefire negotiation hostages exchange Sunday 25 October 2026 latest evening",
+      "Gaza City Khan Younis Deir al Balah airstrike civilian victims damage October 25 2026 21:00 22:00 local"
+    ],
+    "search_recency_days": 1,
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; most recent in-Gaza headline dated 25 October 2026 19:33 Palestine-local, predating this observation window. Latest headline at 20:19 concerned Hebron, not Gaza."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176251",
+        "result": "Earlier October 25 article on Khan Younis and Gaza injuries; publication 12:01 PM Palestine local before window, not new."
+      }
+    ],
+    "high_value_classes_checked": [
+      "Civilian casualties and military operations with civilian impact",
+      "Displacement and damaged civilian infrastructure",
+      "Humanitarian aid access, food, water, fuel and crossings",
+      "Hospital, ambulance, healthcare availability and medical evacuation",
+      "Detention, hostages, ceasefire and negotiation changes"
+    ],
+    "excluded_or_not_counted": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176257",
+        "reason": "25 October report at 15:18 Palestine-local predates prior heartbeat and aggregates already catalogued casualty incidents including the Islamic University strike."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176251",
+        "reason": "12:01 Palestine-local publication predates observation window and overlaps same-day reported attacks."
+      },
+      {
+        "reason": "Other search results were older background, lacked verifiable in-window publication/event time, were outside Gaza or overlapped known reports. Zero qualifying findings does not imply zero incidents."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct regional WHO health verification unavailable."
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "impact": "Reduced direct hospital-capacity, medical evacuation and healthcare emergency verification."
+      }
+    ],
+    "assessment": "No new independently traceable, nonduplicate in-Gaza developments established in the bounded window. OCHA OPT, WHO global and WAFA provided useful coverage; continuing WHO EMRO 502 restrictions warrant DEGRADED rather than FAILED.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

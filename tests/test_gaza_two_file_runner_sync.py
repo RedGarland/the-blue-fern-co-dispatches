@@ -108,6 +108,8 @@ elif args[:1] == ["fetch"]:
     pass
 elif args[:2] == ["rev-parse", "origin/add/pages-repo-default"]:
     print(remote)
+elif args[:3] == ["ls-remote", "--heads", "origin"]:
+    print(remote + "\trefs/heads/add/pages-repo-default")
 elif args[:2] == ["cat-file", "-e"]:
     pass
 elif args[:1] == ["rev-parse"] and len(args) == 2 and ":" in args[1]:

@@ -421,15 +421,6 @@ def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
 
 
 def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True) -> dict[str, Any]:
-
-def _validate_manual_sources_for_operator(edition_date: str, *, post_only: bool) -> dict[str, Any]:
-    validator = validate_or_repair_manual_sources
-    # Keep existing test doubles and older in-process callers compatible while
-    # production post-only mode uses the read-only repair=False contract.
-    if post_only and "repair" in inspect.signature(validator).parameters:
-        return validator(edition_date, repair=False)
-    return validator(edition_date)
-
     path = manual_source_path(edition_date)
     if not path.exists():
         return {"ok": True, "status": "not_present", "path": str(path), "changes": [], "errors": []}
@@ -472,6 +463,15 @@ def _validate_manual_sources_for_operator(edition_date: str, *, post_only: bool)
         "record_count": len(normalized),
     }
 
+
+
+def _validate_manual_sources_for_operator(edition_date: str, *, post_only: bool) -> dict[str, Any]:
+    validator = validate_or_repair_manual_sources
+    # Keep existing test doubles and older in-process callers compatible while
+    # production post-only mode uses the read-only repair=False contract.
+    if post_only and "repair" in inspect.signature(validator).parameters:
+        return validator(edition_date, repair=False)
+    return validator(edition_date)
 
 def _capture_daily_run(args: list[str]) -> tuple[int, dict[str, Any], str]:
     buffer = io.StringIO()

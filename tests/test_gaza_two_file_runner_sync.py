@@ -362,8 +362,8 @@ def test_real_git_descendant_rollback_is_guarded_and_restores_reviewed_pair(tmp_
     rollback = _git(source, "rev-parse", "HEAD").stdout.strip()
     rollback_operator = _git(source, "rev-parse", f"{rollback}:scripts/run_gaza_daily_operator.py").stdout.strip()
     rollback_bluesky = _git(source, "rev-parse", f"{rollback}:src/bluefern_dispatches/bluesky_post.py").stdout.strip()
-    _git(bare, "fetch", source.as_uri(), "add/pages-repo-default")
-    _git(bare, "update-ref", "refs/heads/add/pages-repo-default", rollback)
+    _git(fixture["bare"], "fetch", source.as_uri(), "add/pages-repo-default")
+    _git(fixture["bare"], "update-ref", "refs/heads/add/pages-repo-default", rollback)
     _git(fixture["target"], "merge", "--ff-only", fixture["forward"])
     result, report = _run_real_controller(
         fixture,

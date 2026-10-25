@@ -64,9 +64,12 @@ function Get-StatusSnapshot {
         if (-not $raw -or $raw.Length -lt 4) { continue }
         $path = Normalize-GitPath $raw.Substring(3)
         $byPath[$path] = $raw.Substring(0, 2)
-        $absolute = [IO.Path]::GetFullPath((Join-Path $TargetRoot ($path -replace '/', '\')))
-        $targetPrefix = [IO.Path]::GetFullPath($TargetRoot).TrimEnd('\') + '\'
-        if (-not $absolute.StartsWith($targetPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+        $targetFull = [IO.Path]::GetFullPath($TargetRoot)
+        $relativePath = ($path -split '/') -join [string][IO.Path]::DirectorySeparatorChar
+        $absolute = [IO.Path]::GetFullPath((Join-Path $targetFull $relativePath))
+        $targetPrefix = $targetFull.TrimEnd([char[]]@([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)) + [IO.Path]::DirectorySeparatorChar
+        if (-not ($absolute.Equals($targetFull, [StringComparison]::OrdinalIgnoreCase) -or
+                 $absolute.StartsWith($targetPrefix, [StringComparison]::OrdinalIgnoreCase))) {
             throw "Status path escapes TargetRoot: $path"
         }
         if (-not (Test-Path -LiteralPath $absolute -PathType Leaf)) {
@@ -159,7 +162,7 @@ function Write-JsonReport {
     param([Parameter(Mandatory = $true)][object]$Report)
     if (-not $ReportPath) {
         $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
-        $script:ReportPath = Join-Path $env:TEMP "gaza-two-file-sync-$stamp.json"
+        $script:ReportPath = Join-Path ([IO.Path]::GetTempPath()) "gaza-two-file-sync-$stamp.json"
     }
     try {
         Assert-SafeArtifactPath -Path $ReportPath -Label "ReportPath"
@@ -167,7 +170,7 @@ function Write-JsonReport {
     catch {
         $rejected = $ReportPath
         $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
-        $script:ReportPath = Join-Path $env:TEMP "gaza-two-file-sync-rejected-path-$stamp-$([guid]::NewGuid().ToString('N')).json"
+        $script:ReportPath = Join-Path ([IO.Path]::GetTempPath()) "gaza-two-file-sync-rejected-path-$stamp-$([guid]::NewGuid().ToString('N')).json"
         $Report.report_path_rejected = $rejected
         if (-not $Report.error) { $Report.error = $_.Exception.Message }
     }

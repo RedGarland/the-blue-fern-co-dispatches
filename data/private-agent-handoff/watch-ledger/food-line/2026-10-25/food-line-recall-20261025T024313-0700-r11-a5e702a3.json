@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T024313-0700-r11-a5e702a3",
+  "scheduled_for": "2026-10-25T02:45:54-07:00",
+  "started_at": "2026-10-25T02:43:13-07:00",
+  "completed_at": "2026-10-25T09:45:08.686Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T01:52:18.178-07:00",
+    "end_at": "2026-10-25T09:45:08.686Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous confirmed hourly watch heartbeat completion through the current execution; only new verifiable developments qualify."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; production nationwide Food Line collection remains authoritative.",
+    "Completed exactly 12 targeted recency-constrained web searches: sole/last/full-service community grocery closures and fires; disaster-related canceled food distributions; abrupt pantry/food-bank service closure or major access reduction; new official SNAP/WIC/EBT interruptions.",
+    "No new qualifying U.S. disruption could be verified as reported or newly developed since the previous heartbeat completion. Search indexing returned primarily stale results; recency filters alone do not guarantee fresh publication.",
+    "Excluded already known or old material including September 14 Spencer NY only-grocery fire; October 20 Wyandanch NY Mercy Soup Kitchen fire interruption; older Ruby's Pantry closures; prior-year shutdown-related SNAP alerts; and historic WIC EBT outages.",
+    "Previously recorded October 24 pantry closure leads were not repeated without new in-window confirmation.",
+    "Searches completed without reported search or direct source retrieval errors. No pending positive finding or material coverage degradation.",
+    "No approvals, publication, changes to production collection, schedules, or automation state."
+  ]
+}

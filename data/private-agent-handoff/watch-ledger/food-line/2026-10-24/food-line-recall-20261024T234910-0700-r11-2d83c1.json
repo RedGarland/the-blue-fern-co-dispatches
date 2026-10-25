@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T234910-0700-r11-2d83c1",
+  "scheduled_for": "2026-10-24T22:45:54-07:00",
+  "started_at": "2026-10-24T23:49:10-07:00",
+  "completed_at": "2026-10-25T06:50:44.599Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T22:42:55.573-07:00",
+    "end_at": "2026-10-25T06:50:44.599Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous persisted hourly heartbeat completion (2026-10-24 22:42:55 PDT) through current watch; search indexing can surface older content."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded high-value miss-class watch only; production nationwide Food Line collection remains authoritative.",
+    "12 targeted web searches completed: 8 fast and 4 slow, focused on sole/last/full-service grocery loss, weather/disaster-canceled emergency distributions, abrupt pantry/food-bank interruption, and official SNAP/WIC/EBT service disruption.",
+    "No new qualifying signal could be verified as first reported or occurring since the last hourly completion; search results largely surfaced older or out-of-scope events.",
+    "Potential food-access lead: BBC Food Pantry posted that its October 24 12:00-1:00 PM food service in Clearwater would close due to a temporary food shortage (https://www.facebook.com/61584192055479/posts/bbc-food-pantryclosed-saturday-october-24-20261200-pm-100-pmdue-to-a-temporary-f/122151204039139735/). Search excerpt available, but direct Facebook page throttled; publication timestamp and whether report was new in this one-hour window were not verified. Not a positive finding.",
+    "Another October 24 pantry closure at CCDC12 appears to be for attendance at a funeral, rather than food supply/disaster; excluded on scope and direct Facebook fetch throttled (https://www.facebook.com/CCDC12/posts/announcement-the-food-pantry-will-be-closed-on-saturday-october-24-2026-we-will-/1453222010329198/).",
+    "NYC ACCESS HRA's advertised October 24 8 PM to October 25 8 AM maintenance was not established as an immediate interruption of SNAP/WIC food benefits; excluded.",
+    "Excluded previously published/non-new incidents: September Spencer NY only-grocery fire; September El Paso food bank storm closure; October 7 Alabama Prodisee weather cancellation; 2025 SNAP shutdown coverage; and Dallas Project 75216 pantry closure already documented in prior same-date ledger.",
+    "Direct Facebook source access was throttled for two posts, including a plausible pantry food-shortage disruption, materially limiting publication-time verification. Useful independent search coverage remained; status DEGRADED.",
+    "No approvals, publication, production-collector changes, or schedule/automation-state changes occurred."
+  ]
+}

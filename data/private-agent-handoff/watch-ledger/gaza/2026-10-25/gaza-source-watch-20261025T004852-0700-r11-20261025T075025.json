@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T004852-0700-r11-20261025T075025",
+  "scheduled_for": "2026-10-25T00:44:51-07:00",
+  "started_at": "2026-10-25T00:48:52-07:00",
+  "completed_at": "2026-10-25T00:50:25-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T23:50:37-07:00",
+    "end": "2026-10-25T00:50:25-07:00",
+    "basis": "Last GitHub-confirmed Gaza Source Watch heartbeat completion through current bounded check. Require a source publication or independently verifiable event in window; exclude pre-window developments, reposts, unsupported claims, duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall and private handoff; authoritative production daily Gaza collector and publisher unchanged.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T234934-0700-r11-20261025T065037.json",
+      "completed_at": "2026-10-24T23:50:37-07:00",
+      "status": "DEGRADED",
+      "verified_via": "GitHub connector fetch_file on ops/watch-ledger"
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest update listed 19 October 2026, outside window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no Gaza bulletin with verified date during observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 25 2026 latest airstrike killed Sunday morning ceasefire civilians",
+      "Gaza October 25 2026 Israeli strikes killed wounded Reuters AP",
+      "site:english.wafa.ps October 25 2026 Gaza killed injured strikes Sunday",
+      "site:aljazeera.com/news/2026/10/25 Gaza killed ceasefire displaced",
+      "site:unicef.org Gaza 25 October 2026 water hospital displacement October",
+      "site:wfp.org Gaza \"25 October 2026\" OR \"24 October 2026\" food convoy crossing",
+      "site:msf.org Gaza 25 October 2026 hospital ambulances evacuation",
+      "site:icrc.org Gaza 25 October 2026 detainee hostage medical evacuation crossing",
+      "Gaza October 25 2026 Rafah Kerem Shalom crossing humanitarian medical evacuation fuel aid today",
+      "site:unrwa.org Gaza \"25 October 2026\" OR \"24 October 2026\" displacement food",
+      "site:reuters.com/world/middle-east/ 2026-10-25 Gaza hospital ceasefire killed",
+      "site:apnews.com/article/ Gaza October 25 2026 attack civilians ceasefire aid"
+    ],
+    "search_recency_days": 1,
+    "classes_checked": [
+      "civilian casualties and civilian impact from military operations",
+      "displacement and damaged civilian infrastructure",
+      "aid, food, water, crossings and fuel",
+      "health facilities, ambulance access, transports, medical evacuations and functioning capacity",
+      "detention/hostages",
+      "ceasefire and negotiations"
+    ],
+    "excluded_pre_window_examples": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176189",
+        "date": "2026-10-23",
+        "reason": "Earlier reported death and injuries from drone strike near Khan Younis."
+      },
+      {
+        "url": "https://www.unicef.org/press-releases/childhood-defined-struggle-survival-gaza-strip",
+        "date": "2026-10-16",
+        "reason": "Earlier child casualty report."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-four-people-gaza-medics-say-2026-10-02/",
+        "date": "2026-10-03",
+        "reason": "Earlier strike and casualties."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Regional direct Gaza health monitoring inaccessible; WHO global reachable."
+      },
+      {
+        "publisher": "WHO EMRO emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "impact": "Regional health service function and medical evacuation verification reduced."
+      }
+    ],
+    "assessment": "No independently verified new, in-Gaza and nonduplicate qualifying developments were found within the bounded search window. This is not evidence that no event occurred. WHO EMRO 502 failures persist from prior hourly checks, without evidence of additional degradation this run.",
+    "publication_actions": "none",
+    "production_authorization": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

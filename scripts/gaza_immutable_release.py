@@ -19,7 +19,7 @@ ALLOWED_PATHS = (
     "src/bluefern_dispatches/bluesky_post.py",
 )
 SCHEMA_VERSION = "bluefern.gaza_immutable_release.v1"
-SUPPORTED_TREE_MODE = "100644"
+SUPPORTED_TREE_MODES = frozenset({"100644", "100755"})
 SUPPORTED_TREE_TYPE = "blob"
 
 
@@ -161,7 +161,7 @@ def verify_release_manifest(
         metadata = tree_metadata.get(path)
         if not isinstance(metadata, dict):
             raise ValueError(f"tree metadata is invalid: {path}")
-        if metadata.get("type") != SUPPORTED_TREE_TYPE or metadata.get("mode") != SUPPORTED_TREE_MODE:
+        if metadata.get("type") != SUPPORTED_TREE_TYPE or metadata.get("mode") not in SUPPORTED_TREE_MODES:
             raise ValueError(f"unsupported Git tree entry mode/type: {path}")
     actual = _read_tree_files(release_root)
     actual_paths = set(actual)

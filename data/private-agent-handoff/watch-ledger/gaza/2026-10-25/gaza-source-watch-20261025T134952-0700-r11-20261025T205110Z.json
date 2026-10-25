@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T134952-0700-r11-20261025T205110Z",
+  "scheduled_for": "2026-10-25T13:44:51-07:00",
+  "started_at": "2026-10-25T13:49:52-07:00",
+  "completed_at": "2026-10-25T13:51:10-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T12:45:09-07:00",
+    "end": "2026-10-25T13:51:10-07:00",
+    "basis": "Previous confirmed ledger completed_at to this bounded watch's observation. In-window publication or independently verified newly traceable development required; earlier duplicate stories excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; authoritative Gaza daily production remains unchanged.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T124234-0700-r11-20261025T194234Z.json",
+      "completed_at": "2026-10-25T12:45:09-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Prior heartbeat read directly from ops/watch-ledger during this run."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed Gaza updates dated 19 October 2026; none newly published in the observation window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible canonical page. No new dated in-window Gaza health report listed."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO EMRO Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:ochaopt.org Gaza October 25 2026 \"25 Oct\" humanitarian report",
+      "site:who.int Gaza October 25 2026 hospital evacuation health",
+      "site:unrwa.org Gaza October 25 2026 aid shelter displacement",
+      "site:unicef.org Gaza October 25 2026 water children",
+      "site:reuters.com Gaza October 25 2026 killed aid ceasefire",
+      "site:apnews.com Gaza October 25 2026 airstrike civilians",
+      "site:palestine.un.org Gaza October 25 2026 crossings aid",
+      "site:icrc.org Gaza October 25 2026 medical evacuations hostages",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"25/October/2026\" \"22:\" killed injured",
+      "Gaza October 25 2026 22:00 Palestine time airstrike casualty aid crossing Sunday",
+      "site:aa.com.tr/en/middle-east/ Gaza Oct 25 2026 22:00 Sunday civilians",
+      "site:aljazeera.com/news/2026/10/25/ Gaza October 25 2026 news strike hospital"
+    ],
+    "search_recency_days": 1,
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest in-Gaza article listed at 19:33 Palestine-local; subsequent headline at 22:25 concerned Hebron, outside Gaza."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176287",
+        "result": "Sheikh Nasser/Khan Younis casualty plus Jabalia and al-Maghazi injuries; dated 19:33 Palestine-local, predating the search window."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/10/25/seven-killed-in-gaza-as-israel-targets-university-campus-and-other-sites",
+        "result": "Live headline/body showed an eight-death same-day aggregate, including Sheikh Nasser death already reported by WAFA at 19:33 Palestine-local; update timestamp and in-window event not verified."
+      }
+    ],
+    "high_value_classes_checked": [
+      "Civilian casualties and military operations with documented civilian impact",
+      "Displacement, shelters and damaged infrastructure",
+      "Humanitarian aid, food, drinking water, crossings and fuel",
+      "Hospitals, ambulance services, health capacity and medical evacuations",
+      "Detention, hostages, ceasefire and negotiation"
+    ],
+    "excluded_or_not_counted": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176287",
+        "reason": "Earlier 19:33 Palestine-local article was already available before prior completed heartbeat (22:45 Palestine-local); no newly dated development."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/10/25/seven-killed-in-gaza-as-israel-targets-university-campus-and-other-sites",
+        "reason": "Article headline changed seven to eight, but added Sheikh Nasser death duplicates earlier WAFA reporting; exact update timestamp not verified. No newly qualifying event can be established."
+      },
+      {
+        "reason": "Other retrieved results were older, outside the Gaza geography, lacked verified observation-window timing, or repeated already-reported developments."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Reduced direct WHO regional verification of Gaza health service capacity and disruption."
+      },
+      {
+        "publisher": "WHO EMRO Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502",
+        "impact": "Reduced direct regional healthcare news verification."
+      }
+    ],
+    "assessment": "No new traceable, nonduplicate developments established since the previous ledger heartbeat. OCHA OPT, WHO global, WAFA and established reporting provided useful coverage. Continuing WHO EMRO HTTP 502 limits health verification and warrants DEGRADED, not FAILED. Zero findings does not imply zero incidents.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

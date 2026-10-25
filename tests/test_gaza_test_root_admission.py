@@ -170,17 +170,26 @@ def test_missing_root_emits_structured_failed_receipt(monkeypatch: pytest.Monkey
     assert receipts
     payload = operator._json_summary_from_stdout(capsys.readouterr().out)
     assert payload["ok"] is False
-    assert payload["exit_code"] == 1
     assert payload["operator_status"] == "TEST_ROOT_BLOCKED"
-    assert payload["public_side_effects"] == {
+    assert payload["test_root_status"] == "missing"
+    assert payload["source_collection_started"] is False
+    assert payload["daily_pipeline_started"] is False
+
+    receipt_path = Path(payload["operational_receipt"])
+    assert receipt_path in receipts
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["status"] == "failed"
+    assert receipt["classification"] == "test_root_blocked"
+    assert receipt["exit_code"] == 1
+    assert receipt["public_side_effects"] == {
         "pages": False,
         "bluesky": False,
         "audio": False,
         "public_output": False,
     }
-    assert payload["details"]["source_collection_started"] is False
-    assert payload["details"]["test_root_status"] == "missing"
-    assert "DISPATCHES_TEST_ROOT" in payload["details"]["test_root_error"]
+    assert receipt["details"]["source_collection_started"] is False
+    assert receipt["details"]["test_root_status"] == "missing"
+    assert "DISPATCHES_TEST_ROOT" in receipt["details"]["test_root_error"]
 
 
 def test_daily_missing_root_is_recorded_before_collection(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

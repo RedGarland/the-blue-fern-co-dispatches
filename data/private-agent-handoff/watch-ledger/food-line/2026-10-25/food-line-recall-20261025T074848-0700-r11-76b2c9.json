@@ -5,12 +5,12 @@
   "run_id": "food-line-recall-20261025T074848-0700-r11-76b2c9",
   "scheduled_for": "2026-10-25T07:45:54-07:00",
   "started_at": "2026-10-25T07:48:48-07:00",
-  "completed_at": "2026-10-25T07:51:08+00:00-07:00",
+  "completed_at": "2026-10-25T07:51:08-07:00",
   "status": "SUCCESS",
   "outcome": "no_findings",
   "search_window": {
     "start_at": "2026-10-25T06:49:47-07:00",
-    "end_at": "2026-10-25T07:51:08+00:00-07:00",
+    "end_at": "2026-10-25T07:51:08-07:00",
     "timezone": "America/Los_Angeles",
     "basis": "Start is the prior completed hourly watch heartbeat on ops/watch-ledger; end is this observation completion."
   },

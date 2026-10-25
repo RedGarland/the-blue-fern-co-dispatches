@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T004423-0700-r11-munson1",
+  "scheduled_for": "2026-10-25T00:45:22-07:00",
+  "started_at": "2026-10-25T00:44:23-07:00",
+  "completed_at": "2026-10-25T00:49:04-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T23:48:57.078-07:00",
+    "end": "2026-10-25T00:49:04-07:00",
+    "basis": "Since most recent verified supplementary watch completion. Late-indexed, unrecorded service actions are eligible for recall; announcement older than this window, prospective change has not yet taken effect. Production collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-mi-grayling-maternity-transfer-20261029-munson",
+      "canonical_source_url": "https://www.munsonhealthcare.org/about-the-system/news-media-relations/news?category=All&page=188",
+      "title": "Munson Healthcare to Transition Birthing Services to New Otsego Memorial Hospital Wing",
+      "publisher": "Munson Healthcare",
+      "exact_supporting_passage": "labor and delivery services currently provided at Munson Healthcare Grayling Hospital will transition to the newly expanded and renovated Otsego Memorial Hospital",
+      "source_published_date": "2026-10-23",
+      "state": "MI",
+      "city": "Grayling",
+      "county": "Crawford",
+      "territory": null,
+      "event_type": "maternity_service_transition_at_origin",
+      "service_line": "labor_and_delivery",
+      "access_consequences": "Provider announcement indexed October 23 states birthing services will transition from Grayling Hospital to Otsego Memorial Hospital in Gaylord beginning October 29 at 6:15 a.m. local Michigan time. Grayling will lose on-site labor-and-delivery services; patients would travel to the receiving hospital. The exact impact on emergency births, number of affected patients, and details of remaining prenatal care could not be independently verified.",
+      "affected_population": "Pregnant patients and families using Munson Healthcare Grayling Hospital labor-and-delivery services; count unknown.",
+      "effective_date": "2026-10-29",
+      "announcement_date": "2026-10-23",
+      "confidence": "medium",
+      "source_role": "official_provider_newsroom_index",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "scope": "Supplementary recall for U.S. states, District of Columbia and territories: hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency, EMS/air-medical losses, official CMS notices and concrete essential-service restorations. Not the authoritative national collector.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Attempted obsolete CMS Public Notices URL first (inaccessible), then recovered official current index before additional targeted research. Current index showed no October 24 or October 25 additions; October 23 HHA termination notices for My Families Healthcare (CA, CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673), and Moonlight Home Health Care Inc (OH, CCN 369006) had been previously logged."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "October 24-25 hospital/ED and maternity closures",
+      "October 24 rural emergency-care reductions",
+      "October 24 ambulance/EMS closures",
+      "October 24 air-medical/base suspensions",
+      "October 24 hospital emergency closure/reopening",
+      "October 24 clinic or urgent-care closure",
+      "October 24 dialysis service closure",
+      "October 24 behavioral-health service closure",
+      "October 24 ED reopening/restoration",
+      "October 24 ambulance service shutdown",
+      "October 24 rural primary-care clinic closure",
+      "October 24 oncology or maternity hospital service closure"
+    ],
+    "prior_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T234653-0700-r11-9b83",
+      "previous_completed_at": "2026-10-24T23:48:57.078-07:00",
+      "previous_heartbeat_verified_read": true,
+      "deduplication": "All 24 October 24 Care Line watch records were inspected, none mentioned Munson, Grayling, Otsego, or this transfer. October 23 older records were not exhaustively scanned."
+    },
+    "source_details": "The provider's Oct 23 announcement appears in a search-index excerpt of its official news listing, but the live page opens at an older cached version and the individual full-text announcement URL could not be resolved. Official indexed headline and transition date support a pending-review candidate only. Publication time cannot establish first discovery in this precise hourly window.",
+    "exclusions": "Historical unrelated US closures; non-U.S. events; generic proposals and funding narratives; previously logged Vista trauma and anesthesia losses, October 23 CMS notices, and October 24 Dennys River EMS closure. No additional confirmed new nonduplicate service change.",
+    "limitations": "Obsolete CMS link was inaccessible though current canonical page was recovered; individual Munson announcement inaccessible; search results predominantly historical. DEGRADED reflects source-access limitations despite useful coverage, not confirmed failure of production collection.",
+    "material_degradation": true,
+    "controls": "No editorial approval, publication, changes to primary collector, task schedule changes or disabling. Exactly one durable heartbeat required for this run."
+  }
+}

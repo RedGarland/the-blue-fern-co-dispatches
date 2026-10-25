@@ -6,7 +6,7 @@ import pytest
 
 from scripts.build_gaza_two_file_release import build_release
 from scripts.gaza_immutable_release import ALLOWED_PATHS, git_blob_sha, release_tree_digest, verify_release_manifest
-from scripts.run_gaza_immutable_release import launch
+from scripts.run_gaza_immutable_release import launch, resolve_release_root
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -79,6 +79,17 @@ def test_check_only_launcher_preserves_runtime_and_writes_receipt(tmp_path):
     assert result["public_side_effects"] is False
     assert receipt.is_file()
     assert not (runtime / "scripts").exists()
+
+
+def test_release_pointer_resolves_only_outside_runtime_root(tmp_path):
+    release, _manifest = _synthetic_manifest(tmp_path)
+    runtime = tmp_path / "runner"
+    (runtime / ".git").mkdir(parents=True)
+    pointer = tmp_path / "active-gaza-release.txt"
+    pointer.write_text(str(release), encoding="utf-8")
+    assert resolve_release_root(None, pointer, runtime) == release.resolve()
+    with pytest.raises(ValueError, match="outside"):
+        resolve_release_root(None, runtime / "active.txt", runtime)
 
 
 def test_launcher_rejects_release_inside_runtime_root(tmp_path):

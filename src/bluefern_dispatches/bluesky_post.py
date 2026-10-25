@@ -4,6 +4,7 @@ import json
 import os
 import re
 import hashlib
+import tempfile
 from io import BytesIO
 from html import unescape
 from pathlib import Path
@@ -256,6 +257,130 @@ def _load_receipt_for_edition_any_status(project_root: Path, edition_date: str) 
     return payload
 
 
+def _write_receipt_atomic(path: Path, payload: dict[str, Any]) -> None:
+    """Publish a small receipt atomically so readers never use a partial outcome."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            temp_path = Path(handle.name)
+            json.dump(payload, handle, indent=2)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temp_path, path)
+        temp_path = None
+    finally:
+        if temp_path is not None:
+            try:
+                temp_path.unlink()
+            except FileNotFoundError:
+                pass
+
+
+def _claim_pending_receipt(
+    *,
+    project_root: Path,
+    edition_date: str,
+    public_url: str,
+    post_text: str,
+    card_title: str,
+    card_description: str,
+    target_handle: str,
+    target_did: str,
+    approved_text_sha256: str,
+) -> bool:
+    """Atomically admit one exact-mode createRecord attempt.
+
+    A durable pending receipt is intentionally left behind if the process dies
+    after admission. A later invocation then fails closed and must reconcile
+    the remote account instead of sending a second post.
+    """
+    path = _receipt_path(project_root, edition_date)
+    lock_path = path.with_name(f"{path.name}.lock")
+    lock_created = False
+    pending_written = False
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with lock_path.open("x", encoding="utf-8") as lock:
+                lock.write("pending receipt admission")
+            lock_created = True
+        except FileExistsError:
+            return False
+
+        existing = _load_receipt_for_edition_any_status(project_root, edition_date)
+        if existing:
+            if str(existing.get("_receipt_error") or ""):
+                return False
+            if str(existing.get("status") or "") != "failure":
+                return False
+
+        _write_success_receipt(
+            project_root=project_root,
+            edition_date=edition_date,
+            public_url=public_url,
+            post_uri="",
+            post_text=post_text,
+            card_title=card_title,
+            card_description=card_description,
+            embed_type="",
+            thumb_status="not_attempted",
+            original_thumb_bytes=None,
+            uploaded_thumb_bytes=None,
+            target_handle=target_handle,
+            target_did=target_did,
+            approved_text_sha256=approved_text_sha256,
+            status="pending",
+            reason="post_attempt_pending_reconcile_before_retry",
+        )
+        pending_written = True
+        return True
+    finally:
+        # If writing the marker failed, retaining the lock is fail-closed. If
+        # the marker was published, the marker itself is the durable guard.
+        if lock_created and pending_written:
+            try:
+                lock_path.unlink()
+            except FileNotFoundError:
+                pass
+
+
+def _exact_post_identity_valid(post_uri: Any, post_cid: Any, expected_did: str) -> bool:
+    uri = str(post_uri or "").strip()
+    cid = str(post_cid or "").strip()
+    prefix = f"at://{str(expected_did).strip()}/app.bsky.feed.post/"
+    return bool(uri.startswith(prefix) and uri[len(prefix) :].strip() and cid)
+
+
+def _exact_success_receipt_valid(
+    payload: dict[str, Any],
+    *,
+    expected_text_sha256: str,
+    expected_handle: str,
+    expected_did: str,
+) -> bool:
+    if str(payload.get("status") or "") != "success":
+        return False
+    if not _exact_post_identity_valid(payload.get("post_uri"), payload.get("post_cid"), expected_did):
+        return False
+    if str(payload.get("post_text_sha256") or "").strip().lower() != str(expected_text_sha256).strip().lower():
+        return False
+    if str(payload.get("target_handle") or "").strip() != str(expected_handle).strip():
+        return False
+    if str(payload.get("target_did") or "").strip() != str(expected_did).strip():
+        return False
+    if "embed_type" not in payload or payload.get("embed_type") not in {None, ""}:
+        return False
+    return True
+
+
 def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str) -> dict[str, Any]:
     public_url_base = _public_url_base(public_url).rstrip("/")
     query = urlencode({"repo": repo, "collection": "app.bsky.feed.post", "limit": "100"})
@@ -286,7 +411,7 @@ def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str)
             continue
         record_text = value["text"]
         post_uri = str(row.get("uri") or "").strip()
-        if not post_uri.startswith(f"at://{repo}/app.bsky.feed.post/"):
+        if not _exact_post_identity_valid(post_uri, row.get("cid"), repo):
             malformed = True
             continue
         embed = value.get("embed") if isinstance(value.get("embed"), dict) else {}
@@ -740,7 +865,7 @@ def _write_success_receipt(
         payload["approved_text_sha256"] = approved_text_sha256
     if reason:
         payload["reason"] = reason
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    _write_receipt_atomic(path, payload)
 
 
 def _collect_story_like_records(payload: Any) -> list[dict[str, Any]]:
@@ -1881,19 +2006,28 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 result["reason"] = "local_receipt_public_url_mismatch"
                 return result
             prior_status = str(prior.get("status") or "")
-            if prior_status == "uncertain":
+            if prior_status in {"pending", "uncertain"}:
                 result["status"] = "blocked"
-                result["reason"] = "post_outcome_uncertain_reconcile_before_retry"
+                result["reason"] = (
+                    "post_attempt_pending_reconcile_before_retry"
+                    if prior_status == "pending"
+                    else "post_outcome_uncertain_reconcile_before_retry"
+                )
                 return result
             if prior_status == "success":
-                if not str(prior.get("post_uri") or "").strip():
-                    result["status"] = "blocked"
-                    result["reason"] = "local_receipt_invalid"
-                    return result
                 same_text = str(prior.get("post_text_sha256") or "").strip().lower() == str(approved_text_sha256).strip().lower()
                 same_did = str(prior.get("target_did") or "").strip() == str(expected_did).strip()
                 same_handle = str(prior.get("target_handle") or "").strip() == handle
                 if same_text and same_did and same_handle:
+                    if not _exact_success_receipt_valid(
+                        prior,
+                        expected_text_sha256=str(approved_text_sha256).strip().lower(),
+                        expected_handle=handle,
+                        expected_did=str(expected_did).strip(),
+                    ):
+                        result["status"] = "blocked"
+                        result["reason"] = "local_receipt_invalid"
+                        return result
                     return {
                         **result,
                         "status": "skipped",
@@ -2029,6 +2163,20 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 image_path = FOOD_LINE_SOCIAL_IMAGE_PATH
             record_payload["record"]["embed"] = external
         req = _build_auth_request(f"{BLUESKY_API_BASE}/com.atproto.repo.createRecord", record_payload, access_jwt)
+        if exact_text_mode and not _claim_pending_receipt(
+            project_root=root,
+            edition_date=edition_date,
+            public_url=str(public_url),
+            post_text=text,
+            card_title=card_title,
+            card_description=card_description,
+            target_handle=handle,
+            target_did=did,
+            approved_text_sha256=str(approved_text_sha256).strip().lower(),
+        ):
+            result["status"] = "blocked"
+            result["reason"] = "post_attempt_admission_uncertain"
+            return result
         post_request_started = True
         with request.urlopen(req, timeout=20.0) as resp:
             body = resp.read().decode("utf-8")

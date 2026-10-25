@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T174101-0700-r11-5c7e2d",
+  "scheduled_for": "2026-10-24T17:45:54-07:00",
+  "started_at": "2026-10-24T17:41:01-07:00",
+  "completed_at": "2026-10-24T17:42:08-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T16:49:30-07:00",
+    "end_at": "2026-10-24T17:42:08-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at the completed_at of the latest existing Food Line recall heartbeat on ops/watch-ledger; that heartbeat was fetched and reviewed before searching."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only; nationwide Food Line production collection remains authoritative.",
+    "12 targeted web searches completed (fast, recency 2 days), distributed across sole/last/full-service grocery store losses, disaster/outage-canceled food distributions, sudden food-bank/pantry closure or service reduction, and new official SNAP/WIC assistance interruptions.",
+    "No newly verifiable qualifying U.S. disruption was found with evidence placing its emergence in the observed interval from 2026-10-24 16:49:30 to 17:42:08 America/Los_Angeles.",
+    "Results consisted primarily of older 2025–September 2026 incidents and unrelated coverage; an October 24 recurring food pantry hours listing described ongoing open service and did not constitute an interruption.",
+    "Search queries returned usable results without source-specific failures material to verification; no finding was invented from undated or old material. Web-index freshness limits may miss rapidly posted local or social notices.",
+    "No approvals, publishing, production collector changes, schedule changes, or task disabling."
+  ]
+}

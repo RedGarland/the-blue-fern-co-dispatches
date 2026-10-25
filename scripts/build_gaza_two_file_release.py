@@ -22,7 +22,7 @@ if __package__ in (None, ""):
 from scripts.gaza_immutable_release import (
     ALLOWED_PATHS,
     SCHEMA_VERSION,
-    SUPPORTED_TREE_MODE,
+    SUPPORTED_TREE_MODES,
     SUPPORTED_TREE_TYPE,
     assert_outside,
     assert_safe_existing_ancestors,
@@ -70,7 +70,7 @@ def _base_tree(source_root: Path, base_head: str) -> dict[str, dict[str, str]]:
         if not line.strip():
             continue
         path, entry = _parse_tree_line(line)
-        if entry["type"] != SUPPORTED_TREE_TYPE or entry["mode"] != SUPPORTED_TREE_MODE:
+        if entry["type"] != SUPPORTED_TREE_TYPE or entry["mode"] not in SUPPORTED_TREE_MODES:
             raise ValueError(f"unsupported Git tree entry mode/type: {path}")
         tree[path] = entry
     return tree

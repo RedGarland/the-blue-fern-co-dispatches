@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T094745-0700-r11-20261025T164923Z",
+  "scheduled_for": "2026-10-25T09:44:51-07:00",
+  "started_at": "2026-10-25T09:47:45-07:00",
+  "completed_at": "2026-10-25T09:49:23.003-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T08:49:52.870-07:00",
+    "end": "2026-10-25T09:49:23.003-07:00",
+    "basis": "Previous independently fetched heartbeat completed_at through current observation. Discovery in-window requires confirmed new source reporting or distinct new development; incident time never inferred from article date alone."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary private recall only; authoritative collection and publication remain production-owned.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T084811-0700-r11-20261025T154952Z.json",
+      "completed_at": "2026-10-25T08:49:52.870-07:00",
+      "outcome": "no_findings",
+      "verified_via": "GitHub fetch_file"
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent listing dated October 19, 2026; no new report in observation window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new dated Gaza healthcare update in observation window."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza killed wounded October 25 2026 18:00 19:00 Sunday",
+      "site:reuters.com/world/middle-east/ Gaza October 25 2026 Sunday latest ceasefire strike civilian",
+      "site:apnews.com/article/ gaza October 25 2026 Sunday ceasefire Israeli strikes civilians",
+      "site:aljazeera.com/news/2026/10/25/ gaza Israeli strike fatalities aid Sunday",
+      "site:aa.com.tr/en/middle-east/ Gaza 25 October 2026 Sunday afternoon new killed hospital crossing",
+      "site:unicef.org Gaza October 25 2026 children water casualties health",
+      "site:wfp.org Gaza 25 October 2026 food distributions access",
+      "site:palestinercs.org Gaza 25 October 2026 ambulances medics injured",
+      "site:icrc.org OR site:msf.org Gaza \"25 October 2026\" hospital ambulance evacuation fuel",
+      "site:un.org OR site:unrwa.org Gaza \"25 October 2026\" civilians displacement aid health",
+      "Gaza October 25 2026 18:00 19:00 Palestine local new attack casualties \"Sunday\"",
+      "Gaza Rafah Kerem Shalom crossings negotiations hostages 25 October 2026 Sunday update"
+    ],
+    "search_recency_days": 1,
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; latest listed 18:34 Palestinian local on October 25 (09:34 PDT) concerns West Bank only. Latest Gaza casualty roundup dated 15:18 Palestinian local (06:18 PDT), predates observation window."
+      },
+      {
+        "publisher": "WAFA Gaza casualty roundup",
+        "url": "https://english.wafa.ps/Pages/Details/176257",
+        "result": "Accessible; seven deaths including three Islamic University, two near Asdaa/Khan Younis, one Deir al-Balah, one al-Rashid/Hamad Hospital area; article 15:18 Palestine local, prior window."
+      },
+      {
+        "publisher": "Anadolu Gaza attacks roundup",
+        "url": "https://www.aa.com.tr/en/middle-east/6-palestinians-killed-10-injured-in-israeli-attacks-across-gaza/4100315",
+        "result": "Accessible; 25 October date but no verifiable publication hour. Locations and casualties substantially overlap pre-window WAFA coverage; no separately verifiable in-window event."
+      }
+    ],
+    "high_value_classes_checked": [
+      "Civilian casualties and military operations with documented civilian impact",
+      "Displacement, damage to civilian infrastructure",
+      "Aid access, food/water services, crossings",
+      "Healthcare disruption, hospital/ambulance/fuel/medical evacuation functioning capacity",
+      "Detention, hostages, ceasefire and negotiations"
+    ],
+    "excluded_or_not_counted": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176257",
+        "reason": "Previously reviewed pre-window seven-death roundup, not a new in-window development."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/6-palestinians-killed-10-injured-in-israeli-attacks-across-gaza/4100315",
+        "reason": "Report covers already documented October 25 attacks; publication hour and incident times not verified; duplicate of WAFA and previous university finding; no distinct new development established."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176251",
+        "reason": "Earlier 12:01 Palestine-local report of two killed in al-Mawasi and injuries near hospital/al-Rashid; duplicated in later day roundups."
+      },
+      {
+        "reason": "Other surfaced items were older than observation window, historical articles, West Bank-specific developments or undated material."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Reduced direct WHO regional health coverage."
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "impact": "Reduced direct hospital capacity, medical evacuation and emergency health verification."
+      }
+    ],
+    "assessment": "Zero independently verified, new, nonduplicate Gaza developments in the bounded observation window; absence of qualified findings does not imply absence of events. Useful OCHA/WHO global/WAFA/Anadolu and established source coverage remains; regional WHO endpoints unavailable; DEGRADED rather than FAILED.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

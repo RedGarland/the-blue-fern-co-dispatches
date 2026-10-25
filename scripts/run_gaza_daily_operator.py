@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import os
 import io
+import inspect
 import json
 import re
 import ssl
@@ -420,6 +421,15 @@ def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
 
 
 def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True) -> dict[str, Any]:
+
+def _validate_manual_sources_for_operator(edition_date: str, *, post_only: bool) -> dict[str, Any]:
+    validator = validate_or_repair_manual_sources
+    # Keep existing test doubles and older in-process callers compatible while
+    # production post-only mode uses the read-only repair=False contract.
+    if post_only and "repair" in inspect.signature(validator).parameters:
+        return validator(edition_date, repair=False)
+    return validator(edition_date)
+
     path = manual_source_path(edition_date)
     if not path.exists():
         return {"ok": True, "status": "not_present", "path": str(path), "changes": [], "errors": []}
@@ -821,7 +831,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
         return result
 
-    manual_validation = validate_or_repair_manual_sources(args.date, repair=not args.post_bluesky_only)
+    manual_validation = _validate_manual_sources_for_operator(args.date, post_only=args.post_bluesky_only)
     result["manual_source_validation"] = manual_validation
     if not manual_validation["ok"]:
         result["operator_status"] = "MANUAL_SOURCE_INVALID"

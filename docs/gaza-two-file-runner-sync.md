@@ -156,12 +156,15 @@ refuse an existing/reparse release path. It must prove that every tracked
 entry except the two allowlisted paths has the same Git blob as `base_commit`.
 The launcher must validate this manifest and the two file hashes, resolve the
 release pointer atomically, set `BLUEFERN_RUNTIME_ROOT` to the original Gaza
-runner root, and invoke the release tree's operator with its source/import
-root separate from that runtime root. It must refuse a target other than
-Gaza, a release outside the approved release root, a mutable/reparse path,
-missing manifest evidence, or a runtime-root mismatch. Activation and
+runner root, and invoke only the release tree's explicitly bound post-only
+operator path. It must refuse generation/collection/general operator modes,
+a target other than Gaza, a release outside the approved release root, a
+mutable/reparse path, missing manifest evidence, or a runtime-root mismatch.
+Pointer updates and launches share one coordination lock, and activation and
 rollback receipts must include the release ID, source/base heads, file hashes,
-pointer before/after, and process result.
+pointer before/after, and process result. The daily generation child is not
+covered by the two-file release until its own source/runtime binding is
+released separately.
 
 These tools implement the source-side mechanism and check-only proof. They do
 not authorize creating a release under `C:\BlueFernRunner`, changing a live

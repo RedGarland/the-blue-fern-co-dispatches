@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T214739-0700-r11-1a42",
+  "scheduled_for": "2026-10-24T21:45:22-07:00",
+  "started_at": "2026-10-24T21:47:39-07:00",
+  "completed_at": "2026-10-24T21:49:13.592-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T20:44:48.482-07:00",
+    "end": "2026-10-24T21:49:13.592-07:00",
+    "basis": "Since the preceding verified hourly supplementary Care Line watch completion, considering late-indexed but unrecorded concrete access changes and rejecting documented duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall covering the 50 U.S. states, District of Columbia, and U.S. territories. Authoritative production Care Line national collection unchanged.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "CMS Public Notices checked before the additional 12 targeted searches. No October 24 notices listed. October 23 home-health terminations for My Families Healthcare (CA, CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA, 559673), and Moonlight Home Health Care Inc (OH, 369006) are previously logged duplicates."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital emergency department closed diverted suspended reopened October 24 2026 United States",
+      "hospital labor delivery maternity unit closing suspended October 24 2026 local news",
+      "rural hospital emergency services closed reopened October 24 2026 news",
+      "ambulance EMS service base closure suspended October 24 2026 local news",
+      "October 24 2026 dialysis closed clinic United States",
+      "October 24 2026 oncology closed patients hospital",
+      "October 24 2026 psychiatric unit closure hospital",
+      "October 24 2026 air ambulance base closing",
+      "October 24 2026 urgent care clinic primary care closed patients United States",
+      "October 24 2026 hospital emergency department reopened services resumed",
+      "octubre 24 2026 Puerto Rico hospital sala emergencia cierre suspensión servicio ambulancia",
+      "October 24 2026 hospital state health department suspended service closure"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T204311-0700-r11-6b42",
+      "previous_completed_at": "2026-10-24T20:44:48.482-07:00",
+      "verified_read": true,
+      "details": "Enumerated 21 preceding October 24 watch ledger files; fetched previous 20:43, 19:47, 18:48, 17:46 and 16:44 entries. All five had no new findings. Previously established Vista trauma loss, Maine Dennys River ambulance closure and October 23 CMS actions remain excluded."
+    },
+    "exclusions": "Returned results were older events, foreign/Canadian events, out-of-scope proposed reopenings, nonspecific financial threats, previously recorded service interruptions or news without evidence of a new patient-facing change. No new qualifying restoration, termination or service loss established.",
+    "limitations": "Initial obsolete CMS Public Notices URL yielded an access error; the correct canonical CMS Public Notices page was located, opened and inspected successfully before all 12 targeted searches. Conservative DEGRADED classification records the failed URL fetch, despite complete CMS coverage recovery. Search indexing yielded predominantly historical/unrelated items. Bounded recall does not prove absence of unindexed nationwide events.",
+    "material_degradation": false,
+    "controls": "No approvals, publication, changes to primary collector, schedule changes, or disabling. Exactly one heartbeat written for this run."
+  }
+}

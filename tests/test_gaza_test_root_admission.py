@@ -178,7 +178,7 @@ def test_missing_root_emits_structured_failed_receipt(monkeypatch: pytest.Monkey
     receipt_path = Path(payload["operational_receipt"])
     assert receipt_path in receipts
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    assert receipt["status"] == "failed"
+    assert receipt["status"] == "FAILED"
     assert receipt["classification"] == "test_root_blocked"
     assert receipt["exit_code"] == 1
     assert receipt["public_side_effects"] == {

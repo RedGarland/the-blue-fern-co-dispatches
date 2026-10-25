@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T174638-0700-r11-c4e2",
+  "scheduled_for": "2026-10-24T17:45:22-07:00",
+  "started_at": "2026-10-24T17:46:38-07:00",
+  "completed_at": "2026-10-24T17:48:08.875-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T16:45:30.373-07:00",
+    "end": "2026-10-24T17:48:08.875-07:00",
+    "basis": "Since last verified hourly supplementary watch; include late-reported previously unrecorded concrete service changes and exclude earlier logged findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S., DC and territories recall only; production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Canonical CMS listing checked before the 12 additional targeted searches. No notices dated October 24. October 23 My Families Healthcare (CA CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA CCN 559673), and Moonlight Home Health Care Inc (OH CCN 369006) previously logged; excluded as duplicates."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital emergency department closed or suspended October 24",
+      "hospital maternity/labor and delivery closure October 24",
+      "ambulance service / helicopter / air-medical base closing October 24",
+      "inpatient mental/behavioral health unit closure October 24",
+      "October 24 hospital emergency closure reports in local/AP sources",
+      "October 24 patient-facing clinic closure",
+      "October 23 dialysis center suspended or closing",
+      "October 24 ambulance service closure or suspension",
+      "October 23-24 emergency department temporary closures or reopenings in local/AP sources",
+      "October 23-24 cancer/oncology treatment facility closure",
+      "October 23-24 rural ambulance/EMS shutdown",
+      "October 23-24 Puerto Rico, Guam, USVI hospital/clinic closure"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T164427-0700-r11-a2f9",
+      "previous_completed_at": "2026-10-24T16:45:30.373-07:00",
+      "verified_read": true,
+      "intervening_watches": "Fetched 15:42 and 16:44 ledger entries directly. GitHub branch comparison exposed both following the previously reported 14:43 watch."
+    },
+    "exclusions": "No qualifying new or previously missed service change confirmed. Guam Regional Medical City outpatient clinic suspension on October 19 and resumption expected October 20 due to Typhoon Champi, plus Guam Memorial Hospital elective-service suspension announced October 16, predate this watch and lack new concrete October 24 access change. Other results were older 2025-2026 hospital, labor/delivery, air ambulance, cancer-care and emergency service changes, proposals, generic risks or unaffected operating departments. Previously recorded CMS terminations and Care Line recall findings excluded.",
+    "limitations": "Initial attempt to open an obsolete CMS policy-memos URL returned an access error; canonical CMS Public Notices subsequently retrieved successfully before targeted searches. An initial CMS-specific search returned no results, and a separate CMS locator search located the canonical page. The obsolete URL error is recorded conservatively as DEGRADED, but did not materially reduce CMS coverage. Twelve targeted searches returned usable but often historical/unrelated results; bounded recall cannot prove absence of unindexed changes.",
+    "material_degradation": false,
+    "controls": "No approval, publication, modification of the authoritative collector, task schedule change, or task disabling."
+  }
+}

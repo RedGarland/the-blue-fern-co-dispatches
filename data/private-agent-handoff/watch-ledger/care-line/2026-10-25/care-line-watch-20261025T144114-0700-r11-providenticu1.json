@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T144114-0700-r11-providenticu1",
+  "scheduled_for": "2026-10-25T14:45:22-07:00",
+  "started_at": "2026-10-25T14:41:14-07:00",
+  "completed_at": "2026-10-25T14:47:31.944-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T13:43:08-07:00",
+    "end": "2026-10-25T14:47:31.944-07:00",
+    "basis": "Previous independently verified supplementary Care Line heartbeat completed at 13:43:08 PDT. Searches screened the new hourly interval and late-discovered older high-value recall misses. Historical event below is NOT claimed to have occurred or been announced in the hourly window. National production collection remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-il-chicago-provident-hospital-icu-temporary-suspension-effective-20260920",
+      "canonical_source_url": "https://hfsrb.illinois.gov/announcements/provident-hospital-suspension-icu.html",
+      "title": "Provident Hospital of Cook County temporarily suspended intensive-care-unit operations",
+      "publisher": "Illinois Health Facilities and Services Review Board / Cook County Health",
+      "exact_supporting_passage": "on September 20, 2026, Provident temporarily suspended operation of its Intensive Care Unit (“ICU”)",
+      "source_published_date": "2026-10-21",
+      "state": "IL",
+      "city": "Chicago",
+      "county": "Cook",
+      "territory": null,
+      "event_type": "hospital_icu_service_suspension",
+      "service_line": "inpatient_intensive_care",
+      "access_consequences": "An official Cook County Health notice dated October 16 and publicly posted by Illinois regulators October 21 states Provident suspended its ICU on September 20, 2026, for an anticipated period not exceeding one year. Patients presenting at Provident who require ICU care are to be transferred to John H. Stroger Jr. Hospital of Cook County subject to capacity; additional transfer agreements were being pursued. The notice describes low historic ICU census (1–2 patients per day) and a greater-than-50% reduction in ICU services. This is a HISTORICAL, newly noticed recall candidate, not a new October 25 suspension. Current restoration status not independently verified.",
+      "affected_population": "Patients in Chicago/Cook County who require inpatient intensive care at Provident Hospital; exact number affected or additional travel burden not established.",
+      "effective_date": "2026-09-20",
+      "announcement_date": "2026-10-16",
+      "confidence": "high",
+      "source_role": "official_state_published_provider_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall for high-value healthcare-service losses, EMS/air medical loss, CMS/CLIA actions, and concrete essential-service restorations across U.S. states and territories; not authoritative national collector.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "CMS notices were checked before 12 additional targeted searches. Official listing latest entries remain three October 23 home-health terminations already recorded in preceding watches; no October 24–25 addition. One obsolete/incorrect CMS URL failed, then current official CMS page was successfully retrieved."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed reopened October 25 2026 site:news OR site:gov",
+      "hospital labor delivery maternity services closing October 24 25 2026",
+      "behavioral health inpatient psychiatric facility closing services suspended October 24 25 2026",
+      "dialysis oncology infusion clinic services suspended closure October 2026 USA",
+      "rural hospital emergency department closure suspension October 24 October 25 2026 local news",
+      "ambulance service EMS station announced ceasing operations October 24 25 2026 US",
+      "air ambulance medevac helicopter base closure suspension October 2026 local",
+      "primary care urgent care clinic closes patients October 24 25 2026",
+      "\"October 25, 2026\" hospital \"reopened\" emergency OR maternity OR dialysis",
+      "\"October 24, 2026\" \"hospital\" \"suspend\" OR \"closure\" \"services\"",
+      "October 24 25 2026 healthcare closure suspension Puerto Rico Guam Virgin Islands American Samoa",
+      "site:gov \"October 2026\" \"temporary suspension\" hospital ICU ED dialysis emergency services"
+    ],
+    "prior_ledger": {
+      "previous_run_id": "care-line-watch-20261025T134052-0700-r11-cms12",
+      "previous_completed_at": "2026-10-25T13:43:08-07:00",
+      "previous_heartbeat_verified_read": true,
+      "deduplication": "Compared ops/watch-ledger commits and read 54 Care Line heartbeats created after the October 23 07:41 record through October 25 13:43; none logged a Provident Hospital ICU suspension. Records for October 21–early October 23 and production authoritative collection were not exhaustively inspected, so the finding is pending review and historical novelty remains incompletely verified."
+    },
+    "source_details": "October 21 Illinois regulator posting links a signed October 16 Cook County Health official notice; both pages of the scanned notice were visually inspected. ICU suspension effective September 20; transfers to Stroger subject to capacity. No evidence of an October 25 newly effective change.",
+    "exclusions": "CMS October 23 entries, earlier Vista anesthesia/trauma/dialysis, previously reported maternity closures, past air-medical base losses, generic mergers/proposals, non-U.S. stories, and anecdotal social content excluded. October 24 CareOne Lexington nursing-center evacuation excluded from these narrowly prioritized watch classes pending production treatment.",
+    "source_failures": [
+      "Initial noncanonical CMS Public Notices URL inaccessible; resolved by finding and reading current canonical CMS listing."
+    ],
+    "limitations": "No confirmed newly occurring access change within this hourly interval. Late-recall item occurred September 20 and was publicly documented October 21. Search indexing and prior October 21–22 ledger/prod deduplication gaps mean this item might already be represented outside the checked supplementary ledger. Treat as a pending review candidate, not a confirmed nationally unique finding.",
+    "material_degradation": true,
+    "controls": "No editorial approval, publication, primary collection modification, schedule change or task disablement."
+  }
+}

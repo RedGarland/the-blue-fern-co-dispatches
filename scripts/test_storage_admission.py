@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import uuid
 from pathlib import Path
 
 DEFAULT_MIN_FREE_BYTES = 2 * 1024**3
@@ -36,6 +37,67 @@ def require_test_root_capacity(
             f"({min_free_bytes} reserve + {projected_bytes} projected)"
         )
     return resolved
+
+
+def _exclusive_write_probe(root: Path) -> None:
+    probe = Path(root) / f".bluefern-test-root-probe-{uuid.uuid4().hex}"
+    fd: int | None = None
+    try:
+        fd = os.open(str(probe), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+        os.write(fd, b"")
+    except OSError as exc:
+        raise RuntimeError(f"test root is not writable: {root}: {exc}") from exc
+    finally:
+        if fd is not None:
+            os.close(fd)
+        try:
+            probe.unlink()
+        except FileNotFoundError:
+            pass
+        except OSError as exc:
+            raise RuntimeError(f"test root probe cleanup failed: {probe}: {exc}") from exc
+
+
+def admit_test_root(
+    *,
+    repository_root: Path,
+    root: Path | None = None,
+    env_name: str = TEST_ROOT_ENV,
+) -> dict[str, object]:
+    raw = str(root or os.environ.get(env_name, "")).strip()
+    if not raw:
+        return {
+            "ok": False,
+            "status": "missing",
+            "path": None,
+            "error": f"{env_name} must explicitly name a writable project test root",
+        }
+    candidate = Path(raw).expanduser()
+    if not candidate.is_absolute():
+        return {
+            "ok": False,
+            "status": "invalid",
+            "path": raw,
+            "error": f"{env_name} must be an absolute path, not a relative path",
+        }
+    try:
+        test_root = require_test_root_capacity(candidate)
+        _exclusive_write_probe(test_root)
+        require_test_root_capacity(Path(repository_root))
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "ok": False,
+            "status": "invalid",
+            "path": raw,
+            "error": f"test-root admission failed: {type(exc).__name__}: {exc}",
+        }
+    os.environ[env_name] = str(test_root)
+    return {
+        "ok": True,
+        "status": "validated",
+        "path": str(test_root),
+        "error": None,
+    }
 
 
 def estimate_tree_bytes(source_tree: Path) -> int:

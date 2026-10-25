@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts import run_daily_gaza as daily
 from scripts import run_gaza_daily_operator as operator
 
 
@@ -95,8 +96,13 @@ def test_invalid_or_low_space_root_blocks_without_collection(
     monkeypatch.setenv(operator.TEST_ROOT_ENV, str(root))
     monkeypatch.setattr(
         operator,
-        "explicit_test_root",
-        lambda: (_ for _ in ()).throw(RuntimeError(error)),
+        "admit_test_root",
+        lambda **_kwargs: {
+            "ok": False,
+            "status": status,
+            "path": str(root),
+            "error": f"test-root admission failed: {error}",
+        },
     )
     monkeypatch.setattr(
         operator,
@@ -118,8 +124,16 @@ def test_valid_inherited_root_is_canonicalized_before_pipeline(monkeypatch: pyte
     root = tmp_path / "test-root"
     root.mkdir()
     monkeypatch.setenv(operator.TEST_ROOT_ENV, str(root / "."))
-    monkeypatch.setattr(operator, "explicit_test_root", lambda: root.resolve())
-    monkeypatch.setattr(operator, "require_test_root_capacity", lambda _path: root.resolve())
+    monkeypatch.setattr(
+        operator,
+        "admit_test_root",
+        lambda **_kwargs: {
+            "ok": True,
+            "status": "validated",
+            "path": str(root.resolve()),
+            "error": None,
+        },
+    )
     seen: list[str] = []
     monkeypatch.setattr(
         operator,
@@ -166,3 +180,88 @@ def test_missing_root_emits_structured_failed_receipt(monkeypatch: pytest.Monkey
     assert payload["details"]["source_collection_started"] is False
     assert payload["details"]["test_root_status"] == "missing"
     assert "DISPATCHES_TEST_ROOT" in payload["details"]["test_root_error"]
+
+
+def test_daily_missing_root_is_recorded_before_collection(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    root = tmp_path / "daily-root"
+    root.mkdir()
+    monkeypatch.setattr(daily, "ROOT", root)
+    monkeypatch.delenv(operator.TEST_ROOT_ENV, raising=False)
+    monkeypatch.setattr(
+        daily,
+        "collect_or_load_sources",
+        lambda *_args: pytest.fail("collection must not start before test-root admission"),
+    )
+
+    code = daily.main(
+        [
+            "--date",
+            "2026-10-25",
+            "--dry-run",
+            "--pages-repo",
+            str(tmp_path / "pages"),
+        ]
+    )
+
+    manifest = root / "data" / "dispatches" / "gaza" / "editions" / "2026-10-25" / "run_manifest.json"
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert code == 1
+    assert payload["failure_stage"] == "test_root_admission"
+    assert payload["collection_started"] is False
+    assert payload["generation_started"] is False
+    assert payload["validation_ok"] is False
+    assert payload["no_update_eligible"] is False
+    assert payload["publish_blocked_reason"] == "test-root-admission-failed"
+    assert "DISPATCHES_TEST_ROOT" in payload["errors"][0]
+
+
+def test_daily_valid_root_reaches_collection(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    root = tmp_path / "daily-root"
+    root.mkdir()
+    test_root = tmp_path / "test-root"
+    test_root.mkdir()
+    monkeypatch.setattr(daily, "ROOT", root)
+    monkeypatch.setenv(operator.TEST_ROOT_ENV, str(test_root))
+    called: list[str] = []
+    monkeypatch.setattr(
+        daily,
+        "collect_or_load_sources",
+        lambda _args, _summary, _log: (
+            called.append(os.environ[operator.TEST_ROOT_ENV]) or (None, [], None)
+        ),
+    )
+
+    code = daily.main(
+        [
+            "--date",
+            "2026-10-25",
+            "--dry-run",
+            "--pages-repo",
+            str(tmp_path / "pages"),
+        ]
+    )
+
+    manifest = root / "data" / "dispatches" / "gaza" / "editions" / "2026-10-25" / "run_manifest.json"
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert code == 1
+    assert called == [str(test_root.resolve())]
+    assert payload["test_root_status"] == "validated"
+    assert payload["collection_started"] is True
+    assert payload["generation_started"] is False
+
+
+def test_skipped_tests_are_not_validation_success() -> None:
+    summary = {
+        "tests_ok": None,
+        "validation_ok": None,
+        "publish_blocked": False,
+        "publish_blocked_reason": None,
+        "errors": [],
+        "warnings": [],
+    }
+    daily._record_skipped_validation(summary, Path("ignored.log"))
+    assert summary["tests_ok"] is False
+    assert summary["validation_ok"] is False
+    assert summary["publish_blocked"] is True
+    assert summary["publish_blocked_reason"] == "dispatch_validation_skipped"
+    assert summary["errors"]

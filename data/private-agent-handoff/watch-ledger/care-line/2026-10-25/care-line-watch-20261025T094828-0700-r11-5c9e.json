@@ -1,0 +1,55 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T094828-0700-r11-5c9e",
+  "scheduled_for": "2026-10-25T09:45:22-07:00",
+  "started_at": "2026-10-25T09:48:28-07:00",
+  "completed_at": "2026-10-25T09:50:42.683-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T08:47:19.373-07:00",
+    "end": "2026-10-25T09:50:42.683-07:00",
+    "basis": "Since the previous independently verified Care Line supplementary heartbeat completion (08:47:19 PDT); newly indexed older reports checked for distinct access changes and filtered for duplicates. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary high-value recall across all U.S. states, District of Columbia and territories: hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care interruption, rural/emergency care loss, ground/air EMS closure, CMS provider/CLIA action, and confirmed effective essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "note": "Direct CMS Public Notices page retrieved after CMS-focused initial lookup; newest listed notices remain My Families Healthcare CA CCN 758151, 1ST AIDE HOME HEALTH AGENCY CA CCN 559673, and Moonlight Home Health Care Inc OH CCN 369006 dated October 23, all previously recorded. No later notices found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed reopened October 25 2026 United States",
+      "rural hospital maternity labor delivery closure announced October 24 25 2026",
+      "urgent care primary care clinic closure effective October 25 2026 patients",
+      "ambulance service ceases operations county EMS October 24 25 2026",
+      "air ambulance helicopter medical base shut down closed 2026 October 24 25",
+      "behavioral health psychiatric inpatient program suspends services October 24 25 2026",
+      "dialysis center cancer oncology clinic shut down patients October 24 25 2026",
+      "hospital trauma level designation revoked or restored Oct 24 25 2026",
+      "state health department closure order hospital emergency services October 24 25 2026",
+      "hospital reopened emergency department restored services October 24 25 2026",
+      "Puerto Rico USVI Guam CNMI American Samoa hospital clinic ambulance outage closure October 25 2026",
+      "regional local news health facility ED ICU urgent care operations suspended October 25 2026"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261025T084531-0700-r11-cms12-8f3c",
+      "completed_at": "2026-10-25T08:47:19.373-07:00",
+      "branch": "ops/watch-ledger",
+      "verified_read": true,
+      "preceding_outcome": "no_findings"
+    },
+    "source_review": "Focused results were old cases, future reopening plans without operational restoration, international events, or previously noted closures. September 2026 Tehama County air-medical base closure and the older Vista trauma incidents are not new in this interval; Kula Hospital was a reopening plan, not a completed restoration. No qualifying October 25 access change established.",
+    "exclusions": "No newly effective service loss, government access-risk notice, or concretely effective essential-service restoration independently confirmed. Excluded speculative plans, opinion, business-only changes, duplicate/historical cases and unsupported claims.",
+    "limitations": "Sunday morning reporting/indexing delays and unindexed agency statements may hide real events. These are normal discoverability constraints, not an observed material search or tool failure. No claim of comprehensive national coverage.",
+    "material_degradation": false,
+    "controls": "Supplementary only. No approvals, publication, changes to schedule, or disablement."
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T034330-0700-r11-20261025T104746Z",
+  "scheduled_for": "2026-10-25T03:44:51-07:00",
+  "started_at": "2026-10-25T03:43:30-07:00",
+  "completed_at": "2026-10-25T03:47:46-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T02:42:55-07:00",
+    "end": "2026-10-25T03:47:46-07:00",
+    "basis": "Last independently verified Gaza Source Watch heartbeat completion to current check; only independently dated or published in-window, traceable, nonduplicate in-Gaza developments qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall and handoff only; production Gaza collector/publisher remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T024006-0700-r11-20261025024255-0700.json",
+      "completed_at": "2026-10-25T02:42:55-07:00",
+      "status": "DEGRADED",
+      "verified_via": "GitHub connector contents directory listing and fetch_file on ops/watch-ledger"
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed Gaza-related updates dated 19 October 2026; no report within observation interval."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new dated Gaza health/emergency bulletin shown within interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:reuters.com/world/middle-east/ Gaza October 25 2026 civilian deaths strikes humanitarian ceasefire",
+      "site:apnews.com/article/ Gaza October 25 2026 Israel Hamas strikes civilian casualties",
+      "site:news.un.org/en/ 25 October 2026 Gaza humanitarian aid hospitals casualties",
+      "site:english.wafa.ps 25 October 2026 Gaza killed wounded medical",
+      "site:aljazeera.com/news/2026/10/25 Gaza strikes killed 25 October 2026",
+      "site:unicef.org 25 October 2026 Gaza water food health displaced children",
+      "\"October 25, 2026\" \"Deir al-Balah\" \"drone\" killed Sunday",
+      "site:aa.com.tr/en/middle-east/ \"Oct 25, 2026\" Gaza Israeli attacks child killed",
+      "site:english.wafa.ps/Pages/Details/ \"October 25, 2026\" Gaza casualties ambulance Israeli",
+      "site:wfp.org OR site:unrwa.org Gaza \"25 October 2026\" food water aid crossings",
+      "site:msf.org OR site:icrc.org OR site:who.int \"25 October 2026\" Gaza hospital evacuation healthcare fuel",
+      "Gaza October 25 2026 ceasefire disarmament hostages Rafah Kerem Shalom crossing Reuters negotiations new"
+    ],
+    "search_recency_days": 1,
+    "classes_checked": [
+      "civilian casualties, injury, military operations with documented civilian impact",
+      "displacement, shelter, civilian infrastructure damage",
+      "aid and crossings, food and water access",
+      "healthcare, hospitals and ambulances, fuel and transport, medical evacuations, functioning capacity",
+      "detention and hostages",
+      "ceasefire and negotiations"
+    ],
+    "excluded_context": [
+      {
+        "url": "https://en.yenisafak.com/world/four-palestinians-killed-in-latest-israeli-gaza-attacks-3724776",
+        "reason": "Anadolu-sourced roundup describes Saturday 24 October attacks; publication listed 25 October 09:48 Turkish local (before current 02:42:55 PDT window). Previously occurring events; exclude."
+      },
+      {
+        "url": "https://imemc.org/article/israeli-attacks-kill-wound-palestinians-across-gaza/",
+        "reason": "Search surfaced a Sunday 25 October report of drone-strike fatality east of Deir al-Balah, but primary page and RSS returned HTTP 429. Event/publication time relative to prior 02:42:55 PDT check not verified and independent in-window corroboration absent; do not assert new finding."
+      },
+      {
+        "url": "https://www.i24news.tv/en/news/israel/defense/artc-idf-gaza-strikes-killed-two-terrorists-linked-to-hamas-funding-network",
+        "reason": "Reports Israeli claims of strikes on Tuesday and Wednesday last week; no substantiated newly dated civilian impact in observation window."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-people-gaza-medics-say-2026-10-22/",
+        "reason": "22 October 2026 report, pre-window."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct regional healthcare situational verification unavailable; WHO global accessible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "impact": "Direct regional hospital-function/medical-evacuation updates unavailable."
+      },
+      {
+        "publisher": "UN News targeted site search",
+        "url": "https://news.un.org/en/",
+        "error": "robots.txt block",
+        "impact": "UN News article discovery incomplete; OCHA accessible."
+      },
+      {
+        "publisher": "IMEMC article and RSS",
+        "url": "https://imemc.org/article/israeli-attacks-kill-wound-palestinians-across-gaza/",
+        "error": "HTTP 429",
+        "impact": "Potential Oct 25 casualty development could not be directly verified or timed to the observation interval."
+      }
+    ],
+    "assessment": "No independently verified, nonduplicate, newly dated qualifying in-Gaza development established in the bounded interval. OCHA and global WHO accessible; regional WHO HTTP 502 persists. One Oct 25 casualty candidate lacks a verifiable in-window event/publication timestamp and source access; it is not promoted to a finding. Exactly 12 additional targeted searches used. No findings does not establish no incidents occurred.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

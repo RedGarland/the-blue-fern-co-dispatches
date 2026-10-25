@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T154315-0700-r11-cms12-0f1a",
+  "scheduled_for": "2026-10-25T15:45:22-07:00",
+  "started_at": "2026-10-25T15:43:15-07:00",
+  "completed_at": "2026-10-25T15:45:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T14:47:31.944-07:00",
+    "end": "2026-10-25T15:45:43-07:00",
+    "basis": "Previous independently verified supplementary Care Line heartbeat completed at 14:47:31.944 PDT. Screened new hourly interval and older indexed items as possible recall misses. This watch supplements, but does not replace, authoritative national production collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, District of Columbia and U.S. territories; high-value hospital/ED/maternity/behavioral health/dialysis/oncology/primary care suspensions or closures, emergency and rural service loss, EMS/air-medical base loss, CMS provider termination/rescission/CLIA access-risk notices, and concrete restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "accessed": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS Public Notices listing retrieved before any supplementary targeted search. Top three October 23 terminations are My Families Healthcare (CA, 758151), 1ST AIDE HOME HEALTH AGENCY (CA, 559673), and Moonlight Home Health Care Inc (OH, 369006), all previously logged. No notices dated October 24 or 25 were visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 25 2026 hospital emergency department closed suspended reopened United States",
+      "October 25 2026 maternity labor delivery hospital suspension closure U.S.",
+      "October 25 2026 rural hospital emergency care service shut down closure",
+      "October 25 2026 ambulance EMS service ceased operations base closure United States",
+      "October 25 2026 medical helicopter air ambulance base closing suspended",
+      "October 25 2026 hospital behavioral health psychiatric inpatient treatment closure",
+      "October 25 2026 dialysis oncology chemotherapy treatments suspended clinic closing",
+      "October 25 2026 primary care clinic urgent care permanent closure local news",
+      "October 25 2026 hospital clinic services restored resumed after shutdown United States",
+      "October 25 2026 Puerto Rico Guam Virgin Islands American Samoa hospital services closure reopened",
+      "site:gov \"October 25, 2026\" \"hospital\" \"suspended\" OR \"closed\" OR \"reopened\"",
+      "\"October 25, 2026\" \"ambulance\" \"close\" OR \"suspend\" OR \"service\" health"
+    ],
+    "previous_heartbeat": {
+      "branch": "ops/watch-ledger",
+      "run_id": "care-line-watch-20261025T144114-0700-r11-providenticu1",
+      "completed_at": "2026-10-25T14:47:31.944-07:00",
+      "verified_read": true,
+      "prior_outcome": "findings",
+      "details": "Previous watch logged historical September 20 Provident Hospital ICU suspension, not an October 25 event."
+    },
+    "source_review": "Twelve targeted searches reviewed: no verifiable new, nonduplicate U.S./territory clinical service cessation, provider certification action, emergency transport/base suspension, or effective restoration identified after the previous heartbeat. Relevant matches were historical closures/old events, previously known or planned maternity losses, generic hospital vulnerability analyses, non-U.S. cases, and speculative or non-operational changes.",
+    "exclusions": "Previously recorded October 23 CMS notices; Illinois Vista Medical Center East anesthesia/dialysis/trauma changes; prior Provident ICU historical service loss; older rural hospital reports; announced or proposed changes without new effective access impact in this interval; aggregate/advocacy summaries; Canadian/Yemeni and other non-U.S. results; unverified social claims and ownership-only items.",
+    "source_failures": [],
+    "limitations": "This was a bounded national/territory recall sweep, not an exhaustive collector. Weekend local reporting and search-indexing delays may obscure very recent changes; future watches or production may identify late-reported events. No claim of zero nationwide changes.",
+    "material_degradation": false,
+    "controls": "No editorial approval, publication, production collection alteration, schedule change, or task disablement."
+  }
+}

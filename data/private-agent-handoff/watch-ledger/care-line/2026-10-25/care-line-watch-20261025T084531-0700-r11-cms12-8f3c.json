@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T084531-0700-r11-cms12-8f3c",
+  "scheduled_for": "2026-10-25T08:45:22-07:00",
+  "started_at": "2026-10-25T08:45:31-07:00",
+  "completed_at": "2026-10-25T08:47:19.373-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T07:48:19.378-07:00",
+    "end": "2026-10-25T08:47:19.373-07:00",
+    "basis": "Since previous verified Care Line supplementary watch completion; older/late-indexed items evaluated for novelty, and historical/duplicate events excluded. The national production Care Line collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall across U.S. states, DC, and territories for hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care service closures or suspensions, rural/emergency service losses, ambulance and air-medical/base interruptions, CMS provider/CLIA actions, and confirmed effective essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "details": "Official CMS index retrieved first. Latest three entries were October 23 home-health agency termination notices: My Families Healthcare (CA, CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA, CCN 559673), and Moonlight Home Health Care Inc (OH, CCN 369006), already documented in previous watch records. No later notice found."
+    },
+    "additional_targeted_searches": 12,
+    "search_queries": [
+      "\"October 25, 2026\" \"emergency department\" closed suspended hospital United States",
+      "\"October 25, 2026\" \"labor and delivery\" \"closed\" hospital OR suspended",
+      "\"October 25, 2026\" ambulance service closing suspended emergency responders",
+      "\"October 24, 2026\" hospital emergency room shutdown evacuation service suspended",
+      "\"October 24, 2026\" rural hospital emergency closure loss service",
+      "\"October 24, 2026\" behavioral health psychiatric residential treatment closure suspension",
+      "\"October 25, 2026\" dialysis clinic OR oncology OR cancer treatment services closed suspended United States",
+      "\"October 24, 2026\" primary care clinic urgent care office shut down closure patients",
+      "\"October 24, 2026\" \"air ambulance\" \"base\" \"closed\" OR \"suspended\"",
+      "\"October 25, 2026\" \"reopened\" \"emergency department\" OR \"hospital\" service restored",
+      "\"October 24, 2026\" site:gov OR site:us hospital license suspended CLIA healthcare provider closure official",
+      "\"October 24, 2026\" \"Puerto Rico\" OR \"Guam\" OR \"Virgin Islands\" hospital ambulance dialysis emergency closure"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261025T074051-0700-r11-fresenius1",
+      "completed_at": "2026-10-25T07:48:19.378-07:00",
+      "github_verified_read": true
+    },
+    "exclusions": "Previously recorded Vista Medical Center East anesthesia, trauma and dialysis losses, other previously logged October 22–24 cases, old U.S. incidents, future proposals without current concrete access effect, staffing/financing forecasts, foreign health services (including Australia/Canada), and articles lacking verified effective service change were excluded. No new CMS notice.",
+    "findings_explanation": "No new, verified and nonduplicate qualifying U.S. or territory access change identified during CMS-first review and twelve targeted searches. Absence of search hits does not imply no events occurred.",
+    "limitations": "Sunday-morning local-reporting/indexing lag and restricted visibility into non-indexed official notices remain possible. No material CMS retrieval or search failure occurred.",
+    "material_degradation": false,
+    "controls": "Supplementary recall only. Production collector remains authoritative. No approval, publication, schedule modification or task disablement."
+  }
+}

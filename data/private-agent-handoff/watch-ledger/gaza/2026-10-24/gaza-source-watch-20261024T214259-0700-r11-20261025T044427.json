@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T214259-0700-r11-20261025T044427",
+  "scheduled_for": "2026-10-24T21:42:59-07:00",
+  "started_at": "2026-10-24T21:42:59-07:00",
+  "completed_at": "2026-10-24T21:44:27-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T20:44:45-07:00",
+    "end": "2026-10-24T21:44:27-07:00",
+    "basis": "Completed timestamp from latest independently fetched hourly watch heartbeat on ops/watch-ledger; in-window event/publication verification required and historical reports excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production remains authoritative; no approval, publication, publishing pipeline, or schedule changes.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T204340-0700-r11-8e6b2a.json",
+      "completed_at": "2026-10-24T20:44:45-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_via": "GitHub connector direct fetch_file"
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest Gaza updates listed as published 19 October 2026, outside current window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new in-window Gaza health bulletin dated October 24 (20:44-21:44 PDT)."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; unavailable."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; unavailable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 25 2026 04:00 UTC new civilian casualties 24 October 21:00 PDT",
+      "site:reuters.com/world/middle-east/ Gaza Oct 24 2026 latest night ceasefire civilians",
+      "site:apnews.com/article/ Gaza Oct 24 2026 late night Israeli strike ceasefire",
+      "site:english.wafa.ps/Pages/Details/ Gaza Oct 25 2026 Gaza overnight deaths injured",
+      "site:aa.com.tr/en/middle-east/ Gaza Oct 25 2026 overnight aid military civilian",
+      "site:aljazeera.com/news/2026/10/25/ Gaza October 25 2026 ceasefire aid crossing attacks",
+      "site:wfp.org Gaza October 24 2026 October 25 food aid crossing delivery",
+      "site:unicef.org Gaza October 24 2026 October 25 children water shelter health",
+      "site:unrwa.org Gaza October 24 2026 October 25 displaced aid access",
+      "site:icrc.org Gaza October 24 2026 October 25 hostages detainees evacuation",
+      "site:msf.org Gaza October 24 2026 October 25 hospital ambulance patients",
+      "Gaza Strip overnight 24 October 2026 25 October 2026 Saturday Sunday Rafah ceasefire air strikes hospital civilians"
+    ],
+    "search_recency_days": 1,
+    "classes_checked": [
+      "civilian casualties",
+      "displacement/shelter",
+      "aid access/crossings",
+      "food and water access",
+      "healthcare, hospitals, ambulances, transport, fuel, medical evacuations and functioning capacity",
+      "infrastructure damage",
+      "detention and hostages",
+      "ceasefire and negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "excluded_context": [
+      {
+        "publisher": "Reuters/AP/WAFA/Anadolu and humanitarian search results",
+        "reason": "Search results surfaced earlier dated coverage (September/early October or earlier) with no independently verified occurrence or publication in the observation window."
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "reason": "Current emergency landing page contains food-aid reductions and needs context but no authenticated in-window publication/change timestamp; cannot qualify as newly reported this hour."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct WHO regional confirmation of Gaza hospital/ambulance, health service capacity and medical-evacuation updates unavailable."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "impact": "WHO regional emergency reports not accessible; WHO global page was available."
+      }
+    ],
+    "assessment": "OCHA OPT and WHO checked first, followed by exactly 12 targeted searches. No source-traceable, independently verified, nonduplicate qualifying new Gaza development found for this hourly window. WHO regional coverage remains degraded; zero verified findings does not establish zero events.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261024T224438-0700-r11-20261025T054541",
+  "scheduled_for": "2026-10-24T22:44:51-07:00",
+  "started_at": "2026-10-24T22:44:38-07:00",
+  "completed_at": "2026-10-24T22:46:25-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T21:44:27-07:00",
+    "end": "2026-10-24T22:46:25-07:00",
+    "basis": "Previous verified watch heartbeat completed_at to this watch completion. Require independently verifiable in-window event or publication, exclude historical content and duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production collector/publisher remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-24/gaza-source-watch-20261024T214259-0700-r11-20261025T044427.json",
+      "completed_at": "2026-10-24T21:44:27-07:00",
+      "status": "DEGRADED",
+      "verified_via": "GitHub connector fetch_file; repository directory contents separately listed"
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest dated Gaza material listed 19 October 2026, outside observation window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest dated relevant news and reports are older than observation window; no new Gaza-specific dated bulletin."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:reuters.com Gaza October 24 2026 latest ceasefire strikes civilians Saturday evening",
+      "site:apnews.com Gaza October 24 2026 Saturday night killed wounded aid ceasefire",
+      "site:news.un.org Gaza October 24 2026 October 25 humanitarian aid civilians",
+      "site:aljazeera.com/news/2026/10/25 Gaza ceasefire Israeli strikes casualty aid crossing",
+      "site:english.wafa.ps/Pages/Details/ Gaza Saturday October 24 2026 late night civilians killed injured 25 October",
+      "site:wfp.org Gaza October 24 2026 25 October new food distribution cuts crossings",
+      "site:unicef.org Gaza October 24 2026 25 October children water health infrastructure",
+      "site:msf.org Gaza October 24 2026 25 October hospitals ambulances evacuation",
+      "site:icrc.org Gaza October 25 2026 hostages detainees Red Cross medical evac ceasefire",
+      "site:unrwa.org Gaza October 24 2026 late aid displacement shelter water",
+      "Gaza crossings Rafah Kerem Shalom fuel ambulance evacuation October 25 2026 overnight",
+      "Gaza 24 October 2026 25 October 2026 late night casualties ceasefire humanitarian developments"
+    ],
+    "search_recency_days": 1,
+    "classes_checked": [
+      "civilian casualties and military operations with documented civilian impact",
+      "displacement/shelter; infrastructure damage",
+      "aid, food and water access; crossings",
+      "healthcare/hospitals/ambulances/transport/fuel/medical evacuation/functioning capacity",
+      "detention/hostages",
+      "ceasefire/negotiations"
+    ],
+    "excluded_context": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/world-food-programme-cuts-aid-500000-palestinians-gaza-citing-funding-shortages-2026-10-19/",
+        "reason": "Published 19 October, pre-window."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/175944",
+        "reason": "Published 16 October, pre-window."
+      },
+      {
+        "url": "https://www.unicef.org/press-releases/four-children-killed-separate-attacks-destroy-humanitarian-supplies-and-damage",
+        "reason": "Published 28 August, pre-window."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2025/11/11/how-many-times-has-israel-violated-the-gaza-ceasefire-here-are-the-numbers",
+        "reason": "Updated 23 October, pre-window; cumulative statistics not a new event in this hourly window."
+      },
+      {
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/10/25/mass-rally-against-netanyahu-ahead-of-pivotal-israeli-election",
+        "reason": "25 October publication concerns rally in Israel, not in-Gaza ground civilian impact."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Regional Gaza health and medical evacuation monitoring inaccessible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "impact": "Current regional situation reports unavailable; WHO global site accessible."
+      },
+      {
+        "publisher": "UN News search",
+        "url": "https://news.un.org/",
+        "error": "Targeted search blocked by robots.txt",
+        "impact": "UN News direct coverage limited; OCHA site accessible."
+      }
+    ],
+    "assessment": "No new independently verified, traceable, nonduplicate qualifying development was found within the hourly window. No findings is not proof no event occurred. Coverage DEGRADED by regional WHO HTTP 502 and UN News robots denial. Search bounded to exactly 12 additional searches.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

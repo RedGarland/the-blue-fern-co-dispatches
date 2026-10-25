@@ -169,7 +169,7 @@ def test_missing_root_emits_structured_failed_receipt(monkeypatch: pytest.Monkey
     receipts = list((root / "status" / "operational-health" / "gaza" / "2026-10-25").rglob("*.json"))
     assert receipts
     payloads = [json.loads(path.read_text(encoding="utf-8")) for path in receipts]
-    payload = next(item for item in payloads if item["operator_status"] == "TEST_ROOT_BLOCKED")
+    payload = next(item for item in payloads if item.get("operator_status") == "TEST_ROOT_BLOCKED")
     assert payload["ok"] is False
     assert payload["exit_code"] == 1
     assert payload["operator_status"] == "TEST_ROOT_BLOCKED"

@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T034456-0700-r11-8670291b",
+  "scheduled_for": "2026-10-25T03:45:54-07:00",
+  "started_at": "2026-10-25T03:44:56-07:00",
+  "completed_at": "2026-10-25T10:47:35.920Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T02:45:08.686-07:00",
+    "end_at": "2026-10-25T10:47:35.920Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified persisted hourly Food Line Source Watch heartbeat completed 2026-10-25 02:45:08.686 PDT; evaluated only new, source-verifiable U.S. developments since that checkpoint."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary, bounded Food Line recall watch, not the authoritative nationwide production collector.",
+    "Exactly 12 targeted web searches completed with two-day recency filters: 3 for sole/last/full-service grocery losses, 3 for storm/flood/fire/outage/facility-related cancellations of emergency distributions, 3 for abrupt pantry/food-bank closures or major access reduction, and 3 for official SNAP/WIC/EBT interruptions.",
+    "No newly reported qualifying U.S. disruption could be independently verified within the observed hourly interval. Retrieved items were mostly dated months ago or in October 2025 and do not establish current in-window disruptions.",
+    "Examples excluded as older or outside window: September 2026 Spencer NY Shur Fine fire, July 2026 Cincinnati Avondale grocery closure, and 2025 shutdown-related SNAP benefit delays. Routine October 24 pantry open hours and event listings are not disruptions.",
+    "October 24 provider/social-media pantry closure leads already covered in prior ledgers were not repeated absent a newly verifiable change.",
+    "Search requests returned results without errors. Search-index recency was imperfect and treated as a limitation, not independent evidence of a new event or material watch failure. No source access failure materially reduced actionable coverage.",
+    "No approvals, publishing, changes to production collection, schedule, or automation state."
+  ]
+}

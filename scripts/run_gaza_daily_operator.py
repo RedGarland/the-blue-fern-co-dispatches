@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import io
 import json
 import re
@@ -16,10 +17,15 @@ from urllib.parse import urlsplit
 from urllib import request
 
 
-ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "src"
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+SOURCE_ROOT = Path(__file__).resolve().parents[1]
+_runtime_root_value = os.environ.get("BLUEFERN_RUNTIME_ROOT", "").strip()
+RUNTIME_ROOT = Path(_runtime_root_value).expanduser().resolve() if _runtime_root_value else SOURCE_ROOT
+if _runtime_root_value and not RUNTIME_ROOT.is_dir():
+    raise RuntimeError(f"BLUEFERN_RUNTIME_ROOT is not an existing directory: {RUNTIME_ROOT}")
+ROOT = RUNTIME_ROOT
+SRC = SOURCE_ROOT / "src"
+if str(SOURCE_ROOT) not in sys.path:
+    sys.path.insert(0, str(SOURCE_ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
@@ -28,7 +34,8 @@ from bluefern_dispatches.gaza_sources import validate_source_records as validate
 from bluefern_dispatches.operational_health import build_gaza_operational_receipt, write_operational_receipt
 from scripts.preflight_repo_state import is_shared_dispatch_record_path
 from scripts.run_and_notify import notification_error_message, send_email
-from scripts.run_daily_gaza import DEFAULT_PAGES_REPO, DEFAULT_PAGES_BRANCH, DEFAULT_REMOTE_URL
+from scripts.run_daily_gaza import DEFAULT_PAGES_BRANCH, DEFAULT_REMOTE_URL
+import scripts.publish_gaza_historical as publisher
 import scripts.run_daily_gaza as daily
 
 
@@ -138,6 +145,21 @@ def _run_command(args: list[str], *, cwd: Path = ROOT) -> subprocess.CompletedPr
         check=False,
     )
 
+
+
+# Immutable release overlays execute source code from SOURCE_ROOT while keeping
+# data, logs, Pages checkout, credentials, and receipts under RUNTIME_ROOT.
+# The launcher validates both roots and sets BLUEFERN_RUNTIME_ROOT explicitly.
+if _runtime_root_value:
+    daily.ROOT = ROOT
+    daily.SRC = SRC
+    daily.DEFAULT_PAGES_REPO = ROOT / "bluefern-dispatches-pages"
+    publisher.ROOT = ROOT
+    publisher.SRC = SRC
+    publisher.DEFAULT_PAGES_REPO = daily.DEFAULT_PAGES_REPO
+    daily.run_command = _run_command
+    publisher.run_command = _run_command
+DEFAULT_PAGES_REPO = daily.DEFAULT_PAGES_REPO
 
 def _git_output(repo: Path, *args: str) -> str:
     result = _run_command(["git", *args], cwd=repo)

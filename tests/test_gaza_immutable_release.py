@@ -11,6 +11,22 @@ from scripts.gaza_immutable_release import ALLOWED_PATHS, assert_outside, file_s
 from scripts.run_gaza_immutable_release import launch, resolve_release_root, rollback_release_pointer, set_release_pointer
 
 
+def _post_only_args(tmp_path: Path, *, dry_run: bool = True) -> list[str]:
+    approved = tmp_path / "approved-gaza-post.txt"
+    approved.write_text("approved fixture post\n", encoding="utf-8")
+    args = [
+        "--date", "2026-10-25",
+        "--post-bluesky-only",
+        "--bluesky-approved-text-file", str(approved),
+        "--bluesky-approved-text-sha256", "0" * 64,
+        "--bluesky-expected-handle", "thebluefernco.bsky.social",
+        "--bluesky-expected-did", "did:plc:fixture",
+    ]
+    if dry_run:
+        args.append("--dry-run")
+    return args
+
+
 def _git(cwd: Path, *args: str) -> str:
     result = subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True, check=False)
     if result.returncode:
@@ -114,7 +130,7 @@ def test_check_only_launcher_preserves_runtime_and_writes_receipt(tmp_path):
         test_root=test_root,
         receipt=receipt,
         python_executable="unused-in-check-only",
-        operator_args=[],
+        operator_args=_post_only_args(tmp_path),
         check_only=True,
         expected_manifest_sha256=file_sha256(manifest),
         expected_base_commit=runtime_head,
@@ -148,7 +164,7 @@ def test_launcher_child_execution_reports_effects_unknown_and_keeps_runtime_root
         test_root=tmp_path / "test-root",
         receipt=receipt,
         python_executable=sys.executable,
-        operator_args=[],
+        operator_args=_post_only_args(tmp_path, dry_run=False),
         check_only=False,
         expected_manifest_sha256=file_sha256(manifest),
         expected_base_commit=runtime_head,
@@ -186,7 +202,7 @@ def test_launcher_rejects_release_inside_runtime_root(tmp_path):
             test_root=tmp_path / "test-root",
             receipt=tmp_path / "receipt.json",
             python_executable="unused",
-            operator_args=[],
+            operator_args=_post_only_args(tmp_path),
             check_only=True,
             expected_manifest_sha256="0" * 64,
             expected_base_commit="a" * 40,
@@ -303,6 +319,7 @@ def test_pointer_activation_and_rollback_are_atomic_and_bound(tmp_path):
         expected_manifest_sha256=file_sha256(manifest),
         expected_base_commit="a" * 40,
         expected_replacement_commit="b" * 40,
+        expected_current_release=None,
         outcome_receipt=outcome,
     )
     assert first["before"] is None
@@ -351,7 +368,57 @@ def test_pointer_update_refuses_a_competing_writer_lock(tmp_path):
             expected_manifest_sha256=file_sha256(manifest),
             expected_base_commit="a" * 40,
             expected_replacement_commit="b" * 40,
+            expected_current_release=None,
             outcome_receipt=tmp_path / "receipts" / "pointer.json",
+        )
+
+
+def test_post_only_allowlist_rejects_general_generation_or_missing_binding(tmp_path):
+    from scripts.run_gaza_immutable_release import validate_post_only_operator_args
+
+    with pytest.raises(ValueError, match="outside the immutable post-only allowlist"):
+        validate_post_only_operator_args(_post_only_args(tmp_path) + ["--generate-audio"])
+    with pytest.raises(ValueError, match="requires --post-bluesky-only"):
+        validate_post_only_operator_args([
+            "--date", "2026-10-25",
+            "--bluesky-approved-text-file", "approved.txt",
+            "--bluesky-approved-text-sha256", "0" * 64,
+            "--bluesky-expected-handle", "thebluefernco.bsky.social",
+            "--bluesky-expected-did", "did:plc:fixture",
+        ])
+
+
+def test_launcher_and_pointer_share_explicit_activation_lock(tmp_path):
+    release, manifest = _synthetic_manifest(tmp_path)
+    runtime = tmp_path / "runner"
+    _git(tmp_path, "init", str(runtime))
+    _git(runtime, "config", "user.email", "tests@example.invalid")
+    _git(runtime, "config", "user.name", "immutable release tests")
+    (runtime / "runtime-marker.txt").write_text("baseline\n", encoding="utf-8")
+    _git(runtime, "add", ".")
+    _git(runtime, "commit", "-m", "runtime baseline")
+    runtime_head = _git(runtime, "rev-parse", "HEAD")
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["base_commit"] = runtime_head
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+    lock = tmp_path / "coordination" / "gaza.lock"
+    lock.parent.mkdir()
+    lock.write_text("other-owner", encoding="ascii")
+    with pytest.raises(ValueError, match="already in progress"):
+        launch(
+            manifest=manifest,
+            release_root=release,
+            runtime_root=runtime,
+            test_root=tmp_path / "test-root",
+            receipt=tmp_path / "receipts" / "activation.json",
+            python_executable="unused",
+            operator_args=_post_only_args(tmp_path),
+            check_only=True,
+            expected_manifest_sha256=file_sha256(manifest),
+            expected_base_commit=runtime_head,
+            expected_replacement_commit=payload["replacement_commit"],
+            expected_runtime_head=runtime_head,
+            activation_lock=lock,
         )
 
 
@@ -419,3 +486,4 @@ def test_generation_child_uses_runtime_root_and_dry_run_has_no_public_effects(tm
     assert str(source_root.resolve()) not in str(Path(payload["manual_source_path"]).resolve())
     assert payload["dry_run"] is True
     assert not (runtime / "output" / "site").exists()
+

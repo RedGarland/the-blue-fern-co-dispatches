@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T204238-0700-r11-204238",
+  "scheduled_for": "2026-10-24T20:42:38-07:00",
+  "started_at": "2026-10-24T20:42:38-07:00",
+  "completed_at": "2026-10-25T03:43:49.251Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T19:43:16-07:00",
+    "end_at": "2026-10-25T03:43:49.251Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Five-minute overlap before preceding verified hourly watch completion at 2026-10-24T19:48:16-07:00; duplicate and older announcements excluded."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall check of high-value Food Line missed disruptions; the primary production nationwide collector remains authoritative.",
+    "12 targeted web searches completed, limited to: sole/only/last/full-service grocery store fire or closure (4), storm/fire/outage-related canceled food distribution (2), abrupt pantry/food-bank shutdown or access reduction (3), and official SNAP/WIC/EBT interruption (3).",
+    "Searches returned results without tool error, but no verified newly announced qualifying U.S. food-access disruption during the observation interval. Older news, promotional resources, donation announcements, routine distributions, and out-of-scope commercial retail stories were excluded.",
+    "Previous watch's Dallas Project 75216 Bread of Life Food Pantry October 24 inventory-related closure was previously noted; no new publication time or independent verification was established here, so it was not reissued as a new finding.",
+    "No approvals, publications, production collection changes, schedule changes, or task disabling occurred."
+  ]
+}

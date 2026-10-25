@@ -177,9 +177,9 @@ broader than this two-file approval.
 Consequently, the current PR's fast-forward path remains intentionally
 fail-closed for `fa92`  `a0aad`: it reports
 `FULL_SOURCE_ADVANCEMENT_REQUIRED`. It must not be described as an installed
-two-file repair. Activation requires a future reviewed overlay/launcher
-implementation or separately approved full-source lineage, followed by
-runner-local preflight and deployment proof.
+two-file repair. The overlay builder, runtime-root operator interface, and
+launcher are implemented here as source-only capability; activation still
+requires a separately approved runner-local preflight and deployment proof.
 
 ## Validation and CI evidence
 

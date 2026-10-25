@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T184644-0700-r11-5cec0527",
+  "scheduled_for": "2026-10-24T18:45:54-07:00",
+  "started_at": "2026-10-24T18:46:44-07:00",
+  "completed_at": "2026-10-24T18:47:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T17:45:54-07:00",
+    "end_at": "2026-10-24T18:47:26-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Nominal previous hourly Food Line Source Watch schedule slot; last actual previous-run completion timestamp not established by this run."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only. Primary nationwide Food Line production collection remains authoritative.",
+    "Exactly 12 targeted web searches completed; no search errors. Coverage: sole/last/full-service grocery-store loss; severe-weather/disaster cancellation of food distributions; abrupt pantry/food-bank closure/access cuts; newly official SNAP/WIC/food-assistance interruptions.",
+    "No qualifying, newly verifiable U.S. food-access disruption was identified in the bounded hourly window. Indexed results largely referred to historical September 2026 events, October 7-10 cancellations, or October 2025 SNAP/WIC interruptions; these were excluded as stale.",
+    "October 21-23 Kenosha Food Bank announcement of permanent closure at end of 2026 does not describe an immediate service loss during this hourly window, and was excluded.",
+    "October 19 Utah Community Action Services & Food Bank emergency funding appeal warned of future program cuts but identified no abrupt confirmed present service suspension; excluded.",
+    "Routine distribution calendars, resource/closure guidance, donation drives, promotional stories, generic price stories, non-US incidents, and prior occurrences excluded.",
+    "No review approvals, public publication, production collector modifications, schedule changes, or task disabling."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T124935-0700-r11-5d21",
+  "scheduled_for": "2026-10-25T12:45:22-07:00",
+  "started_at": "2026-10-25T12:49:35-07:00",
+  "completed_at": "2026-10-25T12:51:06-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T11:49:42-07:00",
+    "end": "2026-10-25T12:51:06-07:00",
+    "basis": "Since previous verified supplementary hourly Care Line watch completion; older indexed items screened for late-recall novelty. Primary production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded U.S., DC, and territories supplementary recall: hospital/ED/maternity/behavioral health/dialysis/oncology/primary care closures or suspensions; rural and emergency services; ambulance/air medical/base closures; CMS provider and CLIA access-risk notices; concrete effective restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS listing retrieved successfully before targeted searches. Top entries remain October 23 termination notices for My Families Healthcare (CA, CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA, 559673), and Moonlight Home Health Care Inc (OH, 369006), previously recorded. No listed October 24 or October 25 notice.",
+      "accessed": true
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department suspended closed reopening Oct 25 2026 United States",
+      "hospital maternity labor delivery unit closure suspension October 24 25 2026",
+      "hospital emergency room trauma ICU service suspension October 25 2026",
+      "ambulance service EMS air medical base closure October 24 25 2026",
+      "rural clinic urgent care primary care closed October 25 2026",
+      "behavioral health psychiatric residential treatment closure October 25 2026",
+      "site:gov hospital outpatient services emergency suspension reopening October 25 2026",
+      "dialysis center kidney facility treatment services suspended closed October 24 25 2026",
+      "oncology cancer treatment infusion center closure suspension October 24 25 2026",
+      "health care hospital services shut down restored reopen Oct 25 2026 US Sunday",
+      "Puerto Rico Guam Virgin Islands hospital emergency clinic closure outage October 24 25 2026",
+      "healthcare hospital clinic ambulance shuts closes October 25 2026 site:localnews8.com OR site:news10.com OR site:fox*.com"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261025T114823-0700-r11-7e4c",
+      "completed_at": "2026-10-25T11:49:42-07:00",
+      "verified_read": true,
+      "preceding_outcome": "no_findings",
+      "branch": "ops/watch-ledger"
+    },
+    "source_review": "CMS had no newer entries. Twelve targeted searches surfaced no source-verified new, nonduplicate U.S./territory clinical service loss or concrete reopening. Search matches included earlier-known Vista Medical Center East service losses, older announcements, speculative/proposed reopenings, international incidents, and Guam Regional Medical City's October 19 resumption of outpatient services, not a new hourly change. No finding met both qualification and novelty thresholds.",
+    "exclusions": "Excluded earlier-dated known events, out-of-scope international sources, ownership/leadership news without service change, planned but not operational reopenings, opinion, conjecture, and unsupported social assertions.",
+    "search_failures": [
+      {
+        "source": "news10.com",
+        "type": "robots.txt",
+        "details": "One domain in the twelfth targeted-query domain filter was blocked by robots.txt; other searches and official CMS listing remained accessible.",
+        "transient": false
+      }
+    ],
+    "limitations": "One targeted domain robots restriction limits coverage; weekend local reporting and indexing lag may obscure developments. Bounded recall is not a replacement for production.",
+    "material_degradation": false,
+    "controls": "No editorial approvals, production collection changes, publication, scheduling changes, or task disablement."
+  }
+}

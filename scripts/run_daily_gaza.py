@@ -1468,6 +1468,7 @@ def main(argv: list[str] | None = None) -> int:
         summary["publish_blocked_reason"] = "pages-dry-run-safety-failed"
         return finish(1)
 
+    summary["failure_stage"] = "publication"
     if args.dry_run:
         if bool(args.post_bluesky and not args.no_post_bluesky):
             dry_run_bluesky = maybe_post_gaza_dispatch_to_bluesky(
@@ -1492,6 +1493,7 @@ def main(argv: list[str] | None = None) -> int:
             summary["bluesky_thumb_status"] = dry_run_bluesky.get("thumb_status") or "not_attempted"
         summary["ok"] = True
         summary["publish_ok"] = True
+        summary["failure_stage"] = None
         log_line(log_path, "Dry run complete; Pages repo was not updated.")
         return finish(0)
 
@@ -1627,6 +1629,7 @@ def main(argv: list[str] | None = None) -> int:
         summary["errors"].append(f"summary missing required fields: {', '.join(missing_summary_fields)}")
         return finish(1)
     summary["ok"] = True
+    summary["failure_stage"] = None
     log_line(log_path, f"Pipeline finished with exit code 0. pages_repo_updated={summary['pages_repo_updated']} pushed={summary['pushed']}")
     return finish(0)
 

@@ -141,7 +141,7 @@ def test_valid_inherited_root_is_canonicalized_before_pipeline(monkeypatch: pyte
         operator,
         "_capture_daily_run",
         lambda _args: (
-            seen.append(os.environ[operator.TEST_ROOT_ENV]) or (1, {"errors": ["bounded fixture failure"]}, "")
+            seen.append(os.environ[operator.TEST_ROOT_ENV]) or (1, {"errors": ["bounded fixture failure"], "collection_started": True}, "")
         ),
     )
 
@@ -396,3 +396,125 @@ def test_skip_tests_blocks_end_to_end_before_publication(
     assert payload["generation_started"] is True
     assert payload["generation_ok"] is True
     assert commands == [["generation"]]
+
+
+def _daily_collection_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> tuple[Path, Path]:
+    root = tmp_path / "daily-root"
+    root.mkdir()
+    test_root = tmp_path / "test-root"
+    test_root.mkdir()
+    source_path = tmp_path / "sources.json"
+    source_path.write_text("[]", encoding="utf-8")
+    monkeypatch.setattr(daily, "ROOT", root)
+    monkeypatch.setenv(operator.TEST_ROOT_ENV, str(test_root))
+    monkeypatch.setattr(daily, "build_gaza_collection_timing_metadata", lambda *_args: {})
+    monkeypatch.setattr(
+        daily,
+        "collect_or_load_sources",
+        lambda _args, _summary, _log: (
+            source_path,
+            [
+                {
+                    "title": "Test Gaza report",
+                    "url": "https://example.com/story",
+                    "publisher": "Test Publisher",
+                    "retrieved_at": "2026-10-25T12:00:00Z",
+                    "published_at": "2026-10-25T11:00:00Z",
+                    "summary": "A bounded Gaza report.",
+                }
+            ],
+            None,
+        ),
+    )
+    return root, test_root
+
+
+def test_operator_preserves_false_collection_flag(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    _patch_repo_preflight(monkeypatch)
+    root = tmp_path / "test-root"
+    root.mkdir()
+    monkeypatch.setenv(operator.TEST_ROOT_ENV, str(root))
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda _args: (
+            1,
+            {"errors": ["admission failed before collection"], "collection_started": False},
+            "",
+        ),
+    )
+
+    result = operator.run_operator(_args(tmp_path))
+
+    assert result["daily_pipeline_started"] is True
+    assert result["source_collection_started"] is False
+    assert result["failure_stage"] is None
+
+
+def test_daily_second_admission_failure_after_collection(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    root, test_root = _daily_collection_fixture(monkeypatch, tmp_path)
+    admissions = iter(
+        [
+            {"ok": True, "status": "validated", "path": str(test_root), "error": None},
+            {"ok": False, "status": "invalid", "path": str(test_root), "error": "capacity changed"},
+        ]
+    )
+    monkeypatch.setattr(daily, "admit_test_root", lambda **_kwargs: next(admissions))
+
+    code = daily.main(
+        ["--date", "2026-10-25", "--dry-run", "--pages-repo", str(tmp_path / "pages")]
+    )
+
+    manifest = root / "data" / "dispatches" / "gaza" / "editions" / "2026-10-25" / "run_manifest.json"
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert code == 1
+    assert payload["failure_stage"] == "validation_setup"
+    assert payload["collection_started"] is True
+    assert payload["generation_started"] is False
+    assert payload["validation_ok"] is False
+    assert payload["no_update_eligible"] is False
+    assert payload["publish_blocked_reason"] == "test-root-admission-failed"
+    assert "capacity changed" in payload["errors"][-1]
+
+
+def test_daily_validation_allocation_failure_after_collection(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    root, test_root = _daily_collection_fixture(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        daily,
+        "admit_test_root",
+        lambda **_kwargs: {
+            "ok": True,
+            "status": "validated",
+            "path": str(test_root),
+            "error": None,
+        },
+    )
+    monkeypatch.setattr(
+        daily,
+        "make_pytest_basetemp",
+        lambda _name: (_ for _ in ()).throw(OSError("allocation boundary failed")),
+    )
+
+    code = daily.main(
+        ["--date", "2026-10-25", "--dry-run", "--pages-repo", str(tmp_path / "pages")]
+    )
+
+    manifest = root / "data" / "dispatches" / "gaza" / "editions" / "2026-10-25" / "run_manifest.json"
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert code == 1
+    assert payload["failure_stage"] == "validation_setup"
+    assert payload["collection_started"] is True
+    assert payload["generation_started"] is False
+    assert payload["validation_ok"] is False
+    assert payload["no_update_eligible"] is False
+    assert payload["publish_blocked_reason"] == "validation-setup-failed"
+    assert "allocation boundary failed" in payload["errors"][-1]

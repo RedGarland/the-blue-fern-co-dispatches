@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T104049-0700-r11-20261025T174308Z",
+  "scheduled_for": "2026-10-25T10:44:51-07:00",
+  "started_at": "2026-10-25T10:40:49-07:00",
+  "completed_at": "2026-10-25T10:43:08.000-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T09:49:23.003-07:00",
+    "end": "2026-10-25T10:43:08.000-07:00",
+    "basis": "Previous independently verified GitHub ledger heartbeat completed_at to this observation. Source publication time and event time kept distinct; only new nonduplicate in-window reporting accepted."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary private recall watch only; production collector and publisher remain authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T094745-0700-r11-20261025T164923Z.json",
+      "completed_at": "2026-10-25T09:49:23.003-07:00",
+      "outcome": "no_findings",
+      "verified_via": "GitHub branch ops/watch-ledger API read"
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed update dated 19 October 2026; no in-window release."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new dated Gaza health developments in window."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"25/October/2026\" 20:00 killed wounded aid ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza October 25 2026 Sunday ceasefire strikes civilians 20:00",
+      "site:apnews.com/article/ Gaza October 25 2026 Sunday deaths aid ceasefire",
+      "site:aljazeera.com/news/2026/10/25/ gaza latest Gaza strike Palestinians killed ceasefire Sunday evening",
+      "site:aa.com.tr/en/middle-east/ Gaza \"25.10.2026\" Sunday evening killed wounded humanitarian",
+      "site:palestinercs.org OR site:msf.org \"25 October 2026\" Gaza hospital ambulances evacuation",
+      "site:wfp.org OR site:unrwa.org Gaza \"25 October 2026\" food aid access crossings",
+      "site:unicef.org Gaza \"25 October 2026\" children water displaced health",
+      "site:icrc.org Gaza October 25 2026 detainees hostages hospital transport fuel",
+      "Gaza crossings Rafah Kerem Shalom medical evacuations humanitarian convoys October 25 2026 Sunday evening",
+      "Gaza ceasefire negotiations hostages detainees exchange October 25 2026 Sunday latest update",
+      "Gaza Sunday October 25 2026 20:00 21:00 Palestine local airstrike displacement hospitals casualties"
+    ],
+    "search_recency_days": 1,
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest listed Oct 25 19:13 Palestine local (09:13 PDT) concerns PLO/West Bank; latest Gaza fatality roundup 15:18 Palestine local (05:18 PDT), prior window."
+      },
+      {
+        "publisher": "Times of Israel / AFP",
+        "url": "https://www.timesofisrael.com/liveblog_entry/idf-strike-on-gaza-university-reportedly-kills-three/",
+        "result": "Oct 25 16:16 Israel local (06:16 PDT), already-recorded Islamic University attack; no separate in-window event."
+      },
+      {
+        "publisher": "Dawn / AFP",
+        "url": "https://www.dawn.com/news/2039736/israeli-strike-on-university-in-gaza-city-kills-3-another-4-palestinians-killed-in-separate-airstrikes",
+        "result": "Published Oct 25, updated 21:13 PKT (09:13 PDT). Seven fatalities overlap prior WAFA reporting; not a new verified in-window event."
+      },
+      {
+        "publisher": "i24NEWS / IDF claim",
+        "url": "https://www.i24news.tv/en/news/israel/defense/artc-idf-gaza-strikes-killed-two-terrorists-linked-to-hamas-funding-network",
+        "result": "Oct 25 recap of earlier-week strikes, no documented civilian impact and no separately verified in-window military development."
+      },
+      {
+        "publisher": "Middle East Eye",
+        "url": "https://www.middleeasteye.net/live-blog/live-blog-update/israeli-attacks-killed-least-five-palestinians-gaza",
+        "result": "Search snippet of five killed appears to overlap earlier Gaza casualties, direct access failed; time and distinct event not verified."
+      }
+    ],
+    "high_value_classes_checked": [
+      "Civilian casualties and military actions with documented civilian impact",
+      "Displacement, infrastructure/shelter damage",
+      "Aid access, food/water service, crossings",
+      "Hospitals, ambulances, medical evacuation, fuel and functioning capacity",
+      "Detention/hostages, ceasefire and negotiations"
+    ],
+    "excluded_or_not_counted": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176257",
+        "reason": "Previously examined seven-death Oct 25 casualty roundup, outside the observation window."
+      },
+      {
+        "url": "https://www.timesofisrael.com/liveblog_entry/idf-strike-on-gaza-university-reportedly-kills-three/",
+        "reason": "Islamic University Gaza City strike already captured in 06:53 PDT prior heartbeat; not counted twice."
+      },
+      {
+        "url": "https://www.dawn.com/news/2039736/israeli-strike-on-university-in-gaza-city-kills-3-another-4-palestinians-killed-in-separate-airstrikes",
+        "reason": "AFP casualty recap dated earlier than observation; no independent new casualty incident."
+      },
+      {
+        "url": "https://www.i24news.tv/en/news/israel/defense/artc-idf-gaza-strikes-killed-two-terrorists-linked-to-hamas-funding-network",
+        "reason": "Historical claims concerning combatant strikes earlier in the week; not documented civilian impacts."
+      },
+      {
+        "reason": "Other results were undated, older, out-of-window, duplicate or West Bank-specific. Search engines cannot establish absence of an incident."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct regional healthcare verification limited; recurring known endpoint issue."
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "impact": "Hospital functionality and medical evacuation reporting coverage reduced."
+      },
+      {
+        "publisher": "Middle East Eye live-blog update",
+        "url": "https://www.middleeasteye.net/live-blog/live-blog-update/israeli-attacks-killed-least-five-palestinians-gaza",
+        "error": "Direct fetch unavailable",
+        "impact": "Potential article timing/details could not be independently assessed; not treated as a positive finding."
+      }
+    ],
+    "assessment": "Bounded check found no independently verified new nonduplicate in-window Gaza development. OCHA OPT, WHO global and WAFA accessible; WHO EMRO 502 limits health verification, hence DEGRADED (not FAILED). No findings does not prove no incident occurred.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

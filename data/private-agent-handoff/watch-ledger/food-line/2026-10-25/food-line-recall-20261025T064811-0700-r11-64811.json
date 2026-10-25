@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T064811-0700-r11-64811",
+  "scheduled_for": "2026-10-25T06:45:54-07:00",
+  "started_at": "2026-10-25T06:48:11-07:00",
+  "completed_at": "2026-10-25T06:49:47-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T05:45:54-07:00",
+    "end_at": "2026-10-25T06:49:47-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Bounded to the inferred preceding hourly scheduled check through this observation; latest prior completion could not be independently enumerated from the ledger."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch for high-value misses only; authoritative nationwide production Food Line collection remains unchanged.",
+    "Exactly 12 targeted fresh web searches completed (all fast, recency 2-3 days), spanning sole/last/full-service grocery loss, storm/disaster cancellation of emergency distributions, abrupt pantry/food-bank shutdown or access reduction, and official SNAP/WIC/EBT interruptions.",
+    "No search query returned independently verifiable qualifying U.S. food-access disruption first announced or newly occurring during the bounded observation window. No finding is submitted for review.",
+    "Search indexing primarily returned older incidents and irrelevant materials, including 2025 SNAP shutdown coverage, prior-month sole-grocery closures and historical storm/food distribution articles; excluded as non-new or out of scope.",
+    "A Kaua‘i County October 23 hurricane recovery roundup concerns a September hurricane and did not establish a new food distribution suspension during this hour; excluded.",
+    "Previously documented October 24 pantry closure leads are not treated as new without independent evidence of a new development.",
+    "No approvals, publication, schedule changes, task disabling, or changes to the production collector occurred."
+  ]
+}

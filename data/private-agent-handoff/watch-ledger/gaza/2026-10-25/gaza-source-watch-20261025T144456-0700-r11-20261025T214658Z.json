@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T144456-0700-r11-20261025T214658Z",
+  "scheduled_for": "2026-10-25T14:44:51-07:00",
+  "started_at": "2026-10-25T14:44:56-07:00",
+  "completed_at": "2026-10-25T14:46:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T13:51:10-07:00",
+    "end": "2026-10-25T14:46:58-07:00",
+    "basis": "Previous confirmed ops/watch-ledger heartbeat completed_at to current observation; exclude established earlier/duplicate events without verified newly arising or newly traceable in-window development."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall watch only. Production remains authoritative; no editorial, publication, approval, or scheduling actions.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T134952-0700-r11-20261025T205110Z.json",
+      "completed_at": "2026-10-25T13:51:10-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Fetched directly from ops/watch-ledger in this run."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent displayed releases are 19 October 2026; no in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated Gaza health release in the observation window."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway."
+      },
+      {
+        "publisher": "WHO EMRO Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza \"25/October/2026\" \"23:\" killed injury",
+      "site:english.wafa.ps Gaza October 25 2026 night airstrike killed hospital",
+      "site:reuters.com/world/middle-east/ Gaza Oct 25 2026 Sunday latest civilians strikes",
+      "site:apnews.com/article/ Gaza October 25 2026 airstrike residents",
+      "site:unrwa.org Gaza October 25 2026 aid displaced shelter",
+      "site:unicef.org Gaza 25 October 2026 water children medical",
+      "site:palestine.un.org Gaza 25 October 2026 crossing aid ceasefire",
+      "site:icrc.org Gaza October 25 2026 hostage detainee hospital",
+      "site:aa.com.tr/en/middle-east Gaza Oct 25 2026 night airstrikes civilians",
+      "site:aljazeera.com/news/2026/10/25/ Gaza last hour bombing casualties ceasefire",
+      "Gaza October 25 2026 late Sunday 11 pm local Gaza casualties strikes medical evacuation crossing",
+      "Gaza ceasefire talks October 25 2026 Sunday new announcement prisoner release"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza article listed at 19:33 Palestinian-local Oct 25, preceding prior completed heartbeat. Later listed 22:25/22:48 local articles are Hebron and Israel, respectively, outside Gaza."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/10/25/seven-killed-in-gaza-as-israel-targets-university-campus-and-other-sites",
+        "result": "Same-day eight-death aggregate repeats Islamic University and Sheikh Nasser incidents already considered in preceding watches; no separately verified in-window event or article update time."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties / military actions with evidenced civilian impact",
+      "displacement, shelter and infrastructure",
+      "humanitarian aid, food, water, crossings and fuel",
+      "health services, hospital/ambulance capacity, medical evacuations",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Regional direct healthcare verification reduced."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502",
+        "impact": "Regional health and evacuation news verification reduced."
+      }
+    ],
+    "excluded_or_not_counted": [
+      {
+        "publisher": "WAFA",
+        "reason": "19:33 Palestinian-local Gaza report predates prior 13:51 PDT heartbeat."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "reason": "Eight-death daily aggregate and described incidents previously observed; absence of verified in-window update timestamp prevents new finding."
+      },
+      {
+        "reason": "Other retrieved reports are older, out of Gaza geographic scope, or insufficiently timed/sourced for inclusion."
+      }
+    ],
+    "assessment": "No qualifying new, verifiable, nonduplicate Gaza development established in this bounded window. OCHA, WHO global, WAFA and established reporting supplied useful coverage. Continuing WHO EMRO HTTP 502 warrants DEGRADED, not FAILED. No findings does not imply no incidents.",
+    "publication_actions": "none",
+    "production_authorization": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

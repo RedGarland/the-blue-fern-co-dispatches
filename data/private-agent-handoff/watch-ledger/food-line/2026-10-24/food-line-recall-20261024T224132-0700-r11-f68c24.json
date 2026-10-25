@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T224132-0700-r11-f68c24",
+  "scheduled_for": "2026-10-24T21:45:54-07:00",
+  "started_at": "2026-10-24T22:41:32-07:00",
+  "completed_at": "2026-10-25T05:42:55.573+00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T21:40:00-07:00",
+    "end_at": "2026-10-25T05:42:55.573+00:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative approximately one-hour lookback aligned to current hourly watch; last actual preceding completion was not independently recoverable. Latest previously supplied ledger checked: 2026-10-24 19:48:16 PT; coverage overlaps intervening checks if any."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only; production nationwide Food Line collector remains authoritative.",
+    "12 targeted web searches completed (all fast). Topics: sole/only/last/full-service grocery loss, storm/fire/flood/power-related canceled distributions, abrupt pantry/food bank closures and official SNAP/WIC benefit interruption. All queries returned results.",
+    "No verified new signal with sufficient source evidence and publication timing to establish occurrence since the preceding hourly check.",
+    "Excluded prior incidents: September 11 Spencer NY sole-grocery fire (WBNG https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/); September 25 El Paso food bank flood closure (KVIA https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/); April 2026 Ruby's Pantry shutdown (MPR https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites).",
+    "Excluded other non-new/out-of-scope items: Georgia EBT security restrictions effective October 22 (official https://dfcs.georgia.gov/services/snap/connectebt-website-and-mobile-app/new-security-features-ebt-cards-effective-oct-22), Kenosha Food Bank year-end closure announced days earlier, Austin Wheatsville store closure in a multi-grocer city, and 2025 SNAP shutdown warnings.",
+    "Dallas Project 75216 Bread of Life Food Pantry Saturday low-inventory closure already documented in earlier same-date heartbeat; announcement timestamp remains unverified and is not treated as a new hourly signal.",
+    "Search indexing and direct social-post timestamp verification limit definitive exhaustiveness, but no targeted search/source itself materially failed this run.",
+    "No approval, publication, schedule, production-collector, or automation-state changes occurred."
+  ]
+}

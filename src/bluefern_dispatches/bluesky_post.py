@@ -10,6 +10,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from typing import Any
 from urllib import error, request
+from urllib.parse import urlencode
 from bluefern_dispatches.generator import BASE_URL
 from bluefern_dispatches.food_line_bluesky_approval import verify_approval
 from bluefern_dispatches.food_line_bluesky_preview import build_food_line_bluesky_preview
@@ -177,6 +178,117 @@ def _load_receipt_for_same_public_url(project_root: Path, edition_date: str, pub
     if str(payload.get("public_url") or "").strip() != str(public_url).strip():
         return None
     return payload
+
+
+def _public_url_base(value: Any) -> str:
+    return str(value or "").split("?", 1)[0].rstrip("/") + "/"
+
+
+def _validate_live_public_verification(
+    verification: Any,
+    *,
+    edition_date: str,
+    public_url: str,
+) -> tuple[bool, str]:
+    if not isinstance(verification, dict):
+        return False, "missing_live_public_verification"
+    if str(verification.get("status") or "") != "LIVE_OK":
+        return False, "live_public_verification_not_ok"
+    # The existing operator's "homepage" proof is the Gaza desk landing page
+    # derived from the edition URL, not the global Dispatches homepage.
+    for field in ("live_http_ok", "live_archive_ok", "live_homepage_ok"):
+        if verification.get(field) is not True:
+            return False, f"live_public_verification_{field}_missing"
+    if _public_url_base(verification.get("edition_url")) != _public_url_base(public_url):
+        return False, "live_public_edition_url_mismatch"
+    if edition_date not in _public_url_base(verification.get("edition_url")):
+        return False, "live_public_edition_date_mismatch"
+    archive_base = _public_url_base(verification.get("archive_url"))
+    if not archive_base.endswith("/gaza/archive.html/") and not archive_base.endswith("/gaza/archive.html"):
+        return False, "live_public_archive_url_mismatch"
+    return True, "passed"
+
+
+def _load_exact_post_text(
+    path_value: Any,
+    expected_sha256: Any,
+    *,
+    edition_date: str,
+    public_url: str,
+) -> tuple[str | None, str | None, str | None]:
+    path_text = str(path_value or "").strip()
+    expected = str(expected_sha256 or "").strip().lower()
+    if not path_text or not expected:
+        return None, None, "exact_text_path_and_hash_required"
+    if not re.fullmatch(r"[0-9a-f]{64}", expected):
+        return None, None, "exact_text_hash_invalid"
+    path = Path(path_text)
+    try:
+        raw = path.read_bytes()
+    except Exception:  # noqa: BLE001
+        return None, None, "exact_text_file_unreadable"
+    actual = hashlib.sha256(raw).hexdigest()
+    if actual != expected:
+        return None, actual, "exact_text_hash_mismatch"
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return None, actual, "exact_text_not_utf8"
+    if not text or len(text) > BLUESKY_MAX_POST_LENGTH:
+        return None, actual, "exact_text_length_invalid"
+    if _public_url_base(public_url).rstrip("/") not in text or edition_date not in _public_url_base(public_url):
+        return None, actual, "exact_text_public_url_binding_missing"
+    return text, actual, None
+
+
+def _load_receipt_for_edition_any_status(project_root: Path, edition_date: str) -> dict[str, Any] | None:
+    path = _receipt_path(project_root, edition_date)
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        return {"_receipt_error": "local_post_receipt_unreadable"}
+    if not isinstance(payload, dict):
+        return {"_receipt_error": "local_post_receipt_invalid"}
+    return payload
+
+
+def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str) -> dict[str, Any]:
+    public_url_base = _public_url_base(public_url).rstrip("/")
+    query = urlencode({"repo": repo, "collection": "app.bsky.feed.post", "limit": "100"})
+    req = request.Request(
+        f"{BLUESKY_API_BASE}/com.atproto.repo.listRecords?{query}",
+        method="GET",
+        headers={"Accept": "application/json"},
+    )
+    try:
+        with request.urlopen(req, timeout=20.0) as resp:
+            body = resp.read().decode("utf-8")
+        payload = json.loads(body) if body else {}
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "uncertain", "reason": "remote_duplicate_check_failed", "error_type": type(exc).__name__}
+    if not isinstance(payload, dict) or not isinstance(payload.get("records"), list):
+        return {"status": "uncertain", "reason": "remote_duplicate_response_invalid"}
+    for row in payload["records"]:
+        if not isinstance(row, dict):
+            continue
+        value = row.get("value") if isinstance(row.get("value"), dict) else row.get("record")
+        if not isinstance(value, dict):
+            continue
+        record_text = str(value.get("text") or "")
+        embed = value.get("embed") if isinstance(value.get("embed"), dict) else {}
+        external = embed.get("external") if isinstance(embed.get("external"), dict) else {}
+        embedded_url = str(external.get("uri") or "").strip()
+        embedded_url_base = _public_url_base(embedded_url).rstrip("/") if embedded_url else ""
+        post_uri = str(row.get("uri") or "").strip() or None
+        if record_text == post_text:
+            return {"status": "match", "post_uri": post_uri, "post_cid": row.get("cid")}
+        if public_url_base in record_text or embedded_url_base == public_url_base:
+            return {"status": "conflict", "post_uri": post_uri, "post_cid": row.get("cid")}
+    if str(payload.get("cursor") or "").strip():
+        return {"status": "uncertain", "reason": "remote_duplicate_scan_incomplete"}
+    return {"status": "none"}
 
 
 def _gaza_bluesky_artifact_paths(project_root: Path, edition_date: str) -> list[Path]:
@@ -568,6 +680,12 @@ def _write_success_receipt(
     thumb_status: str,
     original_thumb_bytes: int | None,
     uploaded_thumb_bytes: int | None,
+    post_cid: str | None = None,
+    target_handle: str | None = None,
+    target_did: str | None = None,
+    approved_text_sha256: str | None = None,
+    status: str = "success",
+    reason: str | None = None,
 ) -> None:
     path = _receipt_path(project_root, edition_date)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -584,8 +702,18 @@ def _write_success_receipt(
         "thumb_status": thumb_status,
         "original_thumb_bytes": original_thumb_bytes,
         "uploaded_thumb_bytes": uploaded_thumb_bytes,
-        "status": "success",
+        "status": status,
     }
+    if post_cid:
+        payload["post_cid"] = post_cid
+    if target_handle:
+        payload["target_handle"] = target_handle
+    if target_did:
+        payload["target_did"] = target_did
+    if approved_text_sha256:
+        payload["approved_text_sha256"] = approved_text_sha256
+    if reason:
+        payload["reason"] = reason
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
@@ -1529,6 +1657,11 @@ def maybe_post_gaza_dispatch_to_bluesky(
     project_root: Path | None = None,
     force_post: bool = False,
     allow_publish: bool = True,
+    approved_text_path: Path | str | None = None,
+    approved_text_sha256: str | None = None,
+    expected_handle: str | None = None,
+    expected_did: str | None = None,
+    live_verification: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     result: dict[str, Any] = {
         "status": "skipped",
@@ -1547,6 +1680,9 @@ def maybe_post_gaza_dispatch_to_bluesky(
         "source_artifact_paths": [],
         "edition_date_verified": False,
         "stale_content_guard_status": "not_evaluated",
+        "approved_text_sha256": None,
+        "target_handle": None,
+        "target_did": None,
     }
     if not run_succeeded:
         result["reason"] = "run_failed"
@@ -1561,7 +1697,16 @@ def maybe_post_gaza_dispatch_to_bluesky(
         result["reason"] = "disabled_by_env"
         return result
 
+    exact_text_mode = any(value is not None for value in (approved_text_path, approved_text_sha256, expected_handle, expected_did))
     handle = str(os.getenv("BLUESKY_HANDLE", "")).strip()
+    if exact_text_mode and not expected_handle:
+        result["status"] = "blocked"
+        result["reason"] = "exact_target_handle_required"
+        return result
+    if exact_text_mode and handle != str(expected_handle).strip():
+        result["status"] = "blocked"
+        result["reason"] = "exact_target_handle_mismatch"
+        return result
     app_password = os.getenv("BLUESKY_APP_PASSWORD")
     if not handle:
         result["reason"] = "missing_handle"
@@ -1573,8 +1718,44 @@ def maybe_post_gaza_dispatch_to_bluesky(
     root = project_root or Path.cwd()
     context = _gaza_bluesky_context(root, edition_date)
     result["source_artifact_paths"] = list(context.get("source_artifact_paths") or [])
+    exact_text: str | None = None
+    if exact_text_mode:
+        if not expected_did:
+            result["status"] = "blocked"
+            result["reason"] = "exact_target_did_required"
+            return result
+        live_ok, live_reason = _validate_live_public_verification(
+            live_verification,
+            edition_date=edition_date,
+            public_url=str(public_url),
+        )
+        if not live_ok:
+            result["status"] = "blocked"
+            result["reason"] = live_reason
+            return result
+        exact_text, actual_hash, exact_error = _load_exact_post_text(
+            approved_text_path,
+            approved_text_sha256,
+            edition_date=edition_date,
+            public_url=str(public_url),
+        )
+        result["approved_text_sha256"] = actual_hash
+        if exact_error or exact_text is None:
+            result["status"] = "blocked"
+            result["reason"] = exact_error or "exact_text_binding_failed"
+            return result
+        result["edition_date_verified"] = True
+        result["archive_surface_verified"] = True
+        result["live_public_verification"] = {
+            "status": str(live_verification.get("status") or "") if isinstance(live_verification, dict) else None,
+            "edition_url": str(live_verification.get("edition_url") or "") if isinstance(live_verification, dict) else None,
+            "archive_url": str(live_verification.get("archive_url") or "") if isinstance(live_verification, dict) else None,
+        }
+    else:
+        exact_text = None
     verification = _extract_gaza_edition_identity(root, edition_date, public_url)
-    result["edition_date_verified"] = bool(verification.get("verified"))
+    if not exact_text_mode:
+        result["edition_date_verified"] = bool(verification.get("verified"))
     result["requested_date"] = verification.get("requested_date")
     result["manifest_edition_date"] = verification.get("manifest_edition_date")
     result["public_url"] = verification.get("public_url")
@@ -1583,16 +1764,17 @@ def maybe_post_gaza_dispatch_to_bluesky(
     result["page_heading"] = verification.get("page_heading")
     result["mismatched_field"] = verification.get("mismatched_field")
     result["date_issues"] = list(verification.get("date_issues") or [])
-    if verification.get("date_issues"):
+    if not exact_text_mode and verification.get("date_issues"):
         result["status"] = "blocked"
         result["reason"] = "current-edition-date-mismatch"
         result["stale_content_guard_status"] = "blocked"
         return result
     archive_surface = _gaza_archive_surface_contains_edition(root, edition_date)
-    result["archive_surface_verified"] = bool(archive_surface.get("ok"))
-    result["archive_surface_path"] = archive_surface.get("path")
-    result["archive_surface_checked_paths"] = list(archive_surface.get("checked_paths") or [])
-    if not archive_surface.get("ok") and allow_publish:
+    if not exact_text_mode:
+        result["archive_surface_verified"] = bool(archive_surface.get("ok"))
+        result["archive_surface_path"] = archive_surface.get("path")
+        result["archive_surface_checked_paths"] = list(archive_surface.get("checked_paths") or [])
+    if not exact_text_mode and not archive_surface.get("ok") and allow_publish:
         result["status"] = "blocked"
         result["reason"] = "current-edition-missing-from-gaza-archive"
         result["stale_content_guard_status"] = "blocked"
@@ -1607,42 +1789,52 @@ def maybe_post_gaza_dispatch_to_bluesky(
         "mismatched_field": result["mismatched_field"],
         "date_issues": result["date_issues"],
     }
-    text = build_gaza_bluesky_post_text(
-        edition_date,
-        public_url,
-        project_root=root,
-        include_public_url=False,
-    )
-    card_title = _build_gaza_card_title(edition_date)
-    card_description = build_gaza_card_description(edition_date, root, max_length=BLUESKY_CARD_MAX_DESCRIPTION_LENGTH)
-    if _description_duplicates_gaza_post(card_description, text):
-        limited_source = False
-        edition_manifest = context.get("edition_manifest")
-        if isinstance(edition_manifest, dict):
-            limited_source = str(edition_manifest.get("source_adequacy_status") or "").strip().lower() == "limited_source_update"
-        card_description = _build_gaza_generic_card_description(
-            edition_date,
-            BLUESKY_CARD_MAX_DESCRIPTION_LENGTH,
-            limited_source=limited_source,
-        )
-    use_external_embed = card_description != BLUESKY_CARD_FALLBACK_DESCRIPTION
-    if not use_external_embed:
+    if exact_text_mode:
+        text = exact_text
+        card_title = _build_gaza_card_title(edition_date)
+        card_description = BLUESKY_CARD_FALLBACK_DESCRIPTION
+        use_external_embed = False
+        result["stale_content_guard_status"] = "exact_text_hash_bound"
+    else:
         text = build_gaza_bluesky_post_text(
             edition_date,
             public_url,
             project_root=root,
-            include_public_url=True,
+            include_public_url=False,
         )
+        card_title = _build_gaza_card_title(edition_date)
+        card_description = build_gaza_card_description(edition_date, root, max_length=BLUESKY_CARD_MAX_DESCRIPTION_LENGTH)
+        if _description_duplicates_gaza_post(card_description, text):
+            limited_source = False
+            edition_manifest = context.get("edition_manifest")
+            if isinstance(edition_manifest, dict):
+                limited_source = str(edition_manifest.get("source_adequacy_status") or "").strip().lower() == "limited_source_update"
+            card_description = _build_gaza_generic_card_description(
+                edition_date,
+                BLUESKY_CARD_MAX_DESCRIPTION_LENGTH,
+                limited_source=limited_source,
+            )
+        use_external_embed = card_description != BLUESKY_CARD_FALLBACK_DESCRIPTION
+        if not use_external_embed:
+            text = build_gaza_bluesky_post_text(
+                edition_date,
+                public_url,
+                project_root=root,
+                include_public_url=True,
+            )
     result["post_text"] = text
     result["card_title"] = card_title
     result["card_description"] = card_description
-    if text == BLUESKY_GAZA_POST_FALLBACK:
+    if not exact_text_mode and text == BLUESKY_GAZA_POST_FALLBACK:
         result["status"] = "blocked"
         result["reason"] = "current-edition-public-summary-unavailable"
         result["stale_content_guard_status"] = "blocked"
         return result
-    ok, guard_status = _bluesky_stale_content_guard(text, context)
-    result["stale_content_guard_status"] = guard_status
+    if not exact_text_mode:
+        ok, guard_status = _bluesky_stale_content_guard(text, context)
+        result["stale_content_guard_status"] = guard_status
+    else:
+        ok = True
     if not ok:
         result["status"] = "blocked"
         result["reason"] = guard_status
@@ -1650,7 +1842,51 @@ def maybe_post_gaza_dispatch_to_bluesky(
     if not allow_publish:
         result["reason"] = "dry_run"
         return result
-    if not force_post:
+    if exact_text_mode:
+        prior = _load_receipt_for_edition_any_status(root, edition_date)
+        if prior:
+            receipt_error = str(prior.get("_receipt_error") or "")
+            if receipt_error:
+                result["status"] = "blocked"
+                result["reason"] = receipt_error
+                return result
+            if str(prior.get("public_url") or "").strip() != str(public_url).strip():
+                result["status"] = "blocked"
+                result["reason"] = "local_receipt_public_url_mismatch"
+                return result
+            prior_status = str(prior.get("status") or "")
+            if prior_status == "uncertain":
+                result["status"] = "blocked"
+                result["reason"] = "post_outcome_uncertain_reconcile_before_retry"
+                return result
+            if prior_status == "success":
+                if not str(prior.get("post_uri") or "").strip():
+                    result["status"] = "blocked"
+                    result["reason"] = "local_receipt_invalid"
+                    return result
+                same_text = str(prior.get("post_text_sha256") or "").strip().lower() == str(approved_text_sha256).strip().lower()
+                same_did = str(prior.get("target_did") or "").strip() == str(expected_did).strip()
+                same_handle = str(prior.get("target_handle") or "").strip() == handle
+                if same_text and same_did and same_handle:
+                    return {
+                        **result,
+                        "status": "skipped",
+                        "post_uri": str(prior.get("post_uri") or "").strip() or None,
+                        "reason": "skipped_existing_exact_receipt",
+                        "post_text": text,
+                        "card_title": prior.get("card_title") or card_title,
+                        "card_description": prior.get("card_description") or card_description,
+                        "target_handle": handle,
+                        "target_did": expected_did,
+                    }
+                result["status"] = "blocked"
+                result["reason"] = "local_receipt_content_mismatch"
+                return result
+            if prior_status not in {"failure"}:
+                result["status"] = "blocked"
+                result["reason"] = "local_receipt_status_unrecognized"
+                return result
+    elif not force_post:
         receipt = _load_receipt_for_same_public_url(root, edition_date, str(public_url))
         if receipt:
             return {
@@ -1694,6 +1930,53 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 "stale_content_guard_status": result["stale_content_guard_status"],
                 **verification_fields,
             }
+        result["target_handle"] = handle
+        result["target_did"] = did
+        if exact_text_mode and did != str(expected_did).strip():
+            result["status"] = "blocked"
+            result["reason"] = "exact_target_did_mismatch"
+            return result
+        if exact_text_mode:
+            duplicate = _remote_duplicate_reconciliation(did, str(public_url), text)
+            if duplicate.get("status") == "match":
+                if not str(duplicate.get("post_uri") or "").strip():
+                    result["status"] = "blocked"
+                    result["reason"] = "remote_duplicate_record_invalid"
+                    return result
+                _write_success_receipt(
+                    project_root=root,
+                    edition_date=edition_date,
+                    public_url=str(public_url),
+                    post_uri=str(duplicate.get("post_uri") or ""),
+                    post_text=text,
+                    card_title=card_title,
+                    card_description=card_description,
+                    embed_type="",
+                    thumb_status="not_attempted",
+                    original_thumb_bytes=None,
+                    uploaded_thumb_bytes=None,
+                    post_cid=str(duplicate.get("post_cid") or "") or None,
+                    target_handle=handle,
+                    target_did=did,
+                    approved_text_sha256=str(approved_text_sha256).strip().lower(),
+                )
+                return {
+                    **result,
+                    "status": "skipped",
+                    "post_uri": duplicate.get("post_uri"),
+                    "reason": "skipped_matching_remote_record",
+                    "post_text": text,
+                    "card_title": card_title,
+                    "card_description": card_description,
+                }
+            if duplicate.get("status") == "conflict":
+                result["status"] = "blocked"
+                result["reason"] = "ambiguous_remote_duplicate"
+                return result
+            if duplicate.get("status") != "none":
+                result["status"] = "blocked"
+                result["reason"] = str(duplicate.get("reason") or "remote_duplicate_check_uncertain")
+                return result
         thumb_blob = None
         thumb_status = "not_attempted"
         compressed_thumb = False
@@ -1720,10 +2003,12 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 image_path = FOOD_LINE_SOCIAL_IMAGE_PATH
             record_payload["record"]["embed"] = external
         req = _build_auth_request(f"{BLUESKY_API_BASE}/com.atproto.repo.createRecord", record_payload, access_jwt)
+        post_request_started = True
         with request.urlopen(req, timeout=20.0) as resp:
             body = resp.read().decode("utf-8")
         payload = json.loads(body) if body else {}
         post_uri = str(payload.get("uri") or "").strip() if isinstance(payload, dict) else ""
+        post_cid = str(payload.get("cid") or "").strip() if isinstance(payload, dict) else ""
         if not post_uri:
             return {
                 "status": "failure",
@@ -1751,6 +2036,10 @@ def maybe_post_gaza_dispatch_to_bluesky(
             thumb_status=thumb_status,
             original_thumb_bytes=original_thumb_bytes,
             uploaded_thumb_bytes=uploaded_thumb_bytes,
+            post_cid=post_cid or None,
+            target_handle=handle,
+            target_did=did,
+            approved_text_sha256=str(approved_text_sha256).strip().lower() if exact_text_mode else None,
         )
         return {
             "status": "success",
@@ -1770,10 +2059,42 @@ def maybe_post_gaza_dispatch_to_bluesky(
             "source_artifact_paths": result["source_artifact_paths"],
             "edition_date_verified": result["edition_date_verified"],
             "stale_content_guard_status": result["stale_content_guard_status"],
+            "approved_text_sha256": str(approved_text_sha256).strip().lower() if exact_text_mode else None,
             **verification_fields,
         }
     except error.HTTPError as exc:
         reason, err_type, err_message = _safe_http_error(exc, app_password)
+        if exact_text_mode and "post_request_started" in locals() and post_request_started:
+            _write_success_receipt(
+                project_root=root,
+                edition_date=edition_date,
+                public_url=str(public_url),
+                post_uri="",
+                post_text=text,
+                card_title=card_title,
+                card_description=card_description,
+                embed_type="",
+                thumb_status="not_attempted",
+                original_thumb_bytes=None,
+                uploaded_thumb_bytes=None,
+                target_handle=handle,
+                target_did=did,
+                approved_text_sha256=str(approved_text_sha256).strip().lower(),
+                status="uncertain",
+                reason="post_request_http_error_outcome_uncertain",
+            )
+            return {
+                **result,
+                "status": "uncertain",
+                "reason": "post_outcome_uncertain_reconcile_before_retry",
+                "post_text": text,
+                "card_title": card_title,
+                "card_description": card_description,
+                "target_handle": handle,
+                "target_did": did,
+                "error_type": err_type,
+                "error_message": err_message,
+            }
         return {
             "status": "failure",
             "post_uri": None,
@@ -1789,6 +2110,35 @@ def maybe_post_gaza_dispatch_to_bluesky(
             **verification_fields,
         }
     except Exception as exc:  # noqa: BLE001
+        if exact_text_mode and "post_request_started" in locals() and post_request_started:
+            _write_success_receipt(
+                project_root=root,
+                edition_date=edition_date,
+                public_url=str(public_url),
+                post_uri="",
+                post_text=text,
+                card_title=card_title,
+                card_description=card_description,
+                embed_type="",
+                thumb_status="not_attempted",
+                original_thumb_bytes=None,
+                uploaded_thumb_bytes=None,
+                target_handle=handle,
+                target_did=did,
+                approved_text_sha256=str(approved_text_sha256).strip().lower(),
+                status="uncertain",
+                reason="post_request_outcome_uncertain",
+            )
+            return {
+                **result,
+                "status": "uncertain",
+                "reason": "post_outcome_uncertain_reconcile_before_retry",
+                "post_text": text,
+                "card_title": card_title,
+                "card_description": card_description,
+                "target_handle": handle,
+                "target_did": did,
+            }
         return {
             "status": "failure",
             "post_uri": None,
@@ -2152,3 +2502,4 @@ def maybe_post_food_line_dispatch_to_bluesky(
     if allow_publish and not dry_run:
         _write_food_line_post_state(root, edition_date, state_payload)
     return result
+

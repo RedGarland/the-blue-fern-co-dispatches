@@ -399,7 +399,7 @@ def test_pointer_lock_receipt_and_manifest_paths_must_be_distinct(tmp_path):
         )
 
 
-def def test_post_only_allowlist_rejects_general_generation_or_missing_binding(tmp_path):
+def test_post_only_allowlist_rejects_general_generation_or_missing_binding(tmp_path):
     from scripts.run_gaza_immutable_release import validate_post_only_operator_args
 
     with pytest.raises(ValueError, match="outside the immutable post-only allowlist"):

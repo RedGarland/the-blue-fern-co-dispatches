@@ -814,13 +814,22 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
                 project_root=ROOT,
                 force_post=bool(args.force_bluesky_post),
                 allow_publish=not args.dry_run,
+                approved_text_path=args.bluesky_approved_text_file,
+                approved_text_sha256=args.bluesky_approved_text_sha256,
+                expected_handle=args.bluesky_expected_handle,
+                expected_did=args.bluesky_expected_did,
+                live_verification=live,
             )
             result["bluesky_status"] = str(bluesky.get("status") or "skipped")
             result["bluesky_post_uri"] = bluesky.get("post_uri")
             if result["bluesky_status"] == "success":
                 result["ok"] = True
                 result["operator_status"] = "PUBLISHED_AND_POSTED"
-            elif str(bluesky.get("reason")) == "skipped_existing_receipt":
+            elif str(bluesky.get("reason")) in {
+                "skipped_existing_receipt",
+                "skipped_existing_exact_receipt",
+                "skipped_matching_remote_record",
+            }:
                 result["ok"] = True
                 result["operator_status"] = "ALREADY_POSTED"
             elif str(bluesky.get("reason")) == "dry_run":
@@ -983,6 +992,10 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
                 project_root=ROOT,
                 force_post=bool(args.force_bluesky_post),
                 allow_publish=False,
+                approved_text_path=args.bluesky_approved_text_file,
+                approved_text_sha256=args.bluesky_approved_text_sha256,
+                expected_handle=args.bluesky_expected_handle,
+                expected_did=args.bluesky_expected_did,
             )
             result["bluesky_status"] = str(bluesky.get("status") or "skipped")
             result["bluesky_post_uri"] = bluesky.get("post_uri")
@@ -1072,6 +1085,11 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         project_root=ROOT,
         force_post=bool(args.force_bluesky_post),
         allow_publish=True,
+        approved_text_path=args.bluesky_approved_text_file,
+        approved_text_sha256=args.bluesky_approved_text_sha256,
+        expected_handle=args.bluesky_expected_handle,
+        expected_did=args.bluesky_expected_did,
+        live_verification=live,
     )
     result["bluesky_status"] = str(bluesky.get("status") or "skipped")
     result["bluesky_post_uri"] = bluesky.get("post_uri")
@@ -1079,7 +1097,11 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         result["ok"] = True
         result["operator_status"] = "PUBLISHED_AND_POSTED"
         result["next_action"] = "Publication and Bluesky posting completed."
-    elif str(bluesky.get("reason")) == "skipped_existing_receipt":
+    elif str(bluesky.get("reason")) in {
+        "skipped_existing_receipt",
+        "skipped_existing_exact_receipt",
+        "skipped_matching_remote_record",
+    }:
         result["ok"] = True
         result["operator_status"] = "ALREADY_POSTED"
         result["next_action"] = "Publication was already posted to Bluesky."
@@ -1110,6 +1132,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--manual-source-check-only", action="store_true", help="Validate and safely normalize Gaza manual_sources.json, then exit.")
     parser.add_argument("--post-bluesky-only", action="store_true", help="Skip generation/publish and only finish the Bluesky post after live verification.")
     parser.add_argument("--force-bluesky-post", action="store_true", help="Ignore an existing Bluesky receipt and post again.")
+    parser.add_argument("--bluesky-approved-text-file", type=Path, help="Exact UTF-8 Bluesky post text file for an explicitly reviewed text-only post.")
+    parser.add_argument("--bluesky-approved-text-sha256", help="SHA-256 of the exact approved Bluesky text file; required with --bluesky-approved-text-file.")
+    parser.add_argument("--bluesky-expected-handle", help="Expected authenticated Bluesky handle for an exact reviewed post.")
+    parser.add_argument("--bluesky-expected-did", help="Expected authenticated Bluesky DID for an exact reviewed post.")
     parser.add_argument("--force-audio", action="store_true", help="Regenerate dated Gaza audio even when an existing audio file is already present.")
     parser.add_argument("--allow-listing-shrink", action="store_true", help="Allow Gaza homepage recent-editions pruning in dry-run planning.")
     parser.add_argument("--pages-repo", default=str(DEFAULT_PAGES_REPO), help="Local Pages repo path.")

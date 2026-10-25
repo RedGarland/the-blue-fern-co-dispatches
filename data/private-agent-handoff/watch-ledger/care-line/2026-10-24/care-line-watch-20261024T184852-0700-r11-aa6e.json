@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T184852-0700-r11-aa6e",
+  "scheduled_for": "2026-10-24T18:45:22-07:00",
+  "started_at": "2026-10-24T18:48:52-07:00",
+  "completed_at": "2026-10-24T18:50:28.341-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T17:48:08.875-07:00",
+    "end": "2026-10-24T18:50:28.341-07:00",
+    "basis": "Since previous verified hourly Care Line watch completion, also allowing late-reported high-value missed changes while excluding established duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall for U.S. states, DC and territories only. Production Care Line national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Canonical CMS notices page checked first. No October 24 notice present at observation. Three October 23 home-health termination notices (My Families Healthcare CA CCN 758151; 1ST AIDE HOME HEALTH AGENCY CA CCN 559673; Moonlight Home Health Care Inc OH CCN 369006) were previously logged and excluded as duplicates."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "October 24 hospital emergency department temporary closures/suspensions",
+      "October 24 maternity labor-delivery closure or suspension",
+      "October 24 primary-care/urgent-care clinic closures",
+      "October 24 behavioral-health/psychiatric treatment closures",
+      "October 24 ground ambulance service shutdown",
+      "October 24 air ambulance/base closures",
+      "October 24 dialysis facility closures",
+      "October 24 oncology/cancer-center service loss",
+      "October 24 official health-department hospital emergency service suspension/restoration",
+      "October 24 reopened emergency departments",
+      "October 24 rural hospital emergency service closures",
+      "October 24 U.S. territories (PR/Guam/USVI) hospital, clinic or EMS service changes"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T174638-0700-r11-c4e2",
+      "previous_completed_at": "2026-10-24T17:48:08.875-07:00",
+      "verified_read": true,
+      "cross_checks": "Used GitHub comparison to identify intervening 15:42, 16:44, and 17:46 Care Line watch heartbeats; fetched all three, each reported no findings. Previously logged Kingston youth-program announced closure, Vista Medical Center East trauma loss, Dennys River ambulance closure, and October 23 CMS notices excluded."
+    },
+    "exclusions": "Watsonville Community Hospital maternity/NICU consideration lacks enacted or definitive access loss (proposal only). Older air-medical base, dialysis, ED and rural hospital closures, and unrelated non-U.S. results excluded. No newly effective reopening of previously lost essential services established.",
+    "limitations": "Twelve targeted, time-bounded searches returned many older or irrelevant hits. No source retrieval failure observed, but absence of indexed qualifying reports is not proof of absence of service changes nationwide.",
+    "material_degradation": false,
+    "controls": "No approvals, publication, production changes, schedule changes, or disabling."
+  }
+}

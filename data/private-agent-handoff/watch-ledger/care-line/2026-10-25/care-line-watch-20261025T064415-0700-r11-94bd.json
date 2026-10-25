@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T064415-0700-r11-94bd",
+  "scheduled_for": "2026-10-25T06:45:22-07:00",
+  "started_at": "2026-10-25T06:44:15-07:00",
+  "completed_at": "2026-10-25T06:46:04.477-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T05:49:53.405-07:00",
+    "end": "2026-10-25T06:46:04.477-07:00",
+    "basis": "Since previous verified hourly supplementary Care Line watch heartbeat. Late-indexed developments assessed as recall candidates and excluded when already recorded. Production national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States (including DC) and territories: confirmed hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures or suspensions, emergency/rural access loss, ambulance/air-medical/base loss, CMS/CLIA notices, and concrete essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "note": "CMS official listing still begins with the three October 23 HHA terminations already identified: My Families Healthcare (CA 758151), 1ST AIDE HOME HEALTH AGENCY (CA 559673), and Moonlight Home Health Care Inc (OH 369006)."
+    },
+    "additional_targeted_searches": 12,
+    "search_queries": [
+      "hospital emergency department closure suspension reopened October 24 25 2026 local news",
+      "maternity labor delivery birthing unit shutdown closure October 24 25 2026 US",
+      "rural hospital clinic urgent care closed reopening Oct 24 2026",
+      "ambulance service EMS station air medical base closed suspended October 24 25 2026",
+      "dialysis cancer oncology infusion clinic closure October 24 25 2026",
+      "psychiatric behavioral health treatment hospital unit closing October 24 25 2026",
+      "hospital emergency room temporarily closed evacuate flooding fire October 25 2026",
+      "home health CMS termination notice rescission CLIA limitation October 25 2026",
+      "\"Oct. 25, 2026\" \"hospital\" \"closed\" emergency department patients",
+      "\"Oct. 24, 2026\" \"ambulance\" \"closing\" \"service\"",
+      "\"October 24, 2026\" \"clinic\" \"closing\" patients rural",
+      "\"October 25, 2026\" \"hospital\" \"reopened\" \"emergency\""
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261025T054848-0700-r11-5f48",
+      "completed_at": "2026-10-25T05:49:53.405-07:00",
+      "github_verified": true
+    },
+    "exclusions": "CMS October 23 HHA actions and Doylestown Hospital ER, Dennys River Ambulance and similar cases predate this window and are already recorded. Search results were largely historic, theoretical risk/proposals, unrelated content, or non-US (including Oct 24 Nicola Valley Hospital in Canada).",
+    "findings_explanation": "No new qualifying nonduplicate US or territorial healthcare-access change verified in this bounded supplementary recall. Zero results do not imply that no change occurred; indexing and local reporting lag may exist.",
+    "limitations": "Targeted search is non-exhaustive and may miss under-indexed local/territorial notices, especially Sunday early morning; no material retrieval failures observed.",
+    "material_degradation": false,
+    "controls": "Supplementary recall only; authoritative production collector unchanged. No approvals, publication, schedule changes, or task disabling."
+  }
+}

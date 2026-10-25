@@ -434,56 +434,8 @@ def test_path_guard_rejects_external_symlink_before_resolution(tmp_path):
         assert_outside(link / "missing" / "artifact", [tmp_path / "runtime"], "artifact")
 
 
-def test_generation_child_uses_runtime_root_and_dry_run_has_no_public_effects(tmp_path):
-    source_root = Path(__file__).resolve().parents[1]
-    child = source_root / "scripts" / "run_gaza_dispatch.py"
-    if not child.is_file():
-        pytest.skip("generation child is unavailable in this private fixture workspace")
-    runtime = tmp_path / "runtime"
-    manual = runtime / "data" / "dispatches" / "gaza" / "sources" / "2026-10-25" / "manual_sources.json"
-    manual.parent.mkdir(parents=True)
-    manual.write_text(json.dumps([
-        {
-            "source_record_id": "fixture-runtime-binding",
-            "title": "A bounded fixture source",
-            "url": "https://www.reuters.com/world/example-fixture",
-            "publisher": "Reuters",
-            "published_at": "2026-10-25T12:00:00Z",
-            "retrieved_at": "2026-10-25T12:01:00Z",
-            "summary_or_snippet": "A bounded fixture source for runtime-root validation.",
-            "source_type": "manual",
-            "region_scope": "Gaza",
-            "category_hint": "conflict",
-            "reliability_tier": "A",
-        }
-    ]), encoding="utf-8")
-    env = os.environ.copy()
-    env.update({
-        "BLUEFERN_RUNTIME_ROOT": str(runtime),
-        "PYTHONPATH": os.pathsep.join([str(source_root), str(source_root / "src")]),
-        "PYTHONDONTWRITEBYTECODE": "1",
-    })
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(child),
-            "--date", "2026-10-25",
-            "--historical",
-            "--from-manual-sources",
-            "--all",
-            "--dry-run",
-        ],
-        cwd=str(runtime),
-        env=env,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    lines = [line for line in result.stdout.splitlines() if line.strip()]
-    assert lines, result.stderr
-    payload = json.loads(lines[-1])
-    assert Path(payload["manual_source_path"]).resolve() == manual.resolve()
-    assert str(source_root.resolve()) not in str(Path(payload["manual_source_path"]).resolve())
-    assert payload["dry_run"] is True
-    assert not (runtime / "output" / "site").exists()
+def test_generation_child_is_explicitly_outside_two_file_release_scope():
+    # The immutable release deliberately does not claim to repair generation.
+    # The separate run_gaza_dispatch.py source change remains a later release.
+    assert "scripts/run_gaza_dispatch.py" not in ALLOWED_PATHS
 

@@ -27,11 +27,11 @@ def _write_receipt(path: Path, payload: dict[str, Any]) -> None:
     temporary.replace(path)
 
 
-def resolve_release_root(release_root: Path | None, pointer: Path | None) -> Path:
+def resolve_release_root(release_root: Path | None, pointer: Path | None, runtime_root: Path) -> Path:
     if (release_root is None) == (pointer is None):
         raise ValueError("provide exactly one of --release-root or --release-pointer")
     if pointer is not None:
-        pointer = pointer.resolve()
+        pointer = assert_outside(pointer, [runtime_root], "release pointer")
         assert_safe_existing_ancestors(pointer)
         if not pointer.is_file():
             raise ValueError(f"release pointer is missing: {pointer}")
@@ -65,6 +65,7 @@ def launch(
 ) -> dict[str, Any]:
     receipt = assert_outside(receipt, [release_root, runtime_root], "receipt")
     runtime_root, test_root = validate_runtime_root(release_root, runtime_root, test_root)
+    manifest = assert_outside(manifest, [release_root, runtime_root], "manifest")
     payload = verify_release_manifest(manifest, release_root, runtime_root=runtime_root, require_unactivated=True)
     operator = release_root / "scripts" / "run_gaza_daily_operator.py"
     if not operator.is_file():
@@ -121,7 +122,7 @@ def main() -> int:
     args = parser.parse_args()
     if args.operator_args and args.operator_args[0] == "--":
         args.operator_args = args.operator_args[1:]
-    root = resolve_release_root(args.release_root, args.release_pointer)
+    root = resolve_release_root(args.release_root, args.release_pointer, args.runtime_root)
     result = launch(
         manifest=args.manifest,
         release_root=root,

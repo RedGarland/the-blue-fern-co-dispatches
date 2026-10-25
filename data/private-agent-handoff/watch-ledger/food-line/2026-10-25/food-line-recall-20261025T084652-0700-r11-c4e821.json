@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T084652-0700-r11-c4e821",
+  "scheduled_for": "2026-10-25T08:45:54-07:00",
+  "started_at": "2026-10-25T08:46:52-07:00",
+  "completed_at": "2026-10-25T08:49:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T07:45:54-07:00",
+    "end_at": "2026-10-25T08:49:12-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Nominal prior hourly check time to this watch completion; precise prior execution completion could not be independently established from available ledger listing; dates and source publication times evaluated for freshness."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch; production nationwide Food Line collection remains authoritative.",
+    "12 targeted web searches completed without search errors, scoped to four high-value audit miss classes: sole/last/full-service grocery losses (3); storm, flood, fire or outage-canceled emergency distributions (3); abrupt food-pantry/food-bank service closure or major reduction (3); new official SNAP, WIC, or EBT interruptions with immediate food-access impact (3).",
+    "Targeted queries used explicit October 24-25, 2026 dates, site:gov filters for official benefits notices, and incident terminology. Results were checked for U.S. relevance, direct impact, freshness and novelty.",
+    "No qualifying new signal verified in the approximately one-hour observation window. Returned results predominantly concerned prior months/years or routine services, fundraising, general coverage, and other excluded topics.",
+    "Eastport, Maine's sole-store closure report predates this watch by about a month and was excluded as not new (https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food).",
+    "A Kauai hurricane-recovery update dated October 23 contained no verified new cancellation of emergency food distribution within this window (https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/).",
+    "The earlier October 24 pantry closure leads recorded by previous checks remain outside the new-signal threshold; none of the fresh search results supplied a qualifying new verified development.",
+    "No approval, publication, schedule change, automation disablement, or production collection change occurred."
+  ]
+}

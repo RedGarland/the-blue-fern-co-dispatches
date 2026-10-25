@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T005117-0700-r11-84f2a1",
+  "scheduled_for": "2026-10-25T00:45:54-07:00",
+  "started_at": "2026-10-25T00:51:17-07:00",
+  "completed_at": "2026-10-25T00:51:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T23:50:44.599-07:00",
+    "end_at": "2026-10-25T00:51:59-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous persisted heartbeat completion (2026-10-24 23:50:44.599 PDT) through current bounded check; retrieval can surface older stories."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production nationwide Food Line collection remains authoritative.",
+    "12 targeted web searches completed (all fast); covered only/sole/last grocery-store loss, storm/flood/outage-canceled emergency distributions, abrupt pantry/food-bank closure or food shortage, and official SNAP/WIC/EBT benefit interruptions.",
+    "No new in-window qualifying U.S. disruption was verified. Search results predominantly referenced older grocery fires/closures (including Spencer, NY, September 14), past distribution impacts and SNAP/WIC notices from 2025 or mid-2026.",
+    "Older and previous-run pantry leads (including October 24 Dallas and Clearwater pantry closures) were not counted as new without new dated evidence.",
+    "No source retrieval/search failures occurred within this bounded search; search engine results are not exhaustive.",
+    "Excluded resource guides, promotion, replacement-benefit guidance without new immediate benefit access interruption, generic funding/inflation discussions, out-of-country incidents, duplicates, and older coverage.",
+    "No approval, publication, production collection, task schedule, or automation state changes."
+  ]
+}

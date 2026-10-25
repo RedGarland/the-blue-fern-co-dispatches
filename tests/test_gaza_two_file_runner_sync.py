@@ -9,6 +9,7 @@ from pathlib import Path
 
 SCRIPT_PATH = Path(__file__).resolve().parents[1] / "scripts" / "sync_gaza_two_file_runner.ps1"
 SCRIPT = SCRIPT_PATH.read_text(encoding="utf-8")
+DESIGN_DOC = (Path(__file__).resolve().parents[1] / "docs" / "gaza-two-file-runner-sync.md").read_text(encoding="utf-8")
 OPERATOR_BLOB = "9ab8b65401805aec00ded19ed1939bfe949f9ac3"
 BLUESKY_BLOB = "aa01f332e2c017a8d003a6bd1a985a1273ef5626"
 OLD_HEAD = "f" * 40
@@ -49,7 +50,7 @@ def test_dirty_and_branch_guards_are_fail_closed():
     assert 'Target branch mismatch' in SCRIPT
     assert 'Approved source paths are already dirty' in SCRIPT
     assert 'Target HEAD is not an ancestor' in SCRIPT
-    assert 'Target dirty-state paths changed before apply' in SCRIPT
+    assert 'Target dirty-state paths, statuses, or contents changed before apply' in SCRIPT
     assert 'Preserve leading porcelain status whitespace' in SCRIPT
 
 
@@ -67,6 +68,14 @@ def test_no_destructive_or_public_side_effect_commands():
     assert 'public_side_effects = $false' in SCRIPT
     assert 'publication_triggered = $false' in SCRIPT
     assert 'collection_triggered = $false' in SCRIPT
+
+
+def test_overlay_design_binds_runtime_root_and_exact_tree_manifest():
+    assert 'bluefern.gaza_immutable_release.v1' in DESIGN_DOC
+    assert 'BLUEFERN_RUNTIME_ROOT' in DESIGN_DOC
+    assert 'unchanged_entries_verified' in DESIGN_DOC
+    assert 'atomic' in DESIGN_DOC.lower()
+    assert '"activation": "unactivated"' in DESIGN_DOC
 
 
 def _powershell():
@@ -141,6 +150,10 @@ def _run_controller(tmp_path: Path, mode: str, expected_head: str, *, operator_b
         pytest.skip("PowerShell is required for behavior-level controller tests")
     target = tmp_path / "gaza-runner"
     (target / ".git").mkdir(parents=True)
+    for relative in ("scripts/run_gaza_daily_operator.py", "src/bluefern_dispatches/bluesky_post.py"):
+        path = target / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"# fixture: {relative}\n", encoding="utf-8")
     report = tmp_path / "report.json"
     fake_bin = _fake_git_bin(tmp_path)
     env = os.environ.copy()
@@ -187,6 +200,193 @@ def test_actual_old_baseline_fails_closed_on_full_source_divergence(tmp_path):
     assert len(report["incoming_paths"]) == 23
     assert "scope" in report["error"].lower()
     assert report["production_state_mutated"] is False
+
+
+def _git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=str(cwd),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+    if check and result.returncode != 0:
+        if "NtCreateDirectoryObject" in result.stderr:
+            import pytest
+
+            pytest.skip("Windows Git local transport is unavailable in this restricted test session")
+        raise AssertionError(f"git {' '.join(args)} failed: {result.stderr}\n{result.stdout}")
+    return result
+
+
+def _real_git_fixture(tmp_path: Path):
+    """Build a real bare remote and target checkout for apply/rollback tests."""
+    bare = tmp_path / "remote.git"
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    backup = tmp_path / "backups"
+    _git(tmp_path, "init", str(source))
+    _git(source, "config", "user.email", "tests@example.invalid")
+    _git(source, "config", "user.name", "Gaza sync tests")
+    _git(source, "checkout", "-b", "add/pages-repo-default")
+    paths = {
+        "scripts/run_gaza_daily_operator.py": "baseline operator\n",
+        "src/bluefern_dispatches/bluesky_post.py": "baseline bluesky\n",
+        "README.md": "unchanged tree entry\n",
+    }
+    for relative, content in paths.items():
+        path = source / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+    _git(source, "add", ".")
+    _git(source, "commit", "-m", "baseline")
+    baseline = _git(source, "rev-parse", "HEAD").stdout.strip()
+
+    (source / "scripts/run_gaza_daily_operator.py").write_text("forward operator\n", encoding="utf-8")
+    (source / "src/bluefern_dispatches/bluesky_post.py").write_text("forward bluesky\n", encoding="utf-8")
+    _git(source, "add", ".")
+    _git(source, "commit", "-m", "reviewed forward pair")
+    forward = _git(source, "rev-parse", "HEAD").stdout.strip()
+    # A local bare clone avoids transport helpers and keeps this test fully
+    # offline while still exercising a real fetch/merge remote.
+    source_uri = source.as_uri()
+    _git(tmp_path, "clone", "--bare", source_uri, str(bare))
+    _git(tmp_path, "clone", "--branch", "add/pages-repo-default", str(bare), str(target))
+    _git(target, "config", "user.email", "tests@example.invalid")
+    _git(target, "config", "user.name", "Gaza sync tests")
+    _git(target, "reset", "--hard", baseline)
+    operator_blob = _git(source, "rev-parse", f"{forward}:scripts/run_gaza_daily_operator.py").stdout.strip()
+    bluesky_blob = _git(source, "rev-parse", f"{forward}:src/bluefern_dispatches/bluesky_post.py").stdout.strip()
+    return {
+        "bare": bare,
+        "source": source,
+        "target": target,
+        "backup": backup,
+        "baseline": baseline,
+        "forward": forward,
+        "operator_blob": operator_blob,
+        "bluesky_blob": bluesky_blob,
+    }
+
+
+def _run_real_controller(fixture, *, expected_head: str, operator_blob: str, bluesky_blob: str, apply: bool):
+    powershell = _powershell()
+    if not powershell:
+        import pytest
+
+        pytest.skip("PowerShell is required for behavior-level controller tests")
+    report = fixture["target"].parent / ("apply-report.json" if apply else "plan-report.json")
+    args = [
+        powershell,
+        "-NoProfile",
+        "-File",
+        str(SCRIPT_PATH),
+        "-ExpectedProtectedHead",
+        expected_head,
+        "-ExpectedOperatorBlob",
+        operator_blob,
+        "-ExpectedBlueskyBlob",
+        bluesky_blob,
+        "-TargetRoot",
+        str(fixture["target"]),
+        "-BackupRoot",
+        str(fixture["backup"]),
+        "-ReportPath",
+        str(report),
+    ]
+    if apply:
+        args.append("-Apply")
+    result = subprocess.run(args, capture_output=True, text=True, check=False)
+    assert report.exists(), result.stdout + result.stderr
+    return result, json.loads(report.read_text(encoding="utf-8-sig"))
+
+
+def test_real_git_apply_preserves_backup_byte_integrity(tmp_path):
+    fixture = _real_git_fixture(tmp_path)
+    result, report = _run_real_controller(
+        fixture,
+        expected_head=fixture["forward"],
+        operator_blob=fixture["operator_blob"],
+        bluesky_blob=fixture["bluesky_blob"],
+        apply=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert report["result"] == "APPLY_COMPLETE"
+    assert report["production_state_mutated"] is True
+    assert report["production_state_mutation_status"] == "mutated_verified"
+    assert _git(fixture["target"], "rev-parse", "HEAD").stdout.strip() == fixture["forward"]
+    manifest = json.loads(Path(report["backup_manifest"]).read_text(encoding="utf-8-sig"))
+    assert len(manifest["entries"]) == 2
+    for entry in manifest["entries"]:
+        assert entry["source_file"] == entry["backup_file"]
+        backup_path = Path(entry["backup_path"])
+        assert backup_path.is_file()
+        assert backup_path.read_bytes() in {b"baseline operator\n", b"baseline bluesky\n"}
+
+
+def test_real_git_apply_failure_reports_no_mutation_when_backup_source_missing(tmp_path):
+    fixture = _real_git_fixture(tmp_path)
+    (fixture["target"] / "src/bluefern_dispatches/bluesky_post.py").unlink()
+    result, report = _run_real_controller(
+        fixture,
+        expected_head=fixture["forward"],
+        operator_blob=fixture["operator_blob"],
+        bluesky_blob=fixture["bluesky_blob"],
+        apply=True,
+    )
+    assert result.returncode == 2
+    assert report["result"] == "BLOCKED"
+    assert report["production_state_mutated"] is False
+    assert report["production_state_mutation_status"] == "not_attempted"
+    assert _git(fixture["target"], "rev-parse", "HEAD").stdout.strip() == fixture["baseline"]
+
+
+def test_real_git_descendant_rollback_is_guarded_and_restores_reviewed_pair(tmp_path):
+    fixture = _real_git_fixture(tmp_path)
+    source = fixture["source"]
+    (source / "scripts/run_gaza_daily_operator.py").write_text("rollback operator\n", encoding="utf-8")
+    (source / "src/bluefern_dispatches/bluesky_post.py").write_text("rollback bluesky\n", encoding="utf-8")
+    _git(source, "add", ".")
+    _git(source, "commit", "-m", "reviewed descendant rollback")
+    rollback = _git(source, "rev-parse", "HEAD").stdout.strip()
+    rollback_operator = _git(source, "rev-parse", f"{rollback}:scripts/run_gaza_daily_operator.py").stdout.strip()
+    rollback_bluesky = _git(source, "rev-parse", f"{rollback}:src/bluefern_dispatches/bluesky_post.py").stdout.strip()
+    _git(bare, "fetch", source.as_uri(), "add/pages-repo-default")
+    _git(bare, "update-ref", "refs/heads/add/pages-repo-default", rollback)
+    _git(fixture["target"], "merge", "--ff-only", fixture["forward"])
+    result, report = _run_real_controller(
+        fixture,
+        expected_head=rollback,
+        operator_blob=rollback_operator,
+        bluesky_blob=rollback_bluesky,
+        apply=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert report["result"] == "APPLY_COMPLETE"
+    assert _git(fixture["target"], "rev-parse", "HEAD").stdout.strip() == rollback
+    assert (fixture["target"] / "scripts/run_gaza_daily_operator.py").read_text() == "rollback operator\n"
+
+
+def test_real_git_non_descendant_rollback_is_blocked_without_mutation(tmp_path):
+    fixture = _real_git_fixture(tmp_path)
+    target = fixture["target"]
+    _git(target, "merge", "--ff-only", fixture["forward"])
+    # Move the remote branch back only in this disposable repository. The
+    # target remains at the reviewed forward commit, so the requested old head
+    # is not a fast-forward destination.
+    _git(fixture["bare"], "update-ref", "refs/heads/add/pages-repo-default", fixture["baseline"])
+    result, report = _run_real_controller(
+        fixture,
+        expected_head=fixture["baseline"],
+        operator_blob=_git(fixture["source"], "rev-parse", f"{fixture['baseline']}:scripts/run_gaza_daily_operator.py").stdout.strip(),
+        bluesky_blob=_git(fixture["source"], "rev-parse", f"{fixture['baseline']}:src/bluefern_dispatches/bluesky_post.py").stdout.strip(),
+        apply=True,
+    )
+    assert result.returncode == 2
+    assert report["result"] == "BLOCKED"
+    assert report["production_state_mutated"] is False
+    assert _git(target, "rev-parse", "HEAD").stdout.strip() == fixture["forward"]
 
 
 def test_first_porcelain_dirty_entry_is_not_truncated(tmp_path):

@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T015026-0700-r11-d443fc11",
+  "scheduled_for": "2026-10-25T01:45:54-07:00",
+  "started_at": "2026-10-25T01:50:26-07:00",
+  "completed_at": "2026-10-25T08:52:18.178Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T00:51:59-07:00",
+    "end_at": "2026-10-25T08:52:18.178Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last persisted hourly watch heartbeat completion to this execution; older articles returned by search indexing were checked for in-window newness."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value Food Line recall watch only; production nationwide collection is authoritative.",
+    "12 targeted web searches (all fast, recency constrained to two days) completed across four targeted miss classes: sole/last/full-service grocery loss, storm/flood/fire/outage canceled emergency distribution, abrupt pantry/food-bank service reduction, and immediate official SNAP/WIC/EBT disruption.",
+    "No newly published, in-window qualifying U.S. food-access disruption was verified. Results predominantly returned older incidents and unrelated stories; search indexing is incomplete and recency filters may retrieve historical material.",
+    "September Spencer NY only-grocery store fire, October 7 Alabama Prodisee distribution cancellation, and older Ruby's Pantry shutdown were excluded as not new.",
+    "October 24 Dallas Project 75216 and Clearwater pantry closure leads were already mentioned in prior persisted hourly records; no newly dated evidence established a new event after the last check, so not duplicated.",
+    "No direct source fetch failures or blocked verification in this run; web search and GitHub ledger reads completed.",
+    "No approvals, publication, changes to primary Food Line collection, task schedules, or automation state."
+  ]
+}

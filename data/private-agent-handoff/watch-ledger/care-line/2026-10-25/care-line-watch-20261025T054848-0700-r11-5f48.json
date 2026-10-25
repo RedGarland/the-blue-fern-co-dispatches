@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T054848-0700-r11-5f48",
+  "scheduled_for": "2026-10-25T05:45:22-07:00",
+  "started_at": "2026-10-25T05:48:48-07:00",
+  "completed_at": "2026-10-25T05:49:53.405-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T04:44:32.210-07:00",
+    "end": "2026-10-25T05:49:53.405-07:00",
+    "basis": "Since previous verified supplementary hourly Care Line heartbeat; late-indexed events evaluated against prior watch records. Production national Care Line collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, District of Columbia and territories. Supplementary recall of concrete closures, suspensions, service losses, CMS and CLIA access-risk actions, and essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices": 0,
+      "note": "Official CMS list remains headed by the three October 23 Medicare home-health termination notices already identified in earlier hourly watch records (My Families Healthcare CA 758151, 1ST AIDE HOME HEALTH AGENCY CA 559673, Moonlight Home Health Care Inc OH 369006)."
+    },
+    "additional_targeted_searches": 12,
+    "search_queries": [
+      "\"October 25, 2026\" \"hospital\" \"emergency\" \"closed\" United States",
+      "\"October 25, 2026\" maternity labor delivery hospital suspends closes",
+      "\"October 25, 2026\" \"ambulance\" \"service\" closing suspended",
+      "\"October 24, 2026\" rural hospital emergency department closes",
+      "\"October 24, 2026\" psychiatric behavioral health unit closing suspended",
+      "\"October 24, 2026\" dialysis oncology clinic closed services suspended",
+      "site:apnews.com hospital clinic \"October 24, 2026\" shut closed emergency",
+      "site:beckershospitalreview.com \"October 24, 2026\" closure suspension emergency maternity",
+      "\"Oct 24, 2026\" \"urgent care\" \"closed\" clinic patients",
+      "\"Oct 24, 2026\" \"reopened\" emergency department hospital after closure",
+      "\"October 24, 2026\" \"air ambulance\" base closure service suspended",
+      "\"Oct 24, 2026\" Puerto Rico Guam USVI hospital emergency service suspension closure"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261025T044233-0700-r11-6b92",
+      "completed_at": "2026-10-25T04:44:32.210-07:00",
+      "github_verified": true
+    },
+    "exclusions": "Search returns were historical events, general healthcare workforce/rural-hospital risk analysis, proposals, non-US items, unrelated everyday facility hours or accident reporting, and previously recorded CMS notices. No verified new essential-service restoration or concrete loss within this watch's recall criteria.",
+    "findings_explanation": "No newly identified, qualifying, nonduplicate U.S. or territorial healthcare-access change substantiated by official CMS index and 12 additional targeted searches. Zero results do not establish that none occurred; targeted search and indexing recall are inherently limited.",
+    "limitations": "Potential local-reporting and search-index lag, weak recall from broad searches, and uncertain effective dates for inaccessible items. No material source/search execution failure observed.",
+    "material_degradation": false,
+    "controls": "Supplementary watch only; production collector authoritative; no review approval, publication, schedule changes or task disabling."
+  }
+}

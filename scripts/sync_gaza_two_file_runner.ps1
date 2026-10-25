@@ -92,6 +92,15 @@ function Get-GitBlob {
     return (Invoke-Git -Arguments @("rev-parse", "${ExpectedProtectedHead}:$Path")).Output
 }
 
+function Get-LiveRemoteHead {
+    $result = Invoke-Git -Arguments @("ls-remote", "--heads", "origin", "refs/heads/$TargetBranch")
+    $line = @($result.Output -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -First 1)
+    if (-not $line) { throw "Live remote branch is unavailable: origin/$TargetBranch" }
+    $sha = (($line -split "\s+", 2)[0]).Trim()
+    if ($sha -notmatch '^[0-9a-f]{40}$') { throw "Live remote returned an invalid branch SHA: $line" }
+    return $sha
+}
+
 function Get-Sha256 {
     param([Parameter(Mandatory = $true)][string]$Path)
     $sha = [Security.Cryptography.SHA256]::Create()
@@ -148,7 +157,16 @@ function Write-JsonReport {
         $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
         $script:ReportPath = Join-Path $env:TEMP "gaza-two-file-sync-$stamp.json"
     }
-    Assert-SafeArtifactPath -Path $ReportPath -Label "ReportPath"
+    try {
+        Assert-SafeArtifactPath -Path $ReportPath -Label "ReportPath"
+    }
+    catch {
+        $rejected = $ReportPath
+        $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+        $script:ReportPath = Join-Path $env:TEMP "gaza-two-file-sync-rejected-path-$stamp-$([guid]::NewGuid().ToString('N')).json"
+        $Report.report_path_rejected = $rejected
+        if (-not $Report.error) { $Report.error = $_.Exception.Message }
+    }
     $parent = Split-Path -Parent $ReportPath
     if ($parent) { New-Item -ItemType Directory -Force -Path $parent | Out-Null }
     $Report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $ReportPath -Encoding UTF8
@@ -171,6 +189,8 @@ $report = [ordered]@{
     before_status = $null
     before_content = $null
     after_status = $null
+    after_content = $null
+    report_path_rejected = $null
     backup_manifest = $null
     result = "BLOCKED"
     production_state_mutated = $false
@@ -304,7 +324,7 @@ try {
             ($lateStatus.Content | ConvertTo-Json -Compress) -ne ($status.Content | ConvertTo-Json -Compress)) {
             throw "Target dirty-state paths, statuses, or contents changed before apply."
         }
-        if ((Invoke-Git -Arguments @("rev-parse", "origin/$TargetBranch")).Output -ne $ExpectedProtectedHead) { throw "Protected head changed before apply." }
+        if ((Get-LiveRemoteHead) -ne $ExpectedProtectedHead) { throw "Protected head changed on the live remote before apply." }
 
         $report.merge_attempted = $true
         $null = Invoke-Git -Arguments @("merge", "--ff-only", $ExpectedProtectedHead)
@@ -321,6 +341,7 @@ try {
         }
         $afterStatus = Get-StatusSnapshot
         $report.after_status = $afterStatus.Raw
+        $report.after_content = $afterStatus.Content
         $unexpected = @($afterStatus.Paths | Where-Object { $_ -notin $status.Paths })
         if ($unexpected.Count -gt 0) { throw "Unexpected post-apply dirty paths: $($unexpected -join ', ')" }
         $report.after_head = $afterHead

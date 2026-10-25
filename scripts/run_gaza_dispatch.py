@@ -13,8 +13,15 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 
-ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "src"
+SOURCE_ROOT = Path(__file__).resolve().parents[1]
+_runtime_root_value = os.environ.get("BLUEFERN_RUNTIME_ROOT", "").strip()
+RUNTIME_ROOT = Path(_runtime_root_value).expanduser().resolve() if _runtime_root_value else SOURCE_ROOT
+if _runtime_root_value and not RUNTIME_ROOT.is_dir():
+    raise RuntimeError(f"BLUEFERN_RUNTIME_ROOT is not an existing directory: {RUNTIME_ROOT}")
+ROOT = RUNTIME_ROOT
+SRC = SOURCE_ROOT / "src"
+if str(SOURCE_ROOT) not in sys.path:
+    sys.path.insert(0, str(SOURCE_ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 

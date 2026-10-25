@@ -249,7 +249,9 @@ def _load_receipt_for_edition_any_status(project_root: Path, edition_date: str) 
         payload = json.loads(path.read_text(encoding="utf-8"))
     except Exception:  # noqa: BLE001
         return {"_receipt_error": "local_post_receipt_unreadable"}
-    if not isinstance(payload, dict):
+    if not isinstance(payload, dict) or not payload:
+        return {"_receipt_error": "local_post_receipt_invalid"}
+    if not str(payload.get("status") or "").strip():
         return {"_receipt_error": "local_post_receipt_invalid"}
     return payload
 
@@ -270,24 +272,48 @@ def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str)
         return {"status": "uncertain", "reason": "remote_duplicate_check_failed", "error_type": type(exc).__name__}
     if not isinstance(payload, dict) or not isinstance(payload.get("records"), list):
         return {"status": "uncertain", "reason": "remote_duplicate_response_invalid"}
+    malformed = False
+    matches: list[dict[str, Any]] = []
+    conflicts: list[dict[str, Any]] = []
+    approved_text_hash = hashlib.sha256(post_text.encode("utf-8")).hexdigest()
     for row in payload["records"]:
         if not isinstance(row, dict):
+            malformed = True
             continue
         value = row.get("value") if isinstance(row.get("value"), dict) else row.get("record")
-        if not isinstance(value, dict):
+        if not isinstance(value, dict) or not isinstance(value.get("text"), str):
+            malformed = True
             continue
-        record_text = str(value.get("text") or "")
+        record_text = value["text"]
+        post_uri = str(row.get("uri") or "").strip()
+        if not post_uri.startswith(f"at://{repo}/app.bsky.feed.post/"):
+            malformed = True
+            continue
         embed = value.get("embed") if isinstance(value.get("embed"), dict) else {}
         external = embed.get("external") if isinstance(embed.get("external"), dict) else {}
         embedded_url = str(external.get("uri") or "").strip()
         embedded_url_base = _public_url_base(embedded_url).rstrip("/") if embedded_url else ""
-        post_uri = str(row.get("uri") or "").strip() or None
-        if record_text == post_text:
-            return {"status": "match", "post_uri": post_uri, "post_cid": row.get("cid")}
-        if public_url_base in record_text or embedded_url_base == public_url_base:
-            return {"status": "conflict", "post_uri": post_uri, "post_cid": row.get("cid")}
+        same_text = record_text == post_text
+        plain_shape = (
+            value.get("$type") in {None, "app.bsky.feed.post"}
+            and "embed" not in value
+            and "reply" not in value
+            and hashlib.sha256(record_text.encode("utf-8")).hexdigest() == approved_text_hash
+        )
+        item = {"post_uri": post_uri, "post_cid": row.get("cid")}
+        if same_text and plain_shape:
+            matches.append(item)
+        elif same_text or public_url_base in record_text or embedded_url_base == public_url_base:
+            conflicts.append(item)
     if str(payload.get("cursor") or "").strip():
         return {"status": "uncertain", "reason": "remote_duplicate_scan_incomplete"}
+    if malformed:
+        return {"status": "uncertain", "reason": "remote_duplicate_record_invalid"}
+    if conflicts or len(matches) > 1:
+        item = (conflicts or matches)[0]
+        return {"status": "conflict", **item}
+    if matches:
+        return {"status": "match", **matches[0]}
     return {"status": "none"}
 
 
@@ -2009,7 +2035,45 @@ def maybe_post_gaza_dispatch_to_bluesky(
         payload = json.loads(body) if body else {}
         post_uri = str(payload.get("uri") or "").strip() if isinstance(payload, dict) else ""
         post_cid = str(payload.get("cid") or "").strip() if isinstance(payload, dict) else ""
-        if not post_uri:
+        expected_post_uri_prefix = f"at://{did}/app.bsky.feed.post/"
+        exact_response_valid = (
+            bool(post_uri)
+            and post_uri.startswith(expected_post_uri_prefix)
+            and bool(post_uri[len(expected_post_uri_prefix) :].strip())
+            and bool(post_cid)
+        )
+        if not post_uri or (exact_text_mode and not exact_response_valid):
+            if exact_text_mode:
+                _write_success_receipt(
+                    project_root=root,
+                    edition_date=edition_date,
+                    public_url=str(public_url),
+                    post_uri="",
+                    post_text=text,
+                    card_title=card_title,
+                    card_description=card_description,
+                    embed_type="",
+                    thumb_status="not_attempted",
+                    original_thumb_bytes=None,
+                    uploaded_thumb_bytes=None,
+                    post_cid=post_cid or None,
+                    target_handle=handle,
+                    target_did=did,
+                    approved_text_sha256=str(approved_text_sha256).strip().lower(),
+                    status="uncertain",
+                    reason="post_outcome_uncertain_reconcile_before_retry",
+                )
+                return {
+                    **result,
+                    "status": "uncertain",
+                    "post_uri": None,
+                    "reason": "post_outcome_uncertain_reconcile_before_retry",
+                    "post_text": text,
+                    "card_title": card_title,
+                    "card_description": card_description,
+                    "error_type": "InvalidCreateRecordResponse",
+                    "error_message": "createRecord response did not contain an expected post URI and CID",
+                }
             return {
                 "status": "failure",
                 "post_uri": None,

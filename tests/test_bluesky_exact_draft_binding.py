@@ -138,6 +138,175 @@ def test_missing_local_edition_uses_verified_public_recovery_and_posts_text_only
     assert payload["approved_text_sha256"] == TEXT_SHA256
 
 
+def test_missing_post_uri_is_uncertain_and_blocks_retry(monkeypatch, tmp_path):
+    _configure_env(monkeypatch)
+    _session(monkeypatch)
+    calls = {"records": 0, "create": 0}
+
+    def fake_urlopen(req, timeout=20.0):
+        if "listRecords" in req.full_url:
+            calls["records"] += 1
+            return FakeResponse({"records": []})
+        calls["create"] += 1
+        return FakeResponse({"cid": "bafy-no-uri"})
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", fake_urlopen)
+    kwargs = _kwargs(tmp_path)
+    first = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**kwargs)
+
+    assert first["status"] == "uncertain"
+    assert first["reason"] == "post_outcome_uncertain_reconcile_before_retry"
+    assert first["error_type"] == "InvalidCreateRecordResponse"
+    receipt = tmp_path / "data" / "dispatches" / "gaza" / "editions" / EDITION_DATE / "bluesky_post_receipt.json"
+    payload = json.loads(receipt.read_text(encoding="utf-8"))
+    assert payload["status"] == "uncertain"
+    assert payload["reason"] == "post_outcome_uncertain_reconcile_before_retry"
+    assert payload["post_cid"] == "bafy-no-uri"
+
+    second = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**kwargs)
+    assert second["status"] == "blocked"
+    assert second["reason"] == "post_outcome_uncertain_reconcile_before_retry"
+    assert calls == {"records": 1, "create": 1}
+
+
+def test_wrong_create_record_identity_is_uncertain_and_blocks_retry(monkeypatch, tmp_path):
+    _configure_env(monkeypatch)
+    _session(monkeypatch)
+    calls = {"records": 0, "create": 0}
+
+    def fake_urlopen(req, timeout=20.0):
+        if "listRecords" in req.full_url:
+            calls["records"] += 1
+            return FakeResponse({"records": []})
+        calls["create"] += 1
+        return FakeResponse({"uri": "at://did:plc:wrong/app.bsky.feed.like/nope"})
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", fake_urlopen)
+    kwargs = _kwargs(tmp_path)
+    first = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**kwargs)
+
+    assert first["status"] == "uncertain"
+    assert first["reason"] == "post_outcome_uncertain_reconcile_before_retry"
+    receipt = tmp_path / "data" / "dispatches" / "gaza" / "editions" / EDITION_DATE / "bluesky_post_receipt.json"
+    assert json.loads(receipt.read_text(encoding="utf-8"))["status"] == "uncertain"
+    second = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**kwargs)
+    assert second["status"] == "blocked"
+    assert calls == {"records": 1, "create": 1}
+
+
+def test_expected_create_record_uri_without_cid_is_uncertain(monkeypatch, tmp_path):
+    _configure_env(monkeypatch)
+    _session(monkeypatch)
+
+    def fake_urlopen(req, timeout=20.0):
+        if "listRecords" in req.full_url:
+            return FakeResponse({"records": []})
+        return FakeResponse({"uri": f"at://{DID}/app.bsky.feed.post/no-cid"})
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", fake_urlopen)
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**_kwargs(tmp_path))
+
+    assert result["status"] == "uncertain"
+    assert result["reason"] == "post_outcome_uncertain_reconcile_before_retry"
+
+
+def test_empty_local_receipt_blocks_before_new_post(monkeypatch, tmp_path):
+    _configure_env(monkeypatch)
+    receipt = tmp_path / "data" / "dispatches" / "gaza" / "editions" / EDITION_DATE / "bluesky_post_receipt.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text("{}", encoding="utf-8")
+    called = {"session": 0}
+    monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: called.__setitem__("session", 1))
+
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**_kwargs(tmp_path))
+
+    assert result["status"] == "blocked"
+    assert result["reason"] == "local_post_receipt_invalid"
+    assert called["session"] == 0
+
+
+def test_malformed_remote_record_blocks_reconciliation(monkeypatch, tmp_path):
+    _configure_env(monkeypatch)
+    _session(monkeypatch)
+
+    monkeypatch.setattr(
+        bluesky_post.request,
+        "urlopen",
+        lambda req, timeout=20.0: FakeResponse({"records": [{"uri": "at://bad" , "value": "not-a-record"}]}),
+    )
+
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**_kwargs(tmp_path))
+
+    assert result["status"] == "blocked"
+    assert result["reason"] == "remote_duplicate_record_invalid"
+
+
+def test_remote_exact_text_with_embed_or_reply_is_conflict(monkeypatch, tmp_path):
+    _configure_env(monkeypatch)
+    _session(monkeypatch)
+
+    monkeypatch.setattr(
+        bluesky_post.request,
+        "urlopen",
+        lambda req, timeout=20.0: FakeResponse(
+            {
+                "records": [
+                    {
+                        "uri": f"at://{DID}/app.bsky.feed.post/embedded",
+                        "value": {"text": TEXT, "embed": {"external": {"uri": PUBLIC_URL}}, "reply": {"root": {}}},
+                    }
+                ]
+            }
+        ),
+    )
+
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**_kwargs(tmp_path))
+
+    assert result["status"] == "blocked"
+    assert result["reason"] == "ambiguous_remote_duplicate"
+
+
+def test_remote_match_does_not_mask_later_conflict(monkeypatch, tmp_path):
+    _configure_env(monkeypatch)
+    _session(monkeypatch)
+
+    monkeypatch.setattr(
+        bluesky_post.request,
+        "urlopen",
+        lambda req, timeout=20.0: FakeResponse(
+            {
+                "records": [
+                    {"uri": f"at://{DID}/app.bsky.feed.post/match", "value": {"text": TEXT}},
+                    {"uri": f"at://{DID}/app.bsky.feed.post/conflict", "value": {"text": "Different copy " + PUBLIC_URL}},
+                ]
+            }
+        ),
+    )
+
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**_kwargs(tmp_path))
+
+    assert result["status"] == "blocked"
+    assert result["reason"] == "ambiguous_remote_duplicate"
+
+
+def test_remote_match_with_unexamined_cursor_is_uncertain(monkeypatch, tmp_path):
+    _configure_env(monkeypatch)
+    _session(monkeypatch)
+
+    monkeypatch.setattr(
+        bluesky_post.request,
+        "urlopen",
+        lambda req, timeout=20.0: FakeResponse(
+            {"records": [{"uri": f"at://{DID}/app.bsky.feed.post/match", "value": {"text": TEXT}}], "cursor": "next"}
+        ),
+    )
+
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**_kwargs(tmp_path))
+
+    assert result["status"] == "blocked"
+    assert result["reason"] == "remote_duplicate_scan_incomplete"
+
+
 def test_exact_draft_skips_matching_remote_post_without_create_record(monkeypatch, tmp_path):
     _configure_env(monkeypatch)
     _session(monkeypatch)
@@ -146,7 +315,7 @@ def test_exact_draft_skips_matching_remote_post_without_create_record(monkeypatc
     def fake_urlopen(req, timeout=20.0):
         called.append(req.full_url)
         assert "listRecords" in req.full_url
-        return FakeResponse({"records": [{"uri": "at://existing", "cid": "bafy-existing", "value": {"text": TEXT}}]})
+        return FakeResponse({"records": [{"uri": f"at://{DID}/app.bsky.feed.post/existing", "cid": "bafy-existing", "value": {"text": TEXT}}]})
 
     monkeypatch.setattr(bluesky_post.request, "urlopen", fake_urlopen)
 
@@ -154,7 +323,7 @@ def test_exact_draft_skips_matching_remote_post_without_create_record(monkeypatc
 
     assert result["status"] == "skipped"
     assert result["reason"] == "skipped_matching_remote_record"
-    assert result["post_uri"] == "at://existing"
+    assert result["post_uri"] == f"at://{DID}/app.bsky.feed.post/existing"
     assert len(called) == 1
 
 
@@ -170,7 +339,7 @@ def test_exact_draft_blocks_different_content_for_same_public_url(monkeypatch, t
             {
                 "records": [
                     {
-                        "uri": "at://different",
+                        "uri": f"at://{DID}/app.bsky.feed.post/different",
                         "value": {"text": "Different approved copy\n" + PUBLIC_URL},
                     }
                 ]
@@ -195,7 +364,7 @@ def test_exact_draft_blocks_mismatched_local_receipt_before_session(monkeypatch,
             {
                 "status": "success",
                 "public_url": PUBLIC_URL,
-                "post_uri": "at://existing",
+                "post_uri": f"at://{DID}/app.bsky.feed.post/existing",
                 "post_text_sha256": "0" * 64,
                 "target_did": DID,
             }

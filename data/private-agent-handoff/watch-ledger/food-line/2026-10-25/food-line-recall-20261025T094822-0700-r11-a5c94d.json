@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T094822-0700-r11-a5c94d",
+  "scheduled_for": "2026-10-25T09:45:54-07:00",
+  "started_at": "2026-10-25T09:48:22-07:00",
+  "completed_at": "2026-10-25T09:50:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T08:49:12-07:00",
+    "end_at": "2026-10-25T09:50:01-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified Food Line recall heartbeat completion through this run's completion; fresh local/agency signals sought and older indexed results excluded."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded Food Line recall only; production nationwide Food Line collector remains authoritative.",
+    "12 targeted web searches completed (3 sole/last/full-service grocer loss; 3 storm/flood/fire/outage distribution cancellations; 3 pantry/food bank abrupt closures or service reductions; 3 SNAP/WIC/EBT interruptions from official sources). No search failures observed.",
+    "Explicit October 24–25, 2026 search terms and 2-day search recency were applied; source published/event dates were checked before treating results as new. Indexed historical hits did not establish events within this one-hour window.",
+    "No new qualifying, independently verifiable U.S. food-access disruption identified since the prior hourly check. Returned hits centered on older incidents, routine food-bank distributions, donations, guides, or prospective/historical benefit worries.",
+    "Previously surfaced pantry-closure leads and older sole-grocery-loss incidents are not newly established within this search window; excluded as stale/duplicates.",
+    "The October 25 'Food Bank distribution this week' article is a routine listing, not a cancellation (https://www.fredericksburgfreepress.com/2026/10/25/food-bank-distribution-this-week-76/). The October 25 Vergennes teen-pantry report documents an existing service, not a closure (https://vtdigger.org/2026/10/25/teen-food-pantry-tackles-food-insecurity/).",
+    "No approval, publication, production collection change, schedule modification, or task disablement performed."
+  ]
+}

@@ -13,6 +13,7 @@ import os
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -69,6 +70,25 @@ def _read_pointer(pointer: Path) -> Path | None:
     return Path(value).resolve()
 
 
+@contextmanager
+def _pointer_lock(pointer: Path):
+    lock = pointer.with_name(pointer.name + ".lock")
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError as exc:
+        raise ValueError(f"release pointer update is already in progress: {lock}") from exc
+    try:
+        os.write(fd, str(os.getpid()).encode("ascii"))
+        yield
+    finally:
+        os.close(fd)
+        try:
+            lock.unlink()
+        except FileNotFoundError:
+            pass
+
+
 def set_release_pointer(
     *,
     pointer: Path,
@@ -79,9 +99,11 @@ def set_release_pointer(
     expected_base_commit: str,
     expected_replacement_commit: str,
     expected_current_release: Path | None = None,
+    outcome_receipt: Path,
 ) -> dict[str, Any]:
     pointer = assert_outside(pointer, [runtime_root, release_root], "release pointer")
     release_root = assert_outside(release_root, [runtime_root], "release root")
+    outcome_receipt = assert_outside(outcome_receipt, [runtime_root, release_root], "pointer outcome receipt")
     assert_safe_existing_ancestors(pointer)
     payload = verify_release_manifest(
         manifest,
@@ -91,17 +113,20 @@ def set_release_pointer(
         expected_replacement_commit=expected_replacement_commit,
         require_unactivated=True,
     )
-    before = _read_pointer(pointer)
-    if expected_current_release is not None and before != expected_current_release.resolve():
-        raise ValueError("release pointer changed from the trusted expected value")
-    pointer.parent.mkdir(parents=True, exist_ok=True)
-    temporary = pointer.with_name(f".{pointer.name}.{os.getpid()}.tmp")
-    temporary.write_text(str(release_root) + "\n", encoding="utf-8")
-    temporary.replace(pointer)
-    after = _read_pointer(pointer)
-    if after != release_root:
-        raise ValueError("release pointer verification failed after atomic replacement")
-    return {"release_id": payload["release_id"], "before": str(before) if before else None, "after": str(after)}
+    with _pointer_lock(pointer):
+        before = _read_pointer(pointer)
+        if expected_current_release is not None and before != expected_current_release.resolve():
+            raise ValueError("release pointer changed from the trusted expected value")
+        pointer.parent.mkdir(parents=True, exist_ok=True)
+        temporary = pointer.with_name(f".{pointer.name}.{os.getpid()}.tmp")
+        temporary.write_text(str(release_root) + "\n", encoding="utf-8")
+        temporary.replace(pointer)
+        after = _read_pointer(pointer)
+        if after != release_root:
+            raise ValueError("release pointer verification failed after atomic replacement")
+        result = {"release_id": payload["release_id"], "before": str(before) if before else None, "after": str(after)}
+        _write_receipt(outcome_receipt, {"schema_version": "bluefern.gaza_pointer_update.v1", **result})
+        return result
 
 
 def rollback_release_pointer(**kwargs: Any) -> dict[str, Any]:
@@ -198,6 +223,7 @@ def launch(
         env = os.environ.copy()
         env["BLUEFERN_RUNTIME_ROOT"] = str(runtime_root)
         env["DISPATCHES_TEST_ROOT"] = str(test_root)
+        env["PYTHONDONTWRITEBYTECODE"] = "1"
         python_path = os.pathsep.join([str(release_root), str(release_root / "src"), env.get("PYTHONPATH", "")])
         env["PYTHONPATH"] = python_path
         process = subprocess.run(
@@ -253,4 +279,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -1,0 +1,156 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T064927-0700-r11-20261025T135342Z",
+  "scheduled_for": "2026-10-25T06:44:51-07:00",
+  "started_at": "2026-10-25T06:49:27-07:00",
+  "completed_at": "2026-10-25T06:53:42-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T05:50:03-07:00",
+    "end": "2026-10-25T06:53:42-07:00",
+    "basis": "Previous independently verified heartbeat completion through this observation; in-window source confirmation and first detection are distinguished from unverified incident time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261025-islamic-university-gaza-city-second-strike-three-killed",
+      "canonical_source_url": "https://saba.ye/en/news3818430.htm",
+      "title": "Three Palestinians killed in Israeli strike on Gaza University",
+      "publisher": "Yemen News Agency (SABA)",
+      "source_date": "2026-10-25",
+      "publication_date": "2026-10-25",
+      "publication_datetime": "2026-10-25T15:55:28+03:00",
+      "event_date": "2026-10-25",
+      "event_datetime": null,
+      "location": "Islamic University campus, Gaza City, Gaza Strip",
+      "affected_population_system": "Three people reportedly killed (Sami Baroud, Ashraf Dahlan, Shadi Abu Ataya), other persons wounded; an earlier reported strike at the campus wounded five people. Student and university campus safety.",
+      "exact_supporting_passage": "Three Palestinians were killed and others injured on Sunday in a second Israeli airstrike targeting the Islamic University campus in Gaza City.",
+      "source_type": "News agency reporting; corroborated by Palestinian news agency WAFA; attribution is reported, not independently investigated",
+      "classification": "new",
+      "confidence": "medium-high for occurrence as reported by multiple outlets; event minute unverified",
+      "bounded_discovery_context": {
+        "first_seen_in_watch": "2026-10-25T06:53:42-07:00",
+        "in_window_confirming_publication": "2026-10-25T15:55:28+03:00",
+        "corroborating_source_url": "https://english.wafa.ps/Pages/Details/176257",
+        "corroborating_source_published_at": "2026-10-25T15:18:00+03:00",
+        "prior_watch_end": "2026-10-25T05:50:03-07:00",
+        "timing_caveat": "WAFA's reporting time (05:18 PDT) predates the start of this watch's window, but its newly surfaced report was absent from the previously recorded WAFA latest-news listing. SABA's direct report at 05:55 PDT is in-window. The attack's exact time is unknown; do not claim it occurred in this window.",
+        "cross_report_deduplication": "This campus report is included within WAFA's seven-Gaza-fatality daily aggregate, and is not seven additional fatalities. The 12:01 WAFA report concerned al-Mawasi, Hamad Hospital area, and al-Rashid road, not the campus. No October 25 edition is listed in the publicly visible Gaza archive at observation.",
+        "authorization": "private supplementary watch finding for production intake/review only; not approved for public release"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall/private handoff only; primary production Gaza collector/publisher authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T054844-0700-r11-20261025T125003Z.json",
+      "completed_at": "2026-10-25T05:50:03-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_via": "GitHub connector fetch_file"
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest updates dated 19 October; no report published in the watch window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated Gaza medical operations update in window."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway"
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 25 2026 latest 16:00 17:00 casualties airstrikes civilians Reuters AP",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"25/October/2026\" killed wounded afternoon",
+      "site:aljazeera.com/news/2026/10/25 Gaza Sunday casualties 25 October afternoon",
+      "site:unicef.org Gaza October 25 2026 children water displacement humanitarian",
+      "site:wfp.org Gaza October 25 2026 crossings aid food distributions",
+      "site:icrc.org OR site:msf.org Gaza \"25 October 2026\" hospitals medical evacuation fuel",
+      "Gaza Rafah Kerem Shalom crossings medical evacuation October 25 2026 Sunday latest",
+      "Gaza ceasefire hostage negotiations detention October 25 2026 Sunday latest",
+      "\"Islamic University\" \"October 25, 2026\" Gaza killed three Ashraf Dahlan Shadi Abu Ataya Sami Baroud",
+      "\"Hamdan Salman Abu Amra\" \"October 25\" Deir al Balah drone",
+      "\"Alaa Ahmed Abu Zayed\" \"Nabil Ahmed Abu Zayed\" Gaza 25 October 2026",
+      "Gaza October 25 2026 afternoon Sunday strike campus Islamic University Gaza injured killed AP Reuters 15 16"
+    ],
+    "search_recency_days": 1,
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "New latest-news listing included 25 October 15:18 Palestine-local casualty roundup, not present in prior run's recorded latest list."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176257",
+        "result": "WAFA 15:18 Palestine-local seven-death roundup includes three campus fatalities; not an additional seven deaths beyond the campus findings."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176251",
+        "result": "WAFA 12:01 Palestine-local casualties in Khan Younis, Hamad Hospital area and al-Rashid road; previously recognized and older than window."
+      },
+      {
+        "url": "https://saba.ye/en/news3818430.htm",
+        "result": "15:55:28 Palestine-local direct published confirmation of three killed at Gaza Islamic University; within the watch window."
+      },
+      {
+        "url": "https://dispatches.thebluefernco.com/gaza/archive.html",
+        "result": "Public archive latest edition 2026-10-24. Does not prove absence from unpublished production queue."
+      }
+    ],
+    "classes_checked": [
+      "Civilian casualties and strikes with reported civilian effects",
+      "Civilian infrastructure and education access (Islamic University campus)",
+      "Displacement, aid and crossings, water/food access",
+      "Hospital functioning, medical evacuation, ambulances and fuel",
+      "Hostage/detention and ceasefire/negotiation developments"
+    ],
+    "excluded_or_not_counted": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176251",
+        "reason": "Pre-window article and pre-recognized incidents; not counted again."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176257",
+        "reason": "The seven-death roundup overlaps campus deaths; not counted as a separate finding. WAFA 15:18 publication predates watch start, though first surfaced during this run."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Pre-window report published 19 October."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct regional healthcare verification unavailable"
+      },
+      {
+        "publisher": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "impact": "Direct medical-evacuation and facility-capacity verification unavailable"
+      }
+    ],
+    "assessment": "One newly surfaced and in-window corroborated campus-strike development passed source-traceability and cross-report dedupe screening. Exact incident time unverified. No verified in-window new updates in other high-value classes. Some WHO regional coverage unavailable, so DEGRADED rather than FAILED. No claim of exhaustive incident absence.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

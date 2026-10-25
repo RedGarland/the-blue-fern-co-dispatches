@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T234653-0700-r11-9b83",
+  "scheduled_for": "2026-10-24T23:45:22-07:00",
+  "started_at": "2026-10-24T23:46:53-07:00",
+  "completed_at": "2026-10-24T23:48:57.078-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T22:41:38-07:00",
+    "end": "2026-10-24T23:48:57.078-07:00",
+    "basis": "Since the most recent verified supplementary watch heartbeat completion. Late-indexed events assessed only if distinct and not already logged; production national collector is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall across all 50 U.S. states, District of Columbia, and U.S. territories for concrete hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency, EMS/air-medical closures or suspensions, CMS legal notices and concrete essential-service reopenings.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official current CMS Public Notices index checked before any additional targeted searches; no October 24 notices. Three October 23 Medicare HHA termination notices (My Families Healthcare CA 758151, 1ST AIDE HOME HEALTH AGENCY CA 559673, Moonlight Home Health Care Inc OH 369006) previously logged."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "October 24 emergency-department closure or suspension",
+      "October 24 maternity/labor-and-delivery services closed",
+      "October 24 ambulance or EMS service closure",
+      "October 24 urgent-care or clinic closure",
+      "October 24 behavioral-health/psychiatric service loss",
+      "October 24 dialysis or oncology service suspension",
+      "October 24 rural hospital ED closure",
+      "October 24 air-medical/helicopter base closure",
+      "October 24 emergency service reopening/restoration",
+      "October 23-24 hospital anesthesia/trauma-service interruption",
+      "October 24 territory healthcare closures (Puerto Rico, Guam, USVI, American Samoa)",
+      "October 24 primary-care clinic closure"
+    ],
+    "prior_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T224035-0700-r11-2240c",
+      "previous_completed_at": "2026-10-24T22:41:38-07:00",
+      "previous_heartbeat_verified_read": true,
+      "previous_run_status": "DEGRADED",
+      "previous_run_outcome": "no_findings"
+    },
+    "excluded_or_preexisting": [
+      "Vista Medical Center East Illinois anesthesia suspension (October 22) and trauma-designation revocation (October 23) already logged in watch ledger; October 24 follow-up reporting not a separate new action.",
+      "Watsonville Community Hospital maternity/L&D/NICU options remain under discussion, with no decided or effective service loss as of retrieved reports.",
+      "Other returned reports older, foreign, advocacy/opinion, risk/proposals without concrete new service effect or duplicate events.",
+      "Vista inpatient dialysis pause described as having occurred by October 9; no evidence a distinct change emerged in this hourly window."
+    ],
+    "limitations": "Search-index results heavily favored historical or duplicate reports despite date-targeted recency filtering. No qualifying, verifiable, nonduplicate material access change confirmed in the checked window; a bounded supplementary check does not prove national absence.",
+    "material_degradation": false,
+    "controls": "No approval, publication, production collection edits, task schedule alteration or disabling. This is exactly one durable heartbeat for this completed execution."
+  }
+}

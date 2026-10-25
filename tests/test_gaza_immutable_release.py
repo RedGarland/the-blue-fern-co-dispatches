@@ -311,6 +311,7 @@ def test_pointer_activation_and_rollback_are_atomic_and_bound(tmp_path):
     runtime.mkdir()
     pointer = tmp_path / "active" / "release.txt"
     outcome = tmp_path / "receipts" / "pointer.json"
+    lock = tmp_path / "coordination" / "gaza.lock"
     first = set_release_pointer(
         pointer=pointer,
         release_root=release,
@@ -321,6 +322,7 @@ def test_pointer_activation_and_rollback_are_atomic_and_bound(tmp_path):
         expected_replacement_commit="b" * 40,
         expected_current_release=None,
         outcome_receipt=outcome,
+        activation_lock=lock,
     )
     assert first["before"] is None
     assert Path(first["after"]) == release.resolve()
@@ -334,6 +336,7 @@ def test_pointer_activation_and_rollback_are_atomic_and_bound(tmp_path):
         expected_replacement_commit="b" * 40,
         expected_current_release=release,
         outcome_receipt=outcome,
+        activation_lock=lock,
     )
     assert Path(second["after"]) == second_release.resolve()
     rolled_back = rollback_release_pointer(
@@ -346,6 +349,7 @@ def test_pointer_activation_and_rollback_are_atomic_and_bound(tmp_path):
         expected_replacement_commit="b" * 40,
         expected_current_release=second_release,
         outcome_receipt=outcome,
+        activation_lock=lock,
     )
     assert Path(rolled_back["after"]) == release.resolve()
     assert json.loads(outcome.read_text(encoding="utf-8"))["after"] == str(release.resolve())
@@ -370,10 +374,32 @@ def test_pointer_update_refuses_a_competing_writer_lock(tmp_path):
             expected_replacement_commit="b" * 40,
             expected_current_release=None,
             outcome_receipt=tmp_path / "receipts" / "pointer.json",
+            activation_lock=lock,
         )
 
 
-def test_post_only_allowlist_rejects_general_generation_or_missing_binding(tmp_path):
+def test_pointer_lock_receipt_and_manifest_paths_must_be_distinct(tmp_path):
+    release, manifest = _synthetic_manifest(tmp_path)
+    runtime = tmp_path / "runner"
+    runtime.mkdir()
+    pointer = tmp_path / "active" / "release.txt"
+    shared = tmp_path / "coordination" / "shared.json"
+    with pytest.raises(ValueError, match="distinct"):
+        set_release_pointer(
+            pointer=pointer,
+            release_root=release,
+            runtime_root=runtime,
+            manifest=manifest,
+            expected_manifest_sha256=file_sha256(manifest),
+            expected_base_commit="a" * 40,
+            expected_replacement_commit="b" * 40,
+            expected_current_release=None,
+            outcome_receipt=shared,
+            activation_lock=shared,
+        )
+
+
+def def test_post_only_allowlist_rejects_general_generation_or_missing_binding(tmp_path):
     from scripts.run_gaza_immutable_release import validate_post_only_operator_args
 
     with pytest.raises(ValueError, match="outside the immutable post-only allowlist"):

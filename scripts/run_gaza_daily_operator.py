@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import io
 import json
-import os
 import re
 import ssl
 import subprocess
@@ -793,6 +792,9 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         result["test_root_error"] = test_root.get("error")
         if not test_root["ok"]:
             result["operator_status"] = "TEST_ROOT_BLOCKED"
+            result["failure_stage"] = "test_root_admission"
+            result["validation_ok"] = False
+            result["no_update_eligible"] = False
             result["next_action"] = str(test_root.get("error") or "Test-root admission failed.")
             result["source_repo_status_after"] = _git_status_branch(ROOT)
             result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
@@ -900,10 +902,10 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         audio_voice=args.audio_voice,
         audio_format=args.audio_format,
     )
-    result["source_collection_started"] = True
     result["daily_pipeline_started"] = True
     code, summary, _stdout = _capture_daily_run(daily_args)
     result["commands_run"].append("scripts/run_daily_gaza.py " + " ".join(daily_args))
+    result["source_collection_started"] = bool(summary.get("collection_started"))
     result["source_count"] = int(summary.get("source_count") or 0)
     result["publisher_count"] = int(summary.get("publisher_count") or 0)
     result["public_story_count"] = int(summary.get("public_story_count") or 0)

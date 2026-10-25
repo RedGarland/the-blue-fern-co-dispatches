@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -139,8 +141,7 @@ def test_valid_inherited_root_is_canonicalized_before_pipeline(monkeypatch: pyte
         operator,
         "_capture_daily_run",
         lambda _args: (
-            seen.append(os.environ[operator.TEST_ROOT_ENV]) or
-            (1, {"errors": ["bounded fixture failure"]}, ""),
+            seen.append(os.environ[operator.TEST_ROOT_ENV]) or (1, {"errors": ["bounded fixture failure"]}, "")
         ),
     )
 
@@ -250,7 +251,7 @@ def test_daily_valid_root_reaches_collection(monkeypatch: pytest.MonkeyPatch, tm
     assert payload["generation_started"] is False
 
 
-def test_skipped_tests_are_not_validation_success() -> None:
+def test_skipped_tests_are_not_validation_success(tmp_path: Path) -> None:
     summary = {
         "tests_ok": None,
         "validation_ok": None,
@@ -259,9 +260,139 @@ def test_skipped_tests_are_not_validation_success() -> None:
         "errors": [],
         "warnings": [],
     }
-    daily._record_skipped_validation(summary, Path("ignored.log"))
+    daily._record_skipped_validation(summary, tmp_path / "ignored.log")
     assert summary["tests_ok"] is False
     assert summary["validation_ok"] is False
     assert summary["publish_blocked"] is True
     assert summary["publish_blocked_reason"] == "dispatch_validation_skipped"
     assert summary["errors"]
+
+
+def test_real_child_process_inherits_and_validates_root(tmp_path: Path) -> None:
+    root = tmp_path / "child-test-root"
+    root.mkdir()
+    repo_root = Path(__file__).resolve().parents[1]
+    environment = os.environ.copy()
+    environment[operator.TEST_ROOT_ENV] = str(root)
+    environment["PYTHONPATH"] = str(repo_root / "src") + os.pathsep + str(repo_root)
+    code = (
+        "import json; "
+        "from scripts import run_gaza_daily_operator as operator; "
+        "print(json.dumps(operator._validate_scheduled_test_root()))"
+    )
+
+    completed = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=repo_root,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    payload = json.loads(completed.stdout)
+    assert payload["ok"] is True
+    assert payload["status"] == "validated"
+    assert Path(payload["path"]).resolve() == root.resolve()
+
+
+def test_skip_tests_blocks_end_to_end_before_publication(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "daily-root"
+    root.mkdir()
+    test_root = tmp_path / "test-root"
+    test_root.mkdir()
+    pages_repo = tmp_path / "pages"
+    pages_repo.mkdir()
+    monkeypatch.setattr(daily, "ROOT", root)
+    monkeypatch.setenv(operator.TEST_ROOT_ENV, str(test_root))
+    monkeypatch.setattr(
+        daily,
+        "admit_test_root",
+        lambda **_kwargs: {
+            "ok": True,
+            "status": "validated",
+            "path": str(test_root.resolve()),
+            "error": None,
+        },
+    )
+    monkeypatch.setattr(daily, "make_pytest_basetemp", lambda _name: tmp_path / "basetemp")
+    monkeypatch.setattr(daily, "generation_command", lambda *_args, **_kwargs: ["generation"])
+    monkeypatch.setattr(daily, "pages_publish_command", lambda *_args, **_kwargs: ["pages"])
+    source_path = tmp_path / "sources.json"
+    source_path.write_text("[]", encoding="utf-8")
+    record = {
+        "title": "Test Gaza report",
+        "url": "https://example.com/story",
+        "publisher": "Test Publisher",
+        "retrieved_at": "2026-10-25T12:00:00Z",
+        "published_at": "2026-10-25T11:00:00Z",
+        "summary": "A bounded Gaza report.",
+    }
+    monkeypatch.setattr(
+        daily,
+        "collect_or_load_sources",
+        lambda _args, _summary, _log: (source_path, [record], None),
+    )
+    monkeypatch.setattr(daily, "build_gaza_collection_timing_metadata", lambda *_args: {})
+    commands: list[list[str]] = []
+
+    def fake_run_command(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout=json.dumps(
+                {
+                    "ok": True,
+                    "publisher_count": 1,
+                    "publishers": ["Test Publisher"],
+                    "source_adequacy_status": "adequate",
+                }
+            ),
+            stderr="",
+        )
+
+    monkeypatch.setattr(daily, "run_command", fake_run_command)
+    monkeypatch.setattr(
+        daily,
+        "validate_generated_output",
+        lambda _date: {
+            "archive_updated": True,
+            "rss_updated": True,
+            "source_count": 1,
+            "public_story_count": 1,
+            "warnings": [],
+            "errors": [],
+        },
+    )
+    monkeypatch.setattr(daily, "validate_public_site_has_no_detail_files", lambda: [])
+    monkeypatch.setattr(
+        "bluefern_dispatches.gaza_audio.refresh_gaza_audio_public_surfaces",
+        lambda _root: None,
+    )
+
+    code = daily.main(
+        [
+            "--date",
+            "2026-10-25",
+            "--skip-tests",
+            "--dry-run",
+            "--pages-repo",
+            str(pages_repo),
+        ]
+    )
+
+    manifest = root / "data" / "dispatches" / "gaza" / "editions" / "2026-10-25" / "run_manifest.json"
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert code == 1
+    assert payload["tests_ok"] is False
+    assert payload["validation_ok"] is False
+    assert payload["publish_blocked"] is True
+    assert payload["publish_blocked_reason"] == "dispatch_validation_skipped"
+    assert payload["generation_started"] is True
+    assert payload["generation_ok"] is True
+    assert commands == [["generation"]]

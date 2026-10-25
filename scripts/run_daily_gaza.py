@@ -1278,7 +1278,29 @@ def main(argv: list[str] | None = None) -> int:
             )
         ),
     ]
-    pytest_basetemp = make_pytest_basetemp("bluefern-pytest-gaza")
+    summary["failure_stage"] = "validation_setup"
+    admission = admit_test_root(repository_root=ROOT)
+    summary["test_root_status"] = admission["status"]
+    summary["test_root_path"] = admission.get("path")
+    summary["test_root_error"] = admission.get("error")
+    if not admission["ok"]:
+        summary["validation_ok"] = False
+        summary["no_update_eligible"] = False
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "test-root-admission-failed"
+        summary["errors"].append(str(admission.get("error") or "Test-root admission failed before validation setup."))
+        log_line(log_path, f"Test-root admission failed before validation setup: {summary['errors'][-1]}")
+        return finish(1)
+    try:
+        pytest_basetemp = make_pytest_basetemp("bluefern-pytest-gaza")
+    except Exception as exc:  # noqa: BLE001
+        summary["validation_ok"] = False
+        summary["no_update_eligible"] = False
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "validation-setup-failed"
+        summary["errors"].append(f"validation test-root allocation failed: {type(exc).__name__}: {exc}")
+        log_line(log_path, f"Validation setup failed: {summary['errors'][-1]}")
+        return finish(1)
     if not args.skip_tests:
         summary["planned_actions"].append(command_text(pytest_command(args.validation_profile, pytest_basetemp)))
     if not args.dry_run:

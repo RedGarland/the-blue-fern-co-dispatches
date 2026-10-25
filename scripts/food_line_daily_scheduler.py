@@ -280,6 +280,38 @@ def _parse_child_terminal_result(stdout: str | None) -> tuple[dict[str, Any] | N
     return payload, "parsed"
 
 
+def _accept_status_inspection_result(
+    result: subprocess.CompletedProcess[str],
+    *,
+    expected_run_id: str,
+    expected_edition_date: str,
+    expected_state_path: str | None = None,
+) -> bool:
+    payload, parse_status = _parse_child_terminal_result(result.stdout)
+    if parse_status != "parsed" or not isinstance(payload, dict):
+        return False
+    if payload.get("run_id") != expected_run_id or payload.get("edition_date") != expected_edition_date:
+        return False
+    state_path = _nonempty_text(payload.get("run_state_path"))
+    if not state_path:
+        return False
+    if expected_state_path is not None:
+        normalize = lambda value: str(value).replace("/", "\\").rstrip("\\").casefold()
+        if normalize(state_path) != normalize(expected_state_path):
+            return False
+    status = payload.get("status")
+    known_statuses = {INCOMPLETE_CAPPED_STATUS, "success", "completed", "completed_with_exclusions", "zero_result_completion"}
+    if status not in known_statuses:
+        return False
+    if payload.get("fatal_error") or payload.get("child_process_failure") or payload.get("malformed_child_output"):
+        return False
+    if status == INCOMPLETE_CAPPED_STATUS:
+        if payload.get("resumable") is True or payload.get("error_type") in {"child_process_failure", "malformed_child_output", "collection_failure"}:
+            return False
+        return result.returncode in {0, 1, 2}
+    return result.returncode == 0 and status not in {"child_process_failure", "malformed_child_output", "collection_failure"}
+
+
 def _nonempty_text(value: Any) -> str:
     return str(value or "").strip()
 
@@ -1277,9 +1309,14 @@ def run_resume(args: argparse.Namespace) -> int:
         status_result = _invoke_python(
             python,
             root,
-            ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id, "--run-id", run_id],
+            ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id, "--run-id", run_id, "--date", edition_date],
         )
-        if status_result.returncode != 0:
+        if not _accept_status_inspection_result(
+            status_result,
+            expected_run_id=str(record["run_id"]),
+            expected_edition_date=edition_date,
+            expected_state_path=str(state_path),
+        ):
             raise _command_error("source-watch status inspection", status_result)
         command_exit = 0
         resume_status = "resume_not_required"
@@ -1316,7 +1353,7 @@ def run_resume(args: argparse.Namespace) -> int:
                     inspected = _invoke_python(
                         python,
                         root,
-                        ["scripts/run_food_line_discovery_expansion.py", "--status-run", str(record["run_id"]), "--run-id", str(record["run_id"])],
+                        ["scripts/run_food_line_discovery_expansion.py", "--status-run", str(record["run_id"]), "--run-id", str(record["run_id"]), "--date", edition_date],
                     )
                     if inspected.returncode != 0:
                         raise _command_error("post-resume status inspection", inspected)
@@ -1597,4 +1634,5 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 

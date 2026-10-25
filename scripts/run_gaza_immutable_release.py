@@ -70,9 +70,11 @@ def _read_pointer(pointer: Path) -> Path | None:
     return Path(value).resolve()
 
 
+_EXPECTED_CURRENT_UNSET = object()
+
+
 @contextmanager
-def _pointer_lock(pointer: Path):
-    lock = pointer.with_name(pointer.name + ".lock")
+def _activation_lock(lock: Path):
     lock.parent.mkdir(parents=True, exist_ok=True)
     try:
         fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
@@ -89,6 +91,51 @@ def _pointer_lock(pointer: Path):
             pass
 
 
+def _pointer_lock(pointer: Path):
+    return _activation_lock(pointer.with_name(pointer.name + ".lock"))
+
+
+POST_ONLY_FLAG_OPTIONS = frozenset({"--post-bluesky-only", "--dry-run"})
+POST_ONLY_VALUE_OPTIONS = frozenset(
+    {
+        "--date",
+        "--bluesky-approved-text-file",
+        "--bluesky-approved-text-sha256",
+        "--bluesky-expected-handle",
+        "--bluesky-expected-did",
+    }
+)
+POST_ONLY_REQUIRED_OPTIONS = POST_ONLY_VALUE_OPTIONS
+
+
+def validate_post_only_operator_args(operator_args: list[str]) -> None:
+    """Fail closed unless the child can enter only the approved post-only mode."""
+    seen: set[str] = set()
+    index = 0
+    while index < len(operator_args):
+        token = operator_args[index]
+        if not token.startswith("--"):
+            raise ValueError(f"post-only operator args cannot contain positional values: {token}")
+        if token in seen:
+            raise ValueError(f"duplicate post-only operator option: {token}")
+        if token in POST_ONLY_FLAG_OPTIONS:
+            seen.add(token)
+            index += 1
+            continue
+        if token in POST_ONLY_VALUE_OPTIONS:
+            if index + 1 >= len(operator_args) or operator_args[index + 1].startswith("--"):
+                raise ValueError(f"post-only operator option requires one value: {token}")
+            seen.add(token)
+            index += 2
+            continue
+        raise ValueError(f"operator option is outside the immutable post-only allowlist: {token}")
+    if "--post-bluesky-only" not in seen:
+        raise ValueError("immutable release activation requires --post-bluesky-only")
+    missing = POST_ONLY_REQUIRED_OPTIONS - seen
+    if missing:
+        raise ValueError(f"post-only operator args missing trusted bindings: {sorted(missing)}")
+
+
 def set_release_pointer(
     *,
     pointer: Path,
@@ -98,13 +145,21 @@ def set_release_pointer(
     expected_manifest_sha256: str,
     expected_base_commit: str,
     expected_replacement_commit: str,
-    expected_current_release: Path | None = None,
+    expected_current_release: Path | None | object = _EXPECTED_CURRENT_UNSET,
     outcome_receipt: Path,
+    activation_lock: Path | None = None,
 ) -> dict[str, Any]:
     pointer = assert_outside(pointer, [runtime_root, release_root], "release pointer")
     release_root = assert_outside(release_root, [runtime_root], "release root")
     outcome_receipt = assert_outside(outcome_receipt, [runtime_root, release_root], "pointer outcome receipt")
+    if outcome_receipt == pointer or outcome_receipt == manifest:
+        raise ValueError("pointer outcome receipt must be distinct from pointer and manifest")
+    if expected_current_release is _EXPECTED_CURRENT_UNSET:
+        raise ValueError("expected_current_release must be supplied, including None for an expected-absent pointer")
     assert_safe_existing_ancestors(pointer)
+    activation_lock = activation_lock or pointer.with_name(pointer.name + ".lock")
+    activation_lock = assert_outside(activation_lock, [runtime_root, release_root], "activation lock")
+    assert_safe_existing_ancestors(activation_lock)
     payload = verify_release_manifest(
         manifest,
         release_root,
@@ -113,10 +168,19 @@ def set_release_pointer(
         expected_replacement_commit=expected_replacement_commit,
         require_unactivated=True,
     )
-    with _pointer_lock(pointer):
+    with _activation_lock(activation_lock):
         before = _read_pointer(pointer)
-        if expected_current_release is not None and before != expected_current_release.resolve():
+        expected_before = None if expected_current_release is None else expected_current_release.resolve()
+        if before != expected_before:
             raise ValueError("release pointer changed from the trusted expected value")
+        intent = {
+            "schema_version": "bluefern.gaza_pointer_update.v1",
+            "phase": "intent",
+            "release_id": payload["release_id"],
+            "before": str(before) if before else None,
+            "after": str(release_root),
+        }
+        _write_receipt(outcome_receipt, intent)
         pointer.parent.mkdir(parents=True, exist_ok=True)
         temporary = pointer.with_name(f".{pointer.name}.{os.getpid()}.tmp")
         temporary.write_text(str(release_root) + "\n", encoding="utf-8")
@@ -125,7 +189,10 @@ def set_release_pointer(
         if after != release_root:
             raise ValueError("release pointer verification failed after atomic replacement")
         result = {"release_id": payload["release_id"], "before": str(before) if before else None, "after": str(after)}
-        _write_receipt(outcome_receipt, {"schema_version": "bluefern.gaza_pointer_update.v1", **result})
+        try:
+            _write_receipt(outcome_receipt, {"schema_version": "bluefern.gaza_pointer_update.v1", "phase": "complete", **result})
+        except Exception as exc:
+            raise RuntimeError(f"release pointer changed but outcome receipt finalization is uncertain: {exc}") from exc
         return result
 
 
@@ -178,65 +245,75 @@ def launch(
     expected_base_commit: str,
     expected_replacement_commit: str,
     expected_runtime_head: str,
+    activation_lock: Path | None = None,
 ) -> dict[str, Any]:
+    validate_post_only_operator_args(operator_args)
     release_root = assert_outside(release_root, [runtime_root], "release root")
     manifest = assert_outside(manifest, [release_root, runtime_root], "manifest")
     receipt = assert_outside(receipt, [release_root, runtime_root], "receipt")
-    runtime_root, test_root, actual_runtime_head = validate_runtime_root(
-        release_root, runtime_root, test_root, expected_runtime_head
-    )
-    payload = verify_release_manifest(
-        manifest,
-        release_root,
-        runtime_root=runtime_root,
-        require_unactivated=True,
-        expected_manifest_sha256=expected_manifest_sha256,
-        expected_base_commit=expected_base_commit,
-        expected_replacement_commit=expected_replacement_commit,
-    )
-    if payload["base_commit"] != actual_runtime_head:
-        raise ValueError("release base_commit does not match the actual runtime baseline")
-    operator = release_root / "scripts" / "run_gaza_daily_operator.py"
-    if not operator.is_file():
-        raise ValueError(f"immutable release operator is missing: {operator}")
-    started = datetime.now(timezone.utc).isoformat()
-    result: dict[str, Any] = {
-        "schema_version": "bluefern.gaza_immutable_activation.v1",
-        "release_id": payload["release_id"],
-        "manifest": str(manifest.resolve()),
-        "release_root": str(release_root),
-        "runtime_root": str(runtime_root),
-        "runtime_head": actual_runtime_head,
-        "expected_manifest_sha256": expected_manifest_sha256,
-        "test_root": str(test_root),
-        "operator": str(operator),
-        "started_at": started,
-        "check_only": check_only,
-        "activation": "validated_only" if check_only else "process_started",
-        "exit_code": None,
-        "public_side_effects": False if check_only else None,
-        "scheduler_mutation": False if check_only else None,
-        "collection_triggered": False if check_only else None,
-        "publication_triggered": False if check_only else None,
-    }
-    if not check_only:
-        env = os.environ.copy()
-        env["BLUEFERN_RUNTIME_ROOT"] = str(runtime_root)
-        env["DISPATCHES_TEST_ROOT"] = str(test_root)
-        env["PYTHONDONTWRITEBYTECODE"] = "1"
-        python_path = os.pathsep.join([str(release_root), str(release_root / "src"), env.get("PYTHONPATH", "")])
-        env["PYTHONPATH"] = python_path
-        process = subprocess.run(
-            [python_executable, str(operator), *operator_args],
-            cwd=str(runtime_root),
-            env=env,
-            check=False,
+    if receipt == manifest:
+        raise ValueError("activation receipt must be distinct from manifest")
+    activation_lock = activation_lock or receipt.with_name("gaza-immutable-activation.lock")
+    activation_lock = assert_outside(activation_lock, [runtime_root, release_root], "activation lock")
+    assert_safe_existing_ancestors(activation_lock)
+    with _activation_lock(activation_lock):
+        runtime_root, test_root, actual_runtime_head = validate_runtime_root(
+            release_root, runtime_root, test_root, expected_runtime_head
         )
-        result["exit_code"] = process.returncode
-        result["activation"] = "process_completed"
-    result["completed_at"] = datetime.now(timezone.utc).isoformat()
-    _write_receipt(receipt, result)
-    return result
+        payload = verify_release_manifest(
+            manifest,
+            release_root,
+            runtime_root=runtime_root,
+            require_unactivated=True,
+            expected_manifest_sha256=expected_manifest_sha256,
+            expected_base_commit=expected_base_commit,
+            expected_replacement_commit=expected_replacement_commit,
+        )
+        if payload["base_commit"] != actual_runtime_head:
+            raise ValueError("release base_commit does not match the actual runtime baseline")
+        operator = release_root / "scripts" / "run_gaza_daily_operator.py"
+        if not operator.is_file():
+            raise ValueError(f"immutable release operator is missing: {operator}")
+        started = datetime.now(timezone.utc).isoformat()
+        result: dict[str, Any] = {
+            "schema_version": "bluefern.gaza_immutable_activation.v1",
+            "release_id": payload["release_id"],
+            "manifest": str(manifest.resolve()),
+            "release_root": str(release_root),
+            "runtime_root": str(runtime_root),
+            "runtime_head": actual_runtime_head,
+            "activation_lock": str(activation_lock),
+            "expected_manifest_sha256": expected_manifest_sha256,
+            "test_root": str(test_root),
+            "operator": str(operator),
+            "operator_mode": "post_bluesky_only",
+            "started_at": started,
+            "check_only": check_only,
+            "activation": "validated_only" if check_only else "process_started",
+            "exit_code": None,
+            "public_side_effects": False if check_only else None,
+            "scheduler_mutation": False if check_only else None,
+            "collection_triggered": False if check_only else None,
+            "publication_triggered": False if check_only else None,
+        }
+        if not check_only:
+            env = os.environ.copy()
+            env["BLUEFERN_RUNTIME_ROOT"] = str(runtime_root)
+            env["DISPATCHES_TEST_ROOT"] = str(test_root)
+            env["PYTHONDONTWRITEBYTECODE"] = "1"
+            python_path = os.pathsep.join([str(release_root), str(release_root / "src"), env.get("PYTHONPATH", "")])
+            env["PYTHONPATH"] = python_path
+            process = subprocess.run(
+                [python_executable, str(operator), *operator_args],
+                cwd=str(runtime_root),
+                env=env,
+                check=False,
+            )
+            result["exit_code"] = process.returncode
+            result["activation"] = "process_completed"
+        result["completed_at"] = datetime.now(timezone.utc).isoformat()
+        _write_receipt(receipt, result)
+        return result
 
 
 def main() -> int:
@@ -252,6 +329,7 @@ def main() -> int:
     parser.add_argument("--runtime-root", type=Path, required=True)
     parser.add_argument("--test-root", type=Path, required=True)
     parser.add_argument("--receipt", type=Path, required=True)
+    parser.add_argument("--activation-lock", type=Path, required=True)
     parser.add_argument("--python", dest="python_executable", default=sys.executable)
     parser.add_argument("--check-only", action="store_true")
     parser.add_argument("operator_args", nargs=argparse.REMAINDER)
@@ -272,6 +350,7 @@ def main() -> int:
         expected_base_commit=args.expected_base_commit,
         expected_replacement_commit=args.expected_replacement_commit,
         expected_runtime_head=args.expected_runtime_head,
+        activation_lock=args.activation_lock,
     )
     print(json.dumps(result, indent=2))
     return int(result.get("exit_code") or 0)
@@ -279,3 +358,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

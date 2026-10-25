@@ -17,7 +17,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from scripts.gaza_immutable_release import assert_outside, assert_safe_existing_ancestors, verify_release_manifest
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.gaza_immutable_release import (
+    assert_outside,
+    assert_safe_existing_ancestors,
+    file_sha256,
+    verify_release_manifest,
+)
 
 
 def _write_receipt(path: Path, payload: dict[str, Any]) -> None:
@@ -25,6 +33,79 @@ def _write_receipt(path: Path, payload: dict[str, Any]) -> None:
     temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
     temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     temporary.replace(path)
+
+
+def _git_output(runtime_root: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["git", "-C", str(runtime_root), *args],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode:
+        raise ValueError(f"runtime Git identity check failed: {result.stderr.strip()}")
+    return result.stdout.strip()
+
+
+def validate_runtime_identity(runtime_root: Path, expected_runtime_head: str) -> str:
+    runtime_root = runtime_root.resolve()
+    top = Path(_git_output(runtime_root, "rev-parse", "--show-toplevel")).resolve()
+    if top != runtime_root:
+        raise ValueError(f"runtime root is not the checkout top-level: {runtime_root}")
+    if _git_output(runtime_root, "rev-parse", "--is-inside-work-tree") != "true":
+        raise ValueError("runtime root is not inside a Git work tree")
+    actual_head = _git_output(runtime_root, "rev-parse", "HEAD")
+    if actual_head != expected_runtime_head:
+        raise ValueError(f"runtime HEAD mismatch: expected {expected_runtime_head}, got {actual_head}")
+    return actual_head
+
+
+def _read_pointer(pointer: Path) -> Path | None:
+    if not pointer.exists():
+        return None
+    value = pointer.read_text(encoding="utf-8").strip()
+    if not value:
+        raise ValueError("release pointer is empty")
+    return Path(value).resolve()
+
+
+def set_release_pointer(
+    *,
+    pointer: Path,
+    release_root: Path,
+    runtime_root: Path,
+    manifest: Path,
+    expected_manifest_sha256: str,
+    expected_base_commit: str,
+    expected_replacement_commit: str,
+    expected_current_release: Path | None = None,
+) -> dict[str, Any]:
+    pointer = assert_outside(pointer, [runtime_root, release_root], "release pointer")
+    release_root = assert_outside(release_root, [runtime_root], "release root")
+    assert_safe_existing_ancestors(pointer)
+    payload = verify_release_manifest(
+        manifest,
+        release_root,
+        expected_manifest_sha256=expected_manifest_sha256,
+        expected_base_commit=expected_base_commit,
+        expected_replacement_commit=expected_replacement_commit,
+        require_unactivated=True,
+    )
+    before = _read_pointer(pointer)
+    if expected_current_release is not None and before != expected_current_release.resolve():
+        raise ValueError("release pointer changed from the trusted expected value")
+    pointer.parent.mkdir(parents=True, exist_ok=True)
+    temporary = pointer.with_name(f".{pointer.name}.{os.getpid()}.tmp")
+    temporary.write_text(str(release_root) + "\n", encoding="utf-8")
+    temporary.replace(pointer)
+    after = _read_pointer(pointer)
+    if after != release_root:
+        raise ValueError("release pointer verification failed after atomic replacement")
+    return {"release_id": payload["release_id"], "before": str(before) if before else None, "after": str(after)}
+
+
+def rollback_release_pointer(**kwargs: Any) -> dict[str, Any]:
+    return set_release_pointer(**kwargs)
 
 
 def resolve_release_root(release_root: Path | None, pointer: Path | None, runtime_root: Path) -> Path:
@@ -43,13 +124,19 @@ def resolve_release_root(release_root: Path | None, pointer: Path | None, runtim
     return release_root.resolve()
 
 
-def validate_runtime_root(release_root: Path, runtime_root: Path, test_root: Path) -> tuple[Path, Path]:
+def validate_runtime_root(
+    release_root: Path,
+    runtime_root: Path,
+    test_root: Path,
+    expected_runtime_head: str,
+) -> tuple[Path, Path, str]:
     runtime_root = assert_outside(runtime_root, [release_root], "runtime root")
     test_root = assert_outside(test_root, [release_root], "test root")
     if not runtime_root.is_dir() or not (runtime_root / ".git").exists():
         raise ValueError(f"runtime root is not a Git checkout: {runtime_root}")
+    actual_head = validate_runtime_identity(runtime_root, expected_runtime_head)
     test_root.mkdir(parents=True, exist_ok=True)
-    return runtime_root, test_root
+    return runtime_root, test_root, actual_head
 
 
 def launch(
@@ -62,11 +149,28 @@ def launch(
     python_executable: str,
     operator_args: list[str],
     check_only: bool,
+    expected_manifest_sha256: str,
+    expected_base_commit: str,
+    expected_replacement_commit: str,
+    expected_runtime_head: str,
 ) -> dict[str, Any]:
-    receipt = assert_outside(receipt, [release_root, runtime_root], "receipt")
-    runtime_root, test_root = validate_runtime_root(release_root, runtime_root, test_root)
+    release_root = assert_outside(release_root, [runtime_root], "release root")
     manifest = assert_outside(manifest, [release_root, runtime_root], "manifest")
-    payload = verify_release_manifest(manifest, release_root, runtime_root=runtime_root, require_unactivated=True)
+    receipt = assert_outside(receipt, [release_root, runtime_root], "receipt")
+    runtime_root, test_root, actual_runtime_head = validate_runtime_root(
+        release_root, runtime_root, test_root, expected_runtime_head
+    )
+    payload = verify_release_manifest(
+        manifest,
+        release_root,
+        runtime_root=runtime_root,
+        require_unactivated=True,
+        expected_manifest_sha256=expected_manifest_sha256,
+        expected_base_commit=expected_base_commit,
+        expected_replacement_commit=expected_replacement_commit,
+    )
+    if payload["base_commit"] != actual_runtime_head:
+        raise ValueError("release base_commit does not match the actual runtime baseline")
     operator = release_root / "scripts" / "run_gaza_daily_operator.py"
     if not operator.is_file():
         raise ValueError(f"immutable release operator is missing: {operator}")
@@ -77,16 +181,18 @@ def launch(
         "manifest": str(manifest.resolve()),
         "release_root": str(release_root),
         "runtime_root": str(runtime_root),
+        "runtime_head": actual_runtime_head,
+        "expected_manifest_sha256": expected_manifest_sha256,
         "test_root": str(test_root),
         "operator": str(operator),
         "started_at": started,
         "check_only": check_only,
         "activation": "validated_only" if check_only else "process_started",
         "exit_code": None,
-        "public_side_effects": False,
-        "scheduler_mutation": False,
-        "collection_triggered": False,
-        "publication_triggered": False,
+        "public_side_effects": False if check_only else None,
+        "scheduler_mutation": False if check_only else None,
+        "collection_triggered": False if check_only else None,
+        "publication_triggered": False if check_only else None,
     }
     if not check_only:
         env = os.environ.copy()
@@ -110,6 +216,10 @@ def launch(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--expected-manifest-sha256", required=True)
+    parser.add_argument("--expected-base-commit", required=True)
+    parser.add_argument("--expected-replacement-commit", required=True)
+    parser.add_argument("--expected-runtime-head", required=True)
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--release-root", type=Path)
     group.add_argument("--release-pointer", type=Path)
@@ -132,6 +242,10 @@ def main() -> int:
         python_executable=args.python_executable,
         operator_args=args.operator_args,
         check_only=args.check_only,
+        expected_manifest_sha256=args.expected_manifest_sha256,
+        expected_base_commit=args.expected_base_commit,
+        expected_replacement_commit=args.expected_replacement_commit,
+        expected_runtime_head=args.expected_runtime_head,
     )
     print(json.dumps(result, indent=2))
     return int(result.get("exit_code") or 0)

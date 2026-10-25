@@ -419,7 +419,7 @@ def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
     return errors
 
 
-def validate_or_repair_manual_sources(edition_date: str) -> dict[str, Any]:
+def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True) -> dict[str, Any]:
     path = manual_source_path(edition_date)
     if not path.exists():
         return {"ok": True, "status": "not_present", "path": str(path), "changes": [], "errors": []}
@@ -439,6 +439,18 @@ def validate_or_repair_manual_sources(edition_date: str) -> dict[str, Any]:
                 break
         if missing_only:
             errors = validate_manual_source_records(normalized)
+    if changes and not errors and not repair:
+        return {
+            "ok": False,
+            "status": "normalization_required_read_only",
+            "path": str(path),
+            "changes": changes,
+            "errors": [
+                "post-only mode refuses to rewrite manual_sources.json; "
+                "normalize it in a separately approved source-repair run"
+            ],
+            "record_count": len(normalized),
+        }
     if changes and not errors:
         _write_manual_records(path, normalized)
     return {
@@ -809,7 +821,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
         return result
 
-    manual_validation = validate_or_repair_manual_sources(args.date)
+    manual_validation = validate_or_repair_manual_sources(args.date, repair=not args.post_bluesky_only)
     result["manual_source_validation"] = manual_validation
     if not manual_validation["ok"]:
         result["operator_status"] = "MANUAL_SOURCE_INVALID"

@@ -95,6 +95,22 @@ def _pointer_lock(pointer: Path):
     return _activation_lock(pointer.with_name(pointer.name + ".lock"))
 
 
+def _require_activation_lock(activation_lock: Path | None, *, label: str) -> Path:
+    if activation_lock is None:
+        raise ValueError(f"{label} requires an explicit activation_lock shared by pointer updates and launches")
+    return activation_lock
+
+
+def _assert_distinct_paths(named_paths: dict[str, Path]) -> None:
+    canonical: dict[Path, str] = {}
+    for name, path in named_paths.items():
+        resolved = path.resolve(strict=False)
+        prior = canonical.get(resolved)
+        if prior is not None:
+            raise ValueError(f"{name} must be distinct from {prior}: {resolved}")
+        canonical[resolved] = name
+
+
 POST_ONLY_FLAG_OPTIONS = frozenset({"--post-bluesky-only", "--dry-run"})
 POST_ONLY_VALUE_OPTIONS = frozenset(
     {
@@ -147,18 +163,23 @@ def set_release_pointer(
     expected_replacement_commit: str,
     expected_current_release: Path | None | object = _EXPECTED_CURRENT_UNSET,
     outcome_receipt: Path,
-    activation_lock: Path | None = None,
+    activation_lock: Path,
 ) -> dict[str, Any]:
+    activation_lock = _require_activation_lock(activation_lock, label="set_release_pointer")
     pointer = assert_outside(pointer, [runtime_root, release_root], "release pointer")
     release_root = assert_outside(release_root, [runtime_root], "release root")
+    manifest = assert_outside(manifest, [runtime_root, release_root], "manifest")
     outcome_receipt = assert_outside(outcome_receipt, [runtime_root, release_root], "pointer outcome receipt")
-    if outcome_receipt == pointer or outcome_receipt == manifest:
-        raise ValueError("pointer outcome receipt must be distinct from pointer and manifest")
+    activation_lock = assert_outside(activation_lock, [runtime_root, release_root], "activation lock")
+    _assert_distinct_paths({
+        "pointer": pointer,
+        "manifest": manifest,
+        "outcome_receipt": outcome_receipt,
+        "activation_lock": activation_lock,
+    })
     if expected_current_release is _EXPECTED_CURRENT_UNSET:
         raise ValueError("expected_current_release must be supplied, including None for an expected-absent pointer")
     assert_safe_existing_ancestors(pointer)
-    activation_lock = activation_lock or pointer.with_name(pointer.name + ".lock")
-    activation_lock = assert_outside(activation_lock, [runtime_root, release_root], "activation lock")
     assert_safe_existing_ancestors(activation_lock)
     payload = verify_release_manifest(
         manifest,
@@ -234,7 +255,7 @@ def validate_runtime_root(
 def launch(
     *,
     manifest: Path,
-    release_root: Path,
+    release_root: Path | None,
     runtime_root: Path,
     test_root: Path,
     receipt: Path,
@@ -245,18 +266,38 @@ def launch(
     expected_base_commit: str,
     expected_replacement_commit: str,
     expected_runtime_head: str,
-    activation_lock: Path | None = None,
+    activation_lock: Path,
+    release_pointer: Path | None = None,
 ) -> dict[str, Any]:
     validate_post_only_operator_args(operator_args)
-    release_root = assert_outside(release_root, [runtime_root], "release root")
-    manifest = assert_outside(manifest, [release_root, runtime_root], "manifest")
-    receipt = assert_outside(receipt, [release_root, runtime_root], "receipt")
-    if receipt == manifest:
-        raise ValueError("activation receipt must be distinct from manifest")
-    activation_lock = activation_lock or receipt.with_name("gaza-immutable-activation.lock")
-    activation_lock = assert_outside(activation_lock, [runtime_root, release_root], "activation lock")
+    activation_lock = _require_activation_lock(activation_lock, label="launch")
+    if (release_root is None) == (release_pointer is None):
+        raise ValueError("provide exactly one of release_root or release_pointer")
+    if release_root is not None:
+        release_root = assert_outside(release_root, [runtime_root], "release root")
+    if release_pointer is not None:
+        release_pointer = assert_outside(release_pointer, [runtime_root], "release pointer")
+    manifest = assert_outside(manifest, [runtime_root], "manifest")
+    receipt = assert_outside(receipt, [runtime_root], "receipt")
+    activation_lock = assert_outside(activation_lock, [runtime_root], "activation lock")
+    _assert_distinct_paths({
+        "manifest": manifest,
+        "receipt": receipt,
+        "activation_lock": activation_lock,
+    })
     assert_safe_existing_ancestors(activation_lock)
     with _activation_lock(activation_lock):
+        if release_pointer is not None:
+            release_root = resolve_release_root(None, release_pointer, runtime_root)
+            release_root = assert_outside(release_root, [runtime_root], "release root")
+        assert release_root is not None
+        manifest = assert_outside(manifest, [release_root, runtime_root], "manifest")
+        receipt = assert_outside(receipt, [release_root, runtime_root], "receipt")
+        _assert_distinct_paths({
+            "manifest": manifest,
+            "receipt": receipt,
+            "activation_lock": activation_lock,
+        })
         runtime_root, test_root, actual_runtime_head = validate_runtime_root(
             release_root, runtime_root, test_root, expected_runtime_head
         )
@@ -336,10 +377,9 @@ def main() -> int:
     args = parser.parse_args()
     if args.operator_args and args.operator_args[0] == "--":
         args.operator_args = args.operator_args[1:]
-    root = resolve_release_root(args.release_root, args.release_pointer, args.runtime_root)
     result = launch(
         manifest=args.manifest,
-        release_root=root,
+        release_root=args.release_root,
         runtime_root=args.runtime_root,
         test_root=args.test_root,
         receipt=args.receipt,
@@ -351,6 +391,7 @@ def main() -> int:
         expected_replacement_commit=args.expected_replacement_commit,
         expected_runtime_head=args.expected_runtime_head,
         activation_lock=args.activation_lock,
+        release_pointer=args.release_pointer,
     )
     print(json.dumps(result, indent=2))
     return int(result.get("exit_code") or 0)

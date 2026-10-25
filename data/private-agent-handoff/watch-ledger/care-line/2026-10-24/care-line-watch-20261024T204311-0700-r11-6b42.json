@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261024T204311-0700-r11-6b42",
+  "scheduled_for": "2026-10-24T20:45:22-07:00",
+  "started_at": "2026-10-24T20:43:11-07:00",
+  "completed_at": "2026-10-24T20:44:48.482-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-24T19:48:57.492-07:00",
+    "end": "2026-10-24T20:44:48.482-07:00",
+    "basis": "Since previous independently verified hourly Care Line supplementary watch completion. Late-reported previously unrecorded concrete service changes considered; earlier logged events excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary recall for all U.S. states, District of Columbia and U.S. territories; authoritative production Care Line collection is unchanged.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "CMS Public Notices checked before the additional 12 targeted searches. No October 24 notice listed. October 23 notices for My Families Healthcare (CA, 758151), 1ST AIDE HOME HEALTH AGENCY (CA, 559673), Moonlight Home Health Care Inc (OH, 369006) were previously recorded, not duplicated."
+    },
+    "additional_targeted_searches": 12,
+    "search_topics": [
+      "hospital emergency department closed temporarily October 24 2026 United States local news",
+      "hospital labor delivery maternity unit closed suspended October 24 2026 local news",
+      "October 24 2026 hospital inpatient psychiatric behavioral health services closed paused local news",
+      "October 24 2026 dialysis center sudden closure oncology clinic shut down patients",
+      "October 24 2026 rural hospital emergency services suspended shut down",
+      "October 24 2026 county ambulance service closing shut down EMS",
+      "2026-10-24 air ambulance helicopter medical base closes suspended flight operations United States",
+      "2026-10-24 hospital clinic closed patients news",
+      "October 24 2026 hospital emergency department reopened after closure local",
+      "October 24 2026 urgent care primary care closed permanently local news",
+      "October 24 2026 Puerto Rico Guam US Virgin Islands hospital clinic ambulance emergency closed suspended",
+      "October 24 2026 health department hospital emergency services suspended revoked trauma center"
+    ],
+    "previous_ledger": {
+      "branch": "ops/watch-ledger",
+      "previous_run_id": "care-line-watch-20261024T194730-0700-r11-7d3e",
+      "previous_completed_at": "2026-10-24T19:48:57.492-07:00",
+      "verified_read": true,
+      "notes": "Verified October 24 ledger directory (20 preceding watch JSON files) and read 17:46, 18:48, 19:47 entries; most recent reported no findings."
+    },
+    "exclusions": "Search results were historical/non-current closures, duplicate Vista Medical Center East Illinois trauma designation loss (already recorded Oct 24), older air-medical/EMS closures, proposals, veterinary facilities, non-US facilities, broad risk analyses, or stories without confirmed concrete access change. No newly evidenced qualifying effective restoration or reopening found.",
+    "limitations": "Search indexing often returned older or foreign stories even under narrow date filters; limited supplementary recall cannot establish national absence of developments. No material fetch/search failure.",
+    "material_degradation": false,
+    "controls": "No editorial approval, publication, production pipeline modification, schedule change or task disabling. This record is the single durable heartbeat for this run."
+  }
+}

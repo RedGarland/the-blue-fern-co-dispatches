@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T044301-0700-r11-e76f42",
+  "scheduled_for": "2026-10-25T04:45:54-07:00",
+  "started_at": "2026-10-25T04:43:01-07:00",
+  "completed_at": "2026-10-25T11:44:57.500Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T03:47:35.920-07:00",
+    "end_at": "2026-10-25T11:44:57.500Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "From completed_at of the last read-back-verified hourly Food Line Source Watch heartbeat through this run. Only newly verifiable U.S. disruption events since that checkpoint qualify."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; nationwide production collection remains authoritative.",
+    "12 targeted web searches total (recency 2 days): 3 sole/last/full-service grocery losses, 3 weather/disaster/outage-canceled emergency distributions, 3 abrupt pantry/food-bank closures or major access reductions, 3 official SNAP/WIC/EBT immediate interruptions.",
+    "No source-verifiable U.S. food-access disruption newly reported within this hourly search window met the inclusion criteria.",
+    "Search results disproportionately resurfaced historical articles, including the October 14, 2026 report of Decatur Salvation Army's October 20/22 closure, April 2026 Ruby's Pantry shutdown, and 2025 government-shutdown-related SNAP disruptions; all outside current window.",
+    "Excluded routine food-aid promotion, generic SNAP policy commentary, resource guides, duplicates, historical closures, and items without credible event/announcement times.",
+    "All 12 searches returned results without tool errors. Search-index recency proved imperfect but did not constitute a material outage or justify DEGRADED status.",
+    "No findings forwarded for review; no approval, publication, production collection, schedule, or automation-state changes."
+  ]
+}

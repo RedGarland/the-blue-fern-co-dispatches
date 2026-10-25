@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261024T214710-0700-r11-638e7a",
+  "scheduled_for": "2026-10-24T21:47:10-07:00",
+  "started_at": "2026-10-24T21:47:10-07:00",
+  "completed_at": "2026-10-25T04:48:13.333Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-24T20:38:49-07:00",
+    "end_at": "2026-10-25T04:48:13.333Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Five-minute overlap before prior hourly watch completion at 2026-10-24T20:43:49-07:00. Require evidence of new source publication since prior check; exclude duplicates and older developments."
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only, not the authoritative nationwide production Food Line collector.",
+    "Completed exactly 12 targeted web searches: only/sole/last/full-service U.S. grocery-store loss/fire/closure (4); emergency food distribution cancellation from storm, flood, fire, outage, or facility damage (3); abrupt pantry/food-bank closure or major access reduction (2); official immediate SNAP/WIC/EBT benefits interruption (3).",
+    "No newly published, independently verifiable qualifying U.S. disruption was found within the observation window. Search coverage completed without tool errors.",
+    "Excluded older events (e.g. September 2026 sole grocery fire and food-bank storm damage), unrelated international events, one of multiple grocery stores closing in Austin, unverified provider-social closure timing, 2025 SNAP shutdown reporting, resource guides and routine program promotion.",
+    "Previously identified Dallas Project 75216 Bread of Life pantry October 24 inventory closure was not duplicated; its original announcement timing remains unverified.",
+    "No review approval, publication, schedule adjustment, production collection mutation, or task disabling occurred."
+  ]
+}

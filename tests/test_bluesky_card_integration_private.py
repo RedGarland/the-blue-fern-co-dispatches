@@ -260,16 +260,30 @@ def test_external_card_mode_requires_contract_before_any_session_or_create(priva
             {"expected_card_mode": "plain", "expected_external_card": CARD},
             "external_card_requires_external_mode",
         ),
+        (
+            {"expected_external_card": CARD},
+            "external_card_requires_external_mode",
+        ),
     ],
 )
 def test_incomplete_card_bindings_fail_closed_before_network(private_root, monkeypatch, overrides, reason):
     tmp_path = private_root
     text_path, text_hash = setup(tmp_path, monkeypatch)
     calls = []
+    session_calls = []
+    thumb_calls = []
 
     def urlopen(req, timeout):
         calls.append(req.full_url)
         raise AssertionError("network must not be reached")
+
+    def post_json(*args, **kwargs):
+        session_calls.append((args, kwargs))
+        raise AssertionError("session must not be reached")
+
+    def upload_thumb(*args, **kwargs):
+        thumb_calls.append((args, kwargs))
+        raise AssertionError("thumbnail upload must not be reached")
 
     stack = common_patches(bluesky_post)
     for item in stack:
@@ -294,7 +308,11 @@ def test_incomplete_card_bindings_fail_closed_before_network(private_root, monke
             kwargs.pop("expected_did")
             kwargs.pop("live_verification")
         kwargs.update(overrides)
-        with patch.object(bluesky_post.request, "urlopen", side_effect=urlopen):
+        with (
+            patch.object(bluesky_post.request, "urlopen", side_effect=urlopen),
+            patch.object(bluesky_post, "_post_json", side_effect=post_json),
+            patch.object(bluesky_post, "_upload_card_thumb", side_effect=upload_thumb),
+        ):
             result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**kwargs)
     finally:
         for item in reversed(stack):
@@ -302,6 +320,8 @@ def test_incomplete_card_bindings_fail_closed_before_network(private_root, monke
     assert result["status"] == "blocked"
     assert result["reason"] == reason
     assert calls == []
+    assert session_calls == []
+    assert thumb_calls == []
 
 def test_matching_external_duplicate_receipt_replays_without_rejection(private_root, monkeypatch):
     tmp_path = private_root

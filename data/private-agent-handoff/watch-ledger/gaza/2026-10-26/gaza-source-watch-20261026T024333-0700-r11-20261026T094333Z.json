@@ -1,0 +1,167 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T024333-0700-r11-20261026T094333Z",
+  "scheduled_for": "2026-10-26T02:44:51-07:00",
+  "started_at": "2026-10-26T02:43:33-07:00",
+  "completed_at": "2026-10-26T02:48:38-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T02:08:56-07:00",
+    "end": "2026-10-26T02:48:38-07:00",
+    "basis": "Last verified ledger heartbeat completed_at through this run; original incident dates are distinguished from fresh publication/discovery timestamps."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261025-shujaiya-displacement-camp-fire-800",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/-israeli-army-burns-displacement-camp-in-gaza-leaving-800-palestinians-homeless/4100959",
+      "title": "Israeli army burns displacement camp in Gaza, leaving 800 Palestinians homeless",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "event_date": "2026-10-25",
+      "event_time_local": "20:00 reported in Gaza local time",
+      "publication_time": null,
+      "location": "Near Shujaiya junction, eastern Gaza City, Gaza Strip",
+      "affected_population_system": "More than 200 displaced families / over 800 Palestinians reported to have lost tents and belongings",
+      "exact_supporting_passage": "The fire engulfed displacement tents and families’ few remaining belongings, displacing more than 200 families comprising over 800 Palestinians",
+      "source_type": "established_wire_reporting_attributing_claim_to_Gaza_Public_Works_and_Housing_Ministry",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_during": "2026-10-26 02:08:56–current run PDT",
+        "source_reported": "2026-10-26",
+        "incident_preceded_window": true,
+        "what_is_new": "Monday ministry statement on Sunday evening camp fire, newly found and source-traceable; 200+ affected families",
+        "corroboration": "Yeni Safak republishes Anadolu attribution; not independent confirmation",
+        "verification_limits": "Underlying Gaza ministry statement not independently inspected; alleged drone cause and precise displacement figure are attributed claims, not independently verified.",
+        "search_index": 9
+      }
+    },
+    {
+      "finding_id": "gaza-20261026-egypt-erc-convoy-303-dispatched",
+      "canonical_source_url": "https://english.ahram.org.eg/NewsContentP/58/580914/War-on-Gaza/Egypt-sends-,-tonnes-of-aid-to-Gaza-as-bread-crisi.aspx",
+      "title": "Egypt sends 3,690 tonnes of aid to Gaza as bread crisis deepens",
+      "publisher": "Ahram Online",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "event_date": "2026-10-26",
+      "publication_time": null,
+      "location": "Egypt–Gaza aid corridor; cross-border entry unverified",
+      "affected_population_system": "Gaza food assistance; bakeries, hospitals and essential-service fuel supply",
+      "exact_supporting_passage": "The Egyptian Red Crescent (ERC) dispatched more than 3,690 tonnes of humanitarian aid to Gaza early Monday",
+      "source_type": "established_news_reporting_attributing_dispatch_to_Egyptian_Red_Crescent",
+      "classification": "new",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "observed_during": "2026-10-26 02:08:56–current run PDT",
+        "details": "303rd Zad Al-Ezza convoy; >1,574 tonnes flour and food parcels plus medicines, relief supplies and petroleum products",
+        "what_is_new": "Monday dispatch of a numerically specified additional aid convoy",
+        "corroboration": "Ahram Online attributes shipment and load to Egyptian Red Crescent; no independently verified crossing/offload receipt",
+        "verification_limits": "Do not characterize dispatched aid as delivered inside Gaza. Exact article publication time and convoy crossing status unavailable.",
+        "search_index": 11
+      }
+    },
+    {
+      "finding_id": "gaza-20261026-deir-al-balah-ard-al-shawa-gunfire-injury-advance",
+      "canonical_source_url": "https://www.aa.com.tr/en/world/7-year-old-girl-among-3-palestinians-killed-in-israeli-attacks-in-gaza/4100917",
+      "title": "7-year-old girl among 3 Palestinians killed in Israeli attacks in Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "event_date": "2026-10-26",
+      "publication_time": null,
+      "location": "Ard al-Shawa, eastern Deir al-Balah, central Gaza Strip",
+      "affected_population_system": "A Palestinian woman reported moderately injured by gunfire; displaced civilians near reported limited Israeli vehicle advance",
+      "exact_supporting_passage": "In central Gaza, a Palestinian woman sustained moderate injuries from Israeli gunfire in the Ard al-Shawa area east of Deir al-Balah",
+      "source_type": "established_wire_reporting_with_attributed_medical_source_and_witnesses",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_during": "2026-10-26 02:08:56–current run PDT",
+        "what_is_new": "Distinct central-Gaza gunfire injury and military vehicle advance reported Monday, separate from previously recorded southern al-Mawasi casualty event",
+        "corroboration": "AFP separately reported a Monday morning advance with heavy gunfire in eastern Deir al-Balah, https://today.lorientlejour.com/article/1552096/israeli-strike-kills-three-including-child.html",
+        "verification_limits": "AFP supports advance and gunfire, not the exact woman's injury; medical source unnamed by Anadolu.",
+        "search_index": 10
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; production remains authoritative for verification, editing and publishing.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T020456-0700-r11-20261026T090456Z.json",
+      "completed_at": "2026-10-26T02:08:56-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Read directly from ops/watch-ledger; 2026-10-26 folder enumerated before writing."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest Gaza updates dated 19 October 2026."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring direct-regional verification gap."
+      },
+      {
+        "publisher": "WHO global situation portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new situation news dated within observation window."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest updates dated 19 October 2026."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 26 2026 early Monday latest casualties Khan Younis Mawasi ceasefire Israel Palestinians",
+      "site:reuters.com/world/middle-east/ Gaza October 26 2026 ceasefire shelling casualties crossings",
+      "site:apnews.com Gaza Monday October 26 2026 civilians hospital aid ceasefire",
+      "site:ochaopt.org Gaza October 26 2026 situation report humanitarian access",
+      "site:unrwa.org Gaza 26 October 2026 displacement aid shelter latest update",
+      "site:wfp.org Gaza \"26 October 2026\" food aid crossings humanitarian",
+      "site:unicef.org Gaza \"26 October 2026\" water children malnutrition",
+      "site:icrc.org Gaza \"26 October 2026\" detainees hostages ambulances",
+      "Gaza Shujaiya camp 800 Palestinians 200 families burned October 26 2026 ministry drones Sunday",
+      "Gaza Bir 19 7-year-old girl 3 killed October 26 2026 Nasser hospital",
+      "Egyptian Red Crescent 303rd convoy 3690 tons October 26 2026 Gaza 93 patients Rafah",
+      "Gaza October 26 2026 hospital ambulance medical evacuation fuel PRCS MSF Palestinian Red Crescent"
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and civilian impact of military operations",
+      "displacement and shelter destruction",
+      "humanitarian aid and food, fuel and water access",
+      "hospital capacity, ambulances, medical evacuation",
+      "infrastructure and crossings",
+      "hostages/detention and ceasefire negotiation"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct WHO regional reporting unavailable; WHO global page and OCHA OPT accessible. Pre-existing limitation, not a newly observed outage."
+      }
+    ],
+    "excluded_or_not_counted": [
+      "Southern al-Mawasi / Bir 19 three deaths including a seven-year-old girl: AFP and Anadolu confirmed report, but previous 02:08 watch had already identified three deaths as likely follow-up to an earlier two-death lead; no distinct new incident counted.",
+      "AFP cumulative 11 killed and 50 wounded during past 24 hours: overlapping aggregate, not counted as a separate development.",
+      "Anadolu Oct 26 election/humanitarian roundup cites WFP Oct 19 and MoH Oct 21; stale details excluded as new findings.",
+      "Ahram mention of ERC 93rd patient group at Rafah is not a standalone finding because event timing and patient count remain unverified.",
+      "Most other results were out-of-window or stale Reuters/AP/UN reports; no fresh primary OCHA/WHO developments found."
+    ],
+    "assessment": "OCHA OPT and WHO checked first. Exactly 12 additional targeted searches. Three newly surfaced traceable developments or published statements recorded with temporal and independent-confirmation caveats. WHO regional 502 caused DEGRADED rather than FAILED; usable alternative coverage obtained.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T174855-0700-r11-20261026T005032Z",
+  "scheduled_for": "2026-10-25T17:44:51-07:00",
+  "started_at": "2026-10-25T17:48:55-07:00",
+  "completed_at": "2026-10-25T17:51:25.800-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T16:45:42-07:00",
+    "end": "2026-10-25T17:51:25.800-07:00",
+    "basis": "Previous verified ops/watch-ledger completed_at through current completed_at, local observation day 2026-10-25. Inclusion requires a traceable, nonduplicate Gaza development published or independently verified to have occurred in this window; exclude stale indexing or reports with earlier event time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; production Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T164407-0700-r11-20261025T234542Z.json",
+      "completed_at": "2026-10-25T16:45:42-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Read directly from ops/watch-ledger before this run."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Available; homepage and /updates most recent news entry 19 October 2026, no in-window update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Canonical global WHO Gaza/oPt response page accessible; no newly dated in-window Gaza development identified."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; regional primary-source verification unavailable."
+      }
+    ],
+    "preliminary_source_searches": [
+      "site:who.int Gaza health hospital October 25 2026 WHO medical evacuation",
+      "site:ochaopt.org Gaza October 25 2026 humanitarian updates"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza \"26 October 2026\" \"killed\" \"injured\" early Monday",
+      "site:english.wafa.ps/Pages/Details/ \"26/October/2026\" \"Gaza\"",
+      "site:reuters.com/world/middle-east/ Gaza \"October 26, 2026\" airstrikes ceasefire",
+      "site:apnews.com/article/ Gaza October 26 2026 hospital civilians airstrikes",
+      "site:unrwa.org Gaza \"26 October 2026\" displaced aid",
+      "site:icrc.org Gaza 26 October 2026 humanitarian ambulance crossings",
+      "site:aa.com.tr/en/middle-east/ \"Oct 26, 2026\" \"Gaza\" civilians",
+      "site:aljazeera.com/news/2026/10/26 Gaza strikes civilians humanitarian",
+      "site:palestinercs.org \"October 26, 2026\" Gaza ambulance hospital",
+      "site:wfp.org/news Gaza \"26 October 2026\" food access",
+      "site:unicef.org \"26 October 2026\" Gaza water medical",
+      "Gaza Monday October 26 2026 morning 03:00 04:00 Jerusalem time bombing Rafah Khan Younis Jabalya Al Shifa"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "No new in-window listing; latest 19 October 2026."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000?pageNumber=0",
+        "result": "Latest visible 26 October 2026 00:05 Palestine local time is West Bank item, not Gaza, and before observation start; newest Gaza-specific report 25 October 19:33 Palestine local time, reviewed in prior run."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no in-window dated updates observed."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and military operations affecting civilians",
+      "displacement and infrastructure damage",
+      "aid access, food, water, fuel and crossings",
+      "health services, hospital functionality, ambulance/transport and medical evacuation",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "impact": "Direct regional primary-source checks for healthcare disruptions, hospital functioning and medical evacuation changes unavailable; WHO global site and humanitarian/news alternatives remain accessible."
+      }
+    ],
+    "excluded_or_not_counted": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000?pageNumber=0",
+        "reason": "Newest Gaza item predates previous heartbeat. Later WAFA items shown concern West Bank or Israel, outside Gaza scope."
+      },
+      {
+        "publisher": "The Asian Age / Al Jazeera republication",
+        "url": "https://dailyasianage.com/news/359468/seven-killed-in-gaza",
+        "reason": "Dated 26 October 00:10 Bangladesh local time; repackages prior day's university-campus deaths, previously captured in watch; no new time-qualified development."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+        "reason": "Released 19 October with earlier reporting period; background only, not new."
+      },
+      {
+        "reason": "Other results were stale, out of Gaza, lacked time-qualified evidence or duplicated known events."
+      }
+    ],
+    "assessment": "No new independently traceable, nonduplicate in-window Gaza development established. No findings does not establish that no incidents occurred. Primary WHO regional endpoint 502 makes this execution DEGRADED rather than FAILED.",
+    "publication_actions": "none",
+    "production_authorization": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

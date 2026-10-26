@@ -1,0 +1,55 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T164119-0700-r11-164119",
+  "scheduled_for": "2026-10-26T16:45:54-07:00",
+  "started_at": "2026-10-26T16:41:19-07:00",
+  "completed_at": "2026-10-26T16:43:10-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T15:45:44-07:00",
+    "end_at": "2026-10-26T16:43:10-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior persisted ops/watch-ledger Food Line Source Watch heartbeat completed_at through this run; only newly documented, U.S.-located immediate food-access disruptions in the four specified miss classes qualify."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 8,
+      "slow": 4
+    },
+    "search_terms": [
+      "October 26 2026 \"only grocery store\" \"closed\" \"fire\" town food access",
+      "October 26 2026 \"last grocery store\" destroyed fire closed rural community",
+      "\"Oct. 26, 2026\" \"sole grocery\" closure disaster America",
+      "\"October 26, 2026\" food distribution canceled storm flood closed food bank",
+      "\"Oct 26\" \"food pantry\" canceled flooding 2026 United States",
+      "\"October 26, 2026\" \"food bank\" \"closed\" \"power outage\" distribution",
+      "site:gov October 26 2026 SNAP EBT outage suspended benefits service interrupted",
+      "site:gov October 26 2026 WIC interruption benefits outage cards statewide",
+      "October 26 2026 Monday food pantry \"closing\" \"immediately\" rural town food bank service local",
+      "October 26 2026 cancelled food distribution storm flooding electricity power outage Monday emergency food pantry",
+      "October 26 2026 grocery store fire only grocery store residents must travel town news local",
+      "October 26 2026 state agency \"SNAP\" \"WIC\" \"service interruption\" outage notice today benefits"
+    ],
+    "focus_classes": [
+      "Closure/fire/disaster loss of sole, last, or full-service community grocery store",
+      "Storm/flood/fire/outage/facility damage causing canceled or suspended emergency food distribution",
+      "Abrupt food pantry or food-bank closure or major immediate access reduction",
+      "New official SNAP, WIC, or food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; nationwide production Food Line collection remains authoritative.",
+    "Eight fast and four slow targeted searches completed. No U.S. disruption was both credibly supported and newly reported in the observed 2026-10-26T15:45:44-07:00 to run-completion window.",
+    "Search results were dominated by older grocery-store fires/closures, earlier weather-related pantry closures, 2025 SNAP/WIC shutdown coverage, and generic food program reporting. None establishes a new in-window qualifying access disruption.",
+    "An Oct. 26, 2026 ABC11 Raleigh-Durham result describes a community-owned grocery-store groundbreaking, not grocery access loss; excluded. https://abc11.com/watch/live/",
+    "An Oct. 26, 2026 Times Union Rensselaer County wildfire report said no buildings threatened, with no documented food access suspension; excluded. https://www.timesunion.com/weather/article/crews-battle-wildfires-rensselaer-hamilton-22494304.php",
+    "Previous hour's Facebook-sourced potential flood-related pantry cancellation remains undated, without verified U.S. location or provider; not promoted, and no independently verifiable new evidence surfaced in this bounded search.",
+    "Search indexing can lag local provider notices and cannot prove that no disruptions occurred. This watch does not replace the production nationwide collector.",
+    "No approvals, publication, schedule or automation changes, or production collector mutations occurred."
+  ]
+}

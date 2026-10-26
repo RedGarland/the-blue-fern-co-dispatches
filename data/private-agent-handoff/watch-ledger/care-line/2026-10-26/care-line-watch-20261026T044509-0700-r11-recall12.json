@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T044509-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T04:45:22-07:00",
+  "started_at": "2026-10-26T04:45:09-07:00",
+  "completed_at": "2026-10-26T04:47:04-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T03:45:29-07:00",
+    "end": "2026-10-26T04:47:04-07:00",
+    "basis": "From prior verified Care Line Watch heartbeat completion through the current observation. Supplementary recall only; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S. states, District of Columbia and territories; emergency, hospital, maternity, behavioral health, dialysis, oncology and primary care losses; ambulance and air medical losses; CMS certification actions; concrete essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Direct current official CMS public notice table retrieved and screened; newest notices dated 2026-10-23. None newly posted within the observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 26, 2026\" hospital emergency department closure OR suspension United States",
+      "\"October 26, 2026\" maternity labor delivery hospital closing OR suspending",
+      "\"October 26, 2026\" behavioral health psychiatric residential treatment service closure",
+      "\"October 26, 2026\" dialysis oncology cancer treatment clinic closure suspension",
+      "\"October 26, 2026\" urgent care primary care clinic closed patients",
+      "\"October 26, 2026\" ambulance EMS service closing suspended county rural",
+      "\"October 26, 2026\" air medical helicopter ambulance base closure",
+      "site:gov \"October 26, 2026\" hospital emergency license suspended closed health department",
+      "\"October 26, 2026\" hospital ICU ED reopened resumed service after suspension",
+      "Puerto Rico hospital emergencia cierre suspensión servicio ambulancias 26 octubre 2026",
+      "Guam US Virgin Islands CNMI American Samoa hospital emergency service outage October 26 2026",
+      "\"October 25, 2026\" hospital closure rural emergency ambulance service loss locally reported"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261026T034334-0700-r11-recall12",
+      "completed_at": "2026-10-26T03:45:29-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_read": true
+    },
+    "screening": "All 12 targeted searches completed. No new, well-sourced U.S. or U.S. territory access loss, CMS public notice, or concrete service restoration confirmed since prior heartbeat. Results primarily described months-old service changes, proposal-stage stories, unrelated health-system issues, or foreign events. Previously discussed Illinois, Michigan, Maine, New York and other cases were not repeated.",
+    "source_failures": [
+      {
+        "source_url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertemergprep/public-notices",
+        "failure": "Outdated CMS URL inaccessible during initial CMS check.",
+        "recovery": "Official canonical CMS Public Notices URL retrieved successfully before any additional targeted searches.",
+        "impact": "No CMS coverage gap after recovery."
+      }
+    ],
+    "material_degradation": false,
+    "reason_for_status": "DEGRADED because one CMS source URL failed, even though canonical notice coverage and all twelve follow-up searches completed.",
+    "limitations": "Overnight publication and search-index lag can conceal newly reported local events. No production collector state or internal unpublished candidate queue independently reconciled; production remains authoritative.",
+    "controls": "No reviews approved, no public publication or posting, and no schedule alteration or disablement."
+  }
+}

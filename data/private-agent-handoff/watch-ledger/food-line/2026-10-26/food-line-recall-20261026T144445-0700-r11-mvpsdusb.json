@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T144445-0700-r11-mvpsdusb",
+  "scheduled_for": "2026-10-26T14:45:54-07:00",
+  "started_at": "2026-10-26T14:44:45-07:00",
+  "completed_at": "2026-10-26T14:46:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T13:42:49-07:00",
+    "end_at": "2026-10-26T14:46:32-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified ops/watch-ledger food-line heartbeat completed_at (13:42:49 PDT) to current observation; only newly reported, immediately consequential qualifying U.S. access losses count; pre-existing or previously noticed events excluded."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 8,
+      "slow": 4
+    },
+    "search_terms": [
+      "\"only grocery store\" fire closed October 26 2026 town",
+      "\"last grocery store\" \"October 26, 2026\" closure fire",
+      "\"sole grocery store\" closed destroyed flooding October 2026",
+      "\"food distribution\" cancelled storm October 26 2026 USA",
+      "\"food bank\" cancelled distribution flooding October 26 2026",
+      "\"food pantry\" closed power outage storm October 26 2026",
+      "site:gov \"SNAP\" outage \"October 26, 2026\" benefits",
+      "site:gov \"WIC\" \"October 26, 2026\" interruption closed",
+      "site:facebook.com \"food pantry\" \"closed today\" \"October 26\" 2026 storm",
+      "\"October 26, 2026\" \"food distribution\" \"canceled\" OR \"cancelled\" emergency",
+      "October 26 2026 food bank pantry unexpected closure service suspended US local news",
+      "October 26 2026 SNAP WIC EBT outage benefit interruption state agency notices"
+    ],
+    "focus_classes": [
+      "Loss of sole/only/last/full-service community grocery store to fire, closure or disaster",
+      "Emergency food distribution cancellation/suspension from storm, flood, fire, power outage, facility damage",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary high-value recall only; production nationwide Food Line collection remains authoritative.",
+    "Twelve targeted web searches completed across all four miss classes (8 fast, 4 slow); no individual search failure observed. Search results were checked by event/publication date, not crawler date.",
+    "No newly verifiable qualifying U.S. access disruption or official immediate-benefit interruption was found between 2026-10-26 13:42:49 PDT and this observation. findings is empty, not proof that no events occurred.",
+    "Earlier Spencer NY sole grocery fire (September 11 2026) and El Paso TX food-bank storm closure (September 25 2026) were excluded as historical. Sources: https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/ and https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+    "Kenosha Food Bank end-of-2026 closure was reported October 21 2026 (https://www.the-sun.com/money/17182682/kenosha-food-bank-wisconsin-closing/); future announced service end, not an abrupt closure newly reported in window.",
+    "October 26 NY PLATES funding-grant item (https://www.timesunion.com/news/article/hochul-food-banks-funding-snap-22493570.php) reports routine program grants and earlier SNAP changes, not a new SNAP/WIC interruption; excluded.",
+    "Facebook snippets about pantry closures conflated October 26 with other historical dates and had no verifiable timestamp, facility, and new actionable food-service loss; excluded rather than promoted.",
+    "Search-engine date filtering/indexing can lag same-hour local provider notices. Excluded donation drives, resource guides, ordinary program promotion, general inflation, stale/duplicate events, out-of-country stories and unsubstantiated social snippets.",
+    "No review approval, publication, production collector mutation, schedule/task change, or disabling occurred."
+  ]
+}

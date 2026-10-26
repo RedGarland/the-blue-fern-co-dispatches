@@ -27,6 +27,7 @@ from bluefern_dispatches.bluesky_post import maybe_post_gaza_dispatch_to_bluesky
 from bluefern_dispatches.gaza_sources import validate_source_records as validate_collected_source_records
 from bluefern_dispatches.operational_health import build_gaza_operational_receipt, write_operational_receipt
 from scripts.preflight_repo_state import is_shared_dispatch_record_path
+from scripts.test_storage_admission import TEST_ROOT_ENV, admit_test_root
 from scripts.run_and_notify import notification_error_message, send_email
 from scripts.run_daily_gaza import DEFAULT_PAGES_REPO, DEFAULT_PAGES_BRANCH, DEFAULT_REMOTE_URL
 import scripts.run_daily_gaza as daily
@@ -669,6 +670,11 @@ def _maybe_send_email(result: dict[str, Any], smtp_debug: bool) -> str:
     return "sent"
 
 
+def _validate_scheduled_test_root() -> dict[str, Any]:
+    """Validate the scheduler-provided test root before source collection starts."""
+    return admit_test_root(repository_root=ROOT)
+
+
 def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:
     return {
         "ok": False,
@@ -677,6 +683,13 @@ def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:
         "source_count": 0,
         "publisher_count": 0,
         "public_story_count": 0,
+        "test_root_status": "not_checked",
+        "test_root_path": None,
+        "test_root_error": None,
+        "source_collection_started": False,
+        "daily_pipeline_started": False,
+        "failure_stage": None,
+        "no_update_eligible": None,
         "generation_ok": False,
         "tests_ok": None,
         "validation_ok": None,
@@ -771,6 +784,21 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         result["source_repo_status_after"] = _git_status_branch(ROOT)
         result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
         return result
+
+    if getattr(args, "enforce_test_root", False) and not args.manual_source_check_only and not args.post_bluesky_only:
+        test_root = _validate_scheduled_test_root()
+        result["test_root_status"] = test_root["status"]
+        result["test_root_path"] = test_root.get("path")
+        result["test_root_error"] = test_root.get("error")
+        if not test_root["ok"]:
+            result["operator_status"] = "TEST_ROOT_BLOCKED"
+            result["failure_stage"] = "test_root_admission"
+            result["validation_ok"] = False
+            result["no_update_eligible"] = False
+            result["next_action"] = str(test_root.get("error") or "Test-root admission failed.")
+            result["source_repo_status_after"] = _git_status_branch(ROOT)
+            result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
+            return result
 
     manual_validation = validate_or_repair_manual_sources(args.date)
     result["manual_source_validation"] = manual_validation
@@ -874,11 +902,19 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         audio_voice=args.audio_voice,
         audio_format=args.audio_format,
     )
+    result["daily_pipeline_started"] = True
     code, summary, _stdout = _capture_daily_run(daily_args)
     result["commands_run"].append("scripts/run_daily_gaza.py " + " ".join(daily_args))
+    result["source_collection_started"] = bool(summary.get("collection_started"))
     result["source_count"] = int(summary.get("source_count") or 0)
     result["publisher_count"] = int(summary.get("publisher_count") or 0)
     result["public_story_count"] = int(summary.get("public_story_count") or 0)
+    result["test_root_status"] = summary.get("test_root_status") or result["test_root_status"]
+    result["test_root_path"] = summary.get("test_root_path") or result["test_root_path"]
+    result["test_root_error"] = summary.get("test_root_error") or result["test_root_error"]
+    result["failure_stage"] = summary.get("failure_stage")
+    if "no_update_eligible" in summary:
+        result["no_update_eligible"] = summary.get("no_update_eligible")
     result["generation_ok"] = bool(summary.get("generation_ok"))
     result["tests_ok"] = summary.get("tests_ok")
     result["validation_ok"] = summary.get("validation_ok")
@@ -1148,6 +1184,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--audio-format", choices=("mp3", "wav"), default="mp3", help="Audio format.")
     args = parser.parse_args(argv)
     args.date = validate_date(args.date)
+    # The scheduled wrapper must not silently fall back to TEMP or another guessed path.
+    args.enforce_test_root = True
     return args
 
 
@@ -1189,6 +1227,13 @@ def _emit_operational_receipt(args: argparse.Namespace, result: dict[str, Any], 
             "generation_ok": bool(result.get("generation_ok")),
             "validation_ok": result.get("validation_ok"),
             "live_verify_status": result.get("live_verify_status"),
+            "test_root_status": result.get("test_root_status"),
+            "test_root_path": result.get("test_root_path"),
+            "test_root_error": result.get("test_root_error"),
+            "source_collection_started": bool(result.get("source_collection_started")),
+            "daily_pipeline_started": bool(result.get("daily_pipeline_started")),
+            "failure_stage": result.get("failure_stage"),
+            "no_update_eligible": result.get("no_update_eligible"),
         },
     )
     write_result = write_operational_receipt(ROOT, receipt)

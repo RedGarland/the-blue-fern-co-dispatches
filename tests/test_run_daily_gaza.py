@@ -157,6 +157,7 @@ def isolated(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     root = make_root(request, tmp_path_factory, repo)
     monkeypatch.setattr(daily, "ROOT", root)
+    monkeypatch.setenv(operator.TEST_ROOT_ENV, str(root))
     monkeypatch.setattr(daily, "DEFAULT_PAGES_REPO", root / "bluefern-dispatches-pages")
     monkeypatch.setattr(historical, "ROOT", root)
     yield root
@@ -196,7 +197,7 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
 
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
@@ -255,7 +256,6 @@ def test_date_only_command_forwards_post_edition_date_override(isolated, monkeyp
     code = daily.main([
         "--date",
         "2026-05-07",
-        "--skip-tests",
         "--allow-post-edition-date-sources",
         "--pages-repo",
         str(root / "bluefern-dispatches-pages"),
@@ -318,7 +318,7 @@ def test_daily_summary_includes_source_window_and_later_same_day_update_metadata
 
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     run_manifest = json.loads((root / "data" / "dispatches" / "gaza" / "editions" / "2026-05-07" / "run_manifest.json").read_text(encoding="utf-8"))
@@ -526,7 +526,7 @@ def test_collect_or_load_sources_both_mode_writes_manual_sources_before_generati
     monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
@@ -614,7 +614,7 @@ def test_collect_or_load_sources_both_mode_replaces_preexisting_manual_sources_o
     monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
@@ -644,7 +644,7 @@ def test_collect_or_load_sources_both_mode_fails_when_manual_sources_are_not_per
     monkeypatch.setattr(daily, "write_source_records", fake_write)
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
@@ -673,7 +673,7 @@ def test_collect_or_load_sources_both_mode_reports_persisted_file_count(isolated
     monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
     monkeypatch.setattr(daily, "write_source_records", fake_write)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
@@ -756,7 +756,7 @@ def test_collect_or_load_sources_both_mode_preserves_governance_fields(isolated,
     monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     persisted = json.loads(manual_path.read_text(encoding="utf-8"))
@@ -880,7 +880,7 @@ def test_collect_or_load_sources_both_mode_replaces_manual_sources_on_failure(is
     monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
@@ -903,7 +903,7 @@ def test_generated_page_requires_visible_source_links(isolated, monkeypatch, cap
         else completed(args),
     )
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
@@ -950,7 +950,7 @@ def test_push_is_opt_in(isolated, monkeypatch, capsys):
         ),
     )
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--push", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--push", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
@@ -1026,7 +1026,7 @@ def test_gaza_daily_scoped_publish_stays_inside_gaza_and_reaches_push_stage(isol
     monkeypatch.setattr(daily, "run_command", fake_run)
     monkeypatch.setattr(daily.urllib.request, "urlopen", fake_urlopen)
 
-    code = daily.main(["--date", "2026-06-19", "--skip-tests", "--push", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-06-19", "--push", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
@@ -1094,7 +1094,7 @@ def test_email_report_sends_on_success(isolated, monkeypatch, capsys):
     monkeypatch.setattr(daily, "run_command", fake_run)
     monkeypatch.setattr(daily, "send_email", lambda subject, body, date_str: sent.append((subject, body, date_str)))
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
@@ -1166,7 +1166,6 @@ def test_email_report_failure_after_success_is_nonfatal(isolated, monkeypatch, c
         [
             "--date",
             "2026-05-07",
-            "--skip-tests",
             "--push",
             "--post-bluesky",
             "--email-report",
@@ -1270,7 +1269,7 @@ def test_email_report_failure_does_not_log_smtp_password(isolated, monkeypatch, 
         else completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}),
     )
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     captured = capsys.readouterr().out
     summary = json.loads(captured)
@@ -1331,7 +1330,7 @@ def test_generation_warnings_are_carried_into_daily_summary(isolated, monkeypatc
 
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
@@ -1371,7 +1370,7 @@ def test_pipeline_success_email_failure_sets_notification_error_and_keeps_pipeli
         else completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}),
     )
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
     summary = json.loads(capsys.readouterr().out)
     assert code == 2
     assert summary["pipeline_ok"] is True
@@ -1397,7 +1396,7 @@ def test_pipeline_success_email_tls_failure_includes_safe_guidance(isolated, mon
         else completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}),
     )
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
     summary = json.loads(capsys.readouterr().out)
     assert code == 2
     err = str(summary["notification_error"])
@@ -1430,7 +1429,7 @@ def test_bluesky_not_attempted_when_pipeline_fails(isolated, monkeypatch, capsys
     monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--post-bluesky", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--post-bluesky", "--pages-repo", str(root / "bluefern-dispatches-pages")])
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
     assert called["count"] == 0
@@ -1464,7 +1463,6 @@ def test_force_bluesky_post_flag_is_forwarded(isolated, monkeypatch, capsys):
         [
             "--date",
             "2026-05-07",
-            "--skip-tests",
             "--post-bluesky",
             "--force-bluesky-post",
             "--pages-repo",
@@ -1507,7 +1505,7 @@ def test_daily_summary_uses_existing_receipt_skip_result(isolated, monkeypatch, 
 
     monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
     monkeypatch.setattr(daily, "run_command", fake_run)
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--post-bluesky", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--post-bluesky", "--pages-repo", str(root / "bluefern-dispatches-pages")])
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
     assert summary["bluesky_status"] == "skipped"
@@ -1552,7 +1550,7 @@ def test_dry_run_bluesky_records_preview_without_publishing(isolated, monkeypatc
     monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--post-bluesky", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--post-bluesky", "--pages-repo", str(root / "bluefern-dispatches-pages")])
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
     assert captured["kwargs"] is not None
@@ -1600,7 +1598,6 @@ def test_generate_audio_none_fails_before_generation(isolated, monkeypatch, caps
         [
             "--date",
             "2026-05-07",
-            "--skip-tests",
             "--generate-audio",
             "--tts-provider",
             "none",
@@ -1673,7 +1670,7 @@ def test_dry_run_without_audio_refreshes_public_audio_surfaces(isolated, monkeyp
 
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--dry-run", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     audio_index = root / "output" / "site" / "gaza" / "audio" / "index.html"
@@ -1748,7 +1745,7 @@ def test_publish_without_audio_refreshes_public_audio_surfaces_before_pages_dry_
 
     monkeypatch.setattr(daily, "run_command", fake_run)
 
-    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    code = daily.main(["--date", "2026-05-07", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
@@ -1867,7 +1864,6 @@ def test_daily_audio_flags_are_forwarded_to_gaza_audio_writer(isolated, monkeypa
         [
             "--date",
             "2026-05-07",
-            "--skip-tests",
             "--generate-audio",
             "--tts-provider",
             "openai",

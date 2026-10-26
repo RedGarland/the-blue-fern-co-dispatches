@@ -292,7 +292,7 @@ def test_remote_match_does_not_mask_later_conflict(monkeypatch, tmp_path):
     assert result["reason"] == "ambiguous_remote_duplicate"
 
 
-def test_remote_match_with_unexamined_cursor_is_uncertain(monkeypatch, tmp_path):
+def test_repeated_remote_cursor_fails_closed_before_create_record(monkeypatch, tmp_path):
     _configure_env(monkeypatch)
     _session(monkeypatch)
 
@@ -307,7 +307,7 @@ def test_remote_match_with_unexamined_cursor_is_uncertain(monkeypatch, tmp_path)
     result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**_kwargs(tmp_path))
 
     assert result["status"] == "blocked"
-    assert result["reason"] == "remote_duplicate_scan_incomplete"
+    assert result["reason"] == "remote_duplicate_cursor_repeated"
 
 
 def test_exact_draft_skips_matching_remote_post_without_create_record(monkeypatch, tmp_path):

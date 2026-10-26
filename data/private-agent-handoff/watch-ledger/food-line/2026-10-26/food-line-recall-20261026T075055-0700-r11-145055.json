@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T075055-0700-r11-145055",
+  "scheduled_for": "2026-10-26T07:45:54-07:00",
+  "started_at": "2026-10-26T07:50:55-07:00",
+  "completed_at": "2026-10-26T07:52:37.500-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T07:02:13-07:00",
+    "end_at": "2026-10-26T07:52:37.500-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified hourly watch heartbeat completed_at (2026-10-26 07:02:13 PDT) through current check. Search discovery was allowed broader recency, but new-signal qualification required evidence that the disruption arose after the prior check."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 1,
+    "focus_classes": [
+      "Only/sole/last/full-service local grocer closed, burned, or lost",
+      "Emergency food distributions cancelled/suspended by disaster or outage",
+      "Abrupt pantry/food-bank closure or severe access reduction",
+      "New official SNAP/WIC/food-assistance interruptions with immediate access consequences"
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire October 26 2026 town",
+      "\"sole grocery store\" fire shut down October 26 2026",
+      "\"last grocery store\" \"closure\" October 26 2026",
+      "\"food distribution\" canceled storm flood \"October 26\" 2026",
+      "\"food pantry\" emergency closure \"October 26\" 2026",
+      "SNAP EBT outage October 26 2026 state official benefits interrupted",
+      "site:gov \"SNAP\" \"October 26, 2026\" \"delayed\" benefits",
+      "site:gov \"WIC\" \"October 26, 2026\" \"closed\" \"interruption\"",
+      "\"food bank\" \"closed today\" \"Oct 26\" 2026 storm",
+      "\"pantry\" \"suspended services\" \"October 26\" 2026 food",
+      "\"mobile food distribution\" canceled Monday October 26 2026 severe weather",
+      "\"only supermarket\" closing October 26 2026 residents food desert"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall only; primary nationwide Food Line production collector remains authoritative.",
+    "All 12 targeted web searches completed without tool-level failures. No new qualifying U.S. grocery-store loss, weather-related food distribution cancellation, pantry closure, or official benefits interruption was substantiated within the post-prior-check window.",
+    "A Minnesota Star Tribune report dated October 26 describes Bricelyn's only cafe/small food mart having closed in February 2026, not a new October 26 loss; excluded as outside the window (https://www.startribune.com/a-year-after-trumps-big-beautiful-bill-rural-minnesota-is-still-tallying-the-cost/601895396).",
+    "An October 25 Arvada, Colorado, Safeway sale/closing report lacks evidence that this is the community's only or last full-service grocery store and precedes the window; excluded (https://www.milehighonthecheap.com/safeway-closes-closeout-sale-arvada-colorado-discount/).",
+    "Other returned SNAP disruption coverage concerned 2025 federal government shutdown rather than new 2026 official interruptions; excluded.",
+    "Search index included older or irrelevant reports, promotion, donation drives, and non-U.S. items; crawl recency was not mistaken for event or publication recency.",
+    "No unverified lead was promoted to a positive finding. A zero-finding recall check does not establish absence of disruptions nationwide.",
+    "No approvals, public publication, production collection changes, schedule changes, or task disabling occurred."
+  ]
+}

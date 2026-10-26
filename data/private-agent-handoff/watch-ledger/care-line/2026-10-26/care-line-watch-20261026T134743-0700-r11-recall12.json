@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T134743-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T13:45:22-07:00",
+  "started_at": "2026-10-26T13:47:43-07:00",
+  "completed_at": "2026-10-26T13:48:53-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T12:45:35-07:00",
+    "end": "2026-10-26T13:48:53-07:00",
+    "basis": "Start is completed_at of latest verified heartbeat on ops/watch-ledger (12:44:27 PDT run); end is this supplementary run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Care Line collector remains authoritative.",
+    "scope": "U.S., DC, and territories; hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care service loss, rural and emergency care, ambulance/air-medical bases, CMS provider termination/rescission/CLIA actions, and effective essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "verification": "CMS official canonical Public Notices page retrieved and read. Most recent notices dated 2026-10-23, preceding window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspension October 26 2026 US patients",
+      "rural hospital emergency service shut down October 26 2026 United States",
+      "maternity obstetrics labor delivery service closed suspended October 26 2026 hospital",
+      "behavioral health psychiatric inpatient program closed suspended October 26 2026 USA",
+      "dialysis clinic treatment center closed patients October 26 2026 US",
+      "oncology cancer treatment clinic closed or suspended October 26 2026 USA",
+      "primary care clinic abrupt closure October 26 2026 patients US",
+      "ambulance EMS service stopped operations base closure October 26 2026 county",
+      "air medical helicopter ambulance base closed suspended October 26 2026 USA",
+      "hospital emergency maternity clinic reopened restored services October 26 2026",
+      "site:gov hospital emergency service closure suspension public notice October 26 2026",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands health center hospital closure emergency services October 26 2026"
+    ],
+    "search_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "error": "Incorrect/obsolete CMS path was inaccessible through web retrieval. Canonical CMS Public Notices successfully retrieved directly and separately.",
+        "coverage_impact": "No material impact on CMS notice check. Single failed initial URL recorded per degraded-run policy."
+      }
+    ],
+    "screening": "No new verified qualifying U.S. or territory healthcare-access change found within observation window; hits were historical closures, earlier announcements, proposals, risk forecasts, or outside region. No full production duplicate check needed because no positive candidate.",
+    "excluded_examples": [
+      {
+        "title": "West Suburban Medical Center patient-service closure",
+        "reason": "Historical March 2026 closure; not new to October 26 hourly window."
+      },
+      {
+        "title": "Chicago-area Prime Healthcare obstetric service suspension announcements",
+        "reason": "Earlier announced service changes; no new concrete effect established within this hourly window."
+      },
+      {
+        "title": "Alabama rural hospital closure risk report",
+        "reason": "Financial risk forecast; no completed access loss."
+      },
+      {
+        "title": "Maine rural maternity delivery access article",
+        "reason": "Historical report; no newly established effect in this window."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T124427-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-26T12:45:35-07:00",
+      "previous_heartbeat_read_verified": true,
+      "prior_outcome": "no_findings",
+      "production_review": "Production remains authoritative; no positive candidates for production queue cross-check."
+    },
+    "material_degradation": false,
+    "limitations": "Web results may lag local or official announcements. Search recall is not exhaustive and does not replace production national collection. One bad initial CMS URL was recovered through canonical page; classified DEGRADED for transparent accounting.",
+    "controls": "Exactly one private ledger heartbeat; no approval, public publication, changes to production collector, schedule alteration, or task disabling."
+  }
+}

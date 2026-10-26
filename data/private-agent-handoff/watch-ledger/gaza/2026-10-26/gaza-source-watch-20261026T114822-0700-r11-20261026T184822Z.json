@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T114822-0700-r11-20261026T184822Z",
+  "scheduled_for": "2026-10-26T11:44:51-07:00",
+  "started_at": "2026-10-26T11:48:22-07:00",
+  "completed_at": "2026-10-26T11:51:05.470-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T10:51:22.834-07:00",
+    "end": "2026-10-26T11:51:05.470-07:00",
+    "basis": "Previous independently fetched and verified watch-ledger completed_at through current bounded supplementary observation. Reports published earlier or already covered are excluded regardless of when indexed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall/watch for potential high-value Gaza misses only; production collector, reviews and publisher remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T104817-0700-r11-20261026T174817Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T104817-0700-r11-20261026T174817Z.json",
+      "completed_at": "2026-10-26T10:51:22.834-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest 26 October update (Humanitarian Situation Report | 22 October 2026) contains older Gaza humanitarian developments already covered by previous 07:51 watch, including bread supply, monthly food assistance, water and health-system functionality. No newly reported qualifying change within the current observation window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new Gaza-specific October 26 operational update in the linked WHO news/publications for this search interval."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct endpoint returned HTTP 502 Bad Gateway, a pre-existing source restriction/degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 26 2026 18:00 19:00 Palestinian civilians killed injured Monday hospital AFP Reuters",
+      "Gaza 26 October 2026 aid crossing trucks Kerem Shalom Rafah WHO medical evacuation latest",
+      "Gaza October 26 2026 hospital ambulance fuel medical evacuation capacity health service updates",
+      "Gaza October 26 2026 displacement tents destroyed infrastructure water access shelter new operations",
+      "October 26 2026 Gaza October 26 midday afternoon Monday civilian killed injured ceasefire news",
+      "26 October 2026 Gaza Reuters AFP Associated Press breaking aid hospital strike Monday",
+      "26 October 2026 Gaza Wafa Palestinian News Agency casualties latest 26 2026",
+      "26 October 2026 Gaza UNICEF WFP ICRC UNRWA Red Crescent humanitarian new update",
+      "Gaza 26 October 2026 20:30 21:00 21:30 Gaza City evening drone fatalities injured",
+      "October 26 2026 18:00 UTC Gaza aid humanitarian crossings ceasefire Reuters AFP latest",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"26/October/2026\" \"09:00 PM\" OR \"08:00 PM\"",
+      "site:palestinercs.org Gaza October 26 2026 ambulance health emergency October 26"
+    ],
+    "source_access_degradation": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Previously documented persistent outage, not a new material deterioration; WHO global, OCHA, WAFA, Reuters, AP and other established sources remained reachable."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "Reuters 26 October article on UN Commission of Inquiry was published at 18:23 UTC during the current window, but reports the same Commission findings previously surfaced by AP and recorded at the 08:48 watch (including detention allegations and effects of the ceasefire); not counted as a fresh event.",
+      "WAFA 26 October 11:07 AM Palestinian-local casualty totals (11 bodies received, 35 injured) and al-Rimal strike are older than this observation window and were available before previous watch; the Gaza Health Ministry aggregates may overlap individual events.",
+      "Al Jazeera 26 October reporting a fourth fatality at the al-Mawasi displacement camp is a possible follow-up to the three deaths recorded at 08:48; a distinct update time later than the prior check could not be verified, so excluded rather than inventing freshness or double-counting.",
+      "OCHA bakeries/food distribution/Mekorot/health service-point figures already logged in the 07:51 watch; October 25 Gaza university strikes, Al-Mawasi and Deir al-Balah casualty reports, and Shujaiya camp fire already known.",
+      "West Bank reports, opinion and unsupported social claims excluded. No verified new in-Gaza crossing, medical evacuation, aid delivery, operational hospital closure, or civilian harm development dated within the bounded window."
+    ],
+    "limitations": "WHO EMRO regional 502 persists; targeted search results frequently show older indexed material. No negative claim of absolute completeness or event-time verification is made.",
+    "result": "No newly published or demonstrably updated, traceable, nonduplicate high-value Gaza development was verified since prior hourly watch.",
+    "action_scope": "One watch-ledger heartbeat only. No approval, publication, production change, social post, schedule edit or task disable."
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T021509-0700-r11-20261026T0917577",
+  "scheduled_for": "2026-10-26T01:45:54-07:00",
+  "started_at": "2026-10-26T02:15:09-07:00",
+  "completed_at": "2026-10-26T09:17:57.715Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T23:47:37.731-07:00",
+    "end_at": "2026-10-26T09:17:57.715Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at completed_at of the most recent confirmed prior heartbeat in ops/watch-ledger (October 25, 2026 23:47:37.731 PDT), rather than assuming an hourly run was successfully recorded. Includes intervening uncovered hours."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "queries": [
+      "\"October 26, 2026\" \"only grocery store\" closed fire",
+      "\"October 25, 2026\" \"only grocery store\" closure fire",
+      "\"October 26, 2026\" \"sole grocery\" fire closed",
+      "\"October 25, 2026\" \"food pantry\" \"closed\" suddenly",
+      "\"October 26, 2026\" \"food bank\" \"suspended\" distribution storm",
+      "\"October 25, 2026\" \"food distribution\" canceled flooding storm",
+      "site:facebook.com \"October 26\" \"pantry\" \"closed\" outage",
+      "site:gov \"October 26, 2026\" SNAP benefits outage interruption",
+      "site:gov \"October 25, 2026\" WIC offices closed benefits outage",
+      "\"Oct. 26, 2026\" \"food pantry\" \"closed\" \"flood\"",
+      "grocery store fire \"only grocery\" \"Oct 25\" 2026 US",
+      "SNAP WIC EBT outages benefits delayed food pantry closures storm cancellation \"October 26 2026\""
+    ],
+    "explicit_recency_days_for_last_two_queries": 1,
+    "focus_classes": [
+      "Only/sole/last/full-service grocery closure or disaster",
+      "Canceled/suspended emergency distributions due to storm, flooding, fire, power outage or facility damage",
+      "Abrupt food-pantry/food-bank closure or material service reduction",
+      "Official SNAP/WIC/food-assistance interruption causing immediate loss of access"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall-only watch; production Food Line nationwide collection remains authoritative.",
+    "Performed 12 targeted web searches across all four high-value miss classes; searches completed without reported execution errors.",
+    "No newly reported or newly effective qualifying U.S. disruption was verified as occurring in the interval after the prior persisted heartbeat.",
+    "Returned results were predominantly routine food-pantry calendars, food distribution schedules, stale 2025 shutdown notices, older U.S. and non-U.S. grocery closures, and unrelated references; all excluded rather than treating index crawl dates as event dates.",
+    "No newly verified official SNAP or WIC access interruption surfaced in the searched interval.",
+    "Zero verified findings do not prove every recent hyperlocal development has been indexed or captured; this watch is supplemental, not a substitute for the production collector.",
+    "Prior confirmed GitHub watch heartbeat had completed_at 2026-10-26T06:47:37.731Z. The 2026-10-26 directory initially returned 404 because it did not yet exist; this was not a query or connector failure.",
+    "No review approval, publication, schedule modification, or task disabling."
+  ]
+}

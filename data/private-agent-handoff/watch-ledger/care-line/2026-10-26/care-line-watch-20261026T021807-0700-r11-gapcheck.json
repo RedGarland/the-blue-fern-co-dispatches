@@ -1,0 +1,71 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T021807-0700-r11-gapcheck",
+  "scheduled_for": "2026-10-26T01:45:22-07:00",
+  "started_at": "2026-10-26T02:18:07-07:00",
+  "completed_at": "2026-10-26T02:20:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T23:49:29.160-07:00",
+    "end": "2026-10-26T02:20:58-07:00",
+    "basis": "From last verified Care Line Watch heartbeat to this execution; the expected October 26 00:45 heartbeat was absent on ops/watch-ledger, so the interval exceeds one hour. Includes screening of late-indexed high-value healthcare-access recalls. Production collector is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary U.S., DC, Puerto Rico, Guam, U.S. Virgin Islands, Northern Mariana Islands, and American Samoa scan: hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care suspension or closure, rural/emergency service losses, ambulance/air-medical/base shutdowns, official CMS terminations/rescissions/CLIA notices, and concrete effective essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "CMS official Public Notices page searched first; latest notices are CA home health My Families Healthcare CCN 758151 and 1ST AIDE HOME HEALTH AGENCY CCN 559673 plus OH Moonlight Home Health Care Inc CCN 369006, all already captured October 23. No October 24-26 entries visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 hospital emergency department closed suspended diverted patients United States overnight",
+      "October 26 2026 hospital labor delivery maternity services closure suspension United States",
+      "October 25 26 2026 ambulance EMS station base closure suspended response rural United States",
+      "October 25 26 2026 air medical helicopter ambulance base shut down service access United States",
+      "October 25 26 2026 hospital dialysis unit suspended closes access patients United States",
+      "October 25 26 2026 behavioral health psychiatric inpatient unit closure suspension US hospital",
+      "October 26 2026 hospital closed emergency room patients ambulance diversion new local news",
+      "October 26 2026 urgent care clinic primary care oncology cancer center closes suspends patients US",
+      "October 25 26 2026 rural critical access hospital closes emergency care temporary suspension service",
+      "October 26 2026 hospital emergency department reopened resumed services after suspension United States",
+      "October 25 26 2026 state health department hospital license revoked suspended patient care center",
+      "October 25 26 2026 Puerto Rico Guam Virgin Islands Northern Mariana American Samoa hospital clinic ambulance services closed reopen"
+    ],
+    "previous_heartbeat": {
+      "branch": "ops/watch-ledger",
+      "run_id": "care-line-watch-20261025T234735-0700-r11-bounded12",
+      "completed_at": "2026-10-25T23:49:29.160-07:00",
+      "verified_read": true,
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "cadence_gap": {
+      "material": true,
+      "details": "GitHub care-line/2026-10-26 directory returned 404 on two independent reads before this write. No heartbeat was found for the expected 2026-10-26 00:45 PDT check; this execution started at 02:18:07 PDT, more than 30 minutes after the estimated 01:45:22 PDT schedule. The ledger does not establish coverage during the missing interval.",
+      "observed_last_heartbeat": "2026-10-25T23:49:29.160-07:00",
+      "missing_scheduled_hour": "2026-10-26T00:45:22-07:00"
+    },
+    "screening": "CMS had no newly dated notices. Twelve targeted searches across required miss classes did not establish any new, independently evidenced, nonduplicate United States or territory access change. Returned coverage was mostly months-old known closures, historical reopenings, financial proposals, or irrelevant/non-U.S. items.",
+    "excluded_examples": [
+      "Previously logged 2026-10-23 CMS home-health terminations.",
+      "Illinois Vista Medical Center East anesthesia, trauma, and dialysis access changes previously logged.",
+      "Illinois Roseland maternity closure publicized early October with a future October 31 effective date; not a newly discovered report.",
+      "Michigan Insight Coldwater behavioral-health suspension reported July 15.",
+      "West Suburban Medical Center reopening reports are from April, not this observation interval.",
+      "Indiana ambulance-diversion policy implementation occurred in September, not this interval."
+    ],
+    "source_failures": [],
+    "search_access": "CMS and all twelve supplemental searches returned accessible search results; result relevance was limited by indexing freshness.",
+    "material_degradation": true,
+    "limitations": "Watch-run ledger gap and late execution materially degrade proof of hourly continuity. Fresh overnight local reporting may not yet be indexed; no findings does not prove nationwide absence. National production collection and editorial queue not queried or modified.",
+    "controls": "No editorial approval, publication, changes to national collector, schedule modification, or task disablement."
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T234735-0700-r11-bounded12",
+  "scheduled_for": "2026-10-25T23:45:22-07:00",
+  "started_at": "2026-10-25T23:47:35-07:00",
+  "completed_at": "2026-10-25T23:49:29.160-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T22:51:10-07:00",
+    "end": "2026-10-25T23:49:29.160-07:00",
+    "basis": "From independently verified preceding Care Line Watch heartbeat completion to this run; searches also screened late-indexed high-value recalls. Supplementary only; national production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, DC, Puerto Rico, Guam, US Virgin Islands, Northern Mariana Islands, and American Samoa; hospital/ED/maternity/behavioral health/dialysis/oncology/primary care losses, emergency and rural service loss, ambulance/air-medical/base suspension, CMS provider/CLIA action, and verified effective essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS Public Notices table retrieved directly before other targeted searches. Latest entries are the October 23 My Families Healthcare (CA 758151), 1ST AIDE HOME HEALTH AGENCY (CA 559673), and Moonlight Home Health Care Inc (OH 369006) terminations, all previously recorded. No notices dated October 24 or 25 were present."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 25 2026 hospital emergency department suddenly closed suspended patients late Sunday October 26",
+      "October 25 2026 hospital labor delivery maternity unit closure suspended service late Sunday",
+      "October 25 2026 rural ambulance EMS service shutdown closure suspension urgent response",
+      "October 25 2026 air ambulance medical helicopter base suspended shutdown closed",
+      "October 25 2026 dialysis provider clinic dialysis unit treatment services suspend close",
+      "October 25 2026 behavioral health psychiatric inpatient program hospital closes suspended patients",
+      "October 25 2026 oncology cancer clinic chemotherapy infusion closes or suspends care",
+      "October 25 2026 primary care urgent care clinic abruptly closes patients appointments",
+      "October 25 2026 rural critical access hospital emergency services shut down suspended transfer",
+      "October 25 2026 hospital emergency department reopens restored operations after closure",
+      "October 25 2026 health department suspends hospital license clinic CLIA provider termination",
+      "October 25 2026 Puerto Rico Guam U.S. Virgin Islands American Samoa Northern Mariana Islands hospital ambulance medical clinic closure reopening"
+    ],
+    "previous_heartbeat": {
+      "branch": "ops/watch-ledger",
+      "run_id": "care-line-watch-20261025T224921-0700-r11-bd73",
+      "completed_at": "2026-10-25T22:51:10-07:00",
+      "verified_read": true,
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "screening": "No independently corroborated, qualifying, nonduplicate U.S. or territory healthcare access loss or effective restoration identified in the bounded searches. Results were older coverage, previously identified closures, future plans without concrete impact, reports outside the U.S., or irrelevant discussions.",
+    "excluded_examples": [
+      "CMS October 23 HHA terminations previously recorded; no newly dated notice.",
+      "Henderson Hospital Nevada maternity closure was reported August 13, effective September 30; not new.",
+      "Tehama County California air-ambulance base closure was reported in September; not new.",
+      "Michigan Insight Hospital Coldwater behavioral health suspension announced July; not new.",
+      "West Suburban Medical Center Illinois clinic reopening is historical April coverage; not new."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search freshness can lag real-world Sunday-night developments; absence of recall results does not establish absence of nationwide changes. Production Care Line collector and its complete editorial queue were not consulted or modified.",
+    "controls": "No approval, publication, production collector mutation, schedule change, or disablement."
+  }
+}

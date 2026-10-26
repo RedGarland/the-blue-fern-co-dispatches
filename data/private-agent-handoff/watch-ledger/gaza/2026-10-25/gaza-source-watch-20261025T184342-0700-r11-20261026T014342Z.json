@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T184342-0700-r11-20261026T014342Z",
+  "scheduled_for": "2026-10-25T18:44:51-07:00",
+  "started_at": "2026-10-25T18:43:42.434-07:00",
+  "completed_at": "2026-10-25T18:45:25.269-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T17:51:25.800-07:00",
+    "end": "2026-10-25T18:45:25.269-07:00",
+    "basis": "Start equals completed_at of prior verified ops/watch-ledger heartbeat. Include only newly published or independently time-qualified, traceable, nonduplicate in-Gaza developments after the prior check; Palestinian local date has rolled over to 26 October during this Pacific-day watch. Search result indexing alone is not sufficient."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; daily production Gaza collector/publisher is authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T174855-0700-r11-20261026T005032Z.json",
+      "completed_at": "2026-10-25T17:51:25.800-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Previous heartbeat fetched directly from ops/watch-ledger."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest homepage news entry dated 19 October 2026; no new in-window update."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listing dated 19 October 2026."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No date-qualified in-window Gaza change in latest news, publication or regional news lists."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; direct regional WHO Gaza updates unavailable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza \"26 October 2026\" \"killed\" \"injured\" overnight early Monday",
+      "site:english.wafa.ps/Pages/Details/ \"26/October/2026\" Gaza killed wounded",
+      "site:reuters.com/world/middle-east/ Gaza \"October 26, 2026\" ceasefire civilians strikes",
+      "site:apnews.com/article/ Gaza \"October 26, 2026\" killed wounded aid",
+      "site:unrwa.org Gaza \"26 October 2026\" aid displacement schools food",
+      "site:icrc.org Gaza \"26 October 2026\" ambulance hospital evacuation humanitarian",
+      "site:aa.com.tr/en/middle-east/ \"Oct 26, 2026\" Gaza Palestinian civilians",
+      "site:aljazeera.com/news/2026/10/26/ gaza ceasefire strikes aid overnight",
+      "site:palestinercs.org \"26 October 2026\" Gaza ambulance medical",
+      "site:wfp.org Gaza \"October 26, 2026\" food crossings trucks",
+      "site:unicef.org Gaza \"26 October 2026\" drinking water hospital",
+      "Gaza \"Monday\" \"October 26, 2026\" hospital bombing medical evacuation Rafah ceasefire displacement"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000?pageNumber=0",
+        "result": "Current newest listed entry 26 October 00:05 Palestinian time concerns West Bank olive harvest attacks. Newest Gaza article 25 October 19:33 Palestinian time, previously available and predating prior heartbeat. Other later items outside Gaza."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "No newly dated in-window update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No in-window dated situation update."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Failed HTTP 502."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and documented civilian impact of military operations",
+      "displacement and damage to essential infrastructure",
+      "food and drinking-water access, humanitarian deliveries and crossings",
+      "hospital functionality, ambulance/transport, medical evacuation, fuel and clinical-service disruptions",
+      "detention/hostages, ceasefire status and negotiation developments"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean regional oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "impact": "Could not independently inspect latest WHO regional material on healthcare disruption, functional capacity and medical evacuation; WHO global and alternative sources remained accessible."
+      }
+    ],
+    "excluded_or_not_counted": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000?pageNumber=0",
+        "reason": "Gaza item predates previous check; more recent headlines are West Bank/outside Gaza."
+      },
+      {
+        "publisher": "Reuters / AP",
+        "reason": "Targeted searches surfaced earlier dated reports rather than qualifying in-window changes."
+      },
+      {
+        "publisher": "WHO/OCHA",
+        "reason": "Most recent official updates predate watch window."
+      },
+      {
+        "reason": "No source passage with a verifiable new in-window event or materially new follow-up was found; opinion, duplicate/recycled and undated results excluded."
+      }
+    ],
+    "assessment": "No newly traceable, nonduplicate Gaza development established since prior verified watch. This is not proof that nothing happened. Ongoing WHO regional HTTP 502 limits primary health-source coverage; useful alternative coverage remains, so DEGRADED (not FAILED).",
+    "publication_actions": "none",
+    "production_authorization": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T084532-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T08:45:22-07:00",
+  "started_at": "2026-10-26T08:45:32-07:00",
+  "completed_at": "2026-10-26T08:47:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T07:46:28-07:00",
+    "end": "2026-10-26T08:47:32-07:00",
+    "basis": "Previous verified durable Care Line watch heartbeat completion through current observation in Pacific time. Supplementary recall only; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, DC, Puerto Rico, Guam, U.S. Virgin Islands, Northern Mariana Islands, American Samoa. Essential hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care service losses, emergency/rural losses, ambulance or air-medical/base losses, official CMS access-risk actions, and concrete restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "details": "Official CMS page directly opened during run; most recent listed actions were three October 23 home-health terminations, already preceding the observation window. No October 26 new public notice."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes temporarily service suspended reopening October 26 2026 United States",
+      "hospital labor delivery maternity services stop closure October 26 2026",
+      "behavioral health hospital inpatient unit closing suspension October 26 2026",
+      "dialysis cancer infusion oncology services close suspended October 26 2026",
+      "October 26 2026 ambulance service ceases operations county EMS shutdown United States",
+      "October 26 2026 air ambulance helicopter base closes shuts down medical service USA",
+      "October 26 2026 primary care clinic closes patients must transfer",
+      "October 26 2026 rural hospital emergency services suspend reopen",
+      "site:gov \"Oct 26, 2026\" \"hospital\" \"closure\" OR \"suspension\" OR \"rescission\" OR \"CLIA\"",
+      "\"October 26, 2026\" \"reopened\" \"emergency department\" OR \"maternity\" OR \"dialysis\" hospital",
+      "\"26 de octubre de 2026\" Puerto Rico \"hospital\" \"cierre\" OR \"emergencias\" OR \"diálisis\"",
+      "Guam US Virgin Islands American Samoa Northern Mariana Islands October 26 2026 hospital ambulance clinic closed suspended reopened"
+    ],
+    "screening": "No qualifying newly reported essential U.S./territory healthcare-access loss or verified reopening found since the prior completed heartbeat. Searches surfaced previously announced Illinois maternity suspensions and older Michigan behavioral-health service suspension, historical rural closures and proposals. Official Guam October 17 typhoon outpatient notice and October 19 reopening preceded this observation window; government CNMI health-services bulletin content was older/undated for current observation. Foreign, historical, proposed, and nonclinical stories excluded.",
+    "excluded_examples": [
+      {
+        "title": "Roseland Community Hospital labor/delivery planned closure",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/",
+        "reason": "Previously reported October 1 with a future effective date; not a new development this hour."
+      },
+      {
+        "title": "Guam Regional Medical City typhoon outpatient clinic disruption",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "October 17 announcement for October 19 closure and October 20 anticipated restoration; older than search window."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T074424-0700-r11-recall12-074522.json",
+      "previous_completed_at": "2026-10-26T07:46:28-07:00",
+      "previous_heartbeat_read_verified": true,
+      "production_review": "Primary production collector and production event history are authoritative; no new candidates arose requiring full production dedupe."
+    },
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve targeted web searches completed; no access/search failures observed. Search indexing and local-reporting latency mean absence of a confirmed update is not proof no change occurred. No direct primary production queue review was needed for zero new candidates.",
+    "controls": "Observation and single private-watch heartbeat only. No approval, publication, production mutation, schedule alteration, or task disabling."
+  }
+}

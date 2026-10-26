@@ -24,6 +24,13 @@ from bluefern_dispatches.story_dedupe import (
     similarity as dedupe_similarity,
     story_identity_urls,
 )
+from bluesky_card_contract_private import (
+    CardContractError,
+    ExternalCardContract,
+    build_external_record,
+    validate_create_response,
+    validate_external_record,
+)
 
 BLUESKY_API_BASE = "https://bsky.social/xrpc"
 BLUESKY_MAX_POST_LENGTH = 300
@@ -138,6 +145,125 @@ def _safe_http_error(exc: error.HTTPError, secret: str | None) -> tuple[str, str
 
 def _receipt_path(project_root: Path, edition_date: str) -> Path:
     return project_root / "data" / "dispatches" / BLUESKY_DISPATCH_SLUG / "editions" / edition_date / "bluesky_post_receipt.json"
+
+
+def _correction_receipt_path(project_root: Path, edition_date: str) -> Path:
+    return _receipt_path(project_root, edition_date).with_name("bluesky_card_correction_receipt.json")
+
+
+def _load_correction_receipt(project_root: Path, edition_date: str) -> dict[str, Any] | None:
+    path = _correction_receipt_path(project_root, edition_date)
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        return {"_receipt_error": "correction_receipt_unreadable"}
+    if not isinstance(payload, dict) or not payload or not str(payload.get("status") or "").strip():
+        return {"_receipt_error": "correction_receipt_invalid"}
+    return payload
+
+
+def _write_correction_receipt(
+    *,
+    project_root: Path,
+    edition_date: str,
+    public_url: str,
+    post_text: str,
+    old_uri: str,
+    old_cid: str,
+    old_engagement: dict[str, int],
+    status: str,
+    reason: str | None = None,
+    new_uri: str | None = None,
+    new_cid: str | None = None,
+    card_contract: ExternalCardContract | None = None,
+    link_facets_sha256: str | None = None,
+    extra: dict[str, Any] | None = None,
+) -> None:
+    payload: dict[str, Any] = {
+        "correction_type": "replace_exact_old_gaza_post",
+        "edition_date": edition_date,
+        "public_url": public_url,
+        "post_text_sha256": hashlib.sha256(post_text.encode("utf-8")).hexdigest(),
+        "old_uri": old_uri,
+        "old_cid": old_cid,
+        "old_engagement": dict(old_engagement),
+        "status": status,
+        "written_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+    }
+    if reason:
+        payload["reason"] = reason
+    if new_uri:
+        payload["new_uri"] = new_uri
+    if new_cid:
+        payload["new_cid"] = new_cid
+    if card_contract is not None:
+        payload.update(
+            {
+                "card_mode": "external",
+                "card_uri": card_contract.edition_url,
+                "card_title": card_contract.title,
+                "card_description": card_contract.description,
+                "thumb_cid": card_contract.thumb_cid,
+                "thumb_source_sha256": card_contract.thumb_sha256,
+            }
+        )
+    if link_facets_sha256:
+        payload["link_facets_sha256"] = link_facets_sha256
+    if extra:
+        payload.update(extra)
+    _write_receipt_atomic(_correction_receipt_path(project_root, edition_date), payload)
+
+
+def _claim_correction_pending_receipt(
+    *,
+    project_root: Path,
+    edition_date: str,
+    public_url: str,
+    post_text: str,
+    old_uri: str,
+    old_cid: str,
+    old_engagement: dict[str, int],
+    card_contract: ExternalCardContract,
+) -> bool:
+    """Exclusively claim the correction before any createRecord request."""
+    receipt_path = _correction_receipt_path(project_root, edition_date)
+    lock_path = receipt_path.with_name(f"{receipt_path.name}.claim.lock")
+    lock_created = False
+    marker_written = False
+    try:
+        receipt_path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with lock_path.open("x", encoding="utf-8") as handle:
+                handle.write("correction claim")
+            lock_created = True
+        except FileExistsError:
+            return False
+        existing = _load_correction_receipt(project_root, edition_date)
+        if existing:
+            # Pending, uncertain, completed, malformed, or differently bound
+            # state is never silently stale-reclaimed by a second caller.
+            return False
+        _write_correction_receipt(
+            project_root=project_root,
+            edition_date=edition_date,
+            public_url=public_url,
+            post_text=post_text,
+            old_uri=old_uri,
+            old_cid=old_cid,
+            old_engagement=old_engagement,
+            status="pending_create",
+            card_contract=card_contract,
+        )
+        marker_written = True
+        return True
+    finally:
+        if lock_created and marker_written:
+            try:
+                lock_path.unlink()
+            except FileNotFoundError:
+                pass
 
 
 def _dispatch_post_state_path(project_root: Path, dispatch_slug: str, edition_date: str) -> Path:
@@ -360,12 +486,41 @@ def _exact_post_identity_valid(post_uri: Any, post_cid: Any, expected_did: str) 
     return bool(uri.startswith(prefix) and uri[len(prefix) :].strip() and cid)
 
 
+def _private_external_card_contract(
+    expected_card: dict[str, Any] | None,
+    *,
+    edition_date: str,
+    public_url: str,
+    post_text: str,
+) -> ExternalCardContract:
+    if not isinstance(expected_card, dict):
+        raise CardContractError("external-card contract is required")
+    contract = ExternalCardContract(
+        edition_date=expected_card.get("edition_date"),
+        edition_url=expected_card.get("edition_url"),
+        title=expected_card.get("title"),
+        description=expected_card.get("description"),
+        thumb_cid=expected_card.get("thumb_cid"),
+        thumb_sha256=expected_card.get("thumb_sha256"),
+    )
+    contract.validate(post_text)
+    if contract.edition_date != edition_date or contract.edition_url != public_url:
+        raise CardContractError("external-card contract does not bind the requested edition")
+    return contract
+
+
+def _private_facets_sha256(record: dict[str, Any]) -> str:
+    facets = record.get("facets")
+    return hashlib.sha256(json.dumps(facets, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
 def _exact_success_receipt_valid(
     payload: dict[str, Any],
     *,
     expected_text_sha256: str,
     expected_handle: str,
     expected_did: str,
+    expected_card_contract: ExternalCardContract | None = None,
 ) -> bool:
     if str(payload.get("status") or "") != "success":
         return False
@@ -377,12 +532,36 @@ def _exact_success_receipt_valid(
         return False
     if str(payload.get("target_did") or "").strip() != str(expected_did).strip():
         return False
-    if "embed_type" not in payload or payload.get("embed_type") not in {None, ""}:
-        return False
+    if expected_card_contract is None:
+        if "embed_type" not in payload or payload.get("embed_type") not in {None, ""}:
+            return False
+    else:
+        if payload.get("embed_type") != "app.bsky.embed.external":
+            return False
+        if payload.get("card_uri") != expected_card_contract.edition_url:
+            return False
+        if payload.get("card_title") != expected_card_contract.title:
+            return False
+        if payload.get("card_description") != expected_card_contract.description:
+            return False
+        if payload.get("thumb_cid") != expected_card_contract.thumb_cid:
+            return False
+        if str(payload.get("thumb_source_sha256") or "").lower() != expected_card_contract.thumb_sha256.lower():
+            return False
+        if not str(payload.get("link_facets_sha256") or "").strip():
+            return False
     return True
 
 
-def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str) -> dict[str, Any]:
+def _remote_duplicate_reconciliation(
+    repo: str,
+    public_url: str,
+    post_text: str,
+    expected_card_contract: ExternalCardContract | None = None,
+    *,
+    ignore_exact_uri: str | None = None,
+    ignore_exact_cid: str | None = None,
+) -> dict[str, Any]:
     public_url_base = _public_url_base(public_url).rstrip("/")
     malformed = False
     matches: list[dict[str, Any]] = []
@@ -391,6 +570,7 @@ def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str)
     cursor: str | None = None
     seen_cursors: set[str] = set()
     pages_scanned = 0
+    ignored_exact_old_record = 0
     while True:
         params = {"repo": repo, "collection": "app.bsky.feed.post", "limit": "100"}
         if cursor:
@@ -432,22 +612,47 @@ def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str)
             if not _exact_post_identity_valid(post_uri, row.get("cid"), repo):
                 malformed = True
                 continue
+            if ignore_exact_uri and post_uri == ignore_exact_uri:
+                if str(row.get("cid") or "").strip() != str(ignore_exact_cid or "").strip():
+                    return {
+                        "status": "conflict",
+                        "reason": "correction_old_record_cid_changed_in_duplicate_scan",
+                        "pages_scanned": pages_scanned,
+                        "post_uri": post_uri,
+                        "post_cid": row.get("cid"),
+                    }
+                ignored_exact_old_record += 1
+                continue
             embed = value.get("embed") if isinstance(value.get("embed"), dict) else {}
             external = embed.get("external") if isinstance(embed.get("external"), dict) else {}
             embedded_url = str(external.get("uri") or "").strip()
             embedded_url_base = _public_url_base(embedded_url).rstrip("/") if embedded_url else ""
             same_text = record_text == post_text
-            plain_shape = (
-                value.get("$type") in {None, "app.bsky.feed.post"}
-                and "embed" not in value
-                and "reply" not in value
-                and hashlib.sha256(record_text.encode("utf-8")).hexdigest() == approved_text_hash
-            )
             item = {"post_uri": post_uri, "post_cid": row.get("cid")}
-            if same_text and plain_shape:
-                matches.append(item)
+            if expected_card_contract is not None:
+                try:
+                    validate_external_record(record=value, post_text=post_text, contract=expected_card_contract)
+                except CardContractError:
+                    if same_text or public_url_base in record_text or embedded_url_base == public_url_base:
+                        conflicts.append(item)
+                else:
+                    if same_text:
+                        item["embed_type"] = "app.bsky.embed.external"
+                        item["link_facets_sha256"] = _private_facets_sha256(value)
+                        matches.append(item)
+                    else:
+                        conflicts.append(item)
             elif same_text or public_url_base in record_text or embedded_url_base == public_url_base:
-                conflicts.append(item)
+                plain_shape = (
+                    value.get("$type") in {None, "app.bsky.feed.post"}
+                    and "embed" not in value
+                    and "reply" not in value
+                    and hashlib.sha256(record_text.encode("utf-8")).hexdigest() == approved_text_hash
+                )
+                if same_text and plain_shape:
+                    matches.append(item)
+                else:
+                    conflicts.append(item)
         next_cursor = str(payload.get("cursor") or "").strip()
         if not next_cursor:
             break
@@ -465,6 +670,12 @@ def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str)
             }
         seen_cursors.add(next_cursor)
         cursor = next_cursor
+    if ignore_exact_uri and ignored_exact_old_record != 1:
+        return {
+            "status": "uncertain",
+            "reason": "correction_old_record_not_seen_in_duplicate_scan",
+            "pages_scanned": pages_scanned,
+        }
     if malformed:
         return {"status": "uncertain", "reason": "remote_duplicate_record_invalid", "pages_scanned": pages_scanned}
     if conflicts or len(matches) > 1:
@@ -867,6 +1078,11 @@ def _write_success_receipt(
     target_handle: str | None = None,
     target_did: str | None = None,
     approved_text_sha256: str | None = None,
+    card_mode: str | None = None,
+    card_uri: str | None = None,
+    thumb_cid: str | None = None,
+    thumb_source_sha256: str | None = None,
+    link_facets_sha256: str | None = None,
     status: str = "success",
     reason: str | None = None,
 ) -> None:
@@ -895,6 +1111,16 @@ def _write_success_receipt(
         payload["target_did"] = target_did
     if approved_text_sha256:
         payload["approved_text_sha256"] = approved_text_sha256
+    if card_mode:
+        payload["card_mode"] = card_mode
+    if card_uri:
+        payload["card_uri"] = card_uri
+    if thumb_cid:
+        payload["thumb_cid"] = thumb_cid
+    if thumb_source_sha256:
+        payload["thumb_source_sha256"] = thumb_source_sha256
+    if link_facets_sha256:
+        payload["link_facets_sha256"] = link_facets_sha256
     if reason:
         payload["reason"] = reason
     _write_receipt_atomic(path, payload)
@@ -1673,7 +1899,13 @@ def _thumbnail_candidates(project_root: Path) -> tuple[Path, ...]:
     )
 
 
-def _upload_card_thumb(access_jwt: str, project_root: Path, edition_date: str) -> tuple[dict[str, Any] | None, str, bool, int | None, int | None]:
+def _upload_card_thumb(
+    access_jwt: str,
+    project_root: Path,
+    edition_date: str,
+    *,
+    expected_source_sha256: str | None = None,
+) -> tuple[dict[str, Any] | None, str, bool, int | None, int | None, str | None]:
     _ = edition_date
     candidates = _thumbnail_candidates(project_root)
     for path in candidates:
@@ -1685,23 +1917,26 @@ def _upload_card_thumb(access_jwt: str, project_root: Path, edition_date: str) -
         try:
             data = path.read_bytes()
             original_bytes = len(data)
+            source_sha256 = hashlib.sha256(data).hexdigest()
+            if expected_source_sha256 and source_sha256.lower() != str(expected_source_sha256).strip().lower():
+                continue
             if original_bytes <= BLUESKY_COMPRESS_TARGET_BYTES:
                 blob = _upload_blob(access_jwt, data, mime)
                 if blob:
-                    return blob, "uploaded", False, original_bytes, original_bytes
-                return None, "upload_failed", False, original_bytes, None
+                    return blob, "uploaded", False, original_bytes, original_bytes, source_sha256
+                return None, "upload_failed", False, original_bytes, None, source_sha256
             compressed = _compress_thumb_to_jpeg(data)
             if not compressed:
-                return None, "skipped_too_large", False, original_bytes, None
+                return None, "skipped_too_large", False, original_bytes, None, source_sha256
             if len(compressed) >= BLUESKY_BLOB_MAX_BYTES:
-                return None, "skipped_too_large", False, original_bytes, None
+                return None, "skipped_too_large", False, original_bytes, None, source_sha256
             blob = _upload_blob(access_jwt, compressed, "image/jpeg")
             if blob:
-                return blob, "uploaded_compressed", True, original_bytes, len(compressed)
-            return None, "upload_failed", True, original_bytes, len(compressed)
+                return blob, "uploaded_compressed", True, original_bytes, len(compressed), source_sha256
+            return None, "upload_failed", True, original_bytes, len(compressed), source_sha256
         except Exception:  # noqa: BLE001
-            return None, "upload_failed", False, None, None
-    return None, "no_thumbnail", False, None, None
+            return None, "upload_failed", False, None, None, None
+    return None, "source_hash_mismatch" if expected_source_sha256 else "no_thumbnail", False, None, None, None
 
 
 def _upload_food_line_card_thumb(
@@ -1784,6 +2019,88 @@ def _post_json(url: str, payload: dict[str, Any], timeout: float = 20.0) -> dict
     return parsed
 
 
+def _auth_get_json(url: str, access_jwt: str, timeout: float = 20.0) -> dict[str, Any]:
+    req = request.Request(
+        url,
+        method="GET",
+        headers={"Accept": "application/json", "Authorization": f"Bearer {access_jwt}"},
+    )
+    with request.urlopen(req, timeout=timeout) as resp:
+        body = resp.read().decode("utf-8")
+    parsed = json.loads(body) if body else {}
+    if not isinstance(parsed, dict):
+        raise ValueError("Bluesky API response was not a JSON object")
+    return parsed
+
+
+def _is_exact_record_not_found(exc: error.HTTPError, expected_url: str) -> bool:
+    if getattr(exc, "code", None) not in {400, 404}:
+        return False
+    if str(getattr(exc, "url", "") or "") != str(expected_url):
+        return False
+    try:
+        body = exc.read().decode("utf-8")
+        payload = json.loads(body) if body else {}
+    except Exception:  # noqa: BLE001
+        return False
+    return isinstance(payload, dict) and payload.get("error") == "RecordNotFound"
+
+
+def _at_uri_rkey(uri: str, expected_did: str) -> str | None:
+    prefix = f"at://{expected_did}/app.bsky.feed.post/"
+    if not uri.startswith(prefix):
+        return None
+    rkey = uri[len(prefix) :].strip()
+    return rkey or None
+
+
+def _read_exact_old_post_state(
+    *,
+    access_jwt: str,
+    old_uri: str,
+    old_cid: str,
+    expected_did: str,
+    expected_text: str,
+) -> dict[str, Any]:
+    rkey = _at_uri_rkey(old_uri, expected_did)
+    if not rkey:
+        return {"status": "blocked", "reason": "correction_old_uri_invalid"}
+    try:
+        record_query = urlencode({"repo": expected_did, "collection": "app.bsky.feed.post", "rkey": rkey})
+        record = _auth_get_json(
+            f"{BLUESKY_API_BASE}/com.atproto.repo.getRecord?{record_query}",
+            access_jwt,
+        )
+        value = record.get("value") if isinstance(record.get("value"), dict) else {}
+        if (
+            record.get("uri") != old_uri
+            or record.get("cid") != old_cid
+            or value.get("text") != expected_text
+            or value.get("$type") not in {None, "app.bsky.feed.post"}
+            or "embed" in value
+            or "reply" in value
+        ):
+            return {"status": "blocked", "reason": "correction_old_record_binding_mismatch"}
+        thread_query = urlencode({"uri": old_uri, "depth": "0", "parentHeight": "0"})
+        thread = _auth_get_json(f"{BLUESKY_API_BASE}/app.bsky.feed.getPostThread?{thread_query}", access_jwt)
+        post = ((thread.get("thread") or {}).get("post") or {}) if isinstance(thread.get("thread"), dict) else {}
+        if post.get("uri") != old_uri or post.get("cid") != old_cid:
+            return {"status": "blocked", "reason": "correction_old_engagement_identity_mismatch"}
+        counts: dict[str, int] = {}
+        for field in ("likeCount", "repostCount", "replyCount", "quoteCount"):
+            value_count = post.get(field)
+            if isinstance(value_count, bool) or not isinstance(value_count, int) or value_count < 0:
+                return {"status": "uncertain", "reason": "correction_old_engagement_unreadable"}
+            counts[field] = value_count
+        if any(counts.values()):
+            return {"status": "blocked", "reason": "correction_old_record_engagement_changed", "engagement": counts}
+        return {"status": "verified", "uri": old_uri, "cid": old_cid, "engagement": counts, "value": value}
+    except error.HTTPError as exc:
+        return {"status": "uncertain", "reason": "correction_old_record_read_failed", "error_type": type(exc).__name__}
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "uncertain", "reason": "correction_old_record_read_failed", "error_type": type(exc).__name__}
+
+
 def _bluesky_stale_content_guard(post_text: str, context: dict[str, Any]) -> tuple[bool, str]:
     raw_text = str(post_text or "")
     lowered = " ".join(raw_text.split()).casefold()
@@ -1845,6 +2162,10 @@ def maybe_post_gaza_dispatch_to_bluesky(
     expected_handle: str | None = None,
     expected_did: str | None = None,
     live_verification: dict[str, Any] | None = None,
+    expected_card_mode: str | None = None,
+    expected_external_card: dict[str, Any] | None = None,
+    correction_old_uri: str | None = None,
+    correction_old_cid: str | None = None,
 ) -> dict[str, Any]:
     result: dict[str, Any] = {
         "status": "skipped",
@@ -1866,7 +2187,19 @@ def maybe_post_gaza_dispatch_to_bluesky(
         "approved_text_sha256": None,
         "target_handle": None,
         "target_did": None,
+        "card_mode": None,
+        "card_uri": None,
+        "thumb_cid": None,
+        "link_facets_sha256": None,
+        "correction_mode": False,
+        "correction_receipt_path": None,
     }
+    correction_mode = correction_old_uri is not None or correction_old_cid is not None
+    result["correction_mode"] = correction_mode
+    if correction_mode and (not correction_old_uri or not correction_old_cid):
+        result["status"] = "blocked"
+        result["reason"] = "correction_old_uri_and_cid_required"
+        return result
     if not run_succeeded:
         result["reason"] = "run_failed"
         return result
@@ -1881,6 +2214,27 @@ def maybe_post_gaza_dispatch_to_bluesky(
         return result
 
     exact_text_mode = any(value is not None for value in (approved_text_path, approved_text_sha256, expected_handle, expected_did))
+    card_args_present = expected_card_mode is not None or expected_external_card is not None
+    if card_args_present and not exact_text_mode:
+        result["status"] = "blocked"
+        result["reason"] = "card_mode_requires_exact_text_binding"
+        return result
+    if expected_external_card is not None and expected_card_mode != "external":
+        result["status"] = "blocked"
+        result["reason"] = "external_card_requires_external_mode"
+        return result
+    if expected_card_mode == "external" and expected_external_card is None:
+        result["status"] = "blocked"
+        result["reason"] = "external_card_contract_invalid"
+        return result
+    if correction_mode and not exact_text_mode:
+        result["status"] = "blocked"
+        result["reason"] = "correction_requires_exact_text_binding"
+        return result
+    if correction_mode and expected_card_mode != "external":
+        result["status"] = "blocked"
+        result["reason"] = "correction_requires_external_card_mode"
+        return result
     handle = str(os.getenv("BLUESKY_HANDLE", "")).strip()
     if exact_text_mode and not expected_handle:
         result["status"] = "blocked"
@@ -1902,6 +2256,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
     context = _gaza_bluesky_context(root, edition_date)
     result["source_artifact_paths"] = list(context.get("source_artifact_paths") or [])
     exact_text: str | None = None
+    expected_card_contract: ExternalCardContract | None = None
     if exact_text_mode:
         if not expected_did:
             result["status"] = "blocked"
@@ -1927,6 +2282,37 @@ def maybe_post_gaza_dispatch_to_bluesky(
             result["status"] = "blocked"
             result["reason"] = exact_error or "exact_text_binding_failed"
             return result
+        # Existing exact-draft callers intentionally use text-only mode by
+        # omitting the optional card contract. Card-bearing workflows must
+        # opt in explicitly with expected_card_mode="external" and provide
+        # the hash-bound external-card contract.
+        if expected_card_mode is None:
+            expected_card_mode = "plain"
+        if expected_card_mode not in {"plain", "external"}:
+            result["status"] = "blocked"
+            result["reason"] = "exact_card_mode_required"
+            return result
+        if expected_card_mode == "external":
+            try:
+                expected_card_contract = _private_external_card_contract(
+                    expected_external_card,
+                    edition_date=edition_date,
+                    public_url=str(public_url),
+                    post_text=exact_text,
+                )
+            except CardContractError as exc:
+                result["status"] = "blocked"
+                result["reason"] = "external_card_contract_invalid"
+                result["error_message"] = str(exc)
+                return result
+            result["card_mode"] = "external"
+            result["card_uri"] = expected_card_contract.edition_url
+        else:
+            if expected_external_card is not None:
+                result["status"] = "blocked"
+                result["reason"] = "plain_mode_cannot_carry_external_card"
+                return result
+            result["card_mode"] = "plain"
         result["edition_date_verified"] = True
         result["archive_surface_verified"] = True
         result["live_public_verification"] = {
@@ -1974,9 +2360,9 @@ def maybe_post_gaza_dispatch_to_bluesky(
     }
     if exact_text_mode:
         text = exact_text
-        card_title = _build_gaza_card_title(edition_date)
-        card_description = BLUESKY_CARD_FALLBACK_DESCRIPTION
-        use_external_embed = False
+        card_title = expected_card_contract.title if expected_card_contract else _build_gaza_card_title(edition_date)
+        card_description = expected_card_contract.description if expected_card_contract else BLUESKY_CARD_FALLBACK_DESCRIPTION
+        use_external_embed = expected_card_contract is not None
         result["stale_content_guard_status"] = "exact_text_hash_bound"
     else:
         text = build_gaza_bluesky_post_text(
@@ -2025,7 +2411,19 @@ def maybe_post_gaza_dispatch_to_bluesky(
     if not allow_publish:
         result["reason"] = "dry_run"
         return result
-    if exact_text_mode:
+    if correction_mode:
+        correction_receipt = _load_correction_receipt(root, edition_date)
+        result["correction_receipt_path"] = str(_correction_receipt_path(root, edition_date))
+        if correction_receipt:
+            if correction_receipt.get("_receipt_error"):
+                result["status"] = "blocked"
+                result["reason"] = str(correction_receipt["_receipt_error"])
+                return result
+            if correction_receipt.get("status") != "failure":
+                result["status"] = "blocked"
+                result["reason"] = "correction_receipt_requires_reconciliation"
+                return result
+    elif exact_text_mode:
         prior = _load_receipt_for_edition_any_status(root, edition_date)
         if prior:
             receipt_error = str(prior.get("_receipt_error") or "")
@@ -2056,6 +2454,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
                         expected_text_sha256=str(approved_text_sha256).strip().lower(),
                         expected_handle=handle,
                         expected_did=str(expected_did).strip(),
+                        expected_card_contract=expected_card_contract,
                     ):
                         result["status"] = "blocked"
                         result["reason"] = "local_receipt_invalid"
@@ -2128,8 +2527,28 @@ def maybe_post_gaza_dispatch_to_bluesky(
             result["status"] = "blocked"
             result["reason"] = "exact_target_did_mismatch"
             return result
+        correction_old_state: dict[str, Any] | None = None
+        if correction_mode:
+            correction_old_state = _read_exact_old_post_state(
+                access_jwt=access_jwt,
+                old_uri=str(correction_old_uri),
+                old_cid=str(correction_old_cid),
+                expected_did=did,
+                expected_text=text,
+            )
+            if correction_old_state.get("status") != "verified":
+                result["status"] = str(correction_old_state.get("status") or "blocked")
+                result["reason"] = str(correction_old_state.get("reason") or "correction_old_record_unverified")
+                return result
         if exact_text_mode:
-            duplicate = _remote_duplicate_reconciliation(did, str(public_url), text)
+            duplicate = _remote_duplicate_reconciliation(
+                did,
+                str(public_url),
+                text,
+                expected_card_contract=expected_card_contract,
+                ignore_exact_uri=str(correction_old_uri) if correction_mode else None,
+                ignore_exact_cid=str(correction_old_cid) if correction_mode else None,
+            )
             if duplicate.get("status") == "match":
                 if not str(duplicate.get("post_uri") or "").strip():
                     result["status"] = "blocked"
@@ -2143,7 +2562,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
                     post_text=text,
                     card_title=card_title,
                     card_description=card_description,
-                    embed_type="",
+                    embed_type=duplicate.get("embed_type") or ("app.bsky.embed.external" if expected_card_contract is not None else ""),
                     thumb_status="not_attempted",
                     original_thumb_bytes=None,
                     uploaded_thumb_bytes=None,
@@ -2151,6 +2570,11 @@ def maybe_post_gaza_dispatch_to_bluesky(
                     target_handle=handle,
                     target_did=did,
                     approved_text_sha256=str(approved_text_sha256).strip().lower(),
+                    card_mode="external" if expected_card_contract is not None else "plain",
+                    card_uri=expected_card_contract.edition_url if expected_card_contract is not None else None,
+                    thumb_cid=expected_card_contract.thumb_cid if expected_card_contract is not None else None,
+                    thumb_source_sha256=expected_card_contract.thumb_sha256 if expected_card_contract is not None else None,
+                    link_facets_sha256=duplicate.get("link_facets_sha256") if expected_card_contract is not None else None,
                 )
                 return {
                     **result,
@@ -2174,18 +2598,57 @@ def maybe_post_gaza_dispatch_to_bluesky(
         compressed_thumb = False
         original_thumb_bytes = None
         uploaded_thumb_bytes = None
+        thumb_source_sha256 = None
         image_path = None
+        created_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         record_payload = {
             "repo": did,
             "collection": "app.bsky.feed.post",
             "record": {
                 "$type": "app.bsky.feed.post",
                 "text": text,
-                "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "createdAt": created_at,
             },
         }
         if use_external_embed:
-            thumb_blob, thumb_status, compressed_thumb, original_thumb_bytes, uploaded_thumb_bytes = _upload_card_thumb(access_jwt, root, edition_date)
+            thumb_result = _upload_card_thumb(
+                access_jwt,
+                root,
+                edition_date,
+                expected_source_sha256=(expected_card_contract.thumb_sha256 if expected_card_contract is not None else None),
+            )
+            # Keep the established test seam and legacy non-exact callers
+            # compatible while the card-bearing path carries the additional
+            # source-byte fingerprint. Only the reviewed helper returns six
+            # fields; older inert test doubles return the original five.
+            if len(thumb_result) == 5:
+                (
+                    thumb_blob,
+                    thumb_status,
+                    compressed_thumb,
+                    original_thumb_bytes,
+                    uploaded_thumb_bytes,
+                ) = thumb_result
+                thumb_source_sha256 = None
+            elif len(thumb_result) == 6:
+                (
+                    thumb_blob,
+                    thumb_status,
+                    compressed_thumb,
+                    original_thumb_bytes,
+                    uploaded_thumb_bytes,
+                    thumb_source_sha256,
+                ) = thumb_result
+            else:
+                raise ValueError("_upload_card_thumb returned an unsupported result shape")
+            if exact_text_mode and expected_card_contract is not None and not thumb_blob:
+                result["status"] = "blocked"
+                result["reason"] = "approved_card_thumbnail_unavailable"
+                return result
+            if expected_card_contract is not None and thumb_source_sha256 != expected_card_contract.thumb_sha256:
+                result["status"] = "blocked"
+                result["reason"] = "approved_card_thumbnail_source_mismatch"
+                return result
             external: dict[str, Any] = {
                 "$type": "app.bsky.embed.external",
                 "external": {"uri": str(public_url), "title": card_title, "description": card_description},
@@ -2194,8 +2657,36 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 external["external"]["thumb"] = thumb_blob
                 image_path = FOOD_LINE_SOCIAL_IMAGE_PATH
             record_payload["record"]["embed"] = external
+            if exact_text_mode and expected_card_contract is not None:
+                try:
+                    record_payload["record"] = build_external_record(
+                        post_text=text,
+                        contract=expected_card_contract,
+                        thumb_blob=thumb_blob,
+                        created_at=created_at,
+                    )
+                except CardContractError as exc:
+                    result["status"] = "blocked"
+                    result["reason"] = "approved_card_payload_invalid"
+                    result["error_message"] = str(exc)
+                    return result
         req = _build_auth_request(f"{BLUESKY_API_BASE}/com.atproto.repo.createRecord", record_payload, access_jwt)
-        if exact_text_mode and not _claim_pending_receipt(
+        if correction_mode:
+            claimed = _claim_correction_pending_receipt(
+                    project_root=root,
+                    edition_date=edition_date,
+                    public_url=str(public_url),
+                    post_text=text,
+                    old_uri=str(correction_old_uri),
+                    old_cid=str(correction_old_cid),
+                    old_engagement=dict((correction_old_state or {}).get("engagement") or {}),
+                    card_contract=expected_card_contract,
+                )
+            if not claimed:
+                result["status"] = "blocked"
+                result["reason"] = "correction_claim_unavailable_or_already_claimed"
+                return result
+        if exact_text_mode and not correction_mode and not _claim_pending_receipt(
             project_root=root,
             edition_date=edition_date,
             public_url=str(public_url),
@@ -2243,6 +2734,21 @@ def maybe_post_gaza_dispatch_to_bluesky(
                     status="uncertain",
                     reason="post_outcome_uncertain_reconcile_before_retry",
                 )
+                if correction_mode:
+                    _write_correction_receipt(
+                        project_root=root,
+                        edition_date=edition_date,
+                        public_url=str(public_url),
+                        post_text=text,
+                        old_uri=str(correction_old_uri),
+                        old_cid=str(correction_old_cid),
+                        old_engagement=dict((correction_old_state or {}).get("engagement") or {}),
+                        status="uncertain",
+                        reason="post_outcome_uncertain_reconcile_before_retry",
+                        new_uri=post_uri or None,
+                        new_cid=post_cid or None,
+                        card_contract=expected_card_contract,
+                    )
                 return {
                     **result,
                     "status": "uncertain",
@@ -2268,6 +2774,76 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 "stale_content_guard_status": result["stale_content_guard_status"],
                 **verification_fields,
             }
+        if exact_text_mode and expected_card_contract is not None:
+            rkey = post_uri.rsplit("/", 1)[-1]
+            readback_query = urlencode({"repo": did, "collection": "app.bsky.feed.post", "rkey": rkey})
+            readback_request = request.Request(
+                f"{BLUESKY_API_BASE}/com.atproto.repo.getRecord?{readback_query}",
+                method="GET",
+                headers={"Accept": "application/json", "Authorization": f"Bearer {access_jwt}"},
+            )
+            try:
+                with request.urlopen(readback_request, timeout=20.0) as resp:
+                    readback_body = resp.read().decode("utf-8")
+                readback = json.loads(readback_body) if readback_body else {}
+                validate_create_response({"uri": post_uri, "cid": post_cid}, expected_did=did)
+                if not isinstance(readback, dict) or readback.get("uri") != post_uri or readback.get("cid") != post_cid:
+                    raise CardContractError("post readback identity mismatch")
+                validate_external_record(record=readback.get("value"), post_text=text, contract=expected_card_contract)
+            except Exception as exc:  # noqa: BLE001 - a created-but-unverified post is uncertain.
+                _write_success_receipt(
+                    project_root=root,
+                    edition_date=edition_date,
+                    public_url=str(public_url),
+                    post_uri=post_uri,
+                    post_text=text,
+                    card_title=card_title,
+                    card_description=card_description,
+                    embed_type="app.bsky.embed.external",
+                    thumb_status=thumb_status,
+                    original_thumb_bytes=original_thumb_bytes,
+                    uploaded_thumb_bytes=uploaded_thumb_bytes,
+                    post_cid=post_cid or None,
+                    target_handle=handle,
+                    target_did=did,
+                    approved_text_sha256=str(approved_text_sha256).strip().lower(),
+                    card_mode="external",
+                    card_uri=expected_card_contract.edition_url,
+                    thumb_cid=expected_card_contract.thumb_cid,
+                    thumb_source_sha256=expected_card_contract.thumb_sha256,
+                    link_facets_sha256=_private_facets_sha256(record_payload["record"]),
+                    status="uncertain",
+                    reason="post_readback_card_verification_failed",
+                )
+                if correction_mode:
+                    _write_correction_receipt(
+                        project_root=root,
+                        edition_date=edition_date,
+                        public_url=str(public_url),
+                        post_text=text,
+                        old_uri=str(correction_old_uri),
+                        old_cid=str(correction_old_cid),
+                        old_engagement=dict((correction_old_state or {}).get("engagement") or {}),
+                        status="uncertain",
+                        reason="post_readback_card_verification_failed",
+                        new_uri=post_uri,
+                        new_cid=post_cid or None,
+                        card_contract=expected_card_contract,
+                        link_facets_sha256=_private_facets_sha256(record_payload["record"]),
+                    )
+                return {
+                    **result,
+                    "status": "uncertain",
+                    "post_uri": post_uri,
+                    "reason": "post_outcome_uncertain_reconcile_before_retry",
+                    "post_text": text,
+                    "card_title": card_title,
+                    "card_description": card_description,
+                    "error_type": type(exc).__name__,
+                    "error_message": "created record did not verify as the approved card-bearing post",
+                }
+            result["thumb_cid"] = expected_card_contract.thumb_cid
+            result["link_facets_sha256"] = _private_facets_sha256(record_payload["record"])
         _write_success_receipt(
             project_root=root,
             edition_date=edition_date,
@@ -2284,7 +2860,27 @@ def maybe_post_gaza_dispatch_to_bluesky(
             target_handle=handle,
             target_did=did,
             approved_text_sha256=str(approved_text_sha256).strip().lower() if exact_text_mode else None,
+            card_mode="external" if expected_card_contract is not None else ("plain" if exact_text_mode else None),
+            card_uri=expected_card_contract.edition_url if expected_card_contract is not None else None,
+            thumb_cid=expected_card_contract.thumb_cid if expected_card_contract is not None else None,
+            thumb_source_sha256=expected_card_contract.thumb_sha256 if expected_card_contract is not None else None,
+            link_facets_sha256=_private_facets_sha256(record_payload["record"]) if expected_card_contract is not None else None,
         )
+        if correction_mode:
+            _write_correction_receipt(
+                project_root=root,
+                edition_date=edition_date,
+                public_url=str(public_url),
+                post_text=text,
+                old_uri=str(correction_old_uri),
+                old_cid=str(correction_old_cid),
+                old_engagement=dict((correction_old_state or {}).get("engagement") or {}),
+                status="created_verified_pending_old_delete",
+                new_uri=post_uri,
+                new_cid=post_cid or None,
+                card_contract=expected_card_contract,
+                link_facets_sha256=_private_facets_sha256(record_payload["record"]) if expected_card_contract is not None else None,
+            )
         return {
             "status": "success",
             "post_uri": post_uri,
@@ -2304,6 +2900,8 @@ def maybe_post_gaza_dispatch_to_bluesky(
             "edition_date_verified": result["edition_date_verified"],
             "stale_content_guard_status": result["stale_content_guard_status"],
             "approved_text_sha256": str(approved_text_sha256).strip().lower() if exact_text_mode else None,
+            "correction_mode": correction_mode,
+            "correction_receipt_path": result.get("correction_receipt_path"),
             **verification_fields,
         }
     except error.HTTPError as exc:
@@ -2327,6 +2925,19 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 status="uncertain",
                 reason="post_request_http_error_outcome_uncertain",
             )
+            if correction_mode:
+                _write_correction_receipt(
+                    project_root=root,
+                    edition_date=edition_date,
+                    public_url=str(public_url),
+                    post_text=text,
+                    old_uri=str(correction_old_uri),
+                    old_cid=str(correction_old_cid),
+                    old_engagement=dict((correction_old_state or {}).get("engagement") or {}),
+                    status="uncertain",
+                    reason="post_request_http_error_outcome_uncertain",
+                    card_contract=expected_card_contract,
+                )
             return {
                 **result,
                 "status": "uncertain",
@@ -2373,6 +2984,19 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 status="uncertain",
                 reason="post_request_outcome_uncertain",
             )
+            if correction_mode:
+                _write_correction_receipt(
+                    project_root=root,
+                    edition_date=edition_date,
+                    public_url=str(public_url),
+                    post_text=text,
+                    old_uri=str(correction_old_uri),
+                    old_cid=str(correction_old_cid),
+                    old_engagement=dict((correction_old_state or {}).get("engagement") or {}),
+                    status="uncertain",
+                    reason="post_request_outcome_uncertain",
+                    card_contract=expected_card_contract,
+                )
             return {
                 **result,
                 "status": "uncertain",
@@ -2397,6 +3021,140 @@ def maybe_post_gaza_dispatch_to_bluesky(
             "stale_content_guard_status": result["stale_content_guard_status"],
             **verification_fields,
         }
+
+
+def delete_verified_gaza_card_correction(
+    *,
+    access_jwt: str,
+    project_root: Path,
+    edition_date: str,
+    public_url: str,
+    post_text: str,
+    expected_did: str,
+    old_uri: str,
+    old_cid: str,
+    new_uri: str,
+    new_cid: str,
+    expected_card_contract: ExternalCardContract,
+) -> dict[str, Any]:
+    """Delete only the exact old post after a verified card-bearing replacement.
+
+    This is intentionally separate from create. The old record is retained
+    until the new record is read back and the old URI/CID/zero-engagement state
+    is checked again immediately before deletion.
+    """
+    receipt = _load_correction_receipt(project_root, edition_date)
+    if not receipt or receipt.get("status") != "created_verified_pending_old_delete":
+        return {"status": "blocked", "reason": "correction_receipt_not_ready_for_delete"}
+    if (
+        receipt.get("old_uri") != old_uri
+        or receipt.get("old_cid") != old_cid
+        or receipt.get("new_uri") != new_uri
+        or receipt.get("new_cid") != new_cid
+    ):
+        return {"status": "blocked", "reason": "correction_receipt_binding_mismatch"}
+    if not _exact_post_identity_valid(new_uri, new_cid, expected_did):
+        return {"status": "blocked", "reason": "correction_new_identity_invalid"}
+    new_rkey = _at_uri_rkey(new_uri, expected_did)
+    if not new_rkey:
+        return {"status": "blocked", "reason": "correction_new_uri_invalid"}
+    try:
+        new_query = urlencode({"repo": expected_did, "collection": "app.bsky.feed.post", "rkey": new_rkey})
+        new_record = _auth_get_json(
+            f"{BLUESKY_API_BASE}/com.atproto.repo.getRecord?{new_query}",
+            access_jwt,
+        )
+        if new_record.get("uri") != new_uri or new_record.get("cid") != new_cid:
+            return {"status": "blocked", "reason": "correction_new_readback_identity_mismatch"}
+        validate_external_record(record=new_record.get("value"), post_text=post_text, contract=expected_card_contract)
+    except Exception as exc:  # noqa: BLE001 - no deletion without new proof.
+        return {"status": "uncertain", "reason": "correction_new_readback_failed", "error_type": type(exc).__name__}
+
+    old_state = _read_exact_old_post_state(
+        access_jwt=access_jwt,
+        old_uri=old_uri,
+        old_cid=old_cid,
+        expected_did=expected_did,
+        expected_text=post_text,
+    )
+    if old_state.get("status") != "verified":
+        return {"status": old_state.get("status") or "blocked", "reason": old_state.get("reason") or "correction_old_record_not_deleteable"}
+
+    delete_started = False
+    try:
+        old_rkey = _at_uri_rkey(old_uri, expected_did)
+        if not old_rkey:
+            return {"status": "blocked", "reason": "correction_old_uri_invalid"}
+        delete_payload = {
+            "repo": expected_did,
+            "collection": "app.bsky.feed.post",
+            "rkey": old_rkey,
+            "swapRecord": old_cid,
+        }
+        delete_request = _build_auth_request(
+            f"{BLUESKY_API_BASE}/com.atproto.repo.deleteRecord",
+            delete_payload,
+            access_jwt,
+        )
+        delete_started = True
+        with request.urlopen(delete_request, timeout=20.0) as response:
+            response.read()
+        old_absence_url = f"{BLUESKY_API_BASE}/com.atproto.repo.getRecord?{urlencode({'repo': expected_did, 'collection': 'app.bsky.feed.post', 'rkey': old_rkey})}"
+        try:
+            _auth_get_json(old_absence_url, access_jwt)
+        except error.HTTPError as exc:
+            if not _is_exact_record_not_found(exc, old_absence_url):
+                raise
+        else:
+            _write_correction_receipt(
+                project_root=project_root,
+                edition_date=edition_date,
+                public_url=public_url,
+                post_text=post_text,
+                old_uri=old_uri,
+                old_cid=old_cid,
+                old_engagement=dict(old_state.get("engagement") or {}),
+                status="uncertain",
+                reason="correction_old_record_still_present",
+                new_uri=new_uri,
+                new_cid=new_cid,
+                card_contract=expected_card_contract,
+                extra={"old_delete_status": "old_record_still_present", "new_readback_status": "verified"},
+            )
+            return {"status": "uncertain", "reason": "correction_old_record_still_present"}
+        _write_correction_receipt(
+            project_root=project_root,
+            edition_date=edition_date,
+            public_url=public_url,
+            post_text=post_text,
+            old_uri=old_uri,
+            old_cid=old_cid,
+            old_engagement=dict(old_state.get("engagement") or {}),
+            status="completed",
+            new_uri=new_uri,
+            new_cid=new_cid,
+            card_contract=expected_card_contract,
+            extra={"old_delete_status": "verified_absent", "new_readback_status": "verified"},
+        )
+        return {"status": "completed", "old_uri": old_uri, "new_uri": new_uri, "new_cid": new_cid}
+    except Exception as exc:  # noqa: BLE001 - deletion outcome is uncertain after request start.
+        if delete_started:
+            _write_correction_receipt(
+                project_root=project_root,
+                edition_date=edition_date,
+                public_url=public_url,
+                post_text=post_text,
+                old_uri=old_uri,
+                old_cid=old_cid,
+                old_engagement=dict(old_state.get("engagement") or {}),
+                status="uncertain",
+                reason="correction_old_delete_outcome_uncertain",
+                new_uri=new_uri,
+                new_cid=new_cid,
+                card_contract=expected_card_contract,
+            )
+            return {"status": "uncertain", "reason": "correction_old_delete_outcome_uncertain", "error_type": type(exc).__name__}
+        return {"status": "failure", "reason": str(exc) or "correction_old_delete_failed", "error_type": type(exc).__name__}
 
 
 def maybe_post_food_line_dispatch_to_bluesky(
@@ -2746,4 +3504,5 @@ def maybe_post_food_line_dispatch_to_bluesky(
     if allow_publish and not dry_run:
         _write_food_line_post_state(root, edition_date, state_payload)
     return result
+
 

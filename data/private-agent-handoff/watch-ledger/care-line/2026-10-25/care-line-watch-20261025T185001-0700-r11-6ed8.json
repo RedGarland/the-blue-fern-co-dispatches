@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T185001-0700-r11-6ed8",
+  "scheduled_for": "2026-10-25T18:45:22-07:00",
+  "started_at": "2026-10-25T18:50:01-07:00",
+  "completed_at": "2026-10-25T18:51:34-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T17:43:18.211-07:00",
+    "end": "2026-10-25T18:51:34-07:00",
+    "basis": "From verified prior supplementary care-line heartbeat completion (2026-10-25T17:43:18.211-07:00) to this check's completion; late-indexed recall included. Production national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, District of Columbia and U.S. territories. Supplementary high-value recall only: hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care service loss, emergency/rural loss, EMS/air-medical/base shutdown, CMS termination/rescission/CLIA action, and concrete restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_page_accessed": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS list accessed; latest three October 23 home-health termination notices (My Families Healthcare CA 758151, 1ST AIDE HOME HEALTH AGENCY CA 559673, Moonlight Home Health Care Inc OH 369006) were identified by earlier watches; no October 24–25 notice listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 25 2026 hospital emergency department emergency room closed suspended services United States",
+      "October 25 2026 labor delivery maternity hospital unit closure suspended announced",
+      "October 25 2026 rural hospital medical clinic service stopped operations closure",
+      "October 25 2026 ambulance EMS air ambulance base shuts down suspends response service",
+      "October 25 2026 department of health hospital trauma designation suspension official notice",
+      "October 25 2026 dialysis center inpatient outpatient kidney treatment service suspended closed",
+      "October 25 2026 behavioral health psychiatric hospital residential treatment program closing patients",
+      "October 25 2026 cancer oncology chemotherapy infusion clinic service suspended shut down",
+      "October 25 2026 primary care federally qualified health center urgent care closure last day",
+      "October 25 2026 hospital emergency department reopened service restored ambulance resumed",
+      "October 25 2026 Puerto Rico Guam US Virgin Islands American Samoa CNMI hospital clinic ambulance service closure",
+      "October 24 25 2026 local news hospital closure emergency care maternity dialysis ambulance services U.S."
+    ],
+    "previous_heartbeat": {
+      "branch": "ops/watch-ledger",
+      "run_id": "care-line-watch-20261025T174057-0700-r11-supp12",
+      "completed_at": "2026-10-25T17:43:18.211-07:00",
+      "verified_read": true,
+      "previous_outcome": "no_findings"
+    },
+    "screening": "Twelve bounded targeted searches returned no independently verifiable new or newly recalled nonduplicate qualifying U.S./territory service-access development. Results were mostly older suspensions, historical closures, proposals, national trend reporting or unrelated foreign-country material. No qualifying new CMS notice.",
+    "excluded_examples": [
+      "Vista Medical Center East (IL) anesthesia/trauma designation service losses occurred October 22–23 and were already logged.",
+      "Roseland Community Hospital (IL) maternity-service suspension announced previously; not new to this watch.",
+      "Sturgis Hospital (MI) rural service loss occurred months earlier.",
+      "Older clinic closures and historical restorations without newly effective October 25 changes excluded.",
+      "Hospital proposals, ownership-only business articles, general commentary and non-U.S. results excluded."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search-index coverage is bounded and incomplete, especially for Sunday local reporting; cannot rule out unpublished or not-yet-indexed access changes. Deduplication checked the independently verified immediately preceding supplementary heartbeat and known ledger findings, not authoritative production queue.",
+    "controls": "No editorial approval, publication, production collector modification, schedule change or disablement."
+  }
+}

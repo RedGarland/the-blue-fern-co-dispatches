@@ -371,7 +371,13 @@ def test_food_line_discovery_expansion_stops_at_deadline_after_first_query(tmp_p
     assert result["status"] == "timed_out"
     assert result["timed_out"] is True
     assert result["queries_completed"] == 1
-    assert result["queries_timed_out"] == 1
+    # The global deadline is observed before q2 starts; no query-level
+    # timeout occurred, so preserve truthful disposition accounting.
+    assert result["queries_attempted"] == 1
+    assert result["queries_succeeded"] == 1
+    assert result["queries_failed"] == 0
+    assert result["queries_timed_out"] == 0
+    assert result["queries_remaining"] == 1
     assert result["candidate_count"] == 0
     candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
     assert candidates == []
@@ -1284,6 +1290,7 @@ def test_google_news_rpc_request_parses_escaped_garturlres(monkeypatch: pytest.M
             return response_text.encode("utf-8")
 
     monkeypatch.setattr(expansion_module.urllib.request, "urlopen", lambda *args, **kwargs: _Response())
+    monkeypatch.setattr(expansion_module.ssl, "_create_unverified_context", lambda: object())
 
     resolved, error = expansion_module._google_news_rpc_request("token", "1782841548", "sig")
 
@@ -1305,6 +1312,7 @@ def test_google_news_rpc_request_parses_garturlres_with_amp_fallback(monkeypatch
             return response_text.encode("utf-8")
 
     monkeypatch.setattr(expansion_module.urllib.request, "urlopen", lambda *args, **kwargs: _Response())
+    monkeypatch.setattr(expansion_module.ssl, "_create_unverified_context", lambda: object())
 
     resolved, error = expansion_module._google_news_rpc_request("token", "1788047985", "sig")
 
@@ -1326,6 +1334,7 @@ def test_google_news_rpc_request_without_article_url_fails_safely(monkeypatch: p
             return response_text.encode("utf-8")
 
     monkeypatch.setattr(expansion_module.urllib.request, "urlopen", lambda *args, **kwargs: _Response())
+    monkeypatch.setattr(expansion_module.ssl, "_create_unverified_context", lambda: object())
 
     resolved, error = expansion_module._google_news_rpc_request("token", "1788047985", "sig")
 
@@ -3823,3 +3832,4 @@ def test_food_line_discovery_expansion_helper_reads_no_current_update_metadata(t
     assert helper_result["no_current_update"] is True
     assert helper_result["discovery_audit_json_path"].endswith("discovery_audit.json")
     assert helper_result["discovery_audit_md_path"].endswith("discovery_audit.md")
+

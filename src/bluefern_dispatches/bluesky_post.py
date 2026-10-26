@@ -30,6 +30,7 @@ BLUESKY_MAX_POST_LENGTH = 300
 BLUESKY_CARD_MAX_DESCRIPTION_LENGTH = 240
 BLUESKY_CARD_FALLBACK_DESCRIPTION = "Source-backed daily Gaza briefing from The Blue Fern Co."
 BLUESKY_GAZA_POST_FALLBACK = "The latest Gaza briefing is live.\n\nFull briefing:"
+BLUESKY_DUPLICATE_SCAN_MAX_PAGES = 1000
 FOOD_LINE_DISPATCH_SLUG = "food-line"
 FOOD_LINE_BLUESKY_POST_FALLBACK = "The latest Food Line briefing is live.\n\nFull briefing:"
 FOOD_LINE_BLUESKY_POST_STATE_FILENAME = "bluesky_post.json"
@@ -383,64 +384,95 @@ def _exact_success_receipt_valid(
 
 def _remote_duplicate_reconciliation(repo: str, public_url: str, post_text: str) -> dict[str, Any]:
     public_url_base = _public_url_base(public_url).rstrip("/")
-    query = urlencode({"repo": repo, "collection": "app.bsky.feed.post", "limit": "100"})
-    req = request.Request(
-        f"{BLUESKY_API_BASE}/com.atproto.repo.listRecords?{query}",
-        method="GET",
-        headers={"Accept": "application/json"},
-    )
-    try:
-        with request.urlopen(req, timeout=20.0) as resp:
-            body = resp.read().decode("utf-8")
-        payload = json.loads(body) if body else {}
-    except Exception as exc:  # noqa: BLE001
-        return {"status": "uncertain", "reason": "remote_duplicate_check_failed", "error_type": type(exc).__name__}
-    if not isinstance(payload, dict) or not isinstance(payload.get("records"), list):
-        return {"status": "uncertain", "reason": "remote_duplicate_response_invalid"}
     malformed = False
     matches: list[dict[str, Any]] = []
     conflicts: list[dict[str, Any]] = []
     approved_text_hash = hashlib.sha256(post_text.encode("utf-8")).hexdigest()
-    for row in payload["records"]:
-        if not isinstance(row, dict):
-            malformed = True
-            continue
-        value = row.get("value") if isinstance(row.get("value"), dict) else row.get("record")
-        if not isinstance(value, dict) or not isinstance(value.get("text"), str):
-            malformed = True
-            continue
-        record_text = value["text"]
-        post_uri = str(row.get("uri") or "").strip()
-        if not _exact_post_identity_valid(post_uri, row.get("cid"), repo):
-            malformed = True
-            continue
-        embed = value.get("embed") if isinstance(value.get("embed"), dict) else {}
-        external = embed.get("external") if isinstance(embed.get("external"), dict) else {}
-        embedded_url = str(external.get("uri") or "").strip()
-        embedded_url_base = _public_url_base(embedded_url).rstrip("/") if embedded_url else ""
-        same_text = record_text == post_text
-        plain_shape = (
-            value.get("$type") in {None, "app.bsky.feed.post"}
-            and "embed" not in value
-            and "reply" not in value
-            and hashlib.sha256(record_text.encode("utf-8")).hexdigest() == approved_text_hash
+    cursor: str | None = None
+    seen_cursors: set[str] = set()
+    pages_scanned = 0
+    while True:
+        params = {"repo": repo, "collection": "app.bsky.feed.post", "limit": "100"}
+        if cursor:
+            params["cursor"] = cursor
+        query = urlencode(params)
+        req = request.Request(
+            f"{BLUESKY_API_BASE}/com.atproto.repo.listRecords?{query}",
+            method="GET",
+            headers={"Accept": "application/json"},
         )
-        item = {"post_uri": post_uri, "post_cid": row.get("cid")}
-        if same_text and plain_shape:
-            matches.append(item)
-        elif same_text or public_url_base in record_text or embedded_url_base == public_url_base:
-            conflicts.append(item)
-    if str(payload.get("cursor") or "").strip():
-        return {"status": "uncertain", "reason": "remote_duplicate_scan_incomplete"}
+        try:
+            with request.urlopen(req, timeout=20.0) as resp:
+                body = resp.read().decode("utf-8")
+            payload = json.loads(body) if body else {}
+        except Exception as exc:  # noqa: BLE001
+            return {
+                "status": "uncertain",
+                "reason": "remote_duplicate_check_failed",
+                "error_type": type(exc).__name__,
+                "pages_scanned": pages_scanned,
+            }
+        if not isinstance(payload, dict) or not isinstance(payload.get("records"), list):
+            return {
+                "status": "uncertain",
+                "reason": "remote_duplicate_response_invalid",
+                "pages_scanned": pages_scanned,
+            }
+        pages_scanned += 1
+        for row in payload["records"]:
+            if not isinstance(row, dict):
+                malformed = True
+                continue
+            value = row.get("value") if isinstance(row.get("value"), dict) else row.get("record")
+            if not isinstance(value, dict) or not isinstance(value.get("text"), str):
+                malformed = True
+                continue
+            record_text = value["text"]
+            post_uri = str(row.get("uri") or "").strip()
+            if not _exact_post_identity_valid(post_uri, row.get("cid"), repo):
+                malformed = True
+                continue
+            embed = value.get("embed") if isinstance(value.get("embed"), dict) else {}
+            external = embed.get("external") if isinstance(embed.get("external"), dict) else {}
+            embedded_url = str(external.get("uri") or "").strip()
+            embedded_url_base = _public_url_base(embedded_url).rstrip("/") if embedded_url else ""
+            same_text = record_text == post_text
+            plain_shape = (
+                value.get("$type") in {None, "app.bsky.feed.post"}
+                and "embed" not in value
+                and "reply" not in value
+                and hashlib.sha256(record_text.encode("utf-8")).hexdigest() == approved_text_hash
+            )
+            item = {"post_uri": post_uri, "post_cid": row.get("cid")}
+            if same_text and plain_shape:
+                matches.append(item)
+            elif same_text or public_url_base in record_text or embedded_url_base == public_url_base:
+                conflicts.append(item)
+        next_cursor = str(payload.get("cursor") or "").strip()
+        if not next_cursor:
+            break
+        if next_cursor in seen_cursors:
+            return {
+                "status": "uncertain",
+                "reason": "remote_duplicate_cursor_repeated",
+                "pages_scanned": pages_scanned,
+            }
+        if pages_scanned >= BLUESKY_DUPLICATE_SCAN_MAX_PAGES:
+            return {
+                "status": "uncertain",
+                "reason": "remote_duplicate_scan_limit_exceeded",
+                "pages_scanned": pages_scanned,
+            }
+        seen_cursors.add(next_cursor)
+        cursor = next_cursor
     if malformed:
-        return {"status": "uncertain", "reason": "remote_duplicate_record_invalid"}
+        return {"status": "uncertain", "reason": "remote_duplicate_record_invalid", "pages_scanned": pages_scanned}
     if conflicts or len(matches) > 1:
         item = (conflicts or matches)[0]
-        return {"status": "conflict", **item}
+        return {"status": "conflict", "pages_scanned": pages_scanned, **item}
     if matches:
-        return {"status": "match", **matches[0]}
-    return {"status": "none"}
-
+        return {"status": "match", "pages_scanned": pages_scanned, **matches[0]}
+    return {"status": "none", "pages_scanned": pages_scanned}
 
 def _gaza_bluesky_artifact_paths(project_root: Path, edition_date: str) -> list[Path]:
     site_root = project_root / "output" / "site" / "gaza" / "editions" / edition_date

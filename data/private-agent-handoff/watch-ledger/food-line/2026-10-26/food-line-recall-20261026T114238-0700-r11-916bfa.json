@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T114238-0700-r11-916bfa",
+  "scheduled_for": "2026-10-26T11:45:54-07:00",
+  "started_at": "2026-10-26T11:42:38-07:00",
+  "completed_at": "2026-10-26T11:44:34.090-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T10:48:40.934-07:00",
+    "end_at": "2026-10-26T11:44:34.090-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the independently verified completion of the most recent prior Food Line Source Watch heartbeat (run_id food-line-recall-20261026T104627-0700-r11-70ac2b). Queries include October 26 and one-day search recency to accommodate indexing delays; only newly substantiated disruptions in this window qualify."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 1,
+    "focus_classes": [
+      "Closure/fire/disaster affecting a community's sole, last, or full-service grocer",
+      "Cancellation/suspension of emergency food distributions due to storm, flooding, fire, outage, or property damage",
+      "Abrupt pantry/food-bank closure or major service reduction",
+      "New official SNAP/WIC/food-assistance benefit or service interruption with immediate access effects"
+    ],
+    "search_terms": [
+      "\"only grocery store\" \"fire\" closed \"October 26\" 2026",
+      "\"last grocery store\" \"closed\" \"October 26, 2026\" town",
+      "\"sole grocery store\" fire flood closure October 26 2026",
+      "2026 October 26 only full-service grocery store closing community food desert",
+      "\"food distribution\" \"canceled\" \"October 26, 2026\" storm flood outage",
+      "\"food bank\" \"distribution\" \"cancelled\" Monday October 26 2026 weather",
+      "site:facebook.com \"food pantry\" \"closed\" \"October 26, 2026\" storm flood",
+      "\"mobile food distribution\" \"canceled\" \"Oct. 26\" 2026",
+      "\"food pantry\" \"temporarily closed\" \"October 26\" 2026",
+      "\"food bank\" \"closed\" \"October 26, 2026\" fire OR damage OR shortage",
+      "site:gov \"SNAP\" \"October 26, 2026\" \"delayed\" benefits outage",
+      "site:gov \"WIC\" \"October 26, 2026\" services suspended OR outage OR closure"
+    ]
+  },
+  "coverage_notes": [
+    "Bounded supplementary high-value miss-class recall only. Production nationwide Food Line collection remains authoritative.",
+    "All 12 targeted search requests completed and returned results. No verified new eligible U.S. food-access disruption was found in the observation window.",
+    "Results included stale articles about earlier grocery-store losses and emergency-food cancellations, notably July 2026 Avondale, Cincinnati full-service grocery closure; September 2026 Eastport, Maine grocery loss; July 2026 eastern Michigan mobile distribution cancellations. These were not newly reported within this window.",
+    "SNAP/WIC query results were dominated by October–November 2025 federal shutdown impacts, not new 2026 official interruptions. Excluded as old information.",
+    "Search crawl/fetch date is not publication time. No same-hour source publication was inferred from a recent crawl timestamp; no positive finding was added without independently supported timing and immediate access consequences.",
+    "The conservative one-day query recency is a retrieval filter, not proof that underlying articles were published today. Search indexing and social-media notice visibility limit sensitivity, but no material tool failure occurred.",
+    "Excluded duplicates, donation drives, routine outreach, guides, general inflation/food-price commentary, opinion, and promotional content.",
+    "The nominal 11:45:54 PDT recurrence time was recorded in scheduled_for; this invocation began earlier per supplied runtime timestamp.",
+    "No editorial review approval, publication, schedule edit, task disabling, or production collection change occurred."
+  ]
+}

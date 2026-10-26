@@ -1,0 +1,61 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T204610-0700-r11-7f36",
+  "scheduled_for": "2026-10-25T20:45:22-07:00",
+  "started_at": "2026-10-25T20:46:10-07:00",
+  "completed_at": "2026-10-25T20:48:10-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T19:51:42-07:00",
+    "end": "2026-10-25T20:48:10-07:00",
+    "basis": "From the verified preceding supplementary Care Line heartbeat completion to the current execution; late-indexed recalls screened, with production national collection remaining authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S., DC, Puerto Rico, Guam, U.S. Virgin Islands, Northern Mariana Islands, American Samoa. Supplementary watch for hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care service loss, emergency/rural loss, ambulance/air-medical/base loss, CMS provider/CLIA actions, and concrete effective restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_page_accessed": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "The latest listed CMS notices are the October 23 home-health agency terminations My Families Healthcare (CA 758151), 1ST AIDE HOME HEALTH AGENCY (CA 559673), and Moonlight Home Health Care Inc (OH 369006), already recorded in prior watch. No October 24 or October 25 notice appeared."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"hospital\" \"emergency department\" (closed OR suspended OR diverted) \"October 25, 2026\" United States",
+      "\"labor and delivery\" OR \"maternity\" \"closing\" hospital \"October 25\" 2026",
+      "\"rural hospital\" emergency services closure suspension October 25 2026",
+      "\"ambulance service\" OR \"air medical\" closed suspended October 25 2026",
+      "\"dialysis\" OR \"oncology\" clinic treatment suspended closed October 25 2026",
+      "\"behavioral health\" OR psychiatric unit hospital closure suspension October 25 2026",
+      "\"primary care\" OR \"urgent care\" clinic closed patients October 25 2026",
+      "\"reopened\" hospital \"emergency department\" October 25 2026 United States",
+      "\"hospital\" \"diverted\" \"patients\" service suspended October 25 2026",
+      "site:illinois.gov OR site:pa.gov OR site:mass.gov hospital suspension service notice October 25 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital health clinic emergency suspended October 25 2026",
+      "hospital emergency department ambulance closure service \"October 25, 2026\" local news"
+    ],
+    "previous_heartbeat": {
+      "branch": "ops/watch-ledger",
+      "run_id": "care-line-watch-20261025T194959-0700-r11-3a9d",
+      "completed_at": "2026-10-25T19:51:42-07:00",
+      "verified_read": true,
+      "previous_outcome": "no_findings"
+    },
+    "screening": "CMS first, followed by exactly twelve bounded topical targeted searches. No independently verified, previously unrecorded qualifying healthcare-access change identified for the covered window; current-day material found was planning, training, commentary or non-service-change reporting, while concrete closures and restorations were older.",
+    "excluded_examples": [
+      "October 25 Minnesota rural obstetrics fellowship report is a workforce/training initiative, not a newly effective service loss or restoration: https://www.mprnews.org/story/2026/10/25/rural-labor-and-delivery-get-boost-from-university-of-minnesota-medical-school-fellowship",
+      "September 22 Hawai'i Kula Hospital restoration announcement lacks an effective reopening date; the emergency department remains closed: https://mauinow.com/2026/09/22/state-maui-health-and-kaiser-permanente-announce-restoration-and-reopening-plans-for-kula-hospital/",
+      "Historical hospital closures and previous watch findings, non-U.S. results, financial projections, proposals without actual service change, and nonhealthcare coverage excluded."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search results and Sunday local reporting may lag real-world events. Absence of supplementary findings is not evidence that no service change occurred. Authoritative production national collector and its full review queue were not independently read; no duplication claim against that queue.",
+    "controls": "No approval, publication, alteration of primary collector, schedule change, or task disablement."
+  }
+}

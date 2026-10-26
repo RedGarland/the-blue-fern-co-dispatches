@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T084757-0700-r11-1793029769644",
+  "scheduled_for": "2026-10-26T08:45:54-07:00",
+  "started_at": "2026-10-26T08:47:57-07:00",
+  "completed_at": "2026-10-26T08:49:29.644-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T07:52:37.500-07:00",
+    "end_at": "2026-10-26T08:49:29.644-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified hourly watch heartbeat completed_at through this check; candidate eligibility requires an evidenced new disruption or update within this interval, not merely a fresh crawl."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": "1 for ten queries; 2 for two queries",
+    "focus_classes": [
+      "Only/sole/last/full-service local grocer closed, burned, or lost",
+      "Emergency food distribution canceled/suspended by storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or severe access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_terms": [
+      "\"only grocery store\" \"closed\" fire October 26 2026 town",
+      "\"sole grocery store\" burned closed Monday October 26 2026",
+      "\"last full-service grocery store\" closes \"October 26\" 2026",
+      "\"food distribution\" canceled storm \"October 26\" 2026",
+      "\"food bank\" distribution suspended flood fire \"October 26\" 2026",
+      "\"mobile food pantry\" canceled today Monday October 26 2026",
+      "\"food pantry\" \"closed today\" \"October 26\" 2026",
+      "\"food bank\" abrupt service closure Monday October 26 2026",
+      "\"pantry\" \"suspended services\" \"October 26\" 2026",
+      "SNAP EBT benefits outage interruption Monday October 26 2026 official state",
+      "site:gov SNAP benefits delayed October 26 2026 interruption notice",
+      "site:gov WIC interruption office closure October 26 2026 emergency"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall only; authoritative nationwide production Food Line collector was not modified or supplanted.",
+    "All 12 targeted searches returned without tool-level search failure; no source substantiated a qualifying new U.S. food-access disruption occurring since the prior hourly check.",
+    "Current October 26 Super Foodtown coverage describes a supermarket opening (not access loss), excluded: https://northeasttimes.com/2026/10/26/tacony-super-foodtown-opens-torresdale-avenue/.",
+    "October 26 Minnesota Star Tribune report on Bricelyn concerns a food mart/cafe closure in February 2026, previously excluded and outside the window: https://www.startribune.com/a-year-after-trumps-big-beautiful-bill-rural-minnesota-is-still-tallying-the-cost/601895396.",
+    "A Decatur Salvation Army pantry two-day closure was announced October 14 and scheduled October 20 and 22, outside this run window and routine for Christmas applications, excluded: https://www.decaturtribune.com/2026/10/14/the-salvation-army-food-pantry-will-be-closed-tuesday-october-20th-and-thursday-october-22nd/.",
+    "Ruby's Pantry network shutdown coverage dated April 1, 2026 and 2025 SNAP interruption notices surfaced as older index results, excluded rather than treated as October 26 news.",
+    "Crawl recency and publication recency were not treated as proof of a newly arising disruption; lack of newly verified findings is not evidence no disruptions occurred nationwide.",
+    "No approval, public publication, production change, schedule change, or task disable action was taken."
+  ]
+}

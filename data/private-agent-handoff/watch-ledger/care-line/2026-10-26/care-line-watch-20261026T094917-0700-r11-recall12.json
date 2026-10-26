@@ -1,0 +1,74 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T094917-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T09:45:22-07:00",
+  "started_at": "2026-10-26T09:49:17-07:00",
+  "completed_at": "2026-10-26T09:53:20.515-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T08:47:32-07:00",
+    "end": "2026-10-26T09:53:20.515-07:00",
+    "basis": "Previous Care Line Watch heartbeat on ops/watch-ledger read and verified; supplementary watch searched from previous recorded completion through this run. Search results screened for published/event date and duplicate history."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary national Care Line production collector and review queues remain authoritative.",
+    "scope": "United States, District of Columbia, Puerto Rico, Guam, US Virgin Islands, Northern Mariana Islands, American Samoa: hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures or suspensions, rural/emergency service loss, ambulance/air-medical closures, official CMS terminations/rescissions/CLIA limitations, and concrete essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "details": "CMS official Public Notices listing opened and checked directly; latest listed actions were October 23 HHA termination notices. No new provider termination, rescission or CLIA limitation/suspension in the observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended services announced October 26 2026 United States",
+      "hospital maternity obstetrics labor delivery unit closure October 25 26 2026",
+      "rural hospital emergency room closure services suspension reopening October 26 2026",
+      "ambulance service air medical helicopter base closure suspension October 25 26 2026",
+      "October 26 2026 dialysis center suspension closure patients news",
+      "October 26 2026 behavioral health psychiatric inpatient unit closes temporarily hospital",
+      "October 26 2026 oncology cancer center primary care clinic closing abruptly effective",
+      "October 25 26 2026 hospital emergency department dialysis maternity reopened resumed services",
+      "October 26 2026 health care hospital emergency department ambulance service closure suspended US local news",
+      "October 25 2026 community hospital clinic maternity unit health services closure United States",
+      "site:gov October 26 2026 health facility closure termination hospital emergency access notice",
+      "October 26 2026 Puerto Rico Guam US Virgin Islands hospital clinic emergency service closure"
+    ],
+    "screening": "No newly reported, credible, concretely effective U.S./territory healthcare access loss, regulatory action, or restoration confirmed within this interval. October 25-26 results mainly concerned historical service losses, ongoing future plans, general policy or non-U.S. events.",
+    "excluded_examples": [
+      {
+        "title": "Watsonville Community Hospital may end maternity services",
+        "source_url": "https://lookout.co/watsonville-community-hospital-may-close-maternity-services-to-avoid-shutting-down/story",
+        "reason": "October 22 options/proposal; no implemented or approved new service change confirmed."
+      },
+      {
+        "title": "Guam Regional Medical City services resume after storm",
+        "source_url": "https://www.grmc.gu/2026/10/18/grmc-to-resume-critical-outpatient-services-monday-regular-hospital-operations-to-resume-tuesday/",
+        "reason": "October 18 announcement and October 19-20 restoration, preceding the observation window."
+      },
+      {
+        "title": "Roseland Community Hospital maternity closure announcement",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/",
+        "reason": "October 1 previously reported future service loss; not new since preceding hourly watch."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T084532-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-26T08:47:32-07:00",
+      "previous_heartbeat_read_verified": true,
+      "previous_heartbeat_outcome": "no_findings",
+      "branch_continuity": "Compared commit 455c61ba1d3db7290188083241d6273c713e46ba to ops/watch-ledger and identified the intervening 08:45 Care Line heartbeat before examining its contents.",
+      "production_review": "Production collector and production history remain authoritative; no new candidate arose to require full production queue duplicate comparison."
+    },
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve targeted searches completed; date-constrained web indexing and reporting latency limit recall. No findings does not establish that no healthcare service change occurred. Targeted search results may contain older articles despite recency requests.",
+    "controls": "Exactly one private watch-ledger heartbeat for this run. No approval, publication, production mutation, schedule alteration or disabling."
+  }
+}

@@ -191,3 +191,1153 @@ def _git_status_lines(repo: Path) -> list[str]:
         raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "git status --short failed")
     return [line for line in result.stdout.splitlines() if line.strip()]
 
+
+def _git_status_branch(repo: Path) -> str:
+    return _git_output(repo, "status", "--short", "--branch")
+
+
+def _git_branch(repo: Path) -> str:
+    return _git_output(repo, "branch", "--show-current")
+
+
+def _git_head_sha(repo: Path) -> str:
+    return _git_output(repo, "rev-parse", "--short", "HEAD")
+
+
+def _git_head_subject(repo: Path) -> str:
+    return _git_output(repo, "log", "-1", "--pretty=%s")
+
+
+def _pages_repo_snapshot(pages_repo: Path) -> dict[str, Any]:
+    snapshot: dict[str, Any] = {
+        "exists": pages_repo.exists(),
+        "status_branch": None,
+        "branch": None,
+        "upstream": None,
+        "ahead": None,
+        "behind": None,
+        "head_sha": None,
+        "head_subject": None,
+        "working_tree_clean": None,
+        "index_clean": None,
+        "untracked_clean": None,
+        "diverged": None,
+    }
+    if not pages_repo.exists():
+        return snapshot
+    try:
+        snapshot["status_branch"] = _git_status_branch(pages_repo)
+        status_lines = _git_status_lines(pages_repo)
+        snapshot["working_tree_clean"] = not status_lines
+        snapshot["index_clean"] = not any(line[:1] in {"A", "C", "D", "M", "R", "T", "U"} for line in status_lines)
+        snapshot["untracked_clean"] = not any(line.startswith("??") for line in status_lines)
+        snapshot["branch"] = _git_branch(pages_repo)
+        snapshot["head_sha"] = _git_head_sha(pages_repo)
+        snapshot["head_subject"] = _git_head_subject(pages_repo)
+        upstream = _git_output(pages_repo, "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}")
+        snapshot["upstream"] = upstream
+        counts = _git_output(pages_repo, "rev-list", "--left-right", "--count", f"{upstream}...HEAD")
+        parts = counts.split()
+        if len(parts) == 2:
+            snapshot["behind"] = int(parts[0])
+            snapshot["ahead"] = int(parts[1])
+            snapshot["diverged"] = snapshot["ahead"] > 0 and snapshot["behind"] > 0
+    except Exception as exc:  # noqa: BLE001
+        snapshot["error"] = str(exc)
+    return snapshot
+
+
+def _git_dirty_path(line: str) -> str:
+    text = line[3:] if len(line) > 3 else line
+    if " -> " in text:
+        text = text.split(" -> ", 1)[1]
+    return _normalize_repo_path(text.strip())
+
+
+def _is_preserved_tracked_shared_record(line: str, path: str) -> bool:
+    return line[:2] == " M" and is_shared_dispatch_record_path(path)
+
+
+def _split_source_dirty_state(edition_date: str, status_lines: list[str]) -> tuple[list[str], list[str], list[str]]:
+    manual_path = _normalize_repo_path(str(manual_source_path(edition_date).relative_to(ROOT)))
+    allowed_manual = {manual_path}
+    keep: list[str] = []
+    cleanable: list[str] = []
+    risky: list[str] = []
+    for line in status_lines:
+        path = _git_dirty_path(line)
+        if path in allowed_manual:
+            keep.append(line)
+            continue
+        if _is_preserved_tracked_shared_record(line, path):
+            keep.append(line)
+            continue
+        if any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in SAFE_SOURCE_CLEAN_PREFIXES):
+            cleanable.append(line)
+            continue
+        risky.append(line)
+    return keep, cleanable, risky
+
+
+def _pages_git_action_in_progress(pages_repo: Path) -> str | None:
+    git_dir = pages_repo / ".git"
+    markers = {
+        "rebase-merge": "rebase",
+        "rebase-apply": "rebase",
+        "MERGE_HEAD": "merge",
+        "CHERRY_PICK_HEAD": "cherry-pick",
+    }
+    for marker, label in markers.items():
+        if (git_dir / marker).exists():
+            return label
+    return None
+
+
+def _clean_source_generated_artifacts() -> dict[str, Any]:
+    return {
+        "ok": True,
+        "status": "skipped_evidence_preserved",
+        "commands": [],
+        "errors": [],
+    }
+
+
+def _validate_pages_repo(pages_repo: Path, pages_branch: str) -> tuple[bool, str | None]:
+    if not pages_repo.exists():
+        return False, f"Pages repo does not exist: {pages_repo}"
+    action = _pages_git_action_in_progress(pages_repo)
+    if action:
+        return False, f"Pages repo has an active {action} in progress. Resolve it before running the operator."
+    branch = _git_branch(pages_repo)
+    if branch != pages_branch:
+        return False, f"Pages repo must be on {pages_branch}; found {branch or '<detached>'}."
+    dirty = _git_status_lines(pages_repo)
+    if dirty:
+        return False, "Pages repo has uncommitted changes and cannot be reset safely:\n" + "\n".join(dirty)
+    return True, None
+
+
+def _sync_pages_repo(pages_repo: Path, pages_branch: str) -> dict[str, Any]:
+    commands: list[str] = []
+    fetch = _run_command(["git", "-C", str(pages_repo), "fetch", "origin"], cwd=ROOT)
+    commands.append(f'git -C "{pages_repo}" fetch origin')
+    if fetch.returncode != 0:
+        return {"ok": False, "commands": commands, "error": fetch.stderr.strip() or fetch.stdout.strip()}
+    merge = _run_command(["git", "-C", str(pages_repo), "merge", "--ff-only", f"origin/{pages_branch}"], cwd=ROOT)
+    commands.append(f'git -C "{pages_repo}" merge --ff-only origin/{pages_branch}')
+    if merge.returncode != 0:
+        return {"ok": False, "commands": commands, "error": merge.stderr.strip() or merge.stdout.strip()}
+    return {"ok": True, "commands": commands}
+
+
+def _load_manual_records(path: Path) -> list[dict[str, Any]]:
+    payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    records = payload.get("sources") if isinstance(payload, dict) else payload
+    if not isinstance(records, list):
+        raise ValueError(f"{path.name} must be a list or an object with a sources list")
+    return [record for record in records if isinstance(record, dict)]
+
+
+def _normalized_text(value: Any) -> str:
+    return " ".join(str(value or "").strip().lower().split())
+
+
+def _manual_source_placeholder_reasons(record: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    url = str(record.get("url") or "").strip()
+    parsed = urlsplit(url) if url else None
+    host = (parsed.hostname or "").lower() if parsed else ""
+    if host in PLACEHOLDER_URL_HOSTS:
+        reasons.append(f"url host is {host}")
+    normalized_url = _normalized_text(url)
+    if any(hint in normalized_url for hint in PLACEHOLDER_URL_HINTS):
+        reasons.append("url contains placeholder text")
+
+    title = _normalized_text(record.get("title"))
+    if title and any(hint in title for hint in PLACEHOLDER_TITLE_HINTS):
+        reasons.append("title contains placeholder language")
+
+    publisher = _normalized_text(record.get("publisher"))
+    if publisher and any(hint in publisher for hint in PLACEHOLDER_PUBLISHER_HINTS):
+        reasons.append("publisher contains placeholder language")
+
+    summary = _normalized_text(record.get("summary_or_snippet"))
+    if summary and any(hint in summary for hint in PLACEHOLDER_SUMMARY_HINTS):
+        reasons.append("summary_or_snippet contains placeholder language")
+
+    traceability_note = _normalized_text(record.get("traceability_note"))
+    if traceability_note and any(hint in traceability_note for hint in PLACEHOLDER_TRACEABILITY_HINTS):
+        reasons.append("traceability_note is generic and not source-safe")
+
+    return reasons
+
+
+def _write_manual_records(path: Path, records: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(records, indent=2), encoding="utf-8")
+
+
+def normalize_manual_source_records(records: list[dict[str, Any]], edition_date: str) -> tuple[list[dict[str, Any]], list[str]]:
+    normalized: list[dict[str, Any]] = []
+    changes: list[str] = []
+    for index, record in enumerate(records, start=1):
+        row = dict(record)
+        if not str(row.get("source_record_id") or "").strip():
+            row["source_record_id"] = f"gaza-src-{edition_date}-{index:03d}"
+            changes.append(f"source record {index}: added source_record_id")
+        if not str(row.get("retrieved_at") or "").strip():
+            row["retrieved_at"] = str(row.get("published_at") or f"{edition_date}T23:59:59Z").strip()
+            changes.append(f"source record {index}: added retrieved_at")
+        if not str(row.get("provider_id") or "").strip():
+            row["provider_id"] = "manual-supplement"
+            changes.append(f"source record {index}: added provider_id=manual-supplement")
+        if not str(row.get("attribution_mode") or "").strip():
+            row["attribution_mode"] = "reported_public_source"
+            changes.append(f"source record {index}: added attribution_mode=reported_public_source")
+        if not str(row.get("claim_status") or "").strip():
+            row["claim_status"] = "reported_public_source"
+            changes.append(f"source record {index}: added claim_status=reported_public_source")
+        normalized.append(row)
+    return normalized, changes
+
+
+def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
+    errors: list[str] = []
+    collected_errors = validate_collected_source_records(records, min_sources=0)
+    for index, record in enumerate(records, start=1):
+        missing = [field for field in MANUAL_CORE_FIELDS if not str(record.get(field) or "").strip()]
+        if missing:
+            errors.append(f"source record {index} missing required fields: {', '.join(missing)}")
+        url = str(record.get("url") or "").strip()
+        if url and not url.startswith(("http://", "https://")):
+            errors.append(f"source record {index} has invalid URL: {url}")
+        placeholder_reasons = _manual_source_placeholder_reasons(record)
+        if placeholder_reasons:
+            errors.append(f"record {index} {PLACEHOLDER_RECORD_ERROR}")
+            errors.append(f"record {index} placeholder indicators: {', '.join(placeholder_reasons)}")
+    for error in collected_errors:
+        if error not in errors:
+            errors.append(error)
+    return errors
+
+
+def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True) -> dict[str, Any]:
+    path = manual_source_path(edition_date)
+    if not path.exists():
+        return {"ok": True, "status": "not_present", "path": str(path), "changes": [], "errors": []}
+    records = _load_manual_records(path)
+    normalized, changes = normalize_manual_source_records(records, edition_date)
+    errors = validate_manual_source_records(normalized)
+    if errors:
+        missing_only = True
+        for error in errors:
+            match = re.search(r"missing required fields: (.+)$", error)
+            if not match:
+                missing_only = False
+                break
+            missing = {part.strip() for part in match.group(1).split(",")}
+            if not missing.issubset(NORMALIZABLE_FIELDS):
+                missing_only = False
+                break
+        if missing_only:
+            errors = validate_manual_source_records(normalized)
+    if changes and not errors and not repair:
+        return {
+            "ok": False,
+            "status": "normalization_required_read_only",
+            "path": str(path),
+            "changes": changes,
+            "errors": [
+                "post-only mode refuses to rewrite manual_sources.json; "
+                "normalize it in a separately approved source-repair run"
+            ],
+            "record_count": len(normalized),
+        }
+    if changes and not errors:
+        _write_manual_records(path, normalized)
+    return {
+        "ok": not errors,
+        "status": "normalized" if changes and not errors else ("valid" if not errors else "invalid"),
+        "path": str(path),
+        "changes": changes,
+        "errors": errors,
+        "record_count": len(normalized),
+    }
+
+
+
+def _validate_manual_sources_for_operator(edition_date: str, *, post_only: bool) -> dict[str, Any]:
+    validator = validate_or_repair_manual_sources
+    # Keep existing test doubles and older in-process callers compatible while
+    # production post-only mode uses the read-only repair=False contract.
+    if post_only and "repair" in inspect.signature(validator).parameters:
+        return validator(edition_date, repair=False)
+    return validator(edition_date)
+
+def _capture_daily_run(args: list[str]) -> tuple[int, dict[str, Any], str]:
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        code = daily.main(args)
+    output = buffer.getvalue()
+    return code, _json_summary_from_stdout(output), output
+
+
+def _json_summary_from_stdout(output: str) -> dict[str, Any]:
+    summary: dict[str, Any] = {}
+    match = re.search(r"(\{[\s\S]*\})\s*$", output)
+    if match:
+        summary = json.loads(match.group(1))
+    return summary
+
+
+def _verified_no_update_summary(summary: dict[str, Any]) -> bool:
+    """Return true only for an explicitly complete, no-qualifying-records run."""
+    coverage_fields = (
+        summary.get("source_coverage_status"),
+        summary.get("collection_completion_status"),
+    )
+    if any(value != "complete_no_qualifying_records" for value in coverage_fields):
+        return False
+    if summary.get("no_update_eligible") is not True:
+        return False
+    if summary.get("no_update_status_written") is not True:
+        return False
+    return not any(
+        "source collection incomplete" in str(error).lower()
+        for error in summary.get("errors") or []
+    )
+
+
+def _daily_args(
+    *,
+    edition_date: str,
+    pages_repo: Path,
+    pages_branch: str,
+    remote_url: str,
+    dry_run: bool,
+    generate_audio: bool,
+    allow_listing_shrink: bool,
+    tts_provider: str,
+    audio_model: str,
+    audio_voice: str,
+    audio_format: str,
+    skip_tests: bool = False,
+) -> list[str]:
+    args = [
+        "--date",
+        edition_date,
+        "--pages-repo",
+        str(pages_repo),
+        "--pages-branch",
+        pages_branch,
+        "--remote-url",
+        remote_url,
+    ]
+    if dry_run:
+        args.append("--dry-run")
+    if skip_tests:
+        args.append("--skip-tests")
+    if allow_listing_shrink:
+        args.append("--allow-listing-shrink")
+    if generate_audio and tts_provider != "none":
+        args.extend(
+            [
+                "--generate-audio",
+                "--tts-provider",
+                tts_provider,
+                "--audio-model",
+                audio_model,
+                "--audio-voice",
+                audio_voice,
+                "--audio-format",
+                audio_format,
+            ]
+        )
+    return args
+
+
+def _no_update_pages_publish_args(
+    *,
+    edition_date: str,
+    pages_repo: Path,
+    pages_branch: str,
+    remote_url: str,
+    dry_run: bool,
+    allow_listing_shrink: bool,
+) -> list[str]:
+    args = [
+        sys.executable,
+        "scripts\\publish_github_pages.py",
+        "--pages-repo",
+        str(pages_repo),
+        "--pages-branch",
+        pages_branch,
+        "--only-dispatch",
+        "gaza",
+        "--artifact-family",
+        "no-update",
+        "--expect-date",
+        edition_date,
+    ]
+    if dry_run:
+        args.append("--dry-run")
+    else:
+        args.extend(["--remote-url", remote_url, "--commit", "--no-push"])
+    if allow_listing_shrink:
+        args.append("--allow-listing-shrink")
+    return args
+
+
+def _remote_tree_verify(pages_repo: Path, pages_branch: str, edition_date: str) -> dict[str, Any]:
+    errors: list[str] = []
+    fetch = _run_command(["git", "fetch", "origin", pages_branch], cwd=pages_repo)
+    if fetch.returncode != 0:
+        return {"ok": False, "errors": [fetch.stderr.strip() or fetch.stdout.strip()], "remote_commit_sha": None}
+    sha = _git_output(pages_repo, "rev-parse", f"origin/{pages_branch}")
+    expected = (
+        f"gaza/editions/{edition_date}/index.html",
+        "gaza/index.html",
+        "gaza/archive.html",
+        "gaza/rss.xml",
+    )
+    for path in expected:
+        result = _run_command(["git", "ls-tree", "--name-only", f"origin/{pages_branch}", "--", path], cwd=pages_repo)
+        if path not in result.stdout.split():
+            errors.append(f"remote tree is missing {path}")
+    return {"ok": not errors, "errors": errors, "remote_commit_sha": sha}
+
+
+def _cache_busted_url(url: str, token: str) -> str:
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}v={token}"
+
+
+def _fetch_url(url: str) -> tuple[int | None, str, str | None]:
+    req = request.Request(url, headers={"Cache-Control": "no-cache"})
+    try:
+        context = ssl._create_unverified_context()
+        with request.urlopen(req, timeout=30, context=context) as response:
+            status = getattr(response, "status", 200)
+            body = response.read().decode("utf-8", errors="replace")
+        return status, body, None
+    except Exception as exc:  # noqa: BLE001
+        return None, "", str(exc)
+
+
+def _excerpt(text: str, max_chars: int = 200) -> str:
+    compact = " ".join(str(text or "").split())
+    return compact[:max_chars]
+
+
+def verify_live_publication(
+    *,
+    edition_date: str,
+    public_urls: dict[str, str],
+    cache_token: str,
+    remote_tree_ok: bool,
+    sleep_fn: Any = time.sleep,
+) -> dict[str, Any]:
+    edition_base = str(public_urls.get("edition") or "")
+    archive_base = str(public_urls.get("archive") or "")
+    homepage_base = edition_base.rsplit("/editions/", 1)[0] + "/"
+    attempts: list[dict[str, Any]] = []
+    for delay in LIVE_RETRY_DELAYS:
+        if delay:
+            sleep_fn(delay)
+        edition_url = _cache_busted_url(edition_base, cache_token)
+        archive_url = _cache_busted_url(archive_base, cache_token)
+        homepage_url = _cache_busted_url(homepage_base, cache_token)
+        edition_status, edition_body, edition_error = _fetch_url(edition_url)
+        archive_status, archive_body, archive_error = _fetch_url(archive_url)
+        homepage_status, homepage_body, homepage_error = _fetch_url(homepage_url)
+        edition_marker_found = (
+            edition_status == 200
+            and edition_date in edition_body
+            and "Dispatches From Gaza" in edition_body
+            and any(marker in edition_body for marker in LIVE_MARKERS)
+        )
+        archive_ok = archive_status == 200 and edition_date in archive_body
+        homepage_ok = homepage_status == 200 and edition_date in homepage_body
+        attempt = {
+            "edition_status": edition_status,
+            "archive_status": archive_status,
+            "homepage_status": homepage_status,
+            "edition_error": edition_error,
+            "archive_error": archive_error,
+            "homepage_error": homepage_error,
+            "edition_marker_found": edition_marker_found,
+            "archive_ok": archive_ok,
+            "homepage_ok": homepage_ok,
+            "edition_excerpt": _excerpt(edition_body),
+        }
+        attempts.append(attempt)
+        if edition_marker_found and archive_ok and homepage_ok:
+            return {
+                "ok": True,
+                "status": "LIVE_OK",
+                "live_http_ok": True,
+                "live_archive_ok": True,
+                "live_homepage_ok": True,
+                "edition_url": edition_url,
+                "archive_url": archive_url,
+                "homepage_url": homepage_url,
+                "attempts": attempts,
+                "diagnostic_excerpt": attempt["edition_excerpt"],
+            }
+    last = attempts[-1] if attempts else {}
+    pending = bool(remote_tree_ok and (last.get("edition_status") in {200, 404, None}))
+    return {
+        "ok": False,
+        "status": "PAGES_PROPAGATION_PENDING" if pending else "LIVE_VERIFICATION_FAILED",
+        "live_http_ok": bool(last.get("edition_marker_found")),
+        "live_archive_ok": bool(last.get("archive_ok")),
+        "live_homepage_ok": bool(last.get("homepage_ok")),
+        "edition_url": _cache_busted_url(edition_base, cache_token),
+        "archive_url": _cache_busted_url(archive_base, cache_token),
+        "homepage_url": _cache_busted_url(homepage_base, cache_token),
+        "attempts": attempts,
+        "diagnostic_excerpt": str(last.get("edition_excerpt") or ""),
+        "expected_marker": "Dispatches From Gaza + edition date + current Gaza label",
+    }
+
+
+def _build_email_subject(result: dict[str, Any]) -> str:
+    return f"[Blue Fern Dispatches] Gaza operator {result['operator_status']} - {result['date']}"
+
+
+def _build_email_body(result: dict[str, Any]) -> str:
+    lines = [
+        f"operator_status: {result.get('operator_status')}",
+        f"ok: {str(bool(result.get('ok'))).lower()}",
+        f"date: {result.get('date')}",
+        f"source_count: {result.get('source_count')}",
+        f"publisher_count: {result.get('publisher_count')}",
+        f"public_story_count: {result.get('public_story_count')}",
+        f"pages_commit_sha: {result.get('pages_commit_sha')}",
+        f"bluesky_status: {result.get('bluesky_status')}",
+        f"audio_status: {result.get('audio_status')}",
+        f"email_status: {result.get('email_status')}",
+        f"cleanup_status: {result.get('cleanup_status')}",
+        f"public_url: {result.get('public_url') or '<none>'}",
+        f"next_action: {result.get('next_action') or '<none>'}",
+    ]
+    return "\n".join(lines)
+
+
+def _maybe_send_email(result: dict[str, Any], smtp_debug: bool) -> str:
+    send_email(_build_email_subject(result), _build_email_body(result), str(result["date"]), smtp_debug=smtp_debug)
+    return "sent"
+
+
+def _validate_scheduled_test_root() -> dict[str, Any]:
+    """Validate the scheduler-provided test root before source collection starts."""
+    return admit_test_root(repository_root=ROOT)
+
+
+def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:
+    return {
+        "ok": False,
+        "operator_status": "FAILED",
+        "date": args.date,
+        "source_count": 0,
+        "publisher_count": 0,
+        "public_story_count": 0,
+        "test_root_status": "not_checked",
+        "test_root_path": None,
+        "test_root_error": None,
+        "source_collection_started": False,
+        "daily_pipeline_started": False,
+        "failure_stage": None,
+        "no_update_eligible": None,
+        "generation_ok": False,
+        "tests_ok": None,
+        "validation_ok": None,
+        "pages_synced_before_publish": False,
+        "pages_commit_sha": None,
+        "pages_push_ok": None,
+        "remote_tree_verify_ok": None,
+        "live_verify_status": None,
+        "live_http_ok": None,
+        "live_archive_ok": None,
+        "bluesky_status": "skipped",
+        "bluesky_post_uri": None,
+        "audio_status": "audio_skipped",
+        "email_status": "not_requested",
+        "cleanup_status": "not_run",
+        "source_repo_status_after": None,
+        "source_repo_status_before": None,
+        "pages_repo_status_after": None,
+        "pages_repo_status_before": None,
+        "pages_repo_ahead_before": None,
+        "pages_repo_behind_before": None,
+        "pages_repo_was_ahead_before": False,
+        "pages_commit_sha_before": None,
+        "pages_commit_subject_before": None,
+        "next_action": None,
+        "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{args.date}/",
+        "commands_run": [],
+        "manual_source_validation": None,
+        "pages_repo": str(Path(args.pages_repo)),
+    }
+
+
+def run_operator(args: argparse.Namespace) -> dict[str, Any]:
+    result = _operator_result_base(args)
+    pages_repo = Path(args.pages_repo).resolve()
+    source_status_before = _git_status_lines(ROOT)
+    pages_snapshot_before = _pages_repo_snapshot(pages_repo)
+    result["source_repo_status_before"] = _git_status_branch(ROOT)
+    result["pages_repo_status_before"] = pages_snapshot_before.get("status_branch")
+    result["pages_repo_ahead_before"] = pages_snapshot_before.get("ahead")
+    result["pages_repo_behind_before"] = pages_snapshot_before.get("behind")
+    result["pages_repo_was_ahead_before"] = bool((pages_snapshot_before.get("ahead") or 0) > 0)
+    result["pages_commit_sha_before"] = pages_snapshot_before.get("head_sha")
+    result["pages_commit_subject_before"] = pages_snapshot_before.get("head_subject")
+    kept, cleanable, risky = _split_source_dirty_state(args.date, source_status_before)
+    if result["pages_repo_was_ahead_before"]:
+        result["operator_status"] = "PAGES_REPO_AHEAD_BLOCKED"
+        commit_sha = str(result.get("pages_commit_sha_before") or "<unknown>")
+        commit_subject = str(result.get("pages_commit_subject_before") or "<unknown>")
+        ahead = result.get("pages_repo_ahead_before")
+        behind = result.get("pages_repo_behind_before")
+        next_action = (
+            f"Pages repo already has {ahead} local commit(s) ahead of origin"
+            f"{f' and {behind} commit(s) behind' if behind is not None else ''}: {commit_sha} {commit_subject}. "
+            "Push or reset that local Pages commit only if it is confirmed safe, then rerun."
+        )
+        if risky:
+            next_action += "\nSource repo also has unexpected dirty paths:\n" + "\n".join(risky)
+        elif cleanable:
+            next_action += "\nSource repo has cleanable generated artifacts:\n" + "\n".join(cleanable)
+        result["next_action"] = next_action
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = pages_snapshot_before.get("status_branch") or _git_status_branch(pages_repo)
+        return result
+    if risky:
+        result["operator_status"] = "REPO_DIRTY_BLOCKED"
+        result["next_action"] = "Clean or commit unexpected source repo changes before rerunning."
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
+        return result
+    if cleanable:
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        if not cleanup["ok"]:
+            result["cleanup_status"] = cleanup["status"]
+            result["operator_status"] = "REPO_DIRTY_BLOCKED"
+            result["next_action"] = "Run the printed cleanup commands manually and rerun."
+            result["source_repo_status_after"] = _git_status_branch(ROOT)
+            result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
+            return result
+    current_branch = _git_branch(ROOT)
+    if current_branch != args.expected_source_branch:
+        result["operator_status"] = "REPO_DIRTY_BLOCKED"
+        result["next_action"] = f"Switch source repo to {args.expected_source_branch} or override --expected-source-branch."
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
+        return result
+    pages_ok, pages_error = _validate_pages_repo(pages_repo, args.pages_branch)
+    if not pages_ok:
+        result["operator_status"] = "REPO_DIRTY_BLOCKED"
+        result["next_action"] = pages_error
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
+        return result
+
+    if getattr(args, "enforce_test_root", False) and not args.manual_source_check_only and not args.post_bluesky_only:
+        test_root = _validate_scheduled_test_root()
+        result["test_root_status"] = test_root["status"]
+        result["test_root_path"] = test_root.get("path")
+        result["test_root_error"] = test_root.get("error")
+        if not test_root["ok"]:
+            result["operator_status"] = "TEST_ROOT_BLOCKED"
+            result["failure_stage"] = "test_root_admission"
+            result["validation_ok"] = False
+            result["no_update_eligible"] = False
+            result["next_action"] = str(test_root.get("error") or "Test-root admission failed.")
+            result["source_repo_status_after"] = _git_status_branch(ROOT)
+            result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
+            return result
+
+    manual_validation = _validate_manual_sources_for_operator(args.date, post_only=args.post_bluesky_only)
+    result["manual_source_validation"] = manual_validation
+    if not manual_validation["ok"]:
+        result["operator_status"] = "MANUAL_SOURCE_INVALID"
+        result["next_action"] = "; ".join(manual_validation["errors"])
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+    if args.manual_source_check_only:
+        result["ok"] = True
+        result["operator_status"] = "MANUAL_SOURCE_VALID"
+        result["next_action"] = "Manual source validation completed."
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+
+    if args.post_bluesky_only:
+        live = verify_live_publication(
+            edition_date=args.date,
+            public_urls={
+                "edition": result["public_url"],
+                "archive": "https://dispatches.thebluefernco.com/gaza/archive.html",
+            },
+            cache_token=args.date,
+            remote_tree_ok=True,
+            sleep_fn=lambda _seconds: None,
+        )
+        result["live_verify_status"] = live["status"]
+        result["live_http_ok"] = live["live_http_ok"]
+        result["live_archive_ok"] = live["live_archive_ok"]
+        if live["status"] != "LIVE_OK":
+            result["operator_status"] = live["status"]
+            result["next_action"] = "Wait for the live site to update, then rerun with --post-bluesky-only."
+        else:
+            bluesky = maybe_post_gaza_dispatch_to_bluesky(
+                edition_date=args.date,
+                public_url=str(result["public_url"]),
+                run_succeeded=True,
+                post_requested=not args.skip_bluesky,
+                project_root=ROOT,
+                force_post=bool(args.force_bluesky_post),
+                allow_publish=not args.dry_run,
+                approved_text_path=args.bluesky_approved_text_file,
+                approved_text_sha256=args.bluesky_approved_text_sha256,
+                expected_handle=args.bluesky_expected_handle,
+                expected_did=args.bluesky_expected_did,
+                live_verification=live,
+            )
+            result["bluesky_status"] = str(bluesky.get("status") or "skipped")
+            result["bluesky_post_uri"] = bluesky.get("post_uri")
+            if result["bluesky_status"] == "success":
+                result["ok"] = True
+                result["operator_status"] = "PUBLISHED_AND_POSTED"
+            elif str(bluesky.get("reason")) in {
+                "skipped_existing_receipt",
+                "skipped_existing_exact_receipt",
+                "skipped_matching_remote_record",
+            }:
+                result["ok"] = True
+                result["operator_status"] = "ALREADY_POSTED"
+            elif str(bluesky.get("reason")) == "dry_run":
+                result["ok"] = True
+                result["operator_status"] = "BLUESKY_PREVIEW_READY"
+            else:
+                result["operator_status"] = "BLUESKY_FAILED"
+                result["next_action"] = str(bluesky.get("reason") or "Bluesky post-only run failed.")
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        result["cleanup_status"] = cleanup["status"]
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+
+    sync = _sync_pages_repo(pages_repo, args.pages_branch)
+    result["commands_run"].extend(sync["commands"])
+    if not sync["ok"]:
+        result["operator_status"] = "REPO_DIRTY_BLOCKED"
+        result["next_action"] = str(sync.get("error") or "Pages repo sync failed.")
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+    result["pages_synced_before_publish"] = True
+
+    audio_requested_for_run = bool(args.generate_audio and args.tts_provider != "none" and not args.skip_audio)
+    generate_audio = audio_requested_for_run
+    if generate_audio and audio_file_path(args.date, args.audio_format).exists() and not args.force_audio:
+        generate_audio = False
+        result["audio_status"] = "audio_reused_existing"
+
+    daily_args = _daily_args(
+        edition_date=args.date,
+        pages_repo=pages_repo,
+        pages_branch=args.pages_branch,
+        remote_url=args.remote_url,
+        dry_run=bool(args.dry_run),
+        generate_audio=generate_audio,
+        allow_listing_shrink=bool(args.allow_listing_shrink),
+        tts_provider=args.tts_provider,
+        audio_model=args.audio_model,
+        audio_voice=args.audio_voice,
+        audio_format=args.audio_format,
+    )
+    result["daily_pipeline_started"] = True
+    code, summary, _stdout = _capture_daily_run(daily_args)
+    result["commands_run"].append("scripts/run_daily_gaza.py " + " ".join(daily_args))
+    result["source_collection_started"] = bool(summary.get("collection_started"))
+    result["source_count"] = int(summary.get("source_count") or 0)
+    result["publisher_count"] = int(summary.get("publisher_count") or 0)
+    result["public_story_count"] = int(summary.get("public_story_count") or 0)
+    result["test_root_status"] = summary.get("test_root_status") or result["test_root_status"]
+    result["test_root_path"] = summary.get("test_root_path") or result["test_root_path"]
+    result["test_root_error"] = summary.get("test_root_error") or result["test_root_error"]
+    result["failure_stage"] = summary.get("failure_stage")
+    if "no_update_eligible" in summary:
+        result["no_update_eligible"] = summary.get("no_update_eligible")
+    result["generation_ok"] = bool(summary.get("generation_ok"))
+    result["tests_ok"] = summary.get("tests_ok")
+    result["validation_ok"] = summary.get("validation_ok")
+    result["pages_commit_sha"] = summary.get("pages_commit_sha")
+    if code != 0:
+        errors = [str(item) for item in summary.get("errors") or []]
+        no_publication = any(
+            "No valid traceable Gaza sources survived normalization and dedupe" in item
+            or "all candidates were suppressed as repeated or stale-risk" in item
+            or "No source-backed Gaza stories survived curation/dedupe" in item
+            or "No substantive Gaza/Palestinian ground-development story cleared threshold" in item
+            for item in errors
+        )
+        if no_publication:
+            if not _verified_no_update_summary(summary):
+                result["ok"] = False
+                result["operator_status"] = "UPSTREAM_INCOMPLETE"
+                result["generation_ok"] = False
+                result["validation_ok"] = False
+                result["next_action"] = (
+                    "Threshold-blocked generation had incomplete or unverified source coverage; "
+                    "no-update publication was not authorized."
+                )
+                cleanup = _clean_source_generated_artifacts()
+                result["commands_run"].extend(cleanup["commands"])
+                result["cleanup_status"] = cleanup["status"]
+                result["source_repo_status_after"] = _git_status_branch(ROOT)
+                result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+                return result
+            result["ok"] = True
+            result["operator_status"] = "NO_PUBLICATION_NEEDED"
+            result["generation_ok"] = True
+            result["validation_ok"] = True
+            result["next_action"] = "No dispatch was published because no new source-backed Gaza update qualified."
+            if summary.get("no_update_status_written") is True:
+                publish_args = _no_update_pages_publish_args(
+                    edition_date=args.date,
+                    pages_repo=pages_repo,
+                    pages_branch=args.pages_branch,
+                    remote_url=args.remote_url,
+                    dry_run=bool(args.dry_run),
+                    allow_listing_shrink=bool(args.allow_listing_shrink),
+                )
+                publish = _run_command(publish_args)
+                result["commands_run"].append(" ".join(publish_args))
+                publish_summary = _json_summary_from_stdout(publish.stdout)
+                result["local_pages_copy_ok"] = publish_summary.get("local_pages_copy_ok")
+                result["pages_commit_sha"] = publish_summary.get("commit_sha")
+                result["pages_commit_ok"] = publish_summary.get("pages_commit_ok")
+                if publish.returncode != 0:
+                    result["ok"] = False
+                    result["operator_status"] = "NO_UPDATE_PAGES_UPDATE_FAILED"
+                    publish_errors = [str(item) for item in publish_summary.get("errors") or []]
+                    result["next_action"] = (
+                        "; ".join(publish_errors)
+                        or publish.stderr.strip()
+                        or publish.stdout.strip()
+                        or "No-update Pages update failed."
+                    )
+                elif args.dry_run:
+                    result["operator_status"] = "NO_UPDATE_DRY_RUN_READY"
+                    result["next_action"] = "Review the no-update dry-run summary; rerun with --push to publish the status notice."
+                elif not args.push:
+                    result["operator_status"] = "NO_UPDATE_LOCAL_PUBLISH_READY"
+                    result["next_action"] = f'Push from the Pages repo or rerun with --push. Pages repo: "{pages_repo}"'
+                else:
+                    push = _run_command(["git", "-C", str(pages_repo), "push", "origin", args.pages_branch], cwd=ROOT)
+                    result["commands_run"].append(f'git -C "{pages_repo}" push origin {args.pages_branch}')
+                    if push.returncode != 0:
+                        result["ok"] = False
+                        result["operator_status"] = "NO_UPDATE_PUSH_FAILED"
+                        result["pages_push_ok"] = False
+                        result["next_action"] = push.stderr.strip() or push.stdout.strip() or "No-update Pages push failed."
+                    else:
+                        result["pages_push_ok"] = True
+                        result["operator_status"] = "NO_UPDATE_PUBLISHED"
+                        result["next_action"] = "No-update status notice published."
+        else:
+            result["operator_status"] = "AUDIO_FAILED" if any("audio generation failed" in item for item in errors) else "FAILED"
+            result["next_action"] = errors[0] if errors else "Daily Gaza run failed."
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        result["cleanup_status"] = cleanup["status"]
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+
+    if audio_requested_for_run and not args.dry_run:
+        audio_verification = _verify_requested_audio_artifacts(args.date, pages_repo, args.audio_format)
+        if not audio_verification["ok"]:
+            result["ok"] = False
+            result["operator_status"] = "AUDIO_FAILED"
+            result["audio_status"] = "audio_failed"
+            result["next_action"] = audio_verification["next_action"]
+            cleanup = _clean_source_generated_artifacts()
+            result["commands_run"].extend(cleanup["commands"])
+            result["cleanup_status"] = cleanup["status"]
+            result["source_repo_status_after"] = _git_status_branch(ROOT)
+            result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+            return result
+        if result["audio_status"] == "audio_skipped":
+            result["audio_status"] = "audio_generated"
+
+    if args.dry_run:
+        if args.post_bluesky and not args.skip_bluesky:
+            bluesky = maybe_post_gaza_dispatch_to_bluesky(
+                edition_date=args.date,
+                public_url=str(result["public_url"]),
+                run_succeeded=True,
+                post_requested=True,
+                project_root=ROOT,
+                force_post=bool(args.force_bluesky_post),
+                allow_publish=False,
+                approved_text_path=args.bluesky_approved_text_file,
+                approved_text_sha256=args.bluesky_approved_text_sha256,
+                expected_handle=args.bluesky_expected_handle,
+                expected_did=args.bluesky_expected_did,
+            )
+            result["bluesky_status"] = str(bluesky.get("status") or "skipped")
+            result["bluesky_post_uri"] = bluesky.get("post_uri")
+        result["ok"] = True
+        result["operator_status"] = "DRY_RUN_READY"
+        result["next_action"] = "Review the dry-run summary; rerun with --push for live publication."
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        result["cleanup_status"] = cleanup["status"]
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+
+    if not args.push:
+        result["ok"] = True
+        result["operator_status"] = "LOCAL_PUBLISH_READY"
+        result["next_action"] = f'Push from the Pages repo or rerun with --push. Pages repo: "{pages_repo}"'
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        result["cleanup_status"] = cleanup["status"]
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+
+    push = _run_command(["git", "-C", str(pages_repo), "push", "origin", args.pages_branch], cwd=ROOT)
+    result["commands_run"].append(f'git -C "{pages_repo}" push origin {args.pages_branch}')
+    if push.returncode != 0:
+        result["operator_status"] = "FAILED"
+        result["pages_push_ok"] = False
+        result["next_action"] = push.stderr.strip() or push.stdout.strip() or "Pages push failed."
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        result["cleanup_status"] = cleanup["status"]
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+    result["pages_push_ok"] = True
+
+    remote_verify = _remote_tree_verify(pages_repo, args.pages_branch, args.date)
+    result["remote_tree_verify_ok"] = bool(remote_verify["ok"])
+    if remote_verify.get("remote_commit_sha"):
+        result["pages_commit_sha"] = remote_verify["remote_commit_sha"]
+    live = verify_live_publication(
+        edition_date=args.date,
+        public_urls={"edition": str(result["public_url"]), "archive": "https://dispatches.thebluefernco.com/gaza/archive.html"},
+        cache_token=str(result["pages_commit_sha"] or args.date),
+        remote_tree_ok=bool(remote_verify["ok"]),
+    )
+    result["live_verify_status"] = live["status"]
+    result["live_http_ok"] = live["live_http_ok"]
+    result["live_archive_ok"] = live["live_archive_ok"]
+    if live["status"] != "LIVE_OK":
+        result["ok"] = live["status"] == "PAGES_PROPAGATION_PENDING"
+        result["operator_status"] = live["status"]
+        result["next_action"] = (
+            f"Wait for Pages propagation, then rerun: python scripts/run_gaza_daily_operator.py --date {args.date} --post-bluesky-only"
+            if live["status"] == "PAGES_PROPAGATION_PENDING"
+            else "Inspect live verification diagnostics and marker expectations."
+        )
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        result["cleanup_status"] = cleanup["status"]
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+
+    if args.skip_bluesky or not args.post_bluesky:
+        result["ok"] = True
+        result["operator_status"] = "PUBLISHED_NOT_POSTED"
+        result["next_action"] = (
+            f"Run post-only if needed: python scripts/run_gaza_daily_operator.py --date {args.date} --post-bluesky-only"
+            if args.skip_bluesky
+            else "Publication completed."
+        )
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        result["cleanup_status"] = cleanup["status"]
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+
+    bluesky = maybe_post_gaza_dispatch_to_bluesky(
+        edition_date=args.date,
+        public_url=str(result["public_url"]),
+        run_succeeded=True,
+        post_requested=True,
+        project_root=ROOT,
+        force_post=bool(args.force_bluesky_post),
+        allow_publish=True,
+        approved_text_path=args.bluesky_approved_text_file,
+        approved_text_sha256=args.bluesky_approved_text_sha256,
+        expected_handle=args.bluesky_expected_handle,
+        expected_did=args.bluesky_expected_did,
+        live_verification=live,
+    )
+    result["bluesky_status"] = str(bluesky.get("status") or "skipped")
+    result["bluesky_post_uri"] = bluesky.get("post_uri")
+    if result["bluesky_status"] == "success":
+        result["ok"] = True
+        result["operator_status"] = "PUBLISHED_AND_POSTED"
+        result["next_action"] = "Publication and Bluesky posting completed."
+    elif str(bluesky.get("reason")) in {
+        "skipped_existing_receipt",
+        "skipped_existing_exact_receipt",
+        "skipped_matching_remote_record",
+    }:
+        result["ok"] = True
+        result["operator_status"] = "ALREADY_POSTED"
+        result["next_action"] = "Publication was already posted to Bluesky."
+    else:
+        result["operator_status"] = "BLUESKY_FAILED"
+        result["next_action"] = str(bluesky.get("reason") or "Bluesky posting failed.")
+
+    cleanup = _clean_source_generated_artifacts()
+    result["commands_run"].extend(cleanup["commands"])
+    result["cleanup_status"] = cleanup["status"]
+    result["source_repo_status_after"] = _git_status_branch(ROOT)
+    result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+    return result
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run the safe Gaza daily operator.")
+    parser.add_argument("--date", default=time.strftime("%Y-%m-%d"), help="Edition date in YYYY-MM-DD format.")
+    parser.add_argument("--dry-run", action="store_true", help="Run generation and validation without pushing Pages or posting live.")
+    parser.add_argument("--post-bluesky", action="store_true", help="Preview or post the Gaza Bluesky card as part of the operator run.")
+    parser.add_argument("--generate-audio", action="store_true", help="Generate Gaza audio artifacts during the run.")
+    parser.add_argument("--email-report", action="store_true", help="Send the operator summary email.")
+    parser.add_argument("--smtp-debug", action="store_true", help="Enable SMTP debug output when sending the operator email.")
+    parser.add_argument("--push", action="store_true", help="Push the Pages repo after local publish succeeds.")
+    parser.add_argument("--skip-audio", action="store_true", help="Skip audio generation even when audio artifacts exist or generation is requested.")
+    parser.add_argument("--skip-bluesky", action="store_true", help="Disable Bluesky posting for this run.")
+    parser.add_argument("--force-pages-rebuild", action="store_true", help="Reserved compatibility flag; the operator already fetches Pages and fast-forwards safely.")
+    parser.add_argument("--manual-source-check-only", action="store_true", help="Validate and safely normalize Gaza manual_sources.json, then exit.")
+    parser.add_argument("--post-bluesky-only", action="store_true", help="Skip generation/publish and only finish the Bluesky post after live verification.")
+    parser.add_argument("--force-bluesky-post", action="store_true", help="Ignore an existing Bluesky receipt and post again.")
+    parser.add_argument("--bluesky-approved-text-file", type=Path, help="Exact UTF-8 Bluesky post text file for an explicitly reviewed text-only post.")
+    parser.add_argument("--bluesky-approved-text-sha256", help="SHA-256 of the exact approved Bluesky text file; required with --bluesky-approved-text-file.")
+    parser.add_argument("--bluesky-expected-handle", help="Expected authenticated Bluesky handle for an exact reviewed post.")
+    parser.add_argument("--bluesky-expected-did", help="Expected authenticated Bluesky DID for an exact reviewed post.")
+    parser.add_argument("--force-audio", action="store_true", help="Regenerate dated Gaza audio even when an existing audio file is already present.")
+    parser.add_argument("--allow-listing-shrink", action="store_true", help="Allow Gaza homepage recent-editions pruning in dry-run planning.")
+    parser.add_argument("--pages-repo", default=str(DEFAULT_PAGES_REPO), help="Local Pages repo path.")
+    parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Pages branch.")
+    parser.add_argument("--remote-url", default=DEFAULT_REMOTE_URL, help="Pages repo remote URL.")
+    parser.add_argument("--expected-source-branch", default=DEFAULT_SOURCE_BRANCH, help="Required source repo branch for safety checks.")
+    parser.add_argument("--tts-provider", choices=("none", "openai"), default="openai", help="TTS provider used with --generate-audio.")
+    parser.add_argument("--audio-model", default="gpt-4o-mini-tts", help="TTS model used with --generate-audio.")
+    parser.add_argument("--audio-voice", default="alloy", help="TTS voice used with --generate-audio.")
+    parser.add_argument("--audio-format", choices=("mp3", "wav"), default="mp3", help="Audio format.")
+    args = parser.parse_args(argv)
+    args.date = validate_date(args.date)
+    # The scheduled wrapper must not silently fall back to TEMP or another guessed path.
+    args.enforce_test_root = True
+    return args
+
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _emit_operational_receipt(args: argparse.Namespace, result: dict[str, Any], *, started_at: str, completed_at: str) -> str | None:
+    if args.dry_run or args.manual_source_check_only or args.post_bluesky_only:
+        return None
+    run_stamp = started_at.replace("-", "").replace(":", "").replace("+00:00", "Z").replace(".", "")
+    run_id = f"gaza-daily-{args.date}-{run_stamp}"
+    predicted = ROOT / "status" / "operational-health" / "gaza" / args.date / "runs" / f"gaza_daily_dispatch-{run_id}.json"
+    publication_status = str(result.get("operator_status") or "UNKNOWN").lower()
+    receipt = build_gaza_operational_receipt(
+        scheduled_for=args.date,
+        started_at=started_at,
+        completed_at=completed_at,
+        exit_code=0 if result.get("ok") else 1,
+        operator_status=str(result.get("operator_status") or "FAILED"),
+        ok=bool(result.get("ok")),
+        run_id=run_id,
+        runner_path=str(ROOT),
+        branch=_git_branch(ROOT),
+        source_head=_git_output(ROOT, "rev-parse", "HEAD"),
+        public_side_effects={
+            "pages": result.get("pages_push_ok") is True,
+            "bluesky": result.get("bluesky_status") == "success",
+            "audio": result.get("audio_status") in {"audio_generated", "audio_reused_existing"},
+            "public_output": result.get("pages_push_ok") is True,
+        },
+        publication_attempted=result.get("pages_push_ok") is not None,
+        publication_status=publication_status,
+        artifact_refs={"task_receipt": str(predicted)},
+        details={
+            "source_count": int(result.get("source_count") or 0),
+            "publisher_count": int(result.get("publisher_count") or 0),
+            "public_story_count": int(result.get("public_story_count") or 0),
+            "generation_ok": bool(result.get("generation_ok")),
+            "validation_ok": result.get("validation_ok"),
+            "live_verify_status": result.get("live_verify_status"),
+            "test_root_status": result.get("test_root_status"),
+            "test_root_path": result.get("test_root_path"),
+            "test_root_error": result.get("test_root_error"),
+            "source_collection_started": bool(result.get("source_collection_started")),
+            "daily_pipeline_started": bool(result.get("daily_pipeline_started")),
+            "failure_stage": result.get("failure_stage"),
+            "no_update_eligible": result.get("no_update_eligible"),
+        },
+    )
+    write_result = write_operational_receipt(ROOT, receipt)
+    return str(write_result.receipt_path)
+
+
+def _print_human_summary(result: dict[str, Any]) -> None:
+    print(f"Gaza operator status: {result['operator_status']}")
+    print(f"Date: {result['date']}")
+    print(f"Next action: {result.get('next_action') or '<none>'}")
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    started_at = _utc_now()
+    result = run_operator(args)
+    completed_at = _utc_now()
+    try:
+        receipt_path = _emit_operational_receipt(args, result, started_at=started_at, completed_at=completed_at)
+        if receipt_path:
+            result["operational_receipt"] = receipt_path
+    except Exception as exc:  # noqa: BLE001
+        result.setdefault("warnings", []).append(f"operational receipt emission failed: {type(exc).__name__}: {exc}")
+    if args.email_report:
+        try:
+            result["email_status"] = _maybe_send_email(result, smtp_debug=bool(args.smtp_debug))
+        except Exception as exc:  # noqa: BLE001
+            result["email_status"] = f"failed: {notification_error_message(exc)}"
+            if result.get("ok") and not args.dry_run:
+                result.setdefault("warnings", []).append(result["email_status"])
+                result["source_repo_status_after"] = _git_status_branch(ROOT)
+                result["pages_repo_status_after"] = _git_status_branch(Path(args.pages_repo))
+                print(f"Email warning: {result['email_status']}")
+                _print_human_summary(result)
+                print(json.dumps(result, indent=2))
+                return 0
+            if result.get("ok"):
+                result["ok"] = False
+                result["next_action"] = result["email_status"]
+    _print_human_summary(result)
+    print(json.dumps(result, indent=2))
+    return 0 if result.get("ok") else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+

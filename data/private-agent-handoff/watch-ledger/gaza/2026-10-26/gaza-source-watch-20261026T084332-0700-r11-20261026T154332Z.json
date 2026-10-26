@@ -1,0 +1,131 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T084332-0700-r11-20261026T154332Z",
+  "scheduled_for": "2026-10-26T08:44:51-07:00",
+  "started_at": "2026-10-26T08:43:32-07:00",
+  "completed_at": "2026-10-26T08:48:07.792-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T07:51:00-07:00",
+    "end": "2026-10-26T08:48:07.792-07:00",
+    "basis": "Last verified hourly watch-ledger completed_at through this run's completion; compare by story identity and publication timing where available; older event dates preserved."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-al-mawasi-20261026-afp-hospital-three-deaths-followup",
+      "canonical_source_url": "https://www.bssnews.net/international/438496",
+      "title": "AFP reports hospital-confirmed three deaths, including a girl, from al-Mawasi displacement-camp strike",
+      "publisher": "Agence France-Presse (AFP), syndicated by Bangladesh Sangbad Sangstha (BSS)",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "publication_time": null,
+      "event_date": "2026-10-26",
+      "event_period": null,
+      "location": "Al-Mawasi, west of Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Displaced civilians in tent camp; three fatalities identified by Nasser Hospital as Hossam al-Zamli, Tamer Abu Sneima and seven-year-old Jouri al-Soufi; other wounded including a child and a woman. Earlier watch had recorded two fatalities including a girl in al-Mawasi. Reported 11 deaths and 50 injuries over 24 hours is an aggregate, not attributable entirely to this strike.",
+      "supporting_passage": "Nasser Hospital in the southern Gaza city of Khan Yunis confirmed the three deaths.",
+      "source_type": "Established wire reporting (AFP), attributed first-responder statement and named receiving hospital; syndicated report",
+      "classification": "follow-up",
+      "confidence": "HIGH that AFP attributes three deaths to named hospital and civil defence; MEDIUM that this is a revised tally of the exact prior two-fatality report rather than a separate nearby incident",
+      "bounded_discovery_context": {
+        "discovered_during": "2026-10-26T08:43:32-07:00 through 2026-10-26T08:48:07.792-07:00",
+        "reporting_time_precision": "Source date is 26 October; exact publication time not independently verified. The report might have been available before this hourly window; newly recalled during this check, not claimed to have occurred within the hour.",
+        "original_prior_record": "Earlier watch recorded two deaths including a girl and 15 wounded in al-Mawasi; prior 07:51 heartbeat explicitly treated 25–26 October al-Mawasi fatalities as already known. This finding preserves only the incremental AFP/Nasser Hospital three-death identification and requires same-incident deduplication.",
+        "independent_confirmation": "AFP quotes both Gaza civil defence and Nasser Hospital; Israeli military said it was looking into reports. No independent forensic verification claimed.",
+        "production_disposition": "Supplementary handoff; editorial dedupe required. No authorization, approval, publication or schedule change."
+      }
+    },
+    {
+      "finding_id": "gaza-detainees-20261026-un-coi-reported-sde-teiman-six-cases",
+      "canonical_source_url": "https://apnews.com/article/israel-gaza-un-war-sexual-crimes-9547f83319b8c5be32ab3ab81534772a",
+      "title": "AP reports new UN Commission of Inquiry findings alleging sexual violence in six cases involving detainees from Gaza at Sde Teiman",
+      "publisher": "The Associated Press",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "publication_time": null,
+      "event_date": null,
+      "event_period": "Since October 2023; dates of six alleged incidents not specified",
+      "location": "Sde Teiman military detention facility, Israel (outside Gaza); victims described as detainees from Gaza",
+      "affected_population_or_system": "Male Palestinian detainees from Gaza; UN-appointed independent Commission of Inquiry says it recently documented six cases involving alleged sexual violence by Israeli guards. AP says it could not independently corroborate several graphic allegations; Israel rejects accusations of sexual assault and challenges the commission.",
+      "supporting_passage": "documented six cases where Israeli guards were sexually violent toward male detainees from Gaza",
+      "source_type": "Established wire reporting on a newly released UN-mandated Commission of Inquiry report; original report URL not independently retrieved",
+      "classification": "follow-up",
+      "confidence": "MEDIUM for the newly reported Commission findings as accurately attributed by AP; allegations are not independently verified and the individual event dates are unknown",
+      "bounded_discovery_context": {
+        "discovered_during": "2026-10-26T08:43:32-07:00 through 2026-10-26T08:48:07.792-07:00",
+        "publication_precision": "AP says report released Monday 26 October; exact hour is unknown. Newly discovered during watch, not asserted to have been published after prior 07:51 completion.",
+        "geography_scope": "Gaza-origin detainees, but alleged acts were at a detention facility outside Gaza. Flag for strict production geography gate; not suitable for an in-Gaza at-a-glance item without policy-compliant development.",
+        "recycled_elements_excluded": "AP's figure of 196 deaths near the Yellow Line during the ceasefire and territorial-control context were reported by UN months before Oct 26 and are not counted as new.",
+        "limitations": "UN primary report was not found among bounded searches; AP says it could not independently corroborate several sexual assault accounts; reported as allegations, not adjudicated facts.",
+        "production_disposition": "Supplementary handoff only; Gaza geography and evidence policy review required. No authorization, approval, publication or schedule change."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; production is authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T074826-0700-r11-20261026T144826Z",
+      "completed_at": "2026-10-26T07:51:00-07:00",
+      "branch": "ops/watch-ledger",
+      "verified_by": "GitHub connector fetch_file"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest Oct 26 report titled 'Humanitarian Situation Report | 22 October 2026'; already covered by prior 07:51 ledger (four findings). Direct report page intermittently failed but link from /updates succeeded."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, persistent from earlier hourly runs."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated 26 October Gaza-specific operational health update displayed."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:reuters.com/world/middle-east/ Gaza Monday October 26 2026 casualties aid crossings ceasefire",
+      "site:apnews.com/article/gaza October 26 2026 Monday strike displacement aid",
+      "site:english.wafa.ps 26 October 2026 Gaza afternoon 17:00 killed injured hospitals",
+      "site:aa.com.tr/en/middle-east/ Gaza October 26 2026 18:00 civilian killed displaced",
+      "site:unicef.org Gaza 26 October 2026 statement attacks children water",
+      "Gaza October 26 2026 Monday latest 15:00 UTC 16:00 UTC civilians injured new strike October 26",
+      "site:english.wafa.ps/Pages/Details/ October 26 2026 Gaza PM wounded killed humanitarian",
+      "26 October 2026 Gaza aid medical evacuation hospital operational latest report Palestinian Red Crescent",
+      "October 26 2026 Gaza Rafah Kerem Shalom crossing negotiations ceasefire hostages latest Monday",
+      "site:ohchr.org 26 October 2026 Commission Gaza ceasefire control 60 prisoners",
+      "site:un.org 26 October 2026 Independent International Commission Inquiry Gaza 196 killed yellow line",
+      "site:palestinercs.org Gaza October 26 2026 ambulance medical transport casualties"
+    ],
+    "source_access_degradation": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "materiality": "Known pre-existing direct regional coverage degradation; OCHA, WHO global and other established reporting still provided partial coverage."
+      },
+      {
+        "source": "OCHA situation report direct URL",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+        "error": "Intermittent fetch error via direct open",
+        "materiality": "Recovered by clicking from OCHA /updates; report text accessible."
+      }
+    ],
+    "excludes": [
+      "Four OCHA Oct 26 operational findings from 07:51 ledger not repeated.",
+      "Prior Gaza incident reports without changes not repeated.",
+      "AP/UN figure of 196 deaths at Yellow Line derived from earlier 2026 reporting not treated as fresh event.",
+      "West Bank incidents, unrelated Middle East hostilities, opinion and unsupported social content excluded."
+    ],
+    "caveat": "Newly discoverable source-backed follow-ups, not necessarily events or publications within this clock hour. Prior al-Mawasi two-death report may refer to same incident as AFP three-death account; production must dedupe.",
+    "action_scope": "One heartbeat JSON created on ops/watch-ledger only; production, approvals, publication, automation untouched."
+  }
+}

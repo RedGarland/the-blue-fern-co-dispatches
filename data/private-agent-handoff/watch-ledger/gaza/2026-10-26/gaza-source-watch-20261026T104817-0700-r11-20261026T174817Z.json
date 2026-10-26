@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T104817-0700-r11-20261026T174817Z",
+  "scheduled_for": "2026-10-26T10:44:51-07:00",
+  "started_at": "2026-10-26T10:48:17-07:00",
+  "completed_at": "2026-10-26T10:51:22.834-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T09:48:22.154-07:00",
+    "end": "2026-10-26T10:51:22.834-07:00",
+    "basis": "Prior verified Gaza Source Watch watch-ledger completed_at through this bounded supplementary observation. Source date and event date are not assumed equal to first discovery."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall watch only; production remains the authoritative collector, editorial review and publisher.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T094652-0700-r11-20261026T164652Z",
+      "completed_at": "2026-10-26T09:48:22.154-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "GitHub connector fetch_file, ref ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed item is the 26 October 2026 publication 'Humanitarian Situation Report | 22 October 2026', examined at https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026. Its Gaza details were available before this observation window and had already been examined by previous hourly watches; no newly dated/verified Gaza development found."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Latest Gaza-specific published links and WHO regional news did not furnish a new 26 October incident or operational change since prior check."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean / oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway (persistent documented endpoint degradation); no direct regional Gaza health verification available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 26 2026 latest updates 17:00 UTC Reuters civilian casualties aid crossing ceasefire",
+      "site:english.wafa.ps 26 October 2026 Gaza evening killed injured al-Mawasi Deir al-Balah",
+      "site:aa.com.tr/en/middle-east/ Gaza October 26 2026 latest Monday evening strike aid",
+      "site:apnews.com/article/ October 26 2026 Gaza Monday evening ceasefire humanitarian",
+      "site:ochaopt.org 26 October 2026 Gaza humanitarian new aid water hospital transport update",
+      "site:unrwa.org October 26 2026 Gaza flour shelter displacement update",
+      "October 26 2026 Gaza Islamic University drone strike students killed three afternoon Reuters AFP",
+      "Gaza 26 October 2026 20:00 Gaza City Islamic University drone strike Palestinian guards killed",
+      "site:english.wafa.ps/Pages/Details/ \"October 26, 2026\" Gaza deaths Monday  evening",
+      "site:palestinercs.org October 26 2026 Gaza ambulance incident medical evacuation",
+      "site:wfp.org October 26 2026 Gaza food access bakery convoy update",
+      "Gaza 26 October 2026 Rafah Kerem Shalom aid crossings hostages negotiations 17:00 GMT"
+    ],
+    "source_access_degradation": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Persistent and documented in earlier hourly checks. Limits direct WHO regional verification; OCHA, WHO global, WAFA and established reporting remain available."
+      },
+      {
+        "source": "Haaretz",
+        "url": "https://www.haaretz.com/gaza/2026-10-26/ty-article/.premium/idf-kills-five-in-gaza-strip-displaced-persons-camp-destroyed-in-fire/000001a1-7827-db92-abbb-faf7b3990000",
+        "error": "HTTP 403 Forbidden",
+        "materiality": "Paywall/access restriction blocked independent inspection; snippet concerns previously reported al-Mawasi/displacement developments; no unverified new claim elevated."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "OCHA October 26 report (covering October 22) was already discovered and assessed in preceding watches; its bakeries, monthly food aid suspension, restored Mekorot water, health facility functionality and other retrospective figures are not recounted as newly reported this hour.",
+      "AFP three fatalities at al-Mawasi already logged as a follow-up at 08:48; Haaretz reports older Gaza strikes and displacement camp fire without accessible full text or verified new event time.",
+      "Islamic University Gaza City campus strikes on October 25 killed three guards and injured students according to Al Jazeera's October 25 report; predated prior hourly check and excluded as recycled, even though discovered during this search.",
+      "WHO generator oil exhaustion warning is dated October 21-22 and is a risk warning, not a confirmed new hospital shutdown.",
+      "WAFA's most recent indexed Gaza incident reports located were published earlier on October 26 or October 25 (Palestinian local time) and either recorded by prior watch or older than the observation window.",
+      "No supportable new crossing, medevac, hostage, detainee, displacement, water, food or ceasefire development with verified new timing emerged.",
+      "West Bank-only and non-Gaza cases, unsourced social claims, opinions, duplicate/recycled and stale search results excluded."
+    ],
+    "limitations": "Twelve bounded targeted searches, some with stale date-indexed results; access-limited WHO regional and Haaretz sources mean full completeness is not guaranteed. No material new deterioration beyond previously documented WHO regional outage observed.",
+    "result": "No new traceable, nonduplicate qualifying Gaza development verified since the prior hourly watch.",
+    "action_scope": "Exactly one new watch heartbeat JSON on ops/watch-ledger. No production run, publication, approval, social posting, scheduling or automation setting changes."
+  }
+}

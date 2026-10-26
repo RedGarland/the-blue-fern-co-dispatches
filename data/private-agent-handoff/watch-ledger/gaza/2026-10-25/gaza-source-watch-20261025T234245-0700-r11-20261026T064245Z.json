@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T234245-0700-r11-20261026T064245Z",
+  "scheduled_for": "2026-10-25T23:44:51-07:00",
+  "started_at": "2026-10-25T23:42:45-07:00",
+  "completed_at": "2026-10-25T23:44:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T22:45:48-07:00",
+    "end": "2026-10-25T23:44:58-07:00",
+    "basis": "Start is completed_at of last independently read ops/watch-ledger heartbeat; only events with verified new reporting in this interval qualify. Screen earlier, duplicates, and unverified time-of-publication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; daily production publisher/collector remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T224342-0700-r11-20261026T054342Z.json",
+      "completed_at": "2026-10-25T22:45:48-07:00",
+      "verification": "Fetched as UTF-8 from ops/watch-ledger before coverage checks; DEGRADED/no_findings."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Newest dated update October 19, 2026; no official update in observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; same documented regional endpoint outage as prior watches."
+      },
+      {
+        "publisher": "WHO global emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No dated Gaza healthcare or medical-evacuation update in observation window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:ochaopt.org Gaza October 26 2026 humanitarian situation casualties aid crossing",
+      "site:who.int Gaza October 26 2026 medical evacuation hospital fuel patients",
+      "site:unrwa.org Gaza October 26 2026 displacement aid food",
+      "site:wfp.org Gaza October 26 2026 food trucks supplies distribution",
+      "site:unicef.org Gaza October 25 26 2026 water sanitation healthcare children",
+      "site:icrc.org Gaza October 26 2026 hostages detainees humanitarian hospitals",
+      "site:reuters.com Gaza \"October 26, 2026\" strike killed ceasefire aid Israel",
+      "site:apnews.com Gaza \"October 26, 2026\" killed shelling crossing ceasefire",
+      "Gaza Palestinians killed wounded Monday October 26 2026 Khan Younis Gaza City 25 October night",
+      "Gaza \"26 October 2026\" ambulance hospital fuel medical evacuation PRCS MSF",
+      "Gaza Sunday October 25 2026 night ceasefire negotiations crossings displaced civilians latest",
+      "site:alghad.com غزة 26 أكتوبر 2026 قصف مواصي خان يونس شهيد إصابة الاثنين"
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties; attacks and military operations with documented civilian impact",
+      "displacement; shelters; infrastructure",
+      "food and water access, aid corridors and crossings",
+      "hospital, ambulance, fuel, transport, functioning capacity and medical evacuation",
+      "detention and hostage status; ceasefire and negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "impact": "Regional source remained unavailable for direct verification of health-service capacity and medical evacuations; WHO global portal and OCHA OPT were accessible. Persistent known issue, not a newly material degradation."
+      }
+    ],
+    "excluded_or_not_counted": [
+      "AP October 25 rolling Middle East article https://apnews.com/article/mideast-news-october-25-2026-4779a3deeb1a23f59414164532d5c885 reports 7 Gaza deaths based on hospital officials and ICRC receipt of detainee lists. Neither item gives publication/event timing proving new emergence after 22:45:48 PDT, so not treated as new for this hour.",
+      "gazanews.live October 25 entries have Gaza-local event timestamps and are not independently established new developments within the 22:45–23:44 PDT observation window. Some report generic shooting without documented civilian impact.",
+      "Previous al-Mawasi/Khan Younis casualty lead already in earlier watch heartbeat, not recounted.",
+      "UN agency and Reuters/AP results with earlier publication dates were excluded, along with unsupported social claims and West Bank-only coverage."
+    ],
+    "assessment": "OCHA OPT and WHO were checked first, then exactly 12 targeted searches. No source-backed, time-bounded, nonduplicate new Gaza development verified for this window. Regional WHO endpoint remains unavailable, so persist DEGRADED/no_findings rather than abort.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

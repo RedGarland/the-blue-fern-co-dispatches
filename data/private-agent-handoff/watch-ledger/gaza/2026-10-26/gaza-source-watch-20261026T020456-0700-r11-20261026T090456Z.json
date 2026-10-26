@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T020456-0700-r11-20261026T090456Z",
+  "scheduled_for": "2026-10-26T01:44:51-07:00",
+  "started_at": "2026-10-26T02:04:56-07:00",
+  "completed_at": "2026-10-26T02:08:56-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T00:56:30.248-07:00",
+    "end": "2026-10-26T02:08:56-07:00",
+    "basis": "From completed_at of most recent verified Gaza heartbeat on ops/watch-ledger; 2026-10-26 directory was enumerated and contained that prior heartbeat only as of this run. Late scheduler execution produced an approximately 70-minute recall window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary production collector/editor/publisher remains authoritative. No publication, approval or scheduler changes.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T005216-0700-r11-20261026T075216Z.json",
+      "completed_at": "2026-10-26T00:56:30.248-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Read via connected GitHub from ops/watch-ledger; enumerated 2026-10-26 directory to confirm no later prior Gaza heartbeat."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed update published October 19, 2026. No newly dated Gaza update in observation window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated oPt health development within observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Timed out (retrieval error); persistent regional-source limitation, not newly emerged during this run."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:unrwa.org Gaza 26 October 2026 humanitarian update",
+      "site:wfp.org Gaza 26 October 2026 food access crossings",
+      "site:unicef.org Gaza 26 October 2026 water children casualties",
+      "site:icrc.org Gaza October 26 2026 hospital detainees hostage humanitarian",
+      "site:reliefweb.int Gaza 26 October 2026 health access displacement situation",
+      "site:palestinercs.org Gaza 26 October 2026 ambulance emergency",
+      "Gaza October 26 2026 Palestinians killed wounded Khan Younis Monday morning Reuters AFP",
+      "Gaza October 26 2026 hospital ambulance fuel medical evacuation health",
+      "Gaza October 26 2026 crossings aid trucks food water Rafah Kerem Shalom",
+      "Gaza October 26 2026 airstrikes civilians displacement Reuters AP",
+      "غزة 26 أكتوبر 2026 شهداء إصابات خان يونس الإثنين صباح",
+      "Gaza Israel ceasefire negotiations October 26 2026 civilians displaced detainees"
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties",
+      "displacement and shelter",
+      "aid and food/water",
+      "hospitals and medical evacuation/ambulance/fuel/functioning capacity",
+      "infrastructure and crossings",
+      "detainees/hostages and ceasefire/negotiation",
+      "military operations with documented civilian impact"
+    ],
+    "reviewed_excluded": [
+      {
+        "url": "https://www.fatehgaza.com/ar/post/77531/3-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D8%B7%D9%81%D9%84%D8%A9-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D8%A8%D9%82%D8%B5%D9%81-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A-%D8%B9%D9%84%D9%89-%D9%85%D9%88%D8%A7%D8%B5%D9%8A-%D8%AE%D8%A7%D9%86-%D9%8A%D9%88%D9%86%D8%B3",
+        "reason": "Published 2026-10-26 09:28 Gaza local (before this recall window); same al-Mawasi Khan Younis casualty incident handed off in Oct 25 20:49 PDT watch. Higher figure of three reported but no independently established new event this period."
+      },
+      {
+        "url": "https://nn.najah.edu/news/Gaza/2026/10/26/572738/",
+        "reason": "Oct 26 11:40 Gaza local cumulative Ministry of Health mortality/injury totals reported in search index, but article body inaccessible and source-period/new increment unverified; excluded as insufficiently traceable incremental development and potential aggregate repetition."
+      },
+      {
+        "url": "https://www.fatehgaza.com/ar/post/77527/",
+        "reason": "Oct 25 statement on flour needed for one day of bakery operations, published before this observation window."
+      },
+      {
+        "description": "Fateh Gaza breaking ribbon references injuries in a Tel al-Hawa drone strike",
+        "reason": "No independently verified timestamp or article-level supporting detail for a distinct incident; withheld."
+      }
+    ],
+    "search_quality": "Official humanitarian sources and established outlets prioritized. Direct WHO regional access timed out; OCHA and WHO global pages available. Search index returned some stale/recycled and inaccessible articles; none independently qualified as new in observed window. One existing source restriction makes run DEGRADED but is not a newly material failure.",
+    "notification_recommendation": "none; no qualifying new finding or newly material degradation."
+  }
+}

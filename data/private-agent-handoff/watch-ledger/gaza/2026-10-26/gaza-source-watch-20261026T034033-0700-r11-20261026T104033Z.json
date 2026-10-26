@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T034033-0700-r11-20261026T104033Z",
+  "scheduled_for": "2026-10-26T03:44:51-07:00",
+  "started_at": "2026-10-26T03:40:33-07:00",
+  "completed_at": "2026-10-26T03:42:10-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T02:48:38-07:00",
+    "end": "2026-10-26T03:42:10-07:00",
+    "basis": "Since last independently verified ops/watch-ledger heartbeat completed_at; older event/publication dates are not fresh findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only. Production is authoritative for editorial review, approvals and publication.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T024333-0700-r11-20261026T094333Z.json",
+      "completed_at": "2026-10-26T02:48:38-07:00",
+      "status": "DEGRADED",
+      "outcome": "findings",
+      "verified_by": "Direct GitHub fetch_file and directory enumeration of ops/watch-ledger before this write",
+      "carried_forward_finding_ids": [
+        "gaza-20261025-shujaiya-displacement-camp-fire-800",
+        "gaza-20261026-egypt-erc-convoy-303-dispatched",
+        "gaza-20261026-deir-al-balah-ard-al-shawa-gunfire-injury-advance"
+      ]
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest front-page item is a reported Gaza impact snapshot published 23 October (data as of 21 October); no new October 26 item."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; direct regional reporting inaccessible, persistent from earlier runs."
+      },
+      {
+        "publisher": "WHO global situation portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated October 26 Gaza-specific release on this portal."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:ochaopt.org Gaza October 26 2026 humanitarian update latest",
+      "site:who.int Gaza October 26 2026 hospital ambulance evacuation",
+      "site:unrwa.org Gaza 26 October 2026 aid displaced crossings",
+      "site:unicef.org Gaza October 26 2026 children water aid",
+      "site:icrc.org Gaza October 26 2026 medical aid hospital",
+      "Gaza October 26 2026 Reuters AP civilians killed ceasefire aid latest early Monday",
+      "Gaza October 26 2026 Al Jazeera Anadolu AFP latest Khan Younis Gaza City Deir al-Balah civilian",
+      "site:palestine.un.org Gaza 26 October 2026 access health displacement",
+      "Gaza 26 October 2026 Monday latest hospital patient evacuation fuel Rafah crossing trucks",
+      "26 October 2026 Gaza aid UN WFP OCHA crossing Kerem Shalom humanitarian update Monday",
+      "26 October 2026 Gaza casualties Monday midday medical sources Israeli shelling airstrike injuries",
+      "26 October 2026 Gaza ceasefire hostages negotiations released detainees update Monday"
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and military impact",
+      "displacement and shelter",
+      "aid deliveries and crossings",
+      "food, water and fuel access",
+      "healthcare, ambulances and medical evacuation",
+      "infrastructure damage",
+      "detainees and hostages",
+      "ceasefire and negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Pre-existing direct regional WHO coverage gap; WHO global site and other sources accessible."
+      },
+      {
+        "publisher": "IMEMC",
+        "url": "https://imemc.org/article/eleven-palestinians-killed-in-gaza-attacks-in-24-hours/",
+        "error": "HTTP 429 Too Many Requests on full-page retrieval",
+        "impact": "Search snippet provided an apparent 24-hour casualty aggregate; underlying article was not independently readable or verified. Not counted as new, and may overlap prior reports."
+      }
+    ],
+    "excluded_or_not_counted": [
+      "Anadolu/AFP October 26 al-Mawasi/Bir 19 fatalities, eastern Deir al-Balah injured woman, burned Shujaiya displacement tents, and Egyptian Red Crescent 303rd convoy had already been captured in the previous verified heartbeat; not re-counted.",
+      "AP October 25 round-up reports hospital-attributed Gaza deaths and ICRC detainee-list resumption; these are dated before the current 02:48 PDT observation start and have no verified new October 26 change in this window.",
+      "Next Century Foundation Gaza Information Index published October 26 compiles October 16–25 and earlier Gaza casualty and crossing data, not a newly occurring event in the current window.",
+      "IMEMC eleven-casualty 24-hour headline could not be opened (429) and no independently verified new incident/date could be distinguished from already reported deaths.",
+      "OCHA October 23 impact snapshot (covering October 21), WHO older material, October 19 WFP funding cuts and other retrospective results are out of window."
+    ],
+    "assessment": "OCHA OPT and WHO checked first. Twelve additional targeted searches total. No independently verifiable, source-traceable and clearly new nonduplicative development in the bounded window. WHO regional 502 and secondary 429 constitute DEGRADED coverage, not FAILED; usable alternative coverage remained.",
+    "notification_assessment": "No materially new degradation compared with previous runs; no new qualifying finding.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

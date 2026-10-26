@@ -1,0 +1,165 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-25-002",
+    "title": "'Gaza's suffering has become campaign fodder': Palestinians fear the worst from Israel election",
+    "summary": "Humanitarian catastrophe largely ignored as rivals Gadi Eisenkot and Benjamin Netanyahu vow to end Hamas rule As. Israel prepares to go to the polls , Palestinians in Gaza are bracing for an outcome that could shape their future, knowing their fate rests with the country that has reduced much of the territory to rubble and killed nearly 75,000 people. Gaza, where nearly a million displaced Palestinians face dire sanitary conditions, water shortages and the constant threat of Israeli strikes, has been largely absent from the election campaign .",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 96,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-25-guardian-world-032154b7179c"
+    ],
+    "source_ids": [
+      "gaza-2026-10-25-guardian-world-032154b7179c"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/oct/25/gaza-suffering-campaign-fodder-palestinians-fear-worst-israel-election"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-25-guardian-world-032154b7179c",
+        "title": "'Gaza's suffering has become campaign fodder': Palestinians fear the worst from Israel election",
+        "url": "https://www.theguardian.com/world/2026/oct/25/gaza-suffering-campaign-fodder-palestinians-fear-worst-israel-election",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Humanitarian catastrophe largely ignored as rivals Gadi Eisenkot and Benjamin Netanyahu vow to end Hamas rule As Israel prepares to go to the polls , Palestinians in Gaza are bracing for an outcome that could shape their future, knowing their fate rests with the country that has reduced much of the territory to rubble and killed nearly 75,000 people. Gaza, where nearly a million displaced Palestinians face dire sanitary conditions, water shortages and the constant threat of Israeli strikes, has been largely absent from the election campaign .",
+        "event_date": "2026-10-25T06:00:54+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-26T04:19:31.004476+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 96,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-25T06:00:54+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-25-001",
+    "title": "Emirati diplomat who helped deliver aid to Gaza enters UN secretary general race",
+    "summary": "Lana Nusseibeh has Palestine's endorsement but faces criticism over UAE's record on human rights and Sudan. An Emirati diplomat who as UAE ambassador to the UN helped secure the delivery of humanitarian aid to Gaza has entered the race as a late contender to succeed Ant\u00f3nio Guterres as the world body's secretary general. Lana Nusseibeh, who is of Palestinian heritage, is widely noted for her advocacy of the Palestinian cause and the two-state solution and has won the endorsement of the state of Palestine.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 75,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-25-guardian-world-00b82af35294"
+    ],
+    "source_ids": [
+      "gaza-2026-10-25-guardian-world-00b82af35294"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/oct/25/lana-nusseibeh-emirati-diplomat-enters-un-secretary-general-race"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-25-guardian-world-00b82af35294",
+        "title": "Emirati diplomat who helped deliver aid to Gaza enters UN secretary general race",
+        "url": "https://www.theguardian.com/world/2026/oct/25/lana-nusseibeh-emirati-diplomat-enters-un-secretary-general-race",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Lana Nusseibeh has Palestine's endorsement but faces criticism over UAE's record on human rights and Sudan An Emirati diplomat who as UAE ambassador to the UN helped secure the delivery of humanitarian aid to Gaza has entered the race as a late contender to succeed Ant\u00f3nio Guterres as the world body's secretary general. Lana Nusseibeh, who is of Palestinian heritage, is widely noted for her advocacy of the Palestinian cause and the two-state solution and has won the endorsement of the state of Palestine.",
+        "event_date": "2026-10-25T19:00:10+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-26T04:19:31.004476+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 75,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-25T19:00:10+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

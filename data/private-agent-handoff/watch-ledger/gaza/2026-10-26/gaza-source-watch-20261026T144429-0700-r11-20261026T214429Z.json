@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T144429-0700-r11-20261026T214429Z",
+  "scheduled_for": "2026-10-26T14:44:51-07:00",
+  "started_at": "2026-10-26T14:44:29-07:00",
+  "completed_at": "2026-10-26T14:46:50.705-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T13:48:31.228-07:00",
+    "end": "2026-10-26T14:46:50.705-07:00",
+    "basis": "Verified prior Gaza Source Watch heartbeat completed_at through completion of this bounded supplementary recall. Previously published items discovered now do not qualify merely because they reappear in results."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall; primary daily Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T134612-0700-r11-20261026T204612Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T134612-0700-r11-20261026T204612Z.json",
+      "completed_at": "2026-10-26T13:48:31.228-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "GitHub fetch_file ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent update listed: Humanitarian Situation Report | 22 October 2026, published 26 October 2026. Its prior-period humanitarian and civilian impact developments were already recorded in previous watch runs. No newly released report found."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest news and publications listings did not surface any health-service, patient evacuation, facility function, fuel or ambulance change newly published in the observation interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct request returned HTTP 502 Bad Gateway. This is a previously documented, continuing endpoint failure, not a new material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 27 2026 00:00 01:00 Gaza time killed injured airstrike civilians Monday night October 26",
+      "site:english.wafa.ps Gaza 26 October 2026 27 October 2026 late night attacks casualties",
+      "site:reuters.com October 26 2026 Gaza Palestinians airstrikes ceasefire Monday night",
+      "site:apnews.com Gaza October 26 2026 27 October 2026 new attacks civilians",
+      "Gaza 27 October 2026 Palestinian Red Crescent ambulance hospital emergency fuel evacuation update",
+      "Gaza Oct 26 2026 Oct 27 2026 WFP UNICEF WHO OCHA UNRWA humanitarian shipments water aid crossing latest",
+      "Gaza Israel ceasefire negotiations Monday October 26 2026 new announcement hostages swap Israeli withdrawal",
+      "October 26 2026 late Gaza displaced Shujaiya tents Khan Younis shelter bombardment new",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"26/October/2026\" \"10:\" \"PM\"",
+      "October 27 2026 Gaza aid Kerem Shalom Rafah crossing Egypt Red Crescent trucks flour medicine opening",
+      "October 26 2026 Gaza hospital services ambulance medical evacuation WHO Health Cluster 47 percent update",
+      "site:unicef.org Gaza 26 October 2026 new children water humanitarian update"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Recent articles through 22:28 Gaza-local time on 26 October were about Al-Aqsa Mosque or West Bank events; latest Gaza camp-burning item was published 19:36 Gaza time, prior to the watch interval and already preserved."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible. Regional front page did not show a separately verifiable new in-Gaza development within the observation window."
+      }
+    ],
+    "source_access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Persistent and known; reduced regional WHO direct coverage but no new material outage; WHO global and OCHA remained accessible."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "OCHA 26 October post of 22 October humanitarian report: bakery operations, suspended food distributions, water-restoration and 47% functional health points already registered as follow-ups earlier on 26 October.",
+      "WAFA Deir al-Balah two killed, al-Mawasi casualties, Shujaiya displaced camp: already recorded in preceding Gaza watch ledgers.",
+      "A 26 October recap of al-Mawasi fatality and Shujaiya displacement repeats earlier incident reporting, not a separate new incident.",
+      "Potential Khan Younis tent shooting appeared only in recycled, weakly attributed secondary reporting without a reliably dated primary account and does not meet traceability and freshness criteria.",
+      "Search returns were predominantly prior-month/2025 items, unrelated regional reports, West Bank-only activity, or unsourced social claims."
+    ],
+    "limitations": "Search result indexing and publication timestamps can lag, and no-result is not proof that no events occurred. WHO EMRO endpoint remains unavailable. No new material degradation versus prior watch was found.",
+    "result": "No additional nonduplicate qualifying Gaza development newly verified in this interval.",
+    "action_scope": "One private heartbeat JSON on ops/watch-ledger only; no production publication, approvals, scheduling or automation changes."
+  }
+}

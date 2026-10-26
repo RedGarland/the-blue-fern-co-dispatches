@@ -354,6 +354,13 @@ def test_legacy_discovery_wrapper_writes_run_state_and_query_plan(tmp_path: Path
             "rejected_news_count": 0,
             "fetch_failure_count_by_type": {},
             "direct_source_count": 5,
+            "queries_attempted": 1,
+            "queries_completed": 1,
+            "queries_succeeded": 1,
+            "queries_failed": 0,
+            "queries_timed_out": 0,
+            "direct_source_fetch_attempt_count": 5,
+            "direct_source_fetch_success_count": 5,
         }
 
     def fake_plan(root: Path, edition_date: str) -> list[dict[str, object]]:
@@ -986,7 +993,19 @@ def test_food_line_discovery_terminal_json_is_ascii_safe_for_windows_cp1252(
     monkeypatch.setattr(
         discovery_compat,
         "run_food_line_discovery_expansion",
-        lambda *args, **kwargs: {"ok": True, "status": "completed", "marker": "\ufeff"},
+        lambda *args, **kwargs: {
+            "ok": True,
+            "status": "completed",
+            "marker": "\ufeff",
+            "queries_attempted": 0,
+            "queries_completed": 0,
+            "queries_succeeded": 0,
+            "queries_failed": 0,
+            "queries_timed_out": 0,
+            "direct_source_fetch_attempt_count": 0,
+            "direct_source_fetch_success_count": 0,
+            "partitions_completed": 1,
+        },
     )
 
     code = discovery_compat.main(["--date", "2026-09-08"])
@@ -1034,9 +1053,14 @@ def test_legacy_discovery_wrapper_timeout_writes_timed_out_state_and_releases_lo
             "rejected_news_count": 0,
             "fetch_failure_count_by_type": {},
             "direct_source_count": 1,
+            "queries_attempted": 1,
             "queries_completed": 1,
+            "queries_succeeded": 0,
             "queries_timed_out": 1,
             "queries_failed": 0,
+            "queries_processed_this_invocation": 1,
+            "direct_source_fetch_attempt_count": 0,
+            "direct_source_fetch_success_count": 0,
             "partitions_completed": 0,
             "resumable": True,
         }
@@ -1117,9 +1141,13 @@ def test_legacy_discovery_wrapper_zero_result_completion_is_structured_success(
             "rejected_news_count": 0,
             "fetch_failure_count_by_type": {},
             "direct_source_count": 0,
+            "queries_attempted": 1,
             "queries_completed": 1,
+            "queries_succeeded": 1,
             "queries_timed_out": 0,
             "queries_failed": 0,
+            "direct_source_fetch_attempt_count": 0,
+            "direct_source_fetch_success_count": 0,
             "partitions_completed": 1,
             "resumable": False,
         },
@@ -1226,7 +1254,22 @@ def test_food_line_resume_passes_run_id_to_status_and_resume_commands(
         else:
             assert "--run-id" in arguments
             assert arguments[arguments.index("--run-id") + 1] == run_id
-        return subprocess.CompletedProcess([str(python), *arguments], 0, stdout="{}", stderr="")
+        return subprocess.CompletedProcess(
+            [str(python), *arguments],
+            0,
+            stdout=json.dumps(
+                {
+                    "ok": False,
+                    "status": "timed_out",
+                    "run_id": run_id,
+                    "edition_date": edition_date,
+                    "run_state_path": str(state_path),
+                    "resumable": True,
+                    "fatal_error": "",
+                }
+            ),
+            stderr="",
+        )
 
     monkeypatch.setattr(scheduler, "source_lock", fake_source_lock)
     monkeypatch.setattr(scheduler, "_load_record_and_state", fake_load_record_and_state)
@@ -1256,6 +1299,302 @@ def test_food_line_resume_passes_run_id_to_status_and_resume_commands(
     assert captured_commands[1][captured_commands[1].index("--max-run-minutes") + 1] == "30"
     assert "--max-queries" in captured_commands[1]
     assert captured_commands[1][captured_commands[1].index("--max-queries") + 1] == "200"
+
+
+def test_timed_out_status_is_resume_inspectable_but_never_export_or_intake_eligible(tmp_path: Path) -> None:
+    run_id = "timed-out-gate"
+    edition_date = "2026-08-19"
+    state_path = tmp_path / "run-state.json"
+    result = subprocess.CompletedProcess(
+        ["python"],
+        0,
+        stdout=json.dumps(
+            {
+                "ok": False,
+                "status": "timed_out",
+                "run_id": run_id,
+                "edition_date": edition_date,
+                "run_state_path": str(state_path),
+                "resumable": True,
+                "fatal_error": "",
+            }
+        ),
+        stderr="",
+    )
+    assert scheduler._accept_status_inspection_result(
+        result,
+        expected_run_id=run_id,
+        expected_edition_date=edition_date,
+        expected_state_path=str(state_path),
+    ) is True
+
+    state = {
+        "status": "timed_out",
+        "coverage": {"required_success_ratio": 1.0, "direct_success_ratio": 1.0},
+        "options": {"required_coverage_threshold": 0.9, "direct_source_coverage_threshold": 0.75},
+        "partitions_completed": 0,
+        "partitions_total": 1,
+        "agent_export": {"status": "blocked_incomplete_collection", "path": None},
+        "final_error": "timed out",
+    }
+    assert scheduler.collection_qualifies(state) is False
+    assert scheduler._state_requires_export(state) is False
+    assert scheduler._required_export_exists(state) is False
+
+
+def test_collection_only_timed_out_resume_is_blocked_before_export_child_launch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    edition_date = "2026-08-19"
+    run_id = "collection-only-timed-out-resume"
+    state_path = (
+        tmp_path
+        / "data"
+        / "dispatches"
+        / "food-line"
+        / "discovery-runs"
+        / edition_date
+        / run_id
+        / "run-state.json"
+    )
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state = {
+        "schema_version": scheduler.RUN_STATE_SCHEMA,
+        "run_id": run_id,
+        "edition_date": edition_date,
+        "status": "timed_out",
+        "resumable": True,
+        "resume_count": 0,
+        "execution_mode": "collection_only",
+        "release_ready": False,
+        "intake_eligible": False,
+        "partitions_total": 1,
+        "partitions_completed": 0,
+        "queries_total": 2,
+        "queries_completed": 1,
+        "queries_failed": 0,
+        "queries_timed_out": 0,
+        "candidates_discovered": 0,
+        "query_plan_sha256": "collection-only-plan",
+        "final_error": "overall deadline exceeded",
+        "options": {"required_coverage_threshold": 0.9, "direct_source_coverage_threshold": 0.75},
+        "coverage": {"required_success_ratio": 0.5, "direct_success_ratio": 0.5},
+        "agent_export": {"status": "not_requested", "path": None, "sha256": ""},
+    }
+    state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    record = {
+        "schema_version": scheduler.RUN_RECORD_SCHEMA,
+        "edition_date": edition_date,
+        "run_id": run_id,
+        "source_commit": "collection-only-source",
+        "source_branch": scheduler.PRODUCTION_BRANCH,
+        "run_state_path": str(state_path),
+        "scheduled_start_at": "2026-08-19T18:34:44Z",
+        "resume_attempted": False,
+    }
+    record_path = tmp_path / "status" / "food-line" / "runs" / f"{edition_date}.json"
+    record_path.parent.mkdir(parents=True, exist_ok=True)
+    record_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    original_state_bytes = state_path.read_bytes()
+    captured_commands: list[list[str]] = []
+
+    @contextmanager
+    def fake_source_lock(*args: object, **kwargs: object):
+        raise AssertionError("collection-only timed-out runs must be blocked before resume lock/child launch")
+        yield
+
+    def fake_invoke_python(python: Path, root: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
+        captured_commands.append([str(item) for item in arguments])
+        assert arguments[1] == "--status-run"
+        assert "--export-agent-inbox" not in arguments
+        assert "--agent-inbox-dir" not in arguments
+        return subprocess.CompletedProcess(
+            [str(python), *arguments],
+            0,
+            stdout=json.dumps(
+                {
+                    "ok": False,
+                    "status": "timed_out",
+                    "run_id": run_id,
+                    "edition_date": edition_date,
+                    "run_state_path": str(state_path),
+                    "resumable": True,
+                    "fatal_error": "",
+                }
+            ),
+            stderr="",
+        )
+
+    monkeypatch.setattr(scheduler, "source_lock", fake_source_lock)
+    monkeypatch.setattr(scheduler, "_verify_same_source_commit", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "_invoke_python", fake_invoke_python)
+    monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda run_dir: [])
+
+    code = scheduler.run_resume(
+        scheduler.argparse.Namespace(
+            repo_root=str(tmp_path),
+            python=str(tmp_path / ".venv" / "Scripts" / "python.exe"),
+            edition_date=edition_date,
+            branch=scheduler.PRODUCTION_BRANCH,
+            test_mode=False,
+            stale_lock_minutes=45,
+        )
+    )
+
+    assert code == 10
+    assert len(captured_commands) == 1
+    assert state_path.read_bytes() == original_state_bytes
+    persisted_state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert persisted_state["execution_mode"] == "collection_only"
+    assert persisted_state["status"] == "timed_out"
+    assert persisted_state["intake_eligible"] is False
+    raw_output = capsys.readouterr().out
+    result = json.loads(raw_output)
+    assert result["ok"] is False
+    assert result.get("resume_status") == "resume_blocked_collection_only", raw_output
+    receipt = json.loads(Path(result["receipt_path"]).read_text(encoding="utf-8"))
+    assert receipt["resume_status"] == "resume_blocked_collection_only"
+    assert receipt["execution_mode"] == "collection_only"
+    assert receipt["intake_eligible"] is False
+    assert receipt["publication_attempted"] is False
+    assert "export must not be introduced" in receipt["reason"]
+    persisted_record = json.loads(record_path.read_text(encoding="utf-8"))
+    assert persisted_record["resume_status"] == "resume_blocked_collection_only"
+
+
+def test_collection_only_transition_after_status_check_is_blocked_inside_resume_lock(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    edition_date = "2026-08-19"
+    run_id = "collection-only-transition-during-resume"
+    state_path = (
+        tmp_path
+        / "data"
+        / "dispatches"
+        / "food-line"
+        / "discovery-runs"
+        / edition_date
+        / run_id
+        / "run-state.json"
+    )
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    export_state = {
+        "schema_version": scheduler.RUN_STATE_SCHEMA,
+        "run_id": run_id,
+        "edition_date": edition_date,
+        "status": "timed_out",
+        "resumable": True,
+        "resume_count": 0,
+        "execution_mode": "export_enabled",
+        "release_ready": False,
+        "intake_eligible": False,
+        "partitions_total": 1,
+        "partitions_completed": 0,
+        "queries_total": 2,
+        "queries_completed": 1,
+        "queries_failed": 0,
+        "queries_timed_out": 0,
+        "candidates_discovered": 0,
+        "query_plan_sha256": "transition-plan",
+        "final_error": "overall deadline exceeded",
+        "options": {"required_coverage_threshold": 0.9, "direct_source_coverage_threshold": 0.75},
+        "coverage": {"required_success_ratio": 0.5, "direct_success_ratio": 0.5},
+        "agent_export": {"status": "blocked_incomplete_collection", "path": None, "sha256": ""},
+    }
+    collection_only_state = dict(export_state)
+    collection_only_state.update(
+        {
+            "execution_mode": "collection_only",
+            "release_ready": False,
+            "intake_eligible": False,
+            "agent_export": {"status": "not_requested", "path": None, "sha256": ""},
+        }
+    )
+    state_path.write_text(json.dumps(export_state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    record = {
+        "schema_version": scheduler.RUN_RECORD_SCHEMA,
+        "edition_date": edition_date,
+        "run_id": run_id,
+        "source_commit": "transition-source",
+        "source_branch": scheduler.PRODUCTION_BRANCH,
+        "run_state_path": str(state_path),
+        "scheduled_start_at": "2026-08-19T18:34:44Z",
+        "resume_attempted": False,
+    }
+    record_path = tmp_path / "status" / "food-line" / "runs" / f"{edition_date}.json"
+    record_path.parent.mkdir(parents=True, exist_ok=True)
+    record_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    captured_commands: list[list[str]] = []
+    lock_entries = 0
+
+    @contextmanager
+    def fake_source_lock(*args: object, **kwargs: object):
+        nonlocal lock_entries
+        lock_entries += 1
+        yield
+
+    def fake_load_record_and_state(layout: scheduler.Layout, loaded_edition_date: str):
+        assert loaded_edition_date == edition_date
+        # Simulate the persisted mode transition after the first status check
+        # but before the lock-protected reload.
+        state_path.write_text(json.dumps(collection_only_state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        return record, collection_only_state, state_path
+
+    def fake_invoke_python(python: Path, root: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
+        captured_commands.append([str(item) for item in arguments])
+        assert arguments[1] == "--status-run"
+        assert "--export-agent-inbox" not in arguments
+        assert "--agent-inbox-dir" not in arguments
+        return subprocess.CompletedProcess(
+            [str(python), *arguments],
+            0,
+            stdout=json.dumps(
+                {
+                    "ok": False,
+                    "status": "timed_out",
+                    "run_id": run_id,
+                    "edition_date": edition_date,
+                    "run_state_path": str(state_path),
+                    "resumable": True,
+                    "fatal_error": "",
+                }
+            ),
+            stderr="",
+        )
+
+    monkeypatch.setattr(scheduler, "source_lock", fake_source_lock)
+    monkeypatch.setattr(scheduler, "_load_record_and_state", fake_load_record_and_state)
+    monkeypatch.setattr(scheduler, "_verify_same_source_commit", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "_invoke_python", fake_invoke_python)
+    monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda run_dir: [])
+
+    code = scheduler.run_resume(
+        scheduler.argparse.Namespace(
+            repo_root=str(tmp_path),
+            python=str(tmp_path / ".venv" / "Scripts" / "python.exe"),
+            edition_date=edition_date,
+            branch=scheduler.PRODUCTION_BRANCH,
+            test_mode=False,
+            stale_lock_minutes=45,
+        )
+    )
+
+    assert code == 10
+    assert lock_entries == 1
+    assert len(captured_commands) == 1
+    persisted_state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert persisted_state["execution_mode"] == "collection_only"
+    assert persisted_state["status"] == "timed_out"
+    assert persisted_state["intake_eligible"] is False
+    result = json.loads(capsys.readouterr().out)
+    assert result["ok"] is False
+    assert result["resume_status"] == "resume_blocked_collection_only"
+    receipt = json.loads(Path(result["receipt_path"]).read_text(encoding="utf-8"))
+    assert receipt["execution_mode"] == "collection_only"
+    assert receipt["export_status"] == "not_requested"
+    assert receipt["publication_attempted"] is False
 
 
 def test_legacy_discovery_wrapper_reports_child_process_failure_with_structured_json(
@@ -1378,8 +1717,12 @@ def test_real_child_completed_with_exclusions_contract_is_exit_zero_and_schedule
             "rejected_news_count": 2,
             "fetch_failure_count_by_type": {"http_503": 1},
             "queries_completed": 1,
+            "queries_attempted": 1,
+            "queries_succeeded": 1,
             "queries_failed": 0,
             "queries_timed_out": 0,
+            "direct_source_fetch_attempt_count": 1,
+            "direct_source_fetch_success_count": 1,
             "partitions_completed": 1,
             "resumable": False,
             "candidates": [
@@ -1973,7 +2316,31 @@ def test_resume_dirty_check_accepts_sanctioned_review_and_generated_residue(
     monkeypatch.setattr(
         scheduler,
         "_invoke_python",
-        lambda python, root, arguments: subprocess.CompletedProcess([str(python), *arguments], 0, stdout="", stderr=""),
+        lambda python, root, arguments: subprocess.CompletedProcess(
+            [str(python), *arguments],
+            0,
+            stdout=json.dumps(
+                {
+                    "ok": True,
+                    "status": "completed_with_exclusions",
+                    "run_id": run_id,
+                    "edition_date": edition_date,
+                    "run_state_path": str(
+                        tmp_path
+                        / "data"
+                        / "dispatches"
+                        / "food-line"
+                        / "discovery-runs"
+                        / edition_date
+                        / run_id
+                        / "run-state.json"
+                    ),
+                    "resumable": False,
+                    "fatal_error": "",
+                }
+            ),
+            stderr="",
+        ),
     )
     args = _resume_args(tmp_path, edition_date=edition_date)
     args.test_mode = False
@@ -2321,7 +2688,36 @@ def test_completed_with_exclusions_missing_record_reconciles_for_resume(tmp_path
     _install_terminal_source_watch_without_record(tmp_path, status="completed_with_exclusions")
     monkeypatch.setattr(scheduler, "verify_checkout", lambda *args, **kwargs: "test-source-commit")
     monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
-    monkeypatch.setattr(scheduler, "_invoke_python", lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout="", stderr=""))
+    state_path = (
+        tmp_path
+        / "data"
+        / "dispatches"
+        / "food-line"
+        / "discovery-runs"
+        / "2026-09-07"
+        / "source-watch-test"
+        / "run-state.json"
+    )
+    monkeypatch.setattr(
+        scheduler,
+        "_invoke_python",
+        lambda python, root, arguments: subprocess.CompletedProcess(
+            [str(python), *arguments],
+            0,
+            stdout=json.dumps(
+                {
+                    "ok": True,
+                    "status": "completed_with_exclusions",
+                    "run_id": "source-watch-test",
+                    "edition_date": "2026-09-07",
+                    "run_state_path": str(state_path),
+                    "resumable": False,
+                    "fatal_error": "",
+                }
+            ),
+            stderr="",
+        ),
+    )
     monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda *args, **kwargs: [])
 
     code = scheduler.run_resume(_resume_args(tmp_path))
@@ -2341,9 +2737,36 @@ def test_completed_with_exclusions_missing_record_reconciles_for_current_intake(
     monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
     monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda *args, **kwargs: [])
     invoked_arguments: list[str] = []
+    state_path = (
+        tmp_path
+        / "data"
+        / "dispatches"
+        / "food-line"
+        / "discovery-runs"
+        / "2026-09-07"
+        / "source-watch-test"
+        / "run-state.json"
+    )
 
     def fake_invoke(python: Path, root: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
         invoked_arguments.extend(arguments)
+        if "--status-run" in arguments:
+            return subprocess.CompletedProcess(
+                [str(python), *arguments],
+                0,
+                stdout=json.dumps(
+                    {
+                        "ok": True,
+                        "status": "completed_with_exclusions",
+                        "run_id": "source-watch-test",
+                        "edition_date": "2026-09-07",
+                        "run_state_path": str(state_path),
+                        "resumable": False,
+                        "fatal_error": "",
+                    }
+                ),
+                stderr="",
+            )
         report = root / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-09-07" / "current-intake.json"
         report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(
@@ -2399,3 +2822,4 @@ def test_terminal_source_watch_reconciliation_fails_closed_for_mismatched_or_inc
     assert code == 0
     receipt = json.loads(next((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json")).read_text(encoding="utf-8"))
     assert receipt["status"] == expected_status
+

@@ -300,7 +300,16 @@ def _accept_status_inspection_result(
         if normalize(state_path) != normalize(expected_state_path):
             return False
     status = payload.get("status")
-    known_statuses = {INCOMPLETE_CAPPED_STATUS, "success", "completed", "completed_with_exclusions", "zero_result_completion"}
+    known_statuses = {
+        INCOMPLETE_CAPPED_STATUS,
+        "success",
+        "completed",
+        "completed_with_exclusions",
+        "zero_result_completion",
+        # A timed-out run may be inspected for guarded continuation. It is
+        # never a qualifying collection or export/intake success.
+        "timed_out",
+    }
     if status not in known_statuses:
         return False
     if payload.get("fatal_error") or payload.get("child_process_failure") or payload.get("malformed_child_output"):
@@ -378,6 +387,11 @@ def child_result_audit(result: subprocess.CompletedProcess[str], state: dict[str
     child_declared_outcome = ""
     child_error_type = ""
     child_error_message = ""
+    child_publication_attempted: Any = None
+    child_public_side_effects: dict[str, Any] = {}
+    child_publication_evidence_present = False
+    child_side_effect_evidence_present = False
+    child_execution_mode = ""
     contradiction = ""
     if payload is not None:
         child_status = _nonempty_text(payload.get("status"))
@@ -385,6 +399,15 @@ def child_result_audit(result: subprocess.CompletedProcess[str], state: dict[str
         child_declared_outcome = _nonempty_text(payload.get("child_outcome_classification"))
         child_error_type = _nonempty_text(payload.get("error_type"))
         child_error_message = _nonempty_text(payload.get("error_message") or payload.get("error"))
+        child_execution_mode = _nonempty_text(payload.get("execution_mode"))
+        child_publication_evidence_present = "publication_attempted" in payload
+        child_side_effect_evidence_present = isinstance(payload.get("public_side_effects"), dict)
+        # Preserve the raw value. A missing value, 0, or an empty string is
+        # not an attestation of Boolean False and must remain rejectable.
+        if "publication_attempted" in payload:
+            child_publication_attempted = payload["publication_attempted"]
+        if isinstance(payload.get("public_side_effects"), dict):
+            child_public_side_effects = dict(payload["public_side_effects"])
         contradiction = _child_state_contradiction(payload, state)
         if _nonempty_text(payload.get("fatal_error") or payload.get("final_error")):
             classification = "fatal"
@@ -418,6 +441,11 @@ def child_result_audit(result: subprocess.CompletedProcess[str], state: dict[str
         "child_terminal_ok": child_ok,
         "child_error_type": child_error_type,
         "child_error_message": child_error_message,
+        "child_publication_attempted": child_publication_attempted,
+        "child_public_side_effects": child_public_side_effects,
+        "child_publication_evidence_present": child_publication_evidence_present,
+        "child_side_effect_evidence_present": child_side_effect_evidence_present,
+        "child_execution_mode": child_execution_mode,
         "child_validation_error": validation_error,
         "child_stdout_tail": stdout["tail"],
         "child_stdout_truncated": stdout["truncated"],
@@ -435,10 +463,26 @@ def child_result_allows_scheduler_success(
     result: subprocess.CompletedProcess[str],
     state: dict[str, Any],
     audit: dict[str, Any],
+    *,
+    collection_only: bool = False,
 ) -> bool:
-    if not collection_qualifies(state):
+    qualifies = collection_only_qualifies(state) if collection_only else collection_qualifies(state)
+    if not qualifies:
         return False
-    if _state_requires_export(state) and not bool(audit.get("required_export_present")):
+    if collection_only:
+        export = state.get("agent_export") if isinstance(state.get("agent_export"), dict) else {}
+        if export.get("status") != "not_requested" or state.get("execution_mode") != "collection_only":
+            return False
+        if audit.get("child_execution_mode") != "collection_only":
+            return False
+        if not audit.get("child_publication_evidence_present") or not audit.get("child_side_effect_evidence_present"):
+            return False
+        publication_attempted = audit.get("child_publication_attempted")
+        if type(publication_attempted) is not bool or publication_attempted is not False:
+            return False
+        if any(bool(value) for value in audit.get("child_public_side_effects", {}).values()):
+            return False
+    elif _state_requires_export(state) and not bool(audit.get("required_export_present")):
         return False
     if int(result.returncode) != 0:
         return False
@@ -782,6 +826,8 @@ def _source_noop_receipt(
         "resume_status": status if action == "status_resume" else "not_applicable",
         "reason": reason,
         "source_watch_status": _run_record_status(record) or status,
+        "publication_attempted": None,
+        "publication_side_effects": None,
         "command_exit_code": 0,
         "exit_code": 0,
     }
@@ -953,6 +999,30 @@ def collection_qualifies(state: dict[str, Any]) -> bool:
     )
 
 
+def collection_only_qualifies(state: dict[str, Any]) -> bool:
+    """Require complete collection while keeping release/intake disabled."""
+    if state.get("status") not in QUALIFYING_COLLECTION_STATUSES:
+        return False
+    coverage = state.get("coverage") if isinstance(state.get("coverage"), dict) else {}
+    options = state.get("options") if isinstance(state.get("options"), dict) else {}
+    required_ratio = float(coverage.get("required_success_ratio") or 0.0)
+    direct_ratio = float(coverage.get("direct_success_ratio") or 0.0)
+    required_threshold = float(options.get("required_coverage_threshold") or 0.90)
+    direct_threshold = float(options.get("direct_source_coverage_threshold") or 0.75)
+    partitions_terminal = int(state.get("partitions_completed") or 0) == int(state.get("partitions_total") or -1)
+    export = state.get("agent_export") if isinstance(state.get("agent_export"), dict) else {}
+    return (
+        state.get("execution_mode") == "collection_only"
+        and required_ratio >= required_threshold
+        and direct_ratio >= direct_threshold
+        and partitions_terminal
+        and export.get("status") == "not_requested"
+        and not state.get("final_error")
+        and state.get("release_ready") is False
+        and state.get("intake_eligible") is False
+    )
+
+
 def _invoke_python(python: Path, root: Path, arguments: Iterable[str]) -> subprocess.CompletedProcess[str]:
     return _run([str(python), *map(str, arguments)], cwd=root)
 
@@ -973,6 +1043,9 @@ def _safe_state_summary(state: dict[str, Any]) -> dict[str, Any]:
         "export_status": export.get("status"),
         "inbox_export_path": export.get("path"),
         "inbox_export_sha256": export.get("sha256"),
+        "execution_mode": state.get("execution_mode"),
+        "release_ready": state.get("release_ready"),
+        "intake_eligible": state.get("intake_eligible"),
     }
 
 
@@ -1015,7 +1088,11 @@ def _write_food_line_operational_health_receipt(
         public_side_effects=task_receipt.get("publication_side_effects") if isinstance(task_receipt.get("publication_side_effects"), dict) else {},
         collection_health=_nonempty_text(task_receipt.get("final_status") or task_receipt.get("source_status")),
         upstream_dependency_status=_nonempty_text(task_receipt.get("source_watch_status") or task_receipt.get("source_status")),
-        publication_attempted=bool(task_receipt.get("publication_attempted")) if task_receipt.get("publication_attempted") is not None else None,
+        publication_attempted=(
+            task_receipt.get("publication_attempted")
+            if type(task_receipt.get("publication_attempted")) is bool
+            else None
+        ),
         publication_status=_nonempty_text(task_receipt.get("publication_status") or task_receipt.get("terminal_status")),
         artifact_refs={"task_receipt": str(task_receipt_path)},
         operator_attention_ref=_nonempty_text(task_receipt.get("attention_path")),
@@ -1029,7 +1106,17 @@ def _write_food_line_operational_health_receipt(
             "inbox_export_path": task_receipt.get("inbox_export_path"),
             "inbox_export_sha256": task_receipt.get("inbox_export_sha256"),
             "release_ready": task_receipt.get("release_ready"),
+            "intake_eligible": task_receipt.get("intake_eligible"),
             "intake_status": task_receipt.get("proposal_status") or task_receipt.get("status"),
+            "execution_mode": task_receipt.get("execution_mode"),
+            "publication_attempted_evidence_present": (
+                "publication_attempted" in task_receipt
+                and task_receipt.get("publication_attempted") is not None
+            ),
+            "publication_side_effects_evidence_present": (
+                "publication_side_effects" in task_receipt
+                and task_receipt.get("publication_side_effects") is not None
+            ),
         },
     )
     return write_operational_receipt(layout.root, receipt).receipt_path
@@ -1040,6 +1127,7 @@ def run_source_watch(args: argparse.Namespace) -> int:
     python = Path(args.python).resolve()
     edition_date = validate_date(args.edition_date)
     run_id = str(args.run_id)
+    collection_only = bool(getattr(args, "collection_only", False))
     layout = Layout(root)
     command_exit = 10
     started_at = utc_now()
@@ -1067,8 +1155,11 @@ def run_source_watch(args: argparse.Namespace) -> int:
                     "--run-id", run_id,
                     "--max-run-minutes", f"{FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES:g}",
                     "--max-queries", str(FOOD_LINE_DISCOVERY_MAX_QUERIES),
-                    "--export-agent-inbox",
-                    "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
+                    *([] if collection_only else [
+                        "--export-agent-inbox",
+                        "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
+                    ]),
+                    *(["--collection-only"] if collection_only else []),
                 ],
             )
             command_exit = int(result.returncode)
@@ -1080,7 +1171,7 @@ def run_source_watch(args: argparse.Namespace) -> int:
             if survivors:
                 raise SchedulerError(f"source watch left surviving worker processes: {survivors}")
             child_audit = child_result_audit(result, state)
-            scheduler_success = child_result_allows_scheduler_success(result, state, child_audit)
+            scheduler_success = child_result_allows_scheduler_success(result, state, child_audit, collection_only=collection_only)
             plan_path = run_dir / "query-plan.json"
             plan = read_json(plan_path)
             receipt = {
@@ -1092,11 +1183,22 @@ def run_source_watch(args: argparse.Namespace) -> int:
                 "source_commit": source_commit,
                 "source_branch": args.branch,
                 "run_id": run_id,
+                "execution_mode": "collection_only" if collection_only else "export_enabled",
                 "configuration_sha256": plan.get("configuration_sha256"),
                 **_safe_state_summary(state),
                 "resume_status": "not_attempted",
                 "command_exit_code": command_exit,
                 **child_audit,
+                "publication_attempted": (
+                    child_audit["child_publication_attempted"]
+                    if child_audit["child_publication_evidence_present"]
+                    else None
+                ),
+                "publication_side_effects": (
+                    child_audit["child_public_side_effects"]
+                    if child_audit["child_side_effect_evidence_present"]
+                    else None
+                ),
                 "exit_code": 0 if scheduler_success else (command_exit or 2),
             }
             receipt_path = _source_receipt_path(layout, edition_date, "source-watch")
@@ -1147,6 +1249,9 @@ def run_source_watch(args: argparse.Namespace) -> int:
                 "lock_path": str(exc.lock_path),
                 "lock_age_seconds": round(exc.lock_age_seconds, 3),
                 "lock_owner": exc.owner_metadata,
+                "execution_mode": "collection_only" if collection_only else "export_enabled",
+                "publication_attempted": None,
+                "publication_side_effects": None,
                 "attention_path": str(exc.attention),
                 "command_exit_code": 10,
                 "exit_code": 10,
@@ -1178,6 +1283,9 @@ def run_source_watch(args: argparse.Namespace) -> int:
             "edition_date": edition_date,
             "source_branch": args.branch,
             "run_id": run_id,
+            "execution_mode": "collection_only" if collection_only else "export_enabled",
+            "publication_attempted": None,
+            "publication_side_effects": None,
             "final_status": "failed",
             "reason": str(exc),
             "attention_path": str(attention),
@@ -1320,6 +1428,64 @@ def run_resume(args: argparse.Namespace) -> int:
             raise _command_error("source-watch status inspection", status_result)
         command_exit = 0
         resume_status = "resume_not_required"
+
+        def block_collection_only_resume(
+            current_record: dict[str, Any], current_state: dict[str, Any], current_state_path: Path
+        ) -> int:
+            blocked_status = "resume_blocked_collection_only"
+            blocked_receipt = {
+                "schema_version": SOURCE_RECEIPT_SCHEMA,
+                "action": "status_resume",
+                "task_started_at": current_record.get("resume_started_at") or started_at,
+                "task_completed_at": utc_now(),
+                "edition_date": edition_date,
+                "source_commit": current_record.get("source_commit"),
+                "source_branch": args.branch,
+                "run_id": run_id,
+                **_safe_state_summary(current_state),
+                "resume_status": blocked_status,
+                "reason": "automatic resume is disabled for collection-only runs; export must not be introduced",
+                "command_exit_code": 10,
+                "exit_code": 10,
+                "publication_attempted": False,
+                "publication_side_effects": {},
+            }
+            blocked_receipt_path = _source_receipt_path(layout, edition_date, "status-resume")
+            atomic_write_json(blocked_receipt_path, blocked_receipt)
+            operational_receipt_path = _write_food_line_operational_health_receipt(
+                layout,
+                edition_date,
+                action="status_resume",
+                task_receipt=blocked_receipt,
+                task_receipt_path=blocked_receipt_path,
+                task_status=blocked_status,
+            )
+            blocked_receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+            atomic_write_json(blocked_receipt_path, blocked_receipt)
+            current_record.update(
+                {
+                    "last_status": current_state.get("status"),
+                    "source_watch_status": current_state.get("status"),
+                    "resume_status": blocked_status,
+                    "resume_receipt_path": str(blocked_receipt_path),
+                }
+            )
+            write_run_record(layout, edition_date, current_record, preserve_success=False)
+            print(
+                terminal_json(
+                    {
+                        "ok": False,
+                        "receipt_path": str(blocked_receipt_path),
+                        "operational_receipt_path": str(operational_receipt_path),
+                        **blocked_receipt,
+                    }
+                )
+            )
+            return 10
+
+        if state.get("execution_mode") == "collection_only":
+            return block_collection_only_resume(record, state, state_path)
+
         if state.get("status") == INCOMPLETE_CAPPED_STATUS and not bool(state.get("resumable")):
             resume_status = "continuation_required"
         elif not collection_qualifies(state):
@@ -1327,6 +1493,8 @@ def run_resume(args: argparse.Namespace) -> int:
                 raise SchedulerError(f"source-watch state is not qualifying or resumable: {state.get('status')}")
             with source_lock(layout, edition_date, "status-resume", stale_minutes=args.stale_lock_minutes, run_id=str(record.get("run_id") or "")):
                 record, state, state_path = _load_record_and_state(layout, edition_date)
+                if state.get("execution_mode") == "collection_only":
+                    return block_collection_only_resume(record, state, state_path)
                 if collection_qualifies(state) or state.get("status") not in RESUMABLE_COLLECTION_STATUSES or not bool(state.get("resumable")):
                     resume_status = "resume_not_required"
                 else:
@@ -1618,6 +1786,11 @@ def build_parser() -> argparse.ArgumentParser:
         child.add_argument("--test-mode", action="store_true", help=argparse.SUPPRESS)
         child.add_argument("--stale-lock-minutes", type=int, default=45, help=argparse.SUPPRESS)
     subparsers.choices["source-watch"].add_argument("--run-id", required=True)
+    subparsers.choices["source-watch"].add_argument(
+        "--collection-only",
+        action="store_true",
+        help="Collect and receipt source coverage without exporting inbox findings or enabling intake/publication.",
+    )
     subparsers.choices["intake"].add_argument("--lock-wait-seconds", type=int, default=300)
     subparsers.choices["intake"].add_argument("--lock-poll-seconds", type=float, default=2.0, help=argparse.SUPPRESS)
     return parser

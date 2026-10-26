@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T124427-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T12:45:22-07:00",
+  "started_at": "2026-10-26T12:44:27-07:00",
+  "completed_at": "2026-10-26T12:45:35-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T11:49:12.315-07:00",
+    "end": "2026-10-26T12:45:35-07:00",
+    "basis": "Start equals completed_at of most recent verified 2026-10-26 11:46 Care Line Watch heartbeat, read from ops/watch-ledger; end is current supplementary recall run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Care Line collector remains authoritative.",
+    "scope": "U.S., DC and territories. Hospital/ED/maternity/behavioral-health/dialysis/oncology/primary care; emergency/rural loss; ambulance/air-medical bases; CMS termination/rescission/CLIA access risk; confirmed effective restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "details": "Official CMS Public Notices retrieved through canonical site search after an older CMS memo URL failed. The most recent notice listed remained 2026-10-23; no post-Oct-23 action visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 26, 2026\" \"emergency department\" \"closed\" hospital",
+      "\"October 26, 2026\" \"maternity\" \"closed\" hospital service",
+      "\"October 26, 2026\" \"dialysis\" \"suspended\" hospital patients",
+      "\"October 26, 2026\" \"behavioral health\" \"closure\" services",
+      "\"October 26, 2026\" \"ambulance service\" \"suspend\" OR \"closure\"",
+      "\"October 26, 2026\" \"air ambulance\" \"base\" \"closing\" OR \"closed\"",
+      "hospital \"October 26, 2026\" \"services suspended\" \"patients\" -canada -uk",
+      "\"Oct. 26, 2026\" \"emergency room\" \"shut down\" OR \"temporarily closed\" US",
+      "rural hospital \"October 26, 2026\" \"closure\" \"clinic\"",
+      "site:gov \"October 26, 2026\" \"hospital\" \"service interruption\" OR \"suspension\" United States",
+      "\"October 26, 2026\" hospital emergency services \"reopened\" \"restored\" US",
+      "\"October 26, 2026\" \"Guam\" OR \"Puerto Rico\" OR \"Virgin Islands\" hospital services suspended clinic"
+    ],
+    "search_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertificationgeninfo/policy-and-memos-states-and-regions",
+        "error": "Outdated CMS landing URL inaccessible through the research tool; canonical CMS Public Notices was independently retrieved and fully available.",
+        "coverage_impact": "none to material CMS notice surveillance"
+      }
+    ],
+    "screening": "No verified new U.S. or territorial clinical access closure, suspension, termination, or effective restoration indexed during the observation window. Search results included foreign non-U.S. service concerns, previously announced relocations, and speculative ownership/reopening plans.",
+    "excluded_examples": [
+      {
+        "title": "Tahoe Forest Health System Sierra Center service relocation",
+        "url": "https://www.tfhd.com/news-events/tahoe-health-news/september-2026/",
+        "reason": "September announcement that urgent care, pharmacy and related services move October 26; not proof of new net access loss or unexpected reopening."
+      },
+      {
+        "title": "Chicago Tribune report on prospective acquisition of West Suburban and Weiss hospitals",
+        "url": "https://bancodeprofissionais.com/2026/10/26/insight-west-surburban-weiss/",
+        "reason": "Existing historical hospital closures and prospective ownership transaction; no confirmed effective reopening. Syndication/mirror source."
+      },
+      {
+        "title": "Dialysis concerns at Chittagong Medical College Hospital",
+        "url": "https://tob.news/life-on-the-line-patients-fear-losing-dialysis-care-at-cmch/",
+        "reason": "Bangladesh outside U.S./territorial coverage; future contract expiration, not current concrete service closure."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T114614-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-26T11:49:12.315-07:00",
+      "previous_heartbeat_read_verified": true,
+      "prior_outcome": "no_findings",
+      "production_review": "No positive candidates identified that would warrant full production queue duplicate verification."
+    },
+    "material_degradation": false,
+    "limitations": "Search engine results may lag; this supplementary recall is not comprehensive and does not replace primary national collection. One obsolete CMS entry URL failed but canonical Public Notices coverage succeeded; degraded classification preserves that failure.",
+    "controls": "Exactly one private GitHub heartbeat; no approvals, publishing, primary production changes, schedule changes, or task disabling."
+  }
+}

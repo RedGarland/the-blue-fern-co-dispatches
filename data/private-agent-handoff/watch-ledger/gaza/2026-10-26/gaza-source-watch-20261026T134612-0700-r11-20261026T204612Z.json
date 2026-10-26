@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T134612-0700-r11-20261026T204612Z",
+  "scheduled_for": "2026-10-26T13:44:51-07:00",
+  "started_at": "2026-10-26T13:46:12-07:00",
+  "completed_at": "2026-10-26T13:48:31.228-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T12:48:24.828-07:00",
+    "end": "2026-10-26T13:48:31.228-07:00",
+    "basis": "Prior verified watch heartbeat completed_at through the completion of this bounded supplementary search. Searches may return earlier publication and event times; search discovery is not treated as event freshness."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; daily production Gaza publisher/collector authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T124545-0700-r11-20261026T194545Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T124545-0700-r11-20261026T194545Z.json",
+      "completed_at": "2026-10-26T12:48:24.828-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Current top-listed publication is Humanitarian Situation Report | 22 October 2026, posted 26 October 2026. Its previously recorded food, water, health and bakery developments predate and were covered by earlier watch findings; no fresh new report appeared during this interval."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Listed global news, regional news and health response materials yielded no verifiably new in-Gaza health change published within this watch window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway. Persistent known endpoint failure, not a newly material loss."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 26 2026 latest 20:00 UTC casualties Khan Younis Deir al Balah Gaza City airstrikes",
+      "site:english.wafa.ps \"26/October/2026\" Gaza \"PM\" killed injured",
+      "site:reuters.com/world/middle-east/ Gaza October 26 2026 late afternoon ceasefire shooting Palestinians",
+      "site:apnews.com/article Gaza October 26 2026 Monday Palestinian killed hospital ceasefire",
+      "October 26 2026 Gaza PRCS ambulance paramedics hospital fuel new attack health care",
+      "Gaza 26 October 2026 WFP UNICEF UNRWA aid delivery food water restrictions evening update",
+      "Gaza October 26 2026 22:00 Gaza local time strike civilians latest update October 26 2026",
+      "Gaza October 26 2026 Rafah crossing Kerem Shalom trucks operations fuel entry late Monday",
+      "Gaza October 26 2026 hostage detainee release negotiation ceasefire mediators update after noon EDT",
+      "Gaza October 26 2026 displaced camp burned new shelters infrastructure blast Gaza City Monday night",
+      "site:un.org/unispal/ 26 October 2026 Gaza new humanitarian developments press release",
+      "site:aljazeera.com/news/liveblog/2026/10/26 Gaza late October 26 casualties water hospitals"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Most recent listed items through 21:36 Gaza local time were West Bank/Al-Aqsa items. The latest in-Gaza reports (Deir al-Balah casualties, Shujaiya camp) predated the window and were previously captured."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible. Current Middle East page yielded no traceably new in-Gaza civilian-impact or operational change during this observation window."
+      }
+    ],
+    "source_access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Known, persistent regional WHO outage; WHO global, OCHA OPT, WAFA and Reuters were accessible. Reduced direct regional WHO health-source coverage; not newly material."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "26 October OCHA report reiterates previously recorded 23–25 October bakery, assistance, water and healthcare developments; no new in-window update.",
+      "WAFA 26 October Deir al-Balah strike, Shujaiya displacement camp and al-Mawasi casualty updates were handled in earlier watch runs; not re-counted.",
+      "Reuters UN detention inquiry and genocide report were previously surfaced or outside the in-Gaza event scope; no fresh in-Gaza incident in this hour.",
+      "26 October aggregate Gaza health-authority casualty article returned without verified source publication within this watch interval; it describes a prior 24-hour period, not a new separately verified incident.",
+      "Other search hits were historical, West Bank-only, opinion, unrelated coverage or undated and did not meet new-and-traceable criteria."
+    ],
+    "limitations": "Search results heavily skewed toward historical material and can miss newly published reports; negative findings do not establish complete absence of events. WHO EMRO direct endpoint continues failing HTTP 502.",
+    "result": "No nonduplicate, independently traceable qualifying Gaza development newly verified since the preceding completed watch.",
+    "action_scope": "One new heartbeat JSON written only to ops/watch-ledger. No production, approval, publication, social, schedule or task state change."
+  }
+}

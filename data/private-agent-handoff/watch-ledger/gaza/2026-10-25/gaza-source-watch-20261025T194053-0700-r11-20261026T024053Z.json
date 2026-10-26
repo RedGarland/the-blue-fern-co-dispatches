@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T194053-0700-r11-20261026T024053Z",
+  "scheduled_for": "2026-10-25T19:44:51-07:00",
+  "started_at": "2026-10-25T19:40:53-07:00",
+  "completed_at": "2026-10-25T19:43:22.631-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T18:45:25.269-07:00",
+    "end": "2026-10-25T19:43:22.631-07:00",
+    "basis": "Prior independently read ops/watch-ledger heartbeat completed_at to end of current verification. Require novel, source-traceable in-Gaza development first published or independently verified within the window, excluding stale indexing, pre-window reports, and duplicates; Gaza local time is 26 October 2026."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch; production Gaza collector and daily publisher remain authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T184342-0700-r11-20261026T014342Z.json",
+      "completed_at": "2026-10-25T18:45:25.269-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Fetched directly from ops/watch-ledger after listing the 2026-10-25 directory."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Newest displayed news entry was 19 October 2026; no in-window publication."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Newest published listings dated 19 October 2026."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; unavailable for direct regional primary-source verification."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Emergency overview, global news and regional news contain no new, time-qualified Gaza update in watch window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 26 2026 04:00 05:00 morning strikes deaths wounded developments",
+      "site:english.wafa.ps \"26/October/2026\" Gaza killed injured",
+      "site:reuters.com Gaza October 26 2026 civilians ceasefire aid",
+      "site:apnews.com Gaza October 26 2026 attack humanitarian hospital",
+      "site:unrwa.org Gaza October 26 2026 displaced food aid crossing",
+      "site:icrc.org Gaza October 26 2026 medical ambulance",
+      "site:palestinercs.org October 26 2026 Gaza ambulance hospital",
+      "site:aljazeera.com/news/2026/10/26/ Gaza killed wounded ceasefire",
+      "site:aa.com.tr/en/middle-east/ Gaza Oct 26 2026 civilians",
+      "Gaza crossing fuel water hospitals Oct 26 2026 early morning WHO OCHA",
+      "site:wafa.ps \"26/10/2026\" غزة فجر الاثنين قصف إصابات",
+      "\"26 أكتوبر 2026\" \"غزة\" \"فجر\" شهداء مستشفى"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000?pageNumber=0",
+        "result": "Newest visible entry 26 October 00:05 Palestine time concerns West Bank olive harvest. Newest Gaza report 25 October 19:33 Palestine time and earlier casualty coverage precede previous watch."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/6-palestinians-killed-10-injured-in-israeli-attacks-across-gaza/4100315",
+        "result": "Article dated 25 October 2026 Palestine/Türkiye, recounting 25 October casualties (university campus, al-Mawasi, Deir al-Balah), pre-window and overlapping prior findings; no new event timestamp."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties, displacement, infrastructure damage and military operations with documented civilian impact",
+      "aid access, food/water access, crossings and fuel delivery",
+      "healthcare disruption, hospital functioning/capacity, ambulance transport and medical evacuation",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "impact": "Direct WHO regional verification of hospital functionality, emergency response and medical evacuations unavailable. Global WHO, OCHA, WAFA and other reporting remained available."
+      }
+    ],
+    "excluded_or_not_counted": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000?pageNumber=0",
+        "reason": "No Gaza report with a post-18:45:25 PDT source timestamp; later news concerned the West Bank or other locations."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/6-palestinians-killed-10-injured-in-israeli-attacks-across-gaza/4100315",
+        "reason": "25 October Gaza casualty roundup predates the watch and overlaps earlier casualty reporting."
+      },
+      {
+        "publisher": "Reuters/AP/UNRWA/ICRC/Al Jazeera/PRCS",
+        "reason": "Search results were older, geographically irrelevant, or did not provide a verifiable in-window Gaza development."
+      },
+      {
+        "publisher": "Arabic WAFA and Arabic web results",
+        "reason": "Returned older material or West Bank reports, without a new qualifying in-Gaza occurrence."
+      }
+    ],
+    "assessment": "No newly published or independently time-qualified, nonduplicate Gaza development established within this window. Absence of verified findings does not imply no incidents occurred. WHO regional primary-source outage persists, so DEGRADED rather than FAILED.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

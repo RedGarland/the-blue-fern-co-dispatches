@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T214219-0700-r11-20261026T044219Z",
+  "scheduled_for": "2026-10-25T21:44:51-07:00",
+  "started_at": "2026-10-25T21:42:19-07:00",
+  "completed_at": "2026-10-25T21:44:59-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T20:52:16.030-07:00",
+    "end": "2026-10-25T21:44:59-07:00",
+    "basis": "Prior independently fetched watch-ledger heartbeat completed_at through end of this check; require source-backed new occurrence or newly reported verified development, screen known earlier reports and prior finding."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch, not authoritative primary daily Gaza collection or publication.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T204902-0700-r11-20261026T034902Z.json",
+      "completed_at": "2026-10-25T20:52:16.030-07:00",
+      "verification": "Independently fetched directly from ops/watch-ledger; contained one medium-confidence Khan Younis southern al-Mawasi casualty lead already handed off."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; newest homepage Gaza item 19 October 2026; no new reporting for the window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, same known endpoint failure as preceding watches."
+      },
+      {
+        "publisher": "WHO global emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; most recent listed news entry not new Gaza development for this window."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent posts 19 October 2026; no new situation update."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 26 2026 Israeli shelling civilian killed wounded Khan Younis al Mawasi updates",
+      "Gaza October 25 26 2026 Reuters AP ceasefire airstrike civilians late Sunday overnight",
+      "Gaza October 26 2026 aid delivery crossings trucks UNRWA WFP restrictions",
+      "Gaza October 26 2026 WHO hospital fuel medical evacuations patients health",
+      "Gaza October 25 26 2026 displacement shelters tents OCHA new movements",
+      "Gaza October 26 2026 Israeli military operations civilian impact northern southern Gaza",
+      "\"26 October 2026\" \"Gaza\" killed injured ceasefire",
+      "\"25 October 2026\" \"Gaza\" hospital patients humanitarian",
+      "site:reuters.com/world/middle-east/ 2026-10-25 Gaza civilians ceasefire",
+      "site:aljazeera.com/news/2026/10/25 Gaza killed hospital aid",
+      "site:ochaopt.org/content \"25 October 2026\" Gaza",
+      "\"October 26, 2026\" Gaza crossing water aid hospital displacement"
+    ],
+    "direct_review": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176287",
+        "result": "Article timestamp 25 October 2026 19:33 in site's displayed local time, regarding Sheikh Nasser strike and injuries in Jabalia and al-Maghazi; predates watch window and was already screened in previous heartbeat."
+      },
+      {
+        "publisher": "Banglanews24",
+        "url": "https://en.banglanews24.com/international/news/bd/197198.details",
+        "result": "Search-index item dated 26 October 2026 08:40 Bangladesh local time on Gaza university strike; event overlaps pre-window Oct 25 reporting in prior heartbeat. Direct page HTTP 403; not counted."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom/features/summer-activities-brought-back-sense-childhood-children-gaza-strip",
+        "result": "Older feature returned 403 when opened; no fresh qualified material evident."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and military operations with civilian impact",
+      "displacement and infrastructure",
+      "aid, food, water and crossings",
+      "hospitals, ambulances, healthcare access, fuel, medical evacuations",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct WHO regional health service and medical evacuation verification limited; WHO global and OCHA remained accessible."
+      },
+      {
+        "publisher": "Banglanews24 and UNRWA selected article endpoints",
+        "error": "HTTP 403",
+        "impact": "Specific article bodies unavailable, but those leads were stale/duplicate or not window-qualified; no material loss of qualifying findings."
+      }
+    ],
+    "excluded_or_not_counted": "Prior-hour Al Ghad southern al-Mawasi two dead and 15 injured retained solely as known existing watch finding; Oct 25 Islamic University and WAFA Sheikh Nasser/Jabalia/al-Maghazi accounts predate this hourly window. Most retrieved search results were older or lacked source-confirmed event/publication timing.",
+    "assessment": "Twelve targeted searches plus direct OCHA OPT and WHO checks yielded no independently traceable new, nonduplicate development in the defined Pacific-time window. Known WHO regional endpoint 502 persisted; useful coverage from OCHA, WHO global, WAFA and indexed news was retained, so DEGRADED rather than FAILED. No new material change in source availability beyond prior reported WHO limitation.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

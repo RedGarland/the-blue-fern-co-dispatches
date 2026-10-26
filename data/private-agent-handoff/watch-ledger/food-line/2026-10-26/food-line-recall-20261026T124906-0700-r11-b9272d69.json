@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T124906-0700-r11-b9272d69",
+  "scheduled_for": "2026-10-26T12:45:54-07:00",
+  "started_at": "2026-10-26T12:49:06-07:00",
+  "completed_at": "2026-10-26T12:51:00.640-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T10:48:40.934-07:00",
+    "end_at": "2026-10-26T12:51:00.640-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative overlapping start from last independently read-back verified Food Line recall heartbeat; nominal previous hourly check 11:45:54 PDT could not be confirmed in currently available run artifacts. Older indexed reports were reviewed for provenance but never treated as new."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 8,
+      "slow": 4
+    },
+    "search_recency_days": {
+      "fast": 2,
+      "slow": null
+    },
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store loss or disaster",
+      "Weather, fire, flooding or outage canceling emergency food distribution",
+      "Abrupt food pantry/food bank shutdown or major service reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire October 26 2026 town",
+      "\"sole grocery store\" closed burned October 2026",
+      "\"last grocery store\" closure October 26 2026 America rural",
+      "\"food pantry\" \"closed\" \"October 26, 2026\" emergency",
+      "\"food bank\" \"distribution canceled\" \"October 26\" storm",
+      "October 26 2026 food pantry food distribution suspended flooding power outage",
+      "site:gov \"SNAP\" \"October 26, 2026\" interruption benefits halted",
+      "site:gov WIC clinic closed October 26 2026 emergency outage",
+      "October 26 2026 local food pantry abruptly closed today access suspension county",
+      "October 26 2026 only grocery store in town closed fire storm USA",
+      "October 26 2026 food bank distribution cancelled closed weather disaster United States",
+      "October 26 2026 SNAP EBT WIC outage payments not available official county agency notice"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded miss-class recall only; nationwide production Food Line collection remains authoritative.",
+    "Twelve targeted web searches completed (eight fast and four slow). No web search command failed, though sparse same-hour index coverage limits sensitivity.",
+    "No directly verified newly reported event within the conservative observation window met the four specified high-value classes; findings array intentionally empty.",
+    "Klagetoh, Arizona inclement-weather food distribution cancellation was for October 21, 2026 (https://www.facebook.com/StAnnesMissionKlagetoh/posts/due-to-forecast-threat-of-extensive-rain-in-the-klagetoh-area-on-wednesday-and-a/1148352670869071/); excluded as stale.",
+    "Bastrop County, Texas food pantry notice closed October 23 and resumed October 26 (https://www.facebook.com/BastropCountyFoodPantry/posts/the-food-pantry-will-be-closed-on-friday-october-23-2026-and-returning-to-our-re/1557122356456201/); excluded as routine closure outside interval.",
+    "Spencer, New York only-grocery-store fire reported September 14, 2026 (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/); Ruby's Pantry multistate closure April 1, 2026 (https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites); excluded as older events.",
+    "Retrieved SNAP shutdown notices largely dated October 2025, not October 2026; no new official interruption verified in the current window. Date of web crawl alone was not treated as source publication date.",
+    "Excluded donation drives, resource guides, program promotion, recipes, opinion, non-U.S. events, generic inflation stories, and duplicate or stale events.",
+    "No approval, publication, schedule change, task disabling, or production-collector modification performed."
+  ]
+}

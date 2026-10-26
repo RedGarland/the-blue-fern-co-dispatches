@@ -27,6 +27,7 @@ from bluefern_dispatches.gaza_sources import validate_source_records as validate
 from bluefern_dispatches.gaza_sources import write_source_records
 from bluefern_dispatches.bluesky_post import maybe_post_gaza_dispatch_to_bluesky
 from scripts.run_and_notify import notification_error_message, send_email
+from scripts.test_storage_admission import admit_test_root
 from scripts.publish_gaza_historical import (
     BASE_PUBLIC_URL,
     DEFAULT_PAGES_BRANCH,
@@ -943,6 +944,13 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "planned_actions": [],
         "public_story_count": 0,
         "pages_dry_run_ok": False,
+        "test_root_status": "not_checked",
+        "test_root_path": None,
+        "test_root_error": None,
+        "failure_stage": "initialization",
+        "collection_started": False,
+        "generation_started": False,
+        "no_update_eligible": False,
     }
 
 
@@ -1129,6 +1137,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def _record_skipped_validation(summary: dict[str, Any], log_path: Path) -> None:
+    summary["warnings"].append("tests skipped by --skip-tests")
+    summary["tests_ok"] = False
+    summary["validation_ok"] = False
+    summary["publish_blocked"] = True
+    summary["publish_blocked_reason"] = "dispatch_validation_skipped"
+    summary["errors"].append("tests skipped by --skip-tests; publication is blocked until validation runs")
+    log_line(log_path, "Validation skipped; refusing to continue to Pages publication")
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     args.validation_profile = apply_env_profile(args.validation_profile)
@@ -1194,6 +1212,20 @@ def main(argv: list[str] | None = None) -> int:
         write_summary(summary)
         return pipeline_code
 
+    admission = admit_test_root(repository_root=ROOT)
+    summary["test_root_status"] = admission["status"]
+    summary["test_root_path"] = admission.get("path")
+    summary["test_root_error"] = admission.get("error")
+    if not admission["ok"]:
+        summary["failure_stage"] = "test_root_admission"
+        summary["validation_ok"] = False
+        summary["no_update_eligible"] = False
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "test-root-admission-failed"
+        summary["errors"].append(str(admission.get("error") or "Test-root admission failed."))
+        log_line(log_path, f"Test-root admission failed: {summary['errors'][-1]}")
+        return finish(1)
+
     tts_provider = str(args.tts_provider or "none").strip().lower()
     if args.generate_audio and tts_provider == "none":
         message = "audio generation requested but no real TTS provider is configured; set --tts-provider openai and OPENAI_API_KEY before rerunning."
@@ -1203,6 +1235,8 @@ def main(argv: list[str] | None = None) -> int:
         log_line(log_path, f"Audio configuration failed: {message}")
         return finish(1)
 
+    summary["failure_stage"] = "source_collection"
+    summary["collection_started"] = True
     try:
         source_path, records, manual_source_restore = collect_or_load_sources(args, summary, log_path)
     except Exception as exc:  # noqa: BLE001
@@ -1244,7 +1278,29 @@ def main(argv: list[str] | None = None) -> int:
             )
         ),
     ]
-    pytest_basetemp = make_pytest_basetemp("bluefern-pytest-gaza")
+    summary["failure_stage"] = "validation_setup"
+    admission = admit_test_root(repository_root=ROOT)
+    summary["test_root_status"] = admission["status"]
+    summary["test_root_path"] = admission.get("path")
+    summary["test_root_error"] = admission.get("error")
+    if not admission["ok"]:
+        summary["validation_ok"] = False
+        summary["no_update_eligible"] = False
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "test-root-admission-failed"
+        summary["errors"].append(str(admission.get("error") or "Test-root admission failed before validation setup."))
+        log_line(log_path, f"Test-root admission failed before validation setup: {summary['errors'][-1]}")
+        return finish(1)
+    try:
+        pytest_basetemp = make_pytest_basetemp("bluefern-pytest-gaza")
+    except Exception as exc:  # noqa: BLE001
+        summary["validation_ok"] = False
+        summary["no_update_eligible"] = False
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "validation-setup-failed"
+        summary["errors"].append(f"validation test-root allocation failed: {type(exc).__name__}: {exc}")
+        log_line(log_path, f"Validation setup failed: {summary['errors'][-1]}")
+        return finish(1)
     if not args.skip_tests:
         summary["planned_actions"].append(command_text(pytest_command(args.validation_profile, pytest_basetemp)))
     if not args.dry_run:
@@ -1263,6 +1319,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.push:
         summary["planned_actions"].extend(["git status", f"git push origin {args.pages_branch}"])
 
+    summary["failure_stage"] = "generation"
+    summary["generation_started"] = True
     log_line(
         log_path,
         f"Pipeline command started: {command_text(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition), allow_post_edition_date_sources=bool(args.allow_post_edition_date_sources)))}",
@@ -1360,6 +1418,7 @@ def main(argv: list[str] | None = None) -> int:
 
         refresh_gaza_audio_public_surfaces(ROOT)
 
+    summary["failure_stage"] = "validation"
     if not args.skip_tests:
         summary["tests_run"] = True
         tests, tests_cmd = run_tests(args.validation_profile, pytest_basetemp)
@@ -1373,8 +1432,8 @@ def main(argv: list[str] | None = None) -> int:
             summary["publish_blocked_reason"] = "dispatch_validation_failed"
             return finish(1)
     else:
-        summary["warnings"].append("tests skipped by --skip-tests")
-        summary["validation_ok"] = True
+        _record_skipped_validation(summary, log_path)
+        return finish(1)
 
     pages_dry_run = run_command(
         pages_publish_command(
@@ -1409,6 +1468,7 @@ def main(argv: list[str] | None = None) -> int:
         summary["publish_blocked_reason"] = "pages-dry-run-safety-failed"
         return finish(1)
 
+    summary["failure_stage"] = "publication"
     if args.dry_run:
         if bool(args.post_bluesky and not args.no_post_bluesky):
             dry_run_bluesky = maybe_post_gaza_dispatch_to_bluesky(
@@ -1433,6 +1493,7 @@ def main(argv: list[str] | None = None) -> int:
             summary["bluesky_thumb_status"] = dry_run_bluesky.get("thumb_status") or "not_attempted"
         summary["ok"] = True
         summary["publish_ok"] = True
+        summary["failure_stage"] = None
         log_line(log_path, "Dry run complete; Pages repo was not updated.")
         return finish(0)
 
@@ -1568,6 +1629,7 @@ def main(argv: list[str] | None = None) -> int:
         summary["errors"].append(f"summary missing required fields: {', '.join(missing_summary_fields)}")
         return finish(1)
     summary["ok"] = True
+    summary["failure_stage"] = None
     log_line(log_path, f"Pipeline finished with exit code 0. pages_repo_updated={summary['pages_repo_updated']} pushed={summary['pushed']}")
     return finish(0)
 

@@ -44,6 +44,9 @@ def isolated(monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 def _stub_operator_success(monkeypatch: pytest.MonkeyPatch, *, pages_repo: Path) -> None:
+    test_root = operator.ROOT / "test-root"
+    test_root.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setenv(operator.TEST_ROOT_ENV, str(test_root))
     monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
     monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == operator.ROOT else "gh-pages")
     monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo_arg, pages_branch: (True, None))

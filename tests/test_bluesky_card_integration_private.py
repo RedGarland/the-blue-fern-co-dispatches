@@ -244,6 +244,65 @@ def test_external_card_mode_requires_contract_before_any_session_or_create(priva
     assert calls == []
 
 
+
+@pytest.mark.parametrize(
+    ("overrides", "reason"),
+    [
+        (
+            {"expected_card_mode": "external", "expected_external_card": CARD},
+            "card_mode_requires_exact_text_binding",
+        ),
+        (
+            {"expected_card_mode": "external"},
+            "external_card_contract_invalid",
+        ),
+        (
+            {"expected_card_mode": "plain", "expected_external_card": CARD},
+            "external_card_requires_external_mode",
+        ),
+    ],
+)
+def test_incomplete_card_bindings_fail_closed_before_network(private_root, monkeypatch, overrides, reason):
+    tmp_path = private_root
+    text_path, text_hash = setup(tmp_path, monkeypatch)
+    calls = []
+
+    def urlopen(req, timeout):
+        calls.append(req.full_url)
+        raise AssertionError("network must not be reached")
+
+    stack = common_patches(bluesky_post)
+    for item in stack:
+        item.start()
+    try:
+        kwargs = {
+            "edition_date": "2026-10-25",
+            "public_url": URL,
+            "run_succeeded": True,
+            "post_requested": True,
+            "project_root": tmp_path,
+            "expected_handle": HANDLE,
+            "expected_did": DID,
+            "live_verification": LIVE,
+            "approved_text_path": text_path,
+            "approved_text_sha256": text_hash,
+        }
+        if reason == "card_mode_requires_exact_text_binding":
+            kwargs.pop("approved_text_path")
+            kwargs.pop("approved_text_sha256")
+            kwargs.pop("expected_handle")
+            kwargs.pop("expected_did")
+            kwargs.pop("live_verification")
+        kwargs.update(overrides)
+        with patch.object(bluesky_post.request, "urlopen", side_effect=urlopen):
+            result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(**kwargs)
+    finally:
+        for item in reversed(stack):
+            item.stop()
+    assert result["status"] == "blocked"
+    assert result["reason"] == reason
+    assert calls == []
+
 def test_matching_external_duplicate_receipt_replays_without_rejection(private_root, monkeypatch):
     tmp_path = private_root
     text_path, text_hash = setup(tmp_path, monkeypatch)

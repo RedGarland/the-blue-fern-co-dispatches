@@ -1,0 +1,77 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T154900-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T15:45:22-07:00",
+  "started_at": "2026-10-26T15:49:00-07:00",
+  "completed_at": "2026-10-26T15:51:07.267-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T14:50:08.449-07:00",
+    "end": "2026-10-26T15:51:07.267-07:00",
+    "basis": "Previous hourly heartbeat's independently fetched completed_at on ops/watch-ledger through this execution; discovery may lag actual publication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; the production national Care Line collector remains authoritative.",
+    "scope": "United States, DC, Puerto Rico, Guam, US Virgin Islands, Northern Mariana Islands, American Samoa. Hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures or suspensions, emergency/rural service loss, ground/air ambulance or base loss, CMS terminations/rescissions/CLIA notices, and confirmed effective essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "verification": "Official CMS Public Notices retrieved first, then opened; top entries are October 23, 2026 (three termination notices), with no Oct 26 notice listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure temporary shutdown October 26 2026 United States local news",
+      "maternity labor delivery obstetric unit closure October 26 2026 hospital",
+      "rural hospital emergency services suspension closure October 26 2026",
+      "behavioral health psychiatric inpatient hospital closure service October 26 2026",
+      "dialysis clinic closures kidney care October 26 2026",
+      "oncology cancer center closure treatment service Oct 26 2026",
+      "primary care medical clinic closing patients announcement October 26 2026",
+      "ambulance EMS service station suspension closing October 26 2026",
+      "air ambulance helicopter base closing service interruption October 26 2026",
+      "hospital emergency department reopening restored service Oct 26 2026",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Islands October 26 2026 hospital closure clinic ambulance disruption",
+      "site:gov \"October 26, 2026\" \"hospital\" \"services\" \"suspended\" OR \"closed\""
+    ],
+    "search_failures": [],
+    "screened_out": [
+      {
+        "title": "Roseland Community Hospital to close labor and delivery unit",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/",
+        "reason": "Oct 1 report about planned end-of-month closure; no new confirmed effective action during hourly window."
+      },
+      {
+        "title": "Expanding Urgent Care in Southeastern San Diego",
+        "url": "https://www.morningstar.com/news/pr-newswire/20261026sf81358/expanding-urgent-care-in-southeastern-san-diego",
+        "reason": "New urgent care center announcement; not a restoration of previously lost essential service or an access loss."
+      },
+      {
+        "title": "DispatchHealth Names New CEO Amid Operational Reset",
+        "url": "https://homehealthcarenews.com/2026/10/dispatchhealth-names-new-ceo-amid-operational-reset-inside-its-pivot-to-health-system-enablement/",
+        "reason": "Corporate service-model shift reported today, but no verified newly effective local hospital/ED, primary-care, EMS or other enumerated service closure during window."
+      },
+      {
+        "title": "Rural Hospital Closures Tied to Improved Cancer Surgery Outcomes",
+        "url": "https://www.ajmc.com/view/rural-hospital-closures-tied-to-improved-cancer-surgery-outcomes",
+        "reason": "New research article describing historic closures, not a new healthcare access change."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T144808-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-26T14:50:08.449-07:00",
+      "previous_heartbeat_read_verified": true,
+      "prior_outcome": "no_findings",
+      "production_review": "No new qualifying candidates to submit; production collection remains authoritative."
+    },
+    "material_degradation": false,
+    "limitations": "Twelve targeted web queries plus official CMS page are a bounded sampling, not exhaustive national detection. Search indexing and local publication delays can produce late discoveries; one-hour window interpreted relative to prior verified completed_at.",
+    "controls": "Exactly one non-public ops/watch-ledger heartbeat; no approval, public publication, production mutation, schedule alteration, or task disablement."
+  }
+}

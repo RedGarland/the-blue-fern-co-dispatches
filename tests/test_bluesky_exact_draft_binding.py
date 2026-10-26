@@ -524,3 +524,106 @@ def test_interruption_after_request_start_leaves_pending_marker_and_blocks_overl
     assert second["reason"] == "post_attempt_pending_reconcile_before_retry"
     assert calls == {"records": 1, "create": 1}
 
+
+
+def _pagination_record(text: str, rkey: str) -> dict:
+    return {
+        "uri": f"at://{DID}/app.bsky.feed.post/{rkey}",
+        "cid": f"bafy{rkey}",
+        "value": {"$type": "app.bsky.feed.post", "text": text},
+    }
+
+
+def test_remote_duplicate_reconciliation_scans_all_pages_before_none(monkeypatch):
+    responses = [
+        {"records": [_pagination_record("older", "one")], "cursor": "page-2"},
+        {"records": [_pagination_record("newer", "two")]},
+    ]
+    urls = []
+
+    def paged_urlopen(req, timeout=20.0):
+        urls.append(req.full_url)
+        return FakeResponse(responses.pop(0))
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", paged_urlopen)
+    result = bluesky_post._remote_duplicate_reconciliation(DID, PUBLIC_URL, TEXT)
+
+    assert result == {"status": "none", "pages_scanned": 2}
+    assert "cursor=page-2" in urls[1]
+
+
+def test_remote_duplicate_reconciliation_finds_match_on_later_page(monkeypatch):
+    responses = [
+        {"records": [], "cursor": "page-2"},
+        {"records": [_pagination_record(TEXT, "match")]},
+    ]
+    monkeypatch.setattr(
+        bluesky_post.request,
+        "urlopen",
+        lambda req, timeout=20.0: FakeResponse(responses.pop(0)),
+    )
+
+    result = bluesky_post._remote_duplicate_reconciliation(DID, PUBLIC_URL, TEXT)
+
+    assert result["status"] == "match"
+    assert result["post_uri"] == f"at://{DID}/app.bsky.feed.post/match"
+    assert result["pages_scanned"] == 2
+
+
+def test_remote_duplicate_reconciliation_repeated_cursor_fails_closed(monkeypatch):
+    responses = [
+        {"records": [], "cursor": "same"},
+        {"records": [], "cursor": "same"},
+    ]
+    monkeypatch.setattr(
+        bluesky_post.request,
+        "urlopen",
+        lambda req, timeout=20.0: FakeResponse(responses.pop(0)),
+    )
+
+    result = bluesky_post._remote_duplicate_reconciliation(DID, PUBLIC_URL, TEXT)
+
+    assert result == {
+        "status": "uncertain",
+        "reason": "remote_duplicate_cursor_repeated",
+        "pages_scanned": 2,
+    }
+
+
+def test_remote_duplicate_reconciliation_later_page_error_is_uncertain(monkeypatch):
+    calls = 0
+
+    def failing_urlopen(req, timeout=20.0):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return FakeResponse({"records": [], "cursor": "page-2"})
+        raise OSError("simulated later-page failure")
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", failing_urlopen)
+    result = bluesky_post._remote_duplicate_reconciliation(DID, PUBLIC_URL, TEXT)
+
+    assert result["status"] == "uncertain"
+    assert result["reason"] == "remote_duplicate_check_failed"
+    assert result["pages_scanned"] == 1
+
+
+def test_remote_duplicate_reconciliation_page_limit_fails_closed(monkeypatch):
+    responses = [
+        {"records": [], "cursor": "one"},
+        {"records": [], "cursor": "two"},
+    ]
+    monkeypatch.setattr(
+        bluesky_post.request,
+        "urlopen",
+        lambda req, timeout=20.0: FakeResponse(responses.pop(0)),
+    )
+    monkeypatch.setattr(bluesky_post, "BLUESKY_DUPLICATE_SCAN_MAX_PAGES", 2)
+
+    result = bluesky_post._remote_duplicate_reconciliation(DID, PUBLIC_URL, TEXT)
+
+    assert result == {
+        "status": "uncertain",
+        "reason": "remote_duplicate_scan_limit_exceeded",
+        "pages_scanned": 2,
+    }

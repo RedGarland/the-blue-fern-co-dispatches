@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T024631-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T02:45:22-07:00",
+  "started_at": "2026-10-26T02:46:31-07:00",
+  "completed_at": "2026-10-26T02:48:14-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T02:20:58-07:00",
+    "end": "2026-10-26T02:48:14-07:00",
+    "basis": "From previous verified Care Line Watch heartbeat completion through this execution. Source-index recency can surface older events, but older or previously known reports were not accepted as new qualifying developments. Production national collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary U.S. states, DC, Puerto Rico, Guam, U.S. Virgin Islands, Northern Mariana Islands and American Samoa healthcare-access recall: acute hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures or suspensions; rural emergency care, ambulance/air-medical/base losses; CMS termination/rescission and CLIA access notices; verified effective restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS table checked before supplemental searches. Latest public notices visible were three October 23 HHA terminations in CA and OH, all already considered by previous runs; no newer October 24-26 notices visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 hospital emergency department closure suspended services overnight United States",
+      "October 25 26 2026 labor delivery maternity unit closing hospital announced rural",
+      "October 25 26 2026 mental behavioral health psychiatric inpatient hospital suspends closes",
+      "October 25 26 2026 dialysis clinic inpatient dialysis services closing suspension",
+      "October 25 26 2026 rural hospital emergency room temporary closure ambulance diversion",
+      "October 25 26 2026 ambulance EMS station base closure staffing coverage",
+      "\"October 25, 2026\" \"urgent care\" \"closes\" clinic United States",
+      "\"October 25, 2026\" \"oncology\" \"clinic\" \"closure\" cancer service",
+      "\"October 25, 2026\" \"air ambulance\" \"base\" \"closed\" US",
+      "\"October 26, 2026\" hospital emergency room reopened resumed services United States",
+      "\"October 25, 2026\" state health department suspends hospital license patient care",
+      "October 25 26 2026 Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic ambulance services closure reopening"
+    ],
+    "previous_heartbeat": {
+      "branch": "ops/watch-ledger",
+      "run_id": "care-line-watch-20261026T021807-0700-r11-gapcheck",
+      "completed_at": "2026-10-26T02:20:58-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_read": true
+    },
+    "screening": "No report published/confirmed in this short observation interval established a new, concrete, nonduplicate U.S. or territory healthcare-access change. Search results primarily surfaced historical reports, proposals, out-of-country events, and stories already considered in previous runs. The October 26 AJMC oncology article discussed hypothetical closure risks rather than concrete access change.",
+    "potentially_relevant_unconfirmed": {
+      "title": "Stoughton Health closes McFarland Urgent Care Clinic",
+      "source_url": "https://www.hngnews.com/leader_independent/news/local/stoughton-health-closes-mcfarland-urgent-care-clinic/article_73a2a2ff-64c3-4ea5-a2ef-ba6491837116.html",
+      "publisher": "Hometown News Group",
+      "indexed_publication_hint": "last week; exact date not confirmed",
+      "reason_excluded": "Result indicated a prior-week closure, not a verified new change within this observation interval; source article returned HTTP 402, so clinical details, effective date and duplication could not be confirmed."
+    },
+    "source_failures": [
+      {
+        "source_url": "https://www.hngnews.com/leader_independent/news/local/stoughton-health-closes-mcfarland-urgent-care-clinic/article_73a2a2ff-64c3-4ea5-a2ef-ba6491837116.html",
+        "failure": "HTTP 402 Payment Required on full-article retrieval",
+        "impact": "Local urgent-care closure result could not be fully validated; not promoted to finding."
+      }
+    ],
+    "material_degradation": false,
+    "reason_for_status": "DEGRADED per watch contract because one potentially pertinent reporting source was inaccessible, although CMS and all twelve targeted searches returned useful coverage.",
+    "limitations": "New overnight local reporting may not yet be indexed. No production collector or editorial queue checked or modified. Earlier reported missing 00:45 run remains a historical continuity concern, not evidence of a fresh gap during this short observed interval.",
+    "controls": "No approval, publication, schedule change, or task disablement."
+  }
+}

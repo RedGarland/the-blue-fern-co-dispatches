@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T064903-0700-r11-20261026T134903Z",
+  "scheduled_for": "2026-10-26T06:44:51-07:00",
+  "started_at": "2026-10-26T06:49:03-07:00",
+  "completed_at": "2026-10-26T06:52:37-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T04:45:39-07:00",
+    "end": "2026-10-26T06:52:37-07:00",
+    "basis": "Last independently verified watch-ledger completed_at; no subsequent 05:xx JSON was found in the 2026-10-26 branch directory as of this run. Coverage therefore spans the observed ledger gap; production remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261026-deir-al-balah-drone-strike-two-killed-one-wounded-wafa",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176340",
+      "title": "Two killed in Israeli occupation strike on Deir al-Balah",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "publication_time_reported": "15:01 local as shown by WAFA; UTC offset unverified",
+      "event_date": "2026-10-26",
+      "location": "Deir al-Balah, central Gaza Strip",
+      "affected_population_or_system": "People struck by a drone; two Palestinians reported killed and one wounded. Civilian status of each victim not independently established.",
+      "supporting_passage": "Two Palestinians were killed and another was wounded on Monday in a strike by an Israeli occupation drone targeting individuals",
+      "supporting_passage_context": "Exact 22-word excerpt from WAFA's 26 October report; report attributes the incident to local reporting and cites medical sources for the broader Gaza toll.",
+      "source_type": "Local Palestinian news agency; incident reported directly, without named eyewitness or independent primary confirmation.",
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA home-page check following OCHA and WHO priority checks and 12 targeted searches; article appeared with Monday, 26 October 2026 03:01 PM publication time.",
+        "observed_after": "2026-10-26T04:45:39-07:00",
+        "distinguish_from_prior": "Previous verified watch findings captured a woman injured by gunfire and military advance in Ard al-Shawa east of Deir al-Balah; this is a separately described drone strike with two reported deaths and one injury, not a mere republication of the earlier account.",
+        "corroboration": "Single attributable agency report; independent verification pending. Do not conflate casualties with the October 26 morning aggregate or other named attacks.",
+        "disposition": "Recall-only candidate for authoritative production deduplication and editorial verification; not authorized for publication."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall, not the primary publisher/collector. All findings require production deduplication and review.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T044319-0700-r11-20261026T114319Z.json",
+      "completed_at": "2026-10-26T04:45:39-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "Direct GitHub ops/watch-ledger fetch_file; directory enumeration."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed update published 23 October for Gaza 21 October, with no newly listed October 26 update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean / oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; pre-existing regional WHO access failure."
+      },
+      {
+        "publisher": "WHO global situation portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest listed Gaza-specific situational news older than this window."
+      }
+    ],
+    "initial_first_source_search_queries": [
+      "site:ochaopt.org Gaza October 26 2026 humanitarian situation report update",
+      "site:who.int Gaza 26 October 2026 hospital health medical evacuation emergency"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 26 2026 Monday latest Reuters deaths aid ceasefire hospital",
+      "Gaza October 26 2026 AP AFP civilians killed injured October 26 morning",
+      "site:unrwa.org Gaza 26 October 2026 update shelters displaced aid",
+      "site:unicef.org Gaza 26 October 2026 water medical children update",
+      "site:wfp.org Gaza 26 October 2026 food trucks aid shortages",
+      "site:icrc.org Gaza October 26 2026 hospitals medical ambulance detainees",
+      "Gaza October 26 2026 Monday Anadolu Al Jazeera latest 26 Oct wounded martyrs Gaza city Khan Younis",
+      "Gaza 26 October 2026 Palestinian health ministry Gaza daily report casualties Monday",
+      "26 October 2026 Gaza Rafah Kerem Shalom crossing opened closed today ambulance medevac",
+      "26 October 2026 Gaza UN OCHA humanitarian aid convoy distribution food water update",
+      "Gaza 26 October 2026 hostages prisoners ceasefire talks Israel Hamas Monday",
+      "Gaza 26 October 2026 displacement Shujaiya tents burned water sewage hospital fuel disruption"
+    ],
+    "additional_direct_pages_checked": [
+      "https://www.aa.com.tr/en/middle-east",
+      "https://english.wafa.ps/",
+      "https://www.aljazeera.com/where/palestine/",
+      "https://www.unrwa.org/newsroom",
+      "https://english.wafa.ps/Pages/Details/176340",
+      "https://english.wafa.ps/Pages/Details/176324",
+      "https://english.wafa.ps/Pages/Details/176323",
+      "https://www.aa.com.tr/en/world/7-year-old-girl-among-4-palestinians-killed-in-israeli-attacks-in-gaza/4100917"
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and military civilian impact",
+      "displacement and shelter",
+      "humanitarian aid, food, water, crossings",
+      "healthcare, ambulance and medical evacuation",
+      "infrastructure, fuel and sanitation",
+      "detainees, hostages and ceasefire negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct WHO regional health verification remained unavailable; global WHO and OCHA accessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "error": "HTTP 403",
+        "impact": "Direct UNRWA newsroom inaccessible; targeted indexed searches used."
+      }
+    ],
+    "observed_ledger_gap": "No heartbeat JSON with a 05:xx PDT run start found in branch directory as of this observation. An execution may have failed or not written its mandatory heartbeat. This supplementary execution does not retroactively mark it completed.",
+    "excluded_or_not_counted": [
+      "Anadolu October 26 Bir 19/al-Mawasi fatalities and injury, eastern Deir al-Balah gunfire injury, and prior Shujaiya displacement-camp fire were in earlier verified watch findings; excluded as duplicates.",
+      "WAFA 26 October 11:07 AM Gaza local Al-Rimal strike, daily Ministry of Health 11 deaths/35 injuries 24-hour aggregate, and older Gaza casualty reports were published before the current observation start; not counted as newly found during this window.",
+      "West Bank incidents and election-related commentary excluded as outside Gaza-ground remit.",
+      "Unverified older WHO medical metrics, WFP cuts reported 19 October, and all undated claims excluded."
+    ],
+    "assessment": "One attributable new Deir al-Balah drone-strike casualty report was found by direct agency inspection and preserved for production review. OCHA OPT and WHO checked first, followed by precisely 12 additional targeted searches. Persistent WHO regional 502 and UNRWA 403 impair direct coverage, so DEGRADED rather than FAILED. Two-hour gap in verified ledger history noted; do not assume missed run results.",
+    "notification_assessment": "New qualifying nonduplicate incident found; notify operator. WHO 502/UNRWA 403 are persistent rather than novel.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

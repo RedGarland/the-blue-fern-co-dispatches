@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T154353-0700-r11-154353",
+  "scheduled_for": "2026-10-26T15:45:54-07:00",
+  "started_at": "2026-10-26T15:43:53-07:00",
+  "completed_at": "2026-10-26T15:45:44-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T14:46:32-07:00",
+    "end_at": "2026-10-26T15:45:44-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous persisted ops/watch-ledger Food Line heartbeat completed_at to current observation in PDT; include only newly reported and verified U.S. access disruptions in the four specified miss classes."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 8,
+      "slow": 4
+    },
+    "search_terms": [
+      "\"only grocery store\" closed fire Monday October 26 2026 community",
+      "\"last grocery store\" closure fire October 26 2026 town food desert",
+      "\"sole grocery store\" damaged destroyed 26 October 2026 United States",
+      "\"food distribution\" canceled canceled Monday October 26 2026 storm weather",
+      "\"food bank\" \"distribution\" \"canceled\" \"Oct 26\" 2026 flooding",
+      "\"food pantry\" \"closed today\" \"October 26, 2026\" outage",
+      "site:gov SNAP EBT card outage benefits stopped October 26 2026 official state",
+      "site:gov WIC benefits interruption outage October 26 2026 state notice",
+      "October 26 2026 food pantry shut down suddenly food bank service closures Monday United States local",
+      "October 26 2026 canceled food distribution hurricane storm food bank announces closed today",
+      "October 26 2026 full service grocery closes only store town fire rural neighborhood local",
+      "October 26 2026 SNAP WIC EBT temporary disruption benefits delayed official state announcement"
+    ],
+    "focus_classes": [
+      "Sole/only/last/full-service community grocery store closure/loss/fire/disaster",
+      "Weather/disaster/damage canceled or suspended emergency food distributions",
+      "Abrupt food pantry or food bank closure/major service reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall watch only, not primary nationwide collection; production Food Line collector remains authoritative.",
+    "Twelve targeted searches (eight fast, four slow) yielded no sufficiently verified, newly reported in-window qualifying U.S. access disruption; findings [] does not prove none occurred.",
+    "One social-source verification attempt failed: a Facebook post search snippet said 'Due to the flood threat, we are canceling the food pantry tomorrow at the community center,' but the direct post fetch was throttled. Its post date, U.S. location, provider identity, and relevance to this hour cannot be established. Excluded rather than promoted; this source-specific gap causes DEGRADED status. Source: https://www.facebook.com/61582238523158/posts/pumpkin-bread-class-is-canceled-due-to-the-flooding-we-are-praying-for-everyone-/122127925533074617/",
+    "October 25 Guardian report about a Michigan food-assistance helpline temporary suspension for call-volume pressure was published before this window and concerns a helpline rather than immediate SNAP/WIC issuance loss; excluded as preexisting and out of defined window. https://www.theguardian.com/us-news/2026/oct/25/trump-food-stamp-cuts",
+    "NY food-bank funding grant story dated October 26 is ordinary program expansion; previously identified and excluded. https://www.timesunion.com/news/article/hochul-food-banks-funding-snap-22493570.php",
+    "October 21 report of Kenosha Food Bank planned end-of-2026 closure is prior-window and not an abrupt newly announced same-hour shutdown. https://www.the-sun.com/money/17182682/kenosha-food-bank-wisconsin-closing/",
+    "October 24 Wheatsville Co-op article reports closure of one of two co-op locations in Austin, not sole/full-service community grocery loss; the report precedes window. https://www.the-sun.com/money/17199451/grocery-store-shuts-doors/",
+    "Search engines largely surfaced older grocery fires, older hurricane cancellations, historical shutdown-related SNAP notices, and general SNAP caseload reporting; none met in-window official immediate access interruption criteria. Search indexing can lag same-hour local notices.",
+    "No approval, publication, production collector changes, schedule changes, or task disabling occurred."
+  ]
+}

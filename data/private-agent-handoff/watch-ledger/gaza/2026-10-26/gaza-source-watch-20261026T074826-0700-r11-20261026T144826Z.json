@@ -1,0 +1,202 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T074826-0700-r11-20261026T144826Z",
+  "scheduled_for": "2026-10-26T07:44:51-07:00",
+  "started_at": "2026-10-26T07:48:26-07:00",
+  "completed_at": "2026-10-26T07:51:00-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T06:52:37-07:00",
+    "end": "2026-10-26T07:51:00-07:00",
+    "basis": "Last verified Gaza watch-ledger completed_at, not assumed scheduled run; distinction between source discovery date and the older underlying event periods is preserved."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-ocha-20261026-bakery-flour-shutdown-reopening-20261025",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+      "title": "WFP-supported commercial bakeries resume after flour shortage, with one still closed on 25 October",
+      "publisher": "UN OCHA OPT",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "publication_time": null,
+      "event_date": "2026-10-25",
+      "event_period": "2026-10-23/2026-10-25",
+      "location": "Gaza Strip (specific bakery sites not identified)",
+      "affected_population_or_system": "Bread production and access; 17 WFP fuel-only supported commercial bakeries. Fourteen stopped 23 October; 16 operating by 25 October after temporary flour transfers; one remained closed for technical reasons.",
+      "supporting_passage": "16 of the 17 bakeries resumed operations",
+      "source_type": "UN humanitarian coordination; WFP-supported sector reporting summarized by OCHA",
+      "classification": "follow-up",
+      "confidence": "HIGH for OCHA-reported operational status; underlying flour flow requires WFP/operator confirmation",
+      "bounded_discovery_context": {
+        "discovered_via": "OCHA OPT /updates page checked before additional searches; official 26 Oct situation report then opened and read.",
+        "discovery_interval": "2026-10-26T06:52:37-07:00 to 2026-10-26T07:51:00-07:00",
+        "source_reporting_scope": "Mostly 12–18 October 2026; explicitly dated later events through 25 October are distinguished from the report's publication date.",
+        "specific_evidence": "OCHA Gaza section, paragraph immediately before 'Water, sanitation and health challenges', 23–25 October sequence.",
+        "prior_comparison": "Earlier watch ledgers documented aid convoys but not this bakery shut/restart sequence; OCHA update was not present on the previous 06:52 run's updates list.",
+        "production_disposition": "Supplementary recall only; requires production dedupe and editorial verification. No authorization or publication."
+      }
+    },
+    {
+      "finding_id": "gaza-ocha-20261026-food-aid-suspension-500k-oct2026",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+      "title": "OCHA reports October food parcel and flour assistance suspended for approximately 500,000 people per month",
+      "publisher": "UN OCHA OPT",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "publication_time": null,
+      "event_date": null,
+      "event_period": "October 2026 onward",
+      "location": "Gaza Strip",
+      "affected_population_or_system": "People relying on food assistance; sector partners project fewer than 1 million monthly recipients from October against 2.1 million people, following suspension of parcel/flour distribution to around 500,000 people monthly. Funding is stated cause.",
+      "supporting_passage": "food parcel and flour distribution",
+      "source_type": "UN humanitarian coordination and food-sector/WFP partner figures",
+      "classification": "follow-up",
+      "confidence": "HIGH for OCHA-documented program cuts; sector estimate is a projection, not a measured October beneficiary count",
+      "bounded_discovery_context": {
+        "discovered_via": "OCHA OPT /updates page checked before additional searches; official 26 Oct situation report then opened and read.",
+        "discovery_interval": "2026-10-26T06:52:37-07:00 to 2026-10-26T07:51:00-07:00",
+        "source_reporting_scope": "Mostly 12–18 October 2026; explicitly dated later events through 25 October are distinguished from the report's publication date.",
+        "specific_evidence": "OCHA 'Funding shortages compounding the humanitarian crisis'; distinguishes suspension for 500k from projected under-1m overall coverage.",
+        "prior_comparison": "AP/WFP reported food support reductions on 20 October; do not count this as a separate newly begun cut without production dedupe. More specific primary assessment now captured.",
+        "production_disposition": "Supplementary recall only; requires production dedupe and editorial verification. No authorization or publication."
+      }
+    },
+    {
+      "finding_id": "gaza-ocha-20261026-gaza-city-mekorot-pipeline-repair",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+      "title": "OCHA reports Gaza City water supply restoration after repairs to Mekorot line",
+      "publisher": "UN OCHA OPT",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "publication_time": null,
+      "event_date": null,
+      "event_period": "2026-10-12/2026-10-18",
+      "location": "Gaza City",
+      "affected_population_or_system": "Drinking water supplied via Gaza City Mekorot pipeline from Israel; repairs returned drinking-water provision to September levels after an early October disruption. Volume and households benefiting not provided.",
+      "supporting_passage": "drinking water supply to return",
+      "source_type": "UN humanitarian coordination; WASH Cluster operational update",
+      "classification": "follow-up",
+      "confidence": "HIGH for WASH Cluster reported repair; exact completion day and volume unverified",
+      "bounded_discovery_context": {
+        "discovered_via": "OCHA OPT /updates page checked before additional searches; official 26 Oct situation report then opened and read.",
+        "discovery_interval": "2026-10-26T06:52:37-07:00 to 2026-10-26T07:51:00-07:00",
+        "source_reporting_scope": "Mostly 12–18 October 2026; explicitly dated later events through 25 October are distinguished from the report's publication date.",
+        "specific_evidence": "OCHA 'Water, sanitation and health challenges', first paragraph; report's 12–18 October reporting period.",
+        "prior_comparison": "No matching repair was identified in prior verified watch findings; old event disclosed by a new dated OCHA report, not a new repair during the hourly window.",
+        "production_disposition": "Supplementary recall only; requires production dedupe and editorial verification. No authorization or publication."
+      }
+    },
+    {
+      "finding_id": "gaza-ocha-20261026-health-service-47pct-oncology-shortages",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+      "title": "OCHA reports only 47% of Gaza health service points at least partly functional amid critical oncology shortages",
+      "publisher": "UN OCHA OPT",
+      "source_date": "2026-10-26",
+      "publication_date": "2026-10-26",
+      "publication_time": null,
+      "event_date": null,
+      "event_period": null,
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Hospitals, clinics, cancer diagnostics and chronic disease patients; 47% of health service points partly or fully functional, restricted IV fluids, anaesthesia, surgery supplies, type 1 insulin analogues, and limited mammography/CT with no MRI capability reported.",
+      "supporting_passage": "only 47 per cent",
+      "source_type": "UN humanitarian coordination; health-sector reporting with Gaza MoH oncology service figures",
+      "classification": "follow-up",
+      "confidence": "HIGH for OCHA-reported operating capacity, individual facilities not identified",
+      "bounded_discovery_context": {
+        "discovered_via": "OCHA OPT /updates page checked before additional searches; official 26 Oct situation report then opened and read.",
+        "discovery_interval": "2026-10-26T06:52:37-07:00 to 2026-10-26T07:51:00-07:00",
+        "source_reporting_scope": "Mostly 12–18 October 2026; explicitly dated later events through 25 October are distinguished from the report's publication date.",
+        "specific_evidence": "OCHA 'Water, sanitation and health challenges', oncology paragraph; diagnostic/service metrics reported in the 26 October update.",
+        "prior_comparison": "WHO regional direct verification continues to fail; this is newly documented primary humanitarian follow-up rather than a specific change proven since 06:52.",
+        "production_disposition": "Supplementary recall only; requires production dedupe and editorial verification. No authorization or publication."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall only; daily production remains authoritative. No content is auto-approved or published.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T064903-0700-r11-20261026T134903Z",
+      "completed_at": "2026-10-26T06:52:37-07:00",
+      "status": "DEGRADED",
+      "outcome": "findings",
+      "verified_by": "GitHub ops/watch-ledger directory listing and raw JSON readback"
+    },
+    "primary_checks_first": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/",
+          "https://www.ochaopt.org/updates"
+        ],
+        "result": "OCHA homepage still listed 23 October as newest, but dedicated /updates page included new 26 October humanitarian situation report; full official report accessible. Publication hour is not exposed."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean / oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurrent direct regional access degradation."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated 26 October Gaza-specific item on WHO global overview."
+      }
+    ],
+    "who_priority_searches": [
+      "site:who.int Gaza health October 26 2026 WHO medical evacuation hospital",
+      "site:emro.who.int palestine Gaza 26 October 2026 healthcare"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:ochaopt.org \"Humanitarian Situation Report\" \"22 October 2026\" Gaza",
+      "site:reuters.com Gaza October 26 2026 7 am EDT civilians ceasefire aid",
+      "site:apnews.com Gaza October 26 2026 morning hospital casualties aid",
+      "site:unrwa.org Gaza October 26 2026 displaced aid shelters October 26",
+      "site:wfp.org Gaza October 26 2026 food access border crossings",
+      "site:unicef.org Gaza October 26 2026 water children healthcare",
+      "site:reuters.com/world/middle-east/ 2026/10/26 Gaza Oct 26 2026 ceasefire aid people killed",
+      "site:aa.com.tr/en Gaza 26 October 2026 after 06:00 GMT ambulance civilian Israeli fire",
+      "site:english.wafa.ps 26 October 2026 Gaza 16:00 17:00 aid water hospital injured",
+      "site:palestinercs.org 26 October 2026 Gaza ambulance health",
+      "October 26 2026 Gaza Kerem Shalom crossing deliveries fuel medical evacuations",
+      "Gaza October 26 2026 ceasefire hostages prisoners detained negotiations Qatar Egypt latest"
+    ],
+    "additional_direct_pages_checked": [
+      "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+      "https://dispatches.thebluefernco.com/gaza/",
+      "https://www.unrwa.org/newsroom"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct WHO oPt regional health verification unavailable; WHO global and OCHA still accessible; pre-existing."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "error": "HTTP 403",
+        "impact": "Direct UNRWA newsroom unavailable; indexed search coverage used; pre-existing."
+      }
+    ],
+    "coverage_class_summary": "Targeted casualty and military civilian impact, crossings/aid/food/water, health/evacuation, infrastructure, displacement/shelter, detention/hostages, and ceasefire negotiations. Searches did not produce another confidently new independent same-hour event.",
+    "excluded_or_not_counted": [
+      "Prior Deir al-Balah October 26 WAFA drone-strike casualty story already recorded in 06:52 run.",
+      "Earlier 25–26 October al-Mawasi fatalities, injured woman in eastern Deir al-Balah, Shujaiya displacement camp, and Egyptian Red Crescent convoy already in verified previous watch findings.",
+      "OCHA report's West Bank incidents excluded from Gaza desk.",
+      "Unverified social accounts, election commentary, old press coverage and older health/evacuation datasets excluded.",
+      "OCHA's 12–18 October humanitarian report events are not falsely dated to this watch's 06:52–07:51 discovery interval.",
+      "No independent same-hour new fatalities, crossing opening or negotiations shift corroborated by targeted searches."
+    ],
+    "assessment": "Four distinct traceable Gaza operational developments were retrieved from an OCHA OPT situation report newly listed on 26 October. All are historical or ongoing follow-ups, not events asserted to have occurred within this hourly window. Bakery status dated through 25 October. The OCHA update had not appeared in the prior heartbeat's checked listings. Regional WHO HTTP 502 and UNRWA HTTP 403 persisted; DEGRADED with useful coverage, not FAILED.",
+    "notification_assessment": "Newly surfaced qualifying primary humanitarian follow-ups found; notify. Do not represent the original events as same-hour events.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

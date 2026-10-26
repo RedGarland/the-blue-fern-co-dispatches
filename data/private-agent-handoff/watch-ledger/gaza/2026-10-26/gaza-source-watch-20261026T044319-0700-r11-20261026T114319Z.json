@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T044319-0700-r11-20261026T114319Z",
+  "scheduled_for": "2026-10-26T04:44:51-07:00",
+  "started_at": "2026-10-26T04:43:19-07:00",
+  "completed_at": "2026-10-26T04:45:39-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T03:42:10-07:00",
+    "end": "2026-10-26T04:45:39-07:00",
+    "basis": "From latest directly verified prior watch-ledger heartbeat completed_at; included only new, traceable, nonduplicate developments verified after that cutoff."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; production collector and publisher retain authority; no approval/publication/schedule actions.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T034033-0700-r11-20261026T104033Z.json",
+      "completed_at": "2026-10-26T03:42:10-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "GitHub fetch_file on ops/watch-ledger",
+      "previously_qualified_ids": [
+        "gaza-20261025-shujaiya-displacement-camp-fire-800",
+        "gaza-20261026-egypt-erc-convoy-303-dispatched",
+        "gaza-20261026-deir-al-balah-ard-al-shawa-gunfire-injury-advance"
+      ]
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible, homepage latest 23 Oct 2026 Gaza impact snapshot for 21 Oct; no new Oct 26 release in observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean / occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; direct regional WHO site unavailable, pre-existing across prior checks."
+      },
+      {
+        "publisher": "WHO global emergencies portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated Oct 26 Gaza-specific situation or release."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:unrwa.org Gaza October 26 2026 Monday new humanitarian access displacement water",
+      "site:unicef.org Gaza 26 October 2026 children casualties water healthcare",
+      "site:icrc.org Gaza October 26 2026 Red Cross evacuation medical wounded detainees",
+      "site:wfp.org Gaza 26 October 2026 food assistance crossings",
+      "site:palestine.un.org Gaza 26 October 2026 hospital displaced aid",
+      "Gaza 26 October 2026 Reuters AFP AP Monday early morning latest casualties strikes ceasefire",
+      "26 October 2026 Gaza Monday Anadolu civilian killed injured Khan Younis Deir al Balah Gaza city",
+      "26 October 2026 Gaza hospitals ambulances fuel medevac WHO ministry health operating update",
+      "26 October 2026 Gaza Rafah Kerem Shalom aid trucks crossings Monday access UN",
+      "26 October 2026 Gaza water sanitation sewage infrastructure electricity shelters damaged",
+      "Gaza 26 October 2026 Monday hostage detainee releases negotiations ceasefire violence Reuters",
+      "26 October 2026 Gaza Egypt red crescent 303 convoy arrived delivered aid distribution"
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and documented military civilian impact",
+      "displacement and shelter loss",
+      "aid deliveries, food, water and crossing access",
+      "healthcare, hospitals, ambulances, fuel and medical evacuation",
+      "infrastructure and sanitation",
+      "detention, hostages and ceasefire negotiations"
+    ],
+    "additional_direct_pages_checked": [
+      "https://news.un.org/en/focus/gaza",
+      "https://www.aa.com.tr/en/middle-east",
+      "https://www.unrwa.org/newsroom",
+      "https://www.aa.com.tr/en/middle-east/netanyahu-postpones-gaza-security-administrative-arrangements-until-after-israeli-election/4100364"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Persistent regional direct healthcare source gap; WHO global site and other humanitarian outlets accessible."
+      },
+      {
+        "publisher": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "error": "HTTP 403",
+        "impact": "Direct newsroom inaccessible; targeted indexed searches remained available but surfaced no fresh relevant report."
+      },
+      {
+        "publisher": "UN News focus page",
+        "url": "https://news.un.org/en/focus/gaza",
+        "error": "Not accessible via retrieval tool",
+        "impact": "Direct UN News focus-page retrieval unavailable; alternative OCHA and UN searches remain."
+      }
+    ],
+    "excluded_or_not_counted": [
+      "Oct 26 early report of 800 people displaced by displacement-camp fire at Shujaiya, Egyptian Red Crescent convoy 303 dispatch, and Deir al-Balah gunfire injury / military advance were already carried by the verified 02:48 PDT findings heartbeat.",
+      "Anadolu report on Netanyahu delaying post-war Gaza security/administration arrangements is dated 25 Oct 2026, before the previous 03:42 PDT check, and reports decisions made over preceding weeks, with no verified new development in this window.",
+      "OCHA Oct 23 impact snapshot reporting on Oct 21, UNICEF child-casualty retrospective and WFP/UN older reports are out of window.",
+      "Searches did not verify a new Oct 26 hospital-function change, medevac, casualty incident, aid arrival, crossing decision or ceasefire shift since the previous verified heartbeat."
+    ],
+    "assessment": "OCHA OPT and WHO were checked first, followed by 12 targeted searches and bounded direct page checks. No new, traceable, reliably dated, nonduplicate development established within current observation window. A persistent WHO regional 502 plus inaccessible UNRWA/UN News pages reduces coverage, hence DEGRADED rather than FAILED. Alternative coverage remained operational.",
+    "notification_assessment": "No new qualifying finding and no material new degradation relative to ongoing WHO access limitation; skip notification.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

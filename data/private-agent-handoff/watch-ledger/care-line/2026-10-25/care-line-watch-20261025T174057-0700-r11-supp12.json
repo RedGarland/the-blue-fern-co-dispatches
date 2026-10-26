@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261025T174057-0700-r11-supp12",
+  "scheduled_for": "2026-10-25T17:45:22-07:00",
+  "started_at": "2026-10-25T17:40:57-07:00",
+  "completed_at": "2026-10-25T17:43:18.211-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T16:51:50.612-07:00",
+    "end": "2026-10-25T17:43:18.211-07:00",
+    "basis": "Started at the independently verified prior supplementary Care Line heartbeat completion (2026-10-25 16:51:50.612 PDT). Bounded recent-report and late-index recall only; authoritative national production collection not accessed or modified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, District of Columbia, Puerto Rico, Guam, U.S. Virgin Islands, Northern Mariana Islands, American Samoa; hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care clinical service closures or suspensions, emergency and rural losses, EMS/air-medical/base closures, CMS terminations/rescissions/CLIA certification actions, and verified concrete essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "official_page_accessed": true,
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Current official listing retrieved first. Latest notices remained October 23 Medicare home-health agency termination notices: My Families Healthcare (CA; CCN 758151), 1ST AIDE HOME HEALTH AGENCY (CA; CCN 559673), and Moonlight Home Health Care Inc (OH; CCN 369006); all were previously recorded in the watch ledger. No October 24–25 notice appeared."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department shut down Sunday October 25 2026 USA services closure",
+      "October 25 2026 maternity labor delivery hospital services suspended closing",
+      "October 25 2026 rural hospital emergency room suspended service closure",
+      "October 25 2026 ambulance EMS rescue service stopped responding closure",
+      "October 25 2026 air ambulance medevac helicopter base closure service suspended US",
+      "October 25 2026 behavioral health psychiatric residential treatment center closed patients",
+      "October 25 2026 dialysis kidney care center closed suspended operations patients",
+      "October 25 2026 oncology chemotherapy infusion cancer clinic closed suspended treatments",
+      "October 25 2026 primary care urgent care community clinic permanently closed appointments",
+      "October 25 2026 reopened emergency department hospital maternity unit medical service resumed",
+      "October 25 2026 Puerto Rico Guam American Samoa Virgin Islands hospital clinic services suspended",
+      "October 24 25 2026 state health department official hospital ICU ED services suspension closure notice USA"
+    ],
+    "previous_heartbeat": {
+      "branch": "ops/watch-ledger",
+      "run_id": "care-line-watch-20261025T164920-0700-r11-6f91",
+      "completed_at": "2026-10-25T16:51:50.612-07:00",
+      "verified_read": true,
+      "prior_outcome": "no_findings"
+    },
+    "screening": "Twelve targeted queries returned no independently substantiated nonduplicate U.S./territory essential healthcare-service closure/suspension, official access-risk action, EMS loss, or concrete restoration newly identifiable after the previous watch. Search results were primarily older clinical service changes, general rural healthcare trends, proposals, unrelated material, and foreign-country service disruptions.",
+    "excluded_examples": [
+      "Roseland Community Hospital (IL) Oct 31 planned labor-and-delivery end announced October 2, not a new hourly development.",
+      "Children's Home of Kingston (NY) January 2027 planned youth residential treatment closure previously logged October 24.",
+      "Prior Illinois Vista Medical Center East anesthesia, dialysis, and trauma designation service losses already logged.",
+      "Non-U.S. October 25 Daisy Hill maternity proposal rally in Northern Ireland and service-impact claims in Yemen excluded by geography.",
+      "Past hospital closures, old temporary disruptions, and ownership-only stories excluded."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "A bounded search-index recall is not an exhaustive national/territory census; weekend lag may conceal newly effective local service changes. Authoritative production Care Line collection and any review queue were not accessed, so deduplication reflects the verified supplementary ledger and known previous findings rather than exhaustive production comparison. No newly qualifying event was confirmed.",
+    "controls": "No editorial approval, public posting, production collection change, schedule change, or disablement."
+  }
+}

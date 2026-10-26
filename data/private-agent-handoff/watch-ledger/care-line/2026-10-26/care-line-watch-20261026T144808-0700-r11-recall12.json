@@ -1,0 +1,77 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T144808-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T14:45:22-07:00",
+  "started_at": "2026-10-26T14:48:08-07:00",
+  "completed_at": "2026-10-26T14:50:08.449-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T13:48:53-07:00",
+    "end": "2026-10-26T14:50:08.449-07:00",
+    "basis": "Starts at the completed_at time in the prior independently read heartbeat on ops/watch-ledger; ends at this execution's heartbeat creation."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall watch only; production Care Line collection remains authoritative.",
+    "scope": "United States, DC, Puerto Rico, Guam, US Virgin Islands, Northern Mariana Islands, American Samoa; hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures or suspensions, emergency and rural service loss, ambulance/air-medical/base closures, CMS terminations/rescissions/CLIA restrictions and effective essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "verification": "Official CMS canonical Public Notices page read; top three notices dated 2026-10-23 and no 2026-10-26 notice listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended reopened October 26 2026 local news",
+      "hospital labor delivery maternity unit closure services October 26 2026",
+      "rural hospital emergency room closed service cut October 26 2026",
+      "behavioral mental health inpatient hospital unit closed October 26 2026",
+      "dialysis clinic closing patients transferred October 26 2026",
+      "oncology cancer center treatment service closing October 26 2026",
+      "primary care clinic permanently closing patients October 26 2026",
+      "ambulance EMS station base closing service suspended October 26 2026",
+      "air ambulance medical helicopter base closing service suspension October 2026 latest",
+      "hospital emergency services restored reopened October 26 2026",
+      "medical center clinic emergency department closures October 26 2026 Puerto Rico Guam US Virgin Islands",
+      "site:gov \"October 26, 2026\" hospital ambulance emergency services closure notice"
+    ],
+    "search_failures": [],
+    "screened_out": [
+      {
+        "title": "Watsonville Hospital considers closing mother-baby services",
+        "url": "https://pajaronian.com/watsonville-hospital-considers-closing-mother-baby-services-as-possible-closure-within-one-year-looms/",
+        "reason": "Only a potential future maternity closure; no concrete newly effective service loss."
+      },
+      {
+        "title": "Patient prompts temporary emergency room closure at Doylestown Hospital",
+        "url": "https://centralbucksnews.com/news/emergency-rooms-at-doylestown-hospital-closed-until-further-notice/",
+        "reason": "Earlier report, published outside October 26 hourly observation window; no fresh change established."
+      },
+      {
+        "title": "Cheshire Medical Center to Close Winchester Family Medicine Clinic in November",
+        "url": "https://mykeenenow.com/news/219912-cheshire-medical-center-to-close-winchester-family-medicine-clinic-in-november/",
+        "reason": "Previously identified in earlier October 16 watch ledger; no new October 26 development."
+      },
+      {
+        "title": "Nicola Valley Hospital temporary ED closure",
+        "url": "https://cfjctoday.com/2026/10/24/nicola-valley-hospital-emergency-department-undergoes-immediate-temporary-closure/",
+        "reason": "Merritt, British Columbia, Canada; outside US/territorial scope."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T134743-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-26T13:48:53-07:00",
+      "previous_heartbeat_read_verified": true,
+      "prior_outcome": "no_findings",
+      "production_review": "No newly verified positive candidates to send to production review; production remains authoritative."
+    },
+    "material_degradation": false,
+    "limitations": "Bounded external search, not exhaustive national monitoring. Search/indexing and local publication delays may defer discovery; results were predominantly previously announced, proposals, outside scope, or historical events.",
+    "controls": "One private branch heartbeat only; no approvals, public publication, production changes, schedule alteration or task disablement."
+  }
+}

@@ -2214,6 +2214,19 @@ def maybe_post_gaza_dispatch_to_bluesky(
         return result
 
     exact_text_mode = any(value is not None for value in (approved_text_path, approved_text_sha256, expected_handle, expected_did))
+    card_args_present = expected_card_mode is not None or expected_external_card is not None
+    if card_args_present and not exact_text_mode:
+        result["status"] = "blocked"
+        result["reason"] = "card_mode_requires_exact_text_binding"
+        return result
+    if expected_external_card is not None and expected_card_mode != "external":
+        result["status"] = "blocked"
+        result["reason"] = "external_card_requires_external_mode"
+        return result
+    if expected_card_mode == "external" and expected_external_card is None:
+        result["status"] = "blocked"
+        result["reason"] = "external_card_contract_invalid"
+        return result
     if correction_mode and not exact_text_mode:
         result["status"] = "blocked"
         result["reason"] = "correction_requires_exact_text_binding"

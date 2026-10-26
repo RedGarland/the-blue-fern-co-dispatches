@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T034659-0700-r11-104859",
+  "scheduled_for": "2026-10-26T03:45:54-07:00",
+  "started_at": "2026-10-26T03:46:59-07:00",
+  "completed_at": "2026-10-26T03:48:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T02:51:31-07:00",
+    "end_at": "2026-10-26T03:48:59-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous confirmed watch heartbeat completed at 02:51:31 PT; check for newly published/announced events through this run. Search indexing timestamps are not publication timestamps."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": [
+      "fast",
+      "slow"
+    ],
+    "focus_classes": [
+      "Loss/closure/fire/disaster affecting only/sole/last/full-service community grocery",
+      "Emergency food distribution canceled/suspended by storms/floods/fires/outages/facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "Official immediate SNAP/WIC/food-assistance interruption"
+    ],
+    "search_terms": [
+      "\"only grocery store\" fire closed October 25 26 2026 town",
+      "\"sole grocery store\" closure destroyed fire October 26 2026",
+      "\"last grocery store\" closes October 26 2026 rural",
+      "\"food distribution\" canceled storm outage flooding October 26 2026",
+      "\"food pantry\" temporarily closed flood power outage October 26 2026",
+      "\"food bank\" distribution cancelled weather October 26 2026",
+      "site:gov \"SNAP\" \"interruption\" \"October 26\" \"2026\"",
+      "site:gov WIC offices closed October 26 2026 outage benefits",
+      "October 26 2026 food pantry suddenly shut down food bank closed unable to distribute food United States",
+      "October 26 2026 canceled food distribution flooding storm fire food pantry United States",
+      "October 26 2026 rural community only supermarket grocery store shut closed fire",
+      "October 26 2026 SNAP EBT WIC benefits system outage delays official state agency announcement"
+    ]
+  },
+  "coverage_notes": [
+    "Bounded supplementary national Food Line recall only, not a substitute for the authoritative production collector.",
+    "12 targeted web searches completed (8 fast, 4 slow) across four priority miss classes; no search tool-level failure observed.",
+    "No fresh source explicitly verified a newly qualifying U.S. disruption first announced after the prior heartbeat (2026-10-26 02:51:31 PDT) and before completion.",
+    "Recent search result for Kenosha County Food Bank's planned year-end closure was published days earlier and is a future closure, not an abrupt new in-window service disruption.",
+    "2026-10-25 SNAP enrollment decline story reports national aggregate policy impacts and a Michigan helpline pause without an in-window official interruption date; not a new official immediate benefit interruption.",
+    "Older reported grocery fires (e.g., Spencer, NY in September 2026) and storm-damaged food bank closures (El Paso, TX in September 2026) were excluded as outside the window.",
+    "Excluded donation drives, resource guides, recipes, opinion, routine program promotion, inflation coverage, foreign examples, duplicates, and undated/social claims without verification.",
+    "Searches may miss very recent local/provider notices due to indexing delays. Zero findings does not prove zero incidents.",
+    "No review approval, public content publication, scheduling change, automation disabling, or production collector mutation performed."
+  ]
+}

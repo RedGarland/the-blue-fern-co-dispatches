@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T124545-0700-r11-20261026T194545Z",
+  "scheduled_for": "2026-10-26T12:44:51-07:00",
+  "started_at": "2026-10-26T12:45:45-07:00",
+  "completed_at": "2026-10-26T12:48:24.828-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T11:51:05.470-07:00",
+    "end": "2026-10-26T12:48:24.828-07:00",
+    "basis": "Prior verified ledger heartbeat completed_at through the end of this bounded supplementary observation. Search indexing and source publication times are not assumed to establish event freshness."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; production collector and publisher remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T114822-0700-r11-20261026T184822Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T114822-0700-r11-20261026T184822Z.json",
+      "completed_at": "2026-10-26T11:51:05.470-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed report published 26 October covers Gaza developments through 22 October and was already reviewed and recorded in previous hours (bread, water access, health capacity and food-assistance cuts). No verified new development since 11:51 PDT."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Latest listed WHO/EMRO items on this page predate the search window; no verified new Gaza-specific medical evacuation, hospital or health-system change."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct endpoint inaccessible: timed out (previous checks recorded HTTP 502)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza Oct 26 2026 evening 20:00 21:00 Gaza time Israeli drone strike killed civilians latest",
+      "Gaza October 26 2026 Reuters AFP Associated Press 19:00 UTC ceasefire shootings civilian Gaza",
+      "site:english.wafa.ps/Pages/Details/ Gaza 26 October 2026 9:00 PM casualties",
+      "Gaza 26 October 2026 21:00 October 26 Al Jazeera live updates killed wounded",
+      "Gaza October 26 2026 Red Crescent ambulances hospital attack emergency 20:00",
+      "Gaza October 26 2026 Rafah Kerem Shalom crossing trucks delivery new restrictions evening",
+      "Gaza 26 October 2026 WHO hospital fuel medical evacuation emergency update",
+      "Gaza 26 October 2026 WFP UNRWA UNICEF humanitarian food water access displaced families",
+      "Gaza October 26 2026 infrastructure damage tents displacement Gaza City evening reports",
+      "Gaza October 26 2026 hostages detained release ceasefire mediators negotiations latest October 26",
+      "site:reuters.com/world/middle-east/ Gaza October 26 2026 19:00 GMT Monday October 26",
+      "site:apnews.com/article/ gaza october 26 2026 monday afternoon 2026 humanitarian"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest articles through 26 October 21:27 Palestinian local time concern the West Bank; most recent Gaza casualty and camp reports displayed were published before this window and already surfaced earlier."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible; no qualifying new in-Gaza development with verified update time in the observed window surfaced from the latest section."
+      }
+    ],
+    "source_access_degradation": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "Timeout/inaccessible via web retrieval",
+        "materiality": "Persistent regional-endpoint problem, not a newly material loss; WHO global, OCHA and WAFA were accessible."
+      },
+      {
+        "source": "Palestine Red Crescent Society news",
+        "url": "https://www.palestinercs.org/en/News",
+        "error": "Direct news endpoint inaccessible via web retrieval",
+        "materiality": "Supplementary direct page failed; WHO global, OCHA, WAFA and other established reporting remained accessible. No evidence of material new degradation."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "OCHA 26 October report recounts earlier October Gaza developments; October 23 bakery interruptions, October 25 restart, Gaza City Mekorot repair, 47% health service functionality and food-assistance suspensions already recorded at 07:51 PDT.",
+      "WAFA 26 October 15:01 local time Deir al-Balah strike (two killed, one injured) already captured at 06:52 PDT; 19:36 local time WAFA story about Shujaiya displacement camp covers a previously documented event, not a new event.",
+      "Other search returns were stale items from 2023–2026 outside the current observation window, West Bank-only events, opinion, or humanitarian context without traceable new changes; no qualifying contemporaneous report could be verified."
+    ],
+    "limitations": "Targeted search retrieval strongly favored stale archive hits; in-window negative result is not a completeness guarantee. WHO EMRO and Palestine Red Crescent direct source endpoints unavailable, so regional health and ambulance coverage is reduced.",
+    "result": "No traceable, nonduplicate, qualifying Gaza development verifiably new since previous completed watch.",
+    "action_scope": "Exactly one ledger heartbeat intended. No approval, publication, social posting, schedule change or task disable."
+  }
+}

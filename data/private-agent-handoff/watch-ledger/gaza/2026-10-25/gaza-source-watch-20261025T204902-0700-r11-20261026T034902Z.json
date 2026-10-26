@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T204902-0700-r11-20261026T034902Z",
+  "scheduled_for": "2026-10-25T20:44:51-07:00",
+  "started_at": "2026-10-25T20:49:02-07:00",
+  "completed_at": "2026-10-25T20:52:16.030-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T19:43:22.631-07:00",
+    "end": "2026-10-25T20:52:16.030-07:00",
+    "basis": "From previous successfully fetched and verified watch-ledger heartbeat completed_at to current check; qualify only first-seen, documented, time-relevant, in-Gaza developments. Site-local article time is unconverted because its timezone is not documented."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261026-khan-younis-southern-mawasi-2-dead-15-wounded-alghad",
+      "canonical_source_url": "https://www.alghad.tv/%D8%A7%D8%AE%D8%A8%D8%A7%D8%B1-%D8%A7%D9%84%D8%BA%D8%AF/news/%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%8815-%D9%85%D8%B5%D8%A7%D8%A8%D8%A7-%D9%81%D9%8A-%D9%87%D8%AC%D9%85%D8%A7%D8%AA-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A%D8%A9-%D8%B9%D9%84%D9%89-%D8%AE%D8%A7%D9%86-%D9%8A%D9%88%D9%86%D8%B3",
+      "title": "شهيدان و15 مصابا في هجمات إسرائيلية على خان يونس",
+      "title_english": "Two killed and 15 injured in Israeli attacks on Khan Younis",
+      "publisher": "Al Ghad TV (الغد)",
+      "source_publication_date": "2026-10-26",
+      "source_publication_time_local": "06:25",
+      "source_publication_timezone": null,
+      "event_date": "2026-10-26",
+      "event_time": null,
+      "location": "Al-Iqlimi area, southern al-Mawasi, south of Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Two Palestinians reportedly killed, including a girl, and 15 injured; civilians affected by bombardment and gunfire.",
+      "exact_supporting_passage": "أفاد مراسل الغد باستشهاد فلسطينيين اثنين، بينهما طفلة، وإصابة 15 آخرين جراء قصف إسرائيلي وإطلاق نار في منطقة الإقليمي بالمواصي الجنوبية",
+      "source_type": "Established Arabic news outlet's attributed on-scene correspondent reporting; direct article text visible in indexed result, original webpage fetch denied.",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "first_observed_at": "2026-10-25T20:52:16.030-07:00",
+        "discovery_query": "\"26 أكتوبر 2026\" \"غزة\" \"فجر\" شهداء جرحى إسعاف معابر",
+        "observed_source_display_date": "26 أكتوبر 2026 - 06:25 صباحا",
+        "reported_event_context": "Correspondent reported shelling and shootings near Al-Iqlimi in southern al-Mawasi; earlier reports of injuries near Bir 19 including a seriously injured girl; artillery shelling south of Khan Younis at Monday dawn.",
+        "window_qualification": "Found after the prior hourly heartbeat; article explicitly reports Monday dawn October 26 events. Article's displayed clock timezone is not verified, so exact publication instant cannot be independently established.",
+        "deduplication": "Contrasted against 25 October Al Jazeera/WAFA: earlier two deaths at Al-Mawasi/near Asdaa prison involved named brothers, not a child girl; Sunday evening Sheikh Nasser killing also differs. Treat as separately reported new development, subject to confirmation.",
+        "verification_limitations": "Single identifiable correspondent report; search-index excerpt available, direct article fetch returned DisabledError. WAFA English listing has no matching new report. No independent confirmation yet.",
+        "production_handoff": "Watch lead for production review only; not approved, posted, or merged into the primary collector."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch; production remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T194053-0700-r11-20261026T024053Z.json",
+      "completed_at": "2026-10-25T19:43:22.631-07:00",
+      "verification": "Fetched directly from ops/watch-ledger."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible, latest listed entries dated 19 October 2026; no new window-qualified item."
+      },
+      {
+        "publisher": "OCHA OPT homepage",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; no new entry."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, direct regional health verification unavailable."
+      },
+      {
+        "publisher": "WHO global emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no time-qualified Gaza update in its listed news."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps \"26/October/2026\" Gaza killed injured early morning",
+      "site:reuters.com/world/middle-east/ gaza \"October 26, 2026\" ceasefire humanitarian",
+      "site:apnews.com/article/ gaza \"October 26, 2026\" strikes aid",
+      "site:unrwa.org Gaza October 26 2026 humanitarian aid displacement",
+      "site:icrc.org Gaza October 26 2026 hospitals medical transport crossings",
+      "site:palestinercs.org \"26 October 2026\" Gaza ambulances",
+      "site:aljazeera.com/news/2026/10/26/ Gaza strikes wounded ceasefire",
+      "site:aa.com.tr/en/middle-east/ Gaza \"26.10.2026\" killed injured",
+      "site:news.un.org/en/ Gaza \"26 October 2026\" humanitarian",
+      "site:wfp.org Gaza October 26 2026 flour bread trucks hunger",
+      "site:unicef.org Gaza October 26 2026 water hospitals children",
+      "\"26 أكتوبر 2026\" \"غزة\" \"فجر\" شهداء جرحى إسعاف معابر"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA English latest",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000?pageNumber=0",
+        "result": "Latest displayed 26 October 00:05 Palestine time item concerns West Bank; no new Gaza article in window."
+      },
+      {
+        "publisher": "WAFA 25 October",
+        "url": "https://english.wafa.ps/Pages/Details/176257",
+        "result": "Earlier Sunday morning attacks and two named adult brothers in Khan Younis; not counted as new."
+      },
+      {
+        "publisher": "Al Jazeera 25 October",
+        "url": "https://www.aljazeera.com/amp/news/2026/10/25/seven-killed-in-gaza-as-israel-targets-university-campus-and-other-sites",
+        "result": "Pre-window Sunday casualties, including al-Mawasi and university strikes; used for overlap screening."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and military operations with documented civilian impact",
+      "displacement, aid, food and water access",
+      "hospitals, ambulance, fuel, health service capacity and medical evacuation",
+      "crossings, detention, hostages, ceasefire and negotiations",
+      "infrastructure damage"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Direct WHO regional corroboration for medical and hospital-related changes unavailable; global WHO and OCHA accessible."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "error": "Robots exclusion in targeted search",
+        "impact": "UN News search was blocked; other humanitarian sources remained available."
+      },
+      {
+        "publisher": "Al Ghad article",
+        "url": "https://www.alghad.tv/%D8%A7%D8%AE%D8%A8%D8%A7%D8%B1-%D8%A7%D9%84%D8%BA%D8%AF/news/%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%8815-%D9%85%D8%B5%D8%A7%D8%A8%D8%A7-%D9%81%D9%8A-%D9%87%D8%AC%D9%85%D8%A7%D8%AA-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A%D8%A9-%D8%B9%D9%84%D9%89-%D8%AE%D8%A7%D9%86-%D9%8A%D9%88%D9%86%D8%B3",
+        "error": "Direct webpage retrieval DisabledError; search result furnished headline, outlet timestamp, and attributed reporter excerpt.",
+        "impact": "Specific casualty report traceable but not fully re-read at publisher origin; confidence medium."
+      }
+    ],
+    "excluded_or_not_counted": "All 25 October reports on Islamic University, Sunday's al-Mawasi/Asdaa prison casualties, and evening Sheikh Nasser strike excluded as pre-window. Other targeted results stale or not temporally verified.",
+    "assessment": "One new, attributable Monday-dawn casualty report surfaced. Its direct article cannot be opened and it remains uncorroborated by a second source; preserve as a medium-confidence recall lead, not publication-ready. WHO regional endpoint outage persists, so DEGRADED, not FAILED.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

@@ -5,6 +5,7 @@ param(
     [string]$Date = "",
     [string]$RepoRoot = "",
     [string]$PagesRepo = "",
+    [string]$TestRootBase = "",
     [string]$SourceBranch = "add/pages-repo-default",
     [string]$PagesBranch = "gh-pages",
     [string]$CredentialTarget = "bluefern-smtp",
@@ -534,11 +535,46 @@ try {
         throw "Food Line dispatch script not found: $foodLineScript"
     }
 
-    Set-Location $RepoRoot
-
     if (-not $Date) {
         $Date = Get-Date -Format "yyyy-MM-dd"
     }
+
+    if ($Dispatch -eq "gaza") {
+        # The scheduled task must provide an explicit base; never inherit a stale
+        # user/machine value and never fall back to C:\TEMP or the repository.
+        Remove-Item Env:DISPATCHES_TEST_ROOT -ErrorAction SilentlyContinue
+        $rootAdmissionFailure = $null
+        try {
+            $testRootHelper = Join-Path $PSScriptRoot "windows\prepare_gaza_task_root.ps1"
+            if (-not (Test-Path -LiteralPath $testRootHelper -PathType Leaf)) {
+                throw "Gaza task-root helper is missing: $testRootHelper"
+            }
+            . $testRootHelper
+            $taskTestRoot = Set-GazaTaskScopedTestRoot -BasePath $TestRootBase -Date $Date
+            Write-Log "Gaza task-scoped test root: $taskTestRoot"
+        } catch {
+            Remove-Item Env:DISPATCHES_TEST_ROOT -ErrorAction SilentlyContinue
+            $rootAdmissionFailure = $_.Exception.Message
+            Write-Log "Gaza task-root admission blocked before sync/child launch: $rootAdmissionFailure"
+        }
+
+        if ($null -ne $rootAdmissionFailure) {
+            $failureArgs = @(
+                $gazaOperatorScript,
+                "--date", $Date,
+                "--pages-repo", $PagesRepo,
+                "--pages-branch", $PagesBranch,
+                "--expected-source-branch", $SourceBranch
+            )
+            $failureResult = Invoke-LoggedCommand -Python $python -Arguments $failureArgs -ParseJsonTail
+            if ($failureResult.ExitCode -eq 0) {
+                throw "Gaza task-root admission failed, but the structured child failure returned exit code 0."
+            }
+            exit $failureResult.ExitCode
+        }
+    }
+
+    Set-Location $RepoRoot
 
     $checkOnlyRequested = $PSBoundParameters.ContainsKey("CheckOnly")
     $dryRunFullRequested = $PSBoundParameters.ContainsKey("DryRunFull")

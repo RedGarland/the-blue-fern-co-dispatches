@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T134125-0700-r11-7fc9d1",
+  "scheduled_for": "2026-10-26T13:45:54-07:00",
+  "started_at": "2026-10-26T13:41:25-07:00",
+  "completed_at": "2026-10-26T13:42:49-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T12:51:00.640-07:00",
+    "end_at": "2026-10-26T13:42:49-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start anchored to completed_at of latest verified prior ops/watch-ledger Food Line heartbeat (2026-10-26 12:49 run); require new evidence of disruption or new official notice within this interval. Older incidents are context only."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 8,
+      "slow": 4
+    },
+    "web_search_recency_days": {
+      "fast": 2,
+      "slow": null
+    },
+    "focus_classes": [
+      "Only/sole/last/full-service community grocery-store closure, fire or disaster",
+      "Emergency food distribution cancelled/suspended due to weather, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major service-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access impact"
+    ],
+    "search_terms": [
+      "\"only grocery store\" fire closure town October 26 2026 USA",
+      "\"only grocery store\" burned closed October 2026 rural community",
+      "\"food distribution\" canceled storm October 26 2026 food bank",
+      "\"food pantry\" distribution cancelled closed flooding outage October 26 2026",
+      "\"food bank\" \"closed\" \"October 26, 2026\" disaster outage",
+      "\"food pantry\" \"abruptly closed\" October 26 2026",
+      "site:gov \"SNAP\" \"October 26, 2026\" outage interruption benefits",
+      "site:gov \"WIC\" \"October 26, 2026\" closed disrupted services",
+      "October 26 2026 grocery \"only\" store closes town wildfire 2026",
+      "October 26 2026 food pantry closed emergency distribution cancelled storm US",
+      "October 26 2026 food bank distribution suspended closed flood power outage local news",
+      "October 26 2026 SNAP WIC EBT benefits interruption official notice 2026 site:gov"
+    ]
+  },
+  "coverage_notes": [
+    "This is a bounded supplementary miss-class recall, not the authoritative nationwide Food Line production collector.",
+    "Twelve targeted web searches completed successfully (8 fast, 4 slow) across all four classes. No individual search/tool failure occurred; same-hour indexing remains sparse and this cannot prove no events occurred.",
+    "No newly published source corroborated a qualifying US food-access disruption after the prior checked heartbeat; findings intentionally empty.",
+    "October 26 AP Four Corners flooding coverage (https://apnews.com/article/a91e683f54e41eb3fe8c03863a502d21) establishes active flood impacts, but did not identify cancellation of an emergency food distribution or closure of a qualifying grocery/pantry provider. Excluded as category-unconfirmed.",
+    "October 24 Wheatsville Food Co-op coverage (https://www.the-sun.com/money/17199451/grocery-store-shuts-doors/) describes a preannounced Austin branch closure on October 25 with multiple alternate stores, not a sole/full-service community grocery loss within this interval. Excluded.",
+    "Previously reported Spencer NY only-grocery-store fire occurred September 11, 2026 (https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/). Excluded as historical and already observed in prior watch.",
+    "Official WA DSHS benefits update (https://www.dshs.wa.gov/family-food-and-housing-services/dshs-benefits-and-hr-1) and other SNAP sources concern prior program changes rather than new immediate outage since prior check; October 2025 shutdown stories excluded by event date.",
+    "Excluded donations, resource guides, opinion, routine promotion, generic inflation, out-of-country reports, stale/duplicate events, and unverified social announcements.",
+    "No approvals, publications, task or schedule changes, disabling, or production collector mutations occurred."
+  ]
+}

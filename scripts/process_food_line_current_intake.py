@@ -28,6 +28,7 @@ from bluefern_dispatches.food_line_current_review import (
     write_json_atomic,
     write_proposed_edition,
 )
+from bluefern_dispatches.food_line_sources import food_line_supported_geography_result
 from bluefern_dispatches.food_line_runtime_state import current_queue_path
 
 
@@ -127,9 +128,30 @@ def _queue_item_from_candidate(
         or exact_supporting_passage
         or proposed_public_headline
     ).strip()
-    location_name = str(row.get("location_name") or row.get("location_scope") or row.get("state") or "United States").strip()
-    state = str(row.get("state") or "US").strip().upper() or "US"
-    location_scope = str(row.get("location_scope") or "state_local").strip()
+    location_name = str(
+        row.get("event_location")
+        or row.get("impact_location")
+        or row.get("location_name")
+        or ""
+    ).strip()
+    state = str(row.get("event_state") or row.get("impact_state") or row.get("state") or "").strip().upper()
+    location_scope = str(
+        row.get("event_location_scope")
+        or row.get("impact_location_scope")
+        or row.get("location_scope")
+        or ""
+    ).strip()
+    country = str(row.get("event_country") or row.get("impact_country") or row.get("country") or "").strip()
+    raw_country = str(row.get("country") or "").strip()
+    raw_event_country = str(row.get("event_country") or "").strip()
+    raw_impact_country = str(row.get("impact_country") or "").strip()
+    raw_state = str(row.get("state") or "").strip().upper()
+    raw_event_state = str(row.get("event_state") or "").strip().upper()
+    raw_impact_state = str(row.get("impact_state") or "").strip().upper()
+    raw_location = str(row.get("location") or "").strip()
+    raw_event_location = str(row.get("event_location") or "").strip()
+    raw_impact_location = str(row.get("impact_location") or "").strip()
+    raw_location_name = str(row.get("location_name") or "").strip()
     pressure_type = str(row.get("pressure_type") or row.get("map_category") or "food-access pressure").strip()
     affected_groups = row.get("affected_groups")
     if not isinstance(affected_groups, list) or any(not isinstance(value, str) for value in affected_groups):
@@ -174,9 +196,17 @@ def _queue_item_from_candidate(
             "exact_supporting_passage": exact_supporting_passage,
             "proposed_public_headline": proposed_public_headline,
             "proposed_public_summary": proposed_public_summary,
-            "location_name": location_name,
-            "state": state,
+            "location_name": raw_location_name,
+            "state": raw_state,
             "location_scope": location_scope,
+            "country": raw_country,
+            "event_country": raw_event_country,
+            "impact_country": raw_impact_country,
+            "event_state": raw_event_state,
+            "impact_state": raw_impact_state,
+            "location": raw_location,
+            "event_location": raw_event_location,
+            "impact_location": raw_impact_location,
             "pressure_type": pressure_type,
             "affected_groups": affected_groups,
             "why_it_matters": why_it_matters,
@@ -192,6 +222,33 @@ def _queue_item_from_candidate(
             "publication_eligible": False,
         }
     )
+    geography_result = food_line_supported_geography_result(row)
+    if geography_result["supported"]:
+        row["country"] = str(geography_result.get("normalized_country") or country).strip()
+        row["event_country"] = row["country"]
+        row["state"] = str(geography_result.get("normalized_state") or state).strip().upper()
+        row["event_state"] = row["state"]
+        row["location_name"] = str(geography_result.get("normalized_location_name") or location_name).strip()
+        row["event_location"] = row["location_name"]
+        row["location_scope"] = str(geography_result.get("normalized_location_scope") or location_scope).strip()
+        row["event_location_scope"] = row["location_scope"]
+    row["supported_product_geography"] = bool(geography_result["supported"])
+    row["food_line_geography_status"] = geography_result["status"]
+    row["food_line_geography_reason"] = geography_result["reason"]
+    row["food_line_geography_evidence_field"] = geography_result["evidence_field"]
+    if not geography_result["supported"]:
+        geography_reason = (
+            "outside_food_line_us_territories_scope"
+            if geography_result["status"] == "outside"
+            else "food_line_event_geography_unverified"
+        )
+        reasons = [str(value).strip() for value in str(row.get("exclusion_reason") or "").split(";") if str(value).strip()]
+        row["exclusion_reason"] = "; ".join(dict.fromkeys([*reasons, geography_reason]))
+        row["eligible_for_review"] = False
+        row["review_retention_disposition"] = "rejected_with_reason"
+        row["review_transition_owner"] = ""
+        row["editorial_status"] = "hold"
+        row["editorial_note"] = "Held for private audit: event geography is outside or unverified for Food Line scope."
     for private_key in ("raw_agent_payload", "private_text_provenance", "chain_of_custody", "hidden_instructions"):
         row.pop(private_key, None)
     return row

@@ -36,6 +36,7 @@ from bluefern_dispatches.food_line_sources import (
     classify_food_line_source_purpose,
     evaluate_food_line_pressure,
     food_line_is_supported_geography,
+    food_line_supported_geography_result,
     normalize_title,
     refresh_food_line_pressure_registry_source_purpose,
     _url_path_date,
@@ -883,6 +884,11 @@ def _food_line_pressure_type_key(row: dict[str, Any]) -> str:
 
 
 def _food_line_public_inclusion_reason(row: dict[str, Any]) -> str:
+    geography_result = food_line_supported_geography_result(row)
+    if not geography_result["supported"]:
+        if geography_result["status"] == "outside":
+            return "outside product geography"
+        return "event geography unverified"
     if not bool(row.get("source_public_story_eligible", True)):
         return "not fresh enough for public inclusion"
     if not bool(row.get("supported_product_geography", True)) or str(row.get("location_scope") or "").strip() == "outside_product_geography":

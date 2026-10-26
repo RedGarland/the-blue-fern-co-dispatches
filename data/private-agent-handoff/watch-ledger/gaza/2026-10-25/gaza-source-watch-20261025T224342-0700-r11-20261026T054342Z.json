@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261025T224342-0700-r11-20261026T054342Z",
+  "scheduled_for": "2026-10-25T22:44:51-07:00",
+  "started_at": "2026-10-25T22:43:42-07:00",
+  "completed_at": "2026-10-25T22:45:48-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-25T21:44:59-07:00",
+    "end": "2026-10-25T22:45:48-07:00",
+    "basis": "From completed_at of independently fetched prior heartbeat to current completion time; screen older, duplicate and unsupported items."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; production remains authoritative for daily collection and publication.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-25/gaza-source-watch-20261025T214219-0700-r11-20261026T044219Z.json",
+      "completed_at": "2026-10-25T21:44:59-07:00",
+      "verification": "Read from ops/watch-ledger. Previous no_findings heartbeat confirms preceding-hour al-Mawasi casualty lead had already been handed off."
+    },
+    "first_checked": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; newest homepage Gaza item dated 19 October 2026; no new reporting in this observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; persistent known regional coverage restriction."
+      },
+      {
+        "publisher": "WHO global emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new Gaza health development in observation window; latest listed WHO regional entry dated 19 August 2026."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest update dated 19 October 2026."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:who.int Gaza 26 October 2026 health emergency hospital medical evacuations",
+      "site:ochaopt.org Gaza \"25 October 2026\" \"26 October 2026\" humanitarian",
+      "site:unrwa.org Gaza October 25 26 2026 aid displacement",
+      "site:wfp.org Gaza October 26 2026 food trucks crossings",
+      "site:unicef.org Gaza October 26 2026 water sanitation children",
+      "site:icrc.org Gaza 25 October 2026 26 October detainees hostages medical",
+      "site:reuters.com/world/middle-east/ Gaza October 26 2026 civilians killed ceasefire Sunday Monday",
+      "site:apnews.com/article/ Gaza October 26 2026 attacks casualties humanitarian October 25",
+      "Gaza Khan Younis Mawasi Monday October 26 2026 Israeli shelling injured children Reuters AFP",
+      "Gaza hospitals ambulances medical evacuations October 26 2026 latest MSF Palestine Red Crescent",
+      "Gaza ceasefire negotiation hostage bodies crossings October 26 2026 updates",
+      "Gaza civilians killed displaced aid food fuel strikes October 26 2026 early Monday updates"
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and documented civilian impact of military action",
+      "displacement, shelters and infrastructure",
+      "aid access, food, water and crossing access",
+      "hospitals, ambulances, medical evacuation, fuel and healthcare capacity",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "impact": "Reduced direct verification of hospital functionality, healthcare disruption and patient evacuations; WHO global and OCHA OPT remained accessible. Repeated known restriction, not newly worsened."
+      }
+    ],
+    "excluded_or_not_counted": "Al Ghad's reported southern al-Mawasi casualties were already in earlier watch finding; searches also surfaced older UN, Reuters, AP, WFP, UNICEF and ICRC reports, including misleading older articles returned for October 26 searches. None established a new independently traceable event or update within this Pacific-hour window.",
+    "assessment": "OCHA OPT and WHO were checked first, followed by exactly 12 targeted searches. No new source-backed nonduplicate developments qualified. The known WHO regional HTTP 502 persists, hence DEGRADED rather than FAILED. The global WHO page and OCHA updates were accessible and useful.",
+    "production_authorization": "none",
+    "publication_actions": "none",
+    "schedule_changed": false,
+    "automation_disabled": false
+  }
+}

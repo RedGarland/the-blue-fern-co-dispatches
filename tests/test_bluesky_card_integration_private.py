@@ -209,7 +209,7 @@ def test_readback_missing_card_is_uncertain_without_second_create_or_delete(priv
     assert not any("deleteRecord" in url for url in calls)
 
 
-def test_missing_card_mode_blocks_before_any_session_or_create(private_root, monkeypatch):
+def test_external_card_mode_requires_contract_before_any_session_or_create(private_root, monkeypatch):
     tmp_path = private_root
     text_path, text_hash = setup(tmp_path, monkeypatch)
     calls = []
@@ -234,12 +234,13 @@ def test_missing_card_mode_blocks_before_any_session_or_create(private_root, mon
                 expected_handle=HANDLE,
                 expected_did=DID,
                 live_verification=LIVE,
+                expected_card_mode="external",
             )
     finally:
         for item in reversed(stack):
             item.stop()
     assert result["status"] == "blocked"
-    assert result["reason"] == "exact_card_mode_required"
+    assert result["reason"] == "external_card_contract_invalid"
     assert calls == []
 
 

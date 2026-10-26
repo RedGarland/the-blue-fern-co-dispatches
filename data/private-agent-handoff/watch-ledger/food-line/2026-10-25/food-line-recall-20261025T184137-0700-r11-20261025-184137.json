@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T184137-0700-r11-20261025-184137",
+  "scheduled_for": "2026-10-25T18:45:54-07:00",
+  "started_at": "2026-10-25T18:41:37-07:00",
+  "completed_at": "2026-10-26T01:43:35.973Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T17:52:08.455-07:00",
+    "end_at": "2026-10-26T01:43:35.973Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at from previous successfully persisted hourly heartbeat on ops/watch-ledger; only incidents newly announced or newly effective during interval qualify, not rediscovered older notices."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": null,
+    "focus_classes": [
+      "Loss or disaster impacting the only/sole/last/full-service community grocery store",
+      "Emergency food distributions canceled or suspended by storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire October 25 2026 community",
+      "\"last grocery store\" closure fire October 2026 town",
+      "\"sole grocery store\" burned closed October 2026",
+      "\"full-service grocery store\" closure October 2026",
+      "\"food distribution\" canceled storm flood Sunday October 25 2026",
+      "\"food pantry\" \"closed\" \"October 25, 2026\" emergency",
+      "\"food bank\" \"distribution\" canceled outage October 2026",
+      "\"mobile pantry\" \"canceled\" October 25 2026 weather",
+      "\"food pantry\" \"closed\" \"Oct 25, 2026\" shortage OR damage",
+      "\"food bank\" \"suspended services\" October 2026 closure",
+      "site:gov \"SNAP\" \"October 25, 2026\" interrupted EBT outages benefits",
+      "\"WIC\" \"benefits\" \"interruption\" \"October 25\" 2026"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary targeted recall only; nationwide production Food Line collector remains authoritative.",
+    "Twelve targeted web searches completed with returned results and no tool-level errors.",
+    "No direct report or official agency/provider notice verified a qualifying U.S. food-access disruption new during this observation window.",
+    "Historical grocery losses, earlier weather-related food distribution closures, and previously announced pantry disruptions were excluded as outside the interval.",
+    "Austin Wheatsville Food Co-op October 25 retail closure did not establish loss of the community's only or last full-service grocery option.",
+    "An independent EBT news aggregator lists planned multi-state processor maintenance on October 27; this is prospective, not an official presently occurring assistance interruption, and is excluded.",
+    "Search result recency and crawl timestamps do not establish incident novelty; an empty findings array does not imply that no disruptions occurred.",
+    "Excluded donation appeals, guides, promotion, routine eligibility updates, generic economic stories, duplicated or non-U.S. material.",
+    "No review approval, publication, schedule alteration, disabling, or production collector change."
+  ]
+}

@@ -64,6 +64,7 @@ def _terminal_contract_result(
     error_type: str | None = None,
     error_message: str | None = None,
     warnings: list[str] | None = None,
+    collection_only: bool = False,
 ) -> dict[str, object]:
     payload = dict(result)
     candidate_count = int(payload.get("candidate_count") or payload.get("public_eligible_candidate_count") or 0)
@@ -92,6 +93,41 @@ def _terminal_contract_result(
     if status == NONFATAL_COMPLETED_WITH_EXCLUSIONS and bool(payload.get("ok")):
         payload.setdefault("child_outcome_classification", NONFATAL_COMPLETED_WITH_EXCLUSIONS)
         payload.setdefault("fatal_error", "")
+    # Only the explicitly routed CollectionOnly child path may attest that it
+    # performed no publication/public side effects. Missing evidence from a
+    # normal or unknown path must remain missing so the scheduler rejects it.
+    if collection_only:
+        publication_attempted = payload.get("publication_attempted")
+        public_side_effects = payload.get("public_side_effects")
+        contradictory_attempted = (
+            "publication_attempted" in payload
+            and (type(publication_attempted) is not bool or publication_attempted is not False)
+        )
+        contradictory_effects = (
+            "public_side_effects" in payload
+            and (not isinstance(public_side_effects, dict) or bool(public_side_effects))
+        )
+        if contradictory_attempted or contradictory_effects:
+            # Never replace producer evidence with a clean-looking assertion.
+            # The scheduler must see the original contradictory values and reject
+            # the child result rather than treating it as a no-side-effect run.
+            payload["ok"] = False
+            payload["status"] = "collection_only_publication_evidence_conflict"
+            payload["error_type"] = "contradictory_publication_evidence"
+            payload["error_message"] = (
+                "collection-only child returned publication evidence that is not "
+                "an explicit Boolean False and empty side-effects object"
+            )
+            payload["final_error"] = payload["error_message"]
+            return {
+                **payload,
+                "edition_date": edition_date,
+                "run_id": run_id,
+                "timed_out": bool(timed_out),
+                "warnings": list(warnings if warnings is not None else payload.get("warnings") or []),
+            }
+        payload["publication_attempted"] = False
+        payload["public_side_effects"] = {}
     return {
         **payload,
         "ok": contract_ok,
@@ -195,6 +231,7 @@ def _legacy_args_supplied(args: argparse.Namespace) -> bool:
             args.max_run_minutes is not None,
             args.export_agent_inbox,
             args.agent_inbox_dir is not None,
+            args.collection_only,
         )
     )
 
@@ -290,6 +327,7 @@ def _bounded_state_from_result(
     query_plan: list[dict[str, object]],
     result: dict[str, object],
     resume_count: int = 0,
+    export_requested: bool = True,
 ) -> tuple[dict[str, object], dict[str, object]]:
     plan_payload = _query_plan_payload(root, edition_date, run_id, query_plan)
     discovery_ok = bool(result.get("ok"))
@@ -384,23 +422,38 @@ def _bounded_state_from_result(
             "required_success_ratio": 0.0 if timed_out or not counters_consistent else min(1.0, queries_succeeded / max(1, query_plan_available_count)),
             "direct_success_ratio": 0.0 if timed_out or not counters_consistent or not direct_consistent else min(1.0, direct_ratio),
         },
-        "agent_export": {
-            "status": "success_with_exclusions"
-            if status == "completed_with_exclusions" and counter_integrity_status == "valid"
-            else "blocked_incomplete_collection"
-            if incomplete_capped
-            else "success"
-            if discovery_ok and not timed_out and counter_integrity_status == "valid"
-            else "blocked_incomplete_collection",
-            "path": str(Path(result.get("agent_export_path") or (root / "status" / "food-line" / "runtime" / "agent-inbox"))),
-            "sha256": str(result.get("agent_export_sha256") or hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()),
-        },
+        "agent_export": (
+            {
+                "status": "success_with_exclusions"
+                if status == "completed_with_exclusions" and counter_integrity_status == "valid"
+                else "blocked_incomplete_collection"
+                if incomplete_capped
+                else "success"
+                if discovery_ok and not timed_out and counter_integrity_status == "valid"
+                else "blocked_incomplete_collection",
+                "path": str(Path(result.get("agent_export_path") or (root / "status" / "food-line" / "runtime" / "agent-inbox"))),
+                "sha256": str(result.get("agent_export_sha256") or hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()),
+            }
+            if export_requested
+            else {"status": "not_requested", "path": None, "sha256": None}
+        ),
+        "execution_mode": "export_enabled" if export_requested else "collection_only",
+        "release_ready": None if export_requested else False,
+        "intake_eligible": None if export_requested else False,
         "next_action": "Plan-bound continuation required before intake." if status == INCOMPLETE_CAPPED_STATUS else "Repair collection counters before intake." if counter_integrity_status != "valid" else "No collection action required.",
     }
     return state, plan_payload
 
 
-def _write_state_files(root: Path, edition_date: str, run_id: str, result: dict[str, object], *, resume_count: int = 0) -> dict[str, object]:
+def _write_state_files(
+    root: Path,
+    edition_date: str,
+    run_id: str,
+    result: dict[str, object],
+    *,
+    resume_count: int = 0,
+    export_requested: bool = True,
+) -> dict[str, object]:
     query_plan = build_food_line_discovery_query_plan(root, edition_date)
     state, plan_payload = _bounded_state_from_result(
         root=root,
@@ -409,6 +462,7 @@ def _write_state_files(root: Path, edition_date: str, run_id: str, result: dict[
         query_plan=query_plan,
         result=result,
         resume_count=resume_count,
+        export_requested=export_requested,
     )
     run_dir = root / "data" / "dispatches" / "food-line" / "discovery-runs" / edition_date / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -427,6 +481,9 @@ def _write_state_files(root: Path, edition_date: str, run_id: str, result: dict[
         "status": state["status"],
         "coverage": state["coverage"],
         "agent_export": state["agent_export"],
+        "execution_mode": state["execution_mode"],
+        "release_ready": state["release_ready"],
+        "intake_eligible": state["intake_eligible"],
         "queries_total": state["queries_total"],
         "queries_completed": state["queries_completed"],
         "queries_failed": state["queries_failed"],
@@ -536,6 +593,27 @@ def _read_state(root: Path, run_id: str, edition_date: str | None = None) -> dic
     return payload
 
 
+def _precommit_collection_only_contract(
+    result: dict[str, object],
+    *,
+    edition_date: str,
+    run_id: str,
+    collection_only: bool,
+) -> dict[str, object]:
+    """Reject contradictory producer evidence before writing durable state."""
+    if not collection_only:
+        return result
+    checked = _terminal_contract_result(
+        result,
+        edition_date=edition_date,
+        run_id=run_id,
+        collection_only=True,
+    )
+    if checked.get("status") == "collection_only_publication_evidence_conflict":
+        return checked
+    return result
+
+
 def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
     root = Path.cwd()
     run_id = str(args.resume_run or args.run_id or "")
@@ -587,8 +665,26 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
             result["agent_export"] = export
             result["agent_export_path"] = export["path"]
             result["agent_export_sha256"] = export["sha256"]
-        wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
-        return _terminal_contract_result(wrapped, edition_date=edition_date, run_id=run_id)
+        result = _precommit_collection_only_contract(
+            result,
+            edition_date=edition_date,
+            run_id=run_id,
+            collection_only=bool(args.collection_only),
+        )
+        wrapped = _write_state_files(
+            root,
+            edition_date,
+            run_id,
+            result,
+            resume_count=resume_count,
+            export_requested=bool(args.export_agent_inbox),
+        )
+        return _terminal_contract_result(
+            wrapped,
+            edition_date=edition_date,
+            run_id=run_id,
+            collection_only=bool(args.collection_only),
+        )
 
     runtime_deadline = datetime.now(timezone.utc) + timedelta(minutes=max(1.0, float(args.max_run_minutes)))
     result = run_food_line_discovery_expansion(
@@ -617,13 +713,27 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         result["agent_export"] = export
         result["agent_export_path"] = export["path"]
         result["agent_export_sha256"] = export["sha256"]
-    wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
+    result = _precommit_collection_only_contract(
+        result,
+        edition_date=edition_date,
+        run_id=run_id,
+        collection_only=bool(args.collection_only),
+    )
+    wrapped = _write_state_files(
+        root,
+        edition_date,
+        run_id,
+        result,
+        resume_count=resume_count,
+        export_requested=bool(args.export_agent_inbox),
+    )
     if not wrapped["ok"] and not bool(result.get("timed_out")) and wrapped.get("status") != INCOMPLETE_CAPPED_STATUS:
         wrapped["status"] = "collection_failure"
     return _terminal_contract_result(
         wrapped,
         edition_date=edition_date,
         run_id=run_id,
+        collection_only=bool(args.collection_only),
         timed_out=bool(result.get("timed_out")),
         error_type=str(result.get("error_type") or "").strip() or ("timeout" if bool(result.get("timed_out")) else None),
         error_message=str(result.get("error_message") or result.get("error") or "").strip() or None,
@@ -649,6 +759,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-run-minutes", type=float)
     parser.add_argument("--export-agent-inbox", action="store_true")
     parser.add_argument("--agent-inbox-dir")
+    parser.add_argument("--collection-only", action="store_true", help=argparse.SUPPRESS)
     return parser
 
 
@@ -656,6 +767,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
+        if args.collection_only and (args.export_agent_inbox or args.agent_inbox_dir is not None):
+            raise ValueError(
+                "--collection-only cannot be combined with --export-agent-inbox or --agent-inbox-dir"
+            )
         if _legacy_args_supplied(args):
             result = _run_legacy_bounded_contract(args)
         else:
@@ -690,6 +805,7 @@ def main(argv: list[str] | None = None) -> int:
             result,
             edition_date=str(result.get("edition_date") or args.date or ""),
             run_id=str(result.get("run_id") or args.run_id or ""),
+            collection_only=bool(args.collection_only),
         )
     except Exception as exc:  # noqa: BLE001
         result = _terminal_contract_result(
@@ -703,6 +819,7 @@ def main(argv: list[str] | None = None) -> int:
             },
             edition_date=args.date,
             run_id=str(args.run_id or ""),
+            collection_only=bool(args.collection_only),
             error_type=type(exc).__name__,
             error_message=str(exc),
         )

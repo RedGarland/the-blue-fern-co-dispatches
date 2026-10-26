@@ -2598,12 +2598,36 @@ def maybe_post_gaza_dispatch_to_bluesky(
             },
         }
         if use_external_embed:
-            thumb_blob, thumb_status, compressed_thumb, original_thumb_bytes, uploaded_thumb_bytes, thumb_source_sha256 = _upload_card_thumb(
+            thumb_result = _upload_card_thumb(
                 access_jwt,
                 root,
                 edition_date,
                 expected_source_sha256=(expected_card_contract.thumb_sha256 if expected_card_contract is not None else None),
             )
+            # Keep the established test seam and legacy non-exact callers
+            # compatible while the card-bearing path carries the additional
+            # source-byte fingerprint. Only the reviewed helper returns six
+            # fields; older inert test doubles return the original five.
+            if len(thumb_result) == 5:
+                (
+                    thumb_blob,
+                    thumb_status,
+                    compressed_thumb,
+                    original_thumb_bytes,
+                    uploaded_thumb_bytes,
+                ) = thumb_result
+                thumb_source_sha256 = None
+            elif len(thumb_result) == 6:
+                (
+                    thumb_blob,
+                    thumb_status,
+                    compressed_thumb,
+                    original_thumb_bytes,
+                    uploaded_thumb_bytes,
+                    thumb_source_sha256,
+                ) = thumb_result
+            else:
+                raise ValueError("_upload_card_thumb returned an unsupported result shape")
             if exact_text_mode and expected_card_contract is not None and not thumb_blob:
                 result["status"] = "blocked"
                 result["reason"] = "approved_card_thumbnail_unavailable"

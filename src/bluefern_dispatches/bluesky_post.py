@@ -2269,6 +2269,12 @@ def maybe_post_gaza_dispatch_to_bluesky(
             result["status"] = "blocked"
             result["reason"] = exact_error or "exact_text_binding_failed"
             return result
+        # Existing exact-draft callers intentionally use text-only mode by
+        # omitting the optional card contract. Card-bearing workflows must
+        # opt in explicitly with expected_card_mode="external" and provide
+        # the hash-bound external-card contract.
+        if expected_card_mode is None:
+            expected_card_mode = "plain"
         if expected_card_mode not in {"plain", "external"}:
             result["status"] = "blocked"
             result["reason"] = "exact_card_mode_required"

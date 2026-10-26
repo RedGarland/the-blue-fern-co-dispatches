@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T060342-0700-r11-recall12-054522",
+  "scheduled_for": "2026-10-26T05:45:22-07:00",
+  "started_at": "2026-10-26T06:03:42-07:00",
+  "completed_at": "2026-10-26T06:05:43.644-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T04:47:04-07:00",
+    "end": "2026-10-26T06:05:43.644-07:00",
+    "basis": "Latest verified Care Line Watch heartbeat completion through current observation; covers schedule delay without dropping the interval. Supplementary recall only; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S. states, District of Columbia, Puerto Rico, Guam, U.S. Virgin Islands, Northern Mariana Islands, and American Samoa. Hospital/ED/maternity/behavioral health/dialysis/oncology/primary-care loss, rural emergency loss, ambulance/air-medical loss, official CMS notices, and concrete restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notice_count": 0,
+      "details": "Official CMS Public Notices page retrieved before supplemental targeted searches. Latest posted notice dates October 23; none newly dated in this observation period. October 22 Louisville CLIA limitation and October 23 home-health notices are outside the current window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 26, 2026\" hospital emergency department closure suspended services",
+      "\"October 26, 2026\" labor delivery maternity unit closure stopped deliveries",
+      "\"October 26, 2026\" behavioral health psychiatric facility closes residential treatment",
+      "\"October 26, 2026\" dialysis oncology cancer center shutdown service suspended",
+      "\"October 26, 2026\" clinic primary care urgent care closes patients lose access",
+      "\"October 26, 2026\" ambulance EMS rural service shut down cease operations",
+      "\"October 26, 2026\" air ambulance medical helicopter base closure suspend flights",
+      "\"October 26, 2026\" hospital ICU trauma center emergency services reopens resumes",
+      "site:gov \"October 26, 2026\" emergency department hospital license closure suspension",
+      "\"October 25, 2026\" \"hospital\" \"closure\" \"emergency\" rural healthcare",
+      "\"26 de octubre de 2026\" hospital emergencia cierre ambulancia Puerto Rico",
+      "Guam US Virgin Islands Northern Mariana American Samoa hospital emergency suspension October 2026"
+    ],
+    "previous_heartbeat": {
+      "run_id": "care-line-watch-20261026T044509-0700-r11-recall12",
+      "completed_at": "2026-10-26T04:47:04-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_read": true
+    },
+    "screening": "Twelve targeted searches spanning service closures/suspensions, EMS/air-medical, restoration, official restrictions and territories yielded no new, corroborated qualifying healthcare-access change since the previous heartbeat. Search results concerned older events, unrelated mergers/policy, proposals, non-U.S. incidents, or general healthcare trends. Existing Maine, Illinois, Michigan and New York candidates excluded from re-reporting.",
+    "source_failures": [],
+    "material_degradation": false,
+    "timeliness": "Started approximately 18 minutes after the 05:45:22 PDT scheduled time. Prior verified Care Line heartbeat had completed at 04:47:04 PDT; this recall window begins there, maintaining coverage of the intervening interval. No evidence of source/tool failure; delayed start noted for operational awareness.",
+    "limitations": "Search-index publication delays and sparse early-morning reporting can conceal very recent local changes. Historical deduplication against the full production Care Line collector and its unpublished review queue was not performed; production collection remains authoritative. Zero findings means none confirmed by this bounded watch, not proof of no U.S. service changes.",
+    "controls": "No approval, publication, social posting, production queue edits, schedule change or disabling."
+  }
+}

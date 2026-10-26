@@ -1,0 +1,55 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T070036-0700-r11-62b9e4",
+  "scheduled_for": "2026-10-26T06:45:54-07:00",
+  "started_at": "2026-10-26T07:00:36-07:00",
+  "completed_at": "2026-10-26T07:02:13-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T05:45:54-07:00",
+    "end_at": "2026-10-26T07:02:13-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative window beginning with the nominal prior hourly check. The immediately previous actual completion timestamp was not independently retrievable from the ledger. Discovery searched the preceding two days but qualification required a new disruption within this bounded window."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 2,
+    "focus_classes": [
+      "Only, sole, last, or full-service grocery store closure/loss/fire/disaster",
+      "Emergency food distribution canceled or suspended due to storm/flood/fire/outage/damage",
+      "Abrupt food pantry/food-bank closure or major service reduction",
+      "Official immediate SNAP/WIC/food-assistance interruption"
+    ],
+    "search_terms": [
+      "\"only grocery store\" \"closed\" \"fire\" \"October\" \"2026\" town",
+      "\"sole grocery store\" fire closed \"October 2026\"",
+      "\"last grocery store\" \"closed\" \"October 2026\"",
+      "\"full-service grocery store\" closed town October 2026",
+      "\"food distribution\" \"canceled\" storm flood October 26 2026",
+      "\"food distribution\" \"cancelled\" \"power outage\" October 2026",
+      "\"food pantry\" \"closed\" \"October 26, 2026\" emergency",
+      "\"food bank\" \"operations suspended\" flood fire October 2026",
+      "SNAP EBT outage October 26 2026 official announcement",
+      "WIC benefit interruption October 26 2026 state agency notice",
+      "SNAP benefits delayed October 26 2026 official agency urgent",
+      "\"food pantry\" \"closed\" \"October 25\" \"2026\" shortage"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary Food Line recall only; primary nationwide production collection remains authoritative.",
+    "Completed 12 targeted searches with no search-level tool failures; topical relevance and source publication timestamps were reviewed before qualification.",
+    "No new verifiable qualifying disruption was identified within the conservative October 26 Pacific observation window.",
+    "FOX 13 Seattle reported severe shortages at Bremerton Foodline on October 25 at 4:30 PM PDT, but no abrupt service shutdown or major access reduction was documented, and publication preceded this window; excluded (https://www.fox13seattle.com/news/bremerton-food-bank-severe-shortages).",
+    "An October 23 CBPP SNAP tracker reports aggregate historical participation declines rather than a newly announced official immediate benefits interruption; excluded (https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025).",
+    "October 24 Kauaʻi Hurricane Lowell recovery coverage described longer-running relief operations; no new canceled emergency-food distribution was substantiated (https://kauainownews.com/2026/10/24/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/).",
+    "Search results were heavily populated by previously reported events, generic food insecurity, donor appeals, and non-U.S. examples. Search engine crawl recency was not treated as publication recency.",
+    "No unverified, older, duplicated, promotional, opinion, resource-guide, or donation-drive material was elevated as a finding.",
+    "Zero findings means none verified within this bounded supplementary search, not that no disruption occurred nationwide.",
+    "No approvals, publishing, primary collector changes, automation schedule edits, or task disabling occurred."
+  ]
+}

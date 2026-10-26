@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261025T214640-0700-r11",
+  "scheduled_for": "2026-10-25T21:45:54-07:00",
+  "started_at": "2026-10-25T21:46:40-07:00",
+  "completed_at": "2026-10-26T04:48:07.635Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-25T20:43:17-07:00",
+    "end_at": "2026-10-26T04:48:07.635Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at the completion timestamp of the prior retrieved and verified hourly heartbeat; bounded recall checks potential news/official announcements for newly reported or newly effective disruption, excluding preexisting stories and date-unconfirmed results."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 2,
+    "search_terms": [
+      "October 25 2026 \"only grocery store\" fire closed community USA",
+      "October 25 2026 \"sole grocery store\" closure town",
+      "October 25 2026 \"last grocery store\" shut down rural",
+      "October 25 2026 \"full-service grocery store\" fire outage closure",
+      "\"October 25, 2026\" \"food distribution\" canceled storm flood",
+      "food pantry distribution canceled flood storm outage October 25 2026 USA",
+      "\"October 25, 2026\" \"food pantry\" \"closed\" emergency",
+      "October 25 2026 \"food bank\" \"temporarily closed\" flood fire",
+      "site:facebook.com \"food pantry\" \"closed\" \"October 25\" \"2026\"",
+      "site:gov \"October 25, 2026\" SNAP outage benefits unavailable",
+      "site:gov October 25 2026 WIC EBT system outage interruption",
+      "October 25 2026 official SNAP benefits suspended interrupted states outage"
+    ],
+    "focus_classes": [
+      "Loss/closure/fire/disaster affecting a community's only, sole, last, or full-service grocer",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, power outage, or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate access loss"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall-only Food Line Source Watch; authoritative nationwide production collection not modified.",
+    "Completed 12 targeted fresh web searches (4 grocery, 2 distribution, 3 pantry/food-bank, 3 SNAP/WIC); no search-level execution errors.",
+    "No U.S. qualifying incident could be verified as newly announced or newly effective since 2026-10-25T20:43:17-07:00.",
+    "Searches returned older grocery-loss reports including Spencer NY (2026-09-14), Eastport ME (2026-08-29), and North Charleston SC (2026-08-13); excluded as pre-window.",
+    "Results about November 2025 SNAP funding suspension, earlier outages, and October 2026 longer-term SNAP participation trends did not substantiate a fresh immediate official access interruption.",
+    "Index crawl timestamps were not treated as incident or publication dates. Excluded resource guides, donation appeals, restaurant closures, routine announcements, generic cost trends, speculation and duplicates.",
+    "Zero findings is a bounded verification result, not proof that no U.S. food-access disruptions occurred.",
+    "No approvals, publications, schedule changes, or task disabling were performed."
+  ]
+}

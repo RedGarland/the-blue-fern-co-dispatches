@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T154521-0700-r11-20261026T224521Z",
+  "scheduled_for": "2026-10-26T15:44:51-07:00",
+  "started_at": "2026-10-26T15:45:21-07:00",
+  "completed_at": "2026-10-26T15:47:31.525-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T14:46:50.705-07:00",
+    "end": "2026-10-26T15:47:31.525-07:00",
+    "basis": "Verified previous Gaza watch heartbeat completed_at through this supplementary recall check; publication/event times checked against the window, and earlier discovered reports are deduplicated."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall on high-value in-Gaza civilian/humanitarian developments only; production daily Gaza collection and publication remain authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T144429-0700-r11-20261026T214429Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T144429-0700-r11-20261026T214429Z.json",
+      "completed_at": "2026-10-26T14:46:50.705-07:00",
+      "verified_by": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Newest listed post is Humanitarian Situation Report | 22 October 2026, posted 26 October; report's high-value operational follow-ups previously recorded in the day's watches. No newly listed product covering this interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct access failed: HTTP 502 Bad Gateway; persistent documented coverage limitation."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest health news, publication and regional news listings did not document a newly published service-capacity, medical-evacuation, hospital, ambulance or fuel development in the window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 27 2026 early Tuesday Gaza City Khan Younis Rafah casualties wounded displaced civilians overnight",
+      "site:english.wafa.ps Gaza October 27 2026 Tuesday midnight October 26 killed injured",
+      "site:reuters.com/world/middle-east Gaza October 26 2026 Monday evening ceasefire strike killed",
+      "site:apnews.com/article/gaza October 26 2026 late Israeli airstrike aid ceasefire civilians",
+      "site:ochaopt.org October 26 2026 evening Gaza crossings aid displacement update",
+      "Gaza Palestine Red Crescent Society October 26 2026 late night ambulance hospital transport fuel medical evacuation",
+      "Gaza Oct 26 2026 latest news evening October 27 strikes injuries deaths hospital sources after 22:00 Gaza time",
+      "Palestine Wafa 27 October 2026 Gaza overnight 12:30 AM attack Israeli",
+      "Reuters AP 26 October 2026 Gaza humanitarian crossings aid convoy ceasefire 26 October",
+      "WHO Palestine Gaza health cluster 26 October 2026 evening medical evacuation hospital functioning water",
+      "site:unicef.org 26 October 2026 Gaza emergency water child killed hospitalized",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"27/October/2026\" military strike displacement"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest headlines through 26 October 23:52 Gaza-local time. No new in-Gaza event article during 27 October 00:46–01:46 Gaza local time. Earlier Gaza City camp fire and Deir al-Balah casualty reports were already recorded."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible. No independently verified new Gaza civilian-impact event found in observation window; 26 October UN commission report filed 18:23 UTC, before the watch window, and previously covered."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Direct access failed: HTTP 403, recurring restriction."
+      }
+    ],
+    "source_access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Known persistent direct-source coverage gap; WHO global, OCHA OPT and other sources accessible."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "error": "HTTP 403 Forbidden",
+        "materiality": "Known persistent direct access restriction; alternate humanitarian source checks conducted."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "OCHA 26 October report on 22 October conditions: bakery shutdowns/reopening, food distribution interruptions, restored drinking water, and 47% functioning health service points had been captured earlier.",
+      "WAFA Deir al-Balah two killed, Gaza City displacement-camp fire, Khan Younis/al-Mawasi fatalities were preserved in prior watch runs; no new verified count or incident in this hour.",
+      "26 October UN Commission of Inquiry coverage by Reuters/AP predated the observation window and its Gaza findings/related prisoner allegations appeared in prior watches; no new in-Gaza occurrence identified.",
+      "Search matches for 2023-2025 and earlier 2026 Gaza events were excluded; West Bank-only, opinion, social-only and poorly attributed claims did not qualify."
+    ],
+    "limitations": "Search indexing and publication timestamps can lag. No verified new result does not prove no event happened. WHO regional and UNRWA direct endpoints remain inaccessible, but neither represents newly material degradation relative to prior watch.",
+    "result": "No nonduplicate qualifying Gaza development newly verified in the observation interval.",
+    "action_scope": "Created one private durable watch heartbeat on ops/watch-ledger. No publication, editorial authorization, schedule or production change."
+  }
+}

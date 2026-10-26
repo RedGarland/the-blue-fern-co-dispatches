@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T164958-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T16:45:22-07:00",
+  "started_at": "2026-10-26T16:49:58-07:00",
+  "completed_at": "2026-10-26T16:51:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T15:51:07.267-07:00",
+    "end": "2026-10-26T16:51:59-07:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed_at through this run. Event occurrence was reported October 26 but exact onset/publication hour was unavailable; this is a newly detected recall finding, not an assertion the incident began within the last hour."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-nm-unm-health-cyber-disruption-20261026",
+      "canonical_source_url": "https://apnews.com/article/new-mexico-health-cybersecurity-hack-7a3593f8a3cee4ca895774ab1574919f",
+      "title": "A cybersecurity issue forces a major New Mexico hospital to divert patients and close clinics",
+      "publisher": "Associated Press",
+      "exact_supporting_passage": "forced it to send ambulances to other hospitals",
+      "source_published_date": "2026-10-26",
+      "state": "NM",
+      "city": "Albuquerque",
+      "county": "Bernalillo",
+      "territory": null,
+      "event_type": "temporary_emergency_and_outpatient_service_disruption",
+      "service_line": "Hospital emergency/Level 1 trauma; outpatient clinics",
+      "access_consequences": "UNM Health System diverted ambulances to other hospitals, discouraged people from arriving at its main Albuquerque hospital, and canceled appointments at more than 30 clinics due to a cybersecurity disruption. AP reported temporary loss of normal access to the state's only Level 1 trauma center; duration and full technical cause not yet confirmed.",
+      "affected_population": "Ambulance/serious-trauma and emergency patients in New Mexico; patients with appointments at more than 30 UNM Health clinics.",
+      "effective_date": "2026-10-26",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "independent_wire_reporting_with_health_system_statements",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; the national production Care Line collector remains authoritative.",
+    "scope": "United States, DC, Puerto Rico, Guam, US Virgin Islands, Northern Mariana Islands, American Samoa; healthcare service suspensions/closures, emergency/rural service loss, air/ground ambulance bases, CMS access-risk notices, and proven effective reopenings.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "verification": "Official CMS public notices inspected first. Top three listed notices remained 2026-10-23, with none dated 2026-10-26."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspending services October 26 2026 US local news",
+      "labor delivery maternity obstetrics ward closure announced October 26 2026 hospital",
+      "rural critical access hospital closure ER suspension October 26 2026",
+      "psychiatric behavioral health inpatient unit closure October 26 2026",
+      "dialysis kidney center clinic closing patients October 26 2026 United States",
+      "oncology infusion cancer center patient treatments suspended closure October 26 2026",
+      "family medicine primary care urgent care clinic closes October 26 2026 United States",
+      "ambulance EMS service county station closure suspended October 26 2026",
+      "air medical helicopter air ambulance base shutting down flights October 26 2026 United States",
+      "hospital emergency department clinic reopened resumed patients Monday October 26 2026",
+      "Puerto Rico Guam Virgin Islands Northern Mariana Islands American Samoa hospital clinic ambulance closure October 26 2026",
+      "site:gov \"October 26, 2026\" \"hospital\" \"closure\" OR \"service suspension\" OR \"CLIA\""
+    ],
+    "search_failures": [],
+    "screened_out": [
+      {
+        "title": "Tehama County air ambulance base closes amid insurer dispute",
+        "reason": "Base closure occurred in September and was reported last month; not a new event during this run."
+      },
+      {
+        "title": "GRMC to Suspend Visitation on Saturday due to Typhoon Champi, Outpatient Clinics Closed on Monday",
+        "reason": "Guam outpatient closure was announced October 17 for October 19; not new in this observation window."
+      },
+      {
+        "title": "West Suburban resumes some services",
+        "reason": "Clinic restoration reported April 2026; historical event."
+      },
+      {
+        "title": "New survey on primary care access",
+        "reason": "Research/general access trend, not a discrete service closure or restoration."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T154900-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-26T15:51:07.267-07:00",
+      "previous_outcome": "no_findings",
+      "previous_heartbeat_read_verified": true,
+      "new_finding_in_previous_heartbeat": false,
+      "production_review": "Production collector state not independently inspected; finding is pending review and must be deduplicated against production before any downstream action."
+    },
+    "material_degradation": false,
+    "limitations": "Exactly 12 targeted discovery searches plus the official CMS page; this is not exhaustive national monitoring. AP article confirms the October 26 disruption but does not supply a precise incident onset, source publication time, or confirmed restoration time. No official health-system advisory independently retrieved in this run.",
+    "controls": "Private ledger heartbeat only; no editorial approval, public publication, production collection changes, schedule changes, or task disablement."
+  }
+}

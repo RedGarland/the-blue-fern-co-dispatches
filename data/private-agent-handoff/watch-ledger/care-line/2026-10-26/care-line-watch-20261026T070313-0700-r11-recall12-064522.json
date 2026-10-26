@@ -1,0 +1,63 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T070313-0700-r11-recall12-064522",
+  "scheduled_for": "2026-10-26T06:45:22-07:00",
+  "started_at": "2026-10-26T07:03:13-07:00",
+  "completed_at": "2026-10-26T07:07:05-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T06:05:43.644-07:00",
+    "end": "2026-10-26T07:07:05-07:00",
+    "basis": "Previous durable and verified hourly Care Line Watch heartbeat completion to current observation. Recency-limited supplementary recall, not primary collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "All U.S. states, District of Columbia and U.S. territories: hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care loss, emergency or rural service loss, EMS or air-medical/base closure, official CMS termination/rescission/CLIA action and concrete essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "details": "CMS official notices checked before all supplementary targeted searches; newest listed notices date October 23, 2026, and predate this observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 26, 2026\" hospital closes emergency department services US",
+      "\"October 26, 2026\" maternity labor delivery unit suspension closing hospital",
+      "\"October 26, 2026\" behavioral health psychiatric hospital clinic closing services",
+      "\"October 26, 2026\" dialysis clinic oncology cancer center closure patients",
+      "\"October 26, 2026\" rural hospital emergency department overnight closure",
+      "\"October 26, 2026\" \"ambulance\" \"service\" \"closing\" county",
+      "\"October 26, 2026\" air medical helicopter base ambulance shutdown closure",
+      "\"October 26, 2026\" primary care clinic health center patients closing",
+      "\"October 26, 2026\" hospital unit reopening resuming emergency labor delivery",
+      "site:gov \"October 26, 2026\" hospital emergency closure service suspension",
+      "\"26 de octubre de 2026\" hospital sala emergencia cierre servicios Puerto Rico",
+      "Guam American Samoa Northern Mariana US Virgin Islands hospital emergency department clinic suspension closure October 2026"
+    ],
+    "screening": "No new, corroborated, nonduplicate healthcare-access changes for this hourly interval were established. Search results predominantly concerned previously reported closures, policy discussions and general healthcare trends; foreign cases were excluded.",
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T060342-0700-r11-recall12-054522",
+      "previous_completed_at": "2026-10-26T06:05:43.644-07:00",
+      "previous_heartbeat_read_verified": true,
+      "ledger_dates_checked": [
+        "2026-10-16",
+        "2026-10-24",
+        "2026-10-25",
+        "2026-10-26"
+      ],
+      "reference": "Winchester Family Medicine, NH November 6 primary-care closure was reported October 16, 2026; the October 16 ledger explicitly excluded it as pre-existing to that hourly window. Thus this result is not newly reported and must not be reintroduced as a fresh finding.",
+      "prior_exclusion_ledger": "data/private-agent-handoff/watch-ledger/care-line/2026-10-16/care-line-watch-20261016T204621-0700-r12-8c27.json",
+      "production_review": "Production Care Line collector and any unpublished review queue remain authoritative; complete historical production de-duplication was not performed."
+    },
+    "source_failures": [],
+    "material_degradation": false,
+    "timeliness": "Started approximately 17m51s after the scheduled 06:45:22 PDT time; search window begins at the prior verified heartbeat completion, avoiding an unsearched interval.",
+    "limitations": "Time-lagged indexing and sparse early-morning local coverage may obscure new developments. A no-findings outcome means none confirmed by this bounded watch, not that none occurred. A batched GitHub read hit an orchestration call cap, after which the relevant ledger records were retrieved in smaller verified batches; no source coverage was lost.",
+    "controls": "No approvals, publication, editorial policy changes, production queue modifications, schedule changes or disabling."
+  }
+}

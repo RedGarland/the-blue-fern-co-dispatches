@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T214110-0700-r11-214223",
+  "scheduled_for": "2026-10-26T21:45:54-07:00",
+  "started_at": "2026-10-26T21:41:10-07:00",
+  "completed_at": "2026-10-26T21:42:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T20:49:26-07:00",
+    "end_at": "2026-10-26T21:42:23-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of the latest verified prior durable Food Line watch heartbeat on ops/watch-ledger; end is local current-time confirmation following search. Only newly verified incidents/notices in the observation window qualify; index crawl time alone does not establish incident recency."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" \"closed\" OR \"fire\" \"October 26, 2026\"",
+      "\"last grocery store\" \"fire\" OR \"closure\" October 26 2026",
+      "\"sole grocery\" town store burned closed October 2026",
+      "\"full-service grocery store\" \"closed\" October 26 2026",
+      "\"food distribution\" \"canceled\" \"storm\" \"October 26\" 2026",
+      "\"food bank\" \"distribution\" \"cancelled\" \"flood\" 2026 October 26",
+      "\"food pantry\" \"distribution\" \"canceled\" \"power outage\" October 26 2026",
+      "\"food pantry\" \"closed\" \"October 26, 2026\" services",
+      "food bank food pantry shut down closed abruptly October 26 2026 local news",
+      "site:gov \"SNAP\" \"EBT\" \"October 26, 2026\" outage OR delay OR suspended",
+      "site:gov \"WIC\" \"October 26, 2026\" interruption OR closed OR outage",
+      "October 26 2026 SNAP benefit issuance suspended EBT system outage official state"
+    ],
+    "focus_classes": [
+      "Only, sole, last, or full-service community grocery-store loss/closure/fire/disaster",
+      "Canceled or suspended emergency food distribution due to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food-bank closure or major service-access reduction",
+      "New official SNAP/WIC/food-aid interruption immediately affecting access"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary high-value recall watch only; authoritative production nationwide Food Line collection remains unchanged.",
+    "Twelve targeted web searches completed without tool error. Search result freshness was limited: even with two-day recency most matches were previously published incidents, including some recrawled today.",
+    "No new verifiable U.S. disruption in the four allowed classes was reported or documented between October 26, 2026 20:49:26 and 21:42:23 America/Los_Angeles. This does not prove none occurred; newly published local/provider notices may be indexed later.",
+    "Examples excluded as out of window: Woodbine, Iowa grocery reopening after an older fire (https://www.3newsnow.com/southwest-iowa/woodbine-welcomes-back-its-only-grocery-store-after-fire-closed-it-nearly-2-years-ago); Butler, Indiana grocery closure reported May 6, 2026 (https://www.21alivenews.com/2026/05/06/butler-loses-only-full-service-grocery-store-after-more-than-six-decades/).",
+    "Out-of-window food-pantry closures included Ruby's Pantry Upper Midwest network in April 2026 (https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites) and Oakland's Laney pantry closure in September 2026 (https://peraltacitizen.com/2026/09/02/laney-food-pantry-closed-until-september-16/).",
+    "Official SNAP/WIC targeted searches yielded no newly dated October 26, 2026 official notices confirming immediate interruption. Predominant federal-shutdown results referred to 2025, not the current observation window.",
+    "Older announcements and reopening/recovery coverage were not treated as new access-loss events; excluded routine aid solicitations, donation drives, resource guides, recipes, promotions, opinion, foreign incidents, generic inflation, and duplicates.",
+    "No editorial approval, publication, task schedule edit, task disabling, or primary collector operation performed.",
+    "Nominal scheduled_for is the RRULE's October 26 21:45:54 Pacific occurrence; invocation started earlier than that nominal local time according to the provided runtime clock."
+  ]
+}

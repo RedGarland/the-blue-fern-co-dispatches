@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T204855-0700-r11-204855",
+  "scheduled_for": "2026-10-26T20:45:54-07:00",
+  "started_at": "2026-10-26T20:48:55-07:00",
+  "completed_at": "2026-10-26T20:49:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T19:51:53-07:00",
+    "end_at": "2026-10-26T20:49:26-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start based on verified completed_at of immediately preceding durable Food Line watch heartbeat; end from local current-time tool at close of research. Incident/report publication time rather than search crawler time determines eligibility."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "search_terms": [
+      "\"only grocery store\" fire closed October 26 2026 United States",
+      "\"sole grocery store\" \"fire\" \"October 26\" 2026",
+      "\"last grocery store\" closed October 26 2026 town",
+      "\"full-service grocery store\" closure outage fire October 26 2026",
+      "\"food distribution\" canceled storm flood October 26 2026",
+      "\"food bank\" distribution cancelled power outage October 26 2026",
+      "\"food pantry\" distribution suspended due to flooding fire October 26 2026",
+      "\"food pantry\" \"temporarily closed\" October 26 2026",
+      "\"food bank\" \"closed\" \"October 26, 2026\" emergency",
+      "\"food pantry\" services suspended damaged building October 26 2026",
+      "site:gov \"SNAP\" \"EBT\" outage suspension \"October 26, 2026\"",
+      "site:gov \"WIC\" closure interruption October 26 2026 benefits"
+    ],
+    "recency_days": 2,
+    "focus_classes": [
+      "Only/sole/last/full-service community grocery store closure, fire, or disaster",
+      "Weather/fire/outage/facility-damage cancellation of emergency food distributions",
+      "Abrupt human-food pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-aid interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary high-value miss recall only; production Food Line nationwide collector remains authoritative.",
+    "Completed exactly twelve targeted web searches without observed search-tool error. Search results were predominantly historical material (2020–2026, including earlier 2026 events) despite the two-day recency setting; crawling/index freshness does not establish event recency.",
+    "No verified new U.S. access-disruption signal matched the four classes in the 2026-10-26 19:51:53–20:49:26 PDT observation window. This is a search finding, not a guarantee no relevant incidents occurred.",
+    "Rejected older or out-of-window examples: Akron, Ohio Roush's Market grocery fire reported June 2, 2026 (https://www.cleveland19.com/2026/06/02/man-arrested-akron-grocery-store-fire/); North Charleston, South Carolina grocery access loss reported August 13, 2026 (https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/); Palm Springs, California Saturday food bank suspension reported September 2, 2026 (https://www.nbcpalmsprings.com/local-and-community/2026/09/02/well-in-the-desert-suspends-saturday-food-bank-after-palm-springs-move).",
+    "Official SNAP/WIC searches surfaced primarily 2025 federal-shutdown articles and statements, not newly issued October 26, 2026 official interruption notices with immediate access consequences.",
+    "Previously unverified Facebook-linked flood cancellation from an earlier watch was not newly substantiated with date, place and source in these results; not promoted or counted.",
+    "Excluded pet-food-only pantries, aid solicitations, donation campaigns, resource guides, routine food distribution promotions, out-of-country incidents, generic inflation, stale incidents, and duplicate stories.",
+    "Potential routine limits: delayed indexing of local stories and provider social-media notices; neither is a confirmed material failure of this run.",
+    "No editorial approval, publishing, primary collector change, schedule change, or disabling was performed."
+  ]
+}

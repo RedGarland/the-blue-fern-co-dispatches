@@ -1,0 +1,138 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T034156-0700-r11-20261027T104156Z",
+  "scheduled_for": "2026-10-27T03:44:51-07:00",
+  "started_at": "2026-10-27T03:41:56-07:00",
+  "completed_at": "2026-10-27T03:45:35.265-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T02:53:19.683-07:00",
+    "end": "2026-10-27T03:45:35.265-07:00",
+    "basis": "Previous verified Gaza Source Watch heartbeat completion to current observation. Publication timestamp precedes boundary slightly but WAFA item was absent from previous directly inspected homepage listing; treated as a newly surfaced previously missed death, not an assertion of in-hour incident."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261027-tihani-mohammad-saeed-shalalfeh-death-khan-younis",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176376",
+      "title": "Palestinian girl dies of wounds sustained by Israeli gunfire in southern Gaza",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-27",
+      "publication_date": "2026-10-27",
+      "publication_time": "11:46 AM (WAFA site local time; Gaza/West Bank)",
+      "event_date": "2026-10-27",
+      "event_date_context": "WAFA reports six-year-old Tihani Mohammad Saeed Shalalfeh died Tuesday morning from previously sustained shooting wounds; when the shooting occurred is not stated.",
+      "location": "al-Mawasi, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Palestinian child civilian; one newly reported death after earlier gunfire; no newly verified separate casualties from reported shelling elsewhere in Gaza.",
+      "exact_supporting_passage": "Six-year-old Tihani Mohammad Saeed Shalalfeh died on Tuesday morning after succumbing to wounds sustained when she was shot by Israeli forces in the al-Mawasi area of Khan Younis, southern Gaza Strip.",
+      "source_type": "established Palestinian news agency (single-source reporting; no independently verified hospital record available)",
+      "classification": "new",
+      "confidence": "medium-high for the reported death and identity from attributable WAFA reporting; precise prior gunshot date and independent confirmation not available",
+      "bounded_discovery_context": {
+        "observed_after": "2026-10-27T02:53:19.683-07:00",
+        "source_publication_time_equivalent": "2026-10-27T02:46:00-07:00 (assuming WAFA's local UTC+2; predates watch boundary by ~7 minutes)",
+        "prior_watch_evidence": "Previous Gaza heartbeat explicitly listed WAFA homepage's leading 27 October stories ending at 11:18 AM local and did not contain this 11:46 AM article. Newly surfaced/previously missed rather than proven newly published after the boundary.",
+        "dedupe_check": "Prior 02:49 heartbeat finding was a distinct OCHA report about shooting near UN schools and convoy; 26 October Al Jazeera reported a different seven-year-old victim, Jouri al-Soufi, killed in an air attack. No duplicate identity found.",
+        "checked_prior_url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T024921-0700-r11-20261027T094921Z.json",
+        "distinguishing_prior_report_url": "https://www.aljazeera.com/news/2026/10/26/israeli-forces-kill-at-least-five-people-in-gaza-including-7-year-old-girl",
+        "limits": "WAFA also reports tank shelling north of al-Bureij and gunfire toward al-Maghazi and Rafah; not classified as separate civilian-impact findings absent new verifiable casualties or damage."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; daily Gaza production collector and editorial/publication decisions remain authoritative. No publication or approvals authorized.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261027T024921-0700-r11-20261027T094921Z",
+      "completed_at": "2026-10-27T02:53:19.683-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T024921-0700-r11-20261027T094921Z.json",
+      "verification": "Fetched and read from ops/watch-ledger at start; prior reported 1 different finding (UN-site/UN-school/convoy gunfire)."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. 27 October posting was West Bank September casualty/property/displacement snapshot, outside Gaza scope; latest Gaza-related humanitarian situation report dated 26 October about 22 October."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new date-verified Gaza health-system operational update shown in this interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Not accessible through web tool, previously documented recurring source restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza Tuesday 27 October 2026 midday deaths injuries displacement",
+      "site:reuters.com/world/middle-east/ Gaza October 27 2026 killed ceasefire civilians aid",
+      "site:apnews.com/article/ Gaza Oct 27 2026 strikes wounded ceasefire hospital",
+      "site:un.org/en OR site:news.un.org Gaza October 27 2026 humanitarian convoy shooting aid",
+      "site:palestine.un.org/en Gaza October 27 2026 humanitarian updates new crossing",
+      "site:wfp.org Gaza 27 October 2026 food trucks food aid",
+      "site:unicef.org Gaza October 27 2026 children water displaced",
+      "site:who.int Gaza 27 October 2026 medical evacuations hospitals ambulances",
+      "site:palestinercs.org Gaza 27 October 2026 ambulance medics",
+      "Gaza Rafah Kerem Shalom crossing aid fuel medical evacuation October 27 2026 morning",
+      "Gaza Hamas Israel ceasefire negotiations hostages detainees October 27 2026 morning",
+      "site:aljazeera.com/news/2026/10/27 OR site:theguardian.com/world/2026/oct/27 Gaza civilian casualties strikes"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Newly observed 27 October 11:46 AM local Gaza child-death article, 11:49 and 11:53 West Bank articles, 12:13 West Bank article; full death report accessed."
+      },
+      {
+        "publisher": "WAFA (full story)",
+        "url": "https://english.wafa.ps/Pages/Details/176376",
+        "result": "Identified six-year-old Tihani Mohammad Saeed Shalalfeh dying Tuesday morning after gunfire; precise earlier injury date unstated."
+      },
+      {
+        "publisher": "UN in Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "27 October OCHA-sourced UN-site/UN-schools/convoy incidents already captured by previous watch; not duplicated."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "No new 27 October Gaza story listed; 26 October article distinct seven-year-old victim checked against new WAFA finding."
+      },
+      {
+        "publisher": "WHO global news",
+        "url": "https://www.who.int/news",
+        "result": "Accessible but no relevant newly dated Gaza operational item."
+      }
+    ],
+    "excluded_or_unconfirmed": [
+      "27 October UN/OCHA account of UN-site gunfire and shootings near UN schools and convoy: prior heartbeat finding, not repeated.",
+      "26 October Al Jazeera report of seven-year-old Jouri al-Soufi killed in al-Mawasi air attack: different named person from six-year-old Tihani Shalalfeh, not counted as new.",
+      "27 October OCHA OPT West Bank monthly snapshot, WAFA West Bank headlines: outside Gaza geographic remit.",
+      "WAFA reports additional shelling/gunfire in al-Bureij, al-Maghazi and Rafah but no distinct documented civilian injury, displacement or damage to qualify separately.",
+      "Search results with 2025 dates or older 2026 dates, retrospective casualty totals, unsourced claims and stale reposts omitted.",
+      "The prior WHO source URL with expanded spelled-out Israel/oPt path returned 404, but the canonical WHO global landing page was accessible."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Inaccessible via web tool (HTTP status not exposed)",
+        "materiality": "Persistent, previously documented limitation; WHO global and OCHA OPT available."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/",
+        "error": "Robots restriction in targeted search access",
+        "materiality": "Official UN in Palestine and OCHA sites accessible."
+      }
+    ],
+    "search_limit": "Exactly 12 additional targeted searches beyond initial OCHA OPT/WHO source checks. Direct source opens/clicks were not counted as searches.",
+    "outcome_assessment": "One newly surfaced attributed child civilian fatality; published approximately seven minutes before prior boundary but not included in preceding WAFA index observation. Newness reflects bounded recall, not proven in-hour occurrence or publication. Single-source caution retained.",
+    "action_scope": "Exactly one new heartbeat in ops/watch-ledger. No approval, public publication, production modification, schedule change or watch disable."
+  }
+}

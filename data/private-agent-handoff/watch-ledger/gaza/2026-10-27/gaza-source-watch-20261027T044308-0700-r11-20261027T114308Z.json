@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T044308-0700-r11-20261027T114308Z",
+  "scheduled_for": "2026-10-27T04:44:51-07:00",
+  "started_at": "2026-10-27T04:43:08-07:00",
+  "completed_at": "2026-10-27T04:45:50.673-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T03:45:35.265-07:00",
+    "end": "2026-10-27T04:45:50.673-07:00",
+    "basis": "From completion of previous verified Gaza watch heartbeat to this run's completed observation in PDT; search results checked for new traceable developments, not merely newly indexed old coverage."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. The authoritative Gaza collector/publisher and editorial decisions are unchanged.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261027T034156-0700-r11-20261027T104156Z",
+      "completed_at": "2026-10-27T03:45:35.265-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T034156-0700-r11-20261027T104156Z.json",
+      "previous_finding_id": "gaza-20261027-tihani-mohammad-saeed-shalalfeh-death-khan-younis",
+      "verification": "Fetched and read from target ledger branch before searches; one named six-year-old fatality already recorded."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed Gaza humanitarian report is Humanitarian Situation Report | 22 October 2026 (published 26 October). The 27 October item concerns the West Bank; no newly dated Gaza update."
+      },
+      {
+        "publisher": "WHO (global)",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Latest listed relevant operational materials predate this hourly window; no date-verified new Gaza medical-evacuation/health-functioning update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Inaccessible via web source tool (same documented recurring restriction)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza 27 October 2026 \"PM\" killed injured Khan Younis",
+      "site:reuters.com/world/middle-east/ Gaza October 27 2026 civilians attacks ceasefire",
+      "site:apnews.com/article/ Gaza October 27 2026 killed hospitals crossings",
+      "site:aljazeera.com/news/2026/10/27 Gaza strikes killed displacement ceasefire",
+      "site:palestine.un.org/en Gaza 27 October 2026 convoy UN site shootings followup aid",
+      "site:unicef.org Gaza 27 October 2026 children water disease medical services",
+      "site:wfp.org Gaza October 27 2026 food security assistance deliveries",
+      "site:icrc.org Gaza 27 October 2026 hostage detainees ambulance crossings",
+      "site:palestinercs.org Gaza 27 October 2026 ambulance medical injury health service",
+      "Gaza Rafah Kerem Shalom crossing fuel medical evacuation October 27 2026 Tuesday latest",
+      "Gaza Israel Hamas ceasefire hostage negotiations October 27 2026 latest update",
+      "site:theguardian.com/world/2026/oct/27 Gaza Israel civilian casualties displacement hospital military"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "OCHA OPT full report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+        "result": "Verified publication 26 October; Gaza coverage primarily 12–18 October with several 20–25 October updates; no new 27 October hour-specific development."
+      },
+      {
+        "publisher": "WAFA homepage",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest indexed 27 October article at 1:07 PM local concerned Ramallah. The 11:46 AM article about child Tihani Shalalfeh was captured by prior heartbeat; no later Gaza story listed."
+      },
+      {
+        "publisher": "UN in Palestine homepage",
+        "url": "https://palestine.un.org/en",
+        "result": "27 October OCHA/UN article on UN-site and school/convoy shooting, new yellow line markers, and fires around Ash Shuja'iyyeh was surfaced in previous 02:49 watch; not recounted as a new finding."
+      },
+      {
+        "publisher": "Al Jazeera Palestine feed",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "No new 27 October Gaza item on accessible listing; 26 October fatality story is older coverage."
+      },
+      {
+        "publisher": "WFP Gaza press release",
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "result": "19 October funding cuts item retrieved via search, outside window."
+      },
+      {
+        "publisher": "WFP news index",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 in direct check; targeted search retrieved relevant older WFP press release."
+      }
+    ],
+    "excluded_or_unconfirmed": [
+      "WAFA 27 October 11:46 AM Gaza child fatality: prior watch recorded it; duplicate.",
+      "27 October UN in Palestine story including shootings by UN schools and UN convoy: prior 02:49 watch already recorded this report; no separately verified incident timestamp within window.",
+      "27 October WAFA 12:13 and 1:07 PM headlines and OCHA West Bank snapshot: geographically outside Gaza remit.",
+      "26 October OCHA report's Gaza casualty/medical/fuel/water and WFP bakery details: retrospective or already published, not new in this watch hour.",
+      "19 October WFP Gaza food-assistance cuts: established prior report, not new.",
+      "Search results restricted to stale 2025/earlier-2026 articles, opinion, or source claims without verified incident impact were excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean region",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Not accessible via web source tool; exact HTTP status not exposed",
+        "materiality": "Previously documented continuing limitation. WHO global and OCHA available."
+      },
+      {
+        "source": "WFP news index",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "materiality": "Index unavailable; primary WFP 19 October press release surfaced in search. Useful coverage remained."
+      }
+    ],
+    "search_limit": "Twelve additional targeted search queries after initial two OCHA OPT/WHO targeted checks. Direct page reads not counted toward query limit.",
+    "outcome_assessment": "No newly verified, nonduplicate Gaza development in bounded hourly window. DEGRADED refers to partial source access, not failure of the overall watch. No newly material degradation identified.",
+    "action_scope": "Exactly one fresh heartbeat JSON; no approvals, publication, production modification, scheduler change, or watch disabling."
+  }
+}

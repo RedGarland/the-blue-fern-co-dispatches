@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T164337-0700-r11-20261027T234337Z",
+  "scheduled_for": "2026-10-27T16:44:51-07:00",
+  "started_at": "2026-10-27T16:43:37-07:00",
+  "completed_at": "2026-10-27T16:44:55-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T15:50:04-07:00",
+    "end": "2026-10-27T16:44:55-07:00",
+    "basis": "Previous watch's verified heartbeat ended at 2026-10-27T15:50:04-07:00; search results checked against source/event dates, excluded old, repeated, unverified or outside-Gaza reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only. Production Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T154848-0700-r11-20261027T224848Z.json",
+      "completed_at": "2026-10-27T15:50:04-07:00",
+      "outcome": "no_findings",
+      "status": "DEGRADED"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Home/updates list 27 October West Bank monthly snapshot; newest Gaza-specific situation report dated 22 October, posted 26 October. No new within-window Gaza update verified."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible after correcting WHO page URL. No new dated in-window Gaza health, medevac, fuel, ambulance, hospital-functioning, or capacity development on overview."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Endpoint inaccessible, ongoing known coverage restriction; alternate WHO global accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:ochaopt.org Gaza October 27 2026 latest humanitarian update 27 October 28 October",
+      "site:who.int OR site:emro.who.int Gaza October 27 2026 hospitals medical evacuation fuel",
+      "Reuters Gaza October 27 2026 latest civilian casualties ceasefire aid access overnight",
+      "site:english.wafa.ps Gaza October 27 2026 28 October strikes casualties displaced",
+      "site:unrwa.org OR site:wfp.org OR site:unicef.org Gaza 27 October 2026 food water aid announcement",
+      "site:msf.org OR site:icrc.org Gaza October 27 2026 hospital ambulances displaced",
+      "Gaza medical evacuation WHO hospital trauma fuel October 27 2026 latest",
+      "Gaza Kerem Shalom Rafah crossing aid trucks access October 27 2026 latest UN",
+      "site:news.un.org Gaza 27 October 2026 humanitarian civilian casualties",
+      "site:apnews.com Gaza October 27 2026 ceasefire civilians casualties",
+      "site:aljazeera.com/news/2026/10/27 Gaza latest airstrike casualties talks",
+      "site:bbc.com/news Gaza October 27 2026 fighting deaths aid"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest material focuses on Israeli election and incidents in the West Bank; no in-window Gaza qualifying report identified."
+      },
+      {
+        "publisher": "United Nations in Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "October 27 Gaza material re UN sites, schools, convoy gunfire and displaced households already captured by earlier watch; no new within-window Gaza development."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Recent list dominated by Israeli election/West Bank; no newly verified within-window Gaza report."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/en/posts/265784-silent-death-in-gaza-hunger-and-lack-of-medicine-claim-patients-amidst",
+        "result": "Gaza healthcare article timestamp Tue Oct 27 07:56 Jerusalem time, far earlier than window; mixed contextual and unsourced statistics, excluded."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/israel-gaza-un-war-sexual-crimes-9547f83319b8c5be32ab3ab81534772a",
+        "result": "UN-commissioned investigators' report covered October 26; not fresh within this hourly interval."
+      }
+    ],
+    "exclusions": [
+      "OCHA/UN reported gunfire near Deir al Balah UN site, schools, convoy, and Ash Shuja'iyyeh shelter arson: recorded in 02:53 watch; not new.",
+      "WAFA child Tihani Mohammad Saeed Shalalfeh death report recorded at 03:45; not new.",
+      "October 26 OCHA Gaza situation report and AP report on UN-commissioned investigators, plus October 27 early-morning Al-Quds healthcare article: outside hourly window.",
+      "UN Hebron displacement, hospital and ambulance detention reports are West Bank, outside Gaza dispatch.",
+      "Search result titled Gaza Humanitarian Response Situation Report No. 7 refers to October 2025, not October 2026; explicitly excluded as recycled."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Endpoint unavailable through retrieval",
+        "materiality": "Persistent known restriction; WHO global overview and OCHA accessible."
+      },
+      {
+        "source": "BBC / UN News targeted search",
+        "url": null,
+        "error": "Robots.txt restriction on search-result source domains",
+        "materiality": "Partial search coverage only; OCHA, WHO, WAFA, UN Palestine, AP and Al Jazeera accessible."
+      }
+    ],
+    "assessment": "No newly verified, traceable, nonduplicate Gaza civilian-impact or humanitarian-access development within the specified 15:50–16:44 PDT window. No-findings is bounded negative assurance, not a claim that no incident occurred. DEGRADED reflects known WHO regional access restriction and two blocked publisher domains; not a newly material failure.",
+    "action_scope": "Exactly one GitHub heartbeat only; no approvals, publication, production modifications, social posts, or task/schedule changes."
+  }
+}

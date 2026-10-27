@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T054022-0700-r11-20261027T124022Z",
+  "scheduled_for": "2026-10-27T05:44:51-07:00",
+  "started_at": "2026-10-27T05:40:22-07:00",
+  "completed_at": "2026-10-27T05:42:27-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T04:45:50.673-07:00",
+    "end": "2026-10-27T05:42:27-07:00",
+    "basis": "Completion of the previous verified Gaza watch heartbeat through the observation cutoff, with newly published material evaluated for actual newness and duplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261027T044308-0700-r11-20261027T114308Z",
+      "completed_at": "2026-10-27T04:45:50.673-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T044308-0700-r11-20261027T114308Z.json",
+      "verification": "Fetched from ops/watch-ledger and inspected before the current search."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent Gaza humanitarian situation report listed was the 22 October report published on 26 October; 27 October update is a West Bank snapshot."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest displayed materials and reporting predate the current hourly window. No verified new medical evacuation, hospital-capacity, fuel or ambulance update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Inaccessible via web source tool, a previously documented continuing limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza October 27 2026 \"PM\" killed injured Khan Younis",
+      "site:reuters.com/world/middle-east/ Gaza October 27 2026 strikes ceasefire aid civilians",
+      "site:apnews.com/article/ Gaza October 27 2026 hospital killed ceasefire",
+      "site:palestine.un.org/en \"27 October 2026\" Gaza aid hospitals civilians",
+      "site:unicef.org/press-releases Gaza 27 October 2026 water children displaced",
+      "site:ochaopt.org Gaza \"27 October 2026\" shootings displacement new",
+      "site:english.wafa.ps Gaza \"Tuesday, October 27, 2026\" \"afternoon\" killed injuries displacement",
+      "site:aljazeera.com/news/2026/10/27/ Gaza Palestinians hospital aid ceasefire",
+      "site:theguardian.com/world/2026/oct/27 Gaza strikes ceasefire civilian",
+      "site:msf.org Gaza October 27 2026 healthcare hospitals operations",
+      "site:icrc.org Gaza October 27 2026 ambulance hostages detainees humanitarian",
+      "Gaza Rafah Kerem Shalom crossing medical evacuation fuel food October 27 2026 latest humanitarian 14:00 Gaza"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest displayed 27 October item at 1:41 PM concerned Ramallah/West Bank; 11:46 AM southern Gaza fatality was already captured by preceding watches. No later Gaza incident listed."
+      },
+      {
+        "publisher": "United Nations in Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "27 October UN story repeats previously recorded incidents near Gaza UN sites, schools and convoy, and tent fires/yellow-line changes. No separately timestamped new incident established in this watch window."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "27 October top feed primarily covers Israeli elections and West Bank; latest Gaza casualty article was dated 26 October."
+      },
+      {
+        "publisher": "UNICEF Middle East and North Africa",
+        "url": "https://www.unicef.org/mena/press-releases",
+        "result": "Latest Gaza-focused statement on 22 October. No new 27 October Gaza humanitarian update listed."
+      }
+    ],
+    "excluded_or_unconfirmed": [
+      "WAFA report on six-year-old Tihani Mohammad Saeed Shalalfeh was recorded by the 03:45 watch, not new.",
+      "UN story about Gaza UN-site, school/convoy shootings and yellow-line/tent-fire incidents had been captured by the 02:49 watch and reiterated later; no novel independently dated incident in this watch.",
+      "27 October OCHA/UN and WAFA reporting centered on Hebron and the West Bank is out of Gaza remit.",
+      "26 October UN Commission of Inquiry findings and 26 October Al Jazeera casualty stories predate this hourly window; not counted as new.",
+      "Search-index returns consisting of earlier 2026 or 2025 Gaza reports, opinions, and unrelated Middle East or election items were excluded.",
+      "No new, date-verified crossing, aid, water, food, healthcare, detention or ceasefire operational change was found."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Not accessible through web retrieval; exact HTTP code unavailable",
+        "materiality": "Known ongoing limitation, partially mitigated by accessible WHO global and OCHA sites; no newly material degradation."
+      }
+    ],
+    "search_limit": "Twelve targeted search queries following initial OCHA OPT and WHO checks; direct URL reads were not additional searches.",
+    "outcome_assessment": "No newly verified qualifying and nonduplicate Gaza development in this hourly interval. DEGRADED reflects one continuing regional-source access restriction, not a material new failure.",
+    "action_scope": "One unique heartbeat JSON only; no editorial approval, publication, social post, production mutation, schedule change or disabling."
+  }
+}

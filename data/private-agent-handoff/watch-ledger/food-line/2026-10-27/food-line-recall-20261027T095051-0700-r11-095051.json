@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T095051-0700-r11-095051",
+  "scheduled_for": "2026-10-27T09:45:54-07:00",
+  "started_at": "2026-10-27T09:50:51-07:00",
+  "completed_at": "2026-10-27T09:52:28.181-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T08:48:36-07:00",
+    "end_at": "2026-10-27T09:52:28.181-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at verified prior hourly Food Line Source Watch heartbeat completion. Searches prioritize fresh notices since that check; older reports are not counted as new signals."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" closed fire October 27 2026 town food access",
+      "\"last grocery store\" closing fire October 26 2026 community",
+      "\"sole grocery store\" shut down Oct 27 2026 fire",
+      "\"full-service grocery store\" closes October 27 2026 residents",
+      "\"food distribution\" canceled storm October 27 2026 food bank",
+      "\"food pantry\" distribution canceled flood power outage October 26 27 2026",
+      "\"food bank\" closed due to fire storm October 27 2026",
+      "\"food pantry\" \"closing\" \"October 27, 2026\" services",
+      "\"food bank\" \"reduce hours\" \"October 27, 2026\"",
+      "site:gov \"SNAP\" \"interruption\" October 27 2026 benefits",
+      "site:gov \"WIC\" benefits \"outage\" \"October 27, 2026\"",
+      "SNAP EBT outage October 27 2026 agency benefits delayed"
+    ],
+    "focus_classes": [
+      "Loss, closure, fire or disaster at only/sole/last/full-service grocery store",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate food-access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall only; national production collector remains authoritative. No editorial approval, publication, schedule changes or task disabling.",
+    "Executed 12 targeted searches across four high-value miss classes; search interface completed without a reported error, but surfaced sparse fresh local/official reporting.",
+    "No new qualifying event with a source dated in the observation interval was verified. Search return candidates were general/historical retail closures and 2025 SNAP shutdown notices or evergreen SNAP guides, not current official benefit interruption confirmations.",
+    "Excluded a September 27, 2026 Inc. account of broader Winn-Dixie closures and Immokalee's previously resolved full-service grocery gap as outside the window: https://www.inc.com/amaya-nichole/winn-dixie-closing-stores-2026-updated-list-doomed-locations/91410164",
+    "Excluded California government October 20, 2025 CalFresh interruption warning as historical, not October 2026: https://www.gov.ca.gov/2025/10/20/trump-shutdown-could-soon-halt-food-support-for-millions-in-california-calfresh-cards-face-possibility-of-no-new-funds-in-november/",
+    "Excluded January 29, 2026 third-party SNAP/WIC shutdown guidance as stale, not evidence of an October 27, 2026 active outage: https://www.propel.app/snap/government-shutdown/",
+    "Previously captured Heber City UT pantry closure and Provo UT appointment cuts are not re-reported as new.",
+    "Search/indexing lag and sparse local-source indexing limit confidence in the absence of results; no material source access failure was detected."
+  ]
+}

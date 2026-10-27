@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T184052-0700-r11-20261027T014052Z",
+  "scheduled_for": "2026-10-26T18:44:51-07:00",
+  "started_at": "2026-10-26T18:40:52-07:00",
+  "completed_at": "2026-10-26T18:44:03-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T17:47:58-07:00",
+    "end": "2026-10-26T18:44:03-07:00",
+    "basis": "Prior verified Gaza Source Watch heartbeat completed_at to present observation. Recency is evaluated against source publication and event timing; earlier articles and already-captured developments are not new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production daily Gaza collection/publication is authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T174541-0700-r11-20261027T004541Z",
+      "completed_at": "2026-10-26T17:47:58-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T174541-0700-r11-20261027T004541Z.json",
+      "verified_by": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listing remains Humanitarian Situation Report | 22 October 2026, published October 26. No newer item; October 26 report findings were captured in prior watches."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/occupied-palestine/",
+        "result": "Direct web fetch inaccessible. Prior runs have reported persistent regional HTTP 502, but this execution did not independently establish the HTTP status."
+      },
+      {
+        "publisher": "WHO global emergencies portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest listed relevant WHO regional and global news predates window. No fresh Gaza health, ambulance, evacuation, transport or hospital functioning change verified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 27 2026 early Tuesday airstrike casualties ambulances 4 am Gaza time",
+      "site:english.wafa.ps \"27/October/2026\" Gaza injured killed",
+      "site:reuters.com Gaza October 26 2026 Monday evening strike ceasefire crossings killed",
+      "site:apnews.com/article Gaza October 26 2026 Monday evening displaced casualties hospital",
+      "site:un.org Gaza October 26 2026 evening briefing civilian impact aid",
+      "site:palestinercs.org Gaza \"27 October 2026\" ambulance rescue evacuation",
+      "site:unicef.org \"26 October 2026\" Gaza children health water",
+      "site:wfp.org Gaza October 26 2026 bakeries flour food aid update",
+      "site:who.int Gaza \"26 October 2026\" hospital medical evacuation fuel transport",
+      "site:ochaopt.org Gaza \"27 Oct 2026\" humanitarian access crossings water",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"27 Oct 2026\" Gaza hospital displacement",
+      "Gaza Rafah Kerem Shalom crossing October 26 2026 18:00 PDT new aid access conditions"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Most recent homepage item shown October 26 23:52 local time in Palestine and is West Bank-related; Gaza displacement-camp fire entry at 19:36 October 26 Palestine local time was already recorded by preceding watches. No new Gaza headline found."
+      },
+      {
+        "publisher": "OCHA October 26 report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+        "result": "Accessed. Gaza food assistance, healthcare capacity, child casualty and water details are historical or already recorded."
+      }
+    ],
+    "search_results": "No newly verified, nonduplicate, qualifying Gaza civilian-impact or humanitarian operations change surfaced in the bounded observation window.",
+    "excluded_known_or_nonqualifying": [
+      "OCHA October 26 report material and WFP October 19 ration cuts already covered by prior watches.",
+      "WAFA Shuja'iyya junction displacement-camp fire and Deir al-Balah strike reports already recorded.",
+      "Older 2023–2025 reporting, repeated ceasefire/crossing background, West Bank-only items, and non-attributable material."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/occupied-palestine/",
+        "error": "Page inaccessible via direct fetch; longstanding source coverage limitation.",
+        "materiality": "Not newly material: OCHA and WHO global alternatives remained accessible."
+      },
+      {
+        "source": "UN unispal homepage",
+        "url": "https://www.un.org/unispal/",
+        "error": "Direct fetch HTTP 403.",
+        "materiality": "Supplemental page only; remaining UN coverage from OCHA and other sources accessible."
+      }
+    ],
+    "limitations": "Search and publication indexing may lag; this negative result does not prove no incidents occurred. WHO regional page could not be accessed.",
+    "action_scope": "Exactly one private ops/watch-ledger heartbeat; no approval, publishing, scheduling, production, or social change."
+  }
+}

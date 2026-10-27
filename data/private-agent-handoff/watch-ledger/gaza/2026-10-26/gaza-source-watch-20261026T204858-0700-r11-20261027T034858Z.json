@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T204858-0700-r11-20261027T034858Z",
+  "scheduled_for": "2026-10-26T20:44:51-07:00",
+  "started_at": "2026-10-26T20:48:58-07:00",
+  "completed_at": "2026-10-26T20:50:02-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T19:48:22-07:00",
+    "end": "2026-10-26T20:50:02-07:00",
+    "basis": "Previous verified hourly supplementary watch completed_at to this observation; discovery checked against earlier hourly ledger findings and source publication/event dates. Publication times missing from search results were not inferred."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; production collector/publisher is authoritative and was not altered.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T194731-0700-r11-20261027T024731Z",
+      "completed_at": "2026-10-26T19:48:22-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T194731-0700-r11-20261027T024731Z.json",
+      "verification": "Fetched contents from ops/watch-ledger before searching"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest update shown dated 26 October 2026, Humanitarian Situation Report | 22 October 2026. Previously covered by watches; no newly dated report in observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Inaccessible through web tool; exact HTTP status not established in this execution. Persistent documented limitation."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, no new October 26/27 Gaza-specific hospital, medical-evacuation, ambulance or functioning-capacity update listed."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 27 2026 early morning latest new casualties strikes civilians 05:00 Palestine",
+      "site:english.wafa.ps \"27/October/2026\" Gaza deaths wounded houses",
+      "site:reuters.com/world/middle-east/ Gaza October 26 2026 evening latest ceasefire violations civilians",
+      "site:apnews.com/article Gaza October 26 2026 late Monday strikes ceasefire crossing",
+      "site:un.org Gaza October 26 2026 evening aid deaths medical crisis new",
+      "site:palestinercs.org Gaza October 27 2026 ambulance emergency patients",
+      "site:who.int Gaza \"26 October 2026\" health hospitals medical evacuation",
+      "site:unicef.org Gaza \"26 October 2026\" drinking water displaced children",
+      "site:wfp.org Gaza \"26 October 2026\" food operations crossing",
+      "Gaza Rafah crossing Kerem Shalom aid evacuation October 27 2026 early Tuesday latest",
+      "Gaza ceasefire negotiations October 26 2026 late evening Hamas Israel release hostages official",
+      "Gaza October 27 2026 early Tuesday hospital strike casualties aid 6 AM local"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Newest Gaza-relevant headline listed October 26 7:36 PM local (displacement camp fire), previously covered by earlier watch. Later headlines concerned West Bank or nonqualifying international reactions."
+      },
+      {
+        "publisher": "UN Question of Palestine",
+        "url": "https://www.un.org/unispal/",
+        "result": "HTTP 403 forbidden via web tool; other UN/OCHA sources available."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/un-inquiry-says-israel-kept-committing-genocide-gaza-after-truce-2026-10-26/",
+        "result": "October 26 reporting on UN Commission of Inquiry; same report already captured by prior watch via Associated Press. Not a fresh distinct finding."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/9547f83319b8c5be32ab3ab81534772a",
+        "result": "October 26 report already present in prior watch. No new qualifying incremental findings established."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "October 26 OCHA situation report on food, water and health access already recorded.",
+      "October 26 Reuters/AP coverage of UN Commission of Inquiry and Sde Teiman detainees repeats prior findings.",
+      "October 26 WAFA displaced-camp fire and al-Mawasi/Deir al-Balah casualty accounts already assessed.",
+      "Earlier October casualty reports, 2025 ceasefire/crossing changes, West Bank-only developments, unverified claims and opinion."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Direct open inaccessible via web tool (status code not verified)",
+        "materiality": "Persistent, non-new source restriction; OCHA and WHO global accessible; overall run DEGRADED."
+      },
+      {
+        "source": "UN Question of Palestine index",
+        "url": "https://www.un.org/unispal/",
+        "error": "HTTP 403",
+        "materiality": "Supplementary source only; no newly material loss of coverage."
+      }
+    ],
+    "search_result": "No new qualifying, nonduplicate Gaza development independently verified in the bounded interval. Search-index freshness and uncertain exact publication times limit exclusion of unseen incidents.",
+    "notification_disposition": "No notification: no positive findings and no new material degradation. Persistent WHO regional access limitation reflected in DEGRADED status.",
+    "action_scope": "Exactly one watch-ledger JSON on ops/watch-ledger; no publication, approval, social post, branch change, automation change or production mutation."
+  }
+}

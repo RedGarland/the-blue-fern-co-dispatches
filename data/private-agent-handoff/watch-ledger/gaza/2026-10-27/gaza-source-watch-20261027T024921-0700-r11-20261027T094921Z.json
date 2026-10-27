@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T024921-0700-r11-20261027T094921Z",
+  "scheduled_for": "2026-10-27T02:44:51-07:00",
+  "started_at": "2026-10-27T02:49:21-07:00",
+  "completed_at": "2026-10-27T02:53:19.683-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T01:45:43.191-07:00",
+    "end": "2026-10-27T02:53:19.683-07:00",
+    "basis": "Previous verified Gaza Source Watch heartbeat completed_at to current observation; source issue dates and duplicate coverage checked. Times of newly surfaced publication and underlying incidents are not all known."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261027-un-facilities-gunfire-deir-al-balah-1",
+      "canonical_source_url": "https://palestine.un.org/en/325195-west-bank-hebron-crackdown-displaces-thousands-t%C3%BCrk-warns-ethnic-cleansing",
+      "title": "OCHA reports UN site under fire and three shooting incidents near UN schools and convoy in Gaza",
+      "publisher": "United Nations in Palestine (reporting OCHA)",
+      "source_date": "2026-10-27",
+      "publication_date": "2026-10-27",
+      "publication_time": null,
+      "event_date": null,
+      "event_date_context": "OCHA says UN site has come under fire 'since Friday' (23 October 2026); dates of three separate shooting incidents not specified.",
+      "location": "Deir al Balah and unspecified areas near three UN schools and a UN convoy, Gaza Strip",
+      "affected_population_or_system": "UN humanitarian site, schools, convoy and nearby civilians; no verified casualty or damage totals in this report.",
+      "exact_supporting_passage": "Since Friday, a UN site in Deir al Balah has come under fire.",
+      "source_type": "official UN humanitarian reporting (UN Palestine citing OCHA); primary OCHA article linked but direct fetch HTTP 403",
+      "classification": "follow-up",
+      "confidence": "high for OCHA-attributed report; medium for in-window novelty because only calendar-day publication verified",
+      "bounded_discovery_context": {
+        "discovered_in_window": "2026-10-27T01:45:43.191-07:00 to 2026-10-27T02:53:19.683-07:00",
+        "source_link": "https://www.unocha.org/news/todays-top-news-yemen-occupied-palestinian-territory-sudan-democratic-republic-congo",
+        "newness_basis": "Published in UN Palestine's 27 October 2026 story; previous heartbeat recorded 26 October camp-fire report, not this set of UN-site, school, and convoy shooting incidents. Exact publication hour and event dates not available.",
+        "exclusions": "No implication that shootings occurred during this watch hour; no alleged casualties, perpetrator identity, or facility destruction added beyond cited material.",
+        "additional_verified_context": "UN Palestine's 27 October story reports three separate shooting incidents in the vicinity of three UN schools and near a UN convoy."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Primary Gaza collector and editorial publisher remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261027T014318-0700-r11-20261027T084318Z",
+      "completed_at": "2026-10-27T01:45:43.191-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T014318-0700-r11-20261027T084318Z.json",
+      "verification": "Fetched and read from ops/watch-ledger."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest index item is 26 October publication of Humanitarian Situation Report | 22 October 2026. No new in-window index post."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; situation landing page lists no new date-verified Gaza-specific operational update in this window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Direct web fetch inaccessible; longstanding coverage limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza 27 October 2026 today Tuesday midday deaths injured displaced",
+      "site:reuters.com Gaza October 27 2026 Israel ceasefire civilians killed injured",
+      "site:apnews.com Gaza October 27 2026 hospitals killed Palestinians",
+      "site:un.org Gaza 27 October 2026 aid crossing humanitarian latest",
+      "site:unicef.org Gaza 27 October 2026 children water shelter deaths",
+      "site:wfp.org Gaza 27 October 2026 food aid truck meals",
+      "site:palestinercs.org Gaza 27 October 2026 ambulance medical emergency",
+      "site:aljazeera.com/news/2026/10/27 Gaza strikes civilians ceasefire aid",
+      "Gaza Rafah Kerem Shalom crossings fuel patients evacuation Oct 27 2026 today",
+      "Gaza Israel Hamas ceasefire hostage detainee negotiations October 27 2026 breaking",
+      "Gaza displacement food water infrastructure shelling health Oct 27 2026",
+      "site:bbc.com/news OR site:theguardian.com/world/2026/oct/27 Gaza Palestinians"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "UN in Palestine",
+        "url": "https://palestine.un.org/en/325195-west-bank-hebron-crackdown-displaces-thousands-t%C3%BCrk-warns-ethnic-cleansing",
+        "result": "27 October 2026 article accessible; attributes Gaza UN-site/school/convoy incidents to OCHA; exact publication time not visible."
+      },
+      {
+        "publisher": "OCHA headquarters",
+        "url": "https://www.unocha.org/news/todays-top-news-yemen-occupied-palestinian-territory-sudan-democratic-republic-congo",
+        "result": "Linked original returned HTTP 403 through web; UN Palestine official republication used."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/un-inquiry-says-israel-kept-committing-genocide-gaza-after-truce-2026-10-26/",
+        "result": "Published 26 October at 18:23 UTC, outside search window; UN inquiry report not treated as newly published."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "27 October 11:18 AM through 10:01 AM Gaza-local leading stories concern West Bank, outside Gaza scope; 26 October 19:36 Gaza camp fire previously documented."
+      },
+      {
+        "publisher": "UNICEF and UN humanitarian index",
+        "url": "https://palestine.un.org/en",
+        "result": "27 October index references OCHA-reported violence near humanitarian sites."
+      }
+    ],
+    "excluded_or_unconfirmed": [
+      "26 October OCHA report and 26 October Gaza displacement camp fire were known before this watch, not duplicated.",
+      "26 October UN Commission of Inquiry report on crimes/genocidal acts was published before the interval; not a new hourly finding.",
+      "UN Palestine notes newly observed Yellow Line blocks in Ash Shuja'iyyeh and Deir al Balah but gives no exact observation date or independently quantified new civilian effect; retained as context rather than a separate finding.",
+      "West Bank 27 October reports are outside this Gaza-only scope.",
+      "Older Reuters/AP/Al Jazeera casualty articles and historic humanitarian figures omitted."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Web fetch inaccessible, HTTP status unspecified",
+        "materiality": "Persistent gap; WHO global and OCHA OPT accessible."
+      },
+      {
+        "source": "OCHA global direct news article",
+        "url": "https://www.unocha.org/news/todays-top-news-yemen-occupied-palestinian-territory-sudan-democratic-republic-congo",
+        "error": "HTTP 403",
+        "materiality": "Official UN Palestine republication available and attributed to OCHA."
+      },
+      {
+        "source": "OHCHR direct report and PDF",
+        "url": "https://www.ohchr.org/en/press-releases/2026/10/israel-has-committed-war-crimes-and-crimes-against-humanity-occupied",
+        "error": "HTTP 403",
+        "materiality": "Report is from 26 October, outside hourly window; Reuters and UN summaries available."
+      }
+    ],
+    "search_limit": "12 additional targeted searches total; direct source clicks were not counted as additional searches.",
+    "outcome_assessment": "One newly surfaced official UN/OCHA-attributed update on fire at humanitarian facilities. Source is dated 27 October, but hour of publication and exact shooting dates are not verified; keep follow-up classification, not a confirmed incident during this hour.",
+    "action_scope": "Create exactly one heartbeat on ops/watch-ledger; do not approve, publish, post socially, modify runner, adjust schedule, or disable watch."
+  }
+}

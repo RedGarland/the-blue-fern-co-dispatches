@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T224036-0700-r11-20261027T054036Z",
+  "scheduled_for": "2026-10-26T22:44:51-07:00",
+  "started_at": "2026-10-26T22:40:36-07:00",
+  "completed_at": "2026-10-26T22:44:32-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T21:43:40-07:00",
+    "end": "2026-10-26T22:44:32-07:00",
+    "basis": "Most recent verified watch heartbeat's completed_at through current observation, Pacific time. Searches also covered the early October 27 Gaza-local morning. Do not infer exact event times from undated search result snippets."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; production Gaza publisher/collector authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T214110-0700-r11-20261027T044110Z",
+      "completed_at": "2026-10-26T21:43:40-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T214110-0700-r11-20261027T044110Z.json",
+      "verification": "Readback via connected GitHub; repository directory listing showed this as latest preceding October 26 Gaza heartbeat."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed release was 26 Oct 2026 (Humanitarian Situation Report | 22 October 2026), previously assessed. No newly dated update in observation interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Inaccessible via browser tool, same known restriction as preceding watches. Specific HTTP status not established."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new dated October 26/27 hospital, ambulance, medevac or health-capacity development listed."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 27 2026 Tuesday morning civilians killed wounded Israeli strikes latest 08:00 Gaza",
+      "site:english.wafa.ps \"27/October/2026\" Gaza martyrs injured displacement",
+      "site:reuters.com/world/middle-east/ Gaza October 27 2026 airstrike Palestinians killed ceasefire",
+      "site:apnews.com/article/ Gaza October 27 2026 bombing hospital civilian",
+      "site:palestinercs.org \"October 27, 2026\" Gaza ambulance medical workers",
+      "site:un.org Gaza \"27 October 2026\" aid access displacement water",
+      "site:wfp.org Gaza \"27 October 2026\" bread bakeries flour aid crossing",
+      "site:unicef.org Gaza \"27 October 2026\" water children displacement",
+      "site:who.int Gaza \"27 October 2026\" hospitals patients medical evacuation",
+      "Gaza Rafah crossing Kerem Shalom October 27 2026 aid trucks medical evacuations new suspension",
+      "Gaza ceasefire hostages negotiation Hamas Israel October 27 2026 new agreement violations civilians",
+      "Gaza October 27 2026 early Tuesday al Mawasi Khan Younis Deir al Balah Nuseirat displaced people casualties"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; most recent visible Gaza item was October 26 7:36 PM Palestinian-local displacement-camp fire, previously covered. Later homepage stories concerned the West Bank or nonqualifying diplomacy. No October 27 Gaza incident shown."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/un-inquiry-says-israel-kept-committing-genocide-gaza-after-truce-2026-10-26/",
+        "result": "October 26 UN inquiry report previously covered, not a novel development in this window."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/9547f83319b8c5be32ab3ab81534772a",
+        "result": "October 26 UN inquiry report already covered."
+      },
+      {
+        "publisher": "WFP, UNICEF and Palestinian Red Crescent",
+        "url": null,
+        "result": "October 27 targeted searches yielded no independently verified newly dated Gaza-specific operational change."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "October 26 OCHA humanitarian report's food, bakery, WASH, health and casualty details previously assessed; reporting period largely October 12–18.",
+      "October 26 AP/Reuters UN Commission of Inquiry findings previously covered.",
+      "October 26 WAFA Gaza camp fire and earlier casualty/toll reports previously assessed.",
+      "Later WAFA West Bank events, opinion and diplomacy outside Gaza scope.",
+      "Older 2025/2026 ceasefire, hostage, crossing or medevac stories, unverifiable claims and recycled search-index items."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Site inaccessible via browser tool; HTTP code not established.",
+        "materiality": "Persistent, previously documented limitation; OCHA OPT, WHO global and established reporting available. Marked DEGRADED but not materially newly degraded."
+      }
+    ],
+    "search_result": "No new, source-traceable, nonduplicate Gaza development was verified in the bounded observation window. Freshness lag and the longstanding WHO regional endpoint outage remain residual recall limitations.",
+    "notification_disposition": "No notification: no positive findings and no new material deterioration; persistent WHO restriction recorded.",
+    "action_scope": "Exactly one watch-ledger heartbeat in ops/watch-ledger. No approval, publication, production collector, scheduling or social changes."
+  }
+}

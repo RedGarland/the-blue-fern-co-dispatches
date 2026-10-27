@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T024443-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T02:45:22-07:00",
+  "started_at": "2026-10-27T02:44:43-07:00",
+  "completed_at": "2026-10-27T02:46:28-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T01:49:40.094-07:00",
+    "end": "2026-10-27T02:46:28-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through this run's observation; targeted searches include late-indexed recall candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded U.S. and territories recall watch; production national Care Line collection remains authoritative and was not accessed or changed.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official current CMS Public Notices listing retrieved and inspected first; newest entries remained Oct 23 California and Ohio home health agency termination notices. No Oct 27 termination, rescission, or CLIA action listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended October 27 2026 overnight US rural",
+      "hospital labor and delivery maternity unit closed suspended October 26 27 2026",
+      "behavioral health psychiatric inpatient unit closed suspended October 26 27 2026 hospital",
+      "dialysis center services abruptly shut down October 26 27 2026 United States",
+      "cancer oncology clinic services closure appointments suspended October 26 27 2026",
+      "primary care clinic urgent care closure immediate October 26 27 2026",
+      "ambulance EMS service shut down suspension station closing October 26 27 2026",
+      "air medical helicopter base closure suspended services October 26 27 2026",
+      "rural hospital emergency care shutdown ambulance diversion October 27 2026",
+      "hospital service reopened resumed emergency department October 27 2026",
+      "UNM Health Oct 27 2026 cyberattack ambulance diversion end emergency restored",
+      "site:gov October 27 2026 health services termination CLIA suspension Medicare"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Retrieved; newest date 2026-10-23; no new listed notices."
+      },
+      {
+        "source": "University of New Mexico Health Sciences Center official cybersecurity bulletin",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Retrieved; latest update Oct 26 at 10:27 p.m. MDT (9:27 p.m. PDT), already in earlier watch. Hospitals open; Tuesday clinic resumption announced. No later official confirmation of end of diversions or full ED restoration."
+      },
+      {
+        "source": "KOB reporting of UNM cyber incident",
+        "url": "https://www.kob.com/news/top-news/apparent-computer-hacking-attack-hits-unm-hospital/",
+        "result": "Article listing found; article fetch returned HTTP 402. Official UNM bulletin provided directly accessible coverage; no new event from this listing could be confirmed."
+      }
+    ],
+    "duplicate_review": {
+      "prior_heartbeat": "care-line-watch-20261027T014613-0700-r11-recall12.json",
+      "prior_completed_at": "2026-10-27T01:49:40.094-07:00",
+      "excluded": [
+        "UNM Health Oct 26 cyber disruption, ambulance diversions, outpatient cancellations and subsequent phased restoration/hospital-open notice: documented in previous heartbeats, with no new post-window change established.",
+        "Other returned hospital, maternity, behavioral-health, dialysis, oncology, primary-care and air-medical changes: older than the hourly observation window or outside U.S. and territory scope.",
+        "Proposals, ownership-only stories, opinion, irrelevant transportation shutdowns, and unsupported assertions."
+      ]
+    },
+    "search_failures": [
+      {
+        "source": "KOB News UNM Health article",
+        "failure": "HTTP 402 on opening full article",
+        "fallback": "Official UNM Health bulletin successfully checked",
+        "material_degradation": false
+      }
+    ],
+    "limitations": "A targeted local article was inaccessible (HTTP 402), requiring DEGRADED despite successful official-source fallback. Search index returned mostly historical or duplicate items; late-night local/territory developments may not yet be indexed. No new qualifying change independently confirmed. No inference of completeness for the production collector.",
+    "material_degradation": false,
+    "controls": "Append exactly one watch heartbeat on ops/watch-ledger. No review approval, publication, scheduling changes or task disabling."
+  }
+}

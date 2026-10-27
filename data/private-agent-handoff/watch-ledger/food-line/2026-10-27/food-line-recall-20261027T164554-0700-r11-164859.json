@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T164554-0700-r11-164859",
+  "scheduled_for": "2026-10-27T16:45:54-07:00",
+  "started_at": "2026-10-27T16:48:59-07:00",
+  "completed_at": "2026-10-27T16:49:55-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T15:45:14-07:00",
+    "end_at": "2026-10-27T16:49:55-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Window begins at the prior independently verified Food Line recall heartbeat completion; includes newly indexed late reports only if a distinct current access impact is established. Published dates without exact times do not establish within-hour novelty."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": null,
+    "search_terms": [
+      "\"only grocery store\" closed October 27 2026 town",
+      "\"last grocery store\" closing October 27 2026 rural",
+      "\"sole grocery\" fire closed October 2026",
+      "\"only supermarket\" closed fire town October 2026",
+      "\"food distribution\" canceled storm October 27 2026 food bank",
+      "\"food distribution\" cancelled flooding power outage October 27 2026",
+      "\"food pantry\" closed fire damage October 27 2026",
+      "\"food bank\" suspended services October 27 2026",
+      "\"food pantry\" abruptly closed October 27 2026",
+      "site:gov SNAP benefits delayed suspended October 27 2026 notice",
+      "site:gov WIC benefits interruption outage October 27 2026",
+      "October 27 2026 SNAP EBT outage payment benefits delayed state"
+    ],
+    "focus_classes": [
+      "Only, sole, last or full-service community grocery loss/closure/fire/disaster",
+      "Disaster or outage cancellation/suspension of emergency food distribution",
+      "Abrupt pantry/food-bank closure or major current access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall only; production nationwide collection remains authoritative and was not modified or independently attested here.",
+    "All 12 targeted searches executed and produced usable coverage; no distinct qualifying newly reported U.S. food-access disruption was verified since the preceding 15:45:14 PT watch completion.",
+    "Previously logged South Philadelphia Community Fridge Point Breeze fire, Wymore Nebraska last-grocery loss, and Heber City/Provo Utah service cuts were excluded as duplicate incidents.",
+    "Kenosha Wisconsin food bank planned year-end 2026 closure (reported approximately October 21) was already evaluated in the preceding heartbeat and is not an abrupt present-hour service loss.",
+    "Spencer New York September 2026 grocery fire, El Paso Texas September 2026 distribution suspension, and Ruby's Pantry April 2026 shutdown were historical and excluded.",
+    "Ohio's delayed restriction on qualifying SNAP beverage purchases is not an interruption of benefits. Search results concerning a possible 2026 federal funding-related November SNAP delay lacked a newly verified official immediate interruption; 2025 shutdown guidance and generic regulatory text were excluded.",
+    "Cleveland-area holiday-meal delivery program restructuring is not an abrupt food pantry/food-bank closure and provider describes replacement distribution, so it was excluded.",
+    "Negative assurance is bounded by search-index timeliness, direct official notices discoverable via indexed web pages, and local-provider social-media-only updates. No web query or inspected source materially failed.",
+    "No approvals, public publication, Bluesky posting, schedule changes, or task disabling occurred."
+  ]
+}

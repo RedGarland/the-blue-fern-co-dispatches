@@ -1,0 +1,74 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T154916-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T15:45:22-07:00",
+  "started_at": "2026-10-27T15:49:16-07:00",
+  "completed_at": "2026-10-27T15:50:13.370-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T14:50:23.737-07:00",
+    "end": "2026-10-27T15:50:13.370-07:00",
+    "basis": "Previous independently verified Care Line watch completion through this completed run; targeted searches constrained to October 27 with one-day recency."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch, not authoritative production collection. Only new concrete U.S./territory healthcare access losses and effective essential service restorations qualify.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS page accessible and checked directly first; October 23 home-health terminations in California and Ohio remain newest. No new termination, rescission, CLIA limitation/suspension or comparable notice since previous check."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 hospital emergency department closed suspended services afternoon US",
+      "October 27 2026 rural hospital closes emergency room maternity unit services announced",
+      "October 27 2026 ambulance service suspended closed base emergency medical transport",
+      "October 27 2026 air medical helicopter base shuts down closes flight operations",
+      "October 27 2026 labor and delivery maternity unit closure suspension hospital local news",
+      "October 27 2026 behavioral health inpatient psychiatric hospital facility closure services",
+      "October 27 2026 dialysis center closure patients treatment access",
+      "October 27 2026 oncology cancer treatment center closes suspended services",
+      "October 27 2026 primary care clinic closes immediately healthcare access",
+      "October 27 2026 hospital reopens emergency department resumes services outage storm cyberattack",
+      "October 27 2026 CMS Medicare provider termination CLIA suspension public notice site:cms.gov",
+      "October 27 2026 clinic hospital emergency service closure Puerto Rico Guam Virgin Islands American Samoa"
+    ],
+    "sources_checked": [
+      {
+        "source": "CMS Public Notices (official)",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Accessible; latest notice date unchanged, October 23, 2026."
+      },
+      {
+        "source": "Lake and McHenry County Scanner",
+        "url": "https://www.lakemchenryscanner.com/2026/10/24/state-revokes-trauma-center-designation-for-vista-medical-center-east-in-waukegan-for-2nd-time-in-less-than-3-years/",
+        "result": "October 24 trauma-designation revocation and associated service disruption predates the October 27 14:50 PDT observation start; not a new development in this run."
+      },
+      {
+        "source": "UNM Health official full-restoration bulletin",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Previously logged as pending_review at 13:47 PDT; no new distinct restoration established during this interval."
+      },
+      {
+        "source": "Strong local and healthcare reporting from targeted searches",
+        "result": "Search results predominantly previously dated service changes, reports from prior months, generic discussions, non-US locations, or irrelevant news. No newly announced/effective in-window qualifying event independently verified."
+      }
+    ],
+    "exclusions": [
+      "UNM Health previously confirmed full restoration: duplicate from the 13:47 PDT heartbeat.",
+      "Vista Medical Center East trauma revocation dated October 24: outside observation window; not newly developed in this interval.",
+      "Earlier rural maternity, dialysis, ambulance base and hospital disruption reporting: outside observation window or previously known.",
+      "Prospective proposals without effective access change, ownership-only stories, opinion, unsupported social claims and international results."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search engine recency filters returned older articles; newly occurring events may not be indexed immediately. No confirmed qualifying development in this bounded recall does not establish comprehensive national absence.",
+    "controls": "Exactly one run-specific private heartbeat recorded to ops/watch-ledger; no approval, publication, schedule alteration, task disabling or production collector changes."
+  }
+}

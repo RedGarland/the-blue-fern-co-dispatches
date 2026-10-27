@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T214110-0700-r11-20261027T044110Z",
+  "scheduled_for": "2026-10-26T21:44:51-07:00",
+  "started_at": "2026-10-26T21:41:10-07:00",
+  "completed_at": "2026-10-26T21:43:40-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T20:50:02-07:00",
+    "end": "2026-10-26T21:43:40-07:00",
+    "basis": "Since preceding verified supplementary ledger heartbeat completion; searches covered late 26 Oct (Pacific) / early 27 Oct (Palestinian local time). Exact source publication timestamps not supplied by index were not assumed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall watch; production collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T204858-0700-r11-20261027T034858Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T204858-0700-r11-20261027T034858Z.json",
+      "completed_at": "2026-10-26T20:50:02-07:00",
+      "verification": "Read existing ops/watch-ledger JSON via GitHub connector before source checks."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed item dated 26 Oct 2026, Humanitarian Situation Report | 22 October 2026; previously covered; no new item for monitored interval."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated Oct 26/27 Gaza-specific medical operations/medevac/capacity change on overview."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Not accessible to browser tool; previously documented persistent regional-site restriction. Exact HTTP code not established."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza October 27 2026 morning killed wounded Israeli attacks camp Rafah",
+      "site:reuters.com/world/middle-east/ Gaza October 26 2026 late ceasefire civilians aid",
+      "site:apnews.com/article/ Gaza October 27 2026 overnight October 26 attack hospital",
+      "site:un.org Gaza 27 October 2026 humanitarian aid access crossing",
+      "site:english.wafa.ps/Pages/Details/ \"27/October/2026\" Gaza hospital casualties displacement",
+      "site:palestinercs.org Gaza 27 October 2026 ambulance emergency medical",
+      "site:who.int Gaza \"26 October 2026\" \"health\" \"evacuation\"",
+      "site:unicef.org Gaza 26 October 2026 water children displacement updated",
+      "site:wfp.org Gaza \"26 October 2026\" food aid ration kitchens latest",
+      "Gaza Rafah Kerem Shalom crossing fuel medical evacuation October 27 2026 Tuesday 6am local",
+      "Gaza Hamas Israel ceasefire negotiations hostages release October 26 2026 late Monday new agreement",
+      "Gaza October 27 2026 early Tuesday hospital ambulance civilian deaths Israeli strike 06:00"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Most recent Gaza-relevant headline on homepage is Gaza City displacement-camp fire dated 26 October 2026, 7:36 PM Palestinian-local time, previously covered. Later displayed headlines concerned West Bank or other nonqualifying items."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible. Latest indexed on-site news is 10 June 2026; no current Gaza emergency or ambulance change established."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible. No new independently dated October 27 Gaza food-access development established."
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/press-releases",
+        "result": "Supplemental index inaccessible through browser tool; targeted UNICEF search recovered older relevant reporting only."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "26 October OCHA report/earlier food assistance and WASH risk reporting already covered.",
+      "Reuters and AP 26 October UN Commission of Inquiry reporting already noted in prior watch; not a newly documented event in this interval.",
+      "WAFA October 26 camp fire, casualties and daily mortality totals already assessed; no independent new material increment verified.",
+      "Older crossing, medical evacuation, ceasefire/hostage reporting and unrelated West Bank events excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Inaccessible via web tool; HTTP status not verified.",
+        "materiality": "Persisting preexisting WHO regional source outage. OCHA/WHO global and independent checks accessible; run DEGRADED, but no newly material loss of coverage."
+      },
+      {
+        "source": "UNICEF State of Palestine press releases index",
+        "url": "https://www.unicef.org/sop/press-releases",
+        "error": "Direct open inaccessible; URL/index availability uncertain.",
+        "materiality": "Supplemental index only. Search results and alternate humanitarian sources provided useful coverage."
+      }
+    ],
+    "search_result": "No verifiable new, nonduplicate humanitarian or documented civilian-impact development discovered within bounded interval. Search indexing delay and unavailable WHO regional portal leave residual recall risk.",
+    "notification_disposition": "No notification; outcome no_findings and access limitations were preexisting/nonmaterial.",
+    "schedule_note": "Execution context opened before nominal :44:51 hourly schedule; scheduled_for reflects recurrence, while started_at and completed_at reflect observed timestamps.",
+    "action_scope": "Exactly one JSON heartbeat written to ops/watch-ledger. No publication, approvals, Pages/site/social changes, production collector changes, or scheduling modifications."
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T104528-0700-r11-20261027T174528Z",
+  "scheduled_for": "2026-10-27T10:44:51-07:00",
+  "started_at": "2026-10-27T10:45:28-07:00",
+  "completed_at": "2026-10-27T10:47:32-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T09:42:23-07:00",
+    "end": "2026-10-27T10:47:32-07:00",
+    "basis": "From the verified completed_at of the prior persisted Gaza watch heartbeat through this run's observation cutoff. News publication and underlying incident dates distinguished; previously captured and older items excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary hourly Gaza recall watch; the production daily publisher and collector remain authoritative. This is not a publication or approval action.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T094044-0700-r11-20261027T164044Z.json",
+      "run_id": "gaza-source-watch-20261027T094044-0700-r11-20261027T164044Z",
+      "completed_at": "2026-10-27T09:42:23-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Fetched directly from ops/watch-ledger; findings=[]"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Direct updates index accessible this run. Latest Gaza humanitarian report indexed was the report dated 22 October, posted 26 October 2026; 27 October index entry is a West Bank monthly snapshot. No within-window new Gaza operational update established."
+      },
+      {
+        "publisher": "WHO (global)",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Direct global emergency portal accessible. Its dated latest news, regional items and Gaza medical evacuation/hospital listings do not establish a new Gaza change within the watch window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Direct regional page inaccessible through web retrieval (Internal Error). Known previously reported limitation; global WHO and OCHA remain accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"October 27, 2026\" Gaza killed injured afternoon evening",
+      "site:palestine.un.org/en/ \"27 October 2026\" Gaza aid schools humanitarian",
+      "Gaza October 27 2026 Reuters AFP latest Israeli strikes civilian killed midday GMT",
+      "Gaza October 27 2026 AP News Gaza Israeli military ceasefire civilian deaths",
+      "site:aljazeera.com/news/2026/10/27 Gaza strikes humanitarian casualties",
+      "site:unicef.org October 27 2026 Gaza children water displacement new",
+      "site:msf.org Gaza \"27 October 2026\" hospital healthcare attack staff",
+      "site:icrc.org/en Gaza \"27 October 2026\" hostages detention medical",
+      "site:unrwa.org Gaza \"27 October 2026\" relief schools civilians",
+      "site:wfp.org Gaza \"27 October 2026\" food trucks access",
+      "Gaza October 27 2026 Rafah Kerem Shalom crossing fuel humanitarian convoy latest",
+      "Gaza 27 October 2026 ceasefire hostage talks Israeli Palestinian latest military operations Reuters Al Jazeera"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Current 27 October listings after the already recovered Gaza child-death report concern West Bank incidents, UNRWA response to Hebron, and Israeli elections, not a new Gaza development. No qualifying additional Gaza casualty report in visible index."
+      },
+      {
+        "publisher": "United Nations in Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "27 October featured Gaza UN-site/school/convoy shootings and shelter fire are already covered in earlier Gaza watch records. Leading new updates focus on Hebron/West Bank; no distinct Gaza event within interval verified."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "27 October visible stories focus on elections and West Bank; 26 October Gaza casualty report precedes current watch window."
+      },
+      {
+        "publisher": "WFP Palestine",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Emergency overview accessible and describes ongoing hunger/access conditions; no dated new operational change within window."
+      }
+    ],
+    "excluded_or_unconfirmed": [
+      "Six-year-old Tihani Mohammad Saeed Shalalfeh, WAFA 27 October 11:46 AM Palestine time: previously recorded in 03:45 PDT watch, not newly discovered.",
+      "OCHA/UN reports of shooting near a UN site, three schools and convoy in Deir al Balah, and subsequent tent-fire/displacement effects: previously noted in earlier 02:53 PDT and later watch records.",
+      "OCHA 22 October report published 26 October 2026: older reporting period and known.",
+      "27 October Hebron hospital, ambulance driver arrest, displacement and raids are West Bank events, outside Gaza dispatch scope.",
+      "26 October Gaza casualty stories from Al Jazeera and other publishers are outside the time window and/or already reviewed.",
+      "No corroborated new crossing, food/water, fuel, hospital, medical-evacuation, detention/hostage, ceasefire or civilian-protection event established during this bounded pass.",
+      "Absence of a new verified finding does not establish that no event took place."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean regional portal",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Direct open yielded Internal Error; HTTP status unconfirmed",
+        "materiality": "Previously known ongoing partial-coverage limitation. WHO global portal accessible; OCHA updates index accessible this run. No newly material degradation."
+      }
+    ],
+    "outcome_assessment": "No new traceable, qualifying and nonduplicate Gaza development was found since the prior confirmed heartbeat. DEGRADED because WHO's regional source is inaccessible; otherwise bounded 12-search recall and available humanitarian source checks completed.",
+    "action_scope": "Exactly one append-only heartbeat file on ops/watch-ledger; no public release, production runner change, social posting, approval, or schedule/task alteration."
+  }
+}

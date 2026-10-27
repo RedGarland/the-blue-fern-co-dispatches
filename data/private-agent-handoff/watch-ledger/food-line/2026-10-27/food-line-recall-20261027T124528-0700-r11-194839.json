@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T124528-0700-r11-194839",
+  "scheduled_for": "2026-10-27T12:45:54-07:00",
+  "started_at": "2026-10-27T12:45:28-07:00",
+  "completed_at": "2026-10-27T12:48:39-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T11:49:41.865-07:00",
+    "end_at": "2026-10-27T12:48:39-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of preceding independently verified Food Line Source Watch heartbeat on ops/watch-ledger. Findings assessed separately by publication and event dates; older and previously captured events excluded."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "search_terms": [
+      "October 27 2026 \"only grocery store\" closed fire community",
+      "October 27 2026 \"last grocery store\" closing town",
+      "October 27 2026 \"sole grocery store\" fire shutdown",
+      "October 27 2026 food bank distribution canceled storm weather",
+      "October 27 2026 food pantry distribution canceled flood power outage",
+      "October 27 2026 emergency food distribution suspended building damage",
+      "October 27 2026 food pantry abruptly closes services",
+      "October 27 2026 food bank pantry reducing hours closing immediately",
+      "October 27 2026 site:gov \"SNAP\" \"interruption\" \"benefits\" EBT",
+      "October 27 2026 site:gov \"WIC\" \"temporarily closed\" \"benefits\"",
+      "October 27 2026 SNAP EBT outage benefits delayed state agency announcement",
+      "October 27 2026 food bank pantry suspend distributions close site:org"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery-store closure, fire, disaster, or loss",
+      "Canceled or suspended emergency food distribution due to storm, flood, fire, power outage, or damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "This is a supplementary bounded high-value-miss recall watch; authoritative nationwide production collection was neither queried nor changed.",
+    "Twelve targeted web searches completed across all four specified disruption classes. No tool-reported search failure or materially inaccessible fresh primary source was observed. Search indexing and publication timing limit negative assurance.",
+    "No new qualifying U.S. food-access disruption could be verified within 2026-10-27 11:49:41.865 to 12:47 PT.",
+    "Community Action Services and Food Bank's Heber City, Utah pantry closure and Provo access cuts were already recorded in the October 27 02:43 PT watch and excluded as duplicates. Local source: https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+    "Akron, Ohio sole-neighborhood grocery-store fire was May 30, 2026 and Spencer, NY sole-grocery-store fire was September 11, 2026, both outside window: https://www.cleveland19.com/2026/05/30/akron-fire-crews-battle-commercial-building-fire/ and https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+    "El Paso, Texas storm-damaged food-bank distribution cancellation was September 2026 and previously reported: https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+    "Ruby's Pantry Midwest shutdown was March/April 2026; South Hayward Parish pantry ended distribution in August 2026. Both excluded as historical: https://www.boreal.org/2026/04/01/568624/following-sudden-closure-ruby-s-pantry-ends-all-distributions-including-in-cook-county and https://www.nbcbayarea.com/news/local/hayward-food-pantry-closure/4127106/",
+    "The search for official SNAP/WIC benefit interruptions surfaced predominantly October 2025 federal-shutdown notices (not October 2026 incidents). Maryland chip-card rollout documentation from October 2026 did not establish an immediate new outage during this observation interval: https://dhs.maryland.gov/maryland-department-of-human-services-effectively-transitions-to-fraud-resistant-chip-and-tap-ebt-cards/",
+    "Routine pantry calendars, standard holiday closure schedules, donation appeals, general resource listings, generic inflation and program promotion were excluded. No positive finding entered editorial review.",
+    "No approval, publication, social posting, schedule modification, or automation disabling performed."
+  ]
+}

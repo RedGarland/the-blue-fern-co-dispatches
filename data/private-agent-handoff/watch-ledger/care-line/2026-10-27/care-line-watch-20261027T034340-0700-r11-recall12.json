@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T034340-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T03:45:22-07:00",
+  "started_at": "2026-10-27T03:43:40-07:00",
+  "completed_at": "2026-10-27T03:44:45-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T02:46:28-07:00",
+    "end": "2026-10-27T03:44:45-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through current observation; recall scans may return late-indexed prior-day reports, filtered against previously recorded developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territories recall watch; authoritative national Care Line production collection not accessed or changed.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS listing directly retrieved first; current top entries dated Oct 23: My Families Healthcare (CA), 1ST AIDE HOME HEALTH AGENCY (CA), Moonlight Home Health Care Inc (OH), all termination notices. No Oct 26-27 new provider action in listing."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 27, 2026\" hospital emergency department closed diverted ambulances",
+      "\"October 27, 2026\" hospital suspended services patients",
+      "\"October 27, 2026\" maternity labor delivery unit closing hospital",
+      "\"October 26, 2026\" hospital closed emergency room suspended services",
+      "\"October 26, 2026\" rural hospital emergency room closure",
+      "\"October 26, 2026\" ambulance service shut down station base",
+      "\"October 26, 2026\" medical helicopter air ambulance base closed",
+      "\"October 26, 2026\" dialysis center closing patients",
+      "\"October 26, 2026\" behavioral health psychiatric unit closed hospital",
+      "\"October 26, 2026\" cancer oncology clinic closure or suspension",
+      "\"October 26, 2026\" primary care clinic closed patients",
+      "UNM Health October 27 2026 emergency department ambulance diversion resumed fully"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Official live listing returned; newest date Oct 23; no new notices."
+      },
+      {
+        "source": "Targeted search results",
+        "result": "12 targeted search requests returned results; no new concrete service access change within the observation window independently verified."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261027T024443-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-27T02:46:28-07:00",
+      "excluded": [
+        "UNM Health Oct 26 outage, ambulance diversion, clinic cancellations, phased resumption, and late Oct 26 hospital reopening already covered by earlier heartbeats; no post-window confirmation of resumed full emergency department operations or terminated diversions.",
+        "Vista Medical Center East Waukegan anesthesia-service suspension reported Oct 23, predating watch; no new post-window change evidenced.",
+        "Historical hospital/EMS/dialysis/behavioral-health/primary care events returned outside hourly window; non-U.S. events excluded.",
+        "Editorial/opinion and generic service-risk analysis, proposals without effective service change, and unrelated medical/business stories excluded."
+      ]
+    },
+    "search_failures": [],
+    "limitations": "Search indices may surface old articles despite freshness/date qualifiers; early-morning local or territory changes may be unindexed. The watch does not establish nationwide completeness or replace production.",
+    "material_degradation": false,
+    "controls": "One new heartbeat only on ops/watch-ledger; no review approvals, public publication, schedule edits, or task disabling."
+  }
+}

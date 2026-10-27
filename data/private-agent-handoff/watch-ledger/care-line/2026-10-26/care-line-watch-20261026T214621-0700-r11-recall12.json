@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T214621-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T21:45:22-07:00",
+  "started_at": "2026-10-26T21:46:21-07:00",
+  "completed_at": "2026-10-26T21:49:03.043-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T20:49:21-07:00",
+    "end": "2026-10-26T21:49:03.043-07:00",
+    "basis": "Verified previous Care Line Watch heartbeat completed_at to this run; delayed source indexing checked without duplicating earlier positive findings."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-nm-unm-health-hospitals-open-20261026-2227mdt",
+      "canonical_source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+      "title": "Update on Cybersecurity Event at UNM Health Sciences Center",
+      "publisher": "University of New Mexico Health Sciences Center",
+      "exact_supporting_passage": "All UNM Health hospitals (UNM Hospital and SRMC) are open, and all clinics will resume regularly scheduled appointments and procedures Tuesday, Oct. 27, 2026.",
+      "source_published_date": "2026-10-26",
+      "state": "NM",
+      "city": "Albuquerque and Rio Rancho",
+      "county": "Bernalillo and Sandoval",
+      "territory": null,
+      "event_type": "hospital_operational_restoration_confirmed",
+      "service_line": "Hospital operations at UNM Hospital and Sandoval Regional Medical Center; planned resumption of outpatient appointments and procedures",
+      "access_consequences": "In its 10:27 p.m. MDT October 26 update (9:27 p.m. PDT, within this watch window), UNM Health confirmed both hospitals are open following the earlier cybersecurity-related interruption. It also stated clinics will resume regularly scheduled appointments and procedures Tuesday, October 27. Tuesday clinic resumption is a future commitment, not yet independently observed. The update does not explicitly confirm that ambulance diversion ended or that Level 1 trauma/ED intake was fully restored.",
+      "affected_population": "Hospital patients in Albuquerque and Rio Rancho, New Mexico; clinic patients throughout UNM Health, including people with previously canceled appointments. Exact number affected is unknown.",
+      "effective_date": "2026-10-26",
+      "announcement_date": "2026-10-26",
+      "confidence": "high",
+      "source_role": "first_party_health_system_update",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; national production collector remains authoritative. No inference of production editorial review or deduplication.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "note": "Official CMS page retrieved before any other targeted healthcare-access search; newest dated notices are 2026-10-23 California and Ohio home-health terminations."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 late evening hospital emergency department ambulance diversion closure United States",
+      "October 26 2026 emergency room service suspension rural hospital temporary closure latest",
+      "October 26 2026 maternity labor delivery unit closed service suspended hospital October 27",
+      "October 26 2026 dialysis oncology infusion center clinic suspended services closure patients",
+      "October 26 2026 EMS ambulance service air medical helicopter base closes suspends services",
+      "October 26 2026 mental health behavioral psychiatric hospital closed intake stopped services",
+      "October 26 2026 family medicine primary care clinics suddenly closed patients no appointments",
+      "October 26 2026 hospital emergency services reopened restored after outage diversion evening",
+      "site:hscnews.unm.edu/news/ October 26 2026 8 pm UNM Health services restored emergency ambulance cyber",
+      "October 26 2026 Puerto Rico Guam Virgin Islands American Samoa hospital clinic ambulance suspended services closure",
+      "October 26 2026 local news health department hospital emergency department urgent care service closed patients",
+      "October 27 2026 hospital emergency room closure maternity EMS ambulance base service suspension United States"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Retrieved; newest notice date October 23, 2026."
+      },
+      {
+        "source": "UNM HSC Newsroom",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Retrieved updated official statement as of 10:27 p.m. MDT October 26, 2026; both hospitals confirmed open; outpatient clinics expect regular scheduling Tuesday October 27."
+      },
+      {
+        "source": "WOIO Cleveland 19",
+        "url": "https://www.cleveland19.com/2026/10/26/university-hospitals-still-working-restore-mychart-after-cybersecurity-incident/",
+        "result": "Older October 26 report of University Hospitals Ohio cyber disruption with postponed appointments/procedures, not newly verified within this hourly window."
+      }
+    ],
+    "duplicate_review": {
+      "prior_heartbeat": "care-line-watch-20261026T204756-0700-r11-recall12.json",
+      "prior_completed_at": "2026-10-26T20:49:21-07:00",
+      "excluded": [
+        "UNM Health October 26 original ambulance diversion and clinic cancellation (recorded earlier).",
+        "UNM Health October 26 2:30 p.m. MDT partial resumption (recorded earlier).",
+        "University Hospitals Cleveland October 26 earlier-reported MyChart and elective procedure delays; no newly established change in this window.",
+        "Historical closures, mere proposals, unaffected business transactions and out-of-scope international results."
+      ],
+      "distinguishing_new_detail": "New October 26 10:27 p.m. MDT first-party update confirms both named UNM hospitals open, more concrete than prior phased restoration; clinic return on October 27 has not yet taken effect."
+    },
+    "search_failures": [],
+    "limitations": "Indexed searches can miss unreported or unindexed small-community developments. Hospital-open statement does not specifically certify ambulance diversion cancellation, ED/trauma capabilities, or observed October 27 clinic return. No production queue or live deduplication read.",
+    "material_degradation": false,
+    "controls": "One append-only JSON heartbeat on ops/watch-ledger; pending_review only. No approvals, publications, schedule changes, or production collector edits."
+  }
+}

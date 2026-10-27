@@ -1,0 +1,67 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T084509-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T08:45:22-07:00",
+  "started_at": "2026-10-27T08:45:09-07:00",
+  "completed_at": "2026-10-27T08:46:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T07:52:01-07:00",
+    "end": "2026-10-27T08:46:57-07:00",
+    "basis": "Previous independently verified Care Line heartbeat completion through current run; newly indexed information reviewed for factual novelty, effective service change, and duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch, not authoritative national production collection.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Canonical official notices page accessible and checked first; newest posted notices remain October 23, 2026.",
+      "reference": "turn791286view0"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended patients diverted October 27 2026 United States",
+      "maternity labor delivery unit closed services suspended October 27 2026 hospital",
+      "behavioral health psychiatric facility services closed suspended October 27 2026",
+      "dialysis center oncology clinic closure service suspension October 27 2026",
+      "primary care clinic closed immediately October 27 2026 services",
+      "rural hospital emergency care closure October 27 2026 patients",
+      "ambulance service station base closure suspension October 27 2026 county",
+      "air medical helicopter base operations closed suspended October 27 2026",
+      "hospital services shut down yesterday October 26 2026 emergency",
+      "hospital emergency department reopens services restored October 27 2026",
+      "site:gov October 27 2026 hospital closure emergency medical service suspended",
+      "site:gov October 27 2026 clinical laboratory CLIA suspended provider Medicare terminated"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS official Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Accessible; newest posted notice October 23. No new termination, rescission, CLIA limitation or suspension in the observation window."
+      },
+      {
+        "source": "UNM HSC cybersecurity incident official updates",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Latest visible update October 26 at 10:27 p.m. MDT; hospital opening and October 27 clinic resumption already recorded by earlier watches. No newer official milestone or explicit resolution of ambulance diversions."
+      }
+    ],
+    "excluded": [
+      "UNM Health previously recorded October 26 disruption and partial/full service restoration notices; no newly updated official record within this hour.",
+      "UNM Sandia Vista primary care clinic scheduled opening on October 26 is a new service, not a restoration of previously lost essential service.",
+      "October 26 LewisGale Radford ER announced investment/new construction is a future plan, not a present service change.",
+      "October 27 STAT pediatric emergency care article is commentary on system-wide conditions rather than new verified local service suspension.",
+      "Older U.S. closure/ambulance stories, non-U.S. stories, unrelated weather and speculative/ownership-only results."
+    ],
+    "source_failures": [],
+    "limitations": "Targeted indexed searches may lag local announcements and do not prove complete national coverage. Exact in-window effective timestamps not available for older articles.",
+    "material_degradation": false,
+    "controls": "No human review decision, public publication, approval, schedule change, or task disablement. Exactly one run-specific heartbeat is to be created and read back."
+  }
+}

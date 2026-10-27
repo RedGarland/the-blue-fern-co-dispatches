@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T225049-0700-r11-225222",
+  "scheduled_for": "2026-10-26T22:45:54-07:00",
+  "started_at": "2026-10-26T22:50:49-07:00",
+  "completed_at": "2026-10-26T22:52:22-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T21:42:23-07:00",
+    "end_at": "2026-10-26T22:52:22-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start uses completed_at of the latest verified preceding Food Line watch heartbeat on ops/watch-ledger; end uses the local clock after finishing the bounded research. A result recrawled in this window is not itself evidence of a newly occurring disruption."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" \"closed\" \"October 26, 2026\" town fire",
+      "\"last grocery store\" \"fire\" OR \"shut down\" October 26 2026",
+      "\"sole grocery store\" \"closed\" \"October 26\" 2026",
+      "\"full-service grocery store\" closing October 26 2026 community",
+      "\"food distribution\" canceled storm flooding Monday October 26 2026",
+      "\"food pantry\" \"distribution cancelled\" \"power outage\" October 2026",
+      "\"food bank\" closed unexpectedly \"October 26, 2026\" local",
+      "\"food pantry\" \"closed\" \"October 26, 2026\" emergency",
+      "pantry food bank operations suspended Monday October 26 2026 fire flood outage",
+      "site:gov SNAP EBT benefits suspended outage October 26 2026 state agency",
+      "site:gov \"WIC\" system outage interruption October 26 2026 benefits",
+      "October 26 2026 emergency SNAP food assistance distribution canceled closed official notice"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store loss/closure/fire/disaster",
+      "Emergency food distribution canceled/suspended due to disaster, storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank closure or major service-access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall watch only. The production Food Line nationwide collector remains authoritative and was not touched.",
+    "Twelve targeted fast web searches completed without search-level errors across the four miss classes. Results indexed as recent frequently contained articles actually published in 2025 or earlier in 2026; incident publication date was checked before inclusion.",
+    "No verified new in-scope incident or agency/provider notice occurred or was first published within the precise 2026-10-26 21:42:23 to 22:52:22 America/Los_Angeles observation window. Search results are not exhaustive; slow local indexing may conceal events.",
+    "Same-day but out-of-window/no sole-or-last status: Blue Parkway Sun Fresh, Kansas City, Missouri, closed after October 25 as reported by KCTV on October 26 at 12:00 PM CDT (10:00 AM Pacific). It was not established as the community's sole/last/full-service grocery store; other grocery options were reported (https://www.kctv5.com/2026/10/26/no-notice-blue-parkway-sun-fresh-closes-permanently/). This item was excluded.",
+    "One corroborating Kansas City source (KMBC, https://www.kmbc.com/article/sun-fresh-blue-parkway-closes-kansas-city/74251331) returned HTTP 402 on direct opening; the KCTV report remained accessible for verification. Record status DEGRADED for this isolated source-read failure, without treating it as a substantive coverage loss.",
+    "Searches for food distribution cancellations/pantry closures did not yield newly published source-verified incidents in the bounded interval; official SNAP/WIC searches did not return a newly dated official interruption notice.",
+    "Excluded stale shutdown-era SNAP stories from October 2025, older pantry closings and grocery closures, donation requests, general program updates, food guides, generic inflation, and non-U.S. events.",
+    "No editorial approval, publication, task schedule edit, task disabling, or primary collector operation was performed."
+  ]
+}

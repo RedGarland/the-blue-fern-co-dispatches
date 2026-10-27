@@ -26,7 +26,7 @@
 
   const labelFor = (kind) => {
     const labels = { briefing: "Briefings", correction: "Corrections", monitoring: "Monitoring", all: "All records" };
-    return `${labels[kind]}${kind === "all" ? records.length : (counts[kind] || 0)}`;
+    return `${labels[kind]} ${kind === "all" ? records.length : (counts[kind] || 0)}`;
   };
   filters.forEach((button) => {
     button.textContent = labelFor(button.dataset.filter);

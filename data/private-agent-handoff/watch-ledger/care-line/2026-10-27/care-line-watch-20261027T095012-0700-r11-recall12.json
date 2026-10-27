@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T095012-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T09:45:22-07:00",
+  "started_at": "2026-10-27T09:50:12-07:00",
+  "completed_at": "2026-10-27T09:51:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T08:46:57-07:00",
+    "end": "2026-10-27T09:51:32-07:00",
+    "basis": "The previous verified Care Line heartbeat completed at 08:46:57 PDT. The watch searches newly reported or newly effective access developments and excludes previously recorded changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only. Production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS Public Notices accessible. Most recent listed notices are dated October 23, 2026; no newer provider termination, rescission, CLIA limitation or suspension identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 hospital emergency department suddenly closed suspended diverting ambulances US",
+      "October 27 2026 maternity labor delivery ward closed suspended effective United States",
+      "October 27 2026 rural hospital emergency room shutdown service loss closure US",
+      "October 27 2026 EMS ambulance service shut down air ambulance helicopter base closes",
+      "October 27 2026 dialysis oncology chemotherapy clinic stopped treatments closure",
+      "October 27 2026 behavioral health psychiatric hospital inpatient unit closed suspended",
+      "October 27 2026 primary care urgent care clinic abruptly closed patients US",
+      "site:gov \"October 27, 2026\" \"hospital\" \"closed\" \"emergency\" medical services",
+      "site:gov \"October 27, 2026\" \"ambulance\" \"suspended\" OR \"closed\" OR \"restored\"",
+      "\"October 27, 2026\" \"emergency department\" \"reopened\" OR \"resumed\" OR \"restored\" hospital United States",
+      "\"October 27, 2026\" hospital clinic closes access patients Puerto Rico Guam Virgin Islands",
+      "UNM hospital cybersecurity October 27 2026 ambulance diversion ended normal operations emergency department official"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS official Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Accessible; latest notices October 23, no in-window changes."
+      },
+      {
+        "source": "UNM HSC official cybersecurity update",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Latest official update remains October 26 at 10:27 p.m. MDT: hospitals open and clinics scheduled to resume October 27. Previously recorded; no newer explicit confirmation emergency-department full capability or end of ambulance diversions."
+      },
+      {
+        "source": "AP October 27 syndication of UNM disruption",
+        "url": "https://apnews.com/article/7a3593f8a3cee4ca895774ab1574919f",
+        "result": "Contemporary coverage of October 26 disruption; no new service-change milestone after previous heartbeat."
+      }
+    ],
+    "excluded": [
+      "UNM Health October 26 cybersecurity suspension and successive restoration updates already documented in earlier Care Line heartbeats; October 27 republications do not establish a novel development.",
+      "Older ambulance-base, hospital and dialysis closures outside the window.",
+      "Future rural emergency hospital reopening proposals, legislative/financing plans and general commentary without effective service change.",
+      "Non-U.S. events, ownership-only reports, speculative social claims."
+    ],
+    "source_failures": [],
+    "limitations": "Indexed searching may lag local announcements and is not an exhaustive national census; precise local effective times are often unavailable. No identified source failure or material degradation.",
+    "material_degradation": false,
+    "controls": "No approval, publication, schedule modification, task disablement or production state change. Exactly one run-specific heartbeat created on ops/watch-ledger."
+  }
+}

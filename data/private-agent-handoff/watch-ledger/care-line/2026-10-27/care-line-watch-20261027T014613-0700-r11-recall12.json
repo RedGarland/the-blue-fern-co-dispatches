@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T014613-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T01:45:22-07:00",
+  "started_at": "2026-10-27T01:46:13-07:00",
+  "completed_at": "2026-10-27T01:49:40.094-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T00:46:27-07:00",
+    "end": "2026-10-27T01:49:40.094-07:00",
+    "basis": "Prior independently verified Care Line Watch heartbeat completed_at through current observation; targeted searches included same-day late-indexed recall candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territory access-change recall; authoritative national Care Line production collector and editorial review queue not accessed or changed.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS Public Notices canonical listing retrieved and inspected before the 12 additional targeted searches. Newest entries dated October 23, 2026, remain California and Ohio HHA termination notices; no later listed provider termination, rescission, or CLIA action observed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 overnight hospital emergency department closed diverted ambulance new United States",
+      "October 27 2026 labor and delivery maternity hospital closure suspension effective",
+      "October 27 2026 rural hospital emergency department service closure suspension",
+      "October 27 2026 behavioral health psychiatric hospital unit closing admissions suspended",
+      "October 27 2026 dialysis center closed suspended treatments United States patients",
+      "October 27 2026 oncology cancer infusion clinic shuts down appointments diverted",
+      "October 27 2026 primary care clinic abruptly closed patients services",
+      "October 27 2026 ambulance EMS air medical helicopter base shutdown suspended service United States",
+      "October 27 2026 CMS Public Notices new termination rescission CLIA suspension provider",
+      "October 27 2026 hospital emergency service restored reopened diversion ended after outage",
+      "October 27 2026 Puerto Rico Guam US Virgin Islands American Samoa hospital ambulance clinic service interruption closure",
+      "October 27 2026 UNM Health hospital ambulance diversions ended normal operations emergency department cybersecurity reopened"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices official listing",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Retrieved; latest notice date 2026-10-23, unchanged."
+      },
+      {
+        "source": "UNM Health Sciences Center official cyber incident bulletin",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Retrieved; latest official update still October 26, 2026, 10:27 p.m. MDT (9:27 p.m. PDT): both hospitals open, Tuesday clinic appointments/procedures scheduled; no later explicit ambulance diversion-end or full ED restoration update."
+      }
+    ],
+    "duplicate_review": {
+      "prior_heartbeat": "care-line-watch-20261027T004502-0700-r11-recall12.json",
+      "prior_completed_at": "2026-10-27T00:46:27-07:00",
+      "excluded": [
+        "UNM Health Oct 26 cybersecurity interruption, ambulance diversions, clinic cancellations and phased resumption/hospitals-open notice: already recorded by prior Care Line watches; newer search-index appearance is not a new event.",
+        "Vista Medical Center East Waukegan IL anesthesia-service suspension reported October 23, preceding this window; no newly confirmed action in this window.",
+        "Older hospital, dialysis, oncology, air-medical and primary-care service losses predating this hourly window; no new effective change.",
+        "Proposals without concrete access loss, unrelated ownership stories, commentary, overseas incidents and uncorroborated claims."
+      ]
+    },
+    "search_failures": [],
+    "limitations": "Late-night local reporting and territory notices may not yet be indexed. This bounded 12-search recall found no qualifying new confirmed access change; absence of a finding is not a statement about completeness of the production collector. Search results were mostly older or duplicate stories.",
+    "material_degradation": false,
+    "controls": "Exactly one heartbeat JSON append on ops/watch-ledger. No approval, publication, schedule changes, task disabling, or national collector changes."
+  }
+}

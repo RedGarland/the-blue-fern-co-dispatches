@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T144922-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T14:45:22-07:00",
+  "started_at": "2026-10-27T14:49:22-07:00",
+  "completed_at": "2026-10-27T14:50:23.737-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T13:47:54-07:00",
+    "end": "2026-10-27T14:50:23.737-07:00",
+    "basis": "Starts at the prior independently verified Care Line heartbeat completion (13:47:54 PDT, run care-line-watch-20261027T134606-0700-r11-recall12); ends at this run completion. Fresh source searches used October 27 and one-day recency."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall watch, not the authoritative production national collector; checks new concrete healthcare service loss and restoration only.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Direct CMS page check found latest entries dated October 23, 2026 (two California home-health termination notices and one Ohio home-health termination notice); no in-window new terminations, rescissions, CLIA limitations/suspensions or comparable notices."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended October 27 2026 today local news",
+      "maternity labor delivery birthing unit hospital closure October 27 2026 today",
+      "rural hospital emergency room service closure suspended October 27 2026",
+      "behavioral health inpatient psychiatric facility close services October 27 2026",
+      "dialysis cancer infusion oncology clinic closure October 27 2026 United States",
+      "primary care clinic closure shutdown patients October 27 2026",
+      "ambulance service EMS air medical base station shutdown closure suspension October 27 2026",
+      "hospital emergency department ambulance diversion restored reopening October 27 2026 afternoon",
+      "site:gov hospital health department orders suspended service closure October 27 2026",
+      "Puerto Rico Guam Virgin Islands hospital health clinic emergency medical service closed October 27 2026",
+      "October 27 2026 urgent care emergency room suddenly closes after 1pm Tuesday",
+      "healthcare \"October 27, 2026\" \"closing\" \"patients\" hospital clinic"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices (official)",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Accessible; latest notices October 23, unchanged."
+      },
+      {
+        "source": "Official UNM Health Sciences Center restoration bulletin (prior run comparison)",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Full restoration reported in prior watch at 13:02 PDT and already recorded as pending_review; excluded as duplicate in this run."
+      },
+      {
+        "source": "Capitol News Illinois, Choate mental-health beds",
+        "url": "https://capitolnewsillinois.com/news/state-says-it-will-keep-25-mental-health-beds-at-choate-expand-regional-jobs/",
+        "result": "Published October 26; reversal of proposal to shut all beds, not a newly effective service restoration or loss in this window."
+      },
+      {
+        "source": "Guam Regional Medical City",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "result": "October 17 notice about temporary October 19 outpatient closures and October 20 intended resumption; older than window."
+      }
+    ],
+    "excluded": [
+      "UNM Health full restoration official confirmation at 13:02 PDT is already captured in the 13:47:54 prior heartbeat; no new distinct later operational change verified.",
+      "Choate mental-health bed proposal withdrawn or modified October 26, without a newly effective access change in this interval.",
+      "GRMC typhoon outpatient closures and planned resumption occurred October 19–20, not October 27.",
+      "Older US closures, prospective proposals, international results, business/ownership news without real care-service changes, opinion and unsupported social claims."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search engines surfaced much older articles despite one-day recency; some fresh events may not yet be indexed, so this no-findings result does not assert comprehensive absence. No source/search failed materially. No extra targeted searches were run beyond the 12 listed.",
+    "controls": "Created exactly one run-specific heartbeat on ops/watch-ledger only; no review approval, public publication, production runner mutation, scheduling change, or disabling."
+  }
+}

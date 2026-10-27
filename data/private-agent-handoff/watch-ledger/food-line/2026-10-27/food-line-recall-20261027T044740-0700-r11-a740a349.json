@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T044740-0700-r11-a740a349",
+  "scheduled_for": "2026-10-27T04:45:54-07:00",
+  "started_at": "2026-10-27T04:47:40-07:00",
+  "completed_at": "2026-10-27T04:49:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T03:42:50.220-07:00",
+    "end_at": "2026-10-27T04:49:29-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since most recent independently verified food-line watch ledger heartbeat completed at 03:42:50.220 PDT; late-discovered qualifying sources date-checked and deduplicated against preceding watch."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 2,
+    "search_terms": [
+      "October 27 2026 \"only grocery store\" closes fire town rural",
+      "October 27 2026 \"last grocery store\" \"closed\" town food access",
+      "October 26 2026 \"sole grocery store\" fire closure community",
+      "October 27 2026 food pantry distribution canceled storm flood emergency",
+      "October 27 2026 food bank distribution cancelled power outage weather",
+      "October 26 2026 food distribution suspended fire flood facility damage",
+      "October 27 2026 food pantry closes immediately reduced hours food bank services local",
+      "October 26 2026 pantry closure cuts appointments community action food bank",
+      "October 27 2026 emergency food pantry \"closed\" \"until further notice\" site:org",
+      "October 27 2026 SNAP benefits EBT outage agency notice interruption",
+      "October 27 2026 WIC benefits appointments unavailable clinic closure official",
+      "October 26 2026 food stamp SNAP payment delay suspended state EBT official"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store disaster or closure",
+      "Emergency food distribution canceled due to severe weather, outage or facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary high-value recall only; primary nationwide production collector remains authoritative. No approval, publication, schedule modification, or disabling.",
+    "All 12 targeted queries produced search results; no material search/source failure was observed. Recency-limited search results included older historical stories and international incidents, which were excluded.",
+    "KUTV's Provo/Heber City Community Action Services and Food Bank story is explicitly dated 2026-10-26 16:04 PDT-equivalent or earlier local Mountain time (updated 18:56 local); it corroborates the exact Utah staff, Heber closure, and Provo appointment-cut event already captured by the prior 02:45 PDT watch; excluded as duplicate. Source: https://kutv.com/news/local/utah-food-bank-cuts-staff-pantry-hours-as-funding-shortfall-threatens-2027-services",
+    "Older rural-only grocery closures, emergency-distribution notices and 2025 SNAP shutdown notices were excluded because they were not fresh qualifying developments within the observation window.",
+    "No new official SNAP/WIC payment or service outage; no new canceled disaster distribution; no new abrupt U.S. pantry shutdown or sole/full-service grocer loss verified in this bounded search. Search coverage is non-exhaustive and is not evidence of national absence."
+  ]
+}

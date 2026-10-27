@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T004502-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T00:45:22-07:00",
+  "started_at": "2026-10-27T00:45:02-07:00",
+  "completed_at": "2026-10-27T00:46:27-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T23:47:14.070-07:00",
+    "end": "2026-10-27T00:46:27-07:00",
+    "basis": "Previous independently verified Care Line Watch heartbeat completed_at to this watch's observation time; newly indexed reports of earlier concrete changes were screened for recall gaps."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary national production Care Line collector remains authoritative. No production queue or editorial approval changed.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "The canonical official CMS Public Notices listing was checked before targeted searches. Its most recent visible entries are the October 23 notices for My Families Healthcare (CA), 1ST AIDE HOME HEALTH AGENCY (CA), and Moonlight Home Health Care Inc. (OH). No new terminations, rescissions, CLIA limitations or suspensions were observed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 hospital emergency department temporarily closed diverted ambulances overnight healthcare",
+      "October 27 2026 maternity labor delivery hospital service closing suspension October 26 late",
+      "October 27 2026 rural hospital emergency room suspension closure access notice",
+      "October 27 2026 behavioral health psychiatric inpatient unit closure suspended patients",
+      "October 27 2026 dialysis clinic closure interruption oncology infusion service suspended",
+      "October 27 2026 ambulance EMS service ceased operations base closure suspension",
+      "October 27 2026 air ambulance medical helicopter base closes service suspended",
+      "October 27 2026 primary care clinic hospital outpatient appointments sudden cancellation closure",
+      "October 27 2026 CMS Medicare provider termination CLIA certificate suspension rescission public notice",
+      "October 27 2026 hospital emergency department reopens after outage restoration service",
+      "October 27 2026 Puerto Rico US Virgin Islands Guam American Samoa hospital clinic ambulance service closure",
+      "October 26 2026 late night October 27 UNM Health ambulance diversions ended fully restored cybersecurity"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Retrieved; most recent notices dated 2026-10-23."
+      },
+      {
+        "source": "UNM Health Sciences Center official cyber event bulletin",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Retrieved; latest visible update remains October 26 10:27 p.m. MDT (9:27 p.m. PDT), announcing hospitals open and October 27 clinic resumption. Already recorded in preceding watches. No subsequent explicit confirmation that ambulance diversions ended or emergency department capability fully restored."
+      }
+    ],
+    "duplicate_review": {
+      "prior_heartbeat": "care-line-watch-20261026T234518-0700-r11-recall12.json",
+      "prior_completed_at": "2026-10-26T23:47:14.070-07:00",
+      "excluded": [
+        "UNM Health October 26 ambulance diversion and canceled clinics; phased restoration and hospitals-open update already recorded by preceding watches.",
+        "AP coverage appearing in the October 27 search index describes the known October 26 UNM event, not a separately newly effective access change.",
+        "Red Bluff, California PHI Air Medical base loss occurred in September 2026; older hospital outages and closures predate this observation period.",
+        "Proposed unit closures, overseas incidents, unsupported claims, and non-service business stories excluded."
+      ]
+    },
+    "source_failures": [],
+    "limitations": "Overnight sources, especially smaller rural providers and territories, may be underindexed; the searches returned mostly older/unrelated stories. Zero findings means no newly corroborated qualifying change in this bounded recall check, not proof that none occurred. No direct claim is made about the primary collector's completeness.",
+    "material_degradation": false,
+    "controls": "Exactly one heartbeat JSON is to be written to ops/watch-ledger; no approval, publication, schedule change, or task disablement."
+  }
+}

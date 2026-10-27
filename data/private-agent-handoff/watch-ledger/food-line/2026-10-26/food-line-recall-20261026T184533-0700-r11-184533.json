@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T184533-0700-r11-184533",
+  "scheduled_for": "2026-10-26T18:45:54-07:00",
+  "started_at": "2026-10-26T18:45:33-07:00",
+  "completed_at": "2026-10-26T18:49:37.068-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T17:51:59-07:00",
+    "end_at": "2026-10-26T18:49:37.068-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior confirmed Food Line heartbeat (food-line-recall-20261026T174949-0700-r11-174949) completed_at through current observation; require freshly reported, verifiable U.S. access disruptions in the four audit-defined miss classes; production collector is authoritative."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "search_terms": [
+      "October 26 2026 \"only grocery store\" closed fire community",
+      "October 26 2026 \"last grocery store\" closes access",
+      "October 26 2026 \"sole supermarket\" fire closure rural",
+      "October 26 2026 food pantry distribution canceled flooding storm power outage",
+      "October 26 2026 food bank distribution canceled storm severe weather",
+      "October 26 2026 emergency food distribution postponed fire facility damage",
+      "October 26 2026 food pantry abruptly closed service suspended",
+      "October 26 2026 food bank closes temporarily due to damage outage",
+      "October 26 2026 food pantry stops serving clients closure",
+      "October 26 2026 SNAP benefits outage EBT cards unusable state agency alert",
+      "October 26 2026 WIC benefits system outage interruption state official notice",
+      "October 26 2026 SNAP assistance offices services suspended disruption official state agency"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service community grocery loss, closure, fire or disaster",
+      "Canceled or suspended emergency food distribution due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall watch only; not the primary nationwide collector. Production Food Line collector remains authoritative.",
+    "Twelve targeted fresh web searches completed; no independently verifiable in-window event meeting location, timing, severity and immediate access criteria found. Search result volume was heavily historical. Absence of search matches does not prove that no event occurred.",
+    "September 14, 2026 WBNG report of Spencer, NY losing its only grocery to a fire is out of window (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/). August 13, 2026 Save A Lot North Charleston full-service closure likewise older (https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/).",
+    "Historical closure examples excluded: Ruby's Pantry shut down in April 2026 (https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites); El Paso storm-damaged food bank September 2026 (https://spectrumlocalnews.com/tx/austin/news/2026/09/28/el-paso-braces-for-another-round-of-rain-after-already-shutting-down-a-food-bank-).",
+    "SNAP/WIC searches primarily surfaced prior 2025 shutdown alerts or older EBT outages; no new October 26, 2026 first-party interruption with immediate access consequences corroborated.",
+    "No accessible newly dated flood-related canceled-distribution announcement could resolve the previously noted unverified Facebook post; its date/location remain unconfirmed, so no finding was promoted.",
+    "Search indexing and direct social/agency-post discoverability may lag an hour; no targeted search failure was observed in this run.",
+    "Excluded guides, donation appeals, ordinary program promotion, recipes, inflation commentary, old incidents and duplicate stories.",
+    "No editorial approval, publishing, production changes, schedule changes, or task disabling."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T074430-0700-r11-074625",
+  "scheduled_for": "2026-10-27T07:45:54-07:00",
+  "started_at": "2026-10-27T07:44:30-07:00",
+  "completed_at": "2026-10-27T07:46:25.946-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T06:48:56-07:00",
+    "end_at": "2026-10-27T07:46:25.946-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of independently verified previous 06:47 Food Line watch ledger record; publication/event dates cross-checked to exclude historical or duplicated results."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" closed fire \"October 27\" 2026",
+      "\"only grocery store\" closing fire \"October 26\" 2026",
+      "\"last grocery store\" \"closed\" \"October\" 2026 town",
+      "\"full service grocery store\" \"closed\" \"October 27\" 2026",
+      "\"food distribution\" \"canceled\" storm Tuesday October 27 2026",
+      "\"food bank\" \"distribution cancelled\" outage flood 2026 October 27",
+      "\"food pantry\" \"closed\" \"October 27, 2026\" emergency",
+      "\"food bank\" \"suspending\" services \"October 27\" 2026",
+      "\"food pantry\" \"hours\" \"reduced\" \"October 27\" 2026 -Utah",
+      "site:gov \"SNAP\" \"outage\" \"October 27\" 2026 EBT",
+      "site:gov \"WIC\" \"interruption\" \"October 27\" 2026",
+      "\"SNAP\" \"benefits delayed\" \"October 27\" 2026 state"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service community grocery store loss/closure/fire/disaster",
+      "Emergency food distribution canceled/suspended due to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food bank closure or major service reduction",
+      "Official SNAP/WIC/food assistance immediate-access interruption"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall watch only; authoritative nationwide production collector unchanged. No approvals, publication, schedule changes, or disabling.",
+    "12 targeted web searches attempted and returned results; no material search/service failure. Search indexing returned a substantial amount of historical or unrelated material.",
+    "No new qualifying and source-verified U.S. food-access disruption was observed since previous 2026-10-27T06:48:56-07:00 heartbeat.",
+    "Grocer results included a 2025 St Pete Beach Publix fire/rebuilding report (https://stpeterising.com/home/publix-at-dolphin-village-in-st-pete-beach-to-be-rebuilt-into-larger-elevated-new-prototype-store) and a 2025 Immokalee only-supermarket closure (https://www.wgcu.org/top-story/2025-10-26/closure-of-immokalees-only-supermarket-leaves-a-hole-can-aldi-fill-it-and-when-meanwhile-busing-could-help-some); both historical, excluded.",
+    "An October 26 2026 OPB report about Newport, Oregon Pacific Seafood processing plant fire states the plant returned to regular operations; this is not the only community retail grocer or immediate food-assistance service closure (https://www.opb.org/article/2026/10/26/newports-pacific-seafood-processing-plant-is-back-to-regular-operations-after-fire-forces-evacuation/); excluded as non-qualifying.",
+    "Food-distribution cancellation returned from Prodisee Pantry in Stockton, Alabama was published October 7 and canceled an October 10 2026 event; outside this window (https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/).",
+    "SNAP/WIC results predominantly concerned 2025 shutdown interruption or 2025 SNAP funding risks; not new 2026 official interruption. No independently verifiable current agency notice surfaced in the bounded search.",
+    "Previously captured Utah Heber City pantry closure/Provo appointment cuts remain excluded as a duplicate. Historical results and no-match search constraints do not demonstrate there were no disruptions nationwide."
+  ]
+}

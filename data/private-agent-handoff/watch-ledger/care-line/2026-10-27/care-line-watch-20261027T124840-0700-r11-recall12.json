@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T124840-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T12:45:22-07:00",
+  "started_at": "2026-10-27T12:48:40-07:00",
+  "completed_at": "2026-10-27T12:49:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T11:43:18-07:00",
+    "end": "2026-10-27T12:49:46-07:00",
+    "basis": "Previous verified Care Line heartbeat completion through end of this supplementary recall watch; exclude already-reported and earlier developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary, bounded high-value healthcare-access recall only; authoritative production collection is unchanged.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS list directly read before any targeted searches. Latest three notices dated 2026-10-23 concern home health agency terminations in California and Ohio; no newly posted terminations, rescissions, CLIA limitation/suspension, or comparable access-risk notices within this search window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended reopened October 27 2026 United States today",
+      "hospital maternity labor delivery closure October 27 2026 rural",
+      "ambulance service suspended base closed October 27 2026",
+      "medical air ambulance helicopter base closure October 27 2026",
+      "dialysis center oncology clinic service closing October 27 2026",
+      "behavioral health psychiatric hospital unit closure October 27 2026",
+      "health clinic primary care closure October 27 2026 patients",
+      "hospital emergency service reopened restored October 27 2026",
+      "October 27 2026 hospital closes emergency department healthcare access United States afternoon",
+      "October 27 2026 ambulance service closure rural county EMS shutdown United States",
+      "October 27 2026 hospital clinic closed suddenly patients community health",
+      "October 27 2026 UNM health emergency department ambulance diversion restored October 27"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Canonical official page accessible; latest entry October 23, 2026; no new in-window notice."
+      },
+      {
+        "source": "UNM Health Sciences Center official October 26 cybersecurity update",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Search confirmed the latest official update remained October 26 at 10:27 p.m. MDT, announcing UNM Hospital and SRMC open, clinics scheduled to resume October 27; no newer independent official confirmation of full emergency department/ambulance-diversion restoration."
+      },
+      {
+        "source": "KFF Health News report via CBS News",
+        "url": "https://www.cbsnews.com/news/pediatric-intensive-care-units-closing-nationwide/",
+        "result": "October 27 publication at 5:00 a.m. EDT describes previously occurring pediatric ICU/inpatient unit closures; no current-hour newly effective action."
+      },
+      {
+        "source": "Bangor Daily News, Dennys River Volunteer Ambulance",
+        "url": "https://www.bangordailynews.com/2026/10/13/down-east/downeast-police-courts/dennys-river-volunteer-ambulance-service-closing/",
+        "result": "Announced October 13 with November 30 intended closure; not new during observation window."
+      }
+    ],
+    "excluded": [
+      "UNM Health disruption on October 26 and late October 26 reopening notice: previously captured; October 27 reports largely reprise that event and do not independently confirm a further restoration.",
+      "October 27 KFF/CBS national pediatric inpatient/ICU closures retrospective and published before the hourly window.",
+      "Earlier Doylestown ER temporary closure (October 22), Tehama air medical closure (September) and Dennys River EMS future closure announced October 13.",
+      "Maternity and rural access trend analysis, proposals without concrete effective change, ownership-only stories, commentary/opinion, overseas reports, and unrelated uses of closure."
+    ],
+    "source_failures": [],
+    "limitations": "Search-engine indexing can lag local and official notices within an hour; national recall sampling cannot establish comprehensive negative coverage.",
+    "material_degradation": false,
+    "controls": "No approvals, publication, schedule changes, task disabling, or production collector mutations. One run-specific JSON heartbeat added on ops/watch-ledger."
+  }
+}

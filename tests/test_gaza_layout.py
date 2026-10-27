@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from bluefern_dispatches import generator
@@ -118,3 +119,75 @@ def test_filter_asset_is_present_and_contains_no_network_or_public_write() -> No
     assert "archive-record" in text
     assert "aria-pressed" in text
     assert '`${labels[kind]} ${kind === "all"' in text
+
+
+def test_pages_history_rebuilds_next_edition_after_layout_and_is_idempotent(tmp_path: Path) -> None:
+    """The redesigned Pages baseline must remain a valid next-run input."""
+    site_root = tmp_path / "site"
+    pages_repo = tmp_path / "pages"
+    edition_date = "2026-10-28"
+    site_edition = site_root / "gaza" / "editions" / edition_date
+    site_edition.mkdir(parents=True)
+    (site_edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "public_archive_title": "A new Gaza briefing",
+                "public_archive_subtitle": "A limited-source update.",
+                "public_story_count": 1,
+                "public_source_count": 3,
+                "source_adequacy_status": "limited_source_update",
+                "source_adequacy_label": "Limited-source update",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (pages_repo / "gaza").mkdir(parents=True)
+    dispatch = generator.DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date=edition_date,
+        tagline="Daily source-backed Gaza briefings.",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+    )
+    baseline_index = apply_gaza_home_layout(_legacy_home())
+    baseline_archive = apply_gaza_archive_layout(_legacy_archive()).replace(
+        '<section class="archive-latest">',
+        '<section class="archive-latest" aria-label="Latest archive entry">',
+    )
+    baseline_rss = """<rss><channel>
+  <title>Dispatches From Gaza</title>
+  <description>Saved Gaza updates.</description>
+  <item><title>October 27</title><link>https://dispatches.thebluefernco.com/gaza/editions/2026-10-27/</link><guid>oct27</guid><description>Existing update</description></item>
+</channel></rss>
+"""
+    for name, content in {"index.html": baseline_index, "archive.html": baseline_archive, "rss.xml": baseline_rss}.items():
+        (pages_repo / "gaza" / name).write_text(content, encoding="utf-8")
+
+    assert generator._gaza_aggregate_render_from_pages_history(
+        site_root, dispatch, edition_date, pages_repo, dry_run=False, wrote=[]
+    ) is True
+    rendered = {
+        name: (site_root / "gaza" / name).read_text(encoding="utf-8")
+        for name in ("index.html", "archive.html", "rss.xml")
+    }
+    assert "Wednesday, October 28, 2026" in rendered["index.html"]
+    assert 'href="editions/2026-10-28/"' in rendered["index.html"]
+    assert 'data-record-type="briefing" data-month="2026-10"' in rendered["archive.html"]
+    assert rendered["archive.html"].count('class="archive-latest"') == 1
+    assert '<p class="archive-latest-date">2026-10-28</p>' in rendered["archive.html"]
+    assert '2026-10-28/' in rendered["rss.xml"]
+
+    for name, content in rendered.items():
+        (pages_repo / "gaza" / name).write_text(content, encoding="utf-8")
+    before = dict(rendered)
+    assert generator._gaza_aggregate_render_from_pages_history(
+        site_root, dispatch, edition_date, pages_repo, dry_run=False, wrote=[]
+    ) is True
+    after = {
+        name: (site_root / "gaza" / name).read_text(encoding="utf-8")
+        for name in ("index.html", "archive.html", "rss.xml")
+    }
+    assert after == before

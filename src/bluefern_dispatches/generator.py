@@ -2790,6 +2790,12 @@ def _gaza_aggregate_latest_date(*values: str) -> str | None:
     return max(dates) if dates else None
 
 
+def _gaza_archive_payload_without_layout_metadata(document: str) -> str:
+    """Normalize only filter attributes added by the Gaza archive layout."""
+    document = re.sub(r" archive-record archive-record--(?:briefing|correction|monitoring)", "", document)
+    return re.sub(r' data-record-type="[^"]+" data-month="[^"]+"', "", document)
+
+
 def _gaza_insert_date_ordered_list_item(
     document: str,
     list_open: str,
@@ -2839,8 +2845,8 @@ def _gaza_month_key(heading: str) -> tuple[int, int] | None:
 
 def _gaza_insert_missing_archive_month(archive: str, month_section: str, month_heading: str) -> str:
     month_pattern = re.compile(
-        r'    <section class="archive-month"><h2>(?P<heading>[^<]+)</h2>\n'
-        r'      <ul class="edition-list archive-list">.*?\n      </ul>\n    </section>',
+        r'[ \t]*<section class="archive-month"><h2>(?P<heading>[^<]+)</h2>\n'
+        r'[ \t]*<ul class="edition-list archive-list">.*?\n[ \t]*</ul>\n[ \t]*</section>',
         re.DOTALL,
     )
     month_matches = list(month_pattern.finditer(archive))
@@ -2919,7 +2925,13 @@ def _gaza_aggregate_render_from_pages_history(
             "index.html": render_briefing_list_item(briefing_presentation_for_edition(site_root, dispatch, edition_date)),
             "rss.xml": _gaza_render_new_rss_item(site_root, dispatch, edition_date),
         }
-        mismatched = [filename for filename, payload in expected_payloads.items() if payload not in baseline[filename]]
+        comparison_baseline = dict(baseline)
+        comparison_baseline["archive.html"] = _gaza_archive_payload_without_layout_metadata(
+            comparison_baseline["archive.html"]
+        )
+        mismatched = [
+            filename for filename, payload in expected_payloads.items() if payload not in comparison_baseline[filename]
+        ]
         if mismatched:
             raise ValueError(
                 f"Gaza aggregate date {edition_date} is already listed with a mismatched payload on {', '.join(mismatched)}; use the separate correction workflow"
@@ -2933,7 +2945,7 @@ def _gaza_aggregate_render_from_pages_history(
         if is_newest_edition:
             archive_latest = _render_gaza_archive_latest_entry(site_root, dispatch, row)
             archive_latest_pattern = re.compile(
-                r'    <section class="archive-latest" aria-label="Latest archive entry">.*?    </section>',
+                r'[ \t]*<section class="archive-latest" aria-label="Latest archive entry">.*?[ \t]*</section>',
                 re.DOTALL,
             )
             archive_matches = archive_latest_pattern.findall(archive)
@@ -2941,8 +2953,12 @@ def _gaza_aggregate_render_from_pages_history(
                 raise ValueError("Gaza archive baseline must contain exactly one latest-entry section")
             archive = archive_latest_pattern.sub(archive_latest, archive, count=1)
         month_heading = _gaza_month_heading(edition_date)
-        month_open = f'    <section class="archive-month"><h2>{html.escape(month_heading)}</h2>\n      <ul class="edition-list archive-list">'
-        if month_open not in archive:
+        month_open_match = re.search(
+            rf'[ \t]*<section class="archive-month"><h2>{re.escape(html.escape(month_heading))}</h2>\n'
+            rf'[ \t]*<ul class="edition-list archive-list">',
+            archive,
+        )
+        if month_open_match is None:
             month_section = (
                 f'    <section class="archive-month"><h2>{html.escape(month_heading)}</h2>\n'
                 '      <ul class="edition-list archive-list">\n'
@@ -2951,19 +2967,28 @@ def _gaza_aggregate_render_from_pages_history(
             )
             archive = _gaza_insert_missing_archive_month(archive, month_section, month_heading)
         else:
-            archive = _gaza_insert_date_ordered_list_item(archive, month_open, archive_row, edition_date)
+            archive = _gaza_insert_date_ordered_list_item(
+                archive,
+                month_open_match.group(0),
+                archive_row,
+                edition_date,
+            )
 
         if is_newest_edition:
             latest_card = _gaza_landing_latest_card(site_root, dispatch, row)
-            latest_card_pattern = re.compile(r'    <article class="gaza-latest-card">.*?    </article>', re.DOTALL)
+            latest_card_pattern = re.compile(
+                r'[ \t]*<article class="gaza-latest-card">.*?[ \t]*</article>',
+                re.DOTALL,
+            )
             index_matches = latest_card_pattern.findall(index)
             if len(index_matches) != 1:
                 raise ValueError("Gaza homepage baseline must contain exactly one latest card")
             index = latest_card_pattern.sub(latest_card, index, count=1)
-        readable_open = '    <ul class="edition-list gaza-readable-list">'
-        readable_row = render_briefing_list_item(briefing_presentation_for_edition(site_root, dispatch, edition_date))
-        if readable_open not in index:
+        readable_open_match = re.search(r'[ \t]*<ul class="edition-list gaza-readable-list">', index)
+        if readable_open_match is None:
             raise ValueError("Gaza homepage baseline has no readable-briefings list")
+        readable_open = readable_open_match.group(0)
+        readable_row = render_briefing_list_item(briefing_presentation_for_edition(site_root, dispatch, edition_date))
         index = _gaza_insert_date_ordered_list_item(index, readable_open, readable_row, edition_date)
 
         rss_item = _gaza_render_new_rss_item(site_root, dispatch, edition_date)
@@ -2971,6 +2996,10 @@ def _gaza_aggregate_render_from_pages_history(
         if rss_description is None:
             raise ValueError("Gaza RSS baseline has no channel description")
         rss = _gaza_insert_date_ordered_rss_item(rss, rss_item, edition_date)
+        if "</head>" in archive and "<body>" in archive:
+            archive = apply_gaza_archive_layout(archive)
+        if "</head>" in index and "<body>" in index:
+            index = apply_gaza_home_layout(index)
         rendered = {"index.html": index, "archive.html": archive, "rss.xml": rss}
 
     for filename, content in rendered.items():

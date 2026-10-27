@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T114800-0700-r11-114858",
+  "scheduled_for": "2026-10-27T11:45:54-07:00",
+  "started_at": "2026-10-27T11:48:00-07:00",
+  "completed_at": "2026-10-27T11:49:41.865-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T10:44:44-07:00",
+    "end_at": "2026-10-27T11:49:41.865-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is previous independently verified Food Line Source Watch heartbeat completed_at. New reports were screened for source publication and event timing independently; newly indexed historical items and already logged signals were excluded."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": [
+      1,
+      2
+    ],
+    "focus_classes": [
+      "Loss/closure/fire/disaster affecting the only/sole/last/full-service grocery store in a community",
+      "Emergency food distributions canceled/suspended because of storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire town October 27 2026",
+      "\"last grocery store\" \"closed\" \"October 27, 2026\"",
+      "\"sole grocery store\" closure fire October 2026 USA",
+      "\"food distribution\" canceled storm flood power outage October 27 2026",
+      "\"mobile food pantry\" cancelled weather Oct 27 2026",
+      "\"food bank\" \"distribution\" \"suspended\" \"October 27\" 2026",
+      "\"food pantry\" \"temporarily closed\" \"October 27, 2026\"",
+      "\"food bank\" closing reduced hours access October 27 2026 local news",
+      "\"pantry\" \"closed\" \"October 27\" 2026 flood fire power",
+      "\"SNAP\" \"EBT\" \"outage\" \"October 27, 2026\" official",
+      "site:gov \"SNAP\" \"interruption\" \"October 27, 2026\"",
+      "\"WIC\" \"benefits\" \"unavailable\" \"October 27, 2026\" state"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall only; primary nationwide production collection remains authoritative and was not read or modified.",
+    "Completed 12 targeted web searches across all four high-value miss classes; no web tool search failure was observed. Exact-hour discovery remains limited by search-indexing and publisher timing lag.",
+    "No new qualifying U.S. food-access disruption could be confirmed for the October 27 10:44:44–11:49 PT observation interval.",
+    "Previously recorded Utah Community Action Services and Food Bank Heber City closure and Provo reduced appointments: original local source https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs ; excluded as previously logged by 02:43 PT watch.",
+    "Spencer, NY sole-grocery-store fire reported September 14, 2026 is older than window: https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/ . September Rockport, MA fire damaged building that formerly housed a grocery store, not a newly lost grocery operation: https://www.wcvb.com/article/crews-battle-large-3-alarm-fire-at-rockport-business-town-water-supply-affected/73811000 .",
+    "Kenosha County Food Bank closure announcement was previously reported, not newly announced this hour: https://www.tmj4.com/news/local-news/in-your-community/kenosha-county/people-need-assistance-kenosha-pantry-reacts-as-county-food-bank-prepares-to-close .",
+    "Kauaʻi Hurricane Lowell Oct 27 recovery report described two planned emergency food distributions, not canceled or suspended distributions: https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ .",
+    "October 27 Maryland EBT chip-card item reports an October 21 state announcement and upcoming old-card deactivation; no new immediate outage or interruption in current observation interval established: https://southernmarylandchronicle.com/2026/10/27/maryland-ebt-chip-cards-stolen-benefit-reimbursements-drop-71-percent/ .",
+    "Apparent official SNAP interruptions were dated to October–November 2025; Illinois WIC outage result was from approximately June 2026, with recovery already announced. Generic annual program-rule changes, resource guides, promotions, foreign items and unrelated closures were excluded.",
+    "No human approval, public publication, social post, schedule modification or task disabling performed."
+  ]
+}

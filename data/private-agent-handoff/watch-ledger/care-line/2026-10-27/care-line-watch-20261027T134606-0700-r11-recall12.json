@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T134606-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T13:45:22-07:00",
+  "started_at": "2026-10-27T13:46:06-07:00",
+  "completed_at": "2026-10-27T13:47:54-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T12:49:46-07:00",
+    "end": "2026-10-27T13:47:54-07:00",
+    "basis": "From the verified 12:49:46 PDT prior Care Line watch heartbeat completion to this run; official UNM update at 2:02 p.m. MDT / 1:02 p.m. PDT falls within the interval."
+  },
+  "findings": [
+    {
+      "finding_id": "careline-nm-unm-health-ambulance-and-outpatient-restoration-20261027-1402mdt",
+      "canonical_source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+      "title": "Update on Cybersecurity Event at UNM Health Sciences Center",
+      "publisher": "University of New Mexico Health Sciences Center (UNM HSC Newsroom)",
+      "exact_supporting_passage": "All UNM Health hospitals are fully open, ambulance traffic has returned to normal operations, and clinics have resumed regularly scheduled appointments and procedures.",
+      "source_published_date": "2026-10-27",
+      "state": "NM",
+      "city": "Albuquerque; Rio Rancho",
+      "county": "Bernalillo; Sandoval",
+      "territory": null,
+      "event_type": "essential_service_restoration",
+      "service_line": [
+        "hospital",
+        "ambulance_emergency_intake",
+        "outpatient_appointments_and_procedures"
+      ],
+      "access_consequences": "UNM Health states that ambulance transport has returned to normal, all UNM Health hospitals are fully open, and clinics have resumed scheduled appointments and procedures after the October 26 cyber-related diversion and cancellations.",
+      "affected_population": "Emergency patients transported to UNM Health hospitals and patients with outpatient clinic appointments or procedures in the Albuquerque/Rio Rancho service area; number unknown.",
+      "effective_date": "2026-10-27",
+      "announcement_date": "2026-10-27",
+      "confidence": "high",
+      "source_role": "official_primary",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "supporting_update_time_local": "2026-10-27T14:02:00-06:00",
+      "supporting_update_time_pacific": "2026-10-27T13:02:00-07:00",
+      "dedupe_note": "A distinct October 27 official full-restoration confirmation after the preceding hourly watch; the earlier October 26 cybersecurity disruption and partial resumption notices are not new findings."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value healthcare access losses/restorations; primary production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Direct official CMS page check found latest dated entries on October 23 (CA/OH home-health terminations); no new listed provider termination, rescission, CLIA limitation/suspension, or similar notice dated within the observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 hospital emergency department closure suspension services patients",
+      "October 27 2026 labor delivery maternity unit closure suspension hospital",
+      "October 27 2026 rural hospital emergency room closes suspends service",
+      "October 27 2026 psychiatric behavioral health inpatient unit closes patients",
+      "October 27 2026 dialysis center clinic closes patients",
+      "October 27 2026 oncology cancer treatment infusion center closes services",
+      "October 27 2026 primary care clinic closure patients healthcare",
+      "October 27 2026 ambulance station EMS base air medical service closure suspension",
+      "October 27 2026 hospital emergency department reopen restore service shutdown",
+      "October 27 2026 Puerto Rico Guam USVI hospital medical service closure",
+      "October 27 2026 state health department notice hospital suspension closure services",
+      "October 27 2026 hospital healthcare service interruption emergency diversion ambulance"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Accessible; latest listed notice date October 23, 2026, no new in-window notices."
+      },
+      {
+        "source": "UNM Health Sciences Center official continuing cybersecurity bulletin",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Official update dated October 27, 2:02 p.m. MDT (=1:02 p.m. PDT), confirmed normal ambulance traffic, all UNM Health hospitals open, clinics resumed; new full-restoration confirmation compared with October 26 10:27 p.m. MDT partial-update in previous watch."
+      }
+    ],
+    "excluded": [
+      "Earlier West Suburban/Weiss, Jersey City Heights, rural dialysis and maternity unit closure stories not newly announced or effective in the observation window.",
+      "Earlier UNM October 26 cybersecurity event and late-night planned clinic resumption are prior watch context; only new October 27 explicit full operational restoration confirmation retained.",
+      "Proposals, generalized closure trends, overseas results, funding/ownership issues lacking concrete service impacts, commentary and unsupported social claims."
+    ],
+    "source_failures": [],
+    "limitations": "Search engines returned older material despite one-day recency and can lag local reports. This is supplementary recall, not proof of nationwide absence of other changes. Exact effective time of full UNM restoration was not provided; date is based on October 27 official status update.",
+    "material_degradation": false,
+    "controls": "One run-specific heartbeat on ops/watch-ledger only; no approvals, publication, schedule changes, automation disabling, or production collector mutations."
+  }
+}

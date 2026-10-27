@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T174604-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T17:45:22-07:00",
+  "started_at": "2026-10-26T17:46:04-07:00",
+  "completed_at": "2026-10-26T17:47:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T16:51:59-07:00",
+    "end": "2026-10-26T17:47:40-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through the current run; newly discovered publication versus actual service change dates were distinguished."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall. Production national collector remains authoritative; no production dedupe or editorial authorization performed.",
+    "scope": "United States, DC, Puerto Rico, Guam, U.S. Virgin Islands, Northern Mariana Islands, American Samoa; hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care disruption; rural/emergency service loss; ground/air ambulance closure; official CMS access-risk notices; verified restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "verification": "CMS Public Notices checked first. Most recent public notices dated October 23; no notice dated October 26 or added during the observation interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 hospital emergency department closing ambulance diversion outage Monday USA",
+      "October 26 2026 maternity labor delivery obstetrics hospital unit closure suspended local",
+      "October 26 2026 rural hospital emergency room closing suspended services critical access",
+      "October 26 2026 behavioral health psychiatric hospital unit closed patients",
+      "October 26 2026 dialysis center oncology infusion clinic closed services suspended patients local news",
+      "October 26 2026 primary care family medicine clinic shut doors suspended seeing patients",
+      "October 26 2026 ambulance EMS service station county shuts down suspends service",
+      "October 26 2026 medical helicopter air ambulance base closing suspended service",
+      "UNM Health hospital cyber October 26 2026 5pm resumed reopened ambulances clinics latest",
+      "October 26 2026 hospital emergency department clinic resumed reopened services today local news",
+      "October 26 2026 Puerto Rico Guam U.S. Virgin Islands American Samoa Northern Mariana Islands hospital emergency ambulance dialysis closure",
+      "site:gov \"October 26, 2026\" hospital clinic laboratory closure suspension emergency services"
+    ],
+    "search_failures": [],
+    "screened_out": [
+      {
+        "title": "UNM Health cybersecurity disruption, ambulance diversion and cancelled clinics",
+        "canonical_source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Duplicate of the prior verified watch's care-line-nm-unm-health-cyber-disruption-20261026 finding; the official notice confirms the known Oct 26 disruption but no newly effective restoration or additional distinct service change."
+      },
+      {
+        "title": "San Diego County one-day clinics and children's medical therapy units EHR transition pause",
+        "canonical_source_url": "https://www.sdsentinel.com/article/county-announces-one-day-clinic-closure-for-records-upgrade",
+        "reason": "Retrospective October 26 publication about preannounced October 19 closure, outside the current new-development window; source describes planned pause, not a newly verified reopening."
+      },
+      {
+        "title": "West Suburban Medical Center resumed hospital outpatient services",
+        "reason": "Service restoration reported in April 2026, not a new October 26 event."
+      },
+      {
+        "title": "Chicago-area obstetric service reductions and Alabama Greene County ambulance suspension",
+        "reason": "Previously announced earlier in 2026; no new distinct service change identified in this interval."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T164958-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-26T16:51:59-07:00",
+      "previous_finding_id": "care-line-nm-unm-health-cyber-disruption-20261026",
+      "previous_heartbeat_read_verified": true,
+      "source_cross_check": "Official UNM Health statement dated October 26 corroborates the previously recorded incident. No concrete post-16:51 restoration found.",
+      "production_review": "Production collector state not independently inspected; authoritative production deduplication remains required for any future findings."
+    },
+    "material_degradation": false,
+    "limitations": "Exactly 12 additional targeted searches and the official CMS page; search engines do not guarantee exhaustive indexing or precise hourly publication timestamps. No new official restoration statement found in this window.",
+    "controls": "Private branch heartbeat only; no approval, publication, production pipeline changes, schedule changes, or task disablement."
+  }
+}

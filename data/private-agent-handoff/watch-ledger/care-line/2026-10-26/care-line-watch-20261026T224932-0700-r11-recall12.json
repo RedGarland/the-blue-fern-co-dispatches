@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T224932-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T22:45:22-07:00",
+  "started_at": "2026-10-26T22:49:32-07:00",
+  "completed_at": "2026-10-26T22:51:09-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T21:49:03.043-07:00",
+    "end": "2026-10-26T22:51:09-07:00",
+    "basis": "Prior verified ops/watch-ledger Care Line Watch completed_at to the end of this run; targeted search also checked delayed indexing and possible new effective service changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Production national Care Line collector remains authoritative; no production collection or editorial deduplication asserted.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "note": "Official canonical CMS page retrieved and inspected; latest notices October 23 include California and Ohio home-health agency terminations. Initial previously used obsolete CMS path failed, recovered via canonical CMS search."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 10 pm PDT hospital emergency department diversion closure new United States",
+      "October 26 2026 late night emergency room rural hospital closed suspended service",
+      "October 26 2026 late night maternity obstetrics labor delivery service hospital closure",
+      "October 26 2026 October 27 dialysis center oncology chemotherapy clinic services abruptly closed",
+      "October 26 2026 evening EMS ambulance service air medical helicopter base suspended closure",
+      "October 26 2026 psychiatric behavioral health hospital admissions suspension closure crisis",
+      "October 26 2026 family medicine primary care urgent care clinic closure immediately patients",
+      "October 26 2026 11 pm eastern hospital reopened emergency services restored diversion ended",
+      "UNM Health October 26 2026 after 10:27 pm MDT ambulances diversion ends emergency department October 27 cyber",
+      "October 26 2026 Puerto Rico Guam Virgin Islands hospital clinic ambulance service outage closure",
+      "October 26 2026 hospital system canceled appointments diverted ambulance emergency outage tonight official statement",
+      "October 27 2026 early morning US hospital ER maternity ambulance closure reopening"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Retrieved; October 23, 2026 remains the newest notice date."
+      },
+      {
+        "source": "UNM Health Sciences Center official incident update",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Retrieved; latest visible update remains October 26, 2026 10:27 p.m. MDT (9:27 p.m. PDT), already recorded in previous watch; no later effective restoration or ambulance-diversion end confirmed."
+      }
+    ],
+    "duplicate_review": {
+      "prior_heartbeat": "care-line-watch-20261026T214621-0700-r11-recall12.json",
+      "prior_completed_at": "2026-10-26T21:49:03.043-07:00",
+      "excluded": [
+        "UNM Health October 26 cyber disruption and ambulance diversion (recorded in earlier watch).",
+        "UNM Health October 26 phased restoration and 10:27 p.m. MDT confirmation hospitals open (recorded in earlier watches).",
+        "Watsonville Community Hospital maternity-unit potential closure remains a proposal, without verified effective service loss.",
+        "Previously reported 2026 service reductions and proposed or out-of-window closures, and unrelated opinion or out-of-country results."
+      ]
+    },
+    "search_failures": [
+      {
+        "source": "CMS obsolete Public Notices path",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "result": "Not accessible via web retrieval; recovered canonical CMS page and confirmed newest notices."
+      }
+    ],
+    "limitations": "Search-index coverage of late-night local and territory service changes is incomplete; no evidence of new qualifying event in the interval does not demonstrate absence of unreported events. No primary production queue accessed. CMS obsolete URL failure did not eliminate CMS source coverage.",
+    "material_degradation": false,
+    "controls": "Append one heartbeat JSON to ops/watch-ledger. No approvals, publication, schedule changes, task disabling, or production collector changes."
+  }
+}

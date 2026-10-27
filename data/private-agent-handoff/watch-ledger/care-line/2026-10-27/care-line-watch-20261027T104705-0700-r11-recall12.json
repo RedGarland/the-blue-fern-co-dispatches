@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T104705-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T10:45:22-07:00",
+  "started_at": "2026-10-27T10:47:05-07:00",
+  "completed_at": "2026-10-27T10:48:56.882-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T09:51:32-07:00",
+    "end": "2026-10-27T10:48:56.882-07:00",
+    "basis": "Start at the immediately previous verified Care Line heartbeat completion. Search newly reported or effective access changes and exclude earlier findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss-class recall only; production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official current CMS Public Notices listing accessible, latest public notices October 23, 2026 (home health agency terminations); no October 27 in-window provider termination, rescission, or CLIA limitation/suspension notice."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 hospital emergency department suddenly closed suspended diverting ambulances United States",
+      "October 27 2026 maternity labor delivery ward closure suspended service effective US",
+      "October 27 2026 rural hospital emergency room shuts down closure service loss",
+      "October 27 2026 ambulance EMS service shutdown suspended air medical base closure US",
+      "October 27 2026 dialysis oncology chemotherapy center clinic closed suspended treatments",
+      "October 27 2026 inpatient behavioral health psychiatric hospital unit closure suspension",
+      "October 27 2026 primary care urgent care clinic closes permanently patients medical services",
+      "October 27 2026 hospital emergency reopened resumed ambulance diversion ends health system",
+      "site:gov \"October 27, 2026\" (\"hospital\" OR \"clinic\") (\"suspended\" OR \"closed\" OR \"reopened\")",
+      "site:gov \"October 27, 2026\" ambulance EMS service (\"closed\" OR \"resumed\" OR \"suspended\")",
+      "\"October 27, 2026\" medical clinic hospital closure Puerto Rico Guam U.S. Virgin Islands American Samoa",
+      "UNM Health October 27 2026 new update ambulance diversions ended emergency department fully operational"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices (canonical official page)",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Accessible; latest notices dated October 23, 2026. No newly posted notice in search window."
+      },
+      {
+        "source": "UNM Health Sciences Center official cybersecurity update",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Last substantive official update still October 26 at 10:27 p.m. MDT: UNM Hospital and Sandoval Regional Medical Center open; clinics to resume October 27. Previously captured. No newer explicit end-of-diversion or full ED restoration announcement found."
+      },
+      {
+        "source": "Associated Press contemporaneous coverage",
+        "url": "https://apnews.com/article/7a3593f8a3cee4ca895774ab1574919f",
+        "result": "October 27 coverage reports October 26 incident and earlier recovery steps, not a new access milestone since prior check."
+      }
+    ],
+    "excluded": [
+      "Previously recorded UNM Health cybersecurity restrictions and October 26 late-evening hospital reopening / October 27 clinic resumption notice; October 27 republications are duplicates.",
+      "Older U.S. clinic/ambulance/hospital closures outside the hourly search window, and future proposals lacking newly concrete service changes.",
+      "Foreign healthcare events, speculative reports, ownership-only stories, opinion and generic hospital financial-risk commentary."
+    ],
+    "source_failures": [
+      {
+        "source": "Noncanonical historical CMS Public Notices URL",
+        "url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertificationgeninfo/public-notices",
+        "result": "Inaccessible; recovered by checking official current canonical CMS Public Notices page first. No coverage gap from this legacy route."
+      }
+    ],
+    "limitations": "News indexing may lag very recent local announcements. All 12 targeted searches returned usable results, but no new qualifying announcement could be verified. The old noncanonical CMS route was inaccessible; the current official source was accessible, so no material coverage loss occurred.",
+    "material_degradation": false,
+    "controls": "No editorial approval, publishing, production modification, schedule change, or task disablement. Exactly one run-specific heartbeat is written to ops/watch-ledger."
+  }
+}

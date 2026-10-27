@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T194753-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T19:45:22-07:00",
+  "started_at": "2026-10-26T19:47:53-07:00",
+  "completed_at": "2026-10-26T19:48:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T18:45:04-07:00",
+    "end": "2026-10-26T19:48:58-07:00",
+    "basis": "Previous independently retrieved Care Line Watch heartbeat completed_at through current observation; new reporting and access effects assessed for the interval, with lookback for delayed discovery."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; authoritative production collector unchanged. This ledger does not imply production-event deduplication.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 evening hospital emergency department closure diversion U.S. patients October 26",
+      "October 26 2026 \"hospital\" \"closed\" \"emergency\" \"tonight\" ambulance",
+      "October 26 2026 labor delivery maternity unit suspended service hospital closure",
+      "October 26 2026 rural hospital emergency services discontinued reopened patients",
+      "October 26 2026 behavioral health inpatient psychiatric care clinic closure shutdown service new",
+      "October 26 2026 dialysis kidney center suspended treatments oncology infusion services canceled",
+      "October 26 2026 EMS ambulance station helicopter air medical base closing service suspended",
+      "October 26 2026 family medicine primary care community health center abruptly closed patients",
+      "site:hscnews.unm.edu/news \"October 26, 2026\" \"7\" \"8\" \"ambulances\" \"operating\" cybersecurity",
+      "\"October 26, 2026\" hospital clinic services reopened restored emergency department ambulance diverted",
+      "\"October 26, 2026\" \"Puerto Rico\" \"Guam\" \"Virgin Islands\" hospital clinic closure suspension",
+      "\"October 26, 2026\" hospital emergency clinic ambulance shutdown \"state department of health\" notice"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Retrieved; latest October 23, 2026."
+      },
+      {
+        "source": "UNM Health Sciences official October 26 notice",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "No update later than October 26 6:08 p.m. MDT. Restoration phased from 2:30 p.m. MDT already in preceding heartbeat. No confirmation of full ED/ambulance/outpatient restoration."
+      }
+    ],
+    "search_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertificationgeninfo/policy-and-memos-states-and-regions",
+        "failure": "Legacy CMS URL inaccessible; retrieved the canonical CMS Public Notices page successfully. No substantive notice coverage lost."
+      }
+    ],
+    "duplicate_review": {
+      "prior_heartbeat": "care-line-watch-20261026T184051-0700-r11-recall12.json",
+      "prior_completed_at": "2026-10-26T18:45:04-07:00",
+      "excluded": [
+        "University of New Mexico Health Sciences October 26 cyber-related care interruption, previously reported.",
+        "University of New Mexico Health October 26 2:30 p.m. MDT phased resumption, previously reported in prior heartbeat.",
+        "Historical hospital and maternity closures, pending proposals, unrelated international results, and earlier service interruptions."
+      ]
+    },
+    "limitations": "Hourly supplemental web search and recent indexing are incomplete; absence of qualifying findings is not proof of absence. Production queue and its deduplication state were not consulted. CMS legacy URL inaccessible but current canonical notices page was retrieved.",
+    "material_degradation": false,
+    "controls": "One append-only private watch-ledger heartbeat. No approval, publication, production collector changes, schedule changes, or disablement."
+  }
+}

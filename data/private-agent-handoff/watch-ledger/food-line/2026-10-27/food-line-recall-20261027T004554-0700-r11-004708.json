@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T004554-0700-r11-004708",
+  "scheduled_for": "2026-10-27T00:45:54-07:00",
+  "started_at": "2026-10-27T00:45:59-07:00",
+  "completed_at": "2026-10-27T00:47:08-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T23:46:55-07:00",
+    "end_at": "2026-10-27T00:47:08-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at from immediately preceding verified Food Line Source Watch heartbeat in ops/watch-ledger (2026-10-26 23:45 scheduled run). End is Pacific observation time after bounded search. Search recency and crawl timestamps are not evidence of event novelty."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" closed OR fire October 26 2026 town",
+      "\"last grocery store\" \"closed\" OR \"fire\" October 26 27 2026",
+      "\"sole grocery store\" fire closure October 27 2026",
+      "\"full service grocery store\" closure fire community October 26 2026",
+      "\"food distribution\" canceled storm OR flooding October 26 27 2026",
+      "\"food pantry\" distribution cancelled power outage fire October 26 27 2026",
+      "\"food bank\" canceled distribution due to storm October 26 2026",
+      "\"food pantry\" abruptly closed October 26 27 2026",
+      "\"food bank\" \"services suspended\" October 26 2026",
+      "site:gov SNAP EBT system outage October 26 27 2026 benefits",
+      "site:gov WIC system outage October 26 27 2026 food benefits",
+      "\"SNAP\" \"benefits\" interrupted suspended October 27 2026 official state"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery-store loss, closure, fire or disaster",
+      "Emergency food distributions canceled/suspended by storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank closure or major reduction in service access",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall only; the authoritative nationwide production collector was not accessed or modified.",
+    "Twelve targeted fresh-web searches returned results covering all four miss classes. No search or source-request failure that materially compromised this bounded search was observed.",
+    "No new, date-verified qualifying U.S. food-access disruption was found in 2026-10-26T23:46:55-07:00 through 2026-10-27T00:47:08-07:00. Search result publication/crawl recency was not treated as a confirmed incident date.",
+    "Only/sole/full-service grocery results were stale examples, including Ogden IA (2019), Eagleville TN (2021), and previously reported grocery closures; no new qualifying closure verified.",
+    "Distribution and pantry searches mainly surfaced older incidents such as El Paso TX storm-related on-site distribution closure of September 25, 2026, and Ruby's Pantry shutdown of April 2026; not new to this observation interval.",
+    "SNAP/WIC official interruption searches returned older benefit-policy or 2025 shutdown reporting, with no newly substantiated access-interruption notice.",
+    "Potential US Virgin Islands SNAP food-replacement item from Virgin Islands Consortium was dated October 25, 2026, well before window; it describes seeking approval for replacement of spoiled food after electrical outages, not a new SNAP benefit issuance/EBT access interruption. Excluded as older and outside this narrow recall scope. Source: https://viconsortium.com/vi-government/virgin-islands-bryan-seeks-snap-food-replacement-assistance-after-wapa-outages--says-new-generation-will-take-time",
+    "Limited indexing of local provider notices, social media, and late-night local reporting means no findings does not prove no incidents occurred.",
+    "No approvals, public edition changes, publication, schedule modifications, or task disabling occurred."
+  ]
+}

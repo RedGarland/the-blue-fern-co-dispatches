@@ -264,4 +264,3 @@ def apply_gaza_archive_layout(document: str) -> str:
 </html>
 '''
     return head + body_html
-

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import html
@@ -1002,7 +1002,7 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
     summaries = {
         "gaza": "Daily source-backed briefings from Gaza.",
         "american-pressure": AMERICAN_PRESSURE_PUBLIC_DESCRIPTION,
-        "food-line": "Daily source-backed food insecurity pressure signals across the United States - where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
+        "food-line": "Daily source-backed food insecurity pressure signals across the United States — where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
     }
     for dispatch in dispatches:
         if dispatch.slug not in {"gaza", "american-pressure"}:
@@ -4243,7 +4243,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
             public_archive_title = (
                 care_line_public_archive_title_for_records(care_line_records)
                 if care_line_public_records
-                else f"{dispatch.edition_date} - No current update"
+                else f"{dispatch.edition_date} — No current update"
             )
             public_archive_subtitle = care_line_summary_for_records(care_line_records) if care_line_public_records else care_line_no_current_update_summary()
             public_summary = (
@@ -6877,4 +6877,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

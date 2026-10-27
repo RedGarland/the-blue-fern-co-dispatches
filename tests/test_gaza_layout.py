@@ -118,4 +118,3 @@ def test_filter_asset_is_present_and_contains_no_network_or_public_write() -> No
     assert "archive-record" in text
     assert "aria-pressed" in text
     assert '`${labels[kind]} ${kind === "all"' in text
-

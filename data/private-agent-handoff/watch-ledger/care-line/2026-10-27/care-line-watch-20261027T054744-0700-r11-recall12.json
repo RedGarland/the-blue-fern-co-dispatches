@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T054744-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T05:45:22-07:00",
+  "started_at": "2026-10-27T05:47:44-07:00",
+  "completed_at": "2026-10-27T05:49:16-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T04:51:04-07:00",
+    "end": "2026-10-27T05:49:16-07:00",
+    "basis": "Previous independently fetched Care Line heartbeat completed_at through this execution; late-indexed older developments evaluated only for novelty and duplicate exclusion."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of new U.S. states and territory healthcare-access changes; production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS listing was directly inspected before all 12 additional targeted searches. Latest listed actions remained October 23 (home health terminations), with no newer published termination, rescission, CLIA action or related notice identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department ambulance diversion closed October 27 2026 US",
+      "hospital maternity labor delivery suspension closure October 27 2026 US",
+      "rural hospital emergency room closure reopening October 27 2026",
+      "psychiatric behavioral health inpatient services closure suspension October 27 2026",
+      "dialysis treatment center sudden closure service patients October 27 2026",
+      "oncology cancer clinic infusion services closure suspension October 27 2026",
+      "October 27 2026 primary care clinic closed patients appointments sudden closure United States",
+      "October 27 2026 ambulance EMS service shutdown suspension station coverage",
+      "October 27 2026 air medical helicopter ambulance base closure suspended",
+      "October 27 2026 UNM Health ambulance diversion restored",
+      "October 27 2026 hospital urgent care suspended operations reopened patients",
+      "October 27 2026 Puerto Rico Guam Virgin Islands hospital emergency clinic closed service"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Available; newest public notices dated October 23, 2026."
+      },
+      {
+        "source": "Targeted web search",
+        "result": "12 searches returned results; no newly corroborated qualifying U.S. or territory access change during the observation window."
+      },
+      {
+        "source": "UNM Health official cybersecurity update",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Most recent verified official 10:27 p.m. MDT October 26 update already recorded in prior watch; hospitals open and October 27 appointments expected to resume, but no separate post-window confirmation of ended ambulance diversions."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261027T044854-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-27T04:51:04-07:00",
+      "excluded": [
+        "UNM Health October 26 cyber disruption, temporary ambulance diversions, phased operations restoration, and 10:27 p.m. MDT statement confirming hospitals open and scheduled Tuesday clinic resumption were reported by prior watches; no new verified service-restoration update identified.",
+        "Earlier hospital, behavioral-health, maternity, outpatient, EMS and other clinical service articles were outside the observation window, or described only proposals or unconfirmed plans.",
+        "Search results relating to non-U.S. health systems, opinion, unrelated medical transport accidents, and ownership changes without access effects were excluded."
+      ]
+    },
+    "search_failures": [],
+    "limitations": "Search engine results included many older articles despite date restrictions; newly published or unindexed local notices may be missed. A zero finding result is not a guarantee of exhaustive national coverage.",
+    "material_degradation": false,
+    "controls": "Persist exactly one heartbeat to ops/watch-ledger. No approval, public publication, changes to schedules, or task disabling."
+  }
+}

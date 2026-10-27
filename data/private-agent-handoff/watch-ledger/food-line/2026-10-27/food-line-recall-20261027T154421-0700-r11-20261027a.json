@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T154421-0700-r11-20261027a",
+  "scheduled_for": "2026-10-27T15:45:54-07:00",
+  "started_at": "2026-10-27T15:44:21-07:00",
+  "completed_at": "2026-10-27T15:45:14-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T14:49:11.270-07:00",
+    "end_at": "2026-10-27T15:45:14-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified 14:49:11.270 PT Food Line Source Watch heartbeat completion through this run. Search results checked for within-window reporting and late-discovered immediate consequences; date-only publication is insufficient to prove within-hour timing."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": "2 or 3",
+    "search_terms": [
+      "\"only grocery store\" \"closed\" \"October 27\" 2026",
+      "\"last grocery store\" town closure fire October 27 2026",
+      "\"sole grocery store\" burned shut October 2026 town",
+      "\"full-service grocery store\" closed community October 27 2026",
+      "\"food distribution\" \"canceled\" storm flood October 27 2026",
+      "\"food bank\" distribution suspended power outage storm October 27 2026",
+      "\"food pantry\" fire destroyed closed October 27 2026",
+      "\"food pantry\" \"closing\" hours reduced October 27 2026",
+      "site:gov \"SNAP\" \"EBT\" disruption outage benefits October 27 2026",
+      "site:gov WIC interrupted suspended clinic benefits October 27 2026",
+      "October 27 2026 food bank pantry closes suddenly cuts food distribution local news",
+      "October 27 2026 emergency food distribution cancelled canceled due to weather fire closure outage"
+    ],
+    "focus_classes": [
+      "Loss of only/sole/last/full-service community grocery",
+      "Emergency distribution canceled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank service closure or substantial access reduction",
+      "Official SNAP/WIC/food-assistance disruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary high-value recall only. Production's nationwide collector remains authoritative; no production status or deduplication was asserted.",
+    "All 12 targeted searches ran and returned usable web coverage across four specified categories. No new qualifying U.S. food-access event was verified as newly reported within the observation window.",
+    "The South Philadelphia Community Fridge Point Breeze pantry fire was already recorded in the immediately preceding 14:49 PT heartbeat; a second local report is the same underlying October 26 fire and not a distinct event.",
+    "Previously logged Wymore, Nebraska last-grocery-store loss and Heber City/Provo, Utah pantry reductions are duplicates, not new findings.",
+    "Wyandanch, New York soup-kitchen fire was reported October 20 and is outside this hourly window. Kenosha, Wisconsin food-bank end-of-2026 planned closure is not an abrupt current access loss. October 2025 SNAP-shutdown notices and other historical material were excluded.",
+    "No current official state or federal SNAP/WIC interruption, new disaster-related emergency distribution cancellation, sole-store loss or new substantial pantry reduction was corroborated within this bounded search.",
+    "Indexing freshness limits negative assurance, especially for local provider social-media-only notices and exact publication times.",
+    "No approval, publication, social posting, schedule changes or task disabling occurred."
+  ]
+}

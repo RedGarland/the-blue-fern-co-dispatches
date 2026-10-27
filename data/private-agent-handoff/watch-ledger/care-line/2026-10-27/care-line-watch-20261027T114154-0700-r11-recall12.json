@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T114154-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T11:45:22-07:00",
+  "started_at": "2026-10-27T11:41:54-07:00",
+  "completed_at": "2026-10-27T11:43:18-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T10:48:56.882-07:00",
+    "end": "2026-10-27T11:43:18-07:00",
+    "basis": "From the preceding verified Care Line watch heartbeat completion, using the Pacific time zone. Exclude previously captured and pre-window events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value healthcare access recall; the production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Canonical official CMS notices page accessible and checked before non-CMS targeted searching. Latest entries were three October 23 home health agency termination notices; no in-window Medicare provider termination, rescission, or CLIA action identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department shuts down closes suspends service October 27 2026 local news",
+      "maternity labor delivery unit suspension closure October 27 2026 hospital",
+      "rural hospital emergency department closure reduced hours October 27 2026",
+      "ambulance service air medical base closes suspended October 27 2026",
+      "inpatient behavioral health psychiatric hospital unit closes October 27 2026",
+      "dialysis center clinic closes services suspended October 27 2026",
+      "October 27 2026 oncology cancer infusion treatment clinic shutdown appointments suspended",
+      "October 27 2026 primary care health clinic closure immediate patients services",
+      "October 27 2026 hospital emergency department ambulance diversion lifted restored reopened",
+      "October 27 2026 air ambulance helicopter medical transport base closure suspended",
+      "October 27 2026 American Samoa Guam Puerto Rico Virgin Islands hospital clinic emergency service closures",
+      "October 27 2026 community hospital rural emergency services temporary suspension county health announcement"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Official public notices current listing accessed; latest notice date October 23, 2026; none in current window."
+      },
+      {
+        "source": "UNM Health Sciences Center official cybersecurity update",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Latest posted update remained October 26 at 10:27 p.m. MDT; UNM Hospital and SRMC already announced open and clinics due to resume October 27. No additional confirmation that full ED operations and ambulance acceptance were restored."
+      },
+      {
+        "source": "KFF Health News via CBS News",
+        "url": "https://www.cbsnews.com/news/pediatric-intensive-care-units-closing-nationwide/",
+        "result": "Published October 27 at 5:00 a.m. EDT (2:00 a.m. Pacific), outside the current hourly window; details retrospectively describe earlier pediatric ICU/inpatient unit closures, including Missoula in October 2026, without a new in-window access change."
+      },
+      {
+        "source": "Hoodline Tacoma Pearl Youth Residence report",
+        "url": "https://hoodline.com/2026/10/tacoma-youth-psychiatric-unit-closing-nov-21-cutting-quarter-of-state-s-beds/",
+        "result": "Search returned October 27 recap of previously reported plan for November 21 closure; an actual new current-hour suspension or reopening was not evidenced. Full article fetch inaccessible."
+      }
+    ],
+    "excluded": [
+      "UNM Health October 26 emergency/ambulance restriction and its late-night announced hospital opening/October 27 clinic resumption: already recorded in earlier watch.",
+      "October 27 KFF/CBS pediatric inpatient/ICU closures retrospective: publication at 2 a.m. PDT, before the current hourly window; underlying service losses previously occurred.",
+      "Tacoma Pearl Youth Residence November 21 planned closure reported in retrospective news; not a newly confirmed in-window service loss; pre-existing cessation of admissions.",
+      "Older clinic, hospital, or EMS closures; speculative/planned but not effective service changes; opinion, marketing and overseas cases."
+    ],
+    "source_failures": [
+      {
+        "source": "Initially attempted noncanonical CMS Public Notices URL",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "result": "Not accessible, but corrected to canonical CMS Public Notices URL; official notice coverage recovered."
+      },
+      {
+        "source": "Hoodline Tacoma report",
+        "url": "https://hoodline.com/2026/10/tacoma-youth-psychiatric-unit-closing-nov-21-cutting-quarter-of-state-s-beds/",
+        "result": "Full article fetch disabled; search-indexed summary and earlier-dated closure context available, and it was not accepted as new evidence."
+      }
+    ],
+    "limitations": "One noncanonical CMS URL and one secondary local-news page were inaccessible. Canonical CMS notices, official UNM notice and twelve targeted searches were usable. This run is conservatively DEGRADED due to source-fetch failures, but no material coverage failure was established. Search indexing may lag very recent local announcements.",
+    "material_degradation": false,
+    "controls": "No approval, publication, protected production changes, scheduling changes or task disablement. Exactly one run-specific heartbeat created on ops/watch-ledger."
+  }
+}

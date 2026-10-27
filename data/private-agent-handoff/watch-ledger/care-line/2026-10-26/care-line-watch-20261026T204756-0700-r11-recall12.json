@@ -1,0 +1,74 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T204756-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T20:45:22-07:00",
+  "started_at": "2026-10-26T20:47:56-07:00",
+  "completed_at": "2026-10-26T20:49:21-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T19:48:58-07:00",
+    "end": "2026-10-26T20:49:21-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through the current observation; checked delayed indexing for qualifying changes without repeating established prior findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; authoritative production national collection unchanged. No inference about production queue deduplication.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "note": "Official current CMS list retrieved, including the 2026-10-23 California/Ohio HHA terminations and 2026-10-22 Kentucky CLIA limitation; all precede prior hourly check."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 late evening emergency department hospital temporarily closed diverted ambulances",
+      "October 26 2026 hospital closure suspended emergency services tonight local news",
+      "October 26 2026 labor delivery maternity unit stopped services hospital closure",
+      "October 26 2026 rural hospital emergency department loss ambulance diversion October 27",
+      "October 26 2026 dialysis kidney center or oncology infusion services suspended closed",
+      "October 26 2026 EMS ambulance air medical helicopter base closing suspended service",
+      "October 26 2026 behavioral health psychiatric inpatient care center suddenly shut down suspended October 27",
+      "October 26 2026 primary care family medicine clinic abruptly closed patients unable get appointments",
+      "October 26 2026 hospital emergency department services restored reopened following shutdown ambulance diversion",
+      "site:hscnews.unm.edu/news October 26 2026 UNM hospital ambulances divert services restored evening cybersecurity update",
+      "October 26 2026 Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic ambulance closure suspension",
+      "October 26 2026 state department health warning hospital termination urgent care service stopped operating"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Retrieved; most recent notice October 23, 2026; none newly posted in window."
+      },
+      {
+        "source": "University of New Mexico HSC official cybersecurity update",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Official update remains at October 26, 6:08 p.m. MDT (5:08 p.m. PDT). Reports 2:30 p.m. MDT phased restoration, but outpatient procedures remained canceled and complete ED/ambulance restoration not confirmed. Both disruption and phased resumption were recorded in preceding watches."
+      },
+      {
+        "source": "Guam Regional Medical City October 17 weather advisory",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "result": "Historical October 17 notice with outpatient closure October 19; emergency department continued operating; no novel October 26 service change."
+      }
+    ],
+    "duplicate_review": {
+      "prior_heartbeat": "care-line-watch-20261026T194753-0700-r11-recall12.json",
+      "prior_completed_at": "2026-10-26T19:48:58-07:00",
+      "excluded": [
+        "UNM Health Oct. 26 cybersecurity-related ambulance diversion and canceled clinics (prior positive heartbeat).",
+        "UNM Health Oct. 26 phased return beginning 2:30 p.m. MDT (prior positive heartbeat); no new, concretely effective restoration found.",
+        "Roseland Community Hospital maternity closure announced October 1 for end of October; no new effective closure verified.",
+        "Historical U.S. service interruptions, proposals without confirmed effects, unrelated business/ownership stories, and out-of-scope international results."
+      ]
+    },
+    "search_failures": [],
+    "limitations": "Twelve targeted indexed web queries cannot establish absence of all unindexed or unreported local healthcare changes. Latest UNM statement has not established full emergency-department or ambulance-diversion restoration. Production review backlog and live production deduplication state not consulted.",
+    "material_degradation": false,
+    "controls": "Exactly one append-only heartbeat on ops/watch-ledger; no story approval, publication, production collector, schedule, or automation change."
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T234518-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T23:45:22-07:00",
+  "started_at": "2026-10-26T23:45:18-07:00",
+  "completed_at": "2026-10-26T23:47:14.070-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T22:51:09-07:00",
+    "end": "2026-10-26T23:47:14.070-07:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed_at through end of this supplementary recall check; search also considered newly indexed reports of events within the interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production national Care Line collector remains authoritative. No primary production queue was queried or modified.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS Public Notices page inspected first. Latest listed notices remain October 23: My Families Healthcare (CA), 1ST AIDE HOME HEALTH AGENCY (CA), and Moonlight Home Health Care Inc (OH). No newly listed provider termination, rescission, CLIA limitation or suspension observed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 late night hospital emergency department closed suspended reopened United States",
+      "October 26 2026 hospital maternity labor delivery unit shut down overnight access",
+      "October 26 2026 psychiatric behavioral health unit hospital closure suspension patients",
+      "October 26 2026 dialysis center oncology clinic treatment suspended closing patients",
+      "October 26 2026 rural hospital emergency room temporarily closed ambulance diversion",
+      "October 26 2026 ambulance service shut down suspended EMS base air medical helicopter",
+      "October 26 2026 primary care clinic closure patients appointments cancelled",
+      "October 26 2026 hospital cyber outage restored ambulance diversions UNM Health late evening",
+      "October 26 2026 October 27 2026 hospital service restored reopened emergency department",
+      "October 26 2026 federal CMS termination provider CLIA suspension notice",
+      "October 26 2026 Puerto Rico Guam Virgin Islands hospital clinic service closure emergency",
+      "October 26 2026 health department announces closure urgent care rural health clinic EMS"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Retrieved; newest visible notice date 2026-10-23."
+      },
+      {
+        "source": "UNM Health Sciences Center official incident bulletin",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Retrieved. Latest visible update is 2026-10-26 10:27 p.m. MDT / 9:27 p.m. PDT; UNM Hospital and SRMC open; clinics plan normal appointments Oct 27. Already in prior heartbeat, no later explicit ending of ambulance diversion or separate concrete reopening found."
+      }
+    ],
+    "duplicate_review": {
+      "prior_heartbeat": "care-line-watch-20261026T224932-0700-r11-recall12.json",
+      "prior_completed_at": "2026-10-26T22:51:09-07:00",
+      "excluded": [
+        "UNM Health October 26 cybersecurity disruption and phased operational restoration, including 10:27 p.m. MDT hospital-open confirmation, were recorded by previous watches.",
+        "Watsonville Community Hospital potential maternity-unit closure remains a proposal without an effective service-loss announcement.",
+        "Historical emergency department, maternity, psychiatric, clinic, dialysis, and ambulance closures or restorations returned by searches occurred outside the observation window; international results excluded.",
+        "Ownership and business reporting lacking a verified service interruption and unsupported social reports excluded."
+      ]
+    },
+    "source_failures": [],
+    "limitations": "Fast news/search indexes returned predominantly older or unrelated results. Nighttime local notices and territories may be underindexed; zero confirmed findings does not imply absence of unreported changes. No assertion is made regarding primary collector or editorial queue completeness.",
+    "material_degradation": false,
+    "controls": "Only one heartbeat JSON written to ops/watch-ledger; no publication, approval, task disablement, schedule modification, or production changes."
+  }
+}

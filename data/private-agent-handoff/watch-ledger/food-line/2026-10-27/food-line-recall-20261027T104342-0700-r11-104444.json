@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T104342-0700-r11-104444",
+  "scheduled_for": "2026-10-27T10:45:54-07:00",
+  "started_at": "2026-10-27T10:43:42-07:00",
+  "completed_at": "2026-10-27T10:44:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T09:52:28.181-07:00",
+    "end_at": "2026-10-27T10:44:44-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at independently read-back verified preceding Food Line Source Watch heartbeat completed_at. Fresh source date and event date were screened separately; older sources and previously logged events were not counted as new."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": [
+      1,
+      2
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire town October 27 2026",
+      "\"last grocery store\" closing October 2026 small town residents",
+      "\"sole grocery store\" burned closed October 27 2026",
+      "\"food distribution\" canceled storm flood power outage October 27 2026",
+      "\"mobile food pantry\" canceled October 27 2026 weather",
+      "\"food pantry\" \"temporarily closed\" October 27 2026",
+      "\"food bank\" \"suspend\" services October 27 2026",
+      "\"SNAP\" \"EBT\" \"outage\" October 27 2026 state agency",
+      "October 27 2026 food bank food pantry closure reducing hours services local news",
+      "October 27 2026 distribution canceled postponed pantry storms power outage US",
+      "October 27 2026 \"grocery store\" \"only\" \"close\" town",
+      "site:gov October 27 2026 SNAP WIC benefits interruption outage suspended payments notice"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store loss from closure, fire or disaster",
+      "Emergency food distribution canceled or suspended for storm/flood/fire/outage/facility damage",
+      "Abrupt food pantry/food bank closure or major service access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall, not the primary national collector. Production collection remains authoritative and was not modified.",
+    "Completed 12 targeted web searches across four miss classes. No tool-reported search failures or verified material access gaps.",
+    "No new qualifying U.S. food-access disruption reported in the observation interval could be confirmed from fresh local reporting or official agency/provider notices. Search indexing and publication lag limit negative assurance.",
+    "October 27 aggregation of KUTV reporting describes Community Action Services and Food Bank's Heber City pantry closure plan and Provo weekly service cuts; this is the same Utah incident already recorded in the October 27 02:43 watch heartbeat and was excluded as a duplicate: https://www.diningandcooking.com/us/64536/ . Existing original local report: https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+    "Spencer NY sole grocery store fire was reported September 14, 2026 and was excluded as historical: https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+    "Kenosha WI food bank planned end-of-year closure had been announced approximately October 21, 2026, before this observation window: https://www.the-sun.com/money/17182682/kenosha-food-bank-wisconsin-closing/",
+    "September 25 El Paso TX storm-damaged food bank temporary service halt was historical: https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+    "Apparent government SNAP/WIC interruption notices primarily dated to the 2025 shutdown; no fresh October 27, 2026 official interruption notice was verified.",
+    "Results featuring pet food pantries, restaurant named Pantry, routine funding/grants or distribution expansion, shopping-hour guides, historical SNAP outage stories, and unrelated closures were excluded.",
+    "No approval, publication, social posting, schedule change or task disabling performed."
+  ]
+}

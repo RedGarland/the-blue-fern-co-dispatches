@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T144757-0700-r11-philly-point-breeze",
+  "scheduled_for": "2026-10-27T14:45:54-07:00",
+  "started_at": "2026-10-27T14:47:57-07:00",
+  "completed_at": "2026-10-27T14:49:11.270-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-10-27T13:47:09-07:00",
+    "end_at": "2026-10-27T14:49:11.270-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of most recent verified prior Food Line Source Watch heartbeat on ops/watch-ledger. Current-day discovery was checked against prior watch, while exact article publication time was not available."
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-pa-philadelphia-point-breeze-community-pantry-fire-20261027",
+      "canonical_source_url": "https://www.phillyvoice.com/south-philly-community-fridge-point-breeze-food-pantry-burned/",
+      "source_url": "https://www.phillyvoice.com/south-philly-community-fridge-point-breeze-food-pantry-burned/",
+      "publisher": "PhillyVoice",
+      "source_published_at": "2026-10-27",
+      "title": "Food pantry burns down at South Philly Community Fridge in Point Breeze",
+      "exact_supporting_passage": "South Philadelphia Community Fridge will operate without a pantry in its Point Breeze location for the foreseeable future",
+      "summary": "A fire on the evening of October 26 destroyed the wooden free-food pantry at the South Philadelphia Community Fridge's Point Breeze site at 19th and Ellsworth streets in Philadelphia. Local reporting published October 27 quotes a volunteer saying this particularly heavily used pantry will remain absent pending an investigation. The adjacent functioning fridge remains open and is accepting nonperishable food as a temporary substitute; thus this is a partial on-site food-access capacity loss, not a complete shutdown of the food distribution point. Replacement materials have reportedly been funded, but restoration timing is not established.",
+      "location": "Point Breeze, Philadelphia, Pennsylvania (19th and Ellsworth streets)",
+      "state": "PA",
+      "scope": "One community-fridge network location; loss of standalone pantry storage, with adjacent fridge continuing to operate",
+      "affected_groups": [
+        "Neighbors using free pantry staples at the Point Breeze site",
+        "People dependent on no-cost neighborhood food access; count unverified"
+      ],
+      "pressure_type": "pantry_fire_partial_access_reduction",
+      "confidence": "medium_high; local first-hand volunteer report, specific access-loss component; service remains available via adjacent fridge",
+      "source_role": "original_local_news_report_with_provider_volunteer_account",
+      "evidence_level": "local_reporting_firsthand_volunteer_confirmation; provider_homepage_confirms_location_but_no_official_fire_notice_obtained",
+      "bounded_query_context": {
+        "triggering_query": "\"food pantry\" \"closed\" \"flood\" October 27 2026",
+        "corroboration_query": "\"South Philadelphia Community Fridge\" \"Point Breeze\" fire pantry October 27 2026",
+        "focus_class": "abrupt pantry closure or meaningful partial food-access reduction caused by facility damage",
+        "source_published_at_precision": "date_only",
+        "event_occurred_at": "2026-10-26 night (America/New_York); exact time of fire reportedly after 9 p.m. local",
+        "newly_discovered_in_this_watch": true,
+        "prior_watch_duplicate_check": "Most recent verified 13:47:09 PT heartbeat reported only Wymore, Nebraska; this specific Philadelphia fire was not included there. Production-system dedupe not asserted.",
+        "boundary_note": "The freestanding pantry was destroyed, but the neighboring community refrigerator remains active; assess impact and replacement status before editorial publication."
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" \"closed\" \"October 27\" 2026",
+      "\"last grocery store\" \"shut\" OR \"fire\" town 2026 October 27",
+      "\"sole grocery store\" fire closure October 27 2026",
+      "\"full service grocery store\" closes town October 27 2026",
+      "\"food distribution\" \"canceled\" \"storm\" October 27 2026",
+      "\"food bank\" \"distribution\" \"cancelled\" \"power\" October 27 2026",
+      "\"food pantry\" \"closed\" \"flood\" October 27 2026",
+      "\"food pantry\" \"closing\" \"effective immediately\" October 27 2026",
+      "site:pa.gov OR site:gov \"SNAP\" \"outage\" \"October 27, 2026\" benefits",
+      "site:gov \"WIC\" \"interruption\" \"October 27, 2026\" services",
+      "\"SNAP\" \"EBT\" \"benefits\" \"delayed\" \"October 27, 2026\" state",
+      "\"South Philadelphia Community Fridge\" \"Point Breeze\" fire pantry October 27 2026"
+    ],
+    "focus_classes": [
+      "only/sole/last/full-service grocery loss",
+      "disaster-canceled food distributions",
+      "abrupt pantry/food-bank closure or substantial loss",
+      "official immediate SNAP/WIC benefits interruption"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall only; production collection remains the authoritative nationwide collector and was not altered.",
+    "Twelve targeted web searches completed across four designated classes. One newly discovered current-day report met the facility-damage pantry-access-loss criterion; not claimed to be published after the last hourly heartbeat, because only a day-level article date was displayed.",
+    "PhillyVoice's October 27 report documented destruction of a wooden food pantry at Point Breeze by a Monday evening fire and confirmed the remaining refrigerator is still operational as a temporary alternative. The affected site was described by a volunteer as among the network's most heavily used locations. This is a bounded loss of on-site pantry capacity, not complete termination of food service.",
+    "Provider website corroborates operating location at 1840 Ellsworth Street but no primary-source incident notice was located within the bounded searches. Editorial review should confirm service impact and restoration timetable before consideration for publication.",
+    "No other verified within-window only/last grocery loss, canceled storm/disaster distribution, or official current SNAP/WIC interruption surfaced. Search results for SNAP disruptions were predominantly from 2025; older closure stories and the previously logged Wymore, Nebraska and Heber City/Provo, Utah reports were not duplicated.",
+    "Freshness and search indexing are imperfect; this does not provide nationwide negative assurance.",
+    "No approval, publication, social posting, automation schedule changes, or task disabling occurred."
+  ]
+}

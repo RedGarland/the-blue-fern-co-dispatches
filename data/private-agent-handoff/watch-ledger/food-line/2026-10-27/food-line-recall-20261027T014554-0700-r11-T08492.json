@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T014554-0700-r11-T08492",
+  "scheduled_for": "2026-10-27T01:45:54-07:00",
+  "started_at": "2026-10-27T01:47:42-07:00",
+  "completed_at": "2026-10-27T01:49:21.597-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T00:47:08-07:00",
+    "end_at": "2026-10-27T01:49:21.597-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "The start is completed_at from the immediately preceding verified Food Line Source Watch ledger heartbeat on 2026-10-27. The end is Pacific observation time after the bounded searches. Publication and crawl recency do not establish incident novelty."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" \"closed\" OR \"fire\" town October 26 27 2026",
+      "\"last grocery store\" \"shut\" OR \"fire\" October 2026",
+      "\"full-service grocery\" closure \"October 27\" 2026",
+      "\"food distribution\" \"canceled\" \"storm\" OR \"flood\" October 26 27 2026",
+      "\"food pantry\" \"cancelled\" OR \"closed\" \"power outage\" OR \"flood\" October 2026",
+      "\"food bank\" \"services suspended\" OR \"temporarily closed\" October 26 27 2026",
+      "site:gov \"SNAP\" \"EBT\" \"outage\" \"October 27\" 2026",
+      "site:gov \"WIC\" \"benefits\" \"interruption\" OR \"system outage\" October 2026",
+      "\"food pantry\" \"closed\" \"October 27, 2026\" services",
+      "\"food bank\" fire flood closure October 26 2026 distribution",
+      "\"food distribution\" cancelled October 27 2026 emergency",
+      "\"SNAP\" \"October 27, 2026\" \"delayed\" OR \"suspended\" state"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire, or disaster",
+      "Emergency distribution cancellation or suspension due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food bank closure or major access reduction",
+      "Official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall only. Nationwide production collection remains authoritative and was not accessed or modified.",
+    "Twelve targeted web searches were completed across all four specified high-value miss classes; search tool did not report failures.",
+    "No date-verified, newly reported qualifying U.S. food-access disruption was found within the Pacific observation window. This is not proof that none occurred.",
+    "Only-grocery-store fire results for Spencer, New York were dated September 14–15, 2026, predating the recall window. Earlier Wilson, New York and other grocery results also fell outside the window.",
+    "Searches for canceled distributions or pantry/food-bank closures primarily returned historical incidents: Ruby's Pantry's April 2026 closure; a Portsmouth, Virginia pantry closure months earlier; and older storms. The May 2026 Baker Lake food-bank fire was in Canada and outside geographic scope.",
+    "Official SNAP/WIC interruption searches prominently surfaced 2025 federal shutdown reporting, not a new official interruption within the target window.",
+    "Searches excluded old stories, non-U.S. events, routine scheduled closures, donation appeals, generic program news, and unrelated disaster or water-distribution stories.",
+    "Local provider notices, unindexed social media announcements, and events reported after the observation time can be missed by web indexing.",
+    "No editorial approvals, publication, public content changes, schedule modifications or task disabling."
+  ]
+}

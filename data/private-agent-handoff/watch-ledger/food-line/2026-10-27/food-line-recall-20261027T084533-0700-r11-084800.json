@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T084533-0700-r11-084800",
+  "scheduled_for": "2026-10-27T08:45:54-07:00",
+  "started_at": "2026-10-27T08:45:33-07:00",
+  "completed_at": "2026-10-27T08:48:36-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T07:46:42-07:00",
+    "end_at": "2026-10-27T08:48:36-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the last known execution time of the immediately preceding hourly watch (07:46:42 PDT); exact prior heartbeat completion was not independently retrievable. News and announcements were screened for developments since that check; older material was excluded."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": [
+      1,
+      2,
+      3
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire October 27 2026 United States",
+      "\"sole grocery store\" closure October 2026 town",
+      "\"last grocery store\" closes October 27 2026 small town",
+      "\"food distribution\" canceled storm flood October 27 2026 food bank",
+      "\"mobile food pantry\" canceled weather October 27 2026",
+      "food bank distributions suspended power outage fire October 26 27 2026",
+      "\"food pantry\" \"closing\" October 27 2026 access reduced",
+      "\"food bank\" \"closed\" emergency October 27 2026 service disruption",
+      "SNAP benefits EBT system outage October 27 2026 official notice",
+      "WIC benefits disruption office closures October 27 2026 official",
+      "October 27 2026 food bank pantry operations closed canceled distribution flooding fire outage US local news",
+      "October 27 2026 SNAP WIC benefits stopped suspended delayed state agency outage"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Emergency food distribution suspension due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major service access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall only. Primary national production collection remains authoritative; this run made no editorial approvals, public publications, schedule changes or task disables.",
+    "All 12 targeted web searches executed. Results were dominated by dated historical events and 2025 SNAP shutdown references; no material web/source access failure.",
+    "Arvada CO Safeway closure story published Oct 13/updated Oct 14 (https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/) predates window and misleads by describing only Safeway grocery; article identifies nearby Natural Grocers and Sprouts. Excluded.",
+    "Kenosha WI food bank permanent closure planned for end of 2026 was announced around Oct 21 (https://www.the-sun.com/money/17182682/kenosha-food-bank-wisconsin-closing/); excluded as older than observation window, and closure is not immediate.",
+    "Utah Heber City food pantry closure and Provo weekly appointment reductions were already captured in earlier Oct 27 Food Line watch and are duplicates.",
+    "Older 2026 El Paso TX storm-damaged food bank closure was Sept 25 (https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/) and was not new.",
+    "Searches did not verify new canceled emergency distributions or in-window official SNAP/WIC benefit interruptions. A 2026 third-party SNAP shutdown page cited a future October 27 processing threshold but did not establish an official active payment interruption; excluded (https://www.snapbenefitscalculator.com/blog/will-you-get-snap-benefits).",
+    "Official/press search results frequently referred to October 2025 rather than October 2026. Publisher dates were checked to avoid confusing stale stories for fresh disruptions.",
+    "No new qualifying signal verified since previous hourly check. Search engine recall and indexing delay limit certainty; absence of found signals is not proof that none occurred."
+  ]
+}

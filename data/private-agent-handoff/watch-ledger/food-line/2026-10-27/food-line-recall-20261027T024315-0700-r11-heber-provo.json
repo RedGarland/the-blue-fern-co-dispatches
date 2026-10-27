@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T024315-0700-r11-heber-provo",
+  "scheduled_for": "2026-10-27T02:45:54-07:00",
+  "started_at": "2026-10-27T02:43:15-07:00",
+  "completed_at": "2026-10-27T02:45:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-10-27T01:49:21.597-07:00",
+    "end_at": "2026-10-27T02:45:26-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at from the preceding independently verified Food Line Source Watch heartbeat. A newly surfaced source dated before the observation interval is explicitly flagged as a late-discovered signal, not misrepresented as an event that happened within the window."
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-ut-heber-provo-pantries-20261026-casfb-cuts",
+      "canonical_source_url": "https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+      "source_url": "https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+      "publisher": "KSL.com",
+      "source_published_at": "2026-10-26T18:48:00-06:00",
+      "title": "Utah County nonprofit to close Heber City food pantry; announces layoffs",
+      "exact_supporting_passage": "The reduction will eliminate approximately 200 household appointment slots each week",
+      "summary": "Community Action Services and Food Bank announced on Monday, Oct. 26, that its Heber City pantry will close in November 2026 and that its Provo pantry will reduce hours by seven per week, eliminating approximately 200 household appointment slots weekly. Fifteen staff layoffs were also reported. The publisher's timestamp precedes this hourly observation window, so this is a late-discovered high-value recall signal, not a claim that the announcement occurred during the window. The provider's website corroborates organizational financial strain but still lists current pantry hours; full effective dates and independent confirmation of the cuts remain for editorial verification.",
+      "location": "Heber City and Provo, Utah",
+      "state": "UT",
+      "scope": "Two local community pantry locations; direct Heber closure and Provo weekly access reduction",
+      "affected_groups": [
+        "Heber City residents who depend on Community Action Services food pantry",
+        "Provo-area food-insecure households seeking pantry appointments"
+      ],
+      "pressure_type": "food_pantry_closure_and_major_access_reduction",
+      "confidence": "high_on_reported_announcement; moderate_on_effective_date",
+      "source_role": "original_local_news_reporting_with_attributed_provider_statement",
+      "evidence_level": "direct_local_report; provider_site_context_only",
+      "bounded_query_context": {
+        "triggering_query": "\"food pantry\" \"closing immediately\" OR \"suspend operations\" \"October 26\" 2026",
+        "query_class": "Abrupt pantry/food-bank service closure or major access reduction",
+        "discovery_at": "2026-10-27T02:44:00-07:00",
+        "published_before_search_window": true,
+        "newly_discovered_in_this_watch": true,
+        "prior_watch_duplicate_check": "Previous verified watch heartbeat had no findings; national production ledger not checked and duplicate status not established."
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" \"fire\" OR \"closed\" \"October 27\" 2026",
+      "\"last grocery store\" \"closed\" \"October 26\" 2026",
+      "\"sole grocery store\" \"closure\" OR \"destroyed\" October 2026",
+      "\"food distribution\" \"canceled\" storm flood October 26 27 2026",
+      "\"food pantry\" \"closed\" \"flooding\" OR \"power outage\" October 26 2026",
+      "\"food bank\" \"suspended services\" OR \"temporarily closed\" October 27 2026",
+      "site:gov \"SNAP\" \"EBT\" \"outage\" \"October 26\" \"2026\"",
+      "site:gov \"WIC\" \"service interruption\" OR \"benefits unavailable\" \"October 2026\"",
+      "\"SNAP benefits\" \"delayed\" OR \"interrupted\" \"October 27, 2026\"",
+      "\"food pantry\" \"closing immediately\" OR \"suspend operations\" \"October 26\" 2026",
+      "\"food bank\" \"closed until further notice\" \"October 2026\" United States",
+      "\"distribution cancelled\" \"food\" \"October 27\" 2026 weather"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store disaster or closure",
+      "Emergency food distribution canceled due to severe weather, outage or facility damage",
+      "Abrupt pantry/food bank service closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary high-value recall only; nationwide production collection remains authoritative and was neither inspected nor modified.",
+    "Twelve targeted web searches completed without tool-reported failures; most apparent hits were stale (including 2025 federal SNAP shutdown coverage), out of scope, or unrelated.",
+    "One verifiable late-discovered Utah access-reduction signal was found, but the Oct. 26 6:48 p.m. Utah-local publication timestamp predates the current 1:49–2:45 a.m. Pacific hourly window. This is preserved for editorial review rather than presented as within-window incident novelty.",
+    "Original KSL reporting says Heber City pantry will close in November and Provo service hours will fall seven per week with about 200 weekly household appointment slots lost.",
+    "Provider homepage corroborates financial distress but not the detailed closure announcement; provider site still displays existing hours, so commencement dates require confirmation.",
+    "Prior heartbeat contained no findings; production's possible prior capture was not checked, so this submission is not claimed to be unduplicated against the authoritative collector.",
+    "No other newly reported date-verified event was found during the observation interval; search indexing limitations apply.",
+    "No approvals, publications, task schedule modifications, or task disabling occurred."
+  ]
+}

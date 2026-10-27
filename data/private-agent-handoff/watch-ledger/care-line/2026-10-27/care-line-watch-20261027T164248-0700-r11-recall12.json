@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T164248-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T16:45:22-07:00",
+  "started_at": "2026-10-27T16:42:48-07:00",
+  "completed_at": "2026-10-27T16:43:39.126-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T15:50:13.370-07:00",
+    "end": "2026-10-27T16:43:39.126-07:00",
+    "basis": "Previous verified Care Line watch completion through this run. New developments only; today's republished or older notices excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch; production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS Public Notices accessible before additional searches. Newest entries were 2026-10-23 home-health agency termination notices, with no newer notice in the observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 afternoon hospital emergency department closed suspended reopened United States",
+      "October 27 2026 afternoon rural hospital emergency care closure ambulance diversion",
+      "October 27 2026 maternity labor delivery services closure suspension hospital",
+      "October 27 2026 behavioral health psychiatric inpatient unit closure suspended",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-10-27\" termination rescission laboratory",
+      "hospital dialysis center oncology clinic services closed October 27 2026 United States",
+      "ambulance station base air medical helicopter service closed suspended October 27 2026",
+      "emergency room diverted ambulance hospital closed \"Oct. 27, 2026\"",
+      "\"October 27, 2026\" hospital clinic \"closing\" \"patients\" outpatient emergency",
+      "\"October 27, 2026\" \"ambulance\" \"service\" \"suspended\" OR \"closed\"",
+      "\"October 27, 2026\" \"dialysis\" OR \"oncology\" clinic closure services",
+      "\"October 27, 2026\" \"hospital\" \"reopens\" \"emergency department\" OR \"services resume\""
+    ],
+    "sources_checked": [
+      {
+        "source": "CMS Public Notices (official)",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Accessible, newest notice date remains October 23, 2026."
+      },
+      {
+        "source": "University of New Mexico Health Sciences Center (official)",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Full restoration already recorded in the 13:47 PDT recall heartbeat; no distinct subsequent access change."
+      },
+      {
+        "source": "Behavioral Health Business (primary trade coverage)",
+        "url": "https://bhbusiness.com/2026/10/02/layoffs-closures-planned-at-newport-healthcare-clarvida-comprehensive-life-resources/",
+        "result": "Pearl Youth Residence closure announced October 2 with November 21 planned closure; October 27 syndicated overview does not establish new in-window development; admissions had already stopped in December."
+      },
+      {
+        "source": "CBS News / KFF Health News",
+        "url": "https://www.cbsnews.com/news/pediatric-intensive-care-units-closing-nationwide/",
+        "result": "October 27 article originally published 5:00 a.m. EDT; Missoula PICU closure occurred earlier in October. This broader article predates the observation window and was documented by earlier watch; no new in-window service change."
+      },
+      {
+        "source": "MultiCare Rockwood Primary Care Access Clinic (secondary)",
+        "url": "https://www.medicareinspokane.com/multicare-rockwood-clinic-closures-spokane",
+        "result": "October 27 effective date announced in September; already assessed earlier in the day, not a newly announced in-window closure."
+      }
+    ],
+    "exclusions": [
+      "UNM Health complete restoration: duplicate of the 13:47 PDT Care Line finding.",
+      "Pearl Youth Residence Tacoma youth inpatient closure: announced October 2; republished October 27 and not newly effective in this window.",
+      "Missoula Community Medical Center pediatric ICU closure: earlier October event discussed in October 27 5 a.m. EDT KFF report; not newly developed this interval.",
+      "MultiCare Rockwood Spokane primary-care access clinic October 27 closure: announced September 4 and already examined by earlier watch.",
+      "Prior-month air-medical closures, old hospital closures, international results, future proposals without concrete current access effect, and non-service insurance/business changes."
+    ],
+    "source_failures": [
+      {
+        "source": "KING 5 Tacoma video referenced by Hoodline",
+        "url": "https://www.king5.com/video/news/local/washington-to-lose-25-of-its-long-term-psychiatric-beds-for-children/281-e035f5c3-095b-4479-8404-a21ec21c2fa6",
+        "error": "HTTP 403 Forbidden",
+        "impact": "Optional supporting video not accessible; underlying October 2 Behavioral Health Business article was accessible and confirmed chronology; no material coverage gap."
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "Search recency filters surfaced older events and republished stories; fresh events may not yet be indexed. One optional supporting source returned HTTP 403; primary dated reporting was accessible. The bounded watch cannot prove complete national absence.",
+    "controls": "One new heartbeat on ops/watch-ledger; no approvals, public publishing, production collection changes, scheduling changes, or disabling."
+  }
+}

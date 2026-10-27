@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T044854-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T04:45:22-07:00",
+  "started_at": "2026-10-27T04:48:54-07:00",
+  "completed_at": "2026-10-27T04:51:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T03:44:45-07:00",
+    "end": "2026-10-27T04:51:04-07:00",
+    "basis": "Previous independently retrieved heartbeat completed_at through this execution; late-indexed earlier reports reviewed for missed events but screened against existing handoffs."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for U.S. states and territories; production Care Line collector remains authoritative and was not modified.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS Public Notices listing was checked before the targeted searches; top three termination notices remained dated 2026-10-23, with no 2026-10-27 provider termination/rescission or CLIA action identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department ambulance diversion services closed October 27 2026 United States",
+      "hospital maternity labor delivery service closure suspension October 26 27 2026",
+      "rural hospital emergency room stopped services October 27 2026",
+      "behavioral health psychiatric inpatient unit closure October 26 27 2026",
+      "dialysis facility treatment center abruptly closing patients October 26 27 2026",
+      "cancer oncology infusion clinic services suspended closed October 26 27 2026",
+      "primary care clinic patients closed reopened October 27 2026 United States",
+      "ambulance service shut down closed EMS station October 26 27 2026 United States",
+      "air ambulance medical helicopter base suspended closed October 26 27 2026",
+      "UNM Health October 27 2026 ambulance diversion emergency department fully operational restoration",
+      "hospital urgent care clinic suspended operations October 27 2026 Pacific Atlantic US",
+      "Puerto Rico Guam US Virgin Islands healthcare hospital clinic closure suspension October 26 27 2026"
+    ],
+    "source_checks": [
+      {
+        "source": "CMS Public Notices",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Available; no new notices later than October 23."
+      },
+      {
+        "source": "Web targeted searches",
+        "result": "All 12 targeted search queries returned; no newly confirmed event meeting access-effect and novelty standards for this window."
+      }
+    ],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261027T034340-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-27T03:44:45-07:00",
+      "excluded": [
+        "UNM Health's October 26 cybersecurity outage, ambulance diversion, phased restart, and subsequent official hospital reopening were recorded in earlier watch heartbeats; no new verified emergency-service or diversion-restoration event surfaced.",
+        "Roseland Community Hospital's labor and delivery suspension was reported earlier in October as a planned end-of-month change, without newly verified effective suspension in this observation window.",
+        "Older hospital/EMS, maternity, behavioral-health, oncology, dialysis and primary-care reports and generic healthcare financial risks are outside the window or lack new concrete service consequences.",
+        "Non-U.S. events, editorial/opinion, unsupported social reports, ownership changes without service effect, and proposals excluded."
+      ]
+    },
+    "search_failures": [],
+    "limitations": "Targeted web indexing can lag or return old articles despite date/recency restrictions. Zero qualifying findings does not establish completeness; production collection remains authoritative.",
+    "material_degradation": false,
+    "controls": "One durable heartbeat only on ops/watch-ledger; no approval, publication, schedule edit, or disabling."
+  }
+}

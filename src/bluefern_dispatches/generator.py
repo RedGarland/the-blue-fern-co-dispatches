@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import html
@@ -51,6 +51,7 @@ from bluefern_dispatches.care_line_sources import (
     validate_pressure_source_registry as validate_care_line_pressure_registry,
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
+from bluefern_dispatches.gaza_layout import apply_gaza_archive_layout, apply_gaza_home_layout
 from bluefern_dispatches.public_site_visuals import validate_public_site_visuals
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
 from bluefern_dispatches.source_based_retrospective_archive import (
@@ -1001,7 +1002,7 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
     summaries = {
         "gaza": "Daily source-backed briefings from Gaza.",
         "american-pressure": AMERICAN_PRESSURE_PUBLIC_DESCRIPTION,
-        "food-line": "Daily source-backed food insecurity pressure signals across the United States — where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
+        "food-line": "Daily source-backed food insecurity pressure signals across the United States - where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
     }
     for dispatch in dispatches:
         if dispatch.slug not in {"gaza", "american-pressure"}:
@@ -3835,7 +3836,8 @@ def render_dispatch_index_for_dates(
 {recent_sections}
   </main>
 {footer("")}"""
-    return page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", body, dispatch.name)
+    rendered = page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", body, dispatch.name)
+    return apply_gaza_home_layout(rendered) if dispatch.slug == "gaza" else rendered
 
 
 def ensure_cascadia_source_tables(site_root: Path, dry_run: bool, wrote: list[str], warnings: list[str]) -> None:
@@ -3976,7 +3978,8 @@ def render_archive_for_dates(
 {grouped_archive}
   </main>
 {footer("")}"""
-        return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
+        rendered = page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
+        return apply_gaza_archive_layout(rendered) if dispatch.slug == "gaza" else rendered
     if dispatch.slug == "food-line":
         items = "\n".join(
             render_briefing_archive_row(briefing_presentation_for_edition(site_root, dispatch, date))
@@ -4240,7 +4243,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
             public_archive_title = (
                 care_line_public_archive_title_for_records(care_line_records)
                 if care_line_public_records
-                else f"{dispatch.edition_date} — No current update"
+                else f"{dispatch.edition_date} - No current update"
             )
             public_archive_subtitle = care_line_summary_for_records(care_line_records) if care_line_public_records else care_line_no_current_update_summary()
             public_summary = (
@@ -4485,7 +4488,10 @@ def build_site(
         dispatch_public_root = site_root / dispatch.slug
         dispatch_public_edition = dispatch_public_root / "editions" / dispatch.edition_date
         backup_dir = backup_root / dispatch.slug / dispatch.edition_date
-        for asset in ["site.css", dispatch.logo, "bluefern.png"]:
+        dispatch_assets = ["site.css", dispatch.logo, "bluefern.png"]
+        if dispatch.slug == "gaza":
+            dispatch_assets.append("archive-filters.js")
+        for asset in dispatch_assets:
             copy_asset(root / "assets" / asset, dispatch_public_root / "assets" / asset, dry_run, wrote, warnings)
         write_text(dispatch_public_root / "index.html", render_dispatch_index(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
@@ -6871,3 +6877,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T195018-0700-r11-195018",
+  "scheduled_for": "2026-10-26T19:45:54-07:00",
+  "started_at": "2026-10-26T19:50:18-07:00",
+  "completed_at": "2026-10-26T19:51:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T18:49:37.068-07:00",
+    "end_at": "2026-10-26T19:51:53-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From independently retrieved preceding Food Line heartbeat completed_at (2026-10-26 18:49:37.068 PDT) through this observation; only newly reported, directly verifiable U.S. access losses in the four targeted classes count. Searches also examined recently indexed sources to detect delayed reporting; pre-existing items excluded."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "search_terms": [
+      "\"only grocery store\" closed fire October 26 2026 community",
+      "\"sole grocery store\" fire closure October 26 2026",
+      "\"last grocery store\" closes town October 2026",
+      "\"full service grocery store\" closure fire October 26 2026",
+      "\"food distribution\" canceled storm October 26 2026 food bank",
+      "\"food distribution\" suspended flooding power outage October 26 2026",
+      "food pantry distribution canceled fire October 26 2026",
+      "\"food pantry\" \"temporarily closed\" October 26 2026",
+      "\"food bank\" \"services suspended\" October 26 2026",
+      "\"food pantry\" \"closed\" \"October 26, 2026\"",
+      "site:gov SNAP EBT outage interruption October 26 2026 benefits",
+      "site:gov WIC office closed suspended October 26 2026 emergency"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service community grocery store closure, destruction, fire, or disaster",
+      "Emergency food distribution cancellations/suspensions caused by storm, flooding, fire, outage, or facility damage",
+      "Abrupt food pantry/food bank closure or major access reductions",
+      "New official SNAP/WIC/food-assistance interruption causing immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary recall check only; production Food Line nationwide collection remains authoritative.",
+    "Exactly 12 bounded web searches completed across all four miss classes; no tool search errors were reported. Searches used a 2–3-day recency filter and explicit 2026-10-26 timing, but results were dominated by older events; crawler or search-index freshness is not treated as incident freshness.",
+    "No source identified a U.S. food-access disruption newly reported between 18:49:37 and 19:51:53 PDT on October 26, 2026 with verifiable qualifying access consequences. findings=[] means no confirmed matches, not proof no incidents occurred.",
+    "Excluded older September 2026 Spencer, NY sole-grocery fire (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/), April 2026 Ruby's Pantry closures (https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites), and older storm-response distribution announcements as out of window.",
+    "Official SNAP/WIC searches surfaced mainly historic 2025 benefit disruptions; no new first-party October 26, 2026 official interruption with immediate access consequences was verified.",
+    "Flood-related Facebook cancellation previously flagged as unverified remains without independent event date/location/source verification; not promoted.",
+    "Excluded donation drives, resource guides, routine programs and aid announcements, pet-only food pantries, recipes, generic inflation, stale stories, duplicates, and out-of-country news.",
+    "Search-index lag and inaccessible local agency social posts can hide events within a one-hour window; these are routine coverage limitations, not observed failures of this run.",
+    "No editorial review approval, public content publication, primary collector modification, schedule change, or task disabling occurred."
+  ]
+}

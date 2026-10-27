@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T134354-0700-r11-wymore",
+  "scheduled_for": "2026-10-27T13:45:54-07:00",
+  "started_at": "2026-10-27T13:43:54-07:00",
+  "completed_at": "2026-10-27T13:47:09-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-10-27T12:48:39-07:00",
+    "end_at": "2026-10-27T13:47:09-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of latest verified prior Food Line Source Watch heartbeat on ops/watch-ledger. Newly published reporting is distinguished from the undated underlying store closure; production collection is authoritative for nationwide deduplication."
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-ne-wymore-last-grocery-wymore-super-foods-20261027",
+      "canonical_source_url": "https://www.klkntv.com/city-of-wymore-seeks-residents-input-after-last-grocery-store-closes/",
+      "source_url": "https://www.klkntv.com/city-of-wymore-seeks-residents-input-after-last-grocery-store-closes/",
+      "publisher": "KLKN-TV (Channel 8, Lincoln, Nebraska)",
+      "source_published_at": "2026-10-27",
+      "title": "City of Wymore seeks residents’ input after last grocery store closes",
+      "exact_supporting_passage": "Their last grocery store, Wymore Super Foods, is closing, causing the City to take action.",
+      "summary": "A local report published on October 27 says Wymore, Nebraska, no longer has a grocery store following the loss/closure of its last store, Wymore Super Foods. The city has reportedly formed a steering group and is surveying Wymore and southern Gage County residents about restoring grocery access, delivery partnerships, or a community-owned cooperative. The exact closure date and present operating status of the store are not consistently expressed in the report ('has no grocery store' versus 'is closing'); editorial review should confirm timing with the city before publication. Reporting surfaced as newly published within this watch window; underlying closure date remains unverified.",
+      "location": "Wymore, Gage County, Nebraska",
+      "state": "NE",
+      "scope": "Loss of community's last grocery store; Wymore citywide grocery access, with southern Gage County consultation",
+      "affected_groups": [
+        "Residents of Wymore, Nebraska",
+        "Southern Gage County residents potentially relying on Wymore for food access (extent unquantified)"
+      ],
+      "pressure_type": "last_grocery_store_closure",
+      "confidence": "high_on_reported_loss_of_last_store; closure_effective_date_unverified",
+      "source_role": "original_local_news_report_attributing_city_action",
+      "evidence_level": "local_reporting_with_attributed_municipal_action; official_city_notice_not_independently_retrieved",
+      "bounded_query_context": {
+        "triggering_query": "October 27 2026 \"last grocery store\" closing community",
+        "query_class": "Loss or closure of only/last grocery store",
+        "discovery_date": "2026-10-27",
+        "source_date_precision": "day_only; publisher displays relative '19 minutes ago' without stable timestamp",
+        "newly_discovered_in_this_watch": true,
+        "prior_watch_duplicate_check": "The immediately preceding verified October 27 12:48:39 PT heartbeat had no findings and did not name Wymore; broader production collector status not checked."
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": "2, 7, or 14 as applicable",
+    "search_terms": [
+      "October 27 2026 \"only grocery store\" fire closed town",
+      "October 27 2026 \"last grocery store\" closing community",
+      "October 27 2026 \"sole grocery store\" burned closed community",
+      "October 27 2026 \"full-service grocery\" closure food desert town",
+      "Wymore Nebraska Wymore Super Foods last grocery store closed October 27 2026 city survey steering committee",
+      "October 27 2026 food bank distribution canceled storm flood power outage",
+      "October 27 2026 emergency pantry food distribution suspended facility damage weather",
+      "October 27 2026 food pantry abruptly closed permanently service halted hours cut",
+      "October 27 2026 site:gov SNAP EBT outage benefit delay disruption today state notice",
+      "October 27 2026 site:gov WIC benefits suspended system interruption clinic closed emergency",
+      "October 27 2026 SNAP EBT benefits outage interruption state agency breaking",
+      "Wymore Super Foods closure grocery last city steering committee survey October 2026 Wymore Nebraska"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery-store closure, fire, disaster, or loss",
+      "Storm/disaster/outage/damage-related emergency food distribution cancellation or suspension",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary high-value-miss recall only. The nationwide production collector remains authoritative and was neither queried nor modified.",
+    "Twelve targeted fresh-web searches completed; four classes covered. One qualifying newly reported last-grocery-store access loss in Wymore, Nebraska.",
+    "KLKN published on October 27 and displays a relative publication age but no stable exact timestamp; source_published_at preserves day precision. The exact date the grocery store closed is not established by the report, and the article ambiguously uses 'is closing' while also saying Wymore has no grocery store.",
+    "KLKN quotes city action to form a steering group and solicit residents' views. The full local article was accessible via web retrieval, but an optional direct-origin metadata fetch from the execution container failed because DNS resolution was unavailable; status is DEGRADED conservatively under the source-retrieval failure rule. This did not prevent verification of the article text.",
+    "The previously recorded October 26 Utah Heber City pantry closure/Provo access reduction was excluded as a duplicate. Kansas City Sun Fresh Blue Parkway closed October 25; no evidence established it as the community's only/last/full-service grocery store, and it predates the interval.",
+    "Searches yielded no new verified disaster-canceled food distribution, abrupt pantry/food-bank closure, or official SNAP/WIC benefits interruption during this observation interval. Hurricane Lowell recovery distribution expansion is not a cancellation; most SNAP interruption hits related to October/November 2025.",
+    "Search indexing and publication delays limit negative assurance. The new Wymore item is pending human editorial review and not claimed unduplicated against the authoritative nationwide production collector.",
+    "No review approval, publication, social posting, automation schedule alteration, or task disabling was performed."
+  ]
+}

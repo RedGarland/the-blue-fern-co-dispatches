@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T064744-0700-r11-064856",
+  "scheduled_for": "2026-10-27T06:45:54-07:00",
+  "started_at": "2026-10-27T06:47:44-07:00",
+  "completed_at": "2026-10-27T06:48:56-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T05:43:14-07:00",
+    "end_at": "2026-10-27T06:48:56-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at from latest previously persisted Food Line Source Watch ledger heartbeat (05:43:14 PDT). Search freshness assessed from publication and event dates; late indexed historical results not treated as current."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": 2,
+    "search_terms": [
+      "\"only grocery store\" closing OR closed OR fire October 27 2026",
+      "\"sole grocery store\" fire closed October 26 27 2026 USA",
+      "\"last full-service grocery\" closure October 2026 local",
+      "\"only supermarket\" burned fire small town October 27 2026",
+      "\"food distribution\" cancelled storm flooding October 27 2026",
+      "\"food pantry\" \"cancelled\" \"power outage\" October 27 2026",
+      "\"food pantry\" \"closed until further notice\" October 26 27 2026",
+      "\"food bank\" \"suspended\" services October 27 2026",
+      "\"pantry\" \"closing\" \"food\" October 27 2026 local news -Utah",
+      "\"SNAP\" \"EBT\" \"outage\" \"October 27, 2026\" site:gov",
+      "\"WIC\" \"benefits\" \"interrupted\" October 26 27 2026 department",
+      "\"food assistance\" \"benefits delayed\" \"October 27\" 2026 state agency"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Emergency food distribution suspension from storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall only; nationwide production collection remains authoritative. No editorial approvals, publication, schedule changes, or task disabling.",
+    "All 12 targeted web searches returned accessible search results. No material source/search access failure encountered; indexes were dominated by stale material.",
+    "Only-grocer examples excluded as historical: Eastport, Maine R&M IGA closure reported September 2, 2026 (https://www.wabi.tv/2026/09/02/eastports-only-grocery-store-closing-owner-retires/); Wolcott, NY store closing reported around June 2026 (https://13wham.com/news/local/wolcotts-only-grocery-store-set-to-close-sparking-concerns-over-food-access).",
+    "Pantry closure stories in results were historical or outside hourly interval: Plate of Hope in Platte County, MO (reported previous month; https://www.kshb.com/news/local-news/missouri/platte-county/plate-of-hope-food-pantry-closing-leaving-seniors-without-a-resource); Lighthouse Food Rescue & Distribution threatened by zoning citation reported October 9-10, 2026 (https://localnewsmatters.org/2026/10/10/san-jose-food-pantry-faces-closure-zoning-violations/). Neither constituted a newly verified within-window interruption.",
+    "Hurricane Lowell Kauai recovery page dated October 23, 2026 discusses planned emergency distributions, not cancellations; excluded (https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/).",
+    "Official SNAP/WIC search results returned old 2025 government-shutdown stories, unrelated coverage, or routine assistance; no new dated 2026 official interruption verified.",
+    "Utah Heber City food pantry closure and Provo reduced appointments already captured in October 27 02:45 PDT heartbeat, so were excluded as duplicates.",
+    "No verifiable new qualifying signal since prior completed hourly watch. Search engine indexing and recency limitations apply; absence of findings does not mean absence nationwide."
+  ]
+}

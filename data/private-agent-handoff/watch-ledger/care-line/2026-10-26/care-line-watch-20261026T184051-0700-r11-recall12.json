@@ -1,0 +1,77 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261026T184051-0700-r11-recall12",
+  "scheduled_for": "2026-10-26T18:45:22-07:00",
+  "started_at": "2026-10-26T18:40:51-07:00",
+  "completed_at": "2026-10-26T18:45:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T17:47:40-07:00",
+    "end": "2026-10-26T18:45:04-07:00",
+    "basis": "From preceding independently retrieved Care Line Watch heartbeat completed_at to current observation end. Event effective time and source announcement preceded this interval; finding is a late-discovered distinct restoration phase, not a new incident or a newly timed October 26 evening onset."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-nm-unm-health-phased-hospital-resumption-20261026",
+      "canonical_source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+      "title": "Update on Cybersecurity Event at UNM Health Sciences Center",
+      "publisher": "University of New Mexico Health Sciences Center",
+      "exact_supporting_passage": "At 2:30 p.m., UNM Health began resuming operations and bringing systems back online in phases, as it was safe to do so.",
+      "source_published_date": "2026-10-26",
+      "state": "NM",
+      "city": "Albuquerque",
+      "county": "Bernalillo",
+      "territory": null,
+      "event_type": "partial_restoration_after_hospital_access_disruption",
+      "service_line": "Hospital clinical operations and new-patient acceptance; specific emergency/trauma and ambulance-diversion restoration not established",
+      "access_consequences": "UNM Health's official 6:08 p.m. local update says new-patient acceptance was limited from 12:30–2:30 p.m. MDT and operations began resuming in phases at 2:30 p.m. MDT. This is a verified partial restoration following the previously recorded cybersecurity-related loss of access. Outpatient surgeries and appointments remained suspended for the rest of October 26; the update does not certify full hospital, emergency department, trauma-center, ambulance, or clinic restoration.",
+      "affected_population": "Patients seeking new admission or essential care across UNM Health System in Albuquerque and greater New Mexico; outpatient patients with canceled appointments and procedures continue to be affected.",
+      "effective_date": "2026-10-26T14:30:00-06:00",
+      "announcement_date": "2026-10-26",
+      "confidence": "high",
+      "source_role": "first_party_health_system_update",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall check; national production collector authoritative, production deduplication unverified.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 26 2026 6pm hospital emergency department ambulance diverting closed evacuated reopened US",
+      "October 26 2026 evening UNM Health cybersecurity diversion appointments update restored services",
+      "October 26 2026 maternity labor delivery hospital unit closes suspends service patients",
+      "October 26 2026 rural hospital emergency room closes suspends services state health department",
+      "October 26 2026 behavioral health psychiatric hospital unit closure patients sent elsewhere",
+      "October 26 2026 dialysis oncology infusion cancer center service suspension closed patients",
+      "site:hscnews.unm.edu/news October 26 2026 hospitals clinics resumed operations ambulances UNM Health 6 pm",
+      "October 26 2026 evening ambulance EMS air medical helicopter base shut down suspension county US",
+      "October 26 2026 primary care clinic family medicine urgent care closing immediately patients",
+      "October 26 2026 reopened restored emergency department hospital services after outage evening United States",
+      "October 26 2026 Puerto Rico Guam Virgin Islands American Samoa CNMI hospital dialysis emergency clinic ambulance shutdown reopening",
+      "October 26 2026 state health department hospital emergency closure termination service interruption notice"
+    ],
+    "search_failures": [],
+    "duplicate_review": {
+      "previous_heartbeat": "care-line-watch-20261026T174604-0700-r11-recall12.json",
+      "previous_completed_at": "2026-10-26T17:47:40-07:00",
+      "incident_original_finding_id": "care-line-nm-unm-health-cyber-disruption-20261026",
+      "distinction": "Restoration phase is a distinct access change and not a second report of the original outage. Current report is a late recall of an earlier service-change: official update labeled 6:08 p.m. New Mexico local time (5:08 p.m. PDT), before preceding heartbeat completed. Previous heartbeat explicitly said no confirmed restoration. Preserve chronology and seek production deduplication before editorial use.",
+      "production_review": "Authoritative production collector not independently checked."
+    },
+    "exclusions": "Earlier maternity, behavioral-health, hospital and clinic closures; proposals without effective access change; out-of-country results; absence of concrete new EMS, dialysis, oncology, territory, or CMS notices.",
+    "limitations": "Phased operations resumption is confirmed, but specific ED/trauma intake, ambulance diversion, clinic reopening, and fully restored clinical operations were not individually confirmed. Search engines may not index all hourly changes.",
+    "material_degradation": false,
+    "controls": "Only one new private watch-ledger heartbeat. No editorial approval, publication, scheduling, or task disablement."
+  }
+}

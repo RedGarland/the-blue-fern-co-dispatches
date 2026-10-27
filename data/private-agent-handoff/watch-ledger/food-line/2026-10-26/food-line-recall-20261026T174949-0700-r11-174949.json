@@ -1,0 +1,56 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261026T174949-0700-r11-174949",
+  "scheduled_for": "2026-10-26T17:45:54-07:00",
+  "started_at": "2026-10-26T17:49:49-07:00",
+  "completed_at": "2026-10-26T17:51:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-26T16:43:10-07:00",
+    "end_at": "2026-10-26T17:51:59-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous confirmed ops/watch-ledger Food Line heartbeat completed_at through this observation. Require newly reported and verified U.S. immediate food-access disruptions within the four defined high-value miss classes."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": {
+      "fast": 8,
+      "slow": 4
+    },
+    "search_terms": [
+      "\"only grocery store\" fire closed \"October 26, 2026\" town",
+      "\"last grocery store\" closing burned 26 Oct 2026 community",
+      "\"full-service grocery store\" fire shuttered Oct 26 2026 neighborhood",
+      "\"food distribution\" canceled storm flood power outage \"October 26, 2026\"",
+      "\"food pantry\" closed today flood storm Oct 26 2026",
+      "\"food bank\" emergency distribution canceled \"Oct 26\" 2026",
+      "site:gov \"October 26, 2026\" SNAP EBT outage delayed benefits emergency",
+      "site:gov \"October 26, 2026\" WIC interruption benefits outage food assistance",
+      "October 26 2026 local news food pantry food bank closing suddenly service suspended emergency food access Monday",
+      "Oct 26 2026 grocery store fire closed only grocery town neighborhood no other supermarket U.S.",
+      "Monday October 26 2026 food pantry canceled distribution flooding storm power outage official notice",
+      "October 26 2026 state SNAP EBT WIC benefits system outage interruption agency notices United States"
+    ],
+    "focus_classes": [
+      "Loss/fire/closure/disaster of only, sole, last, or neighborhood full-service grocery",
+      "Storm/flood/fire/outage/facility-damage cancellation of emergency food distribution",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Bounded supplementary recall watch, not the primary nationwide collector; production Food Line collection remains authoritative.",
+    "12 targeted web searches (eight fast, four slow) completed. No newly reported, verifiable, U.S.-located event in the specified observation window met the inclusion criteria. Negative result does not establish no disruptions occurred.",
+    "Results included historical sole-grocery losses (e.g. September 11, 2026 Shur Fine Food Mart fire in Spencer, NY), which precede this hour: https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+    "Historical abrupt pantry closure (Ruby's Pantry on April 1, 2026) was excluded as prior-window: https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+    "Oct. 26 New York food-bank funding grant report concerns expansion, not loss or interruption and was excluded: https://www.timesunion.com/news/article/hochul-food-banks-funding-snap-22493570.php",
+    "SNAP/WIC search results largely referred to the October/November 2025 shutdown, not new 2026 agency-confirmed benefits interruption. A purported October 2026 SNAP page mixed 2025 publication dates and lacked timely official corroboration; excluded.",
+    "Earlier unverified Facebook flood-related pantry cancellation remains without established date, U.S. provider or location. No new independently verifying result surfaced; not promoted to a finding.",
+    "Search indexing can lag same-hour local agency/provider notices. Search results were filtered for event publication date, U.S. jurisdiction, immediate access consequences and duplicates.",
+    "No approvals, publication, schedule or task changes, disabling, or modification of production collection."
+  ]
+}

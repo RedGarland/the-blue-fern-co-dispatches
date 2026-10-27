@@ -1,0 +1,53 @@
+[
+  {
+    "source_record_id": "wafa-176376",
+    "source_id": "wafa-176376",
+    "title": "Palestinian girl dies of wounds sustained by Israeli gunfire in southern Gaza",
+    "canonical_url": "https://english.wafa.ps/Pages/Details/176376",
+    "url": "https://english.wafa.ps/Pages/Details/176376",
+    "publisher": "WAFA",
+    "published_date": "2026-10-27",
+    "event_date": "2026-10-27",
+    "location": "al-Mawasi, Khan Younis, southern Gaza Strip",
+    "attribution": "WAFA",
+    "claim_status": "reported_public_source",
+    "used_in_story_ids": [
+      "gaza-story-2026-10-27-001"
+    ],
+    "summary_or_snippet": "WAFA reported that a six-year-old girl died Tuesday morning from wounds sustained in an earlier shooting in al-Mawasi, Khan Younis. The report does not specify when the shooting occurred."
+  },
+  {
+    "source_record_id": "wafa-176358",
+    "source_id": "wafa-176358",
+    "title": "Israeli forces set fire to displacement camp in Gaza City, displacing over 800 Palestinians",
+    "canonical_url": "https://english.wafa.ps/Pages/Details/176358",
+    "url": "https://english.wafa.ps/Pages/Details/176358",
+    "publisher": "WAFA",
+    "published_date": "2026-10-26",
+    "event_date": "2026-10-26",
+    "location": "Shuja’iyya junction, east of Gaza City",
+    "attribution": "WAFA",
+    "claim_status": "reported_public_source",
+    "used_in_story_ids": [
+      "gaza-story-2026-10-27-002"
+    ],
+    "summary_or_snippet": "WAFA reported that a displacement-camp fire near the Shuja’iyya junction in eastern Gaza City, described as occurring the previous night, displaced more than 800 Palestinians and affected more than 200 families."
+  },
+  {
+    "source_record_id": "wafa-176340",
+    "source_id": "wafa-176340",
+    "title": "Two killed in Israeli occupation strike on Deir al-Balah",
+    "canonical_url": "https://english.wafa.ps/Pages/Details/176340",
+    "url": "https://english.wafa.ps/Pages/Details/176340",
+    "publisher": "WAFA",
+    "published_date": "2026-10-26",
+    "event_date": "2026-10-26",
+    "location": "Deir al-Balah, central Gaza Strip",
+    "attribution": "WAFA",
+    "claim_status": "reported_public_source",
+    "used_in_story_ids": [
+      "gaza-story-2026-10-27-003"
+    ],
+    "summary_or_snippet": "WAFA reported that two Palestinians were killed and another was wounded in a drone strike on Deir al-Balah."
+  }
+]

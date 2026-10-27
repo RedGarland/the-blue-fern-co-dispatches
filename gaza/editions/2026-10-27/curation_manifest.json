@@ -1,0 +1,50 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-27-001",
+    "title": "WAFA reports child’s death after earlier shooting in southern Gaza",
+    "summary": "WAFA reported on October 27 that a six-year-old girl died Tuesday morning from wounds sustained in an earlier shooting in al-Mawasi, Khan Younis. The report does not specify when the shooting occurred.",
+    "source_ids": [
+      "wafa-176376"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176376"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "included_in_public_summary": true,
+    "claim_status": "reported_public_source"
+  },
+  {
+    "story_id": "gaza-story-2026-10-27-002",
+    "title": "WAFA reports displacement after camp fire in Gaza City",
+    "summary": "WAFA reported on October 26 that a displacement-camp fire near the Shuja’iyya junction in eastern Gaza City, described as occurring the previous night, displaced more than 800 Palestinians and affected more than 200 families.",
+    "source_ids": [
+      "wafa-176358"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176358"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "included_in_public_summary": true,
+    "claim_status": "reported_public_source"
+  },
+  {
+    "story_id": "gaza-story-2026-10-27-003",
+    "title": "WAFA reports Deir al-Balah drone strike",
+    "summary": "WAFA reported that two Palestinians were killed and another was wounded in a drone strike on Deir al-Balah on October 26.",
+    "source_ids": [
+      "wafa-176340"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176340"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "included_in_public_summary": true,
+    "claim_status": "reported_public_source"
+  }
+]

@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261026T234525-0700-r11-20261027T064525Z",
+  "scheduled_for": "2026-10-26T23:44:51-07:00",
+  "started_at": "2026-10-26T23:45:25-07:00",
+  "completed_at": "2026-10-26T23:46:33-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-26T22:44:32-07:00",
+    "end": "2026-10-26T23:46:33-07:00",
+    "basis": "Previous verified watch heartbeat completed_at through this observation's latest confirmed Pacific local time. Gaza-local Tuesday morning 27 October was also queried; older results excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; primary production Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261026T224036-0700-r11-20261027T054036Z",
+      "completed_at": "2026-10-26T22:44:32-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-26/gaza-source-watch-20261026T224036-0700-r11-20261027T054036Z.json",
+      "verification": "Readback from connected GitHub ops/watch-ledger; provides previous completed interval."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listing: 26 October 2026 publication, titled Humanitarian Situation Report | 22 October 2026; already within prior watch review. No new listing in interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Inaccessible through browser tool; persistent limitation observed in previous runs; HTTP code not established."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Health situation overview and linked latest news showed no new dated Gaza-specific health/evacuation operational update in bounded interval."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 27 2026 morning 9 am strike dead civilians displaced Rafah Deir al Balah update",
+      "site:english.wafa.ps \"27/October/2026\" Gaza killed wounded shells homes",
+      "site:reuters.com/world/middle-east/ \"October 27, 2026\" Gaza ceasefire civilians",
+      "site:apnews.com/article/ \"Oct 27, 2026\" Gaza attack aid crossing",
+      "site:palestinercs.org \"27 October 2026\" Gaza ambulance hospital",
+      "site:un.org Gaza \"27 October 2026\" humanitarian food water civilians",
+      "site:wfp.org Gaza \"27 October 2026\" aid flour bakeries distribution",
+      "site:unicef.org Gaza \"27 October 2026\" children water safe access",
+      "site:who.int Gaza \"27 October 2026\" hospital ambulance medical evacuation",
+      "Gaza Rafah Kerem Shalom crossings October 27 2026 aid fuel medical evacuation operational change",
+      "Gaza October 27 2026 ceasefire negotiations Hamas Israel new proposal and civilian impact",
+      "Gaza 27 October 2026 morning Khan Younis Nuseirat al Mawasi shelling killed civilian injuries"
+    ],
+    "supplemental_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest 27 October item at 07:50 Gaza-local concerned closures near Ramallah (West Bank, excluded). Latest displayed Gaza-specific displacement camp fire at 19:36 on 26 October, already checked in previous run. No new in-window Gaza event on news list."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible; prominent items included election and regional subjects, no newly time-confirmed Gaza-specific qualifying development in direct listing."
+      },
+      {
+        "publisher": "UN UNISPAL",
+        "url": "https://www.un.org/unispal/",
+        "result": "Direct site check failed (HTTP 403); targeted UN searches returned no newly verified Gaza update."
+      }
+    ],
+    "excluded_known_or_nonqualifying": [
+      "OCHA humanitarian report released 26 October with earlier Gaza reporting period, assessed in previous watch.",
+      "WAFA's 26 October 19:36 Gaza displacement camp fire, previously documented; 27 October Ramallah item pertains to West Bank.",
+      "Reuters 19 October WFP funding cuts and older casualties, ceasefire and crossings articles, not fresh events.",
+      "Older WFP/UNICEF/WHO materials, generalized background, undated claims, search result noise and unsupported social claims."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Browser tool returned inaccessible; no HTTP status established.",
+        "materiality": "Persistent known restriction, not newly material; OCHA OPT and WHO global remain accessible."
+      },
+      {
+        "source": "UN UNISPAL",
+        "url": "https://www.un.org/unispal/",
+        "error": "HTTP 403 direct fetch.",
+        "materiality": "Supplemental site only; primary humanitarian checks and targeted news remained available. No demonstrated new critical coverage gap."
+      }
+    ],
+    "search_result": "No new, verifiable, nonduplicate Gaza-specific development discovered in this bounded hour. Search-index freshness lag and persistent regional WHO endpoint restriction reduce recall confidence.",
+    "notification_disposition": "Do not notify: zero qualifying findings, and no newly material degradation; existing access limits documented.",
+    "action_scope": "One new private watch ledger heartbeat on ops/watch-ledger only; no approval, public publication, schedule changes, production runner changes or social posting."
+  }
+}

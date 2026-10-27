@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T054204-0700-r11-054204",
+  "scheduled_for": "2026-10-27T05:41:41-07:00",
+  "started_at": "2026-10-27T05:42:04-07:00",
+  "completed_at": "2026-10-27T05:43:14-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T04:49:29-07:00",
+    "end_at": "2026-10-27T05:43:14-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completed_at of most recent food-line watch ledger heartbeat, independently retrieved from ops/watch-ledger. Freshness assessed using source publication/event dates rather than crawl dates. Prior known signals excluded."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "recency_days": [
+      2,
+      3
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire October 27 2026 town",
+      "\"last grocery store\" closing rural October 26 2026",
+      "\"sole grocery store\" destroyed fire October 2026 USA",
+      "\"full service grocery store\" closes community October 27 2026",
+      "\"food distribution\" \"canceled\" storm flood October 27 2026",
+      "\"food pantry\" \"canceled\" power outage October 26 2026",
+      "\"mobile food pantry\" \"cancelled\" severe weather October 27 2026",
+      "\"food pantry\" \"closing\" \"immediately\" October 27 2026",
+      "October 27 2026 food bank pantry closes cuts hours food assistance services -Utah",
+      "October 26 2026 food pantry \"until further notice\" closure flood storm",
+      "October 27 2026 SNAP EBT benefits interruption outage agency department human services",
+      "October 27 2026 WIC SNAP benefits suspended payment delay state notice"
+    ],
+    "focus_classes": [
+      "Only/sole/last/full-service grocery store loss/closure/fire/disaster",
+      "Emergency distribution suspension due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded high-value recall only. Primary nationwide production collector remains authoritative. No editorial approvals, publications, schedule changes, or disabling.",
+    "All 12 targeted searches returned usable results; no material web search failure or inaccessible source blocked evaluation.",
+    "Recent-indexed results were predominantly older developments. Examples excluded by original publication date: Spencer, NY only-grocer fire (published September 14, 2026; https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/); Parachute, CO grocery loss (September 2026; https://www.thestreet.com/retail/clarks-market-store-closure-parachute-colorado); Wisconsin Ruby's Pantry closure story (about six months old; https://www.thestreet.com/retail/major-pop-up-food-shop-rubys-pantry-abruptly-closes-82-locations-after-20-years).",
+    "The Heber City closure and Provo reduced appointments already captured in October 27 02:45 PDT Food Line watch were excluded as duplicates.",
+    "SNAP/WIC search results largely concerned the October-November 2025 government shutdown, 2026 policy debates, program promotion, or historical notices, not new official service/payment outages.",
+    "No independently verifiable fresh qualifying sole-grocer loss, disaster-canceled emergency distribution, abrupt pantry/food-bank shutdown/service reduction, or immediate official SNAP/WIC interruption found in this search window. Bounded recall is not exhaustive national coverage."
+  ]
+}

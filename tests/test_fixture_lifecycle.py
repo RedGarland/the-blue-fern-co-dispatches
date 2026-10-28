@@ -12,8 +12,11 @@ pytest_plugins = ("pytester",)
 
 
 def _run_case(pytester, case: str):
-    repo_tests = Path(__file__).parent
-    pytester.makeconftest(f"import sys; sys.path.insert(0, {str(repo_tests)!r}); pytest_plugins = ('fixture_lifecycle',)")
+    repo_tests = Path(__file__).resolve().parent
+    pytester.makeconftest(
+        f"import sys; sys.path.insert(0, {str(repo_tests.parent)!r}); "
+        f"sys.path.insert(0, {str(repo_tests)!r}); pytest_plugins = ('fixture_lifecycle',)"
+    )
     setup = "" if case != "setup_failure" else "raise RuntimeError('setup failure')"
     test_body = {
         "success": "assert root.joinpath('evidence.txt').exists()",
@@ -74,8 +77,11 @@ def test_cleanup_failure_is_visible_and_retained(pytester):
 
 
 def test_shared_template_is_retained_when_child_cleanup_fails(pytester):
-    repo_tests = Path(__file__).parent
-    pytester.makeconftest(f"import sys; sys.path.insert(0, {str(repo_tests)!r}); pytest_plugins = ('fixture_lifecycle',)")
+    repo_tests = Path(__file__).resolve().parent
+    pytester.makeconftest(
+        f"import sys; sys.path.insert(0, {str(repo_tests.parent)!r}); "
+        f"sys.path.insert(0, {str(repo_tests)!r}); pytest_plugins = ('fixture_lifecycle',)"
+    )
     pytester.makepyfile(test_shared="""
 import shutil
 import pytest
@@ -178,8 +184,11 @@ def test_preexisting_redirected_root_is_rejected_and_target_survives(tmp_path, m
 
 
 def test_session_error_retains_template_after_successful_child(pytester):
-    repo_tests = Path(__file__).parent
-    pytester.makeconftest(f"import sys; sys.path.insert(0, {str(repo_tests)!r}); pytest_plugins = ('fixture_lifecycle',)")
+    repo_tests = Path(__file__).resolve().parent
+    pytester.makeconftest(
+        f"import sys; sys.path.insert(0, {str(repo_tests.parent)!r}); "
+        f"sys.path.insert(0, {str(repo_tests)!r}); pytest_plugins = ('fixture_lifecycle',)"
+    )
     pytester.makepyfile(test_interrupt="""
 import pytest
 from fixture_lifecycle import mark_fixture_setup_complete, register_fixture_root

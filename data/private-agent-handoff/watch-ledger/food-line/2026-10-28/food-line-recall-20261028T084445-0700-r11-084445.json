@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T084445-0700-r11-084445",
+  "scheduled_for": "2026-10-28T08:45:54-07:00",
+  "started_at": "2026-10-28T08:44:45-07:00",
+  "completed_at": "2026-10-28T08:45:45-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T07:51:11-07:00",
+    "end_at": "2026-10-28T08:45:45-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at completed_at from the latest verified prior Food Line watch heartbeat on ops/watch-ledger; queries allowed recent-indexing overlap but old/duplicate events excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary high-value recall only, not the authoritative U.S. Food Line nationwide production collector. No editorial approval, publication, Bluesky/social posting, schedule changes, or task disabling.",
+    "Completed twelve targeted web searches, with an October 27–28 2026 freshness focus: four only/sole/last/full-service grocery-store closure/fire, three weather/disaster/outage-related canceled food distributions, two abrupt pantry/food-bank shutdown or access reductions, and three official SNAP/WIC/EBT benefit interruption searches.",
+    "Searches returned usable result sets; no independently verified newly qualifying U.S. food-access disruption was found for 2026-10-28 07:51:11–08:45:45 America/Los_Angeles. No material source retrieval failure occurred. This bounded absence does not demonstrate nationwide absence.",
+    "Kauaʻi Now's October 27 Hurricane Lowell recovery update explicitly listed two emergency distributions (October 27 and October 30), not canceled events; excluded. https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "September 24 El Pasoans Fighting Hunger storm-damage distribution closure predates the window and was already considered in earlier handoffs; excluded. https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+    "Only/last-store reports surfaced historically dated Spencer, New York (September 14), North Charleston, South Carolina (August 13), and older closure/reopening reports; none is a new event for this window. https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/ and https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/",
+    "Abrupt pantry-result examples were April 2026 Ruby's Pantry network shutdown; no qualifying new provider closure verified. https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+    "SNAP/WIC searches surfaced historical October–November 2025 federal-shutdown guidance and no newly dated official statement confirming immediate interruption on October 28, 2026.",
+    "Search indexing delays and social-only local notices remain coverage limits; production collector remains authoritative."
+  ]
+}

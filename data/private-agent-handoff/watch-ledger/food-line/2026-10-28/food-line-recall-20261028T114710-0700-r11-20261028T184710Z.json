@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T114710-0700-r11-20261028T184710Z",
+  "scheduled_for": "2026-10-28T11:45:54-07:00",
+  "started_at": "2026-10-28T11:47:10-07:00",
+  "completed_at": "2026-10-28T11:49:02.485-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T10:51:03.550-07:00",
+    "end_at": "2026-10-28T11:49:02.485-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at completed_at of the latest Food Line Source Watch heartbeat read back on ops/watch-ledger (10:50 run), not the older conversation excerpt. Targeted queries use recent-indexing overlap; old and previously recorded incidents excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value miss-class recall only; primary nationwide Food Line production collector and publishing pipeline remain authoritative. No approval, publishing, social posting, schedule or task modification.",
+    "All 12 targeted web searches completed: 4 only/sole/last/full-service community grocery closure/fire searches; 2 disaster/storm-related emergency-food distribution cancellation searches; 3 abrupt pantry/food-bank shutdown or access-reduction searches; 3 official SNAP/WIC/EBT interruption searches. Searches used 2026-10-28 America/Los_Angeles observation focus and recent-indexing overlap.",
+    "No new traceable and nonduplicate event with evidence of immediate U.S. food-access disruption was verified since the last committed watch completion (10:51:03 PDT). Search results were predominantly older incidents, generic reports, and pre-existing closures. This bounded negative does not establish nationwide absence.",
+    "October 27 Kauaʻi hurricane-recovery notice confirms scheduled October 27 and October 30 emergency food distributions, not cancellations; excluded. https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Prodisee Pantry Stockton, Alabama cancellation due to Hurricane Isaias is real but was published October 7, 2026 and is outside this watch window; excluded as historical. https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-saturday-food-distribution-stockton-ahead-isaias/",
+    "California WIC official federal-budget update (September 2, 2026) states offices are open and benefits continue through the stated federal continuing resolution; does not establish a new October 28 interruption. https://www.myfamily.wic.ca.gov/Home/FederalBudget",
+    "Older sole-store closures included Eastport, Maine (September), Latta, South Carolina (September), and Avondale, Ohio (summer); excluded as historical. https://www.bangordailynews.com/2026/08/29/down-east/downeast-business/eastport-grocery-store-iga-close-next-week-joam40zk0w/",
+    "October 2025 SNAP federal-shutdown reporting and broad October 2026 SNAP participation research are not an in-window official immediate service interruption; excluded.",
+    "No material search or source-verification outage occurred. GitHub branch comparison identified newer 09:48 and 10:50 Food Line heartbeats, and the 10:50 heartbeat was read directly to anchor the correct interval. Index delays, local social-only notices, and search-result selectivity remain limits.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" \"closed\" \"October 28, 2026\" fire community",
+        "\"last grocery store\" fire closure \"October 2026\" town",
+        "\"sole grocery store\" \"closed\" October 2026 small town",
+        "\"full service grocery store\" \"closed\" October 28 2026",
+        "\"food distribution\" cancelled storm flood \"October 28\" 2026",
+        "\"food pantry\" closed \"October 28, 2026\" emergency",
+        "site:gov \"SNAP\" \"benefits\" \"interrupted\" \"October 28, 2026\"",
+        "site:gov WIC service interruption outage October 28 2026",
+        "site:facebook.com \"food pantry\" \"closed\" \"October 28\" \"2026\" storm",
+        "site:gov OR site:org \"food distribution\" \"cancelled\" hurricane \"October 28, 2026\"",
+        "October 28 2026 food bank pantry shutdown food distribution suspended flooded building United States",
+        "October 28 2026 SNAP EBT system outage benefits delayed official state agency"
+      ]
+    }
+  ]
+}

@@ -2724,7 +2724,9 @@ def _gaza_pages_aggregate_baseline(pages_repo: Path) -> dict[str, str] | None:
     baseline: dict[str, str] = {}
     for filename, path in paths.items():
         try:
-            content = path.read_text(encoding="utf-8")
+            # Public history is a byte record: universal-newline reads erase
+            # CRLF inside historical RSS items before preservation can check it.
+            content = path.read_bytes().decode("utf-8")
         except (OSError, UnicodeError) as exc:
             raise ValueError(
                 f"authoritative Gaza aggregate baseline incomplete/unreadable: cannot read {filename}"
@@ -2845,8 +2847,8 @@ def _gaza_month_key(heading: str) -> tuple[int, int] | None:
 
 def _gaza_insert_missing_archive_month(archive: str, month_section: str, month_heading: str) -> str:
     month_pattern = re.compile(
-        r'[ \t]*<section class="archive-month"><h2>(?P<heading>[^<]+)</h2>\n'
-        r'[ \t]*<ul class="edition-list archive-list">.*?\n[ \t]*</ul>\n[ \t]*</section>',
+        r'[ \t]*<section class="archive-month"><h2>(?P<heading>[^<]+)</h2>\r?\n'
+        r'[ \t]*<ul class="edition-list archive-list">.*?\r?\n[ \t]*</ul>\r?\n[ \t]*</section>',
         re.DOTALL,
     )
     month_matches = list(month_pattern.finditer(archive))
@@ -2901,12 +2903,16 @@ def _gaza_aggregate_render_from_pages_history(
     and no-update notices even when only one new edition is intended. This helper
     carries the baseline bytes forward and inserts the current edition once.
     """
+    from .gaza_public_history_reconciliation import aggregate_history_proof
+    correction_proof = aggregate_history_proof(pages_repo, site_root, edition_date)
     baseline = _gaza_pages_aggregate_baseline(pages_repo)
     if baseline is None:
         return False
     archive = baseline["archive.html"]
     index = baseline["index.html"]
     rss = baseline["rss.xml"]
+    from .gaza_public_history_reconciliation import former_latest_record
+    displaced_latest = former_latest_record(index) if correction_proof is not None else None
 
     baseline_date_sets = {
         "archive": set(_gaza_history_dates_in_text(archive)),
@@ -2954,7 +2960,7 @@ def _gaza_aggregate_render_from_pages_history(
             archive = archive_latest_pattern.sub(archive_latest, archive, count=1)
         month_heading = _gaza_month_heading(edition_date)
         month_open_match = re.search(
-            rf'[ \t]*<section class="archive-month"><h2>{re.escape(html.escape(month_heading))}</h2>\n'
+            rf'[ \t]*<section class="archive-month"><h2>{re.escape(html.escape(month_heading))}</h2>\r?\n'
             rf'[ \t]*<ul class="edition-list archive-list">',
             archive,
         )
@@ -2988,11 +2994,14 @@ def _gaza_aggregate_render_from_pages_history(
         if readable_open_match is None:
             raise ValueError("Gaza homepage baseline has no readable-briefings list")
         readable_open = readable_open_match.group(0)
+        if displaced_latest is not None and is_newest_edition:
+            old_date, _old_card, old_row = displaced_latest
+            index = _gaza_insert_date_ordered_list_item(index, readable_open, old_row, old_date)
         readable_row = render_briefing_list_item(briefing_presentation_for_edition(site_root, dispatch, edition_date))
         index = _gaza_insert_date_ordered_list_item(index, readable_open, readable_row, edition_date)
 
         rss_item = _gaza_render_new_rss_item(site_root, dispatch, edition_date)
-        rss_description = re.search(r"  <description>.*?</description>\n", rss, re.DOTALL)
+        rss_description = re.search(r"  <description>.*?</description>\r?\n", rss, re.DOTALL)
         if rss_description is None:
             raise ValueError("Gaza RSS baseline has no channel description")
         rss = _gaza_insert_date_ordered_rss_item(rss, rss_item, edition_date)
@@ -3002,8 +3011,14 @@ def _gaza_aggregate_render_from_pages_history(
             index = apply_gaza_home_layout(index)
         rendered = {"index.html": index, "archive.html": archive, "rss.xml": rss}
 
+    if correction_proof is not None:
+        from .gaza_public_history_reconciliation import assert_aggregate_projections_preserved
+        assert_aggregate_projections_preserved(baseline, rendered)
+        if aggregate_history_proof(pages_repo, site_root, edition_date) != correction_proof or _gaza_pages_aggregate_baseline(pages_repo) != baseline:
+            raise ValueError("verified Gaza public history changed during aggregate rendering")
     for filename, content in rendered.items():
-        write_text(site_root / "gaza" / filename, content, dry_run, wrote)
+        # Binary writes avoid re-translating retained CRLF to CRCRLF on Windows.
+        write_bytes(site_root / "gaza" / filename, content.encode("utf-8"), dry_run, wrote)
     return True
 
 
@@ -3013,13 +3028,19 @@ def _gaza_aggregate_preserve_pages_history(
     *,
     dry_run: bool,
     wrote: list[str],
+    edition_date: str | None = None,
 ) -> bool:
     """Carry the exact authoritative aggregate bytes through a no-current run."""
+    from .gaza_public_history_reconciliation import aggregate_history_proof
+    correction_proof = aggregate_history_proof(pages_repo, site_root, edition_date)
     baseline = _gaza_pages_aggregate_baseline(pages_repo)
     if baseline is None:
         return False
+    if correction_proof is not None:
+        if aggregate_history_proof(pages_repo, site_root, edition_date) != correction_proof or _gaza_pages_aggregate_baseline(pages_repo) != baseline:
+            raise ValueError("verified Gaza public history changed during aggregate preservation")
     for filename in ("index.html", "archive.html", "rss.xml"):
-        write_text(site_root / "gaza" / filename, baseline[filename], dry_run, wrote)
+        write_bytes(site_root / "gaza" / filename, baseline[filename].encode("utf-8"), dry_run, wrote)
     return True
 
 
@@ -3404,8 +3425,11 @@ def reconcile_gaza_public_editions(
     _reconciliation_assert_ordinary_path(site_root)
     if pages_repo is not None:
         _reconciliation_assert_ordinary_path(pages_repo)
-    from .gaza_corrected_manifest_reader import assert_generic_reconciliation_allowed
-    assert_generic_reconciliation_allowed(root, site_root, pages_repo)
+    from .gaza_public_history_reconciliation import reconcile_published_profile
+    preserved_oct25 = reconcile_published_profile(
+        root, site_root, pages_repo, before_date=max_public_date,
+        dry_run=dry_run, wrote=wrote, backup_root=backup_root,
+    )
     discovered: list[dict[str, str]] = []
     backfilled: list[dict[str, str]] = []
     skipped: list[dict[str, str]] = []
@@ -3430,6 +3454,13 @@ def reconcile_gaza_public_editions(
         if max_public_date and edition_date > max_public_date:
             continue
         target_dir = site_root / "gaza" / "editions" / edition_date
+        if preserved_oct25 and edition_date == "2026-10-25":
+            # The full immutable profile (including its correction record) was
+            # validated/copied above, not regenerated or dropped by listability.
+            backfilled.append({"edition_date": edition_date, "source": "fixed_public_history",
+                               "source_path": str(pages_repo / "gaza/editions" / edition_date),
+                               "target_path": str(target_dir)})
+            continue
         authoritative_correction = _gaza_pages_correction_only_edition_dir(pages_repo, edition_date)
         if target_dir.exists():
             if authoritative_correction is not None and not _gaza_edition_dirs_byte_equal(
@@ -4442,6 +4473,15 @@ def build_site(
     dispatches = all_dispatches
     if only_dispatches:
         dispatches = [dispatch for dispatch in all_dispatches if dispatch.slug in only_dispatches]
+    if not only_dispatches or "gaza" in only_dispatches:
+        # The immutable-history consumer supports a bounded new-edition build,
+        # not generic/no-update rebuilding or a ceiling hiding an older seed.
+        # Retain the old fail-closed contract for those unsupported active cases.
+        gaza_dates = [dispatch.edition_date for dispatch in dispatches if dispatch.slug == "gaza"]
+        bounded_date = public_max_dates.get("gaza")
+        if not bounded_date or tuple(gaza_publication_dates) != (bounded_date,) or gaza_dates != [bounded_date]:
+            from .gaza_corrected_manifest_reader import assert_generic_reconciliation_allowed
+            assert_generic_reconciliation_allowed(root, site_root, pages_repo)
     errors.extend(validate_traceability(all_dispatches))
     errors.extend(ensure_public_detail_separation(site_root, detail_roots))
     wrote: list[str] = []

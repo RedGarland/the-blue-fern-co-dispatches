@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T014024-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T01:45:22-07:00",
+  "started_at": "2026-10-28T01:40:24-07:00",
+  "completed_at": "2026-10-28T01:41:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T00:47:33-07:00",
+    "end": "2026-10-28T01:41:57-07:00",
+    "basis": "Previous verified heartbeat completed 2026-10-28 00:47:33 PDT; this recall screens subsequent developments and date-wide October 27-28 reports for indexing lag. Nominal hourly schedule is 01:45:22 PDT, but this execution was invoked earlier at the stated run-context time; no schedule changes were made."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary missed-signal recall; authoritative Care Line production collection and editorial review remain unchanged.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T004639-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Direct CMS Public Notices page inspection: most recent notices remain three October 23, 2026 home-health agency terminations (My Families Healthcare and 1ST AIDE HOME HEALTH AGENCY in California; Moonlight Home Health Care Inc in Ohio). No October 27-28 new provider termination, rescission, CLIA limitation, suspension, or restoration notice."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 28 2026 hospital emergency department closed suspended overnight US",
+      "October 28 2026 maternity labor delivery unit closure suspension hospital USA",
+      "October 28 2026 psychiatric behavioral health hospital ward closed suspended beds",
+      "October 28 2026 dialysis clinic oncology infusion center closed suspended treatments",
+      "October 28 2026 ambulance EMS base closure suspended operations air medical",
+      "October 28 2026 rural hospital emergency room urgent care service closure effective",
+      "October 28 2026 primary care practice clinic closes today patients access",
+      "October 28 2026 hospital emergency clinic services reopened resumed after disruption",
+      "October 27 2026 late night hospital closure emergency service discontinuation announced",
+      "October 27 2026 late breaking maternity dialysis behavioral healthcare services shutdown",
+      "October 28 2026 Puerto Rico Guam Virgin Islands hospital emergency medical service suspension closure",
+      "October 28 2026 US hospital care access service restoration helicopter ambulance hospital reopening"
+    ],
+    "searched_classes": [
+      "hospital and emergency department closure/suspension",
+      "maternity and newborn care loss",
+      "inpatient behavioral health interruption",
+      "dialysis and oncology infusion closure",
+      "primary-care closure",
+      "rural/emergency access loss",
+      "ambulance, EMS, air-medical and base loss",
+      "concrete emergency service reopening/restoration",
+      "U.S. territories",
+      "official CMS notice changes"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "University of New Mexico Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate",
+        "detail": "UNM Health's October 27 full restoration was confirmed and recorded pending_review in a preceding watch; search re-surfaced the update but no additional transition was established."
+      },
+      {
+        "publisher": "Nevada Public Radio",
+        "url": "https://knpr.org/health/2026-08-13/henderson-hospital-announces-closure-of-maternity-nicu-units",
+        "disposition": "excluded_older",
+        "detail": "Maternity/NICU suspension announced August 13 and planned for September 30; no new October 28 change."
+      },
+      {
+        "publisher": "The Raven (Canada)",
+        "url": "https://www.theraven.fm/news1/raven-country-news/port-hardy-hospital-emergency-department-reopens-early-following-staffing-shortage/",
+        "disposition": "excluded_outside_geography",
+        "detail": "British Columbia reopening is outside U.S. states and territories."
+      },
+      {
+        "publisher": "KPRC Click2Houston (from preceding heartbeat)",
+        "url": "https://www.click2houston.com/news/local/2026/10/27/nations-first-detransition-clinic-opens-at-texas-childrens-hospital/",
+        "disposition": "excluded_out_of_scope",
+        "detail": "Previously screened new clinic opening, not restoration of previously lost essential service."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "CMS was directly verified before the 12 additional targeted searches. All search calls returned usable responses, though many matches were older, foreign, or unrelated. No new verifiable qualifying U.S./territory healthcare-access change was established within the observation window. This bounded recall cannot establish exhaustive absence of events nationally and is not the production collector.",
+    "controls": "No approval, publication, review mutation, collector change, scheduling change or disabling."
+  }
+}

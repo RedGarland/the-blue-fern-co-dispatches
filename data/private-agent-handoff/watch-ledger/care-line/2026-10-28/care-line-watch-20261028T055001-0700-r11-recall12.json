@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T055001-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T05:45:22-07:00",
+  "started_at": "2026-10-28T05:50:01-07:00",
+  "completed_at": "2026-10-28T05:51:32.446-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T04:43:43.553-07:00",
+    "end": "2026-10-28T05:51:32.446-07:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed at 04:43:43.553 PDT on 2026-10-28; inspected newly reported or newly effective healthcare-access developments through this run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for possible missed healthcare-access signals; production Care Line collector remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T044234-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS Public Notices listing returned latest notices dated 2026-10-23, including three home-health terminations. No newly dated provider termination/rescission or CLIA limitation/suspension in this hourly interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department shutdown closure October 28 2026 patients",
+      "maternity labor delivery unit closure hospital October 28 2026",
+      "rural hospital emergency services suspension October 28 2026",
+      "ambulance service air medical helicopter base closure suspended October 28 2026",
+      "dialysis oncology cancer center treatment services closure October 28 2026",
+      "behavioral health inpatient psychiatric facility unit shutdown October 28 2026",
+      "primary care community clinic closure October 28 2026 patients",
+      "hospital emergency department reopened restored services October 28 2026",
+      "Puerto Rico Guam Virgin Islands hospital clinic emergency service closure October 28 2026",
+      "emergency department diversion hospital service disruption overnight October 28 2026",
+      "CMS provider termination rescission CLIA limitation suspension October 28 2026",
+      "local news hospital clinic health services closing today October 28 2026"
+    ],
+    "search_recency_days": 1,
+    "searched_classes": [
+      "hospital/ED/maternity closure or suspension",
+      "behavioral-health, dialysis, oncology or primary-care closure or suspension",
+      "rural and emergency-service loss",
+      "ground/air ambulance and base closure",
+      "CMS termination/rescission and CLIA actions",
+      "concrete effective restoration/reopening",
+      "U.S. states and territories (limited by available indexed reporting)"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "KFF Health News",
+        "url": "https://kffhealthnews.org/health-industry/picu-hospital-beds-disappearing-sick-children-intensive-care-montana/",
+        "disposition": "excluded_retrospective",
+        "detail": "Article dated October 28 reports Community Medical Center Missoula pediatric ICU closed earlier in October and other pediatric unit closures dating back months. No closure newly effective or announced within this specific hourly watch window; retrospective signal not entered as new event."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_prior_announcement_and_post_window",
+        "detail": "Roseland labor/delivery suspension announced earlier in October; article timestamp October 28 at 11:19 AM Central, after this watch's ~07:50 AM Central observation endpoint. Not a new development during this interval."
+      },
+      {
+        "publisher": "Alpha News",
+        "url": "https://alphanews.org/exclusive-62-staff-injuries-900k-in-damage-hospital-sounds-alarm-over-caring-for-man-linked-to-hastings-home-invasion/",
+        "disposition": "excluded_prior_incident",
+        "detail": "October 27 article describes October 3 Hastings ED ambulance diversion (since restored) and October 5 Allina letter; not newly changed during watch window."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://abcnews.com/US/wireStory/cybersecurity-issue-forces-major-new-mexico-hospital-divert-137582721",
+        "disposition": "excluded_duplicate",
+        "detail": "University of New Mexico Health System's October 26 cyber interruption and restoration previously recorded by earlier watches; no independent interval change confirmed."
+      },
+      {
+        "publisher": "Lookout Santa Cruz",
+        "url": "https://lookout.co/watsonville-community-hospital-may-close-maternity-services-to-avoid-shutting-down/story",
+        "disposition": "excluded_proposal",
+        "detail": "Watsonville Community Hospital maternity closure remains proposed rather than a newly effective loss during this hour."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve supplemental searches were limited to the 2026-10-28 time frame with 1-day recency and U.S./territory scope. Results included stale, retrospective and post-window entries. Search recency is not a guaranteed strict publication-time filter and indexed coverage is not exhaustive, especially for territories and early-morning local announcements.",
+    "controls": "No approval, publishing, schedule modification, disabling, or mutation of production collector. One new heartbeat file only."
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T034103-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T03:45:22-07:00",
+  "started_at": "2026-10-28T03:41:03-07:00",
+  "completed_at": "2026-10-28T03:42:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T02:51:09-07:00",
+    "end": "2026-10-28T03:42:32-07:00",
+    "basis": "Previous verified care-line watch heartbeat completed at 02:51:09 PDT; searched for newly reported or newly effective U.S. and territory healthcare-access changes through this run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary healthcare-access missed-signal recall. Production Care Line collector remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T024951-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS Public Notices checked as first research target, directly reopened and dated listing inspected; most recent entries remained three October 23 home-health agency terminations (two California, one Ohio). No new provider termination, rescission or CLIA action."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 28, 2026\" hospital emergency department closed suspended United States",
+      "\"October 28, 2026\" labor delivery maternity service closure hospital",
+      "\"October 28, 2026\" psychiatric behavioral health hospital unit closure patients",
+      "\"October 28, 2026\" dialysis oncology infusion center closed suspended patients",
+      "\"October 28, 2026\" \"primary care\" clinic closed closing patients",
+      "\"October 28, 2026\" rural hospital emergency service suspended closed",
+      "\"October 28, 2026\" ambulance service EMS base closure shutdown",
+      "\"October 28, 2026\" air ambulance helicopter medical base ceased operations",
+      "\"October 28, 2026\" emergency department reopened restored patient care hospital",
+      "\"October 27, 2026\" hospital emergency room maternity closure service suspension late",
+      "\"October 28, 2026\" Puerto Rico Guam Virgin Islands hospital clinic closure suspension",
+      "\"October 28, 2026\" hospital outpatient behavioral health dialysis services discontinuing October"
+    ],
+    "searched_classes": [
+      "hospital/ED/maternity closure or suspension",
+      "psychiatric/behavioral-health service loss",
+      "dialysis/oncology service loss",
+      "primary-care service loss",
+      "rural/emergency service loss",
+      "ambulance/air-medical/base loss",
+      "concrete essential-service reopening/restoration",
+      "CMS termination/rescission/CLIA",
+      "U.S. territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "Lookout Santa Cruz",
+        "url": "https://lookout.co/watsonville-community-hospital-board-to-consider-closing-maternity-services-nicu-at-wednesday-meeting/story",
+        "source_published_date": "2026-10-26",
+        "disposition": "excluded_proposal_without_concrete_new_access_change",
+        "detail": "Watsonville Community Hospital maternity/NICU closure decision scheduled for October 28 at 17:00 PDT; proposed labor/delivery change not yet decided or effective during 03:41-03:42 PDT observation. Article references an already-temporarily-closed NICU but offers no new restoration or closure event in the window."
+      },
+      {
+        "publisher": "The Pajaronian",
+        "url": "https://pajaronian.com/watsonville-hospital-considers-closing-mother-baby-services-as-possible-closure-within-one-year-looms/",
+        "source_published_date": "2026-10-23",
+        "disposition": "excluded_older_proposal",
+        "detail": "October 22 town hall and possible future closure; no newly effective loss confirmed."
+      },
+      {
+        "publisher": "MyKeeneNow",
+        "url": "https://mykeenenow.com/news/219912-cheshire-medical-center-to-close-winchester-family-medicine-clinic-in-november/",
+        "source_published_date": null,
+        "disposition": "excluded_older_announcement",
+        "detail": "Reported the prior week regarding planned November primary-care clinic closure; no new access transition in this run."
+      },
+      {
+        "publisher": "KRCR",
+        "url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times",
+        "source_published_date": null,
+        "disposition": "excluded_prior_month",
+        "detail": "Red Bluff air-ambulance closure reporting from September, not a new October 28 development."
+      },
+      {
+        "publisher": "University of New Mexico Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "source_published_date": "2026-10-27",
+        "disposition": "excluded_duplicate",
+        "detail": "Previously recorded hospital/ambulance/clinic restoration; no new verified interruption or restoration."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search-indexed October 28 results were sparse at approximately 03:42 PDT; broad queries also surfaced historical, foreign, and opinion results. Search absence is not exhaustive verification, and the primary production collector remains authoritative.",
+    "controls": "No approval, publication, schedule change, automation disabling, or production-collector modification. One heartbeat JSON only.",
+    "execution_timing_note": "Runtime supplied current local time 03:41:03 PDT, before the configured hourly nominal 03:45:22 scheduled occurrence; preserved the nominal scheduled_for rather than changing the schedule."
+  }
+}

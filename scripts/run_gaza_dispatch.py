@@ -2069,6 +2069,7 @@ def render_archive_index_rss(
             pages_repo,
             dry_run=dry_run,
             wrote=wrote,
+            edition_date=edition_date,
         ):
             return
     write_text(gaza_root / "index.html", render_dispatch_index_for_dates(dispatch, dates, site_root), dry_run, wrote)

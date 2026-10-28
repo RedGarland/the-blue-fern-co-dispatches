@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T024641-0700-r11-20261028T094641Z",
+  "scheduled_for": "2026-10-28T02:44:51-07:00",
+  "started_at": "2026-10-28T02:46:41-07:00",
+  "completed_at": "2026-10-28T02:48:10.885-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T01:42:45.348-07:00",
+    "end": "2026-10-28T02:48:10.885-07:00",
+    "basis": "Window begins at completed_at of latest verified previous Gaza heartbeat in ops/watch-ledger. Source and event dates were assessed separately; discovery of an old article is not treated as a new event, and unknown publication time is not silently inferred."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded supplementary Gaza recall only; primary production Gaza collector and publisher remain authoritative. No approval, publication, schedule, or other production changes.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T014128-0700-r11-20261028T084128Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-28/gaza-source-watch-20261028T014128-0700-r11-20261028T084128Z.json",
+      "completed_at": "2026-10-28T01:42:45.348-07:00",
+      "verified_by_repository_read": true,
+      "outcome": "no_findings",
+      "known_prior_findings": [
+        "gaza-20261028-anadolu-4103255-tuesday-attacks",
+        "gaza-20261028-anadolu-4103255-bseiso-prior-wounds"
+      ]
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent item 27 Oct concerns West Bank; most recent Gaza situation report posted 26 Oct (report dated 22 Oct), and Gaza impact snapshot posted 23 Oct (snapshot dated 21 Oct). No new in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated medical evacuation, attack on health care, hospital-capacity, fuel or healthcare disruption update."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "502 Bad Gateway; persistent restriction also recorded in prior heartbeat."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza 28 October 2026 overnight 27 October Israeli airstrikes civilians casualties Reuters AFP AP",
+      "site:english.wafa.ps 28/October/2026 Gaza casualties killed injured airstrike",
+      "site:aa.com.tr/en/middle-east/ October 28 2026 Gaza casualties new attacks",
+      "site:aljazeera.com/news/2026/10/28 Gaza strikes wounded killed aid ceasefire",
+      "site:news.un.org Gaza October 28 2026 humanitarian casualties displacement",
+      "site:unicef.org OR site:wfp.org Gaza October 28 2026 water food shortage aid supplies",
+      "Gaza October 28 2026 hospital ambulance medical evacuation fuel patient departures Doctors Without Borders Palestine Red Crescent",
+      "Gaza October 28 2026 Rafah crossing Kerem Shalom humanitarian aid truck access food water UNRWA OCHA",
+      "Gaza October 28 2026 new displacement tents rain flood shelter infrastructure UNICEF shelter cluster",
+      "Gaza October 28 2026 ceasefire talks hostages Israeli captives prisoners exchanges mediators Egypt Qatar",
+      "Gaza Wednesday 28 October 2026 Israeli army operations documented civilian impact Tuesday night",
+      "site:palestine.un.org OR site:icrc.org Gaza \"28 October 2026\" injured hospitals aid hostages"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; latest dated 28 Oct items concerned West Bank raids, demolitions, detention and 27 Oct Israeli election; no new qualifying Gaza event."
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east/",
+        "result": "Accessible; latest headlines were Israeli election and regional affairs. No newly verified Gaza humanitarian or direct-civilian-impact event."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; latest dated items concerned Israeli election and 27 Oct Gaza film academy, no new qualifying in-window Gaza humanitarian/military civilian-impact event."
+      },
+      {
+        "publisher": "ICRC",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new date-grounded Gaza humanitarian operational update identified."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible; most recent pertinent Gaza child-casualty statement dated 22 Oct and already outside window."
+      }
+    ],
+    "exclusions": [
+      "Existing Anadolu 28 Oct article on two Gaza deaths, five wounded and Bseiso death was already identified in an earlier watch run; not re-flagged.",
+      "OCHA reports/WHO health background and UNICEF child-casualty statements dated before observation window excluded as recycled.",
+      "WAFA 28 Oct West Bank raids and detention reports excluded as outside Gaza geographic scope.",
+      "Israeli election results, unrelated regional mediation and Gaza cultural feature excluded without a newly documented Gaza civilian-impact development.",
+      "Unattributed claims, opinion and historical search results excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO oPt information resources",
+        "error": "502 Bad Gateway",
+        "materiality": "Previously documented persistent restriction; WHO global accessible. This makes the current run DEGRADED but is not new material degradation."
+      },
+      {
+        "source": "UN News via search",
+        "error": "Blocked by robots.txt",
+        "materiality": "Previously observed access issue; OCHA, WHO global, UNICEF, ICRC and several established publishers accessible. No new material watch-wide failure."
+      }
+    ],
+    "assessment": "No new qualifying, traceable, nonduplicate Gaza civilian-casualty, displacement, aid, food/water, health-service, infrastructure, crossing, detention/hostage, ceasefire or civilian-impact military development verified since previous watch. This is a coverage-limited no-findings result, not evidence that no events occurred.",
+    "action_scope": "Exactly one private-agent-handoff watch heartbeat added to ops/watch-ledger; no public content, approvals, production, social posting, or schedule changes."
+  }
+}

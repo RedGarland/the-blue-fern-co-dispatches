@@ -132,11 +132,19 @@ def test_root_replacement_and_ancestor_redirection_are_refused(tmp_path, monkeyp
         config = Config()
         node = type('Node', (), {'nodeid': 'test', 'get_closest_marker': lambda self, name: None})()
 
+    (root / 'evidence.txt').write_text('original fixture', encoding='utf-8')
     registry = FixtureRunRegistry()
     record = registry.register(Request(), root)
-    shutil.rmtree(root)
+    # Keep the original inode allocated: remove/recreate may recycle its
+    # identity tuple and cannot deterministically exercise identity-mismatch
+    # detection. Inode-reuse acceptance is outside this test's guarantee.
+    original_root = basetemp / 'original-root'
+    root.rename(original_root)
     root.mkdir()
+    assert fixture_lifecycle._identity(original_root) == record.root_identity
+    assert fixture_lifecycle._identity(root) != record.root_identity
     assert not registry._boundary_ok(record)
+    assert (original_root / 'evidence.txt').read_text(encoding='utf-8') == 'original fixture'
 
     ancestor_base = basetemp / 'ancestor-base'
     ancestor_base.mkdir()

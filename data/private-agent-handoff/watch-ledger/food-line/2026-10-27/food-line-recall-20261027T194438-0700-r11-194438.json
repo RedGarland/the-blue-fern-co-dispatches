@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T194438-0700-r11-194438",
+  "scheduled_for": "2026-10-27T19:45:54-07:00",
+  "started_at": "2026-10-27T19:44:38-07:00",
+  "completed_at": "2026-10-27T19:46:45.263-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T17:49:51-07:00",
+    "end_at": "2026-10-27T19:46:45.263-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last independently verified Food Line heartbeat completed 17:49:51 PT (2026-10-27). Conservative overlap with any intervening hourly check ensures no gap; this supplementary watch does not displace authoritative production collection."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engines": [
+      "fast"
+    ],
+    "search_terms": [
+      "\"only grocery store\" closed fire October 27 2026 town",
+      "\"last grocery store\" closure town October 27 2026",
+      "\"sole grocery store\" shut down fire October 2026 rural",
+      "\"full service grocery store\" closes October 27 2026 community",
+      "\"food distribution\" canceled storm October 27 2026 pantry",
+      "\"food distribution\" suspended flooding October 27 2026",
+      "\"mobile pantry\" canceled October 27 2026 weather",
+      "\"food bank\" closed due to fire outage October 27 2026",
+      "\"food pantry\" services suspended October 27 2026",
+      "\"food pantry\" abruptly closed October 27 2026 clients",
+      "site:gov SNAP EBT outage October 27 2026 benefits interrupted",
+      "site:gov WIC benefit service outage October 27 2026"
+    ],
+    "query_recency_days": [
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "focus_classes": [
+      "Loss/closure/fire/disaster of only, sole, last, or full-service community grocery store",
+      "Emergency distribution canceled or suspended by storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank closure or major service reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded recall only; production Food Line nationwide collection remains authoritative and unchanged.",
+    "All 12 targeted web searches executed across four high-value miss classes. No source established a qualifying NEW U.S. food-access interruption in this observation window.",
+    "Previously recorded Wymore, NE last-grocery loss; South Philadelphia pantry fire; and Utah pantry reductions were excluded as duplicates.",
+    "Historical Spencer, NY sole-grocery fire (reported September 14), Richlands, VA Grants Supermarket closure (October 10; not the last store), October 8 Alabama distribution cancellation, and October 14 Deer Park, TX future store closing did not qualify as new within-window disruptions.",
+    "October 27 Ashe Post and Times article about approximately 30% increased pantry demand appeared in search results, but direct article retrieval returned HTTP 402 Payment Required; the snippet alone did not substantiate an abrupt closure or access reduction. This bounded source-access failure warrants DEGRADED status rather than a false finding.",
+    "No timely corroborated official SNAP or WIC outage or benefit interruption appeared in the targeted searches; historical 2025 shutdown notices were excluded.",
+    "Search indexing and direct-source access are bounded; unindexed agency notices, private local social posts, or unverified articles can remain missed.",
+    "No editorial approval, publication, social posting, schedule change, or task disabling occurred."
+  ]
+}

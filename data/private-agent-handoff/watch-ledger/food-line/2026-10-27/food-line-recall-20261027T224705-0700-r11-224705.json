@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T224705-0700-r11-224705",
+  "scheduled_for": "2026-10-27T22:45:54-07:00",
+  "started_at": "2026-10-27T22:47:05-07:00",
+  "completed_at": "2026-10-27T22:47:45.664-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T21:41:23-07:00",
+    "end_at": "2026-10-27T22:47:45.664-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From the independently verified previous Food Line supplementary watch completion through this observation; search terms also covered prior-day articles to account for indexing delays.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only. Authoritative national production collection and editorial gates remain unchanged.",
+    "Executed exactly 12 targeted web searches for the four audit miss classes: sole/last/full-service grocery losses; storm/fire/outage-related emergency distribution cancellations; abrupt pantry or food-bank service losses; and current official SNAP/WIC/EBT interruptions.",
+    "No new, sufficiently verified qualifying U.S. food-access disruption in the hourly observation window was identified.",
+    "The October 27 Wymore, Nebraska sole-grocery closure reporting was already handed off earlier; excluded as duplicate.",
+    "October 27 search results about a Colorado Clark's Market closure in Battlement Mesa/Parachute were only from an unattributed secondary excerpt and did not establish a new closure date or trustworthy original provenance. Excluded pending stronger primary/local sourcing, not asserted as a newly verified event.",
+    "Montgomery County, Maryland's October 26–30 So What Else food-distribution cancellations were scheduled for Food Rescue Week; they were not attributed to a storm, flood, fire, outage, or facility damage and are excluded under this watch's criteria.",
+    "The Kenosha Food Bank end-of-2026 closure announcement was published October 21, 2026 and does not constitute a newly abrupt closure in this interval.",
+    "Search results mentioning October 2025 federal-shutdown SNAP interruptions and September 2026 El Paso storm damage were historical and excluded. No new official 2026 SNAP or WIC interruption was substantiated.",
+    "The already recorded South Philadelphia pantry fire and earlier Utah reductions remain excluded as duplicate handoffs.",
+    "Search-engine indexing delays mean a no-findings result is not proof of nationwide absence. All 12 search operations returned usable results; no material search degradation detected.",
+    "No editorial approval, publication, social posting, primary collection changes, schedule changes, or task disabling occurred."
+  ]
+}

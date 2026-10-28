@@ -320,6 +320,16 @@ def _is_core_ground_source(source: dict[str, Any]) -> bool:
     return any(term in text for term in core_terms)
 
 
+def _source_editorial_label(source: dict[str, Any]) -> str | None:
+    """Carry supplied source prose, never infer confidence or release authority."""
+    if "editorial_label" not in source:
+        return None
+    value = source["editorial_label"]
+    if not isinstance(value, str) or not value.strip() or len(value) > 1000 or not value.isprintable():
+        raise ValueError("editorial_label must be a nonempty printable string of at most 1000 characters")
+    return value
+
+
 def normalize_sources(
     records: list[dict[str, Any]],
     edition_date: str,
@@ -343,6 +353,11 @@ def normalize_sources(
             errors.append(f"source record {index} has invalid URL: {url}")
             continue
         source_id = str(record["source_record_id"]).strip()
+        try:
+            editorial_label = _source_editorial_label(record)
+        except ValueError as exc:
+            errors.append(f"source record {index}: {exc}")
+            continue
         clean_title = clean_feed_text(str(record["title"]).strip())
         clean_summary = clean_feed_text(str(record["summary_or_snippet"]).strip())
         retrieved_at = str(record.get("retrieved_at") or now).strip()
@@ -410,6 +425,7 @@ def normalize_sources(
                 "attribution_mode": _infer_attribution_mode(record),
                 "claim_status": str(record.get("claim_status") or _infer_attribution_mode(record)).strip(),
                 "traceability_note": str(record.get("traceability_note") or "").strip(),
+                **({"editorial_label": editorial_label} if editorial_label is not None else {}),
                 "dispatch_slug": DISPATCH_SLUG,
                 "edition_date": edition_date,
                 "used_in_story_ids": [],
@@ -853,6 +869,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                             ),
                             "publisher": source["publisher"],
                             "summary_or_snippet": source.get("summary_or_snippet"),
+                            **({"editorial_label": source["editorial_label"]} if "editorial_label" in source else {}),
                             "event_date": fragment.get("event_date"),
                             "location": fragment.get("location"),
                             "development_type": fragment.get("development_type"),
@@ -1936,9 +1953,14 @@ def render_gaza_edition(
         chunks.append("<p><strong>Sources</strong></p><ul>")
         for source_id in story.get("source_record_ids") or []:
             source = source_by_id[source_id]
+            editorial_label = _source_editorial_label(source)
+            label_html = (
+                f'<br><strong>Source editorial note:</strong> {html.escape(editorial_label)}'
+                if editorial_label is not None else ""
+            )
             chunks.append(
                 f'<li><a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">'
-                f'{html.escape(source["title"])}</a> - {html.escape(source["publisher"])}</li>'
+                f'{html.escape(source["title"])}</a> - {html.escape(source["publisher"])}{label_html}</li>'
             )
         chunks.append("</ul></article>")
 

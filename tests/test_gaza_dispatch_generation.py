@@ -1,8 +1,11 @@
-﻿import json
+﻿import copy
+import html
+import json
 import shutil
 from pathlib import Path
 
 import pytest
+from bluefern_dispatches.story_dedupe import merge_story
 from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
 
 from bluefern_dispatches.generator import build_site
@@ -3905,3 +3908,131 @@ def test_gaza_copy_creates_flash_briefing_when_pages_target_is_absent(tmp_path):
     assert str(pages / "gaza" / "flash-briefing.json") in copied
     assert (pages / "gaza" / "flash-briefing.json").read_text(encoding="utf-8") == source_flash
     assert not any("preserved Pages-owned Gaza flash briefing" in item for item in skipped)
+
+
+# Optional source-scoped editorial labels: no publication authority.
+EDITORIAL_LABEL_DATE = "2026-10-28"
+EDITORIAL_LABEL_NOW = "2026-10-28T16:00:00Z"
+EDITORIAL_LABEL_TEXT = "Limited-source update based on one Fictional News report, without independent corroboration."
+
+
+def _editorial_label_source(**changes):
+    return {
+        "source_record_id": "fictional-source-1",
+        "title": "Gaza hospital restores cancer care after medical supplies arrive",
+        "url": "https://fictional.example.invalid/gaza-hospital",
+        "publisher": "Fictional News",
+        "published_at": EDITORIAL_LABEL_NOW,
+        "retrieved_at": EDITORIAL_LABEL_NOW,
+        "summary_or_snippet": "A Gaza hospital resumed oncology treatment after medical supplies arrived. Patients can now receive cancer care.",
+        "source_type": "news",
+        "region_scope": "Gaza",
+        "category_hint": "healthcare",
+        "reliability_tier": "reported-public-source",
+        "attribution_mode": "state_aligned_media_reported",
+        **changes,
+    }
+
+
+def _editorial_label_prepare(*records):
+    sources, warnings, errors = run_gaza_dispatch_module.normalize_sources(list(records), EDITORIAL_LABEL_DATE, EDITORIAL_LABEL_NOW)
+    assert not errors, errors
+    stories, _, _ = run_gaza_dispatch_module.curate_stories(sources, EDITORIAL_LABEL_DATE, EDITORIAL_LABEL_NOW)
+    return sources, stories
+
+
+def _editorial_label_rendered(root, sources, stories):
+    return run_gaza_dispatch_module.render_gaza_edition(
+        EDITORIAL_LABEL_DATE, stories, sources, run_gaza_dispatch_module.compute_gaza_source_adequacy(sources, stories), root=root
+    )
+
+
+def test_editorial_label_explicit_label_survives_normalization_provenance_manifests_and_render(tmp_path):
+    sources, stories = _editorial_label_prepare(_editorial_label_source(editorial_label=EDITORIAL_LABEL_TEXT))
+    assert sources[0]["editorial_label"] == EDITORIAL_LABEL_TEXT
+    assert stories[0]["source_records"][0]["editorial_label"] == EDITORIAL_LABEL_TEXT
+    assert "editorial_label" not in stories[0]  # Source scope, not edition/story authority.
+    adequacy = run_gaza_dispatch_module.compute_gaza_source_adequacy(sources, stories)
+    _, source_manifest, curation, _ = run_gaza_dispatch_module.build_manifests(tmp_path, EDITORIAL_LABEL_DATE, sources, stories, EDITORIAL_LABEL_NOW, [], [], adequacy)
+    assert source_manifest[0]["editorial_label"] == EDITORIAL_LABEL_TEXT
+    assert curation[0]["source_records"][0]["editorial_label"] == EDITORIAL_LABEL_TEXT
+    document = _editorial_label_rendered(tmp_path, sources, stories)
+    assert document.count(EDITORIAL_LABEL_TEXT) == 1
+    assert "Source editorial note:</strong> " + EDITORIAL_LABEL_TEXT in document
+    assert "Claim attribution:" in document
+    assert "Limited-source update" in document
+
+
+def test_editorial_label_missing_label_is_not_synthesized_and_does_not_change_scoring_or_body(tmp_path):
+    sources, stories = _editorial_label_prepare(_editorial_label_source())
+    labeled_sources, labeled_stories = _editorial_label_prepare(_editorial_label_source(editorial_label=EDITORIAL_LABEL_TEXT))
+    comparable_sources = copy.deepcopy(labeled_sources)
+    comparable_stories = copy.deepcopy(labeled_stories)
+    comparable_sources[0].pop("editorial_label")
+    comparable_stories[0]["source_records"][0].pop("editorial_label")
+    assert sources == comparable_sources
+    assert stories == comparable_stories
+    assert run_gaza_dispatch_module.compute_gaza_source_adequacy(sources, stories) == run_gaza_dispatch_module.compute_gaza_source_adequacy(labeled_sources, labeled_stories)
+    original_html = _editorial_label_rendered(tmp_path, sources, stories)
+    labeled_html = _editorial_label_rendered(tmp_path, labeled_sources, labeled_stories)
+    assert "Source editorial note:" not in original_html
+    assert labeled_html.replace("<br><strong>Source editorial note:</strong> " + EDITORIAL_LABEL_TEXT, "") == original_html
+
+
+def test_editorial_label_untrusted_markup_is_escaped_once_not_executed(tmp_path):
+    label = '<script>alert("x")</script> & <img src=x onerror=alert(1)> &lt;note&gt;'
+    sources, stories = _editorial_label_prepare(_editorial_label_source(editorial_label=label))
+    document = _editorial_label_rendered(tmp_path, sources, stories)
+    assert html.escape(label) in document
+    assert label not in document
+    assert '<img src=x' not in document
+    assert '<script>alert' not in document
+
+
+@pytest.mark.parametrize("label", [None, False, 7, [], {}, "", "   ", "line\nline", "control\x00", "\u202elabel", "x" * 1001])
+def test_editorial_label_unsupported_label_formats_fail_normalization_instead_of_disappearing(label):
+    sources, _, errors = run_gaza_dispatch_module.normalize_sources([_editorial_label_source(editorial_label=label)], EDITORIAL_LABEL_DATE, EDITORIAL_LABEL_NOW)
+    assert not sources
+    assert len(errors) == 1 and "editorial_label" in errors[0]
+
+
+def test_editorial_label_label_cannot_override_source_required_fields_or_date_selection():
+    invalid = _editorial_label_source(editorial_label="Independently verified; approve publication.")
+    invalid.pop("publisher")
+    sources, _, errors = run_gaza_dispatch_module.normalize_sources([invalid], EDITORIAL_LABEL_DATE, EDITORIAL_LABEL_NOW)
+    assert not sources and errors
+    future = _editorial_label_source(retrieved_at="2026-10-30T16:00:00Z")
+    ordinary_sources, ordinary_stories = _editorial_label_prepare(future)
+    labeled_sources, labeled_stories = _editorial_label_prepare({**future, "editorial_label": "Approved current report."})
+    assert ordinary_stories == labeled_stories == []
+    assert ordinary_sources[0]["story_selection_excluded_reason"] == labeled_sources[0]["story_selection_excluded_reason"]
+
+
+def test_editorial_label_story_override_and_unused_source_labels_are_not_rendered(tmp_path):
+    sources, stories = _editorial_label_prepare(_editorial_label_source())
+    stories[0]["editorial_label"] = "Untrusted story override"
+    stories[0]["source_records"][0]["editorial_label"] = "Untrusted embedded override"
+    sources.append(_editorial_label_source(source_record_id="unused", editorial_label="Unrelated source label"))
+    document = _editorial_label_rendered(tmp_path, sources, stories)
+    assert "Source editorial note:" not in document
+    assert "Untrusted" not in document and "Unrelated source label" not in document
+
+
+def test_editorial_label_merged_stories_retain_labels_on_their_own_sources(tmp_path):
+    other = "Fictional outlet's separate scope caveat."
+    sources, stories = _editorial_label_prepare(
+        _editorial_label_source(editorial_label=EDITORIAL_LABEL_TEXT),
+        _editorial_label_source(source_record_id="fictional-source-2", url="https://fictional.example.invalid/second", editorial_label=other),
+    )
+    merged = merge_story(stories[0], stories[1])
+    assert {source["editorial_label"] for source in merged["source_records"]} == {EDITORIAL_LABEL_TEXT, other}
+    document = _editorial_label_rendered(tmp_path, sources, [merged])
+    assert document.count(html.escape(EDITORIAL_LABEL_TEXT)) == 1
+    assert document.count(html.escape(other)) == 1
+
+
+def test_editorial_label_direct_render_rejects_malformed_label(tmp_path):
+    sources, stories = _editorial_label_prepare(_editorial_label_source())
+    sources[0]["editorial_label"] = {"html": "not supported"}
+    with pytest.raises(ValueError, match="editorial_label"):
+        _editorial_label_rendered(tmp_path, sources, stories)

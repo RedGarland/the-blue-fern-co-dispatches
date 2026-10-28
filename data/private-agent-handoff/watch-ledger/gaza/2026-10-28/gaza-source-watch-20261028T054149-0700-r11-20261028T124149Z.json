@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T054149-0700-r11-20261028T124149Z",
+  "scheduled_for": "2026-10-28T05:44:51-07:00",
+  "started_at": "2026-10-28T05:41:49-07:00",
+  "completed_at": "2026-10-28T05:43:09-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T04:45:21.909-07:00",
+    "end": "2026-10-28T05:43:09-07:00",
+    "basis": "Start is the independently fetched prior Gaza Source Watch heartbeat's completed_at. Detection refers to newly published/verified developments in this bounded observation interval, not necessarily event occurrence times."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza missed-signal recall; primary daily production collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T044317-0700-r11-20261028T114317Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-28/gaza-source-watch-20261028T044317-0700-r11-20261028T114317Z.json",
+      "completed_at": "2026-10-28T04:45:21.909-07:00",
+      "outcome": "findings",
+      "verified_by_repository_read": true,
+      "prior_finding_ids": [
+        "gaza-20261028-wafa-176408-al-tina-drone-strike",
+        "gaza-20261028-wafa-176408-al-laymun-father-daughter-injured"
+      ]
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest posted update is 27 Oct 2026 West Bank snapshot; latest Gaza-related situation report dated 22 Oct, posted 26 Oct. No new Gaza item dated in the observation interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; page summarizes Gaza health system and medical needs but shows no new in-window operational hospital, ambulance, evacuation, fuel or health-capacity change. Correct live WHO situation page located after two invalid alternate URL attempts."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "Timed out/inaccessible; repeatedly documented preexisting WHO regional source access limitation, partially mitigated via WHO Global."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:who.int Gaza October 28 2026 health hospitals medical evacuation update",
+      "site:ochaopt.org Gaza October 28 2026 humanitarian situation casualties aid access",
+      "Gaza October 28 2026 latest civilians killed injured strikes 12:00 GMT WAFA",
+      "Gaza October 28 2026 Rafah crossing aid trucks displaced hospital ambulance WHO",
+      "site:english.wafa.ps/Pages/Details/ \"28/October/2026\" Gaza killed injured hospital",
+      "site:aa.com.tr/en/middle-east/ Gaza \"28.10.2026\" Palestinians killed wounded",
+      "Gaza Oct 28 2026 Israel strikes aid access negotiations latest Reuters AP today",
+      "site:news.un.org/en/ Gaza \"28 October 2026\" water aid medical",
+      "site:unicef.org Gaza \"28 October 2026\" water children aid hospital",
+      "site:msf.org Gaza \"28 October 2026\" health attack fuel medical evacuation",
+      "Gaza October 28 2026 14:00 Jerusalem hospital civilian victims aid transport AFP",
+      "Gaza 28 October 2026 05:00 PDT crossing food water ceasefire hostage latest developments"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Most recent 28 Oct item at publisher-local 14:31 is demolition in Nablus (West Bank, out of scope). Most recent Gaza item is the 13:24 al-Qarara/al-Laymun article already recorded in the preceding heartbeat."
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east/",
+        "result": "Accessible. Latest Gaza casualty headline is the previously recorded report of 27 Oct incidents published 28 Oct. Subsequent visible headlines concern Israel elections, West Bank and other regional subjects."
+      }
+    ],
+    "exclusions": [
+      "WAFA 28 Oct at 13:24 publisher-local, documenting al-Qarara/al-Tina drone strike and al-Laymun father/daughter injuries, was already recorded as two findings in previous heartbeat; not repeated.",
+      "Anadolu report of two killed and five wounded refers to 27 Oct incidents already captured in an earlier watch; not repeated.",
+      "OCHA and WHO humanitarian statistics and prior reports predate observation interval; no in-window changed Gaza service or access status verified.",
+      "AP late-October overview concerning earlier Gaza casualties and Red Cross detainee lists was published before this watch window; no new in-window event verified.",
+      "West Bank-only raids, demolitions, detentions and Israeli election results excluded from Gaza watch. Older reporting, opinion, and unsupported claims excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO oPt information resources",
+        "error": "Direct endpoint timed out; previous runs also documented 502 and regional unavailability.",
+        "materiality": "Preexisting source limitation; WHO global and OCHA OPT available; does not indicate newly material watch-wide degradation."
+      },
+      {
+        "source": "UN News search",
+        "error": "Search blocked by robots.txt for news.un.org/en",
+        "materiality": "Source-specific restriction, alternative official humanitarian sources remain accessible."
+      },
+      {
+        "source": "WHO alternate guessed URLs",
+        "error": "Two alternate WHO situation URL paths returned 404 before correct authoritative WHO URL was fetched.",
+        "materiality": "Invalid endpoint paths corrected during this run, not a failure of WHO global coverage."
+      }
+    ],
+    "assessment": "No new, traceable, nonduplicate Gaza civilian-impact, humanitarian aid, water/food, health function, medical evacuation, crossing, displacement, ceasefire, detention, or military operation change verified during the specified window. Search return quality was noisy/stale; coverage is necessarily partial, and this is not proof no incidents occurred. Status DEGRADED reflects source-specific access limitations, not a newly material watch-wide outage.",
+    "action_scope": "Exactly one immutable private heartbeat JSON on ops/watch-ledger; no approvals, publication, schedule, automation state or production collector changes."
+  }
+}

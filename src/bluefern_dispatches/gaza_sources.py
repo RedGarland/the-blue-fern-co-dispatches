@@ -675,11 +675,10 @@ def filter_recent_duplicate_sources(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     seen_by_key: dict[tuple[str, str], dict[str, Any]] = {}
     checked_editions: set[str] = set()
-    for prior_date, manifest_path in _iter_prior_source_manifests(root, edition_date, lookback_days):
+    from .gaza_corrected_manifest_reader import prior_source_records
+    manifests = _iter_prior_source_manifests(root, edition_date, lookback_days)
+    for prior_date, payload in prior_source_records(root, manifests, edition_date):
         checked_editions.add(prior_date)
-        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if not isinstance(payload, list):
-            continue
         for prior in payload:
             if not isinstance(prior, dict):
                 continue

@@ -765,6 +765,8 @@ def _read_gaza_bluesky_artifact(path: Path, edition_date: str) -> tuple[Any, lis
 
 
 def _gaza_bluesky_context(project_root: Path, edition_date: str) -> dict[str, Any]:
+    from .gaza_corrected_manifest_reader import assert_non_site_action_allowed
+    assert_non_site_action_allowed(project_root, edition_date, "social")
     paths = _gaza_bluesky_artifact_paths(project_root, edition_date)
     payloads: list[tuple[Path, Any]] = []
     issues: list[str] = []
@@ -1867,6 +1869,14 @@ def maybe_post_gaza_dispatch_to_bluesky(
         "target_handle": None,
         "target_did": None,
     }
+    from .gaza_corrected_manifest_reader import assert_non_site_action_allowed, CorrectedManifestError
+    try:
+        assert_non_site_action_allowed(project_root or Path.cwd(), edition_date, "social")
+    except CorrectedManifestError as exc:
+        result["status"] = "blocked"
+        result["reason"] = "corrected_site_only_profile"
+        result["error_message"] = str(exc)
+        return result
     if not run_succeeded:
         result["reason"] = "run_failed"
         return result

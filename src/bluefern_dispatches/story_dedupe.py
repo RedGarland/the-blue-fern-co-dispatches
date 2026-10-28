@@ -777,6 +777,17 @@ def prior_memory_from_outputs(root: Path, dispatch_slug: str, edition_date: str)
         root / "bluefern-dispatches-pages" / dispatch_slug / "editions",
     ]
     seen_row_keys: set[tuple[str, str, str]] = set()
+    corrected_profile = None
+    if dispatch_slug == "gaza":
+        from .gaza_corrected_manifest_reader import corrected_profile_for_outputs
+        corrected_profile = corrected_profile_for_outputs(root, edition_date)
+        if corrected_profile is not None:
+            from .gaza_corrected_manifest_reader import read_corrected_curation
+            for story in read_corrected_curation(corrected_profile):
+                row = memory_row(dispatch_slug, "2026-10-25", story)
+                rows.append(row)
+                seen_row_keys.add((dispatch_slug, str(row.get("story_id")), "2026-10-25"))
+            checked.append("2026-10-25")
     for editions_root in edition_roots:
         if not editions_root.exists():
             continue
@@ -786,10 +797,17 @@ def prior_memory_from_outputs(root: Path, dispatch_slug: str, edition_date: str)
             if dispatch_slug == "cascadia" and not is_weekly_cascadia_edition(path, path.name):
                 continue
             curation_path = path / "curation_manifest.json"
+            if corrected_profile is not None and path.name == "2026-10-25":
+                continue
             sources_path = path / "sources_manifest.json"
             checked.append(path.name)
             if curation_path.exists():
-                for story in read_json_list(curation_path):
+                if dispatch_slug == "gaza":
+                    from .gaza_corrected_manifest_reader import read_memory_curation
+                    memory_stories = read_memory_curation(curation_path, dispatch_slug)
+                else:
+                    memory_stories = read_json_list(curation_path)
+                for story in memory_stories:
                     if story.get("included_in_public_summary") is False:
                         continue
                     row = memory_row(dispatch_slug, path.name, story)
@@ -800,6 +818,9 @@ def prior_memory_from_outputs(root: Path, dispatch_slug: str, edition_date: str)
                 continue
             if not sources_path.exists():
                 continue
+            if dispatch_slug == "gaza":
+                from .gaza_corrected_manifest_reader import reject_corrected_source_fallback
+                reject_corrected_source_fallback(sources_path)
             for source in read_json_list(sources_path):
                 row = memory_row_from_source(dispatch_slug, path.name, source)
                 key = (str(row.get("dispatch_slug")), str(row.get("story_id")), str(row.get("edition_date")))
@@ -912,7 +933,13 @@ def dedupe_public_stories(
     existing_memory = read_json_list(memory_path)
     output_memory, checked = prior_memory_from_outputs(root, dispatch_slug, edition_date)
     prior_rows_by_key: dict[tuple[str, str, str], dict[str, Any]] = {}
-    for row in existing_memory + output_memory:
+    corrected_dates = {row["edition_date"] for row in output_memory
+                       if row.get("latest_classification") == "historical_assessment_not_recomputed"}
+    # Original persisted memory is historical evidence, not active corrected
+    # claims. Overlay this edition without rewriting its archived records.
+    active_existing = [row for row in existing_memory
+                       if not (row.get("dispatch_slug") == dispatch_slug and row.get("edition_date") in corrected_dates)]
+    for row in active_existing + output_memory:
         if row.get("dispatch_slug") != dispatch_slug or str(row.get("edition_date") or "") >= edition_date:
             continue
         if dispatch_slug == "cascadia" and not is_sunday(str(row.get("edition_date") or "")):

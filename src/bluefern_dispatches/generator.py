@@ -3404,6 +3404,8 @@ def reconcile_gaza_public_editions(
     _reconciliation_assert_ordinary_path(site_root)
     if pages_repo is not None:
         _reconciliation_assert_ordinary_path(pages_repo)
+    from .gaza_corrected_manifest_reader import assert_generic_reconciliation_allowed
+    assert_generic_reconciliation_allowed(root, site_root, pages_repo)
     discovered: list[dict[str, str]] = []
     backfilled: list[dict[str, str]] = []
     skipped: list[dict[str, str]] = []

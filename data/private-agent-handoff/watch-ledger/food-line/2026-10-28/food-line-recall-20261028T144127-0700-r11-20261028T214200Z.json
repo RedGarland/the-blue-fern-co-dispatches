@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T144127-0700-r11-20261028T214200Z",
+  "scheduled_for": "2026-10-28T14:45:54-07:00",
+  "started_at": "2026-10-28T14:41:27-07:00",
+  "completed_at": "2026-10-28T14:42:13.652-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T13:50:37.535-07:00",
+    "end_at": "2026-10-28T14:42:13.652-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently read ops/watch-ledger heartbeat ended at 2026-10-28 13:50:37.535 PDT; included fresh index overlap but excluded older events and previously reviewed hits.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production Food Line national collector authoritative. No publication, approval, schedule modification, or task disablement.",
+    "All 12 targeted fast web searches returned results, apportioned three each across sole/last grocery loss; weather/fire/outage-canceled distributions; abrupt pantry/food-bank closure/reduction; and official SNAP/WIC/EBT benefit interruption. No search tool failure encountered.",
+    "No new verified, qualifying, nonduplicate U.S. food-access disruptions were identified during this bounded window; index latency and nonindexed provider notices remain limitations.",
+    "October 28 2026 Montana Cut Bank senior-center report describes an oven failing in July and a donation to restore service, not a new disruption (https://www.cutbankpioneerpress.com/story/2026/10/28/news/logan-health-cut-bank-donation-helps-restore-meal-services-at-parkview-center-in-cut-bank/5459.html).",
+    "October 28 2026 NPR/WOUb EBT-card-security rule proposal concerns fraud prevention, not a currently confirmed benefit payment or redemption interruption (https://woub.org/2026/10/28/trump-administration-pushing-ood-assistance-card-upgrade/).",
+    "Kauaʻi Hurricane Lowell recovery information shows scheduled food assistance/distributions, not verified canceled distribution events in this interval (https://kauainownews.com/2026/10/21/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/).",
+    "Santa Clarita Valley Food Pantry closure report is January 27, 2026, outside this window (https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102). Historic lone-grocer fire coverage and 2025 SNAP/WIC shutdown notices were similarly excluded.",
+    "Publication-date metadata and event dates were separately checked where exposed; no verified immediate official SNAP/WIC interruption surfaced.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" fire OR closes OR destroyed October 28 2026 town",
+        "\"last grocery store\" \"closed\" OR \"fire\" October 2026 town",
+        "\"sole grocery\" \"fire\" OR \"closure\" October 2026 rural",
+        "\"food distribution\" canceled storm flooding October 28 2026 food bank",
+        "\"food distribution\" suspended hurricane storm October 28 2026",
+        "\"food bank\" canceled distribution outage fire October 28 2026",
+        "\"food pantry\" closed suddenly October 28 2026",
+        "\"food bank\" \"closed\" \"power outage\" October 28 2026",
+        "\"food pantry\" reduced hours abruptly October 28 2026",
+        "SNAP EBT benefits system outage October 28 2026 state official",
+        "WIC offices closed services suspended October 28 2026 state agency",
+        "site:gov \"SNAP\" \"interruption\" \"October 28, 2026\""
+      ]
+    },
+    "Nominal hourly scheduled_for follows the configured :45:54 cadence; this automation execution began before its nominal tick at 14:41:27 PDT."
+  ]
+}

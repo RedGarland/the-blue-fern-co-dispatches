@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T064157-0700-r11-064157",
+  "scheduled_for": "2026-10-28T05:45:54-07:00",
+  "started_at": "2026-10-28T06:41:57-07:00",
+  "completed_at": "2026-10-28T06:43:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T04:49:00.478-07:00",
+    "end_at": "2026-10-28T06:43:43-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since last independently verified Food Line recall heartbeat; includes deliberate overlap if an intervening check exists. Newly surfaced reports published outside the interval were assessed for event date and prior handoff.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; authoritative nationwide Food Line production collection, publication, editorial approvals, social posting, schedule, and automation state were not changed.",
+    "Completed exactly 12 targeted web search operations with a two-day recency preference: four for sole/only/last/full-service grocery closure or fire; four for disaster/outage cancellation of emergency food distribution; two for abrupt pantry/food-bank closure or major service reduction; two for official SNAP/WIC/EBT access interruption.",
+    "No new, independently verified qualifying U.S. food-access disruption was found within the observed interval. All twelve targeted searches returned usable result sets, with no material retrieval failure. This is a bounded search result, not a proof of nationwide absence.",
+    "October 27 Hoodline Utah coverage concerns Community Action Services and Food Bank's Heber closure and Provo reduced pantry hours, but original KUTV and KSL reporting was published October 26 and this Utah disruption had already been handed off in earlier watches. Excluded as duplicate. https://kutv.com/news/local/utah-food-bank-cuts-staff-pantry-hours-as-funding-shortfall-threatens-2027-services and https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+    "The September 14 Spencer, New York sole grocery store fire, September El Paso food bank storm closure, and April Ruby's Pantry network closure were not new to this window; excluded as historical. https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/ and https://kfoxtv.com/news/local/el-paso-food-bank-damage-forces-early-closures-after-severe-storms and https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+    "Targeted SNAP/WIC results returned older October 2025 shutdown notices or generic funding guidance; no newly dated official October 28, 2026 statement confirming immediate benefit outage or interruption could be verified.",
+    "Previously noted Wymore, Nebraska last-grocery loss and South Philadelphia pantry fire were not reported again as fresh findings.",
+    "Local news and provider/agency indexing delays can hide short-lived disruptions; unindexed local notices and social-only statements remain outside guaranteed coverage."
+  ]
+}

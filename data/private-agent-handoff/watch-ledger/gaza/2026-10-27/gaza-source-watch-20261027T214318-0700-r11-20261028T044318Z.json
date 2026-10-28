@@ -1,0 +1,151 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T214318-0700-r11-20261028T044318Z",
+  "scheduled_for": "2026-10-27T21:44:51-07:00",
+  "started_at": "2026-10-27T21:43:18-07:00",
+  "completed_at": "2026-10-27T21:45:01.593-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T20:49:17.288-07:00",
+    "end": "2026-10-27T21:45:01.593-07:00",
+    "basis": "Immediately preceding verified watch heartbeat completed 27 October 2026 at 20:49:17.288 PDT. Newly surfaced reporting was checked through this watch. Local Gaza date at the end of the window was 28 October."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261028-anadolu-4103255-tuesday-attacks",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-2-palestinians-wound-5-in-gaza/4103255",
+      "title": "Israeli attacks kill 2 Palestinians, wound 5 in Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28",
+      "publication_time": null,
+      "event_date": "2026-10-27",
+      "event_time": null,
+      "location": "Jabalia refugee camp (northern Gaza); al-Mawasi near Rafah and Khan Younis (southern Gaza); Bureij refugee camp (central Gaza)",
+      "affected_population_or_system": "Palestinian residents including a fisherman and a child; two reported killed and five wounded in separate incidents",
+      "exact_supporting_passage": "Israeli attacks killed two Palestinians and wounded five others across the Gaza Strip on Tuesday",
+      "source_type": "Established newswire reporting attributed to medical and civil-defence sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery": "Targeted search 8 of 12 (Anadolu 28 October 2026), followed by direct inspection of the publisher article.",
+        "prior_watch_window_end": "2026-10-27T20:49:17.288-07:00",
+        "freshness_limit": "Article is dated 28 October in the publisher's time zone but has no clock timestamp exposed. Incident date is Tuesday 27 October, outside this watch's observation interval; the evidence qualifies as newly surfaced reporting, not a verified in-window occurrence.",
+        "duplicate_screen": "Prior heartbeat had no record of the two newly reported deaths (Mahmoud Samih al-Harsh in Jabalia and unidentified victim in al-Mawasi near Rafah), or the five wounded. The separately reported six-year-old girl's death is an established WAFA 27 October item and is not counted again.",
+        "attribution": "The report cites local medical sources, an Al-Awda Hospital source and civil defence; independent first-hand verification is not available in this bounded watch."
+      }
+    },
+    {
+      "finding_id": "gaza-20261028-anadolu-4103255-bseiso-prior-wounds",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-2-palestinians-wound-5-in-gaza/4103255",
+      "title": "Ahmed Yassin Bseiso dies from injuries sustained in an earlier Gaza City strike",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28",
+      "publication_time": null,
+      "event_date": "2026-10-27",
+      "event_time": null,
+      "location": "Gaza City; earlier strike on al-Thawra Street, central Gaza City",
+      "affected_population_or_system": "A Palestinian man who reportedly died of injuries from an earlier Israeli strike",
+      "exact_supporting_passage": "Ahmed Yassin Bseiso also died from injuries sustained days earlier in an Israeli strike on al-Thawra Street in central Gaza City.",
+      "source_type": "Established newswire citing medical sources",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery": "Same newly surfaced Anadolu 28 October article; separated from immediate 27 October casualty incidents to prevent conflating dates.",
+        "prior_watch_window_end": "2026-10-27T20:49:17.288-07:00",
+        "freshness_limit": "Reported in an article dated 28 October; death reported on Tuesday 27 October. Exact article and death times unavailable; not asserted to have occurred in the past hour.",
+        "duplicate_screen": "Previous heartbeat mentions a six-year-old girl dying of earlier wounds, not Bseiso. WAFA's separate 27 October report named Tihani Mohammad Saeed Shalalfeh; she is expressly excluded as already recorded.",
+        "attribution": "Anadolu attributed casualty reporting to medical sources."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall and private handoff only. Daily production collector/publisher remains authoritative; these findings do not confer editorial approval.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T204822-0700-r11-20261028T034822Z.json",
+      "completed_at": "2026-10-27T20:49:17.288-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "readback_verified": true
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Index accessible; newest 27 October item covers West Bank, newest Gaza situation report dated 22 October and published 26 October. No fresh Gaza report within this interval."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, but no dated in-window Gaza hospital, evacuation or health operations update."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Direct regional page inaccessible, as previously documented."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza \"28/October/2026\" injured killed Wednesday morning",
+      "site:reuters.com Gaza October 28 2026 ceasefire strikes deaths civilians",
+      "site:apnews.com Gaza October 28 2026 airstrikes ceasefire Palestinian killed",
+      "site:aljazeera.com/news/2026/10/28 Gaza Israel attacks civilians ceasefire",
+      "site:un.org OR site:palestine.un.org Gaza October 28 2026 aid humanitarian crossings",
+      "site:who.int Gaza October 28 2026 hospital health evacuation medical",
+      "Gaza Wednesday morning 28 October 2026 killed wounded shelling WAFA 28 10 2026",
+      "site:aa.com.tr/en/middle-east Gaza 28 October 2026 Israeli fire killed wounded",
+      "Gaza October 28 2026 ceasefire negotiations hostage border crossing Rafah Israel Palestinian",
+      "site:wfp.org OR site:unicef.org Gaza \"27 October 2026\" OR \"28 October 2026\" water food displacement",
+      "Palestine Red Crescent Gaza October 28 2026 ambulance paramedics hospital injured",
+      "Gaza October 28 2026 latest casualties humanitarian aid hospitals overnight news"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest listed news dated 27 October. Girl Tihani Shalalfeh's previously reported death confirmed as duplicate, excluded."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-2-palestinians-wound-5-in-gaza/4103255",
+        "result": "28 October report with newly surfaced details of two deaths and five wounds on 27 October and follow-up death of Ahmed Bseiso. Publisher does not expose exact publication hour."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "No separate in-window Gaza casualty or humanitarian operations update on index."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Homepage request timed out; OCHA and WHO global alternatives remained accessible."
+      }
+    ],
+    "exclusions": [
+      "WAFA 27 October death of six-year-old Tihani Shalalfeh is a documented previously seen item; excluded from new findings.",
+      "Older articles from 2023–2025 and recent pre-window Reuters/AP/WAFA items were excluded.",
+      "Election coverage, West Bank incidents and opinion articles were excluded.",
+      "The new Anadolu article describes Tuesday 27 October events; none is represented as having occurred during the current hour."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO oPt",
+        "error": "Regional endpoint inaccessible",
+        "materiality": "Persistent previously documented gap; WHO global portal was checked as partial substitute."
+      },
+      {
+        "source": "United Nations in Palestine homepage",
+        "error": "Timeout",
+        "materiality": "OCHA OPT official updates index remained accessible, limiting impact."
+      }
+    ],
+    "assessment": "New traceable 28 October reporting of Gaza casualties discovered after the previous heartbeat. Exact publisher timestamp unavailable, so chronology is qualified: report newly surfaced in the watch, but incident dates are 27 October and are not verified as past-hour occurrences. WHO EMRO remains inaccessible; retain DEGRADED status while preserving findings.",
+    "action_scope": "Exactly one private watch heartbeat on ops/watch-ledger. No changes to production, publication, approvals, public content, social posts, schedule or automation state."
+  }
+}

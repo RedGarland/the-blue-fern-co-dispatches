@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T034931-0700-r11-034931",
+  "scheduled_for": "2026-10-28T02:45:54-07:00",
+  "started_at": "2026-10-28T03:49:31-07:00",
+  "completed_at": "2026-10-28T03:50:25.308-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T02:44:36.034-07:00",
+    "end_at": "2026-10-28T03:50:25.308-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since previous independently verified Food Line heartbeat, with short lookback for indexing lag; older reporting not counted as new.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; authoritative national production collector unchanged. No approvals, publication, social posting, schedule modifications, or task disabling.",
+    "All 12 targeted web searches returned usable responses: four targeting only/last/full-service grocery loss or fire; four targeting storm, flood, fire or outage-related emergency distribution cancellations; two targeting abrupt pantry/food-bank closure or reduction; two targeting official SNAP/WIC/EBT immediate access interruptions.",
+    "No verified new qualifying U.S. food-access disruption identified in this bounded hourly interval. Search indexing and local primary-source coverage are not exhaustive.",
+    "Excluded historical Ovid, New York only-grocery fire (January 2025), Prodisee Pantry Stockton distribution cancellation (October 10, 2026; reported October 7), and August 2026 Yuba-Sutter distribution cancellation as outside window; neither October nor August items were new to this check. https://cnycentral.com/news/local/ghost-town-rebuilding-vital-parts-of-ovid-continues-year-after-massive-fire https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/ https://www.kcra.com/article/yuba-sutter-food-bank-distribution-canceled-at-wheatland-union-high-school-after-bomb-threat/73467198",
+    "Food Bank of Lincoln page describes a general inclement-weather cancellation policy but no specific new cancellation: excluded. https://www.lincolnfoodbank.org/get-food/food-distribution-schedule/",
+    "Earlier Kauaʻi hurricane-recovery notices and routine emergency food distribution schedules did not establish a new distribution cancellation; excluded.",
+    "Official SNAP/WIC interruption searches surfaced no fresh verified notice showing immediate benefit-access interruption; older warnings and unrelated agency/document search hits excluded. Previously handed-off Wymore, Philadelphia and Utah incidents not duplicated.",
+    "Search and candidate evaluation completed without a material technical failure; status SUCCESS."
+  ]
+}

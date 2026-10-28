@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T004148-0700-r11-004148",
+  "scheduled_for": "2026-10-27T23:45:54-07:00",
+  "started_at": "2026-10-28T00:41:48-07:00",
+  "completed_at": "2026-10-28T00:43:35-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T22:47:45.664-07:00",
+    "end_at": "2026-10-28T00:43:35-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative overlap beginning at the latest independently read-back verified Food Line supplementary heartbeat; searched recently indexed October 27-28 reports and direct sources to account for publication/indexing delays.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; primary nationwide production collection remains authoritative. No editorial approval, publication, social post, schedule change, or task disabling.",
+    "Exactly 12 targeted web search operations were executed across the four high-value audit miss classes: sole/last/full-service grocery closures or losses; storm/flood/fire/outage-related emergency distribution cancellations; abrupt pantry/food-bank closures or major service reductions; and new official SNAP/WIC/food-assistance interruptions with immediate access impact.",
+    "No newly verified qualifying U.S. access disruption was identified in the bounded observation window. This is a finding about observed evidence, not proof of nationwide absence; late-indexed local notices remain possible.",
+    "The previously handed-off October 27 Wymore, Nebraska last-grocery report and October 27 South Philadelphia Community Fridge Point Breeze pantry fire were found again and excluded as duplicates.",
+    "October 27 local coverage of the Lulu M. Ross Elementary school fire in Milford, Delaware reported a Food Bank of Delaware school meal pickup response, not a canceled emergency distribution; incident occurred October 25 and reporting was outside this interval, so excluded.",
+    "An October 28 report about Catholic Charities Diocese of Cleveland replacing holiday home-delivery meals with site meals and pantry distributions says total services are expected to be maintained or expanded, not a verified abrupt overall service reduction; excluded.",
+    "Some search results recycled October 2025 SNAP-funding warnings. An October 27, 2026 third-party guide correction disavowed its own earlier October 2026 shutdown claims; there was no new substantiated official SNAP/WIC issuance or benefits interruption.",
+    "Historical grocery and pantry fires from September 2026 and earlier, routine programs, donation coverage, and unrelated commerce closures were excluded.",
+    "All 12 searches returned usable result sets and direct follow-up reads succeeded. Search-index precision is limited but no materially failed search/source request was observed.",
+    "With the latest directly verified prior ledger ending 2026-10-27T22:47:45.664-07:00, the search covers through this observation. A further intervening heartbeat was not independently established; overlap is intentional."
+  ]
+}

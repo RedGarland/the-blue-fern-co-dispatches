@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T234406-0700-r11-234406",
+  "scheduled_for": "2026-10-27T23:45:54-07:00",
+  "started_at": "2026-10-27T23:44:06-07:00",
+  "completed_at": "2026-10-27T23:45:00.040-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T22:47:45.664-07:00",
+    "end_at": "2026-10-27T23:45:00.040-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified supplementary Food Line watch completion through current observation, with overlapping October 26-27 local/official-source searches for indexing lag.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary missed-signal recall only. Primary nationwide production collection and editorial review remain authoritative.",
+    "Executed 12 targeted web searches, spanning only/last/full-service grocery store losses (4), disaster/outage-related emergency distribution cancellations (3), abrupt pantry or food-bank service losses (3), and official SNAP/WIC interruptions (2).",
+    "No newly verified qualifying food-access disruption was identified in the hourly observation window. Search results were sparse for the narrow date and incident criteria; nationwide absence cannot be inferred.",
+    "October 27 reporting about Utah/Provo food-bank cuts and planned Heber City pantry closure is already reflected in prior watch coverage; excluded as duplicate, not a new signal.",
+    "Winn-Dixie regional store-closure report published September 27, 2026 summarizes earlier changes and does not establish a newly lost sole/full-service store in this hour; excluded as historical/non-new.",
+    "Prior handoffs for Wymore, Nebraska last grocery store and South Philadelphia community pantry fire remain excluded as duplicates.",
+    "Search operations returned usable results; no material retrieval failure observed in this run.",
+    "No approval, publication, social posting, change to production collector, schedule change, or task disabling occurred."
+  ]
+}

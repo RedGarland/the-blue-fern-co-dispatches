@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T134955-0700-r11-20261028T205037Z",
+  "scheduled_for": "2026-10-28T13:45:54-07:00",
+  "started_at": "2026-10-28T13:49:55-07:00",
+  "completed_at": "2026-10-28T13:50:37.535-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T12:46:04-07:00",
+    "end_at": "2026-10-28T13:50:37.535-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly Food Line Source Watch heartbeat completed 2026-10-28 12:46:04 PDT, independently read from ops/watch-ledger before this run's write. Recent-index overlap permitted for late-posting notices; historical incidents and duplicates excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; authoritative production nationwide collection unchanged. No editorial approval, publication, social posting, scheduling change, or task disablement.",
+    "All 12 targeted fast web searches returned results without a tool failure. Searches apportioned 3 each to sole/last grocery loss, storm/damage-related distribution cancellation, abrupt pantry/food bank closure/reduction, and official SNAP/WIC/EBT interruption.",
+    "No newly verified, qualifying, nonduplicate U.S. food-access disruption surfaced within 2026-10-28 12:46:04 PDT through the observation end; negative findings are bounded by search indexing and cannot establish that no events occurred.",
+    "Historical only-grocery loss: Spencer, New York Shur Fine fire published 2026-09-14, outside this watch window (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/).",
+    "September El Paso storm damage caused closure of El Pasoans Fighting Hunger distribution, but coverage dates to September 2026 and predates this watch window (https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms).",
+    "Ruby's Pantry network abrupt closure published April 1, 2026 is a historical event, not a new October 28 closure (https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites).",
+    "October 27 article on rising demand at Ashe Food Pantry describes service pressure, not a verified abrupt closure/access reduction (https://www.ashepostandtimes.com/news/a-perfect-storm-requests-for-help-rise-nearly-30-at-ashe-food-pantry/article_f9a99fa1-e650-45dc-8896-3bb8881ee0e3.html).",
+    "SNAP/WIC/EBT targeted searches did not surface a direct official October 28 notice of an interruption with immediate access consequences. Search-result dates and incident dates were screened separately; older policy changes and shutdown reports excluded.",
+    "No apparent web search or GitHub read error; search-index delay and provider-only notices not indexed by search remain limitations.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 28 2026 town US",
+        "\"sole grocery store\" fire closes October 2026",
+        "\"last grocery store\" closed storm October 28 2026",
+        "\"food distribution\" canceled storm October 28 2026 food bank",
+        "\"food distribution\" suspended flooding October 28 2026",
+        "\"food pantry\" closed power outage storm October 28 2026",
+        "\"food bank\" temporarily closed fire October 28 2026",
+        "\"food pantry\" abruptly closes October 28 2026",
+        "\"food bank\" suspends services October 28 2026",
+        "\"SNAP benefits\" interruption October 28 2026 state agency",
+        "\"WIC\" services suspended October 28 2026 state",
+        "\"EBT\" outage October 28 2026 state benefits"
+      ]
+    }
+  ]
+}

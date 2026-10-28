@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T124527-0700-r11-20261028T194527Z",
+  "scheduled_for": "2026-10-28T12:45:54-07:00",
+  "started_at": "2026-10-28T12:45:27-07:00",
+  "completed_at": "2026-10-28T12:46:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T11:49:02.485-07:00",
+    "end_at": "2026-10-28T12:46:04-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Latest prior Food Line Source Watch heartbeat on ops/watch-ledger (2026-10-28 11:49:02.485 PDT) was read before searching; searches include a limited recent-indexing overlap, and old incidents are excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary, bounded recall for four high-value miss classes; authoritative nationwide production collection unchanged. No approval, editorial review decision, publication, social posting, schedule change, or task disabling.",
+    "All 12 targeted web searches executed: 3 sole/only/last community grocery fire or closure; 3 emergency distribution cancellation, storm/outage, or food-pantry interruption; 3 abrupt food-pantry/food-bank shutdown or access reduction; 3 state/official SNAP/WIC/EBT interruption searches.",
+    "No newly verified qualifying, nonduplicate U.S. food-access disruption since the prior 11:49:02.485 PDT completed watch was found. Negative result is scoped to the targeted web searches and is not proof that no incidents occurred.",
+    "Search result for Spencer, New York only-grocery fire was published 2026-09-14, and is historical (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/).",
+    "October 27 Kauaʻi hurricane-recovery report confirms emergency food distributions remain scheduled, not canceled (https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/).",
+    "Allegan County Food Pantry closure (reported September 28) and Kenosha County Food Bank planned end-of-year closure (reported early October) predate this hourly window; San José Lighthouse Food Rescue October 10 zoning notice is a prospective risk, not a newly observed October 28 closure (https://www.wmuk.org/wmuk-news/2026-09-28/after-35-years-of-service-the-allegan-county-food-pantry-is-shutting-its-doors-friday ; https://www.tmj4.com/news/local-news/in-your-community/kenosha-county/people-need-assistance-kenosha-pantry-reacts-as-county-food-bank-prepares-to-close ; https://localnewsmatters.org/2026/10/10/san-jose-food-pantry-faces-closure-zoning-violations/).",
+    "SNAP/WIC queries largely returned October 2025 federal shutdown material and earlier 2026 program eligibility changes, not October 28 2026 official interruption notices; no claims were promoted from these older sources.",
+    "All searches completed; no observed tool failures. Search-index freshness, local social-only provider notices, and small-community reporting delays remain known limitations.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" fire closed \"October 28, 2026\"",
+        "\"last grocery store\" closing town \"October 28\" 2026",
+        "\"sole grocery store\" burned down October 2026 rural",
+        "\"food distribution\" cancelled storm flooding October 28 2026",
+        "\"food bank\" \"distribution canceled\" storm \"October 28\" 2026",
+        "\"food pantry\" \"closed\" \"power outage\" October 28 2026",
+        "\"food pantry\" \"shutting down\" \"October 28, 2026\"",
+        "\"food bank\" suspended services \"October 28\" 2026 USA",
+        "\"food pantry\" closed indefinitely October 28 2026 local news",
+        "site:gov SNAP EBT benefits outage delayed October 28 2026 emergency notice",
+        "site:gov \"WIC\" \"closed\" \"October 28, 2026\"",
+        "\"SNAP\" \"October 28, 2026\" \"interrupted\" \"benefits\" state"
+      ]
+    }
+  ]
+}

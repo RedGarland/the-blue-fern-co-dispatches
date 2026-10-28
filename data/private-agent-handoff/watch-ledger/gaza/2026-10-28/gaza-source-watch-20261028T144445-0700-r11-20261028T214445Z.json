@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T144445-0700-r11-20261028T214445Z",
+  "scheduled_for": "2026-10-28T14:44:51-07:00",
+  "started_at": "2026-10-28T14:44:45-07:00",
+  "completed_at": "2026-10-28T14:46:04.993-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T13:42:28-07:00",
+    "end": "2026-10-28T14:46:04.993-07:00",
+    "basis": "Since prior verified Gaza watch heartbeat completed_at; detection and publication time may differ from event time. Compared against prior WAFA/Anadolu and Al Jazeera findings; no duplicate casualty counts advanced."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production collector/publisher is authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T134042-0700-r11-20261028T204042Z",
+      "completed_at": "2026-10-28T13:42:28-07:00",
+      "status": "DEGRADED",
+      "outcome": "findings"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest homepage listing 27 Oct West Bank snapshot; most recent situation report posted 26 Oct (covers 22 Oct). No new in-window Gaza update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "Timeout, recurring regional-site limitation."
+      },
+      {
+        "publisher": "WHO global emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated in-window Gaza medical evacuation, hospital or health service report; listed regional updates old."
+      }
+    ],
+    "initial_primary_searches": [
+      "site:ochaopt.org Gaza October 28 2026 humanitarian situation update casualties aid crossings healthcare",
+      "site:who.int Gaza 28 October 2026 health hospital medical evacuation emergency"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"28/October/2026\" Gaza casualties 22:00",
+      "site:english.wafa.ps October 28 2026 Gaza killed wounded shelling afternoon evening",
+      "site:aa.com.tr/en/middle-east Gaza October 28 2026 21:00 GMT ceasefire strikes injured",
+      "site:reuters.com/world/middle-east/ Gaza October 28 2026 Israel strikes ceasefire humanitarian",
+      "site:apnews.com/article/ Gaza October 28 2026 civilian casualties aid October",
+      "site:aljazeera.com/news/liveblog/2026/10/28 Gaza Palestinian killed wounded latest",
+      "site:un.org OR site:news.un.org Gaza October 28 2026 aid medical evacuation crossing humanitarian",
+      "site:unicef.org Gaza October 28 2026 water sanitation children displacement",
+      "site:wfp.org Gaza October 28 2026 food distribution supplies trucks humanitarian",
+      "site:msf.org OR site:icrc.org Gaza October 28 2026 hospitals ambulances patient evacuations",
+      "Gaza October 28 2026 Kerem Shalom Rafah crossing fuel medical evac aid latest October 28 evening",
+      "Gaza October 28 2026 talks ceasefire hostage detention Israeli operation documented civilians update 21:00 UTC"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible, latest listed 28 Oct 11:16 PM Jerusalem local (13:16 PDT); only Gaza items in listing at 16:23 and 13:24 Jerusalem, logged earlier."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/mideast-iran-saudi-yemen-israel-palestinians-october-282026-c032db4b09725fea0f6320eec49de5d4",
+        "result": "Accessible October 28 live report: Nasser Hospital attributed 3 dead/15 injured in Rafah and other southern casualties; appears to overlap previously logged WAFA and Anadolu reports. No distinctly new incident or nonduplicative toll verified."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/israel-election-gaza-khan-younis-netanyahu-eisenkot-bc43883046b3c34f2878263a9de97ddb",
+        "result": "Accessible election-focused report, provides background displacement and continuing strikes without a distinct newly verifiable incident."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible. Earlier Gaza rainwater drainage capacity feature already logged; newer live teasers focused on Israel election, Yemen, Lebanon and Iran; no distinct new Gaza event."
+      },
+      {
+        "publisher": "Reuters Israel and Hamas",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Accessible; recent topical articles on election and West Bank, no new Gaza-specific report meeting criteria."
+      },
+      {
+        "publisher": "UNICEF and WFP",
+        "url": "https://www.unicef.org/appeals/state-of-palestine",
+        "result": "Search results returned older humanitarian assessments and ongoing crisis material, no new verified operational change."
+      }
+    ],
+    "exclusions": [
+      "Oct 28 WAFA Rafah al-Mawasi, Nuseirat, al-Bayouk and al-Qarara casualties already in earlier watch logs.",
+      "Anadolu Oct 28 casualty aggregation five killed and 32 injured already logged; AP's overlapping southern Gaza figures not added.",
+      "Al Jazeera eastern Gaza City seven injured update and Gaza City drainage operating at 20% were reported in prior 13:42 heartbeat.",
+      "Reuters/AP Israel election background and West Bank-only developments, plus Yemen/Lebanon/Iran items; unrelated to qualifying Gaza incident.",
+      "Older OCHA, WHO, UNICEF, WFP, MSF, ICRC material and recycling without a new material change."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT resource page",
+        "failure": "Timeout",
+        "materiality": "Persistent source-specific failure already observed in earlier runs; WHO global page accessible."
+      },
+      {
+        "source": "UN News",
+        "failure": "robots.txt blocked in search result",
+        "materiality": "Persistent source-specific access limitation; OCHA and other UN sources accessible."
+      },
+      {
+        "source": "WHO alternate global emergency path",
+        "failure": "404 for verbose path; correct /conflict-in-Israel-and-oPt path accessible",
+        "materiality": "Incorrect/outdated URL, fallback successful."
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent WHO regional/UN News access restrictions; substantial alternative authoritative and established-news coverage completed, with no new material watch-wide regression.",
+    "notification_assessment": "No qualifying nonduplicate new development and no newly material watch-wide failure; suppress user notification.",
+    "safeguards": "Exactly one private heartbeat requested on ops/watch-ledger. No publication, content approval, scheduling, production or automation changes."
+  }
+}

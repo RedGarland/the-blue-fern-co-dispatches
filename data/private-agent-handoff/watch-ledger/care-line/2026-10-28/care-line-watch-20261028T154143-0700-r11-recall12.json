@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T154143-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T15:45:22-07:00",
+  "started_at": "2026-10-28T15:41:43-07:00",
+  "completed_at": "2026-10-28T15:42:39.761-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T14:44:46.781-07:00",
+    "end": "2026-10-28T15:42:39.761-07:00",
+    "basis": "Since verified preceding Care Line Watch heartbeat; same-day newly indexed material reviewed for late-discovered access changes, excluding previously recorded developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for U.S. and territories. Production national collection remains authoritative; no editorial approval or publication.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T144332-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official canonical CMS Public Notices accessed first and read directly. Latest entries remain three home-health termination notices dated October 23, 2026 (CA and OH); no subsequent CMS notices listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes suspends services October 28 2026 announced today",
+      "rural hospital closure emergency room suspended October 28 2026 local news",
+      "maternity labor delivery services end hospital October 28 2026 announced",
+      "behavioral health psychiatric hospital inpatient program closure October 28 2026",
+      "dialysis clinic closing patients October 28 2026",
+      "oncology cancer treatment center closing suspension October 28 2026",
+      "primary care clinic closing patients October 28 2026",
+      "ambulance service EMS suspension shutdown October 28 2026",
+      "air medical helicopter base closure suspension October 28 2026",
+      "hospital emergency maternity services reopened restored October 28 2026",
+      "Puerto Rico Guam US Virgin Islands hospital dialysis clinic emergency service closure October 28 2026",
+      "site:gov 2026 \"October 28\" \"hospital\" \"closure\" \"services\" state department health"
+    ],
+    "searched_classes": [
+      "hospital, emergency-department, maternity and behavioral-health closure/suspension",
+      "rural or other emergency-service loss",
+      "dialysis, oncology and primary-care service change",
+      "ground and air ambulance base/service suspension",
+      "CMS provider termination, rescission, CLIA limitation/suspension",
+      "concrete restoration or reopening of previously lost essential services",
+      "U.S. territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "Centers for Medicare & Medicaid Services",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "no_new_notices",
+        "detail": "Newest notice 2026-10-23; none new since 2026-10-28 14:44 PDT."
+      },
+      {
+        "publisher": "UNM Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate_or_earlier_update",
+        "detail": "Official October 28 12:39 p.m. update confirms operations fully restored. Earlier restoration recorded in prior watches, with 12:39 PDT update preceding observation window; no further access consequence."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_prior_announcement",
+        "detail": "October 28 rally report on Roseland maternity closure set for weekend; suspension was announced earlier in October. No newly effective or announced change this window."
+      },
+      {
+        "publisher": "Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_duplicate",
+        "detail": "Sanford Luverne future delivery cessation was captured pending_review in October 28 11:50 a.m. watch heartbeat."
+      },
+      {
+        "publisher": "Tohono O'odham Nation",
+        "url": "https://www.tonation-nsn.gov/public-service-announcements/",
+        "disposition": "excluded_routine_calendar_closure",
+        "detail": "Pre-announced one-day ambulatory closures on November 2 and 11 (holidays), not an abrupt essential service suspension or restoration with new consequences in this window."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "12 targeted web searches plus official CMS listing are a bounded recall, not an exhaustive national or territorial survey. Search indexing may lag new local releases.",
+    "controls": "No changes to production collector, approvals, publication, scheduling or task state. One heartbeat file created on ops/watch-ledger."
+  }
+}

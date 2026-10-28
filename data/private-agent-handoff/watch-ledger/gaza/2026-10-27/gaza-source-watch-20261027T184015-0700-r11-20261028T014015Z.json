@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T184015-0700-r11-20261028T014015Z",
+  "scheduled_for": "2026-10-27T18:44:51-07:00",
+  "started_at": "2026-10-27T18:40:15-07:00",
+  "completed_at": "2026-10-27T18:41:34.839-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T17:43:42.647-07:00",
+    "end": "2026-10-27T18:41:34.839-07:00",
+    "basis": "From completed_at of the most recent verified Gaza watch heartbeat on ops/watch-ledger to this observation; October 28 Gaza local dates were reconciled against October 27 Pacific local dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall; primary daily collection/publication remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T174221-0700-r11-20261028T004221Z.json",
+      "completed_at": "2026-10-27T17:43:42.647-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Read on GitHub branch ops/watch-ledger before search."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest 27 October index item is September West Bank snapshot. Latest Gaza-relevant situation report covers 22 October and was issued 26 October; no new in-window Gaza-specific OCHA report."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Latest news and regional news on overview have no Gaza healthcare operational update within the hourly window."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Inaccessible through retrieval as in previous hourly watches; WHO global portal used as partial alternative."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza Oct 28 2026 early Wednesday 04:00 strikes civilian killed injured 28 October",
+      "site:english.wafa.ps Gaza \"28/October/2026\" killed injured overnight",
+      "site:reuters.com/world/middle-east/ Gaza October 27 2026 evening ceasefire attack killed",
+      "site:apnews.com Gaza October 27 2026 late Tuesday civilians ceasefire",
+      "site:aljazeera.com/news/2026/10/28 Gaza ceasefire airstrikes casualties",
+      "site:ochaopt.org \"28 October 2026\" Gaza humanitarian access",
+      "Gaza Rafah crossing aid trucks fuel humanitarian 28 October 2026 UN OCHA",
+      "site:who.int Gaza medical evacuation hospital 27 October 2026 28 October 2026",
+      "site:unicef.org Gaza water hospital 27 October 2026 28 October 2026",
+      "site:news.un.org Gaza October 27 2026 ceasefire humanitarian aid",
+      "site:palestine.un.org/en Gaza 28 October 2026 shooting shelters health",
+      "site:anadoluagency.com \"Oct. 28, 2026\" Gaza ceasefire killed wounded aid"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest displayed stories through 23:07 October 27 Palestinian local time concern Israeli elections or West Bank; none are new in-window Gaza casualty or access developments. Previously reported October 27 child death already logged."
+      },
+      {
+        "publisher": "UN in Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Latest October 27 article centers on West Bank Hebron, citing already documented Gaza yellow-line shootings, UN facilities/convoy incidents and Shuja'iyyeh tent arson. No new qualifying in-window event."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza film academy feature and Israeli elections/West Bank items do not establish a new Gaza civilian-impact or humanitarian-access event in the watch window."
+      }
+    ],
+    "exclusions": [
+      "October 26 OCHA/UN reporting on Gaza yellow line, displacement-tent fires and shootings was already covered by previous watches.",
+      "October 27 WAFA report of death of Tihani Mohammad Saeed Shalalfeh already captured by October 27 03:45 watch.",
+      "Reuters October 26 Gaza investigation/casualty summaries, AP historical ceasefire stories and search matches from 2025 or earlier 2026 predate target window.",
+      "UNICEF fundraising/general-impact narratives were not newly confirmed access/service events.",
+      "West Bank and Israeli election developments are outside Gaza watch remit."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Direct retrieval inaccessible",
+        "materiality": "Persistent previously reported restriction, not newly material; WHO global and OCHA accessible."
+      },
+      {
+        "source": "UN News search",
+        "url": "https://news.un.org",
+        "error": "Robots exclusion during targeted search",
+        "materiality": "Other UN official sources were accessible; recall not exhaustive."
+      },
+      {
+        "source": "Search freshness",
+        "url": null,
+        "error": "Some target-date searches returned earlier-month or prior-year results.",
+        "materiality": "Excluded through date/source review; no false positives promoted."
+      }
+    ],
+    "assessment": "Twelve targeted searches plus official and publisher direct checks found no verified, nonduplicate Gaza development published or newly confirmed after prior heartbeat. Zero findings does not establish zero events. DEGRADED is due to persistent WHO regional restriction and UN News search robots/access limits; no newly material failure observed.",
+    "action_scope": "One GitHub heartbeat write only. No approval, publication, social posting, production content, schedule or automation state changes."
+  }
+}

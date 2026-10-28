@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T115007-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T11:45:22-07:00",
+  "started_at": "2026-10-28T11:50:07-07:00",
+  "completed_at": "2026-10-28T11:51:25-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T10:45:37-07:00",
+    "end": "2026-10-28T11:51:25-07:00",
+    "basis": "Previous verified watch heartbeat completion to this observation. The newly discovered same-day confirmed Luverne closure notice was published earlier in the morning and is explicitly flagged as a retrospective recall candidate, not misrepresented as first announced within the hourly interval."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-mn-sanford-luverne-birthing-closure-20261028",
+      "canonical_source_url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+      "title": "Minnesota loses another birth center, this time in Luverne",
+      "publisher": "The Minnesota Star Tribune",
+      "exact_supporting_passage": "Sanford announced the closure Wednesday, but will continue scheduling births in Luverne through April.",
+      "source_published_date": "2026-10-28",
+      "state": "MN",
+      "city": "Luverne",
+      "county": "Rock",
+      "territory": null,
+      "event_type": "confirmed_future_maternity_unit_closure",
+      "service_line": "hospital_obstetrics_labor_and_delivery",
+      "access_consequences": "Sanford Luverne Medical Center confirms that it will stop scheduling deliveries after April 2027. Patients needing hospital childbirth services will have to travel approximately 30 miles to Sioux Falls, South Dakota, or Worthington, Minnesota; prenatal and postpartum care will remain in Luverne. Exact last delivery date not provided.",
+      "affected_population": "Expectant parents relying on local hospital childbirth services in Luverne and surrounding southwest Minnesota communities.",
+      "effective_date": null,
+      "announcement_date": "2026-10-28",
+      "confidence": "high",
+      "source_role": "strong_local_reporting_with_health_system_statements",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss recall; production Care Line national collector is authoritative. This record is not an approval or a publication.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T104401-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS listing checked before topical searches; most recent provider terminations dated October 23. No new CMS termination, rescission, or CLIA notice."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing suspending services October 28 2026 United States",
+      "labor delivery maternity unit closure suspension October 28 2026 hospital",
+      "inpatient psychiatric behavioral health facility services closing October 28 2026",
+      "dialysis center treatments suspended closure October 28 2026",
+      "cancer oncology treatment clinic closing services October 28 2026",
+      "primary care clinic shutting down patients October 28 2026",
+      "rural hospital emergency room service loss October 28 2026",
+      "ambulance service suspended operations October 28 2026",
+      "air medical helicopter ambulance base closing October 28 2026",
+      "hospital emergency department maternity reopened resumed services October 28 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana healthcare hospital emergency service closure October 28 2026",
+      "hospital service temporary suspension patients transferred today October 28 2026"
+    ],
+    "search_recency_days": 2,
+    "searched_classes": [
+      "hospital and specialty-service closure/suspension",
+      "emergency and rural service loss",
+      "ambulance/air-medical/base interruption",
+      "official CMS terminations, rescissions, CLIA limitations or suspensions",
+      "concrete essential-service reopening/restoration",
+      "U.S. states and territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "CMS",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "no_new_notices",
+        "detail": "Latest posted notices remain October 23, 2026."
+      },
+      {
+        "publisher": "The Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "included_new_to_watch_retrospective_same_day_recall_pending_review",
+        "detail": "October 28 at 09:00 Central (07:00 Pacific) publication predates this observation interval, but the firm service closure was absent from the immediately prior verified watch heartbeat. Treat as newly recovered high-value miss, not as a new 10:45-11:51 announcement. Effective closure after April 2027; exact date unknown. Production dedup not independently checked."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_previously_announced",
+        "detail": "October 28 rally update repeats labor-and-delivery closure announced earlier in October; already documented in the preceding heartbeat, no new access change."
+      },
+      {
+        "publisher": "WDTV",
+        "url": "https://www.wdtv.com/2026/10/28/preston-county-ambulance-service-pauses-operations-amid-insurance-switch/",
+        "disposition": "excluded_prior_day_already_checked",
+        "detail": "Bruceton Community Ambulance Service interruption announced October 27 and checked in prior heartbeat; no restoration or new service change confirmed."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Time-bounded recall is not exhaustive and search indexing can lag. One same-day firm future service loss was recovered outside the strict hourly publication window; it is explicitly marked as retrospective and requires production dedup and substantive editorial review. The exact obstetrics shutdown date after April 2027 is unknown. No direct health-system press release located within this 12-search cap.",
+    "controls": "No approval, public publishing, production collector modification, schedule change or disabling. Exactly one private watch-ledger heartbeat."
+  }
+}

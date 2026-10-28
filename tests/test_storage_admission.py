@@ -273,10 +273,14 @@ def _recorded_fixture(tmp_path, *, setup_complete: bool, call_outcome: str):
     return registry, root
 
 
-def test_completed_fixture_is_cleaned(tmp_path):
+def test_completed_fixture_is_retained_without_verified_cleanup_backend(tmp_path):
     registry, root = _recorded_fixture(tmp_path, setup_complete=True, call_outcome="passed")
+    evidence = root / "evidence.txt"
+    evidence.write_text("retain", encoding="utf-8")
     registry.finalize()
-    assert not root.exists()
+    assert root.exists() and registry.records[0].cleanup_deferred
+    assert not registry.records[0].cleanup_failed
+    assert evidence.read_text(encoding="utf-8") == "retain"
 
 
 def test_failed_fixture_is_retained(tmp_path):

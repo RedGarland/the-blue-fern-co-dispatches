@@ -1,0 +1,184 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T074244-0700-r11-20261028T144244Z",
+  "scheduled_for": "2026-10-28T07:44:51-07:00",
+  "started_at": "2026-10-28T07:42:44-07:00",
+  "completed_at": "2026-10-28T14:45:02.915+00:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T06:49:49.243-07:00",
+    "end": "2026-10-28T07:45:02.915-07:00",
+    "basis": "Starts from completed_at of independently verified preceding heartbeat on ops/watch-ledger. Discoveries are reports newly available during this watch interval; incident event times may predate it."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176412",
+      "title": "Three Palestinians killed, 10 injured in Israeli drone strikes in southern Gaza",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28T16:23:00+02:00",
+      "event_date": "2026-10-28",
+      "source_type": "established Palestinian news agency; local-source reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-10-28T07:44:00-07:00",
+        "search_window_start": "2026-10-28T06:49:49.243-07:00",
+        "publication_time_within_window": true,
+        "reporting_time_zone": "Asia/Jerusalem",
+        "event_clock_time": null,
+        "corroboration": "Single WAFA article; independent cross-source confirmation not located in bounded coverage."
+      },
+      "finding_id": "gaza-20261028-wafa-176412-rafah-economy-office-strike",
+      "location": "Al-Mawasi area, Rafah, southern Gaza Strip",
+      "affected_population_system": "Palestinian Ministry of Economy employees and traders present for commercial transactions; three reported killed and 10 injured",
+      "exact_supporting_passage": "Three Palestinians were killed and 10 others injured",
+      "notes": "WAFA attributes these casualties to an Israeli airstrike on a Ministry of Economy facility in Rafah; distinct location and target from earlier al-Qarara/al-Tina report."
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176412",
+      "title": "Three Palestinians killed, 10 injured in Israeli drone strikes in southern Gaza",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28T16:23:00+02:00",
+      "event_date": "2026-10-28",
+      "source_type": "established Palestinian news agency; local-source reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-10-28T07:44:00-07:00",
+        "search_window_start": "2026-10-28T06:49:49.243-07:00",
+        "publication_time_within_window": true,
+        "reporting_time_zone": "Asia/Jerusalem",
+        "event_clock_time": null,
+        "corroboration": "Single WAFA article; independent cross-source confirmation not located in bounded coverage."
+      },
+      "finding_id": "gaza-20261028-wafa-176412-nuseirat-refugee-camp-injuries",
+      "location": "Nuseirat refugee camp, central Gaza Strip",
+      "affected_population_system": "Three Palestinians reportedly injured, some seriously, in an Israeli strike",
+      "exact_supporting_passage": "Three more Palestinians",
+      "notes": "Separately reported strike in Nuseirat; no verified victim identities or event hour."
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176412",
+      "title": "Three Palestinians killed, 10 injured in Israeli drone strikes in southern Gaza",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28T16:23:00+02:00",
+      "event_date": "2026-10-28",
+      "source_type": "established Palestinian news agency; local-source reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-10-28T07:44:00-07:00",
+        "search_window_start": "2026-10-28T06:49:49.243-07:00",
+        "publication_time_within_window": true,
+        "reporting_time_zone": "Asia/Jerusalem",
+        "event_clock_time": null,
+        "corroboration": "Single WAFA article; independent cross-source confirmation not located in bounded coverage."
+      },
+      "finding_id": "gaza-20261028-wafa-176412-al-bayouk-khan-younis-casualties",
+      "location": "Al-Bayouk area, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One Palestinian reportedly killed and a woman seriously injured",
+      "exact_supporting_passage": "a Palestinian was killed and a woman seriously injured",
+      "notes": "Distinct named location from prior al-Tina Street/al-Qarara fatality report; published in later 16:23 source, but event occurred earlier on Oct 28, exact hour unavailable. Not aggregated with Rafah or previously reported al-Qarara casualty."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Gaza recall; primary production collection and publication remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T064759-0700-r11-20261028T134759Z",
+      "completed_at": "2026-10-28T06:49:49.243-07:00",
+      "outcome": "no_findings",
+      "verified_by_repository_read": true
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Available; newest update dated Oct 27 is a West Bank snapshot, latest Gaza situation report posted Oct 26 and dated Oct 22. No in-window Gaza update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Available; no new in-window hospital, ambulance, medical evacuation, health-system capacity, transport, or fuel update; generic background and older reports."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "502 Bad Gateway, recurring previously documented source access restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"28/October/2026\" Gaza Khan Younis Rafah casualties injured after 15:30",
+      "site:aa.com.tr/en/middle-east/ 28.10.2026 Gaza Palestinian killed wounded Wednesday latest",
+      "site:aljazeera.com/news/2026/10/28/ Gaza civilians killed Israeli strike aid Gaza October 28",
+      "site:un.org OR site:news.un.org 28 October 2026 Gaza aid crossing hospital civilians humanitarian",
+      "site:who.int OR site:emro.who.int Gaza 28 October 2026 healthcare medical evacuation hospital fuel",
+      "site:unicef.org OR site:wfp.org 28 October 2026 Gaza food water supplies humanitarian",
+      "site:icrc.org OR site:msf.org 28 October 2026 Gaza hospital ambulance medical access",
+      "Gaza 28 October 2026 latest 16:00 Israel time strikes civilian casualties Gaza City Khan Younis",
+      "Gaza October 28 2026 Rafah Kerem Shalom aid trucks crossing medical evacuation new",
+      "Gaza October 28 2026 ceasefire hostage detainees negotiations military operations civilian impact latest",
+      "site:english.wafa.ps \"28/October/2026\" Gaza 4:00 PM 5:00 PM",
+      "site:reuters.com OR site:apnews.com Gaza October 28 2026 Palestinians aid ceasefire Wednesday"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English homepage",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; new 16:23 publisher-local (07:23 PDT) Gaza report appeared after earlier reports. Its individual incidents were checked against prior ledger."
+      },
+      {
+        "publisher": "WAFA English detailed article",
+        "url": "https://english.wafa.ps/Pages/Details/176412",
+        "result": "Accessible; three distinct newly reported incident locations captured (Rafah economic facility, Nuseirat camp, al-Bayouk Khan Younis)."
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east/",
+        "result": "Accessible; visible current items mostly Israeli elections, Yemen and regional topics, no newly verified Gaza event."
+      },
+      {
+        "publisher": "OCHA global newsroom",
+        "url": "https://www.unocha.org/news",
+        "result": "403 Forbidden; OCHA OPT itself accessible."
+      }
+    ],
+    "exclusions": [
+      "WAFA 13:24 Oct 28 al-Tina Street/al-Qarara fatality and al-Laymun father/daughter injuries previously captured; not repeated.",
+      "WAFA new 16:23 article's five injured in a tuk-tuk strike in al-Mawasi/al-Qarara was not separately counted due possible overlap with previously captured al-Tina/al-Qarara casualties and no independent differentiation.",
+      "Anadolu report of Oct 27 killings previously captured; not repeated.",
+      "West Bank-only demolitions, Israeli election results and older humanitarian/ceasefire context excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "failure": "502 Bad Gateway",
+        "materiality": "Preexisting recurring; WHO Global checked as alternative. Status DEGRADED, not a new watch-wide failure."
+      },
+      {
+        "source": "OCHA global newsroom",
+        "failure": "403 Forbidden",
+        "materiality": "Source-specific; OCHA OPT index accessible."
+      },
+      {
+        "source": "UN News targeted search",
+        "failure": "Robots.txt restriction",
+        "materiality": "Known source-specific restriction with alternative official sources."
+      },
+      {
+        "source": "WHO invalid alternate situation URL",
+        "failure": "404 Not Found",
+        "materiality": "Correct authoritative WHO situation URL was accessed; no missing WHO Global coverage from incorrect path."
+      }
+    ],
+    "source_quality": "Three distinct locations reported in same WAFA article; independent corroboration not obtained within the 12-search bound. Figures attributed to WAFA, not independently confirmed. Event hours unknown; 16:23 is article's publisher-local publication time, converted to 07:23 PDT.",
+    "scope_and_safeguards": "Exactly one durable watch-ledger heartbeat requested. No approvals, publications, public content, production collector, automation schedule or task state altered."
+  }
+}

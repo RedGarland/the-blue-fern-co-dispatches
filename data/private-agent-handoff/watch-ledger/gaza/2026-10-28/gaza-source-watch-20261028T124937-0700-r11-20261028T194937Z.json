@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T124937-0700-r11-20261028T194937Z",
+  "scheduled_for": "2026-10-28T12:44:51-07:00",
+  "started_at": "2026-10-28T12:49:37-07:00",
+  "completed_at": "2026-10-28T12:50:47-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T11:43:55.916-07:00",
+    "end": "2026-10-28T12:50:47-07:00",
+    "basis": "Since previous committed Gaza Source Watch completion. Search results were verified against source/publisher/event dates; discovery timestamps alone were not treated as event timestamps."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; production collector/publisher authoritative, unchanged.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T114156-0700-r11-20261028T184156Z",
+      "completed_at": "2026-10-28T11:43:55.916-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "branch": "ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest listing Oct 27, 2026 was a West Bank monthly snapshot; newest Gaza situation report listed Oct 26 (covering Oct 22). No report released in the observation interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "502 Bad Gateway; repeat of previously documented access failure."
+      },
+      {
+        "publisher": "WHO Global emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest displayed regional reports/news predated observation window; no new dated medical evacuation, hospital, fuel, or healthcare functioning change verified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza October 28 2026 21:00 22:00 23:00 Israeli strike casualties",
+      "site:english.wafa.ps/Pages/Details/ Gaza 28 October 2026 updated Rafah Khan Younis Nuseirat civilian casualties",
+      "site:aa.com.tr/en/middle-east/ gaza October 28 2026 2026 Wednesday latest strikes ceasefire killed 32",
+      "site:reuters.com/world/middle-east Gaza October 28 2026 Israeli strike civilian casualties aid ceasefire",
+      "site:apnews.com/article Gaza October 28 2026 strike casualties crossing humanitarian Wednesday",
+      "site:aljazeera.com/news/2026/10/28 Gaza latest civilian deaths Rafah Khan Younis Nuseirat",
+      "site:news.un.org Gaza humanitarian access medical evacuations October 28 2026",
+      "site:unicef.org OR site:wfp.org Gaza 28 October 2026 food water malnutrition humanitarian aid",
+      "site:msf.org OR site:icrc.org Gaza 28 October 2026 hospital medical evacuation ambulances fuel supplies",
+      "site:unrwa.org OR site:reliefweb.int Gaza 28 October 2026 displacement aid access humanitarian situation",
+      "Gaza October 28 2026 Kerem Shalom Rafah crossing aid convoy access medical evacuation updated Wednesday",
+      "Gaza October 28 2026 ceasefire hostage bodies detention negotiations operations civilian consequences latest Wednesday"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest home-page Gaza casualty stories were published at 16:23 and 13:24 Jerusalem local on Oct 28, already recorded by prior watches. More recent displayed items concern West Bank and unrelated diplomacy; no new Gaza event."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-5-palestinians-wound-32-in-gaza/4103255",
+        "result": "Previously logged Oct 28 five killed/32 wounded follow-up; no verifiable new in-window revision time and substantial overlap with WAFA incidents."
+      },
+      {
+        "publisher": "Reuters Israel/Hamas topic",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Accessible; newest relevant Gaza casualty report in displayed list dated Oct 22. Newer Oct 27-28 entries were Israel election or West Bank topics."
+      },
+      {
+        "publisher": "Al Jazeera Palestine topic",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; Oct 28 visible items primarily Israel election and Hebron/West Bank; no new qualifying in-window Gaza disruption verified."
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/",
+        "result": "Accessible; latest Gaza child-safety statement Oct 22; no in-window new nutrition, water or health item."
+      },
+      {
+        "publisher": "WFP Palestine",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; standing humanitarian needs, no verified time-specific new operational change."
+      },
+      {
+        "publisher": "ICRC",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no newly dated qualifying Gaza development."
+      },
+      {
+        "publisher": "MSF Palestine",
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no newly dated in-window health-service change identified."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; home page latest dated news June 2026, no in-window ambulance/hospital change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/resources/reports",
+        "result": "403 Forbidden; published Oct 22 situation report #237 was an old item despite a misleading 'today' search index label."
+      }
+    ],
+    "exclusions": [
+      "WAFA previously recorded Oct 28 southern Gaza al-Mawasi/Rafah, Khan Younis, Nuseirat and al-Qarara reports; do not double count.",
+      "Anadolu report five killed/32 wounded was already classified as a follow-up in prior 09:46 PDT heartbeat; precise update time not supplied.",
+      "Latest WAFA home-page articles on Hebron, Bethlehem, Jenin, Nablus and Spanish diplomatic condolences are outside Gaza recall scope.",
+      "UNRWA Situation Report #237 source publication date is Oct 22 (not newly published Oct 28); excluded.",
+      "Older AP, Reuters, OCHA and humanitarian items, background statistics, commentary and unsupported social reports excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "failure": "HTTP 502 Bad Gateway",
+        "materiality": "Persistent source-specific limitation documented in previous runs; WHO global accessible."
+      },
+      {
+        "source": "UNRWA direct reports",
+        "failure": "HTTP 403 Forbidden",
+        "materiality": "Persistent direct access limitation; OCHA, UNICEF, WFP and MSF alternatives accessible."
+      },
+      {
+        "source": "UN News targeted search",
+        "failure": "Blocked by robots.txt",
+        "materiality": "Source-specific search restriction; OCHA direct updates and other humanitarian sources accessible."
+      }
+    ],
+    "verification": "OCHA OPT and WHO direct checks preceded exactly 12 additional targeted web searches and publisher-page checks. No newly published, traceable and nonduplicate Gaza development was verified since previous heartbeat. Negative finding is a limit of observed sources, not proof no event occurred.",
+    "notification_assessment": "No new qualifying development; source failures mirror previously documented restrictions and do not represent a newly material watch-wide degradation.",
+    "safeguards": "Exactly one JSON heartbeat file created on ops/watch-ledger; no publication, approvals, production, schedule, or automation changes."
+  }
+}

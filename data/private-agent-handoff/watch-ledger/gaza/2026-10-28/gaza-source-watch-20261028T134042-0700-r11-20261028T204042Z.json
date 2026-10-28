@@ -1,0 +1,172 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T134042-0700-r11-20261028T204042Z",
+  "scheduled_for": "2026-10-28T13:44:51-07:00",
+  "started_at": "2026-10-28T13:40:42-07:00",
+  "completed_at": "2026-10-28T13:42:28-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T12:50:47-07:00",
+    "end": "2026-10-28T13:42:28-07:00",
+    "basis": "Since prior verified watch heartbeat completion; dated sources and previously recorded incidents used for duplicate filtering. Article publication day without exact time does not prove an event occurred within the hourly window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261028-east-gaza-city-artillery-seven-injured-aj-5095918",
+      "canonical_source_url": "https://www.aljazeera.com/news/liveblog/2026/10/27/iran-war-live-pezeshkian-says-middle-east-can-solve-own-issues-without-us?update=5095918",
+      "title": "Israeli artillery shelling injures seven Palestinians eastern Gaza City",
+      "publisher": "Al Jazeera English",
+      "source_date": "2026-10-27",
+      "publication_date": null,
+      "event_date": null,
+      "location": "Eastern Gaza City, Gaza Strip",
+      "affected_population_or_system": "Seven reportedly injured Palestinians; civilian status not independently determined",
+      "exact_supporting_passage": "Israeli artillery shelling injures seven Palestinians eastern Gaza City",
+      "source_type": "Established news outlet, live-update teaser on Palestine coverage landing page",
+      "new_or_follow_up": "new",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-10-28T13:42:28-07:00",
+        "listing_url": "https://www.aljazeera.com/where/palestine/",
+        "listing_relative_age": "56m ago at retrieval; not an independently verified absolute publication timestamp",
+        "verification": "Headline and direct update permalink visible on outlet index; permalink landing page did not render individual update body. Other details and exact incident time unverified.",
+        "deduplication": "Separate eastern Gaza City artillery casualty report, distinct from previously logged southern Gaza WAFA/Anadolu incidents. Count not added to prior casualty totals."
+      }
+    },
+    {
+      "finding_id": "gaza-20261028-gaza-city-drainage-20-percent-winter-aj",
+      "canonical_source_url": "https://www.aljazeera.com/features/2026/10/28/gaza-families-brace-for-a-fourth-winter-of-wind-rain-and-floods-in-camps",
+      "title": "Gaza City municipal spokesman reports drainage at about 20% of previous capacity amid winter preparations",
+      "publisher": "Al Jazeera English",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28",
+      "event_date": null,
+      "location": "Gaza City, Gaza Strip",
+      "affected_population_or_system": "Displaced households in flood-exposed camps; municipal stormwater drainage and emergency maintenance",
+      "exact_supporting_passage": "its rainwater drainage system was operating at about 20 percent of its previous capacity.",
+      "source_type": "Established outlet original local reporting, attributing infrastructure figures to Gaza Municipality spokesperson Husni Muhanna",
+      "new_or_follow_up": "follow-up",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-10-28T13:42:28-07:00",
+        "verification": "Directly accessible Oct 28 feature; local official quoted on operating capacity and constrained cleaning/maintenance. Exact interview and change date unavailable; treat as newly surfaced operational context, not a newly occurring infrastructure failure.",
+        "deduplication": "OCHA Oct 26 already warned of drainage and shelter vulnerabilities; unique locally attributed 20% capacity detail retained as contextual follow-up, not a new casualty incident."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; primary daily collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T124937-0700-r11-20261028T194937Z",
+      "completed_at": "2026-10-28T12:50:47-07:00",
+      "outcome": "no_findings",
+      "status": "DEGRADED"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible, latest listed Oct 27 West Bank snapshot; latest Gaza humanitarian situation report Oct 26 (covers Oct 22); no newly dated in-window report."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Timed out (prior regional access restriction persists)."
+      },
+      {
+        "publisher": "WHO global emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, no newly dated Gaza healthcare/medevac publication found in latest news or regional listings."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:who.int Gaza October 28 2026 medical evacuation hospitals updates",
+      "site:ochaopt.org Gaza 28 October 2026 humanitarian updates",
+      "site:english.wafa.ps Gaza 28 October 2026 afternoon casualties Khan Younis Rafah",
+      "Gaza Oct 28 2026 20:00 GMT 19:00 UTC strikes Palestinians killed injured AFP Reuters Anadolu",
+      "site:english.wafa.ps/Pages/Details/ \"October 28, 2026\" \"Gaza\" killed injured afternoon",
+      "site:aa.com.tr/en/middle-east/ \"Oct 28, 2026\" \"Gaza\" killed aid crossing",
+      "site:apnews.com/article/ \"October 28, 2026\" Gaza strikes humanitarian ceasefire",
+      "site:aljazeera.com/news/2026/10/28 Gaza Israeli strikes casualties October 28",
+      "site:un.org OR site:news.un.org Gaza October 28 2026 humanitarian medical evacuations aid crossing",
+      "site:unicef.org OR site:wfp.org Gaza October 28 2026 food water malnutrition aid",
+      "site:msf.org OR site:icrc.org Gaza October 28 2026 hospital ambulances medical fuel",
+      "Gaza October 28 2026 Rafah Kerem Shalom crossings ceasefire negotiations hostages aid updates"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176412",
+        "result": "Oct 28 16:23 Jerusalem (07:23 PDT) southern Gaza casualty report already recorded; WAFA homepage timed out but article accessible and showed subsequent headlines mainly West Bank."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Accessible; no newly dated qualifying Gaza article, newer displayed entries about election/West Bank."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; new Gaza City artillery-injury teaser and Gaza winter shelter/municipal-drainage report surfaced."
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/",
+        "result": "Accessible, latest displayed Gaza casualty statement Oct 22, not within interval."
+      },
+      {
+        "publisher": "WFP Palestine",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible, standing crisis page; no timestamped new operational change verified."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/resources/reports",
+        "result": "HTTP 403, persistent restriction."
+      }
+    ],
+    "exclusions": [
+      "Previously recorded WAFA Oct 28 Rafah al-Mawasi, Nuseirat, al-Bayouk and al-Qarara injuries/casualties; not counted again.",
+      "Anadolu Oct 28 five killed/32 wounded update already recorded, overlapping WAFA cases.",
+      "AP Oct 26 UN inquiry is older and not a new development in this window.",
+      "Older OCHA/WHO humanitarian capacity figures and unrelated Israel election, West Bank and Lebanon/Iran reports.",
+      "Al Jazeera winter feature repeats previously known large-scale displaced population statistics; only attributable operating-capacity detail retained."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "failure": "timeout",
+        "materiality": "Persistent source-specific; WHO global accessible."
+      },
+      {
+        "source": "UNRWA",
+        "failure": "403 Forbidden",
+        "materiality": "Persistent source-specific; OCHA, WFP and UNICEF alternatives available."
+      },
+      {
+        "source": "WAFA homepage",
+        "failure": "timeout",
+        "materiality": "Article and linked latest-news list accessible."
+      },
+      {
+        "source": "UN News targeted search",
+        "failure": "blocked by robots.txt",
+        "materiality": "Source-specific restriction, alternative OCHA accessible."
+      },
+      {
+        "source": "Al Jazeera individual live update",
+        "failure": "Permalink displayed page shell without individual update content",
+        "materiality": "Update teaser accessible, but details beyond headline unverified; confidence reduced."
+      }
+    ],
+    "safeguards": "One private GitHub heartbeat on ops/watch-ledger only; no publication, approval, production, scheduling or automation changes.",
+    "notification_assessment": "Two newly surfaced, traceable Gaza items merit notification; distinguish incomplete live-update verification and unverified exact source/incident times."
+  }
+}

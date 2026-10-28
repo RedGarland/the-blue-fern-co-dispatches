@@ -3772,7 +3772,7 @@ def test_gaza_landing_separates_readable_briefings_from_no_update_checks(tmp_pat
     )
 
     index_html = generator.render_dispatch_index_for_dates(dispatch, ["2026-09-30"], site_root)
-    latest_html = index_html.split("<h2>Latest Readable Update</h2>", 1)[1].split("<h2>Recent Checks</h2>", 1)[0]
+    latest_html = re.search(r'<article class="gaza-latest-card">.*?</article>', index_html, re.DOTALL).group(0)
     readable_html = index_html.split('<ul class="edition-list gaza-readable-list">', 1)[1].split("</ul>", 1)[0]
     checks_html = index_html.split('<ul class="edition-list gaza-check-list">', 1)[1].split("</ul>", 1)[0]
 
@@ -3811,7 +3811,7 @@ def test_gaza_landing_latest_readable_update_can_use_catchup_after_newer_no_upda
     )
 
     index_html = generator.render_dispatch_index_for_dates(dispatch, [], site_root)
-    latest_html = index_html.split("<h2>Latest Readable Update</h2>", 1)[1].split("<h2>Recent Checks</h2>", 1)[0]
+    latest_html = re.search(r'<article class="gaza-latest-card">.*?</article>', index_html, re.DOTALL).group(0)
 
     assert '<article class="gaza-latest-card">' in latest_html
     assert '<p class="edition-date">2026-09-03</p>' in latest_html
@@ -3889,7 +3889,7 @@ def test_gaza_landing_limits_recent_checks_to_three_and_links_archive(tmp_path: 
     assert "2026-09-28" in checks_html
     assert "2026-09-25" in checks_html
     assert "2026-09-21" not in checks_html
-    assert '<a href="archive.html">Open full archive history</a>' in index_html
+    assert '<a class="text-link" href="archive.html">Open the full archive</a>' in index_html
 
 
 def test_gaza_archive_groups_entries_by_month_and_highlights_latest(tmp_path: Path):
@@ -3946,7 +3946,8 @@ def test_gaza_archive_compact_no_update_rows_are_not_edition_links(tmp_path: Pat
 
     archive_html = generator.render_archive_for_dates(dispatch, ["2026-09-30"], site_root)
 
-    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-01</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">6 sources checked</span></li>' in archive_html
+    assert 'data-record-type="monitoring" data-month="2026-10"' in archive_html
+    assert '<span class="edition-date">2026-10-01</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">6 sources checked</span>' in archive_html
     assert 'href="editions/2026-10-01/"' not in archive_html
     assert "No new source-backed Gaza update met publication threshold today." not in archive_html
 
@@ -3973,7 +3974,7 @@ def test_gaza_latest_card_uses_real_title_when_metadata_exists(tmp_path: Path):
     )
 
     index_html = generator.render_dispatch_index_for_dates(dispatch, ["2026-10-01"], site_root)
-    latest_html = index_html.split("<h2>Latest Readable Update</h2>", 1)[1].split("<h2>Recent Checks</h2>", 1)[0]
+    latest_html = re.search(r'<article class="gaza-latest-card">.*?</article>', index_html, re.DOTALL).group(0)
     readable_html = index_html.split('<ul class="edition-list gaza-readable-list">', 1)[1].split("</ul>", 1)[0]
 
     assert "<h3>Gaza crossings update after new aid restrictions</h3>" in latest_html
@@ -4012,7 +4013,8 @@ def test_gaza_archive_preserves_no_update_rows_and_renders_readable_metadata(tmp
     assert "Hospitals reported access constraints in public source records." in archive_html
     assert "3 sources" in archive_html
     assert "Daily briefing" in archive_html
-    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">8 sources checked</span></li>' in archive_html
+    assert 'data-record-type="monitoring" data-month="2026-10"' in archive_html
+    assert '<span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">8 sources checked</span>' in archive_html
     assert 'href="editions/2026-10-02/"' not in archive_html
 
 
@@ -4100,7 +4102,8 @@ def test_gaza_archive_latest_entry_skips_newer_no_update_rows(tmp_path: Path):
     assert '<p class="archive-latest-date">2026-09-30</p>' in latest_html
     assert '<a class="button" href="editions/2026-09-30/">Read latest</a>' in latest_html
     assert "No qualifying update" not in latest_html
-    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span></li>' in archive_html
+    assert 'data-record-type="monitoring" data-month="2026-10"' in archive_html
+    assert '<span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span>' in archive_html
 
 
 def test_gaza_archive_latest_entry_can_use_catchup_after_newer_no_update(tmp_path: Path):
@@ -4129,7 +4132,8 @@ def test_gaza_archive_latest_entry_can_use_catchup_after_newer_no_update(tmp_pat
     assert '<p class="archive-latest-date">2026-09-30</p>' in latest_html
     assert "<h2>Recovered Gaza development</h2>" in latest_html
     assert '<a class="button" href="catchups/gaza-historical-catchup-2026-09-30/">Read catch-up</a>' in latest_html
-    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span></li>' in archive_html
+    assert 'data-record-type="monitoring" data-month="2026-10"' in archive_html
+    assert '<span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span>' in archive_html
 
 
 def test_gaza_archive_edition_links_have_local_targets(tmp_path: Path):

@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T054442-0700-r11-054442",
+  "scheduled_for": "2026-10-28T04:45:54-07:00",
+  "started_at": "2026-10-28T05:44:42-07:00",
+  "completed_at": "2026-10-28T05:45:55.906-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T04:49:00.478-07:00",
+    "end_at": "2026-10-28T05:45:55.906-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since preceding verified Food Line watch heartbeat; 2-day result freshness lookback to catch delayed indexing. Historical cases are excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "This is a supplementary high-value miss-class Food Line recall, not the authoritative nationwide production collector. No approval, publication, social posting, schedule change, or disabling was performed.",
+    "Completed exactly 12 targeted fresh web searches: four for only/sole/last/full-service grocery loss or fire; four for emergency food distribution cancellation after storm/flood/fire/power/facility damage; two for abrupt pantry/food-bank closure; two for official SNAP/WIC/EBT service interruption. Date focus October 27–28, 2026, with 2-day web-search recency.",
+    "No newly verified qualifying U.S. food-access interruption was surfaced during the bounded search. Search results contained older events, irrelevant closures, aid distributions that were planned rather than canceled, and 2025 SNAP shutdown reports; this is not an exhaustive nationwide negative assertion.",
+    "Excluded Spencer, New York only grocery-store fire reported September 14, 2026 (outside current window): https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/ .",
+    "Excluded North Charleston, South Carolina last full-service Save A Lot loss reported August 13, 2026 (outside current window): https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/ .",
+    "Kauaʻi Now October 27, 2026 Hurricane Lowell recovery update explicitly lists emergency distributions scheduled for October 27 and October 30, not canceled; excluded: https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ .",
+    "Official state notices returned by SNAP/WIC search were dated October 2025 (including Kansas, New Jersey, California, Connecticut), not October 2026 current disruptions, and were excluded. Search discovery was noisy and did not support a positive finding.",
+    "All 12 web search requests completed with usable results, and Kauaʻi source opened successfully; no observed search-tool or source-access failure materially degraded this bounded run.",
+    "Previously recorded Wymore, South Philadelphia, and Utah cases were not repeated. Continued hourly recall can pick up locally indexed reports later."
+  ]
+}

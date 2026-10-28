@@ -1,0 +1,136 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T224934-0700-r11-20261028T054934Z",
+  "scheduled_for": "2026-10-27T22:44:51-07:00",
+  "started_at": "2026-10-27T22:49:34-07:00",
+  "completed_at": "2026-10-27T22:50:57.711-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T21:45:01.593-07:00",
+    "end": "2026-10-27T22:50:57.711-07:00",
+    "basis": "Immediately preceding verified Gaza Source Watch heartbeat (run gaza-source-watch-20261027T214318-0700-r11-20261028T044318Z). Current watch covers subsequent discovery; events reported by Gaza-local calendar date 28 October require publisher-date disambiguation."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded private recall watch. Production Gaza collector/publisher and editorial gates remain authoritative; no publication or approval attempted.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T214318-0700-r11-20261028T044318Z.json",
+      "completed_at": "2026-10-27T21:45:01.593-07:00",
+      "outcome": "findings",
+      "readback_verified": true,
+      "previous_findings": [
+        "gaza-20261028-anadolu-4103255-tuesday-attacks",
+        "gaza-20261028-anadolu-4103255-bseiso-prior-wounds"
+      ]
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest 27 October item concerns West Bank; newest Gaza situation report covers 22 October and was published 26 October. No newer Gaza operations bulletin surfaced."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible global page; latest listed news, speeches and regional releases predate the window. No new dated Gaza health, medical-evacuation or service-capacity change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean regional OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/",
+        "result": "Direct page returned 502 Bad Gateway; persistent previously documented restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps \"28/October/2026\" Gaza killed injured Wednesday",
+      "site:aa.com.tr/en/middle-east Gaza \"28 October 2026\" Wednesday casualties",
+      "site:aljazeera.com/news/2026/10/28 Gaza Israel attacks ceasefire aid",
+      "site:reuters.com/world/middle-east/ Gaza October 28 2026 killed ceasefire",
+      "site:apnews.com Gaza October 28 2026 airstrikes civilian casualties",
+      "site:palestine.un.org/en OR site:un.org Gaza \"28 October 2026\" humanitarian",
+      "site:unrwa.org Gaza October 28 2026 displacement aid fuel crossings",
+      "site:unicef.org OR site:wfp.org Gaza October 28 2026 food water healthcare",
+      "site:msf.org Gaza October 27 2026 October 28 hospital medical evacuated patients",
+      "site:palestinercs.org OR site:icrc.org Gaza 28 October 2026 ambulance medical",
+      "Gaza Rafah Kerem Shalom crossing medical evacuations October 28 2026 latest",
+      "Gaza Wednesday morning October 28 2026 casualties killed displacement humanitarian update"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest listings 27 October Palestine time; no new in-window Gaza casualty, aid or health story. Existing 27 October Shalalfeh death previously reviewed."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-2-palestinians-wound-5-in-gaza/4103255",
+        "result": "Previously recorded 28 October article was inaccessible on direct repeat fetch. Prior verified heartbeat documents its two findings; neither re-counted."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; latest Gaza-related feature not a new qualifying humanitarian/casualty development. Election coverage excluded."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; listed news updates did not show an October 28 Gaza medical/ambulance development."
+      },
+      {
+        "publisher": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "403 Forbidden."
+      },
+      {
+        "publisher": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "403 Forbidden; targeted search retrieved 19 October food-aid reductions but no in-window change."
+      },
+      {
+        "publisher": "UN News Middle East",
+        "url": "https://news.un.org/en/news/region/middle-east",
+        "result": "Restricted URL fetch; alternate authoritative OCHA official channel was accessible."
+      },
+      {
+        "publisher": "OCHA 22 October situation report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+        "result": "26 October publication reviewed as older background; food basket, aid funding, child deaths and health supply findings already predate this discovery window."
+      }
+    ],
+    "exclusions": [
+      "Anadolu 28 October casualties (two newly reported fatalities and five injuries on 27 October) and Ahmed Yassin Bseiso's death are already in the previous heartbeat; excluded as duplicates.",
+      "WAFA 27 October report of six-year-old Tihani Shalalfeh's death was previously seen; excluded.",
+      "26 October OCHA report and 19 October WFP food-assistance reductions predate the current watch and are not new developments.",
+      "October 28 Israeli election articles and West Bank-only incidents do not meet Gaza-specific recall scope.",
+      "Stale, off-topic, undated and non-primary web-search hits excluded; no unsupported in-window occurrence inferred from an article's date."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "error": "502 Bad Gateway",
+        "materiality": "Persistent previously documented. Global WHO emergency page accessible as partial substitute."
+      },
+      {
+        "source": "UNRWA and WFP newsrooms",
+        "error": "403 Forbidden",
+        "materiality": "Not a total coverage loss; indexed WFP reporting and OCHA/WHO official alternatives accessible."
+      },
+      {
+        "source": "UN News Middle East",
+        "error": "Restricted URL fetch",
+        "materiality": "OCHA OPT official updates and WHO global accessible as substitutes."
+      },
+      {
+        "source": "Anadolu previous article direct fetch",
+        "error": "Failed to fetch",
+        "materiality": "Prior heartbeat carries verified finding details; no reclassification attempted."
+      }
+    ],
+    "assessment": "No traceable, nonduplicate, newly surfaced Gaza-specific qualifying development verified since the previous heartbeat. Status remains DEGRADED because of restricted humanitarian source endpoints; no newly material watch-wide degradation established.",
+    "action_scope": "Exactly one private heartbeat on ops/watch-ledger only. No production, approval, public site, social-post, schedule or automation changes."
+  }
+}

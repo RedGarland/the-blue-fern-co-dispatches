@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T084629-0700-r11-20261028T154629Z",
+  "scheduled_for": "2026-10-28T08:44:51-07:00",
+  "started_at": "2026-10-28T08:46:29-07:00",
+  "completed_at": "2026-10-28T15:47:56.436Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T07:45:02.915-07:00",
+    "end": "2026-10-28T08:47:56.436-07:00",
+    "basis": "Start is the verified completed_at of the preceding Gaza Source Watch heartbeat on ops/watch-ledger. Discovery time is distinguished from publication and incident times; no qualifying new reports were verified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative Gaza production collector and publisher remain unchanged.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T074244-0700-r11-20261028T144244Z",
+      "completed_at": "2026-10-28T07:45:02.915-07:00",
+      "outcome": "findings",
+      "verified_from_repository": true,
+      "prior_finding_ids": [
+        "gaza-20261028-wafa-176412-rafah-economy-office-strike",
+        "gaza-20261028-wafa-176412-nuseirat-refugee-camp-injuries",
+        "gaza-20261028-wafa-176412-al-bayouk-khan-younis-casualties"
+      ]
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest Gaza-specific item remains situation report dated October 22 and posted October 26; October 27 item is West Bank only. No newer Gaza report in watch window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new October 28 Gaza hospital, capacity, medical evacuation, ambulance, fuel or health service update on situation page."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "502 Bad Gateway; recurring source-specific access limitation; WHO Global checked as fallback."
+      }
+    ],
+    "primary_source_initial_searches": [
+      "site:ochaopt.org Gaza latest updates October 28 2026 humanitarian situation report access casualties",
+      "site:who.int Gaza occupied Palestinian territory latest October 28 2026 health hospital medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"28/October/2026\" Gaza \"PM\" killed wounded",
+      "site:english.wafa.ps/Pages/Details/ \"28/October/2026\" \"05:\" Gaza",
+      "site:aa.com.tr/en/middle-east/ Gaza October 28 2026 afternoon deaths ceasefire strikes",
+      "site:aljazeera.com/news/2026/10/28/ Gaza Palestinian casualties aid strikes latest",
+      "site:reuters.com/world/middle-east Gaza October 28 2026 air strikes civilians aid",
+      "site:apnews.com Gaza October 28 2026 strike humanitarian aid border",
+      "site:un.org OR site:news.un.org Gaza 28 October 2026 humanitarian latest crossings casualties",
+      "site:unicef.org OR site:wfp.org Gaza 28 October 2026 food water children humanitarian",
+      "Gaza October 28 2026 17:00 18:00 new strikes civilians Palestinian Wednesday Khan Younis",
+      "site:icrc.org OR site:msf.org Gaza 28 October 2026 ambulance hospital health crossing",
+      "site:unrwa.org OR site:ochaopt.org OR site:reliefweb.int 28 October 2026 Gaza humanitarian aid displacement",
+      "Gaza 28 October 2026 Rafah Kerem Shalom crossing medical evacuation ceasefire negotiations October 28"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza article shown at 16:23 publisher-local, equivalent to 07:23 PDT, before the 07:45 PDT cutoff; earlier logged three distinct casualty incidents in previous heartbeat. Newer 16:40 posting concerns condolences over Spain train collision, not Gaza."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "No new Gaza-specific bulletin posted."
+      },
+      {
+        "publisher": "WHO situation page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new in-window health update."
+      }
+    ],
+    "exclusions": [
+      "WAFA October 28 16:23 (publisher-local) three Gaza incidents already logged in previous heartbeat; not repeated.",
+      "WAFA October 28 13:24 earlier al-Qarara/al-Laymun casualties previously logged; not repeated.",
+      "Reuters October 26 UN Commission of Inquiry report and October 22 Gaza strike report predate this watch window.",
+      "Search matches from September, early October and 2025 excluded as recycled background; West Bank-only items excluded.",
+      "No isolated unsourced casualty, negotiation, detention, infrastructure, food/water or health-system claims advanced to findings."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "failure": "502 Bad Gateway",
+        "materiality": "Previously documented persistent site-specific issue; WHO Global remained accessible."
+      },
+      {
+        "source": "UN News",
+        "failure": "Robots.txt restriction during search",
+        "materiality": "Previously documented source-specific restriction; OCHA OPT and other official reporting remained available."
+      }
+    ],
+    "source_quality": "Zero new, independently traceable and nonduplicate Gaza developments discovered in bounded coverage. Search indexing may lag publication; a zero finding is not evidence of no developments.",
+    "scope_and_safeguards": "Exactly one heartbeat intended for this run. No publishing, editorial approval, public-content change, schedule modification, or automation disablement."
+  }
+}

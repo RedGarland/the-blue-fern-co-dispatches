@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T004639-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T00:45:22-07:00",
+  "started_at": "2026-10-28T00:46:39-07:00",
+  "completed_at": "2026-10-28T00:47:33-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T23:48:10-07:00",
+    "end": "2026-10-28T00:47:33-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed 2026-10-27 23:48:10 PDT. Date-wide screening supplemented the hour window because publication-date indexing can lag; older reports and previously recorded events were excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; national Care Line production collector and editorial gates remain authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-27/care-line-watch-20261027T234611-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official current notices table still topped by three 2026-10-23 home-health agency termination notices (My Families Healthcare CA, 1ST AIDE HOME HEALTH AGENCY CA, Moonlight Home Health Care Inc OH). No new termination, rescission, CLIA limitation/suspension, or related notice dated after October 23 was found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 28 2026 hospital emergency department closed suspended overnight United States",
+      "October 28 2026 maternity labor delivery unit closing suspension hospital",
+      "October 28 2026 psychiatric behavioral health hospital services closed suspended",
+      "October 28 2026 dialysis oncology infusion center closure suspended patients",
+      "October 28 2026 ambulance EMS base air ambulance helicopter service suspension closure",
+      "October 28 2026 rural hospital emergency room closure service shut down",
+      "October 28 2026 primary care clinic closing no longer seeing patients",
+      "October 28 2026 emergency hospital clinics services restored reopened after outage",
+      "October 27 2026 late night hospital emergency clinic closure announced patients",
+      "October 27 2026 medical helicopter ambulance bases suspended discontinued",
+      "October 28 2026 Puerto Rico Guam Virgin Islands hospital ambulance health service suspension",
+      "October 28 2026 health care access immediate closure reopening dialysis maternity emergency"
+    ],
+    "searched_classes": [
+      "hospital, emergency department, obstetric/maternity, behavioral-health, dialysis, oncology and primary care closure or suspension",
+      "emergency/rural healthcare service loss",
+      "EMS ambulance, air-medical and base closure or suspension",
+      "CMS termination, rescission and CLIA access-risk notices",
+      "concrete emergency service restoration or reopening",
+      "U.S. territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "University of New Mexico Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate",
+        "detail": "October 27 UNM Health emergency/clinic service restoration previously recorded as a pending_review finding; no further current-hour state change."
+      },
+      {
+        "publisher": "KPRC Click2Houston",
+        "url": "https://www.click2houston.com/news/local/2026/10/27/nations-first-detransition-clinic-opens-at-texas-childrens-hospital/",
+        "disposition": "excluded_out_of_scope_earlier_report",
+        "detail": "Report published October 27 11:43 a.m. and updated 6:44 p.m. described new specialty clinic opening, not abrupt restoration of a previously lost essential service; outside watch window."
+      },
+      {
+        "publisher": "Kaua'i Now",
+        "url": "https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "disposition": "excluded_no_new_healthcare_service_change",
+        "detail": "October 27 disaster-recovery resource report refers to emergency food and general assistance; no newly confirmed essential healthcare service closure/reopening in the window."
+      },
+      {
+        "publisher": "Air Evac Lifeteam secondary aviation coverage",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "disposition": "excluded_older_report",
+        "detail": "Decatur air-medical base closure item indexed from last month, not a new current-hour development."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "All 12 targeted searches returned responses, but recency filters included older articles and non-U.S. material. The bounded search is supplementary, not exhaustive; no verifiable qualifying newly announced/effective healthcare-access change within the 2026-10-27 23:48 to 2026-10-28 00:47 PDT watch window.",
+    "controls": "No approval, editorial review mutation, publication, primary collection change, schedule change or disabling."
+  }
+}

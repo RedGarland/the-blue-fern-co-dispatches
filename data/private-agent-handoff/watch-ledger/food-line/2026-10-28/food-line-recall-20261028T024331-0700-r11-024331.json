@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T024331-0700-r11-024331",
+  "scheduled_for": "2026-10-28T01:45:54-07:00",
+  "started_at": "2026-10-28T02:43:31-07:00",
+  "completed_at": "2026-10-28T02:44:36.034-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T01:44:12.871-07:00",
+    "end_at": "2026-10-28T02:44:36.034-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since previous independently verified Food Line heartbeat; inspected late October 27–October 28 results for delayed indexing, without treating older reports as new.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; primary nationwide production collector remains authoritative. No approvals, publication, social posting, schedule changes, or task disabling.",
+    "Twelve targeted web searches completed: four for sole/last/full-service grocery closure, fire or loss; four for emergency food distribution cancellation due to storm/flood/fire/outage; two for abrupt pantry or food bank closure/service loss; two for official SNAP/WIC access interruption.",
+    "No new, verified qualifying U.S. food-access disruption within the bounded hourly interval. Search results are not exhaustive and local indexing may lag.",
+    "Kauaʻi Now October 27 Hurricane Lowell update reports emergency food distributions scheduled October 27 and October 30, not cancellations. Excluded. https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Guam DPHSS site search result listed October 27 PR27-010 temporary office closure at Rancare Building due to water service interruption; search excerpt did not establish a new SNAP/WIC benefit interruption within this hourly interval, and its announcement predates the interval. Direct agency homepage retrieval timed out twice, preventing full-source assessment. Excluded rather than inferring benefits were interrupted. https://dphss.guam.gov/",
+    "Search results otherwise recycled September 2026 Eastport, Maine grocery closure, earlier 2026 grocery shutdowns, 2025 SNAP funding warnings, non-U.S. food bank fires, resource guidance, routine distributions and donation appeals; excluded as stale, geographically ineligible, or nonqualifying.",
+    "Previously handed-off Wymore, Nebraska grocery loss, South Philadelphia Community Fridge pantry fire and Utah pantry changes were not duplicated.",
+    "DEGRADED due to failed direct retrieval of Guam DPHSS candidate page despite useful search coverage; 12 of 12 targeted searches returned results and there is no verified current qualifying food-assistance service interruption."
+  ]
+}

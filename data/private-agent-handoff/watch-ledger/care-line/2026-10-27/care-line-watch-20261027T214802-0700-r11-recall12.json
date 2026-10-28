@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T214802-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T21:45:22-07:00",
+  "started_at": "2026-10-27T21:48:02-07:00",
+  "completed_at": "2026-10-27T21:49:03-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T20:49:01-07:00",
+    "end": "2026-10-27T21:49:03-07:00",
+    "basis": "Previous committed Care Line heartbeat completed at 20:49:01 PDT; supplemental late-evening recall from that point to current check. Publication/effective dates cross-checked against the window and earlier findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production Care Line collector, reviews, and publication remain authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Inspected the official CMS Public Notices table first. Most recent rows remained 2026-10-23: My Families Healthcare and 1ST AIDE HOME HEALTH AGENCY in California, Moonlight Home Health Care Inc in Ohio; no more recent provider terminations, rescissions, or CLIA actions."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended October 27 2026 late Tuesday local news",
+      "maternity labor delivery obstetrics services closure pause October 27 2026 hospital",
+      "rural hospital emergency room closure suspension reopening October 27 2026",
+      "mental health behavioral hospital psychiatric unit closed service October 27 2026",
+      "ambulance company service shuts down emergency EMS base closes October 27 2026 local",
+      "air medical helicopter medical transport base closure suspend October 27 2026 United States",
+      "dialysis center clinic shutting closed suspended service October 27 2026",
+      "cancer oncology infusion clinic closed paused services October 27 2026 patients",
+      "health clinic primary care shutting permanently October 27 2026 local news patients",
+      "hospital clinic emergency services reopened fully restored October 27 2026 new reopening",
+      "Puerto Rico Guam US Virgin Islands hospital emergency service suspended October 27 2026",
+      "October 27 2026 hospital service closure emergency urgent care temporary suspended local healthcare access"
+    ],
+    "searched_classes": [
+      "hospital, ED, maternity, behavioral health, dialysis, oncology and primary care service closure/suspension",
+      "rural and emergency services losses",
+      "ambulance and air medical service/base closure or suspension",
+      "official CMS Medicare provider termination, rescission and CLIA restriction",
+      "confirmed essential-service restoration and reopening",
+      "U.S. territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "KQED",
+        "url": "https://www.kqed.org/news/12106470/santa-clara-countys-new-psychiatric-care-facility-will-serve-youth",
+        "disposition": "excluded_future_event",
+        "detail": "October 27 report on Santa Clara Valley Healthcare's Behavioral Health Pavilion; patient service is scheduled to begin November 3, not yet effective."
+      },
+      {
+        "publisher": "The Spokesman-Review",
+        "url": "https://www.spokesman.com/stories/2026/sep/04/multicare-to-close-multiple-clinics-by-the-end-of-/",
+        "disposition": "excluded_older_announcement_not_newly_confirmed",
+        "detail": "September 4 announcement described MultiCare Rockwood primary-care clinic closure scheduled for October 27. Search excerpt available; full page fetch returned HTTP 403. No independent new same-window confirmation or precise closure time established."
+      },
+      {
+        "publisher": "UNM Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate",
+        "detail": "October 27 full emergency/clinic restoration already recorded in an earlier watch."
+      },
+      {
+        "publisher": "EMS1",
+        "url": "https://www.ems1.com/volunteer-ems/rural-maine-ambulance-service-to-close-as-volunteer-ranks-fall-short",
+        "disposition": "excluded_older_announcement",
+        "detail": "October 21 report announcing future November 30 closure of Dennys River Ambulance Service, not a new development in current window."
+      },
+      {
+        "publisher": "San Jose Spotlight",
+        "url": "https://sanjosespotlight.com/santa-clara-county-long-overdue-youth-psychiatric-hospital/",
+        "disposition": "excluded_future_event",
+        "detail": "Independently corroborates November 3 opening to patients, despite opening-style headline dated October 26."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "The Spokesman-Review",
+        "url": "https://www.spokesman.com/stories/2026/sep/04/multicare-to-close-multiple-clinics-by-the-end-of-/",
+        "failure": "Full article open returned HTTP 403; index excerpt remained available.",
+        "effect": "No material gap in assessing newly reported changes because this was a September announcement; no in-window new confirmation was identified."
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "One optional local-news page returned 403, hence DEGRADED despite useful coverage and all 12 searches completing. Search indexing can lag, exact within-hour timing is not reliably available for date-only reporting, and this recall search is not exhaustive national surveillance.",
+    "controls": "No approvals, publication, production collector changes, schedule changes, disabling, or new automations."
+  }
+}

@@ -29,7 +29,7 @@ def _run_case(pytester, case: str):
         "cleanup_failure": "assert root.joinpath('evidence.txt').exists()",
     }[case]
     mark = "@pytest.mark.keep_fixture\n" if case == "keep" else ""
-    cleanup = "cleanup=lambda path: (path.joinpath('evidence.txt').unlink(), (_ for _ in ()).throw(OSError('cleanup failure')))[1]" if case == "cleanup_failure" else ""
+    cleanup = "cleanup=lambda path: path.joinpath('cleanup-called.txt').write_text('must not run', encoding='utf-8')" if case == "cleanup_failure" else ""
     teardown = "raise RuntimeError('teardown failure')" if case == "teardown_failure" else ""
     pytester.makepyfile(test_case=f"""
 import pytest
@@ -55,10 +55,12 @@ def root(request, tmp_path_factory):
     return result, output, roots
 
 
-def test_success_is_removed_only_after_all_phases_pass(pytester):
-    result, _, roots = _run_case(pytester, 'success')
+def test_success_is_retained_without_verified_cleanup_backend(pytester):
+    result, output, roots = _run_case(pytester, 'success')
     assert result.ret == 0
-    assert len(roots) == 1 and not roots[0].exists()
+    assert len(roots) == 1 and roots[0].exists()
+    assert (roots[0] / 'evidence.txt').read_text(encoding='utf-8') == 'evidence'
+    assert 'automatic cleanup deferred (no verified object-bound backend)' in output
 
 
 @pytest.mark.parametrize('case', ['setup_failure', 'test_failure', 'teardown_failure', 'skip', 'xfail', 'keep'])
@@ -69,14 +71,15 @@ def test_incomplete_or_non_successful_runs_are_retained(pytester, case):
     assert (result.ret == 0) if case in {'skip', 'xfail', 'keep'} else (result.ret != 0)
 
 
-def test_cleanup_failure_is_visible_and_retained(pytester):
+def test_unverified_cleanup_callback_is_not_invoked(pytester):
     result, output, roots = _run_case(pytester, 'cleanup_failure')
     assert result.ret == 0 and len(roots) == 1 and roots[0].exists()
-    assert not (roots[0] / 'evidence.txt').exists()
-    assert 'cleanup failure' in output and 'retained' in output
+    assert (roots[0] / 'evidence.txt').read_text(encoding='utf-8') == 'evidence'
+    assert not (roots[0] / 'cleanup-called.txt').exists()
+    assert 'automatic cleanup deferred' in output and 'retained' in output
 
 
-def test_shared_template_is_retained_when_child_cleanup_fails(pytester):
+def test_shared_template_is_retained_when_child_cleanup_is_deferred(pytester):
     repo_tests = Path(__file__).resolve().parent
     pytester.makeconftest(
         f"import sys; sys.path.insert(0, {str(repo_tests.parent)!r}); "
@@ -99,7 +102,7 @@ def template(request, tmp_path_factory):
 @pytest.fixture
 def child(request, tmp_path_factory, template):
     root = tmp_path_factory.mktemp('child')
-    register_fixture_root(request, root, parent_group='shared', cleanup=lambda path: (_ for _ in ()).throw(OSError('child cleanup failure')))
+    register_fixture_root(request, root, parent_group='shared', cleanup=lambda path: path.joinpath('cleanup-called.txt').write_text('must not run', encoding='utf-8'))
     shutil.copy2(template / 'template.txt', root / 'child.txt')
     mark_fixture_setup_complete(request, root)
     print(f'CHILD_ROOT={root}')
@@ -113,6 +116,9 @@ def test_child(child):
     template = Path(re.search(r'TEMPLATE_ROOT=(.+)', output).group(1).strip())
     child = Path(re.search(r'CHILD_ROOT=(.+)', output).group(1).strip())
     assert result.ret == 0 and child.exists() and template.exists()
+    assert not (child / 'cleanup-called.txt').exists()
+    assert (child / 'child.txt').read_text(encoding='utf-8') == 'template'
+    assert (template / 'template.txt').read_text(encoding='utf-8') == 'template'
     assert 'shared template' in output
 
 
@@ -244,3 +250,160 @@ def test_missing_teardown_is_retained():
         'call': type('Report', (), {'outcome': 'passed', 'wasxfail': False})(),
     }
     assert FixtureRunRegistry._must_retain(record)
+
+
+def _retention_registry(tmp_path):
+    from types import SimpleNamespace
+    from fixture_lifecycle import FixtureRunRegistry
+
+    base = tmp_path / 'base'
+    base.mkdir()
+    request = SimpleNamespace(
+        config=SimpleNamespace(_tmp_path_factory=SimpleNamespace(getbasetemp=lambda: base)),
+        node=SimpleNamespace(nodeid='retention-case', get_closest_marker=lambda _: None),
+    )
+    return FixtureRunRegistry(), request, base
+
+
+def _mark_retention_case_passed(record):
+    from types import SimpleNamespace
+
+    record.setup_complete = True
+    record.reports = {
+        phase: SimpleNamespace(outcome='passed', wasxfail=False)
+        for phase in ('setup', 'call', 'teardown')
+    }
+
+
+def test_successful_record_never_invokes_path_callback(tmp_path):
+    registry, request, base = _retention_registry(tmp_path)
+    root = base / 'root'
+    root.mkdir()
+    evidence = root / 'evidence.txt'
+    evidence.write_text('retain', encoding='utf-8')
+    calls = []
+    record = registry.register(request, root, cleanup=calls.append)
+    _mark_retention_case_passed(record)
+
+    registry.finalize()
+    registry.finalize()
+
+    assert calls == []
+    assert record.cleanup_deferred
+    assert not record.cleanup_failed and not record.boundary_failed
+    assert evidence.read_text(encoding='utf-8') == 'retain'
+
+
+def test_default_cleanup_is_deferred_for_successful_root(tmp_path):
+    registry, request, base = _retention_registry(tmp_path)
+    root = base / 'root'
+    root.mkdir()
+    evidence = root / 'evidence.txt'
+    evidence.write_text('retain', encoding='utf-8')
+    record = registry.register(request, root)
+    _mark_retention_case_passed(record)
+
+    registry.finalize()
+
+    assert record.cleanup_deferred and not record.cleanup_failed
+    assert evidence.read_text(encoding='utf-8') == 'retain'
+
+
+def test_complete_standalone_template_is_deferred(tmp_path):
+    registry, request, base = _retention_registry(tmp_path)
+    root = base / 'template'
+    root.mkdir()
+    calls = []
+    record = registry.register(request, root, group='standalone', cleanup=calls.append)
+    record.setup_complete = True
+
+    registry.finalize()
+
+    assert record.cleanup_deferred and root.is_dir()
+    assert calls == []
+
+
+def test_existing_retention_reasons_do_not_attempt_cleanup(tmp_path):
+    registry, request, base = _retention_registry(tmp_path)
+    calls = []
+    records = []
+    for reason in ('setup_incomplete', 'missing_teardown', 'setup_failed', 'call_failed',
+                   'teardown_failed', 'skipped', 'xfail', 'keep'):
+        root = base / reason
+        root.mkdir()
+        (root / 'evidence.txt').write_text(reason, encoding='utf-8')
+        record = registry.register(request, root, keep=reason == 'keep', cleanup=calls.append)
+        _mark_retention_case_passed(record)
+        if reason == 'setup_incomplete':
+            record.setup_complete = False
+        elif reason == 'missing_teardown':
+            record.reports.pop('teardown')
+        elif reason.endswith('_failed'):
+            record.reports[reason.removesuffix('_failed')].outcome = 'failed'
+        elif reason == 'skipped':
+            record.reports['call'].outcome = 'skipped'
+        elif reason == 'xfail':
+            record.reports['call'].wasxfail = True
+        records.append((reason, record))
+
+    registry.finalize()
+
+    assert calls == []
+    for reason, record in records:
+        assert not record.cleanup_deferred
+        assert not record.cleanup_failed and not record.boundary_failed
+        assert (record.root / 'evidence.txt').read_text(encoding='utf-8') == reason
+
+
+def test_replacement_is_refused_without_invoking_cleanup(tmp_path):
+    registry, request, base = _retention_registry(tmp_path)
+    root = base / 'root'
+    root.mkdir()
+    (root / 'original.txt').write_text('original', encoding='utf-8')
+    calls = []
+    record = registry.register(request, root, cleanup=calls.append)
+    _mark_retention_case_passed(record)
+    original = base / 'original'
+    root.rename(original)
+    root.mkdir()
+    (root / 'replacement.txt').write_text('replacement', encoding='utf-8')
+
+    registry.finalize()
+
+    assert calls == [] and record.boundary_failed
+    assert not record.cleanup_deferred and not record.cleanup_failed
+    assert (original / 'original.txt').read_text(encoding='utf-8') == 'original'
+    assert (root / 'replacement.txt').read_text(encoding='utf-8') == 'replacement'
+
+
+def test_deferred_child_retains_complete_shared_template(tmp_path):
+    registry, request, base = _retention_registry(tmp_path)
+    template = base / 'template'
+    template.mkdir()
+    child = base / 'child'
+    child.mkdir()
+    calls = []
+    template_record = registry.register(request, template, group='shared', cleanup=calls.append)
+    template_record.setup_complete = True
+    child_record = registry.register(request, child, parent_group='shared', cleanup=calls.append)
+    _mark_retention_case_passed(child_record)
+
+    registry.finalize()
+
+    assert child_record.cleanup_deferred
+    assert not template_record.cleanup_deferred
+    assert template.is_dir() and child.is_dir() and calls == []
+
+
+def test_session_error_still_retains_complete_template(tmp_path):
+    registry, request, base = _retention_registry(tmp_path)
+    root = base / 'template'
+    root.mkdir()
+    calls = []
+    record = registry.register(request, root, group='shared', cleanup=calls.append)
+    record.setup_complete = True
+
+    registry.finalize(retain_templates=True)
+
+    assert root.is_dir() and calls == []
+    assert not record.cleanup_deferred and not record.cleanup_failed

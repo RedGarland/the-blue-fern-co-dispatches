@@ -47,6 +47,7 @@ class FixtureRun:
     ancestor_identities: tuple[tuple[Path, tuple[int, int, int]], ...] = ()
     cleanup_failed: bool = False
     boundary_failed: bool = False
+    cleanup_deferred: bool = False
 
     @property
     def is_template(self) -> bool:
@@ -143,16 +144,14 @@ class FixtureRunRegistry:
             record.boundary_failed = True
             print(f"fixture cleanup refusal: boundary or identity changed; retained {record.root}", file=sys.stderr)
             return
-        try:
-            record.cleanup(record.root)
-        except Exception as exc:
-            record.cleanup_failed = True
-            state = "partial" if record.root.exists() else "root absent after failure"
-            print(f"fixture cleanup failure: retained {record.root} ({state}): {exc}", file=sys.stderr)
-            return
-        if record.root.exists():
-            record.cleanup_failed = True
-            print(f"fixture cleanup incomplete: retained {record.root} (root still exists)", file=sys.stderr)
+        # A path check cannot bind later recursive deletion to this object.
+        # Keep the cleanup argument for caller compatibility, but do not invoke
+        # any path callback until a separately reviewed object-bound backend exists.
+        record.cleanup_deferred = True
+        print(
+            f"fixture retention: automatic cleanup deferred (no verified object-bound backend); retained {record.root}",
+            file=sys.stderr,
+        )
 
     def finalize(self, *, retain_templates: bool = False) -> None:
         retain = {id(record): self._must_retain(record) for record in self.records}
@@ -166,10 +165,10 @@ class FixtureRunRegistry:
                 print(f"fixture retention: retained {record.root}", file=sys.stderr)
             else:
                 self._cleanup_record(record)
-                retain[id(record)] = record.cleanup_failed or record.boundary_failed or record.root.exists()
+                retain[id(record)] = record.cleanup_deferred or record.cleanup_failed or record.boundary_failed or record.root.exists()
         for record in self.records:
             if record.is_template and any(
-                child.parent_group == record.group and (retain[id(child)] or child.cleanup_failed or child.boundary_failed)
+                child.parent_group == record.group and (retain[id(child)] or child.cleanup_deferred or child.cleanup_failed or child.boundary_failed)
                 for child in self.records
             ):
                 retain[id(record)] = True

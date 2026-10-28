@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T154213-0700-r11-20261028T224213Z",
+  "scheduled_for": "2026-10-28T15:44:51-07:00",
+  "started_at": "2026-10-28T15:42:13-07:00",
+  "completed_at": "2026-10-28T15:43:19.086-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T14:46:04.993-07:00",
+    "end": "2026-10-28T15:43:19.086-07:00",
+    "basis": "Since last verified Gaza Source Watch heartbeat completion. Screened newly indexed reports against earlier Oct 28 incident ledger; event dates and source publish dates distinguished."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Gaza collector/publisher is authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T144445-0700-r11-20261028T214445Z",
+      "completed_at": "2026-10-28T14:46:04.993-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-10-28/gaza-source-watch-20261028T144445-0700-r11-20261028T214445Z.json"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible, current homepage most recent item 27 Oct West Bank; latest Gaza-containing situation report dated 26 Oct (22 Oct report). No Gaza in-window update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "502 Bad Gateway, previously documented regional endpoint problem."
+      },
+      {
+        "publisher": "WHO global emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated in-window Gaza healthcare, hospital, medevac or fuel change."
+      }
+    ],
+    "initial_primary_searches": [
+      "site:ochaopt.org Gaza October 28 2026 humanitarian update",
+      "site:who.int Gaza 28 October 2026 health update"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"28/October/2026\" \"Gaza\" \"PM\"",
+      "site:english.wafa.ps/Pages/Details/ \"29/October/2026\" Gaza killed injured",
+      "site:apnews.com/article/ Gaza October 28 2026 evening aid strikes 2026",
+      "site:reuters.com/world/middle-east/ Gaza October 28 2026 latest ceasefire strike aid",
+      "site:aljazeera.com/news/liveblog/2026/10/28 Gaza Israel ceasefire 28 October latest injuries",
+      "site:aa.com.tr/en/middle-east/ Gaza 28 October 2026 evening injured aid ceasefire",
+      "site:un.org OR site:news.un.org Gaza October 28 2026 humanitarian crossings aid medevac water new",
+      "site:unicef.org Gaza 28 October 2026 children injury water displacement",
+      "site:wfp.org Gaza 28 October 2026 aid food trucks fuel",
+      "site:icrc.org OR site:msf.org Gaza October 28 2026 health hospital ambulance evacuation",
+      "Gaza October 28 2026 aid Rafah Kerem Shalom medical evacuations fuel crossing update",
+      "Gaza October 28 2026 evening 29 October ceasefire negotiations hostages civilians attacks update"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Accessible; latest Gaza-specific items listed at 28 October 16:23 and 13:24 Jerusalem time; both previously logged. Later items were West Bank or diplomatic."
+      },
+      {
+        "publisher": "Reuters Israel/Hamas index",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Accessible, no newly listed Gaza-specific qualifying report; largely Israel election and older UN inquiry."
+      },
+      {
+        "publisher": "Al Jazeera Palestine index and live updates",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible, in-window live teasers about Iran/Yemen/Lebanon or Israeli elections; current Gaza winter feature overlaps earlier infrastructure finding."
+      },
+      {
+        "publisher": "AP article",
+        "url": "https://apnews.com/article/mideast-iran-saudi-yemen-israel-palestinians-october-282026-c032db4b09725fea0f6320eec49de5d4",
+        "result": "Previously accessible through prior watch; direct article fetch failed this run. Earlier claims were overlapping southern Gaza casualties."
+      },
+      {
+        "publisher": "JDN, secondary reporting of COGAT",
+        "url": "https://www.jdn.co.il/news/2756287/",
+        "result": "28 Oct 13:28 Israel-time report attributes winter supplies/medical clinic and water/sewage approvals and Monday 214 departures to COGAT. It predates in-window watch and direct primary verification was not obtained; retained as excluded lead, not promoted."
+      }
+    ],
+    "exclusions": [
+      "WAFA Oct 28 Rafah al-Mawasi/Nuseirat/al-Bayouk/al-Qarara and Shalouf injuries already recorded in earlier October 28 watch findings.",
+      "Anadolu five killed/32 injured update already logged; no repeated casualty aggregation.",
+      "Al Jazeera eastern Gaza City seven injured and drainage capacity at ~20% already recorded in the 13:42 PDT watch.",
+      "JDN report sourced to COGAT earlier October 28 and Monday evacuation claim are outside in-window new developments; primary documentation was not directly verified.",
+      "Old 2025 October 28/29 OCHA reports appearing in searches, 2026 older news, West Bank-only and election commentary, and unsupported/social claims excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "failure": "502 Bad Gateway",
+        "materiality": "Persistent source-specific limitation; global WHO site available."
+      },
+      {
+        "source": "UN News",
+        "failure": "robots.txt block for news.un.org",
+        "materiality": "Persistent source-specific restriction; OCHA OPT and UN org results available."
+      },
+      {
+        "source": "AP direct article",
+        "failure": "Not accessible through web page open this run",
+        "materiality": "Substantial alternatives available; article previously covered and no new item established."
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring WHO regional endpoint and UN News restrictions and one AP article access failure; no new material watch-wide degradation, alternative authoritative coverage available.",
+    "notification_assessment": "No new qualifying nonduplicate development and no newly material watch-wide failure/degradation; do not notify.",
+    "safeguards": "Exactly one heartbeat on ops/watch-ledger. No production, approvals, publication, branch/schedule or automation change."
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T164259-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T16:45:22-07:00",
+  "started_at": "2026-10-28T16:42:59-07:00",
+  "completed_at": "2026-10-28T16:43:41-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T15:42:39.761-07:00",
+    "end": "2026-10-28T16:43:41-07:00",
+    "basis": "Since the verified preceding supplementary Care Line Watch heartbeat; same-day late-indexed results screened for previously missed events, without treating old closure dates as new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for U.S. and territories, not the authoritative national production collector.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T154143-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS listing accessed directly before targeted searches. Three Oct 23 home-health termination notices remained the newest; no newer notices listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 28, 2026\" hospital emergency department closes suspends services",
+      "\"October 28, 2026\" maternity labor delivery unit closure announced",
+      "\"October 28, 2026\" rural hospital emergency services closing reopening",
+      "\"October 28, 2026\" ambulance service suspends operations closure",
+      "\"October 28, 2026\" behavioral health psychiatric hospital unit closing services",
+      "\"October 28, 2026\" dialysis clinic oncology center closing patients",
+      "site:cms.gov \"2026-10-28\" \"termination\" \"provider\" public notice",
+      "\"Oct 28, 2026\" \"emergency room\" \"closed\" hospital United States",
+      "\"Oct 28, 2026\" \"air ambulance\" \"base\" closes OR suspended",
+      "\"Oct 28, 2026\" \"primary care clinic\" \"closing\" OR \"reopening\"",
+      "\"October 28, 2026\" \"dialysis\" \"closing\" OR \"suspended\" United States",
+      "\"October 28, 2026\" hospital \"reopened\" emergency services after closure United States Puerto Rico Guam"
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "checked_candidate_sources": [
+      {
+        "publisher": "UNM Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_previously_recorded_restoration",
+        "detail": "Oct 28 12:39 p.m. MDT? official site time not timezone-specified; clinical operations fully functional, no additional suspension since prior check; restoration occurred Oct 27."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_earlier_announced",
+        "detail": "Oct 28 report of upcoming end-of-month Roseland maternity closure; previously announced earlier in October and already reviewed."
+      },
+      {
+        "publisher": "Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_duplicate",
+        "detail": "Oct 28 Sanford Luverne future childbirth cessation already recorded pending_review in prior watch."
+      },
+      {
+        "publisher": "WV News",
+        "url": "https://www.wvnews.com/prestoncountynews/preston-county-ems-crisis-deepens-as-bruceton-ambulance-service-suspends-operations-again/article_9c1166d2-8bb8-42f5-8e66-39f9c31e0351.html",
+        "disposition": "excluded_previously_reviewed",
+        "detail": "Bruceton EMS suspension occurred Tuesday, Oct 27 and was reviewed in earlier watch."
+      },
+      {
+        "publisher": "KFF Health News via CBS News",
+        "url": "https://www.cbsnews.com/news/pediatric-intensive-care-units-closing-nationwide/",
+        "disposition": "excluded_retrospective_outside_window",
+        "detail": "Oct 27 reporting describes Missoula Community Medical Center PICU closure earlier in October with exact effective date unstated; significant rural pediatric critical-care loss but no new change within this hourly window. Potential subject for primary collector retrospective reconciliation; absence from primary not established."
+      }
+    ],
+    "limitations": "Search indexing may lag local and territorial notices. Twelve targeted searches and an official CMS page check are recall coverage, not exhaustive national coverage. Search engine returned many retrospective/foreign matches.",
+    "controls": "No production modification, approval, publication, schedule change, or disabling. Exactly one heartbeat requested on ops/watch-ledger."
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T174221-0700-r11-20261028T004221Z",
+  "scheduled_for": "2026-10-27T17:44:51-07:00",
+  "started_at": "2026-10-27T17:42:21-07:00",
+  "completed_at": "2026-10-27T17:43:42.647-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T16:44:55-07:00",
+    "end": "2026-10-27T17:43:42.647-07:00",
+    "basis": "Starts at the completed_at timestamp of the last verified GitHub heartbeat; source and event publication dates reconciled with Los Angeles observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; daily production Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T164337-0700-r11-20261027T234337Z.json",
+      "completed_at": "2026-10-27T16:44:55-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Fetched directly on ops/watch-ledger via GitHub connector."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; 27 October update is West Bank-only. Newest Gaza-specific entry is the 22 October situation report published 26 October; no in-window Gaza-specific update on index."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Overview/latest-news/latest-regional-news links do not list any Gaza health, hospital, fuel, medevac, or medical access report within the watch window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Inaccessible through retrieval, same previously documented restriction; WHO global overview accessible as partial alternative."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 27 2026 27 October late afternoon evening airstrikes deaths ceasefire Reuters",
+      "site:english.wafa.ps Gaza 27 October 2026 evening killed injured ambulance",
+      "site:palestine.un.org/en Gaza 27 October 2026 evening humanitarian aid convoy children",
+      "site:ochaopt.org 27 October 2026 Gaza humanitarian flash update ceasefire aid",
+      "Gaza October 27 2026 17:00 18:00 19:00 GMT strikes casualties 27/10/2026",
+      "Gaza Tuesday 27 October 2026 water electricity sewage desalination UNICEF WFP evening",
+      "Gaza October 27 2026 ambulance hospital fuel medevac crossing Rafah evening WHO ICRC MSF",
+      "site:aljazeera.com/news/2026/10/27 Gaza latest Tuesday October 27 casualties ceasefire",
+      "Gaza October 28 2026 early hours Israeli fire civilian casualties overnight",
+      "site:english.wafa.ps/Pages/Details/ Gaza October 28 2026 Wednesday morning medical ambulance",
+      "site:anadoluagency.com Gaza \"October 28, 2026\" Israeli attack killed",
+      "Gaza humanitarian UN news October 28 2026 overnight aid crossing evacuations ceasefire"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest homepage reports through 23:07 on 27 October Palestine local time concern Israeli election and West Bank. No verified in-window Gaza item; 11:46 report of child death already recorded by 03:45 watch."
+      },
+      {
+        "publisher": "UN in Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "27 October page carries West Bank-led story referencing Gaza yellow-line shootings, UN sites/convoy and Shuja'iyyeh shelter arson; same incidents documented by preceding watch and/or earlier watches, not new."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "27 October feed focuses on elections and West Bank; 26 October Gaza strike and UN inquiry reports precede watch window."
+      }
+    ],
+    "exclusions": [
+      "UN/OCHA reports of UN sites, schools, convoy incidents, Shuja'iyyeh tent arson and yellow-line encroachment were identified in earlier hourly watch records.",
+      "WAFA death of Tihani Mohammad Saeed Shalalfeh was captured by 03:45 PDT watch.",
+      "Reuters/Al Jazeera 26 October casualty summaries and UN investigators report predate this window.",
+      "Results about October 28 2025 ceasefire strikes and prior-month incidents are not October 2026 developments.",
+      "West Bank Hebron displacement, hospital/ambulance incidents and Israeli election stories do not qualify as Gaza developments."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Retrieval endpoint inaccessible",
+        "materiality": "Previously documented and ongoing; WHO global and OCHA still accessible."
+      },
+      {
+        "source": "Search freshness",
+        "url": null,
+        "error": "Several search matches were older than target dates despite date-constrained queries.",
+        "materiality": "Date filtering and direct publisher index checks avoided recycled/false-positive items; incomplete recall remains possible."
+      }
+    ],
+    "assessment": "No traceable, verified, nonduplicate Gaza civilian-impact or humanitarian access development newly published or confirmed in this bounded hourly window. Negative result does not establish that no events occurred. DEGRADED reflects persistent WHO regional access restriction, not a newly material failure.",
+    "action_scope": "This GitHub heartbeat is the sole write. No authorization, publication, production content, social posting, scheduling, or automation changes."
+  }
+}

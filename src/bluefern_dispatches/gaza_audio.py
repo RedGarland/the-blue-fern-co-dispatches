@@ -699,6 +699,8 @@ def build_flash_briefing_item(metadata: dict[str, Any]) -> dict[str, Any]:
 
 
 def load_gaza_audio_inputs(project_root: Path, edition_date: str) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+    from .gaza_corrected_manifest_reader import assert_non_site_action_allowed
+    assert_non_site_action_allowed(project_root, edition_date, "audio")
     edition_dir = _edition_root(project_root, edition_date)
     curation_path = edition_dir / "curation_manifest.json"
     sources_path = edition_dir / "sources_manifest.json"

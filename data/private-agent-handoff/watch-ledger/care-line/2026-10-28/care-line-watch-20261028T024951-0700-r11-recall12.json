@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T024951-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T02:45:22-07:00",
+  "started_at": "2026-10-28T02:49:51-07:00",
+  "completed_at": "2026-10-28T02:51:09-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T01:41:57-07:00",
+    "end": "2026-10-28T02:51:09-07:00",
+    "basis": "Previous independently verified Care Line watch heartbeat completed at 01:41:57 PDT. Searched emerging October 27-28 healthcare-access events, including older indexed reports only for newly effective concrete change."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territories healthcare-access missed-signal recall; authoritative Care Line production collection is not altered.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T014024-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "CMS public notice listing checked as first research target and directly opened. Latest records remained three October 23 home-health agency terminations; no new October 27-28 provider termination, rescission, CLIA limitation or suspension."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 28, 2026\" \"hospital\" \"emergency department\" \"closed\" OR \"suspended\" US",
+      "\"October 28, 2026\" hospital \"labor and delivery\" \"closure\" OR \"suspension\"",
+      "\"October 28, 2026\" psychiatric hospital \"closed\" OR behavioral health unit \"suspended\"",
+      "\"October 28, 2026\" dialysis clinic \"closed\" OR oncology infusion \"suspended\"",
+      "\"October 28, 2026\" ambulance service base \"closed\" OR \"suspended\" EMS",
+      "\"October 28, 2026\" rural hospital emergency department \"shut\" OR \"closure\"",
+      "\"October 28, 2026\" \"primary care\" clinic closing patients healthcare access",
+      "\"October 28, 2026\" \"hospital\" \"reopened\" \"emergency\" services restoration",
+      "\"October 27, 2026\" hospital emergency department closing suspended service late",
+      "\"October 27, 2026\" maternity dialysis oncology behavioral health clinic closures late",
+      "\"October 28, 2026\" \"Puerto Rico\" \"Guam\" \"Virgin Islands\" hospital medical services suspended closure",
+      "\"October 28, 2026\" \"air ambulance\" \"EMS\" \"medical helicopter\" closure or suspension services"
+    ],
+    "searched_classes": [
+      "hospital/ED/maternity suspension or closure",
+      "psychiatric/behavioral health loss",
+      "dialysis/oncology loss",
+      "primary-care loss",
+      "rural/emergency service loss",
+      "ambulance/air-medical/base loss",
+      "essential service reopening/restoration",
+      "U.S. territories",
+      "CMS provider/CLIA notices"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "University of New Mexico Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate",
+        "detail": "October 27 2:02 p.m. restoration of hospital, ambulance, and clinic operations already recorded pending_review by an earlier watch; no further qualifying transition identified."
+      },
+      {
+        "publisher": "Bruno Digital",
+        "url": "https://bruno.digital/news/a-new-mexico-hospital-diverted-ambulances-for-two-hours-and-a-month-old-ransomware-gang-claims-credit",
+        "disposition": "excluded_repackaging",
+        "detail": "October 28 publication retells the October 26 cyber interruption and restoration, without a new verified care-access change."
+      },
+      {
+        "publisher": "Daily Egyptian",
+        "url": "https://embed-rech-01.dialog.cm/gusbode/docs/the_daily_egyptian_-_oct_28_2026",
+        "disposition": "excluded_older_decision",
+        "detail": "October 28 dated retrospective on previously debated Choate psychiatric bed reductions and an October 15 announcement; no newly effective change confirmed."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "All twelve targeted searches returned usable results but search indexing at 02:50 PDT is sparse and many matches are unrelated, foreign, or retrospective. This watch does not establish exhaustive absence and is not the primary collector.",
+    "controls": "No approval, publication, schedule change, task disabling, or production-collector modification."
+  }
+}

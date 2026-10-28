@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T104401-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T10:45:22-07:00",
+  "started_at": "2026-10-28T10:44:01-07:00",
+  "completed_at": "2026-10-28T10:45:37-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T09:45:52-07:00",
+    "end": "2026-10-28T10:45:37-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completion to this observation; include only newly announced, newly effective, or materially changed healthcare-access events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall watch only; production national Care Line collection remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T094431-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS public-notice listing checked before the twelve topical searches; latest displayed notices remain October 23 (home-health agency terminations). No new provider termination, rescission, CLIA limitation or suspension identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 28, 2026\" hospital emergency department closing services ambulance United States",
+      "\"October 28, 2026\" maternity labor delivery unit closure hospital",
+      "\"October 28, 2026\" rural hospital emergency care suspended",
+      "\"October 28, 2026\" behavioral health psychiatric facility closing patients",
+      "\"Oct 28, 2026\" ambulance service shutdown suspended EMS base closing",
+      "\"Oct 28, 2026\" air ambulance helicopter base shutdown medical transport",
+      "\"Oct 28, 2026\" dialysis center closes patients relocation",
+      "\"Oct 28, 2026\" oncology cancer clinic suspends appointments closure",
+      "\"October 28, 2026\" primary care clinic closing shut doors patients",
+      "\"October 28, 2026\" hospital reopened emergency department services restored",
+      "\"October 28, 2026\" ambulance suspended emergency response service county",
+      "\"October 28, 2026\" territory Puerto Rico Guam Virgin Islands medical hospital emergency services closed"
+    ],
+    "search_recency_days": 2,
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "rural and emergency-service loss",
+      "ambulance/air-medical/base suspension or closure",
+      "official CMS provider termination, rescission and CLIA access-risk notices",
+      "concrete essential-service reopening and restoration",
+      "U.S. states and territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "CMS",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "excluded_no_new_notice",
+        "detail": "Official listing's newest notices date to October 23, 2026."
+      },
+      {
+        "publisher": "WV News",
+        "url": "https://www.wvnews.com/prestoncountynews/bruceton-community-ambulance-service-halts-services-until-insurance-is-reinstated/article_8aac0518-da54-425f-bab6-2663d5344ad8.html",
+        "disposition": "excluded_outside_window_previously_checked",
+        "detail": "Bruceton EMS again suspended operations October 27 while changing insurance carriers. Already checked and excluded in the 08:46 PDT Care Line heartbeat; no new October 28 09:45–10:45 PDT material change verified."
+      },
+      {
+        "publisher": "WV News",
+        "url": "https://www.wvnews.com/prestoncountynews/preston-county-ems-crisis-deepens-as-bruceton-ambulance-service-suspends-operations-again/article_9c1166d2-8bb8-42f5-8e66-39f9c31e0351.html",
+        "disposition": "excluded_recap_previous_day",
+        "detail": "Oct 28 recap of the same Tuesday October 27 ambulance interruption; direct article read returned HTTP 429, but Oct 27 primary local report was fully accessible."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_previously_announced",
+        "detail": "October 28 rally report about maternity ward suspension already announced weeks earlier; prior 09:45 heartbeat already evaluated this source."
+      },
+      {
+        "publisher": "Fluvanna Review",
+        "url": "https://fluvannareview.com/2026/10/volunteer-fire-department-regains-ems-authorization-after-suspension/",
+        "disposition": "excluded_older_restoration",
+        "detail": "Restoration announced October 19, 2026, and dated October 27 in report; outside this observation window."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://www.wvnews.com/prestoncountynews/preston-county-ems-crisis-deepens-as-bruceton-ambulance-service-suspends-operations-again/article_9c1166d2-8bb8-42f5-8e66-39f9c31e0351.html",
+        "failure": "HTTP 429 on optional Oct 28 retrospective local article",
+        "mitigation": "Previously published original local article from October 27 was accessible and supplied event facts.",
+        "material_coverage_loss": false
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "Bounded index-based recall is not exhaustive and indexing may lag actual publication. An optional retrospective local page returned HTTP 429; successful independent coverage of the same older event remained available. No new qualifying development confirmed for the hourly observation window.",
+    "controls": "No review approvals, publication, scheduling mutation, disabling or production collector changes. One heartbeat file only."
+  }
+}

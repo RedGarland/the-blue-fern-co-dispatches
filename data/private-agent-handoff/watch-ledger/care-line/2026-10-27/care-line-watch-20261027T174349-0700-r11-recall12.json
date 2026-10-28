@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T174349-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T17:45:22-07:00",
+  "started_at": "2026-10-27T17:43:49-07:00",
+  "completed_at": "2026-10-27T17:44:47-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T16:43:39.126-07:00",
+    "end": "2026-10-27T17:44:47-07:00",
+    "basis": "Previous verified Care Line heartbeat completion to the current bounded watch; previously assessed developments and older announcements excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall watch only; primary national production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official page accessible, checked before targeted searches. Latest notices remain three home-health agency termination notices dated October 23, 2026; none newly listed for October 27."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended services October 27 2026 announced today",
+      "hospital maternity labor delivery unit closure suspended October 27 2026",
+      "hospital behavioral health psychiatric inpatient closed suspended services October 27 2026",
+      "dialysis center oncology cancer clinic closure interrupted services October 27 2026",
+      "rural hospital emergency service closure diversion October 27 2026 USA",
+      "ambulance service shutdown base closure paramedic coverage October 27 2026",
+      "air ambulance helicopter medical base closing suspended October 27 2026 United States",
+      "primary care clinic permanently closing patients October 27 2026 announcement",
+      "hospital clinic reopening services restored emergency department October 27 2026",
+      "site:cms.gov \"2026-10-27\" \"Termination\" \"provider\"",
+      "Puerto Rico Guam Virgin Islands hospital clinic medical service closure October 27 2026",
+      "October 27 2026 hospital diverted ambulances emergency services outage reopened"
+    ],
+    "sources_checked": [
+      {
+        "source": "CMS Public Notices (official)",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "Accessible, newest date October 23; no new October 27 notices."
+      },
+      {
+        "source": "UNM Health Sciences Center (official)",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "October 27 restoration already recorded in the earlier 13:47 PDT heartbeat; no distinct in-window development."
+      },
+      {
+        "source": "The Spokesman-Review",
+        "url": "https://www.spokesman.com/stories/2026/sep/04/multicare-to-close-multiple-clinics-by-the-end-of-/",
+        "result": "MultiCare Rockwood primary-care clinic October 27 closure was announced September 4 and has been assessed by prior watches."
+      },
+      {
+        "source": "My Keene Now",
+        "url": "https://mykeenenow.com/news/219912-cheshire-medical-center-to-close-winchester-family-medicine-clinic-in-november/",
+        "result": "Winchester Family Medicine November 6 closure was reported last week, not a new announcement or effective service loss this observation window."
+      }
+    ],
+    "exclusions": [
+      "UNM Health restoration: duplicate of earlier October 27 Care Line watch finding.",
+      "MultiCare Rockwood Primary Care Access Clinic: October 27 effective date announced September 4; previously assessed.",
+      "Cheshire Medical Center Winchester Family Medicine closure: reported last week, future effective date November 6, no new action in this window.",
+      "Insight Coldwater inpatient behavioral-health suspension: July 22, 2026 event.",
+      "Earlier air ambulance and hospital closures; proposed reopenings without concrete effective restoration; Canadian and other international results; broad business/ownership coverage without service change."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "All 12 targeted searches executed; results were mainly older, unrelated, or already known. Search indexing latency and bounded coverage mean that no findings does not prove absence of events nationally.",
+    "controls": "Exactly one new heartbeat file intended for ops/watch-ledger; no editorial approval, publication, production change, schedule modification, or disabling."
+  }
+}

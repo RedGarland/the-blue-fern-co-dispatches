@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from scripts.test_storage_admission import explicit_test_root, require_test_root_capacity
-import time
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
@@ -82,10 +82,7 @@ def make_pytest_basetemp(prefix: str, root: Path | None = None) -> Path:
     require_test_root_capacity(repo_root)
     test_root = explicit_test_root(root)
     require_test_root_capacity(test_root)
-    unique = f"{prefix}-{os.getpid()}-{int(time.time() * 1000)}"
-    path = test_root / unique
-    path.mkdir(parents=True, exist_ok=True)
-    return path
+    return Path(tempfile.mkdtemp(prefix="p-", dir=test_root))
 
 
 def pytest_command(profile_name: str, basetemp: Path) -> list[str]:

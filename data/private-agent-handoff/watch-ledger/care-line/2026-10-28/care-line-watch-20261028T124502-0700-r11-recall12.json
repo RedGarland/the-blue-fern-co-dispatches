@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T124502-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T12:45:22-07:00",
+  "started_at": "2026-10-28T12:45:02-07:00",
+  "completed_at": "2026-10-28T12:46:18-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T11:51:25-07:00",
+    "end": "2026-10-28T12:46:18-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completion through this observation. Same-day findings already recorded in the previous heartbeat are excluded as duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary national and territories healthcare-access recall only. Primary production Care Line collection remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T115007-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS listing directly read after correcting an outdated noncanonical URL; latest notices are dated October 23. No new qualifying CMS termination, rescission, CLIA limitation or suspension in this observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended services October 28 2026 United States",
+      "maternity labor delivery childbirth unit closing announced October 28 2026 hospital",
+      "rural hospital closure emergency services loss October 28 2026",
+      "ambulance EMS agency stops service base closure October 28 2026",
+      "air medical helicopter flight base closing October 28 2026",
+      "behavioral health psychiatric inpatient unit closing suspended October 28 2026",
+      "dialysis center closes patients relocate Oct 28 2026 kidney center US",
+      "oncology cancer clinic closing services suspended Oct 28 2026",
+      "primary care clinic closing doctors patients October 28 2026 United States",
+      "hospital reopens emergency department resumes care October 28 2026",
+      "healthcare clinic closes October 28 2026 Puerto Rico Guam US Virgin Islands Samoa",
+      "October 28 2026 health department EMS ambulance suspend closure service local news"
+    ],
+    "search_recency_days": 1,
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health closure or suspension",
+      "dialysis/oncology/primary-care closure or suspension",
+      "emergency and rural service loss",
+      "ambulance/air-medical/base loss",
+      "CMS provider terminations/rescissions and CLIA sanctions",
+      "concrete reopenings and restorations",
+      "U.S. states, District of Columbia and territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "Centers for Medicare & Medicaid Services",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "no_new_notices",
+        "detail": "Latest October 23, 2026; no newer provider termination or laboratory sanction notice."
+      },
+      {
+        "publisher": "The Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_duplicate",
+        "detail": "Sanford Luverne childbirth services confirmed October 28 already included as pending_review in immediately prior verified heartbeat."
+      },
+      {
+        "publisher": "KRCR",
+        "url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times",
+        "disposition": "excluded_older",
+        "detail": "Tehama County air ambulance closure reported in September, not a new October 28 development."
+      },
+      {
+        "publisher": "Cleveland 19 News",
+        "url": "https://www.cleveland19.com/2026/09/20/ill-just-have-go-further-patients-brace-longer-commutes-geneva-cancer-center-closes/",
+        "disposition": "excluded_older",
+        "detail": "Geneva oncology closure previously announced September; no new access change within interval."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "type": "incorrect_noncanonical_CMS_page_route_inaccessible",
+        "recovered_by": "Directly read correct official CMS public notices page and verified date-sorted notices through October 23.",
+        "material_coverage_loss": false
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "A noncanonical CMS link could not be opened initially, requiring a corrected navigation to the accessible official notice page; per conservative source-failure accounting status is DEGRADED, but CMS coverage recovered without material loss. Searches completed but mostly returned older indexed content; bounded search is not exhaustive and search indexing can lag. No verified newly announced qualifying loss or restoration within the hourly window.",
+    "controls": "No approval, publication, production collection mutation, task schedule change, or task disabling. Exactly one private watch-ledger heartbeat created for this run."
+  }
+}

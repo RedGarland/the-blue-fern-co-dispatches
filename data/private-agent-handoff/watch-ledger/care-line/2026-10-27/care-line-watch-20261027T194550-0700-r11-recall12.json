@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T194550-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T19:45:22-07:00",
+  "started_at": "2026-10-27T19:45:50-07:00",
+  "completed_at": "2026-10-27T19:47:04.235-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T18:45:39.523-07:00",
+    "end": "2026-10-27T19:47:04.235-07:00",
+    "basis": "Previous independently verified Care Line watch completion through this bounded recall; older event dates and prior-recorded developments excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall watch only. Production national collection, editorial authorization, and publication remain authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official CMS notices table accessible, with the latest three home-health termination notices dated October 23 (CA and OH); no newer official notice."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended October 27 2026 announced evening",
+      "maternity labor delivery unit closure suspension October 27 2026 hospital",
+      "behavioral mental health inpatient hospital closure suspend services October 27 2026",
+      "rural hospital emergency room closed temporarily October 27 2026",
+      "ambulance station base air medical service shutting down October 27 2026",
+      "dialysis clinic oncology cancer center closing suspending October 27 2026",
+      "primary care clinic sudden closure patients October 27 2026",
+      "hospital healthcare service reopened restored after closure October 27 2026",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-10-27\" termination",
+      "October 27 2026 \"emergency department\" \"closed\" hospital evening US",
+      "October 27 2026 hospital \"suspends\" \"services\" outpatient local news",
+      "October 27 2026 ambulance hospital clinic access closure Puerto Rico Guam US Virgin Islands"
+    ],
+    "searched_classes": [
+      "hospital, ED, maternity, behavioral health, dialysis, oncology and primary-care closure or suspension",
+      "emergency and rural service loss",
+      "ground/air ambulance and base closures",
+      "CMS provider/CLIA termination, rescission, limitation, suspension",
+      "concrete restoration or reopening"
+    ],
+    "sources_checked": [
+      {
+        "publisher": "CMS Public Notices (official)",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "No notices newer than October 23."
+      },
+      {
+        "publisher": "UNM HSC Newsroom (official)",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "Full clinical/ambulance restoration published October 27 at 2:02 p.m. MDT; prior Care Line watch already captured the restoration."
+      },
+      {
+        "publisher": "Baltimore Fishbowl sponsored post (advertiser supplied)",
+        "url": "https://baltimorefishbowl.com/stories/medhaven-health-reopens-in-glen-burnie-following-empire-towers-emergency-closure/",
+        "result": "Published October 27, but expressly says MedHaven resumed in-person office visits September 1; not a new event during this hourly window and source is promotional."
+      },
+      {
+        "publisher": "STAT News",
+        "url": "https://www.statnews.com/2026/10/27/pediatric-emergency-care-rural-hospital-closures/",
+        "result": "October 27 contextual reporting on prior closures, not a newly effective service loss."
+      }
+    ],
+    "exclusions": [
+      "UNM Health full restoration already reported in earlier Care Line watch; duplicate.",
+      "MedHaven Health Maryland primary-care reopening was effective September 1, 2026, not October 27; sponsored story dated October 27 is not itself a new restoration.",
+      "Earlier hospital, ambulance, clinic and maternity closures, international facilities, proposed closures and general health-system analyses without a newly effective U.S. access change."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Official CMS notice list reviewed first and 12 targeted searches completed. Search-index latency, U.S. local-news discoverability and 1-hour time boundary mean no findings does not prove absence of events.",
+    "controls": "Exactly one heartbeat creation requested on ops/watch-ledger for this execution. No editorial approval, publication, production collection changes, schedule changes or disabling."
+  }
+}

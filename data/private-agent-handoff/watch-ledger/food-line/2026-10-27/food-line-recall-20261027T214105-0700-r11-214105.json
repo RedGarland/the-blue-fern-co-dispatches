@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T214105-0700-r11-214105",
+  "scheduled_for": "2026-10-27T21:45:54-07:00",
+  "started_at": "2026-10-27T21:41:05-07:00",
+  "completed_at": "2026-10-27T21:41:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T20:47:46.517-07:00",
+    "end_at": "2026-10-27T21:41:23-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since last independently verified supplementary Food Line heartbeat; 27 October local observation. This run began before its nominal :45:54 scheduling timestamp; scheduled_for preserves the nominal current-cycle timestamp."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "query_recency_days": 1,
+    "focus_classes": [
+      "Loss/closure/fire/disaster of only, sole, last, or full-service community grocery",
+      "Canceled or suspended emergency food distribution caused by storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "search_terms": [
+      "\"only grocery store\" \"closed\" \"October 27, 2026\" community",
+      "\"last grocery store\" \"October 27, 2026\" closure town",
+      "\"sole grocery\" OR \"only full-service grocery\" October 27 2026 closing",
+      "\"grocery store\" \"fire\" \"only\" community October 27 2026",
+      "\"food distribution\" \"canceled\" storm flood October 27 2026",
+      "\"food distribution\" \"cancelled\" outage fire October 27 2026",
+      "\"food pantry\" \"closed\" \"October 27, 2026\" fire",
+      "\"food bank\" \"suspended services\" \"October 27, 2026\"",
+      "\"food pantry\" \"closure\" \"Oct 27, 2026\" clients",
+      "\"food pantry\" \"reduced hours\" \"October 27, 2026\" emergency",
+      "site:gov \"SNAP\" \"October 27, 2026\" benefits delayed interruption EBT",
+      "site:gov \"WIC\" \"October 27, 2026\" outage suspended benefits"
+    ]
+  },
+  "coverage_notes": [
+    "This is a bounded supplementary miss-class recall watch, not the authoritative nationwide production collection.",
+    "12 targeted recency-constrained searches completed across all four priority miss classes. No newly verifiable qualifying food-access loss or official benefit interruption identified for this hourly period.",
+    "Results predominantly returned historical grocery store fires/closures, an October 26 Seattle grocery study (not a new closure), unrelated news, and stale agency/service pages. These do not meet temporal and causal criteria.",
+    "Previously recorded Wymore, Nebraska last-grocery loss; South Philadelphia fire-damaged pantry; and Utah pantry reduction remain excluded as duplicate handoffs, not fresh findings.",
+    "A Virginia city government EBT fraud warning was excluded: it warns of fraudulent declined-transaction text messages, not an official EBT/SNAP service interruption.",
+    "Search-index freshness/coverage is inherently limited; a negative search result is not proof of nationwide absence. No claim of comprehensive coverage.",
+    "No approvals, publications, social posting, schedule changes, or task disabling were performed."
+  ]
+}

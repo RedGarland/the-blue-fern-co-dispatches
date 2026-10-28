@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T064031-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T06:40:31-07:00",
+  "started_at": "2026-10-28T06:40:31-07:00",
+  "completed_at": "2026-10-28T06:42:02.816-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T05:51:32.446-07:00",
+    "end": "2026-10-28T06:42:02.816-07:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed at 05:51:32.446 PDT on October 28; screened newly announced or newly effective service changes through this run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall; production national collector remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T055001-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official list still topped by October 23 home-health agency terminations; no newly dated provider termination/rescission or CLIA limitation/suspension in the interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing suspended October 28 2026 patients morning",
+      "labor delivery maternity unit closing October 28 2026 hospital announcement",
+      "psychiatric behavioral health inpatient beds closing suspended October 28 2026",
+      "dialysis clinic cancer infusion oncology services close October 28 2026",
+      "rural hospital emergency services cease operation October 28 2026",
+      "ambulance EMS service shutdown base closure October 28 2026",
+      "air medical helicopter base suspends operations October 28 2026",
+      "primary care clinic immediate closure patients October 28 2026",
+      "CMS provider termination rescission CLIA suspended October 28 2026 notices",
+      "hospital emergency department reopens restored after shutdown October 28 2026",
+      "Puerto Rico Guam US Virgin Islands American Samoa hospital emergency service closures October 28 2026",
+      "local news hospital service closures suspended reopened Wednesday October 28 2026"
+    ],
+    "search_recency_days": 1,
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care service cessation",
+      "emergency and rural service loss",
+      "ambulance/air-medical/base closure or suspension",
+      "CMS provider termination, rescission or CLIA actions",
+      "abrupt effective service restoration/reopening",
+      "U.S. states and territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "Capitol News Illinois",
+        "url": "https://capitolnewsillinois.com/news/state-says-it-will-keep-25-mental-health-beds-at-choate-expand-regional-jobs/",
+        "disposition": "excluded_outside_window_and_planning",
+        "detail": "Report published October 27 concerning retaining 25 beds at Choate; no newly effective access change within this hourly interval."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_prior_announcement_and_post_window",
+        "detail": "Roseland maternity closure announced weeks earlier; report dated October 28 11:19 AM Central, after this watch's 08:41 AM Central end."
+      },
+      {
+        "publisher": "Santa Cruz Local",
+        "url": "https://santacruzlocal.org/2026/10/02/watsonville-hospital-leaders-say-they-must-shutter-their-maternity-ward-or-face-imminent-closure/",
+        "disposition": "excluded_proposal",
+        "detail": "Watsonville maternity-service loss still not confirmed as effective; October 28 meeting date alone does not meet criteria."
+      },
+      {
+        "publisher": "KSBY",
+        "url": "https://www.ksby.com/paso-robles/san-luis-obispo-countys-air-ambulance-service-to-shut-down-in-november",
+        "disposition": "excluded_old_report",
+        "detail": "Air-ambulance base announcement is from 2025, not new in this observation window."
+      },
+      {
+        "publisher": "Hawaii News Now",
+        "url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/",
+        "disposition": "excluded_not_reopened",
+        "detail": "September funding and rehabilitation announcement; emergency department remains closed and no reopening date has been announced."
+      },
+      {
+        "publisher": "Santa Clara County youth psychiatric hospital",
+        "url": "https://sanjosespotlight.com/santa-clara-county-long-overdue-youth-psychiatric-hospital/",
+        "disposition": "excluded_not_effective",
+        "detail": "Earlier ribbon-cutting/report; patient service start November 3 according to preceding verified watch."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "All 12 targeted searches returned indexed results, but publication-time/recency filtering is imperfect and fresh or non-indexed local/territory notices may be missed. Candidates were excluded when published before the window, effective later, retrospective, or proposals. No source-specific coverage failure observed.",
+    "controls": "No publication, approvals, scheduling changes, task disabling, or production collector changes. Exactly one new heartbeat intended."
+  }
+}

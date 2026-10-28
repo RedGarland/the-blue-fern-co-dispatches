@@ -1,0 +1,157 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T044317-0700-r11-20261028T114317Z",
+  "scheduled_for": "2026-10-28T04:44:51-07:00",
+  "started_at": "2026-10-28T04:43:17-07:00",
+  "completed_at": "2026-10-28T04:45:21.909-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T03:44:07-07:00",
+    "end": "2026-10-28T04:45:21.909-07:00",
+    "basis": "Start is completed_at of preceding verified Gaza Source Watch heartbeat, and end is completion of this bounded search. Publisher-local timestamps interpreted conservatively; event hours unknown."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261028-wafa-176408-al-tina-drone-strike",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176408",
+      "title": "Palestinian killed and several wounded in reported Israeli drone strike at al-Tina Street near al-Qarara",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28",
+      "publication_time": "13:24 (publisher display; timezone not explicitly marked)",
+      "event_date": "2026-10-28",
+      "event_time": null,
+      "location": "Near al-Tina Street entrance, al-Mawasi, al-Qarara, north of Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "At least one Palestinian killed and several others injured, according to WAFA; no named victims provided",
+      "exact_supporting_passage": "A Palestinian was killed and several others were injured on Wednesday in an Israeli drone strike near the entrance to al-Tina Street in al-Mawasi, in the town of al-Qarara, north of Khan Yunis in the southern Gaza Strip.",
+      "source_type": "Established Palestinian public news agency reporting; no named medical or witness corroboration",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery": "Targeted search 2 of 12 surfaced a WAFA article dated 28 October, verified against publisher article and publisher homepage. Direct publisher check confirms its listed 01:24 PM timestamp.",
+        "prior_watch_completed_at": "2026-10-28T03:44:07-07:00",
+        "publication_time_interpretation": "Publisher displays 28/October/2026 01:24 PM without an explicit timezone; assuming Ramallah/Hebron local time (UTC+02 on this date) this converts to 04:24 PDT, within the new watch window. Event clock times are not given.",
+        "duplicate_screen": "Directly compared against prior Oct 28 heartbeat and previously logged Anadolu report of Oct 27 casualties in Jabalia, Rafah, Bureij and Khan Younis. The reported 28 Oct al-Qarara/al-Tina Street and al-Laymun strikes are geographically and temporally distinct in the available texts; no matching prior finding ID.",
+        "attribution": "WAFA is the Palestinian official news agency; the article provides no named individual source or independently corroborating evidence. Casualty accounts remain attributed reports, not independently verified.",
+        "incident": "Drone strike near al-Tina Street, al-Qarara; no corroboration of count or exact incident time in this bounded watch."
+      }
+    },
+    {
+      "finding_id": "gaza-20261028-wafa-176408-al-laymun-father-daughter-injured",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176408",
+      "title": "Father and daughter reportedly injured in separate Israeli strike at al-Laymun, south of Khan Younis",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28",
+      "publication_time": "13:24 (publisher display; timezone not explicitly marked)",
+      "event_date": "2026-10-28",
+      "event_time": null,
+      "location": "Al-Laymun area, south of Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "A Palestinian man and his daughter of the Shalouf family reportedly injured",
+      "exact_supporting_passage": "A Palestinian man and his daughter from the Shalouf family were also injured in an Israeli strike on the al-Laymun area south of Khan Yunis.",
+      "source_type": "Established Palestinian public news agency reporting; no named medical or witness corroboration",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery": "Targeted search 2 of 12 surfaced a WAFA article dated 28 October, verified against publisher article and publisher homepage. Direct publisher check confirms its listed 01:24 PM timestamp.",
+        "prior_watch_completed_at": "2026-10-28T03:44:07-07:00",
+        "publication_time_interpretation": "Publisher displays 28/October/2026 01:24 PM without an explicit timezone; assuming Ramallah/Hebron local time (UTC+02 on this date) this converts to 04:24 PDT, within the new watch window. Event clock times are not given.",
+        "duplicate_screen": "Directly compared against prior Oct 28 heartbeat and previously logged Anadolu report of Oct 27 casualties in Jabalia, Rafah, Bureij and Khan Younis. The reported 28 Oct al-Qarara/al-Tina Street and al-Laymun strikes are geographically and temporally distinct in the available texts; no matching prior finding ID.",
+        "attribution": "WAFA is the Palestinian official news agency; the article provides no named individual source or independently corroborating evidence. Casualty accounts remain attributed reports, not independently verified.",
+        "incident": "Separate location from al-Tina Street; do not sum the two injuries into the first incident or assume they are additional to headline injured totals."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Gaza missed-signal recall. Primary production Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T034205-0700-r11-20261028T104205Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-28/gaza-source-watch-20261028T034205-0700-r11-20261028T104205Z.json",
+      "completed_at": "2026-10-28T03:44:07-07:00",
+      "outcome": "no_findings",
+      "verified_by_repository_read": true
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. As checked, top entries are 27 Oct West Bank snapshot and 26 Oct humanitarian situation report dated 22 Oct; no newly dated Gaza item in this interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No current in-window Gaza hospital, evacuation, fuel, transport, or health-capacity update displayed."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "502 Bad Gateway, preexisting recurrent access restriction; alternate WHO global source accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 28 2026 dawn civilian killed wounded Wednesday latest strike AFP Reuters AP",
+      "site:english.wafa.ps 28 October 2026 Gaza civilian killed wounded overnight",
+      "site:aa.com.tr/en/middle-east/ Gaza Wednesday 28 October 2026 casualties airstrikes",
+      "site:aljazeera.com/news/2026/10/28 Gaza airstrike killed wounded aid ceasefire",
+      "site:un.org OR site:news.un.org Gaza 28 October 2026 humanitarian aid crossings UNOPS",
+      "site:who.int OR site:emro.who.int Gaza October 28 2026 hospital ambulance medical evacuation",
+      "Gaza Rafah Kerem Shalom crossing food aid convoy trucks October 28 2026 change",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza October 28 2026 water food supplies",
+      "Gaza displacement shelters tents destroyed October 28 2026 OCHA UN shelter clusters",
+      "Gaza ceasefire Qatar Egypt negotiations hostages detainees October 28 2026 new",
+      "site:icrc.org OR site:msf.org Gaza October 28 2026 ambulance hospital medical access",
+      "Gaza Wednesday October 28 2026 military operations civilian impact evacuation Rafah Khan Younis"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176408",
+        "result": "Accessible. New Gaza article posted 28 Oct at 01:24 PM publisher-local display; two distinct reported strike locations and casualty impacts."
+      },
+      {
+        "publisher": "WAFA homepage",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible, matching article listed as latest."
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east/",
+        "result": "Accessible; earlier 28 Oct report refers to Tuesday 27 Oct events, already in prior ledger."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; relevant visible items centered on Israeli election, not corroborating this new Gaza incident."
+      },
+      {
+        "publisher": "Anadolu earlier casualty article",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-2-palestinians-wound-5-in-gaza/4103255",
+        "result": "Previously reported distinct Tuesday 27 Oct attacks verified as different from Wednesday 28 Oct WAFA reports."
+      }
+    ],
+    "exclusions": [
+      "Prior Anadolu report dated 28 Oct describes 27 Oct killings and wounded; already logged and not repeated.",
+      "Older OCHA/WHO/UN humanitarian statistics and UNOPS aid transport reports from 27 Oct or earlier are not new events in the hourly window.",
+      "Israeli election results, West Bank-only incidents, other countries, older retrospective reports, opinion and unsupported claims excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO oPt",
+        "error": "502 Bad Gateway",
+        "materiality": "Previously documented persistent restriction, partially mitigated through WHO global."
+      },
+      {
+        "source": "news.un.org targeted result",
+        "error": "Robots restriction in search result",
+        "materiality": "Source access restriction, not watch-wide inability; OCHA and WHO global accessible."
+      }
+    ],
+    "assessment": "Two geographically distinct Gaza casualty developments newly reported by WAFA on 28 Oct; publisher 13:24 local time likely corresponds to 04:24 PDT, inside this observation interval. Event clock times are unknown and no independent cross-source corroboration was found within bounded searches. Partial-source access warrants DEGRADED rather than FAILED.",
+    "action_scope": "One new immutable private heartbeat JSON on ops/watch-ledger only; no public publication, content approval, main collection, schedule or automation state change."
+  }
+}

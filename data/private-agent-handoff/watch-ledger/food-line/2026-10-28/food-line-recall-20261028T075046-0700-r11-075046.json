@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T075046-0700-r11-075046",
+  "scheduled_for": "2026-10-28T07:45:54-07:00",
+  "started_at": "2026-10-28T07:50:46-07:00",
+  "completed_at": "2026-10-28T07:51:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T06:43:43-07:00",
+    "end_at": "2026-10-28T07:51:11-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Begins at completed_at of preceding verified Food Line watch heartbeat; bounded retrospective search includes newly indexed news and official notices.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only. Nationwide Food Line production collection is authoritative. No approval, publication, social post, schedule or automation state change.",
+    "Conducted 12 targeted web searches (four sole/last/full-service grocery loss, three weather/disaster-cancelled food distributions, three abrupt pantry/food-bank closure or major service reductions, two official SNAP/WIC interruption). Queries centered October 27–28, 2026 with two-day recency filtering; local reports and direct official pages prioritized.",
+    "No independently verified new qualifying U.S. food-access interruption surfaced in this bounded interval. Search results skewed toward older incidents or unrelated resource/news items; no tool error or material coverage degradation occurred. Absence is not proof of no incident nationally.",
+    "Older September El Paso severe-storm distribution closure was outside this window and previously captured; excluded. https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+    "October 27 Kauaʻi hurricane recovery reporting addresses ongoing services, not a newly verified canceled emergency distribution. Excluded. https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "October 27 Ashe Food Pantry demand increase is not an abrupt closure or major reduction in access; excluded. https://www.ashepostandtimes.com/news/a-perfect-storm-requests-for-help-rise-nearly-30-at-ashe-food-pantry/article_f9a99fa1-e650-45dc-8896-3bb8881ee0e3.html",
+    "Only/last grocery loss results were older, including August 2026 Eastport, Maine and North Charleston, South Carolina cases; excluded as historical. https://www.bangordailynews.com/2026/08/29/down-east/downeast-business/eastport-grocery-store-iga-close-next-week-joam40zk0w/ and https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/",
+    "Official SNAP/WIC searches yielded no newly dated direct agency confirmation of immediate benefit interruption. Indexed results prominently concerned the 2025 federal shutdown; excluded as historical.",
+    "Indexing lag and provider social-only notices may evade these narrow searches."
+  ]
+}

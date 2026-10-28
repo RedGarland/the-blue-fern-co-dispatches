@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T105006-0700-r11-105006",
+  "scheduled_for": "2026-10-28T10:45:54-07:00",
+  "started_at": "2026-10-28T10:50:06-07:00",
+  "completed_at": "2026-10-28T10:51:03.550-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T08:45:45-07:00",
+    "end_at": "2026-10-28T10:51:03.550-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at latest previous Food Line watch heartbeat independently read back on ops/watch-ledger; targeted queries allowed indexing overlap, with historical items and duplicates excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value-miss recall only; production national Food Line collection remains authoritative. No approval, publication, social posting, schedule modification, or task disabling.",
+    "All 12 targeted web searches completed: 3 sole/last/full-service grocery loss or fire; 3 disaster-related distribution cancellations; 3 abrupt pantry/food-bank closures or major service reductions; 3 official SNAP/WIC/EBT access interruptions. No search or direct verification tool failure occurred.",
+    "No newly verified in-window qualifying disruption found. Results skewed toward historical events despite October 27–28 2026 query qualifiers; this is a bounded negative result, not proof of no U.S. disruptions. No positive review candidate created.",
+    "Older Spencer NY Shur Fine only-grocery-store fire (2026-09-11) excluded as historical; https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/ ; older Akron OH only-neighborhood-market fire (2026-05-30) excluded; https://www.cleveland19.com/2026/05/30/akron-fire-crews-battle-commercial-building-fire/.",
+    "Basking Ridge NJ Stop & Shop lease-related last supermarket closure was previously reported on September 24, 2026, not a newly verified incident for this watch window; https://karentyrell.com/blog/the-lyons-mall-stop-and-shop-is-closing-and-basking-ridge-is-about-to-lose-its-last-supermarket-inside-town-lines.",
+    "Older Ruby's Pantry regional network closure was reported April 1, 2026; excluded as historical; https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites. October 8/9 San Jose Lighthouse Food Rescue zoning enforcement and prospective closure predates the window and does not establish a newly occurring cessation; https://localnewsmatters.org/2026/10/10/san-jose-food-pantry-faces-closure-zoning-violations/.",
+    "2025 federal SNAP shutdown announcements returned but do not establish 2026-10-28 interruption; https://nj.gov/humanservices/news/pressreleases/2025/approved/20251031b.shtml. California WIC September 2026 official update explicitly states services and benefits continue; https://www.myfamily.wic.ca.gov/Home/FederalBudget.",
+    "Earlier case notes and source headlines are historical/context-only and were not promoted to findings. Local-news indexing lag, limited query recall, and social-only notices remain coverage limits.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 28 2026 United States",
+        "\"last grocery store\" closes October 2026 rural community",
+        "\"sole grocery store\" fire destroyed October 27 28 2026",
+        "\"food distribution\" canceled storm October 28 2026",
+        "\"food pantry\" canceled distribution flooding October 27 28 2026",
+        "\"food bank\" distribution suspended power outage October 28 2026",
+        "\"food pantry\" abruptly closed October 28 2026",
+        "\"food bank\" temporarily closed fire damage October 27 28 2026",
+        "food pantry services suspended October 28 2026 local",
+        "SNAP benefits interruption October 28 2026 state agency emergency",
+        "WIC offices closed service suspension October 28 2026 official",
+        "EBT system outage food assistance October 28 2026 state agency"
+      ]
+    }
+  ]
+}

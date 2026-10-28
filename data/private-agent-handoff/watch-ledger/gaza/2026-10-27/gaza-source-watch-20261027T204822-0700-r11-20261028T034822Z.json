@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261027T204822-0700-r11-20261028T034822Z",
+  "scheduled_for": "2026-10-27T20:44:51-07:00",
+  "started_at": "2026-10-27T20:48:22-07:00",
+  "completed_at": "2026-10-27T20:49:17.288-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T19:50:27-07:00",
+    "end": "2026-10-27T20:49:17.288-07:00",
+    "basis": "Previous verified Gaza Source Watch heartbeat on ops/watch-ledger completed at 19:50:27 PDT on 27 October 2026; checked newly published/confirmed developments through this run. In Gaza this corresponds to approximately 05:50 to 06:49 on 28 October."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch only; production daily collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T194851-0700-r11-20261028T024851Z.json",
+      "completed_at": "2026-10-27T19:50:27-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Retrieved directly from ops/watch-ledger prior to this watch."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Index accessible. Latest 27 October item concerns West Bank; newest Gaza humanitarian situation report is 22 October, published 26 October. No new in-window Gaza report."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Emergency overview and latest news/regional news contain no in-window verified change to Gaza health-care services, transport, hospital operations or medical evacuation."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "result": "Direct regional endpoint inaccessible, as in earlier runs; WHO global portal substituted for partial coverage."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps 28 October 2026 Gaza early morning civilians injured Israeli shelling",
+      "site:aljazeera.com/news/2026/10/28 Gaza airstrikes casualties October 28 early",
+      "site:reuters.com/world/middle-east/ Gaza October 28 2026 ceasefire airstrike civilian deaths",
+      "site:apnews.com/article/ Gaza October 28 2026 Israeli strikes ceasefire wounded",
+      "site:un.org Gaza 28 October 2026 humanitarian ceasefire civilian aid medical evacuations",
+      "site:ochaopt.org Gaza October 28 2026 humanitarian update casualties",
+      "site:who.int/news Gaza \"27 October 2026\" medical evacuation hospital OR \"28 October 2026\"",
+      "site:unicef.org Gaza \"28 October 2026\" water children OR displacement",
+      "site:wfp.org Gaza October 28 2026 food crossing trucks aid",
+      "site:english.wafa.ps/Pages/Details/ \"28/October/2026\" Gaza killed hospital wounded",
+      "site:aa.com.tr/en/middle-east/ Gaza Wednesday October 28 2026 Israeli fire killed wounded",
+      "Gaza Rafah Kerem Shalom fuel ambulance emergency aid crossing October 28 2026 morning"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Homepage dated Wednesday 28 October but latest listed story 27 October 23:07 Gaza-local time, concerning Israel election. No in-window Gaza casualty/access report. Earlier WAFA 27 October child wound death is prior-watch item."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Current feed led by 27 October Israeli election and West Bank items; the Gaza casualty article is from 26 October, outside the watch window."
+      },
+      {
+        "publisher": "United Nations in Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Latest 27 October UN Gaza references to Yellow Line shifts and Shuja'iyyeh shelter arson already described by earlier watches; no newly dated qualifying change."
+      }
+    ],
+    "exclusions": [
+      "Older Reuters/AP, Anadolu and WAFA strike reports and OCHA situation updates predate this window.",
+      "26 October OCHA/UN Gaza Yellow Line, Deir al Balah shooting and Shuja'iyyeh arson were described in earlier watch.",
+      "27 October WAFA child's death from earlier wounds already captured; no double count.",
+      "Election and Hebron/West Bank events out of Gaza scope; old or broad background and opinion excluded.",
+      "Search snippets with ambiguous publication time were not treated as positive findings without in-window source confirmation."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean regional oPt",
+        "url": "https://www.emro.who.int/opt/index.html",
+        "error": "Direct endpoint inaccessible",
+        "materiality": "Persistent restriction documented in prior watches; global WHO portal remains accessible as alternative, but regional source coverage is incomplete."
+      },
+      {
+        "source": "Targeted search freshness",
+        "url": null,
+        "error": "Some indexed queries returned older material rather than target-day results",
+        "materiality": "All hits screened by original publisher/event dates; bounded recall may miss very recent unindexed publications."
+      }
+    ],
+    "assessment": "No traceable new nonduplicate Gaza civilian-impact, displacement, aid/water/food, health, crossing, detention, ceasefire or military-operation change verified within the window. No findings does not prove none occurred. Watch marked DEGRADED for persistent inaccessible WHO regional source; OCHA updates index recovered and no newly material failure was found.",
+    "action_scope": "One private heartbeat only. No changes to production, public content, approvals, social posting, schedule or automation status."
+  }
+}

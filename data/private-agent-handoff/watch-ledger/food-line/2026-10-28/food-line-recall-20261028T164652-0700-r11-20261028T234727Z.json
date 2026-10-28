@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T164652-0700-r11-20261028T234727Z",
+  "scheduled_for": "2026-10-28T16:45:54-07:00",
+  "started_at": "2026-10-28T16:46:52-07:00",
+  "completed_at": "2026-10-28T16:47:27.304-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T15:49:43.330-07:00",
+    "end_at": "2026-10-28T16:47:27.304-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently fetched ops/watch-ledger Food Line heartbeat completion time; checked indexed publication/event dates and duplicate status.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only, not the authoritative national production Food Line collection. No editorial approval, public publication, schedule change, or task disablement.",
+    "12 bounded targeted fresh-web searches completed, three each for last/sole grocery loss, weather/disaster-canceled distribution, abrupt pantry/food bank access reduction, and official SNAP/WIC/EBT immediate service interruption. No search-tool failure.",
+    "Within 2026-10-28 15:49:43–16:47 PDT, no new, independently verifiable, nonduplicative qualifying U.S. disruption established; no qualifying finding to send for review.",
+    "October 27 Kauaʻi Hurricane Lowell recovery notice described food distribution availability, not a newly canceled distribution: https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "October 28 SUNY announcement reports expansion of food lockers, not reduction: https://www.suny.edu/suny-news/press-releases/10-26/10-28-26/basic-needs.html.",
+    "October 28 Virginia nonprofit report describes demand and low pantry supplies, not an abrupt service shutdown: https://www.29news.com/2026/10/28/virginia-lt-gov-ghazala-hashmi-highlights-growing-needs-center-nonprofit-excellences-20th-anniversary/.",
+    "SNAP shutdown stories surfaced prominently with October 2025 publication dates and were excluded as historical, e.g. https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/.",
+    "No primary state/federal SNAP or WIC notice of a fresh immediate access interruption was verified. Fresh local source indexing and provider-notice coverage can lag; zero results do not prove zero incidents.",
+    {
+      "bounded_query_context": [
+        "October 28 2026 only grocery store closed fire town community full service market",
+        "October 28 2026 \"only grocery store\" closing OR closed OR fire",
+        "October 28 2026 rural town last grocery store destroyed fire power outage",
+        "October 28 2026 food bank distribution cancelled storm flooding weather",
+        "October 28 2026 \"food distribution\" \"canceled\" storm OR flood OR outage",
+        "October 28 2026 \"food pantry\" canceled closure flooding power outage",
+        "October 28 2026 \"food bank\" temporarily closed emergency damage",
+        "October 28 2026 pantry abruptly closed no longer serves families",
+        "October 28 2026 \"food pantry\" \"closing\" access reduced",
+        "October 28 2026 SNAP benefits suspended interrupted agency alert",
+        "October 28 2026 WIC benefits disruption office closure system outage state",
+        "October 28 2026 EBT outage SNAP payments stopped card system"
+      ]
+    }
+  ]
+}

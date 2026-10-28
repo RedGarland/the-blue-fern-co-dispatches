@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T224219-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T22:45:22-07:00",
+  "started_at": "2026-10-27T22:42:19-07:00",
+  "completed_at": "2026-10-27T22:43:24.036-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T21:49:03-07:00",
+    "end": "2026-10-27T22:43:24.036-07:00",
+    "basis": "From the prior verified Care Line watch completion through this check. This execution began before the nominal 22:45:22 schedule timestamp; scheduled_for preserves the nominal hourly slot."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; national production Care Line collection is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Opened official CMS Public Notices after CMS-specific discovery and before all 12 non-CMS targeted searches. Top rows still dated October 23 (three home health agencies in CA/OH). No newer termination, rescission, or CLIA restriction recorded."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended October 27 2026 United States",
+      "hospital maternity labor delivery unit closure October 27 2026 local news",
+      "rural hospital emergency services shutdown October 27 2026",
+      "mental health psychiatric behavioral health inpatient hospital closes October 27 2026",
+      "ambulance service air medical base closing October 27 2026 county",
+      "dialysis cancer oncology clinic closes patients October 27 2026",
+      "\"Pearl Youth Residence\" \"October 27\" 2026 closure announced Tacoma",
+      "health clinic primary care urgent care closing October 27 2026 patients",
+      "hospital reopens emergency room services restored October 27 2026",
+      "ambulance \"suspended\" \"October 27, 2026\" service",
+      "hospice home health provider Medicare termination October 27 2026",
+      "Puerto Rico Guam US Virgin Islands hospital emergency maternity closure October 27 2026"
+    ],
+    "searched_classes": [
+      "hospital and ED closure/suspension",
+      "maternity, behavioral-health, dialysis, oncology, primary-care access loss",
+      "rural emergency services",
+      "ambulance and air-medical bases",
+      "CMS provider terminations, rescissions, CLIA restrictions",
+      "actual reopening or restoration",
+      "United States territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "Hoodline",
+        "url": "https://hoodline.com/2026/10/tacoma-youth-psychiatric-unit-closing-nov-21-cutting-quarter-of-state-s-beds/",
+        "disposition": "excluded_repeat_of_older_announced_future_closure",
+        "detail": "October 27 secondary story recaps Pearl Youth Residence Nov 21 closure, which was announced/reported September 21-24; no newly confirmed change in this run's window. Admissions had stopped in December."
+      },
+      {
+        "publisher": "Puget Sound Business Journal",
+        "url": "https://www.bizjournals.com/seattle/news/2026/09/21/pearl-youth-residence-closure-november-layoffs.html",
+        "disposition": "older_primary_local_reporting",
+        "detail": "September 21 coverage establishes earlier announcement."
+      },
+      {
+        "publisher": "Lake and McHenry County Scanner",
+        "url": "https://www.lakemchenryscanner.com/2026/10/27/state-says-vista-leaders-gave-no-warning-before-anesthesia-loss-cost-waukegan-hospital-its-trauma-designation/",
+        "disposition": "excluded_older_access_event",
+        "detail": "October 27 follow-up concerns earlier Vista Medical Center East anesthesia/trauma designation loss; prior watch evaluated October 24 event. No in-window new service change established."
+      },
+      {
+        "publisher": "UNM Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate",
+        "detail": "Official October 27 restoration already reported as pending_review in a previous heartbeat."
+      },
+      {
+        "publisher": "The Guardian",
+        "url": "https://www.theguardian.com/us-news/2026/oct/11/medicaid-cuts-maternity-wards",
+        "disposition": "excluded_trend_and_future_risk",
+        "detail": "Policy/sector risk, not newly confirmed individual facility service loss."
+      },
+      {
+        "publisher": "KRCR",
+        "url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times",
+        "disposition": "excluded_older_September_event",
+        "detail": "September 17 Tehama air ambulance base closure outside observation window."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve targeted web searches completed, with date-only reporting and index lag limiting within-hour certainty. This recall is not an exhaustive national scan.",
+    "controls": "No approvals, publication, review-status changes, production collector changes, task scheduling changes, or disabling."
+  }
+}

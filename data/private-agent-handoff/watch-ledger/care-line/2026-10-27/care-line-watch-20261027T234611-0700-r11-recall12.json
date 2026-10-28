@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T234611-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T23:45:22-07:00",
+  "started_at": "2026-10-27T23:46:11-07:00",
+  "completed_at": "2026-10-27T23:48:10-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T22:43:24.036-07:00",
+    "end": "2026-10-27T23:48:10-07:00",
+    "basis": "Last verified Care Line heartbeat completed 22:43:24.036 PDT; this recall covers subsequent observation to this run. Included date-wide screening to account for search-index lag; publication date alone is not sufficient to establish a newly occurring within-hour access event."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary missed-signal recall only. Production national Care Line collector and editorial gates are authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS Public Notices table checked before non-CMS targeted searches. Latest entries remain three 2026-10-23 HHA termination notices (My Families Healthcare CA, 1ST AIDE HOME HEALTH AGENCY CA, Moonlight Home Health Care Inc OH), with no newer provider termination, rescission, CLIA limitation or suspension."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 hospital emergency department closed services suspended United States \"today\"",
+      "October 27 2026 labor delivery maternity obstetrics unit closure suspension hospital",
+      "October 27 2026 psychiatric behavioral health inpatient unit closure suspended hospital",
+      "October 27 2026 dialysis center oncology cancer treatment closure suspension patients",
+      "October 27 2026 ambulance base service suspended air medical helicopter closure",
+      "October 27 2026 rural emergency room hospital services shut down new",
+      "October 27 2026 primary care clinic permanent closure patients announced Tuesday",
+      "October 27 2026 healthcare hospital clinic services reopened restored ambulance diversion ended",
+      "October 27 2026 Puerto Rico Guam US Virgin Islands hospital emergency ambulance dialysis service closure",
+      "October 27 2026 local news hospital closing ward ICU service care patients announced",
+      "October 27 2026 air ambulance medical helicopter base closing service suspended EMS",
+      "October 27 2026 hospital services closed suspended October 27 health care news patients"
+    ],
+    "searched_classes": [
+      "hospital/ED, maternity, behavioral health, dialysis, oncology and primary-care losses",
+      "emergency and rural service closure",
+      "EMS ambulance/air medical/base closure",
+      "official CMS provider termination, rescission and CLIA restriction",
+      "confirmed essential service restoration",
+      "U.S. territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "Hoodline; verified against Northwest Public Broadcasting",
+        "url": "https://hoodline.com/2026/10/tacoma-youth-psychiatric-unit-closing-nov-21-cutting-quarter-of-state-s-beds/",
+        "disposition": "excluded_older_announcement",
+        "detail": "October 27 secondary article repeats Pearl Youth Residence's November 21 future closure. Primary local coverage published September 28, 2026 establishes the announced shutdown was known before this watch; no in-window change."
+      },
+      {
+        "publisher": "Northwest Public Broadcasting",
+        "url": "https://nwpb.org/local/2026-09-28/in-tacoma-a-state-funded-inpatient-treatment-center-for-children-is-set-to-close",
+        "disposition": "prior_reporting_corroboration",
+        "detail": "Primary September 28 report identifies previously announced Pearl Youth closure; accessible when optional linked sources returned 403."
+      },
+      {
+        "publisher": "Alpha News",
+        "url": "https://alphanews.org/exclusive-62-staff-injuries-900k-in-damage-hospital-sounds-alarm-over-caring-for-man-linked-to-hastings-home-invasion/",
+        "disposition": "excluded_retrospective_access_loss",
+        "detail": "October 27 report disclosed temporary Oct 3 ambulance diversion at a Hastings ED and earlier emergency psychiatric bed displacement, neither confirmed as newly occurring in this watch window."
+      },
+      {
+        "publisher": "UNM Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate",
+        "detail": "Full October 27 restoration was already recorded pending_review in an earlier Care Line heartbeat; no further state change confirmed."
+      },
+      {
+        "publisher": "CBS News / KFF Health News",
+        "url": "https://www.cbsnews.com/news/pediatric-intensive-care-units-closing-nationwide/",
+        "disposition": "excluded_historical_trend",
+        "detail": "October 27 nationwide report of pediatric ICU closures over the preceding year, not a fresh individual facility-level event."
+      },
+      {
+        "publisher": "Government of Guam",
+        "url": "https://ghs.guam.gov/jic-release-no-3-gmha-announces-expectant-mother-intake-plans-and-service-suspensions-uscg-sets-port",
+        "disposition": "excluded_older_event",
+        "detail": "October 16 storm-related elective/non-emergency service suspension; outside the watch window."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "KING 5 video",
+        "url": "https://www.king5.com/video/news/local/washington-to-lose-25-of-its-long-term-psychiatric-beds-for-children/281-e035f5c3-095b-4479-8404-a21ec21c2fa6",
+        "failure": "HTTP 403",
+        "effect": "Optional corroboration for September-announced Pearl Youth closure; September 28 NWPB article and October 27 Hoodline article both accessible."
+      },
+      {
+        "source": "Behavioral Health Business",
+        "url": "https://bhbusiness.com/2026/10/02/layoffs-closures-planned-at-newport-healthcare-clarvida-comprehensive-life-resources/",
+        "failure": "HTTP 403",
+        "effect": "Optional October 2 retrospective, with primary September reporting available. No lost current-hour verification."
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "Two linked retrospective articles blocked HTTP 403, so mark DEGRADED rather than abort. Twelve targeted searches returned usable results; search indexing, date-only publication stamps and limited breadth prevent claiming exhaustive national absence. No newly confirmed qualifying event in the observation window.",
+    "controls": "No publication, approval, review-status mutation, primary collector change, schedule change, or disabling."
+  }
+}

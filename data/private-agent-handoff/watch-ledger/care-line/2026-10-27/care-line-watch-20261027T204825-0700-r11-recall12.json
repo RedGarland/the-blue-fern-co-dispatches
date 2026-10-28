@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T204825-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T20:45:22-07:00",
+  "started_at": "2026-10-27T20:48:25-07:00",
+  "completed_at": "2026-10-27T20:49:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T19:47:04.235-07:00",
+    "end": "2026-10-27T20:49:01-07:00",
+    "basis": "From previous independently verified Care Line watch completion to this recall watch; event date and prior-recorded duplication considered."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Production Care Line collector and publication remain authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "CMS official public-notice table successfully inspected first. Latest three notices are October 23 home-health provider terminations in CA and OH; no newer date listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 27 2026 hospital emergency department closed suspended reopened United States",
+      "October 27 2026 rural hospital emergency room closure ambulance diversion",
+      "October 27 2026 labor delivery maternity ward closed or halted services",
+      "October 27 2026 psychiatric inpatient behavioral health hospital unit closure suspended",
+      "October 27 2026 dialysis center abruptly closes patients treatment",
+      "October 27 2026 oncology cancer clinic closes abruptly suspended services",
+      "October 27 2026 primary care medical clinic closes without notice patients",
+      "October 27 2026 ambulance service ceases operations closure emergency medical",
+      "October 27 2026 air ambulance helicopter medical base shuts down closure",
+      "October 27 2026 hospital reopens emergency department services restored after disruption",
+      "October 27 2026 hospital service suspension operating hours reduced patients local news",
+      "October 27 2026 hospital clinic emergency healthcare closure Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana"
+    ],
+    "searched_classes": [
+      "hospital, ED, maternity, behavioral-health, dialysis, oncology and primary-care closure/suspension",
+      "emergency and rural loss",
+      "ground and air ambulance/base closure or suspension",
+      "official CMS provider termination, rescission and CLIA actions",
+      "concrete effective restoration/reopening",
+      "U.S. territories"
+    ],
+    "sources_checked": [
+      {
+        "publisher": "CMS Public Notices",
+        "source_role": "official",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "No notice newer than 2026-10-23."
+      }
+    ],
+    "exclusions": [
+      "UNM Health full restoration on October 27 was recorded in an earlier watch; not a new event in this window.",
+      "Search hits for West Suburban Medical Center, Weiss Memorial Hospital, rural maternity and psychiatric unit closures, and ambulance and air-medical base closures were older than the observation window.",
+      "Foreign facilities, older reopening developments, proposals without concrete current access effect, and broad trend/commentary excluded."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "CMS was accessible, all 12 targeted searches executed, but results were predominantly older indexed news. No independently verified new event was discovered; search-index delay and highly local reports remain possible blind spots. Search completion does not establish exhaustive national coverage.",
+    "controls": "No review approvals, public posting, source publication, production runner changes, scheduling changes, disabling or creation of additional automations."
+  }
+}

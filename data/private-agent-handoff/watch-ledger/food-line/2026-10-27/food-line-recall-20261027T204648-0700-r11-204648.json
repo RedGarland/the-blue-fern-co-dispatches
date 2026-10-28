@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261027T204648-0700-r11-204648",
+  "scheduled_for": "2026-10-27T20:45:54-07:00",
+  "started_at": "2026-10-27T20:46:48-07:00",
+  "completed_at": "2026-10-27T20:47:46.517-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-27T19:46:45.263-07:00",
+    "end_at": "2026-10-27T20:47:46.517-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified supplementary Food Line heartbeat completed at 19:46:45.263 PDT. Conservatively includes the interval through the current observation; supplementary recall only."
+  },
+  "findings": [],
+  "bounded_query_context": {
+    "targeted_web_search_count": 12,
+    "search_engine": "fast",
+    "query_recency_days": 1,
+    "search_terms": [
+      "October 27 2026 town only grocery store closed last store fire community food desert",
+      "October 27 2026 \"last grocery store\" closure rural",
+      "October 27 2026 \"only grocery store\" fire closed",
+      "October 27 2026 \"full-service grocery\" closed lost community",
+      "October 27 2026 food bank distribution canceled storm flooding fire power outage",
+      "October 27 2026 food pantry distribution cancelled weather emergency today",
+      "October 27 2026 food distribution suspended building damage outage",
+      "October 27 2026 food pantry shuts down abruptly closure service halted",
+      "October 27 2026 food bank pantry closes permanently clients services",
+      "October 27 2026 food pantry reduced hours capacity emergency closure",
+      "October 27 2026 state SNAP benefits delayed EBT outage official notice",
+      "October 27 2026 WIC benefits suspended shutdown outage state agency notice"
+    ],
+    "focus_classes": [
+      "Loss/closure/fire/disaster of only, sole, last, or full-service community grocery store",
+      "Canceled or suspended emergency distribution caused by storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption causing immediate access consequences"
+    ]
+  },
+  "coverage_notes": [
+    "Supplementary bounded Food Line recall only; production nationwide collector remains authoritative and unchanged.",
+    "12 targeted searches completed for U.S. reports and official notices across the four specified miss classes. None supported a newly reported qualifying access loss during this hourly window.",
+    "Search results overwhelmingly described older, out-of-window grocery fires and closures, pantry closures, historical SNAP disruption notices, and resource or routine promotion articles; these were excluded.",
+    "Previously handed off Wymore, NE last grocery closure; South Philadelphia Point Breeze pantry fire; and Utah pantry reductions were not duplicated.",
+    "October 27 Kaua‘i Now Hurricane Lowell recovery article was directly reviewed: it confirms two NEW emergency food distributions scheduled Oct. 27 and Oct. 30, not cancellation/suspension. It does not qualify. One initial direct-page open timed out, but another indexed URL successfully returned the same complete article; no lasting coverage loss.",
+    "No new independently supported official SNAP, WIC, or EBT interruption with immediate food-access consequences was found.",
+    "Search indexing and accessible sources are bounded; production collector remains the authoritative nationwide workflow.",
+    "No editorial approval, publication, social posting, task alteration, or schedule change occurred."
+  ]
+}

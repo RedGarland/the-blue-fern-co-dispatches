@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 <channel>
-  <item>
+  <item><title>Scope correction to the October 25 Gaza edition</title><link>https://dispatches.thebluefernco.com/gaza/corrections/gaza-scope-correction-v1-2adf5ce5e94aa0a828f4/</link><guid isPermaLink="false">gaza-scope-correction-v1-2adf5ce5e94aa0a828f4</guid><description>Scope correction: This edition has been narrowed to reporting about conditions inside Gaza. Election-focused framing and a separate UN-candidacy item were removed from the briefing. This is not a finding that the source reporting was false. Limited-source update based on one Guardian report. The source was reviewed on October 27, 2026; this is not a restored October 25 article snapshot or a complete daily briefing.</description></item>
+<item>
     <title>Dispatches From Gaza - Gaza: girl dies after gunfire wounds as camp fire displaces families</title>
     <link>https://dispatches.thebluefernco.com/gaza/editions/2026-10-27/</link>
     <guid>https://dispatches.thebluefernco.com/gaza/editions/2026-10-27/</guid>
@@ -22,10 +23,10 @@
   
   
   <item>
-    <title>Dispatches From Gaza - &#x27;Gaza&#x27;s suffering has become campaign fodder&#x27;: Palestinians fear the worst from Israel election</title>
+    <title>Dispatches From Gaza - Gaza commercial deliveries and flour prices</title>
     <link>https://dispatches.thebluefernco.com/gaza/editions/2026-10-25/</link>
     <guid>https://dispatches.thebluefernco.com/gaza/editions/2026-10-25/</guid>
-    <description>Humanitarian catastrophe largely ignored as rivals Gadi Eisenkot and Benjamin Netanyahu vow to end Hamas rule As. Israel prepares to go to the polls , Palestinians in Gaza are bracing for an outcome that could shape their future, knowing their fate rests with the country that has reduced much of the territory to rubble and killed nearly 75,000 people. Gaza, where nearly a million displaced Palestinians face dire sanitary conditions, water shortages and the constant threat of Israeli strikes, has been largely absent from the election campaign . | 2 sources | Limited-source update</description>
+    <description>The Guardian reported disruption to commercial deliveries in Gaza and higher flour prices. | 1 source | Limited-source update</description>
   </item>
 <item>
     <title>Dispatches From Gaza - Two Palestinians killed and others injured in strike in Al-Nasr, western Gaza City</title>

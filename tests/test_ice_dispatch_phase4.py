@@ -78,7 +78,7 @@ def test_pdf_metadata_fallback_is_bounded_and_not_filesystem_timestamp():
     }
 
 
-def test_current_oig_pdf_is_current_and_historical_pdf_is_stale(monkeypatch):
+def test_oig_listing_dates_do_not_qualify_unsupported_pdf_content(monkeypatch):
     source = oig_source()
     def fake_fetch(url: str, *, timeout: float = 15.0):
         if "reports/audits" in url:
@@ -97,16 +97,17 @@ def test_current_oig_pdf_is_current_and_historical_pdf_is_stale(monkeypatch):
     raw, exclusions, health, _ = collect_live_candidates(
         [source], max_per_source=2, window_hours=72, observed_at="2026-09-09T00:00:00Z"
     )
-    assert len(raw) == 1
-    assert raw[0]["sources"][0]["published_at"] == "2026-09-08T12:00:00Z"
-    assert raw[0]["sources"][0]["date_source"] == "oig_listing_issue_date"
-    assert raw[0]["currentness_status"] == "current_publication"
-    assert exclusions[0]["reason"] == "stale_resurfaced_article"
-    assert exclusions[0]["published_at"] == "2026-07-23T12:00:00Z"
+    assert raw == []
+    assert [row["reason"] for row in exclusions] == ["pdf_text_extraction_unsupported"] * 2
+    assert [row["published_at"] for row in exclusions] == ["2026-09-08T12:00:00Z", "2026-07-23T12:00:00Z"]
+    assert all(row["date_source"] == "oig_listing_issue_date" for row in exclusions)
+    assert all(row["review_status"] == "NEEDS_REVIEW" for row in exclusions)
     assert health[0].success is True
+    assert health[0].accepted_records == 0
+    assert health[0].failed_records == 2
 
 
-def test_undated_pdf_stays_unresolved_not_fabricated(monkeypatch):
+def test_undated_pdf_stays_unsupported_not_fabricated(monkeypatch):
     source = oig_source()
     def fake_fetch(url: str, *, timeout: float = 15.0):
         if "reports/audits" in url:
@@ -114,11 +115,11 @@ def test_undated_pdf_stays_unresolved_not_fabricated(monkeypatch):
         return FetchResult(url, True, 200, "%PDF no visible date but ICE audit report found detention deficiencies.", None, "test")
     monkeypatch.setattr("bluefern_dispatches.ice_dispatch.fetch_url_secure", fake_fetch)
     raw, exclusions, _, _ = collect_live_candidates([source], max_per_source=1, window_hours=72)
-    assert exclusions == []
-    assert raw[0]["sources"][0]["published_at"] is None
-    assert raw[0]["sources"][0]["date_source"] is None
-    assert raw[0]["currentness_status"] == "unresolved_date"
-    assert raw[0]["currentness_confidence"] == "undated_current_surface"
+    assert raw == []
+    assert exclusions[0]["reason"] == "pdf_text_extraction_unsupported"
+    assert exclusions[0]["published_at"] is None
+    assert exclusions[0]["date_source"] is None
+    assert exclusions[0]["review_status"] == "NEEDS_REVIEW"
 
 
 def test_currentness_and_collection_health_are_separate():

@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T094431-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T09:45:22-07:00",
+  "started_at": "2026-10-28T09:44:31-07:00",
+  "completed_at": "2026-10-28T09:45:52-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T08:46:17-07:00",
+    "end": "2026-10-28T09:45:52-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completion to this run; newly announced, newly effective, or materially changed healthcare-access developments only."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall watch; production national Care Line collector remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T084518-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS listing inspected first. No notice added during the observation window, including provider termination, rescission, or CLIA limitation/suspension."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspension October 28 2026 United States local news",
+      "maternity labor delivery hospital closure effective October 28 2026 local news",
+      "hospital behavioral health psychiatric inpatient closure services October 28 2026",
+      "rural hospital emergency services suspended October 28 2026",
+      "dialysis center closure disrupted treatment October 28 2026",
+      "oncology cancer clinic treatment closed suspended October 28 2026",
+      "primary care clinic abruptly closing patients October 28 2026",
+      "ambulance EMS station base closure suspension October 28 2026",
+      "air ambulance helicopter medical transport base closing suspended October 28 2026",
+      "hospital urgent care clinic reopening restoring services October 28 2026",
+      "site:gov October 28 2026 hospital department closure temporary service suspension emergency health",
+      "site:gov October 28 2026 healthcare clinic ambulance restoration reopen hospital"
+    ],
+    "search_recency_days": 2,
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care service closure or suspension",
+      "rural or emergency-service loss",
+      "ambulance/air medical/base suspension or closure",
+      "CMS termination, rescission and CLIA access-risk notice",
+      "essential-service reopening/restoration across U.S. and territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "CMS",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "excluded_no_new_notice",
+        "detail": "Latest official public notices remained dated October 23."
+      },
+      {
+        "publisher": "The Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_previously_checked_outside_window",
+        "detail": "Sanford Luverne plan announced October 28 and reported at 09:00 Minnesota time (07:00 PDT); already evaluated and excluded by prior 08:46 PDT heartbeat, not a new change during this hour. Firm planned birth scheduling stop after April 2027, prenatal/postpartum retained."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_previously_announced",
+        "detail": "October 28 11:19 CDT report repeats earlier October announcement that Roseland maternity services will be suspended at the end of October; no new access-effective development in the search window."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Searches are bounded and indexed report time may lag event time. No new qualifying U.S. or territory service loss, CMS access-risk action, or effective restoration independently verified during this interval.",
+    "controls": "No approval, publication, schedule change, task disabling, or production collection mutation. Exactly one heartbeat JSON created for this execution."
+  }
+}

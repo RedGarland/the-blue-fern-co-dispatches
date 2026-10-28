@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T014316-0700-r11-014316",
+  "scheduled_for": "2026-10-28T00:45:54-07:00",
+  "started_at": "2026-10-28T01:43:16-07:00",
+  "completed_at": "2026-10-28T01:44:12.871-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T00:43:35-07:00",
+    "end_at": "2026-10-28T01:44:12.871-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Interval since the last independently read-back verified Food Line heartbeat; October 27-28 reporting examined with overlap for late indexing.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall watch only; primary nationwide production collection remains authoritative. No editorial approvals, publication, social posting, schedule changes, or task disabling.",
+    "Exactly 12 targeted web searches: three for sole/last/full-service grocery closures, fires or losses; three for disaster/outage-related emergency food distribution cancellation or suspension; three for abrupt pantry/food-bank closure or major service reduction; and three for newly official SNAP/WIC/EBT interruptions.",
+    "No newly verified qualifying U.S. food-access disruption was identified in the bounded window. Search results are not evidence of nationwide absence, and very recent local items may not yet be indexed.",
+    "KPCW's October 27 coverage of Community Action Services' Heber City, Utah pantry reports a planned end-of-November closure, not a new immediate loss during this window; earlier watches also identified Utah pantry disruptions. Excluded as already known and outside immediate-impact window. Source: https://www.kpcw.org/wasatch-county/2026-10-27/provo-based-food-bank-closing-heber-location-after-loss-of-federal-funding",
+    "Kaua'i Now's October 27 Hurricane Lowell recovery update advertises emergency food distributions on October 27 and October 30; it does not announce a food distribution cancellation. Excluded. Source: https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Previously surfaced October 27 Wymore, Nebraska last-grocery loss and October 26 South Philadelphia Community Fridge food pantry fire were already handed off and not counted again.",
+    "Search results prominently recycled October 2025 federal-shutdown SNAP interruption warnings, historical grocery fires, food-resource guides, donation appeals and routine program stories. None established a newly official October 28, 2026 assistance interruption with immediate consequences.",
+    "All targeted search calls completed and inspected direct reporting for relevant candidates; no material request failure was observed. Search-index date matching is imperfect and the watch cannot guarantee every local notice."
+  ]
+}

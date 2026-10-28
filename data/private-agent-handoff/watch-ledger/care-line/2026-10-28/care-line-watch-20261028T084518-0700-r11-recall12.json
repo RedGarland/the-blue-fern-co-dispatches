@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T084518-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T08:45:22-07:00",
+  "started_at": "2026-10-28T08:45:18-07:00",
+  "completed_at": "2026-10-28T08:46:17-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T07:52:05-07:00",
+    "end": "2026-10-28T08:46:17-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completion to this run; only newly announced, newly effective, or materially changed U.S./territory healthcare-access developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch for potential missed signals; production national collector remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T075020-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS notices checked before targeted searches; no October 28 notices, new provider terminations, rescissions, or CLIA limitations/suspensions."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspension announced October 28 2026 United States",
+      "maternity labor delivery unit closes October 28 2026 hospital",
+      "rural hospital emergency services suspended October 28 2026",
+      "ambulance EMS service closed suspended October 28 2026 county",
+      "air ambulance medical helicopter base closing October 28 2026",
+      "mental behavioral health facility clinic closing patients October 28 2026",
+      "dialysis center closing October 28 2026 patients",
+      "oncology cancer treatment clinic closing October 28 2026 patients",
+      "primary care clinic abruptly closes October 28 2026 patients",
+      "hospital emergency room reopened service restored October 28 2026",
+      "medical services suspended today October 28 2026 healthcare access local news",
+      "hospital clinic closure October 28 2026 Puerto Rico Guam Virgin Islands American Samoa Northern Mariana"
+    ],
+    "search_recency_days": 1,
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "emergency and rural service loss",
+      "ambulance/air medical/base closure or suspension",
+      "official CMS provider termination, rescission and CLIA action",
+      "effective essential-service restoration",
+      "U.S. states and territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "CMS",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "excluded_no_new_notice",
+        "detail": "Newest notice dated October 23; none in this observation window."
+      },
+      {
+        "publisher": "The Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_outside_observation_window",
+        "detail": "October 28 article time 09:00 Minnesota local (07:00 PDT), preceding the prior heartbeat at 07:52 PDT. Concrete newly announced plan to stop scheduling deliveries in 2027 (through April 2027); important candidate for production dedup/backfill, but not a new change during this hourly window."
+      },
+      {
+        "publisher": "WDTV",
+        "url": "https://www.wdtv.com/2026/10/28/preston-county-ambulance-service-pauses-operations-amid-insurance-switch/",
+        "disposition": "excluded_outside_observation_window",
+        "detail": "Bruceton Community Ambulance Service temporary suspension announced October 27; reporting time October 27 21:30 EDT (18:30 PDT), more than 13 hours before prior heartbeat. No newly verified change in this window."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_previously_announced_and_future_published",
+        "detail": "October 28 local coverage states Roseland maternity suspension was announced weeks earlier, due by end of October; article stamped 11:19 AM Chicago time (09:19 PDT), later than observation end 08:46 PDT; not evidence of a new effective service change in this window."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "No qualifying newly effective/announced access change verified for the narrow interval. Searches are bounded, not exhaustive; date-only indexing is imprecise and does not establish publication hour. The Sanford Luverne and Bruceton EMS items are substantive older candidate signals, excluded only by explicit window; production collection should assess independently for historical misses.",
+    "controls": "No review approvals, publication, schedule mutation, task disabling, or primary production collector changes. Exactly one new heartbeat for this run."
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T044234-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T04:45:22-07:00",
+  "started_at": "2026-10-28T04:42:34-07:00",
+  "completed_at": "2026-10-28T04:43:43.553-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T03:42:32-07:00",
+    "end": "2026-10-28T04:43:43.553-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed at 03:42:32 PDT on October 28; checked newly reported or newly effective healthcare-access changes through this run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary missed-signal recall only; primary production Care Line collection remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T034103-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official listing opened and inspected first; newest entries still October 23 home-health termination notices (California and Ohio). No new CMS termination, rescission, or CLIA limitation/suspension within the observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 28, 2026\" hospital \"emergency department\" closure suspension",
+      "\"October 27, 2026\" hospital \"emergency room\" closed service",
+      "\"October 27, 2026\" maternity labor delivery unit closure",
+      "\"October 27, 2026\" psychiatric behavioral health facility closure suspension",
+      "\"October 27, 2026\" dialysis center closure patients",
+      "\"October 27, 2026\" cancer oncology clinic closed services",
+      "\"October 27, 2026\" rural hospital emergency service closed",
+      "\"October 27, 2026\" ambulance service shutting down ending operations",
+      "\"October 27, 2026\" air ambulance helicopter base closure",
+      "\"October 28, 2026\" hospital ED service reopened resumed operations",
+      "\"October 27, 2026\" primary care clinic closure patients",
+      "\"October 28, 2026\" CLIA laboratory suspension termination Medicare healthcare"
+    ],
+    "search_recency_days": 2,
+    "searched_classes": [
+      "hospital/ED/maternity closure or suspension",
+      "psychiatric/behavioral-health service loss",
+      "dialysis/oncology service loss",
+      "primary-care service loss",
+      "rural/emergency service loss",
+      "ambulance/air-medical/base loss",
+      "concrete essential-service reopening/restoration",
+      "CMS provider termination/rescission/CLIA",
+      "U.S. states and territories (territory coverage limited by indexed results)"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "University of New Mexico Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate",
+        "detail": "Prior watch already recorded UNM Health interruption/restoration; no new, separately documented change during this window."
+      },
+      {
+        "publisher": "Wyoming Public Media",
+        "url": "https://www.wyomingpublicmedia.org/health/2026-10-27/where-205-million-in-rural-health-transformation-funds-is-going-in-wyoming",
+        "disposition": "excluded_funding_without_concrete_service_change",
+        "detail": "October 27 funding distribution coverage, not a new closure, suspension or effective restoration."
+      },
+      {
+        "publisher": "STAT",
+        "url": "https://www.statnews.com/2026/10/27/pediatric-emergency-care-rural-hospital-closures/",
+        "disposition": "excluded_retrospective",
+        "detail": "Broader analysis of pediatric emergency access and prior rural hospital closures; no newly effective incident in watch window."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/",
+        "disposition": "excluded_prior_announcement",
+        "detail": "Closure news indexed from weeks earlier, not newly announced or effective during this window."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve searches were targeted by 2026-10-27/28 dates and service class, but many results were historical, retrospective, or stale despite recency filters. Early-morning indexing is incomplete; no dedicated territorial-language search fit the 12-search cap. Absence of hits is not exhaustive evidence of absence.",
+    "controls": "No approval, publication, schedule alteration, automation disabling, or production-collector mutation. Exactly one heartbeat was requested for this execution.",
+    "execution_timing_note": "Run began before the 04:45:22 PDT nominal scheduled occurrence. scheduled_for retains that nominal time without changing automation settings."
+  }
+}

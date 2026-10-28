@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T134441-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T13:45:22-07:00",
+  "started_at": "2026-10-28T13:44:41-07:00",
+  "completed_at": "2026-10-28T13:45:34.449-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T12:46:18-07:00",
+    "end": "2026-10-28T13:45:34.449-07:00",
+    "basis": "Since verified preceding Care Line Watch heartbeat. Recall searches also assess newly indexed prior-day developments, excluding previously logged items."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not a production collector; authoritative production collection unchanged.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T124502-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS public listing retrieved first. Latest listed terminations and CLIA actions remain October 23, 2026; no additions for the interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 28 2026 hospital emergency department closed suspended services today United States",
+      "October 28 2026 maternity labor delivery unit closure hospital announced",
+      "October 28 2026 ambulance service stopped operations EMS suspension county",
+      "October 28 2026 rural hospital closes inpatient emergency services",
+      "October 28 2026 dialysis center oncology clinic closure patients",
+      "October 28 2026 inpatient psychiatric behavioral health hospital closure services",
+      "\"Oct 28, 2026\" \"closing\" \"clinic\" hospital",
+      "\"October 28, 2026\" \"ambulance\" \"service\" \"suspended\" OR \"closed\"",
+      "\"October 28, 2026\" \"emergency room\" \"closed\" OR \"reopened\"",
+      "\"October 28, 2026\" \"maternity\" \"closure\" OR \"suspend\"",
+      "\"October 28, 2026\" \"primary care\" \"closure\" clinic",
+      "\"October 28, 2026\" hospital \"reopened\" OR \"restored\" emergency services"
+    ],
+    "searched_classes": [
+      "hospital and ED closure/suspension",
+      "maternity and behavioral-health service closure",
+      "dialysis/oncology/primary-care service loss",
+      "rural emergency-care loss",
+      "ground ambulance and air-medical service closure",
+      "CMS terminations, rescissions, CLIA limitations/suspensions",
+      "essential service restorations/reopenings"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "Centers for Medicare & Medicaid Services",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "no_new_notices",
+        "detail": "Latest notices October 23, 2026."
+      },
+      {
+        "publisher": "WV News",
+        "url": "https://www.wvnews.com/prestoncountynews/bruceton-community-ambulance-service-halts-services-until-insurance-is-reinstated/article_8aac0518-da54-425f-bab6-2663d5344ad8.html",
+        "disposition": "excluded_older_already_reviewed",
+        "detail": "Bruceton EMS suspended October 27; explicitly reviewed in the preceding-day watch."
+      },
+      {
+        "publisher": "The Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_duplicate",
+        "detail": "Sanford Luverne maternity announcement already captured in 11:50 a.m. watch heartbeat as pending_review."
+      },
+      {
+        "publisher": "UNM Health Sciences",
+        "url": "https://hsc.unm.edu/news/",
+        "disposition": "excluded_duplicate",
+        "detail": "October 27 critical-system/ambulance-service restoration already recorded earlier."
+      },
+      {
+        "publisher": "Optum",
+        "url": "https://www.optum.com/en/care/providers/wa/margaret-mass-md-1083343107.html",
+        "disposition": "excluded_insufficient_newness",
+        "detail": "Undated partially closed Madison Center banner; no evidence of a newly announced or newly effective loss within observation window."
+      },
+      {
+        "publisher": "FQHC Talent",
+        "url": "https://www.fqhctalent.com/issues/safety-net-workforce-capacity",
+        "disposition": "excluded_older_announcement",
+        "detail": "Children's Hospital LA workforce action effective October 28 but previously announced in April, without confirmed new service-level change in observation window."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Bounded search of CMS plus 12 targeted web queries; not exhaustive across states and territories. Search indexing and published dates may lag actual developments. Search results were primarily previously published events, contextual reports, or pages lacking verified new access effects.",
+    "controls": "No approval, publication, production collector mutation, schedule alteration or disabling. One heartbeat created for this run."
+  }
+}

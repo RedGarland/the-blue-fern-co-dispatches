@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T075020-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T07:45:22-07:00",
+  "started_at": "2026-10-28T07:50:20-07:00",
+  "completed_at": "2026-10-28T07:52:05-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T06:42:02.816-07:00",
+    "end": "2026-10-28T07:52:05-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed 06:42:02.816 PDT October 28; targeted newly announced, newly effective or materially changed U.S. and territory healthcare-access developments through this run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary missed-signal recall only; primary production Care Line collection remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T064031-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS Public Notices list inspected first; newest entries remain October 23, including home-health agency terminations. No newly dated provider termination, rescission, CLIA limitation or suspension during this interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing suspended services October 28 2026 United States",
+      "maternity obstetrics labor delivery shutdown Oct 28 2026 hospital",
+      "rural hospital emergency room closure ambulance suspended October 28 2026",
+      "dialysis cancer oncology clinic suddenly closes October 28 2026",
+      "ambulance service air medical helicopter base shutdown October 28 2026",
+      "behavioral health psychiatric hospital services closure October 28 2026",
+      "\"October 28, 2026\" hospital \"close\" \"services\"",
+      "\"October 27, 2026\" \"emergency department\" closure hospital",
+      "\"October 28, 2026\" \"ambulance\" \"service\" \"closed\" OR suspended",
+      "\"October 27, 2026\" \"labor and delivery\" \"closing\" OR \"stopped\"",
+      "\"October 28, 2026\" \"clinic\" closed dialysis oncology primary care",
+      "\"October 28, 2026\" hospital emergency services \"reopen\" OR \"restored\""
+    ],
+    "search_recency_days": "First 6 queries recency 2 days; latter 6 had explicit October 27/28 date constraints.",
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "rural and emergency care cessation",
+      "ambulance/air-medical/base suspension or closure",
+      "official CMS provider termination, rescission and CLIA restrictions",
+      "effective, concrete restoration/reopening",
+      "U.S. states and territories (territory-specific fresh indexing limited by budget)"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "CMS",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "no_new_notice",
+        "detail": "Latest listed notice remains dated October 23."
+      },
+      {
+        "publisher": "Boreal Community Media / North Shore Health and Sawtooth Mountain Clinic",
+        "url": "https://www.boreal.org/2026/10/28/589129/north-shore-health-and-sawtooth-mountain-clinic-announce-collaborative-transition-to-strengthen-home-based-nursing-services",
+        "disposition": "excluded_no_documented_access_loss",
+        "detail": "October 28 announcement of transition of home-care licensure and staff to visiting nurse program; indexed primary statement explicitly promises continuity of existing caregivers and minimal interruption. Published 04:33 (site time), with no newly effective loss in hourly window. Direct page retrieval unavailable; classification provisional."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/",
+        "disposition": "excluded_prior_announcement",
+        "detail": "Roseland maternity closure decision previously announced weeks earlier; October 27 republishing reflects older development, with suspension scheduled October 31 rather than during this observation window."
+      },
+      {
+        "publisher": "University of New Mexico Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate",
+        "detail": "October 26 UNM interruption and October 27 resumption recorded in earlier hourly watches; no new effective service change shown."
+      },
+      {
+        "publisher": "Bourbon County Monitor",
+        "url": "https://www.bourboncountymonitor.com/freeman-declines-2-5m-mri-grant-amid-talks-to-sell-fort-scott-hospital-to-kri/",
+        "disposition": "excluded_funding_ownership",
+        "detail": "October 27 MRI grant refusal and sale talks concern capital funding and ownership, not an established cessation of current hospital services."
+      },
+      {
+        "publisher": "Alberta Health Services",
+        "url": "https://www.albertahealthservices.ca/br/Page19638.aspx",
+        "disposition": "excluded_out_of_scope_geography",
+        "detail": "Emergency closure schedules refer to Alberta, Canada, not the United States or territories."
+      }
+    ],
+    "source_failures": [
+      {
+        "publisher": "Boreal Community Media",
+        "url": "https://www.boreal.org/2026/10/28/589129/north-shore-health-and-sawtooth-mountain-clinic-announce-collaborative-transition-to-strengthen-home-based-nursing-services",
+        "error": "Direct open returned DisabledError; indexed search extract contained primary-provider announcement sufficient to identify a planned continuity-preserving transition, but full verification unavailable.",
+        "material": false
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "Twelve date- and service-focused searches returned mainly old, retrospective, or pre-announced developments; early-morning indexing and territorial language/local outlets were not exhaustively covered. The optional Boreal source was blocked for direct retrieval, so the run was marked DEGRADED even though useful coverage remained. Absence of qualifying evidence is not proof no service change occurred.",
+    "controls": "No editorial approval, public posting/publication, schedule changes, task disabling, or production collector mutation. Exactly one new heartbeat file for this run."
+  }
+}

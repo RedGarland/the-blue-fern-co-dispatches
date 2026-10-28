@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T144332-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T14:45:22-07:00",
+  "started_at": "2026-10-28T14:43:32-07:00",
+  "completed_at": "2026-10-28T14:44:46.781-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T13:45:34.449-07:00",
+    "end": "2026-10-28T14:44:46.781-07:00",
+    "basis": "Since the verified preceding Care Line Watch heartbeat, with recall checks of newly indexed same-day reports; previously captured and older developments excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall. Production national collection remains authoritative; this check did not approve or publish anything.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T134441-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "CMS official listing retrieved through canonical redirect, latest action dated October 23 (California and Ohio home-health terminations); no new notices in observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 28, 2026\" \"hospital\" \"closing\" \"emergency\" care",
+      "\"October 28, 2026\" \"labor and delivery\" closing OR suspending",
+      "\"October 28, 2026\" ambulance service shutdown OR suspended OR closure",
+      "\"October 28, 2026\" rural hospital emergency department closure services",
+      "\"October 28, 2026\" dialysis center closes patients relocation",
+      "\"October 28, 2026\" oncology cancer center closes treatment services",
+      "\"October 28, 2026\" behavioral health psychiatric hospital closed beds",
+      "\"October 28, 2026\" primary care clinic closing patients access",
+      "\"October 28, 2026\" air ambulance base closure grounding helicopter",
+      "\"October 28, 2026\" emergency department reopened restored hospital",
+      "\"October 28, 2026\" hospital maternity services suspension announced",
+      "October 28 2026 Puerto Rico Guam Virgin Islands hospital emergency health clinic service shutdown"
+    ],
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health service closures or suspensions",
+      "dialysis, oncology, primary-care access loss",
+      "rural and emergency service loss",
+      "ground and air ambulance service disruption",
+      "CMS provider termination/rescission and CLIA actions",
+      "concrete essential service reopenings/restorations",
+      "U.S. territories"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "Centers for Medicare & Medicaid Services",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "no_new_notices",
+        "detail": "Newest CMS public notices dated 2026-10-23."
+      },
+      {
+        "publisher": "The Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_duplicate",
+        "detail": "Sanford Luverne scheduled childbirth-service closure announced October 28 was captured pending_review in 11:50 a.m. heartbeat."
+      },
+      {
+        "publisher": "Minnesota Attorney General",
+        "url": "https://www.ag.state.mn.us/Office/Communications/2026/10/28_Rural-Healthcare.asp",
+        "disposition": "excluded_proposal_without_concrete_access_effect",
+        "detail": "New maternal-health planning and mapping initiative but no new closure, restoration, or effective service change."
+      },
+      {
+        "publisher": "The Beacon",
+        "url": "https://thebeaconnews.org/stories/2026/10/28/childrens-mercy-aca-spat-shows-how-patients-get-caught-in-crossfire/",
+        "disposition": "excluded_out_of_scope",
+        "detail": "Insurance-network contract dispute affecting future pediatric access, not verified service-line closure/suspension or CMS notice."
+      },
+      {
+        "publisher": "Boston Globe",
+        "url": "https://www.bostonglobe.com/2026/10/28/metro/pandas-pans-mgb-kyle-williams/",
+        "disposition": "excluded_prior_announcement",
+        "detail": "October 28 report discusses specialty treatment program previously announced for January; no new qualifying service change in this interval."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-chicago-news-today-community-hospital-labor-delivery-suspension-draws-calls-state-action/19933758/",
+        "disposition": "excluded_older",
+        "detail": "Previously announced maternity service suspension; no new update."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "failure": "Initial noncanonical CMS URL inaccessible in web fetch",
+        "recovered_via": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "material_coverage_loss": false
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "CMS accessed and all 12 targeted searches completed; search indexing and source timing can lag publication, so this does not constitute an exhaustive national or territorial survey.",
+    "controls": "No content approval, public publication, production collector modification, schedule alteration, or disabling. One new heartbeat file created for this execution."
+  }
+}

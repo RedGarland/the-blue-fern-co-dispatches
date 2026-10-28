@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T154906-0700-r11-20261028T224943Z",
+  "scheduled_for": "2026-10-28T15:45:54-07:00",
+  "started_at": "2026-10-28T15:49:06-07:00",
+  "completed_at": "2026-10-28T15:49:43.330-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T14:42:13.652-07:00",
+    "end_at": "2026-10-28T15:49:43.330-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently read persisted ops/watch-ledger Food Line heartbeat completed 2026-10-28 14:42:13.652 PDT. Search indexed recent developments with publication/event-date checks and excluded duplicates.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; production national Food Line collector remains authoritative. No approval, publication, schedule change, or disablement.",
+    "12 targeted fast web searches executed (three for sole/last grocery-store loss, three disaster-related canceled distributions, three abrupt pantry/food-bank service losses, three official SNAP/WIC/EBT immediate interruptions). Search responses received for each; no targeted-search tool failures.",
+    "No independently verified new and nonduplicate qualifying U.S. food-access interruption established in this observation interval. Index latency and unindexed provider notices remain limitations; absence of a result is not proof of absence.",
+    "Older grocery-store disaster coverage surfaced (e.g., 2020 Berry Creek fire / 2021 Cal OES recovery notice), but no fresh sole/last-store incident met the window: https://www.news.caloes.ca.gov/cal-oes-assists-with-recovery-efforts-of-beloved-berry-creek-market/.",
+    "Santa Clarita Valley Food Pantry unexpected closure was originally reported January 27 2026, not a new October 28 event: https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102.",
+    "SNAP interruption coverage prominently returned October 2025 federal-shutdown stories rather than October 2026 official service disruption, e.g. October 28 2025 Texas Tribune: https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/.",
+    "No fresh primary agency/provider cancellation notice, abrupt access reduction, or verifiable SNAP/WIC service outage identified. Resource guides, donation drives, routine promotion, unrelated policy material, duplicates and historical events excluded.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" fire OR closed OR destroyed October 28 2026 small town",
+        "\"last grocery store\" closing OR fire OR shutdown October 2026 rural community",
+        "\"sole grocery store\" closed OR burned OR flooding October 2026 town",
+        "\"food distribution\" canceled storm OR flooding OR power outage October 28 2026",
+        "\"food pantry\" distribution cancelled hurricane OR storm October 28 2026",
+        "\"food bank\" canceled food distribution fire OR power outage October 2026",
+        "\"food pantry\" \"closed\" October 28 2026 abruptly",
+        "\"food bank\" \"suspended\" \"services\" October 28 2026",
+        "\"food pantry\" \"closed\" OR \"reduced hours\" due to damage October 2026",
+        "site:gov SNAP benefits unavailable EBT outage October 28 2026",
+        "site:gov WIC services suspended October 28 2026 emergency office",
+        "October 28 2026 official SNAP EBT outage benefits interrupted state agency"
+      ]
+    }
+  ]
+}

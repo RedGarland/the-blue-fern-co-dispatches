@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T104756-0700-r11-20261028T174756Z",
+  "scheduled_for": "2026-10-28T10:44:51-07:00",
+  "started_at": "2026-10-28T10:47:56-07:00",
+  "completed_at": "2026-10-28T10:49:18.135-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T09:46:01.302-07:00",
+    "end": "2026-10-28T10:49:18.135-07:00",
+    "basis": "Start from last verified on-branch Gaza Source Watch heartbeat; observation time is not automatically event time. Latest in-window source content checked against prior reported developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary daily collection/publication remains authoritative and unmodified.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T094355-0700-r11-20261028T164355Z",
+      "completed_at": "2026-10-28T09:46:01.302-07:00",
+      "outcome": "findings",
+      "status": "DEGRADED",
+      "source": "ops/watch-ledger branch; fetched via GitHub connector."
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Available; Oct 27 West Bank monthly snapshot top update, Oct 26 Gaza situation report for Oct 22; no new in-window Gaza release."
+      },
+      {
+        "publisher": "OCHA OPT Updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Available; no in-window Gaza-specific publication."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Available; no new in-window Gaza hospital/health/evacuation item on landing page."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "502 Bad Gateway; repeated previously documented source-specific access degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza October 28 2026 20:00 21:00 Palestinians killed wounded Rafah Khan Younis",
+      "site:english.wafa.ps/Pages/Details/ October 28 2026 Gaza 19:00 20:30 displacement casualties",
+      "site:aa.com.tr/en/ October 28 2026 Gaza Israeli attacks killed wounded new 28 October 2026 evening",
+      "site:reuters.com/world/middle-east/ October 28 2026 Gaza ceasefire civilians strikes aid killed injured latest",
+      "site:apnews.com/article/ Gaza October 28 2026 strike aid ceasefire killed civilians",
+      "site:aljazeera.com/news/2026/10/28/ Gaza latest October 28 attacks killed Rafah Khan Younis Nuseirat",
+      "site:un.org OR site:news.un.org Gaza 28 October 2026 humanitarian access crossing casualties hospitals",
+      "site:unicef.org OR site:wfp.org Gaza 28 October 2026 water food aid famine distribution",
+      "site:msf.org OR site:icrc.org Gaza 28 October 2026 health hospitals ambulances fuel evacuations",
+      "site:unrwa.org OR site:reliefweb.int Gaza 28 October 2026 displacement aid access new update",
+      "Gaza October 28 2026 latest evening Rafah Kerem Shalom crossing medical evacuations aid convoys",
+      "Gaza 28 October 2026 evening ceasefire negotiations hostages detention military strikes civilian effects latest"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza-specific home-linked article is 28 October 16:23 Jerusalem-local (07:23 PDT) on Rafah/Nuseirat/Khan Younis, already recorded in earlier heartbeat. Latest overall item 19:38 Jerusalem-local (10:38 PDT) concerns only West Bank farmers; checked direct full story and excluded."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176417",
+        "result": "Published Oct 28 19:38 Jerusalem-local, on Jenin/Nablus/Bethlehem/Ramallah West Bank farmer attacks, outside Gaza scope. Body has apparent dateline typo Oct 12, so not counted."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-5-palestinians-wound-32-in-gaza/4103255",
+        "result": "Direct article access unavailable this run. Expanded same-ID casualty totals (5 killed, 32 wounded) already preserved in previous heartbeat; no newer verifiable revision found."
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/",
+        "result": "Available; featured child nutrition photo essay and Oct 22 statement but no newly verified in-window change."
+      },
+      {
+        "publisher": "ICRC",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Available; most recent linked Gaza article Oct 13 and prior facts/response information, none new in this observation interval."
+      }
+    ],
+    "exclusions": [
+      "WAFA 28 October 16:23 Jerusalem-local Rafah/Nuseirat/Khan Younis casualty incidents, already recorded in prior watch.",
+      "Anadolu same-article follow-up (5 killed and 32 wounded vs earlier 2 killed and 5 wounded) previously preserved; do not double count.",
+      "WAFA Oct 28 19:38 Jerusalem-local farmer incidents occurred in West Bank, not Gaza.",
+      "Reuters, AP, Al Jazeera and OCHA older October reporting, historical UNICEF items and prior humanitarian aggregates outside this window.",
+      "Opinion, unsupported social posts, undated claims and unverified event-time inferences excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "failure": "502 Bad Gateway",
+        "materiality": "Persistent prior-run source-specific failure, not newly material; WHO global source and OCHA OPT accessible."
+      },
+      {
+        "source": "Anadolu direct expanded report",
+        "failure": "Direct URL inaccessible in web retrieval",
+        "materiality": "Cannot verify fresh same-article revision; previous authoritative watch evidence remains and related WAFA source is accessible."
+      },
+      {
+        "source": "UN News",
+        "failure": "Robots restriction on search coverage",
+        "materiality": "Previously documented access restriction; OCHA OPT accessible."
+      }
+    ],
+    "verification": "Twelve additional targeted searches, plus first-priority OCHA/WHO checks and publisher pages; no qualifying new or independently confirmed follow-up found since prior completed watch. Search provider yielded mostly older/low-relevance material; absence of new verified findings is not proof no incidents occurred.",
+    "safeguards": "Exactly one new heartbeat on ops/watch-ledger; no public publication, approvals, scheduling, disabling, production modifications, or other repository changes."
+  }
+}

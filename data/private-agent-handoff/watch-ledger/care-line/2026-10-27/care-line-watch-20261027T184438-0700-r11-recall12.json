@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261027T184438-0700-r11-recall12",
+  "scheduled_for": "2026-10-27T18:45:22-07:00",
+  "started_at": "2026-10-27T18:44:38-07:00",
+  "completed_at": "2026-10-27T18:45:39.523-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-27T17:44:47-07:00",
+    "end": "2026-10-27T18:45:39.523-07:00",
+    "basis": "From prior independently verified Care Line heartbeat completion through this bounded recall check; older events and previously evaluated developments excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall watch; primary national collector and publication controls remain authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "result": "Official public notice table accessible; newest notices remain three October 23 home-health agency terminations (CA and OH). No newer CMS notice found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended October 27 2026 United States",
+      "maternity labor delivery unit closure October 27 2026 rural hospital",
+      "hospital behavioral health inpatient psychiatric unit closing October 27 2026",
+      "dialysis clinic closure patients October 27 2026",
+      "oncology cancer center clinic shutdown patient access October 27 2026",
+      "primary care clinic immediate closure October 27 2026",
+      "rural hospital emergency services suspended today October 27 2026",
+      "ambulance service stopped operations base closed October 27 2026",
+      "air medical helicopter base shutdown service October 27 2026",
+      "hospital clinic reopening restored emergency services October 27 2026",
+      "healthcare services shutdown October 27 2026 site:gov Puerto Rico Guam Virgin Islands",
+      "clinic hospital urgent care emergency suspended resumed October 27 2026 local news"
+    ],
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "emergency or rural service loss",
+      "ground or air ambulance/base loss",
+      "CMS provider and CLIA access-risk actions",
+      "concrete effective restorations"
+    ],
+    "sources_checked": [
+      {
+        "publisher": "CMS Public Notices (official)",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "result": "No notices dated after October 23."
+      },
+      {
+        "publisher": "Lake and McHenry County Scanner",
+        "url": "https://www.lakemchenryscanner.com/2026/10/24/state-revokes-trauma-center-designation-for-vista-medical-center-east-in-waukegan-for-2nd-time-in-less-than-3-years/",
+        "result": "Vista Medical Center East trauma-designation revocation dated October 24; outside this hour and previously evaluated."
+      },
+      {
+        "publisher": "UNM Health Sciences Center (official; prior heartbeat evidence)",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "result": "October 27 full restoration was recorded by the earlier Care Line watch; no distinct in-window change surfaced."
+      },
+      {
+        "publisher": "WAND",
+        "url": "https://www.wandtv.com/2026/09/16/air-evac-closes-base-decatur-airport/",
+        "result": "Air Evac Decatur base closure September 16, outside current window."
+      },
+      {
+        "publisher": "Hawaii News Now",
+        "url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/",
+        "result": "September announcement describes restoration plan without concrete reopening date or effective reopening."
+      }
+    ],
+    "exclusions": [
+      "Prior UNM Health full restoration already recorded; duplicate.",
+      "Vista Medical Center East trauma designation lost October 24, not a new hourly event.",
+      "Earlier hospital, clinic, ambulance and dialysis closures; no new in-window change established.",
+      "Maternity funding-risk and hospital crisis analysis without a newly effective service change.",
+      "Kula Hospital reopening plan without confirmed effective reopening date.",
+      "Out-of-scope international results and tangential studies/business pieces."
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve bounded targeted searches and CMS official review completed. Search results were mostly older or unrelated; search-index delays and the narrow scope prevent interpreting no findings as proof that no qualifying U.S. healthcare access change occurred.",
+    "controls": "One heartbeat file recorded on ops/watch-ledger. No approval, publication, production collection mutation, schedule changes, or disabling."
+  }
+}

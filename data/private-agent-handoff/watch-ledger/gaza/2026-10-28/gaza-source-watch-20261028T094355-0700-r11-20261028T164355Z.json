@@ -1,0 +1,138 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T094355-0700-r11-20261028T164355Z",
+  "scheduled_for": "2026-10-28T09:44:51-07:00",
+  "started_at": "2026-10-28T09:43:55-07:00",
+  "completed_at": "2026-10-28T09:46:01.302-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T08:47:56.436-07:00",
+    "end": "2026-10-28T09:46:01.302-07:00",
+    "basis": "Start equals previous on-branch Gaza Source Watch heartbeat completed_at. Newly observed revisions are not assumed to represent events occurring within the hour; exact original publication/revision clock times must be distinguished from discovery."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261028-anadolu-4103255-casualty-report-expanded-followup",
+      "canonical_source_url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-5-palestinians-wound-32-in-gaza/4103255",
+      "title": "Israeli attacks kill 5 Palestinians, wound 32 in Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-10-28",
+      "publication_date": "2026-10-28",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip; reported incidents in Rafah/al-Mawasi, Khan Younis, Jabalia, Nuseirat, Deir al-Balah and Bureij",
+      "affected_population_system": "Palestinians reported killed and wounded in airstrikes or gunfire; includes people near commercial-truck monitoring checkpoint in Rafah, civilians and a child",
+      "exact_supporting_passage": "Israeli attacks killed five Palestinians and wounded 32 in the Gaza Strip on Tuesday",
+      "source_type": "Established news agency; reports attributed to medical and civil-defense sources",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_during_current_watch": true,
+        "observed_at": "2026-10-28T09:46:01.302-07:00",
+        "prior_ledger_source_url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-10-27/gaza-source-watch-20261027T214318-0700-r11-20261028T044318Z.json",
+        "prior_same_article_title": "Israeli attacks kill 2 Palestinians, wound 5 in Gaza",
+        "prior_same_article_reported_total": "2 killed, 5 injured",
+        "currently_displayed_article_total": "5 killed, 32 injured",
+        "source_url_id": "4103255 (same underlying article as prior report; changed headline and body)",
+        "publisher_update_clock_time": null,
+        "temporal_limit": "Article states publication and update dates of 28 October but no update clock time; new injuries/deaths are not established as occurring within this watch interval. Body mixes reports about Tuesday and Wednesday.",
+        "overlap_handling": "Do not add reported deaths or injuries as unique totals to prior recorded incidents. Earlier WAFA Rafah/al-Mawasi, Nuseirat and al-Bayouk/Khan Younis events overlap the refreshed article; specifically WAFA had described 3 killed/10 injured at Rafah while Anadolu now reports 3/15 at a Rafah commercial-truck checkpoint, and both report al-Bayouk casualties. Revision is captured as a bounded follow-up, not additional distinct strikes.",
+        "source_comparison": "Prior 27 October 21:43 PDT on-branch heartbeat preserves Anadolu article with headline 2 killed/5 wounded; current direct publisher page renders 5 killed/32 wounded under same article ID 4103255.",
+        "corroboration": "New aggregate and specific increased figures rely on Anadolu medical-source reporting; independent confirmation and update timestamp unavailable."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall only; production collector and publisher remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T084629-0700-r11-20261028T154629Z",
+      "completed_at": "2026-10-28T08:47:56.436-07:00",
+      "outcome": "no_findings",
+      "retrieved_from": "ops/watch-ledger"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. October 27 listing concerns the West Bank; most recent Gaza bulletin was October 22 report posted October 26. No fresh in-window Gaza-specific release."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No in-window hospital/ambulance/health-capacity/fuel/medical-evacuation publication exposed."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "502 Bad Gateway; prior-run recurrent source-specific degradation, WHO Global checked as alternative."
+      }
+    ],
+    "initial_primary_search_queries": [
+      "site:ochaopt.org Gaza latest humanitarian situation report 28 October 2026",
+      "site:who.int Gaza 28 October 2026 health hospital medical evacuations"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza Wednesday October 28 2026 18:00 PM killed wounded Rafah Khan Younis",
+      "site:english.wafa.ps/Pages/Details/ Gaza 28 October 2026 17:50 18:30 strikes casualties",
+      "site:aa.com.tr/en/middle-east Gaza October 28 2026 killed injured ceasefire new strikes",
+      "site:aljazeera.com/news/2026/10/28/ Gaza aid strikes ceasefire civilians October 28",
+      "site:reuters.com/world/middle-east/ October 28 2026 Gaza civilians killed aid Israeli strikes",
+      "site:apnews.com Gaza October 28 2026 latest strike wounded aid crossing",
+      "site:un.org OR site:news.un.org Gaza October 28 2026 OCHA aid crossings civilian protection 28 October",
+      "site:unicef.org OR site:wfp.org Gaza 28 October 2026 nutrition food water supply new",
+      "site:icrc.org OR site:msf.org Gaza 28 October 2026 hospitals ambulance fuel patients",
+      "site:unrwa.org OR site:reliefweb.int Gaza 28 October 2026 displacement access humanitarian",
+      "Gaza October 28 2026 18:00 Jerusalem Rafah Kerem Shalom crossing aid medical evacuation new",
+      "Gaza Wednesday October 28 2026 late afternoon ceasefire hostages detention humanitarian civilians Khan Younis Rafah latest"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Most recent Gaza item was 16:23 publisher-local (07:23 PDT), previously recorded. 18:03 and 18:18 local articles are West Bank/cyprus, not Gaza."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-5-palestinians-wound-32-in-gaza/4103255",
+        "result": "Direct publisher page shows expanded casualty headline/body for existing article ID 4103255, compared against archived earlier watch evidence."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/sop/stories/helping-children-gaza-access-nutrition-they-need-grow-and-thrive",
+        "result": "Search returned October 28 photo essay on child nutrition and 300,000 screenings since 2025 ceasefire; direct page access disabled, publication time unknown, mostly historical/aggregated context: not advanced as in-window finding."
+      }
+    ],
+    "exclusions": [
+      "Previously recorded WAFA Rafah, Nuseirat and al-Bayouk casualty events not recounted as separate incidents; changed reporting is a single follow-up.",
+      "WHO and OCHA updates, Reuters/AP older incidents, October 26 UN inquiry and older humanitarian reports are outside the watch window.",
+      "UNICEF photo essay date alone does not establish a new in-window change; precise publication hour unknown; direct source inspection unavailable.",
+      "Hebrew-language report about COGAT tents, water works and Kerem Shalom departures posted at 13:28 Israel local time (04:28 PDT), before this watch window.",
+      "West Bank-only items, unsupported claims, opinion and recycled reports excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "failure": "502 Bad Gateway",
+        "materiality": "Recurring site-specific access failure; WHO Global and OCHA OPT remained accessible."
+      },
+      {
+        "source": "UN News",
+        "failure": "Robots.txt restriction",
+        "materiality": "Previously documented source access issue; OCHA OPT and other primary humanitarian sources accessible."
+      },
+      {
+        "source": "UNICEF direct article",
+        "failure": "DisabledError",
+        "materiality": "Only search snippet accessible; excluded as insufficiently time-specific."
+      }
+    ],
+    "source_quality": "Source article content appears substantially expanded since earlier recorded same-ID copy. Exact publisher revision time is unknown; no claim that described casualties occurred in this hour. Single-agency sourcing, overlapping incidents and unknown chronology preclude aggregating as additional deaths or treating source count as independently verified.",
+    "safeguards": "Exactly one watch-ledger heartbeat file is created. No public publication, approval, schedule alteration, automation disablement, or production changes."
+  }
+}

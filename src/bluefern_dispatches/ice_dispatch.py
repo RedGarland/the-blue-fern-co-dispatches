@@ -15,6 +15,7 @@ from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from enum import Enum
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -926,6 +927,33 @@ class FetchResult:
     content: str
     error: str | None
     fetch_stack: str
+    content_type: str | None = None
+    extraction_error: str | None = None
+
+
+def _unsupported_text_extraction(url: str, content_type: str | None, content: str | bytes) -> str | None:
+    # Byte decoding is not PDF text extraction. No PDF parser is part of the
+    # supported project dependencies, so never use PDF objects/metadata as prose.
+    path = urllib.parse.unquote(urllib.parse.urlparse(url).path).lower()
+    media_type = (content_type or "").split(";", 1)[0].strip().lower()
+    prefix = content[:1024]
+    pdf_header = b"%PDF" in prefix if isinstance(prefix, bytes) else "%PDF" in prefix
+    if path.endswith(".pdf") or media_type in {"application/pdf", "application/x-pdf"} or pdf_header:
+        return "pdf_text_extraction_unsupported"
+    return None
+
+
+def _fetch_receipt(source_id: str, result: FetchResult, *, requested_url: str) -> dict[str, Any]:
+    extraction_error = result.extraction_error or _unsupported_text_extraction(
+        requested_url, result.content_type, result.content
+    ) or _unsupported_text_extraction(result.url, result.content_type, result.content)
+    return {
+        "source_id": source_id, "url": result.url, "ok": result.ok,
+        "status": result.status, "fetch_stack": result.fetch_stack, "error": result.error,
+        "content_type": result.content_type,
+        "text_extraction_status": "not_attempted" if not result.ok else "unsupported" if extraction_error else "not_assessed",
+        "text_extraction_error": extraction_error,
+    }
 
 
 def _decode_bytes(data: bytes) -> str:
@@ -1125,7 +1153,9 @@ def fetch_url_secure(url: str, *, timeout: float = 15.0) -> FetchResult:
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:  # nosec - TLS remains verified by Python
             body = response.read(750_000)
-            return FetchResult(url=url, ok=200 <= int(response.status) < 400, status=int(response.status), content=_decode_bytes(body), error=None, fetch_stack="python_urllib")
+            content_type = response.headers.get("Content-Type")
+            extraction_error = _unsupported_text_extraction(url, content_type, body) or _unsupported_text_extraction(response.geturl(), content_type, body)
+            return FetchResult(url=url, ok=200 <= int(response.status) < 400, status=int(response.status), content="" if extraction_error else _decode_bytes(body), error=None, fetch_stack="python_urllib", content_type=content_type, extraction_error=extraction_error)
     except Exception as exc:  # pragma: no cover - platform/network dependent
         urllib_error = str(exc)
     ps = """
@@ -1135,9 +1165,14 @@ try {
   $targetUrl = [string]$env:BLUEFERN_ICE_FETCH_URL
   $timeoutSec = [int]$env:BLUEFERN_ICE_FETCH_TIMEOUT
   $resp = Invoke-WebRequest -Uri $targetUrl -Method Get -UseBasicParsing -TimeoutSec $timeoutSec -MaximumRedirection 5
-  $content = [string]$resp.Content
+  $contentType = [string]$resp.Headers['Content-Type']
+  $responseUrl = [string]$resp.BaseResponse.ResponseUri.AbsoluteUri
+  $prefix = if ($resp.Content -is [byte[]]) { [System.Text.Encoding]::ASCII.GetString($resp.Content, 0, [Math]::Min(1024, $resp.Content.Length)) } else { ([string]$resp.Content).Substring(0, [Math]::Min(1024, ([string]$resp.Content).Length)) }
+  $pdf = ($contentType -match '^application/(x-)?pdf(?:;|$)') -or ([uri]$targetUrl).AbsolutePath.EndsWith('.pdf', [StringComparison]::OrdinalIgnoreCase) -or ([uri]$responseUrl).AbsolutePath.EndsWith('.pdf', [StringComparison]::OrdinalIgnoreCase) -or $prefix.Contains('%PDF')
+  $extractionError = if ($pdf) { 'pdf_text_extraction_unsupported' } else { $null }
+  $content = if ($pdf) { '' } else { [string]$resp.Content }
   if ($content.Length -gt 750000) { $content = $content.Substring(0, 750000) }
-  @{ok=($resp.StatusCode -ge 200 -and $resp.StatusCode -lt 400); status=[int]$resp.StatusCode; url=[string]$resp.BaseResponse.ResponseUri.AbsoluteUri; content=$content; error=$null} | ConvertTo-Json -Compress -Depth 3
+  @{ok=($resp.StatusCode -ge 200 -and $resp.StatusCode -lt 400); status=[int]$resp.StatusCode; url=$responseUrl; content=$content; error=$null; content_type=$contentType; extraction_error=$extractionError} | ConvertTo-Json -Compress -Depth 3
   exit 0
 } catch {
   $status = $null
@@ -1160,13 +1195,18 @@ try {
             env=env,
         )
         payload = json.loads(completed.stdout.strip()) if completed.stdout.strip() else {}
+        content_type = payload.get("content_type")
+        content = str(payload.get("content") or "")
+        extraction_error = payload.get("extraction_error") or _unsupported_text_extraction(url, content_type, content) or _unsupported_text_extraction(str(payload.get("url") or url), content_type, content)
         return FetchResult(
             url=str(payload.get("url") or url),
             ok=bool(payload.get("ok")),
             status=payload.get("status"),
-            content=str(payload.get("content") or ""),
+            content="" if extraction_error else content,
             error=payload.get("error") or urllib_error,
             fetch_stack="windows_invoke_webrequest_after_urllib_failure",
+            content_type=content_type,
+            extraction_error=extraction_error,
         )
     except Exception as exc:  # pragma: no cover - platform/network dependent
         return FetchResult(url=url, ok=False, status=None, content="", error=f"urllib failed: {urllib_error}; powershell failed: {exc}", fetch_stack="failed")
@@ -1315,18 +1355,79 @@ def _select_links_for_fetch(source_id: str, links: list[dict[str, str]], *, max_
     return [{key: value for key, value in row.items() if not key.startswith("_")} for row in selected_by_original_order], diagnostic
 
 
+class _ArticleTextParser(HTMLParser):
+    """Keep body prose, excluding headings, hidden text and navigation-only blocks."""
+
+    _SKIP = {"script", "style", "noscript", "nav", "header", "footer", "aside", "head", "title", "h1", "h2", "h3", "h4", "h5", "h6"}
+    _VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+    _BLOCK = {"p", "div", "section", "article", "main", "li", "ul", "ol", "blockquote"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.stack: list[tuple[str, bool, str, int, bool]] = []
+        self.groups: list[tuple[tuple[str, int], list[tuple[str, bool]]]] = []
+        self.scopes: set[str] = set()
+        self.block_id = 0
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag in self._VOID:
+            self.handle_data(" ")
+            return
+        attributes = dict(attrs)
+        _, blocked, scope, block, linked = self.stack[-1] if self.stack else ("", False, "body", 0, False)
+        blocked = blocked or tag in self._SKIP or "hidden" in attributes or (attributes.get("aria-hidden") or "").lower() == "true" or (attributes.get("role") or "").lower() in {"navigation", "banner", "contentinfo"}
+        if tag in {"article", "main"} and not blocked:
+            scope = "article" if tag == "article" or scope == "article" else "main"
+            self.scopes.add(scope)
+        if tag in self._BLOCK:
+            self.block_id += 1
+            block = self.block_id
+        self.stack.append((tag, blocked, scope, block, linked or tag == "a"))
+
+    def handle_endtag(self, tag: str) -> None:
+        for index in range(len(self.stack) - 1, -1, -1):
+            if self.stack[index][0] == tag:
+                del self.stack[index:]
+                return
+
+    def handle_data(self, data: str) -> None:
+        _, blocked, scope, block, linked = self.stack[-1] if self.stack else ("", False, "body", 0, False)
+        if blocked:
+            return
+        key = (scope, block)
+        if not self.groups or self.groups[-1][0] != key:
+            self.groups.append((key, []))
+        self.groups[-1][1].append((data, linked))
+
+    def text(self) -> str:
+        scope = "article" if "article" in self.scopes else "main" if "main" in self.scopes else "body"
+        return _clean(" ".join(
+            "".join(text for text, _ in parts)
+            for (group_scope, _), parts in self.groups
+            if group_scope == scope and any(re.search(r"[^\W\d_]{2,}", text) and not linked for text, linked in parts)
+        ))
+
+
 def _extract_passage(html_text: str, title: str) -> str | None:
-    plain = _strip_html(html_text)
+    if _unsupported_text_extraction("", None, html_text):
+        return None
+    parser = _ArticleTextParser()
+    parser.feed(html_text)
+    parser.close()
+    plain = parser.text()
     title_words = [w for w in re.findall(r"[A-Za-z0-9]+", title.lower()) if len(w) > 3]
-    sentences = re.split(r"(?<=[.!?])\s+", plain)
-    for sentence in sentences:
-        lower = sentence.lower()
-        if _keyword_hit(lower) and (not title_words or any(word in lower for word in title_words[:8])):
-            return sentence[:700]
-    for sentence in sentences:
-        if _keyword_hit(sentence):
-            return sentence[:700]
-    return title[:700]
+    title_key = _clean(title).casefold().strip(".!?")
+    sentences = [sentence for sentence in re.split(r"(?<=[.!?])\s+", plain) if sentence.casefold().strip(".!?") != title_key]
+    # Prefer an actual event-bearing passage over an earlier agency explainer.
+    for bucket in ([sentence for sentence in sentences if _event_signal_hit(sentence)], sentences):
+        for sentence in bucket:
+            lower = sentence.lower()
+            if _keyword_hit(lower) and (not title_words or any(word in lower for word in title_words[:8])):
+                return sentence[:700]
+        for sentence in bucket:
+            if _keyword_hit(sentence):
+                return sentence[:700]
+    return None
 
 
 def _infer_category(text: str) -> str:
@@ -1413,14 +1514,29 @@ def _infer_impact(text: str) -> dict[str, int | None]:
 def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: FetchResult, retrieved_at: str, *, index_html: str = "", window_hours: int | None = None) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
     if not _is_fetchable_article_link(link):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "non_article_or_static_link"}
-    passage = _extract_passage(article.content, link["title"])
+    extraction_error = article.extraction_error or _unsupported_text_extraction(link["url"], article.content_type, article.content) or _unsupported_text_extraction(article.url, article.content_type, article.content)
+    passage = None if extraction_error else _extract_passage(article.content, link["title"])
+    if not passage:
+        # Preserve the discovery and its official listing date for manual review;
+        # neither HTTP success nor that date establishes readable report evidence.
+        return None, {
+            "source_id": source["source_id"], "source_url": link["url"],
+            "canonical_source_url": link["canonical_url"], "index_url": source.get("url"),
+            "publisher": source["publisher"], "title": link["title"],
+            "reason": extraction_error or "no_supporting_passage",
+            "text_extraction_status": "unsupported" if extraction_error else "no_supporting_passage",
+            "review_status": "NEEDS_REVIEW", "verification_status": "supporting_evidence_missing",
+            "http_ok": article.ok, "status": article.status, "fetch_stack": article.fetch_stack,
+            "retrieved_at": retrieved_at,
+            **listing_date_evidence_for_link(source, index_html, link),
+        }
     combined = f"{link['title']} {passage or ''}"
     if not _keyword_hit(combined):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_ice_keyword_in_title_or_passage"}
     if _generic_politics_without_concrete_ice_action(combined):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "generic_politics_without_concrete_ice_action"}
-    if not _event_signal_hit(combined):
-        return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_event_level_ice_signal"}
+    if not _event_signal_hit(passage):
+        return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_event_level_ice_signal", "review_status": "NEEDS_REVIEW", "verification_status": "supporting_evidence_missing"}
     category = _infer_category(combined)
     dates = best_date_evidence(source, link, index_html, article.content)
     currentness = currentness_for_dates(
@@ -1492,11 +1608,16 @@ def collect_live_candidates_with_diagnostics(
             provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=False, success=False))
             continue
         index = fetch_url_secure(source["url"], timeout=timeout)
-        fetch_results.append({"source_id": source["source_id"], "url": index.url, "ok": index.ok, "status": index.status, "fetch_stack": index.fetch_stack, "error": index.error})
+        index_receipt = _fetch_receipt(source["source_id"], index, requested_url=source["url"])
+        fetch_results.append(index_receipt)
         if not index.ok:
             provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=True, success=False, http_status=index.status, error=index.error))
             continue
-        links = [link for link in _anchor_candidates(source, index.content) if _source_link_allowed(source, link) and _keyword_hit(link["title"])]
+        index_content = index.content
+        if index_receipt["text_extraction_error"]:
+            index_content = ""
+            exclusions.append({"source_id": source["source_id"], "source_url": source["url"], "reason": index_receipt["text_extraction_error"], "text_extraction_status": "unsupported", "review_status": "NEEDS_REVIEW", "http_ok": index.ok, "status": index.status})
+        links = [link for link in _anchor_candidates(source, index_content) if _source_link_allowed(source, link) and _keyword_hit(link["title"])]
         selected_links, cap_diagnostic = _select_links_for_fetch(source["source_id"], links, max_per_source=max_per_source)
         result_cap_diagnostics.append(_plain(cap_diagnostic))
         accepted = 0
@@ -1506,16 +1627,22 @@ def collect_live_candidates_with_diagnostics(
                 exclusions.append({"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "non_article_or_static_link"})
                 continue
             article = fetch_url_secure(link["url"], timeout=timeout)
-            fetch_results.append({"source_id": source["source_id"], "url": article.url, "ok": article.ok, "status": article.status, "fetch_stack": article.fetch_stack, "error": article.error})
+            article_receipt = _fetch_receipt(source["source_id"], article, requested_url=link["url"])
+            fetch_results.append(article_receipt)
             if not article.ok:
                 failed_records += 1
                 exclusions.append({"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "article_fetch_failed", "status": article.status, "error": article.error})
                 continue
             candidate, exclusion = _candidate_from_link(source, link, article, retrieved_at, index_html=index.content, window_hours=window_hours)
             if candidate:
+                article_receipt["text_extraction_status"] = "supporting_passage_extracted"
                 raw_candidates.append(candidate)
                 accepted += 1
             elif exclusion:
+                article_receipt["qualification_reason"] = exclusion["reason"]
+                if exclusion.get("text_extraction_status"):
+                    article_receipt["text_extraction_status"] = exclusion["text_extraction_status"]
+                    failed_records += 1
                 exclusions.append(exclusion)
         provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=True, success=True, accepted_records=accepted, failed_records=failed_records, http_status=index.status))
     return raw_candidates, exclusions, provider_health, fetch_results, result_cap_diagnostics

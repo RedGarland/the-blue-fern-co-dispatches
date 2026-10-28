@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T044754-0700-r11-044754",
+  "scheduled_for": "2026-10-28T03:45:54-07:00",
+  "started_at": "2026-10-28T04:47:54-07:00",
+  "completed_at": "2026-10-28T04:49:00.478-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T03:50:25.308-07:00",
+    "end_at": "2026-10-28T04:49:00.478-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since independently verified preceding Food Line Source Watch heartbeat, with limited October 27–28 indexing lookback; older events not treated as new.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value Food Line recall only. The primary nationwide production collector remains authoritative; this watch did not approve, publish, post, alter its schedule, or disable any task.",
+    "Executed 12 targeted web searches: four for only/sole/last/full-service grocery loss, fire, or closure; four for storm/flood/fire/outage cancellations of emergency food distributions; two for abrupt food pantry/food-bank closures; two for official SNAP/WIC/EBT benefit-access interruptions. Search recency bounded to 2–3 days, with explicit October 27–28, 2026 qualifiers.",
+    "All 12 searches returned usable search results; none confirmed a new U.S. qualifying disruption in the interval. Relevant local events may be indexed late; this is not an exhaustive nationwide negative finding.",
+    "Excluded Madeira Beach, Florida grocery coverage (September 22, 2026) because it described an Aldi reopening, not a new closure. https://stpeterising.com/home/madeira-beachs-longtime-winn-dixie-will-reopen-as-an-aldi-this-week",
+    "Excluded St. Pete Beach Publix reconstruction report dated October 27, 2025: historical 2025 fire, not a new October 2026 loss. https://stpeterising.com/home/publix-at-dolphin-village-in-st-pete-beach-to-be-rebuilt-into-larger-elevated-new-prototype-store",
+    "Excluded Kauaʻi recovery reporting describing scheduled emergency food distributions rather than canceled distributions. https://kauainownews.com/2026/10/23/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Excluded old 2025 SNAP government-shutdown warnings, unrelated weather closures, donation/resource stories, and non-U.S. or historical food-access events; no current official October 28 SNAP/WIC service interruption was independently substantiated.",
+    "Previously handed-off Wymore, Nebraska, South Philadelphia, and Utah cases were not repeated. Status SUCCESS reflects completed bounded search with no material source or tool failure."
+  ]
+}

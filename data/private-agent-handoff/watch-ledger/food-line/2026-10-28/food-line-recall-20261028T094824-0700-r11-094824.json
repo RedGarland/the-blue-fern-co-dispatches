@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T094824-0700-r11-094824",
+  "scheduled_for": "2026-10-28T09:45:54-07:00",
+  "started_at": "2026-10-28T09:48:24-07:00",
+  "completed_at": "2026-10-28T09:49:25.292-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T08:45:45-07:00",
+    "end_at": "2026-10-28T09:49:25.292-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start at completed_at of the latest verified prior Food Line Source Watch heartbeat on ops/watch-ledger; searches used October 27–28 freshness overlap, with older and duplicate items excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary Food Line high-value recall only. The nationwide production collector remains authoritative; this watch does not approve, publish, post to social media, change scheduling, or disable itself.",
+    "Executed 12 targeted web searches, three each for: only/sole/last/full-service community grocery loss, disaster-related emergency food distribution cancellation, abrupt pantry/food-bank service closure or major access cut, and newly official SNAP/WIC/EBT interruption with immediate food-access consequences. Freshness emphasis October 27–28 2026, America/Los_Angeles.",
+    "No newly qualifying and independently verified U.S. food-access disruption was found between October 28 08:45:45 and this completion time Pacific. Older and duplicate incidents, non-disruption distribution schedules, 2025 federal-shutdown SNAP news, and ongoing policy coverage were excluded. Lack of findings in this bounded watch does not establish nationwide absence.",
+    "Kauaʻi Now October 27 Hurricane Lowell recovery notice lists emergency food distributions for October 27 and October 30, rather than a cancellation; excluded: https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "An attempt to open the Massachusetts Department of Transitional Assistance directory https://www.mass.gov/orgs/department-of-transitional-assistance returned HTTP 403. Its indexed material concerned older notices and routine information, not a newly confirmed benefit interruption. The isolated failure was recorded as DEGRADED rather than aborting remaining usable coverage.",
+    "Web search results contained unrelated older disaster closures, non-U.S. storm news, October 2025 SNAP interruption reports and general agency directories. No candidate met the requested source, time and immediate-impact tests.",
+    "Search index delays and inaccessible social/provider notices are inherent limitations. No direct authority to change the authoritative production pipeline was used."
+  ]
+}

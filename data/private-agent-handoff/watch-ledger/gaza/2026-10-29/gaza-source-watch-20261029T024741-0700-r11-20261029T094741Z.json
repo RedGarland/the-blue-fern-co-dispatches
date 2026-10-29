@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T024741-0700-r11-20261029T094741Z",
+  "scheduled_for": "2026-10-29T02:44:51-07:00",
+  "started_at": "2026-10-29T02:47:41-07:00",
+  "completed_at": "2026-10-29T02:48:58.067-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T01:50:40-07:00",
+    "end": "2026-10-29T02:48:58.067-07:00",
+    "basis": "Prior confirmed ops/watch-ledger Gaza heartbeat completion through this observation. Event or publication time and nonduplicate provenance required for positive qualification; previously catalogued and undated repeats excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; independent production Gaza collector/editor/publisher remains authoritative.",
+    "prior_verified_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T014851-0700-r11-20261029T084851Z",
+      "completed_at": "2026-10-29T01:50:40-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T014851-0700-r11-20261029T084851Z.json",
+      "verification": "Fetched on ops/watch-ledger and checked directory inventory before searching; prior heartbeat reported Al-Tuffah as already recorded."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. News index newest Gaza report is Humanitarian Situation Report | 22 October 2026 (posted 26 October), Gaza impact snapshot dated 21 October (posted 23 October); no newly dated in-window Gaza alert."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. General emergency page contains no newly dated in-window hospital, fuel, medical evacuation, ambulance or health-capacity change."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "result": "HTTP 502 Bad Gateway. Persistent source-specific access degradation also documented in preceding watch."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps \"29/October/2026\" Gaza killed wounded strike morning",
+      "site:aljazeera.net/news/2026/10/29 غزة قصف الخميس صباح اليوم إصابات شهداء",
+      "site:palestinercs.org 29 October 2026 Gaza ambulance patients wounded",
+      "site:reliefweb.int \"29 Oct 2026\" \"Gaza\" \"health\" \"access\"",
+      "Reuters October 29 2026 Gaza Thursday aid crossing civilian casualties ceasefire",
+      "AP October 29 2026 Gaza Israeli strike injuries crossings Thursday",
+      "site:wafa.ps 29/10/2026 غزة شهداء إصابات قصف صباح",
+      "site:unicef.org \"29 October 2026\" Gaza water nutrition children shelter",
+      "Gaza October 29 2026 10 am Palestine time airstrike casualty medical ambulances latest",
+      "site:wfp.org OR site:unrwa.org Gaza \"29 October 2026\" food aid access trucks",
+      "Gaza October 29 2026 Rafah crossing Kerem Shalom medical evacuation fuel hospitals",
+      "Gaza October 29 2026 displacement rainfall tents water sewage infrastructure ceasefire negotiation"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "29 October postings at 10:48, 10:43, 09:44, 09:20 and 07:52 Ramallah time concern West Bank matters, not Gaza. Latest Gaza casualty posts dated 28 October 16:23 and 13:24 Ramallah time, outside current watch window."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/10/29/5-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%8840-%D9%85%D8%B5%D8%A7%D8%A8%D8%A7-%D9%81%D9%8A-%D8%AA%D9%88%D8%A7%D8%B5%D9%84-%D8%A7%D9%84%D9%82%D8%B5%D9%81",
+        "result": "October 29 article recaps already ledgered Al-Tuffah shelling (11 wounded) and Wednesday's Rafah, Khan Younis, Nuseirat, Deir al Balah attacks. No distinct incident timed to current watch window."
+      },
+      {
+        "publisher": "Al Jazeera English Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza winter-camp report dated October 28, existing older item; no newly timed incident."
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Emergency page accessible, no new in-window change verified in relief entry or food access."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Homepage accessible, but English latest news section dated June 2026; no direct in-window new EMS update."
+      }
+    ],
+    "excluded_or_unresolved": [
+      "Al-Tuffah/Al-Sanafour 11-injured shelling was previously recorded in earlier 29 October watch; excluded as duplicate, without adding to casualty totals.",
+      "Al Jazeera Arabic 29 October recap of five deaths and roughly 40 injuries contains prior Wednesday incidents and has no verified within-window event time; excluded.",
+      "WAFA Oct 28 16:23 Gaza drone strike report predates window; excluded.",
+      "Search returns for 2023–2025 and earlier in 2026, and previously covered OCHA health, aid, winter, and displacement analyses are out of window.",
+      "No traceable, independently distinct within-window change verified for displacement, crossings, food/water, healthcare, infrastructure, hostages/detention, negotiations or civilian impact of military operations."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO oPt news",
+        "issue": "HTTP 502",
+        "materiality": "Documented persistent endpoint restriction; WHO global and OCHA OPT remained accessible, so limited but useful coverage persisted. No newly material watch-wide degradation."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked before exactly 12 additional targeted searches; direct checks of WAFA, PRCS, Al Jazeera and WFP followed. No verified new nonduplicate in-window Gaza development.",
+    "status_rationale": "DEGRADED because WHO EMRO endpoint returned HTTP 502. Outcome no_findings as alternative sources remained available.",
+    "notification_assessment": "No qualifying new development or newly material degradation; suppress notification.",
+    "safeguards": "Only this one heartbeat is to be created on ops/watch-ledger; no approvals, publication, production, schedule or automation modifications."
+  }
+}

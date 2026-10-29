@@ -1,0 +1,128 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T224948-0700-r11-20261029T054948Z",
+  "scheduled_for": "2026-10-28T22:44:51-07:00",
+  "started_at": "2026-10-28T22:49:48-07:00",
+  "completed_at": "2026-10-28T22:50:49.871-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T21:49:02.115-07:00",
+    "end": "2026-10-28T22:50:49.871-07:00",
+    "basis": "From last verified Gaza Source Watch heartbeat completion through this observation; source/event dates independently checked, indexed or crawl dates not treated as event dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only, not primary Gaza collection, editorial review, or publication.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T214759-0700-r11-20261029T044759Z",
+      "completed_at": "2026-10-28T21:49:02.115-07:00",
+      "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-10-28/gaza-source-watch-20261028T214759-0700-r11-20261029T044759Z.json",
+      "verification": "Direct GitHub fetch_file from ops/watch-ledger plus directory listing before search"
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent listed item dated 27 October concerns West Bank, most recent Gaza humanitarian report published 26 October and covering 22 October; no new in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; emergency overview and source links contain no independently dated in-window new health, medevac, fuel, hospital or ambulance service change."
+      },
+      {
+        "publisher": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; persistent already known source-specific restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 29 2026 overnight strikes Palestinians killed injured October 28 late night",
+      "site:english.wafa.ps \"29/10/2026\" Gaza injuries bombing",
+      "site:reuters.com/world/middle-east/ Gaza 29 October 2026 ceasefire civilians strikes",
+      "site:aljazeera.com/news/2026/10/29/ Gaza latest casualties displaced",
+      "Gaza October 29 2026 early morning humanitarian aid crossing Rafah Kerem Shalom trucks fuel",
+      "site:who.int OR site:healthclusteropt.org Gaza Oct 29 2026 medical evacuation hospital fuel ambulance",
+      "site:apnews.com/article/gaza October 29 2026 late October 28 Palestinians aid hospital civilians",
+      "site:aa.com.tr/en/middle-east/ Gaza Oct 29 2026 shelling deaths crossings fuel water",
+      "site:un.org OR site:news.un.org Gaza October 29 2026 aid displacement humanitarian operations",
+      "site:icrc.org OR site:unrwa.org Gaza 29 October 2026 detention hostages humanitarian delivery",
+      "Gaza October 29 2026 ceasefire negotiation prisoner hostages exchange civilian repercussions",
+      "Gaza October 28 2026 evening flooding displaced tents rainwater sewage medical capacity Gaza City"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest visible Gaza casualty stories are dated Oct 28 16:23 and 13:24 as displayed in Ramallah publication-time context and were already covered; later visible news items are unrelated or West Bank, not new Gaza civilian harm."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza winter and drainage article dated Oct 28 is already recorded; other latest Palestine items largely election-related, commentary or West Bank; no distinct in-window Gaza development."
+      },
+      {
+        "publisher": "Associated Press via republisher",
+        "url": "https://www.myjournalcourier.com/news/world/article/gaza-residents-watch-israel-election-hoping-to-22498118.php",
+        "result": "Oct 28 at 09:06 article interviews residents about election and repeats earlier Khan Younis casualty reporting; no new in-window operational finding."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Search and current regional listing yielded no new independently verifiable in-window Gaza incident."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/sop/",
+        "result": "Latest relevant Gaza statement Oct 22; no in-window source update."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible general emergency overview; no independently dated in-window change."
+      },
+      {
+        "publisher": "ICRC",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible general operations page; no independently dated in-window detention, missing-person, aid or health change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403 Forbidden; persistent known restriction."
+      }
+    ],
+    "exclusions": [
+      "WAFA Oct 28 southern Gaza deaths and injuries, Al Jazeera Gaza City drainage capacity report, and earlier WHO/UNICEF humanitarian items already recorded or out of the hourly window.",
+      "Associated Press Oct 28 Gaza election reaction article republished at 09:06 am with earlier Khan Younis casualty reference, not a newly timed incident.",
+      "2023, 2024, 2025 and early-2026 Gaza results appearing in search despite 2026 date filters; publication and event date precedence applied.",
+      "Election analysis, commentary, generic humanitarian summaries, West Bank-only incidents and unsupported social/secondhand claims."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502",
+        "materiality": "Previously documented source-specific restriction; WHO global and OCHA OPT accessible."
+      },
+      {
+        "source": "UNRWA",
+        "issue": "HTTP 403",
+        "materiality": "Previously documented source-specific restriction; other primary humanitarian sources accessible."
+      },
+      {
+        "source": "UN News",
+        "issue": "robots.txt inaccessible on search endpoint",
+        "materiality": "Source-specific limitation; OCHA, WHO global, UNICEF, WFP and ICRC available."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO priority checked first, then exactly twelve additional targeted searches, plus direct publisher checks. No verified distinct development first published or occurring inside this bounded observation interval.",
+    "status_rationale": "DEGRADED for persistent WHO EMRO 502, UNRWA 403 and UN News access limits, with useful authoritative alternative coverage; no newly material watch-wide degradation.",
+    "notification_assessment": "No qualifying new finding or newly material coverage failure; no notification requested.",
+    "safeguards": "Exactly one private ledger heartbeat only; no public site/production write, approval, publication, schedule change, or task disabling."
+  }
+}

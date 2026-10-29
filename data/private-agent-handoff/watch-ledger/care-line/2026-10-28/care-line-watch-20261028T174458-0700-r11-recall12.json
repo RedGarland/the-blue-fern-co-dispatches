@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T174458-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T17:45:22-07:00",
+  "started_at": "2026-10-28T17:44:58-07:00",
+  "completed_at": "2026-10-28T17:45:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T16:43:41-07:00",
+    "end": "2026-10-28T17:45:28-07:00",
+    "basis": "Since preceding verified supplementary Care Line heartbeat, with same-day late-indexed recall screened for prior duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary U.S./territory high-value healthcare-access recall; authoritative production collector unchanged.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T164259-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS listing directly checked before additional targeted searches. Latest are three Oct 23 HHA termination notices; no new listed termination, rescission, CLIA limitation or suspension."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes suspends service October 28 2026 United States",
+      "labor delivery maternity birthing services closure October 28 2026 hospital",
+      "behavioral health psychiatric unit services closing paused October 28 2026 hospital",
+      "dialysis center cancer oncology clinic closure October 28 2026 patients",
+      "primary care clinic urgent care closing appointments October 28 2026 local news",
+      "rural hospital emergency room service suspended October 28 2026",
+      "ambulance service EMS stopped service closed October 28 2026 county",
+      "air medical helicopter base closure suspension October 28 2026",
+      "hospital emergency department reopens restored services October 28 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana hospital closure emergency healthcare October 28 2026",
+      "hospital service line closed shut down October 28 2026 health department",
+      "health care access shutdown clinic relocation closure 2026 October 28 local news"
+    ],
+    "search_recency_days": 2,
+    "source_failures": [],
+    "material_degradation": false,
+    "checked_candidate_sources": [
+      {
+        "publisher": "UNM Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate_restoration",
+        "detail": "Oct 28 12:39 p.m. update confirms fully functional clinical operations; initial restoration and EMS normalization established Oct 27; previously screened."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "disposition": "excluded_previously_announced",
+        "detail": "Oct 28 rally story repeats end-of-month maternity service suspension announced earlier in October."
+      },
+      {
+        "publisher": "Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_duplicate",
+        "detail": "Oct 28 Sanford Luverne maternity unit announcement already recorded as pending_review in earlier watch."
+      },
+      {
+        "publisher": "Maine Beacon",
+        "url": "https://mainebeacon.com/midcoast-mothers-family-physicians-fight-mainehealths-birthing-unit-closure/",
+        "disposition": "excluded_existing_future_closure",
+        "detail": "Oct 28 article recaps previously planned Lincoln Hospital Family Birth Center December 18 closure; no new decision/change established within window."
+      },
+      {
+        "publisher": "San José Spotlight",
+        "url": "https://sanjosespotlight.com/santa-clara-county-long-overdue-youth-psychiatric-hospital/",
+        "disposition": "excluded_prior_announcement_future_opening",
+        "detail": "Oct 26 article, updated Oct 28, previews newly constructed Behavioral Health Pavilion planned to open Nov 3; not an abrupt effective restoration/reopening."
+      }
+    ],
+    "limitations": "Bounded 12-query recall and CMS listing review; indexing may lag and geographic coverage is not exhaustive. Search engine included stale, retrospective, and non-U.S. matches.",
+    "controls": "No publication, approval, production collector modification, schedule change or disabling. No findings pending review from this run."
+  }
+}

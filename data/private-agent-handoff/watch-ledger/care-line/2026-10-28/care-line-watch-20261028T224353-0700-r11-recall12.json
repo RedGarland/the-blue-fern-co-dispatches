@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T224353-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T22:45:22-07:00",
+  "started_at": "2026-10-28T22:43:53-07:00",
+  "completed_at": "2026-10-28T22:45:18-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T21:45:55-07:00",
+    "end": "2026-10-28T22:45:18-07:00",
+    "basis": "Last recorded Care Line Watch run time (2026-10-29T04:45:55Z) to this check. Most recent 21:45 heartbeat was not independently fetched; no new positive candidate requiring deduplication arose. The last directly verified supplementary heartbeat predates that run and ended at 20:46:41 PDT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall across the U.S. and territories; production national collector remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T204342-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official live CMS table was opened before all targeted searches. The newest listed notices remain three 2026-10-23 home-health terminations (CA, CA, OH), followed by older dated actions; no subsequent provider termination, rescission, CLIA limitation/suspension or analogous notice appears."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 28 2026 hospital emergency department closure suspension announced evening rural",
+      "October 28 2026 hospital maternity labor delivery obstetrics unit closure confirmed",
+      "October 28 2026 ambulance EMS service closure suspension air medical base",
+      "October 28 2026 hospital inpatient psychiatric behavioral health beds program closing",
+      "October 28 2026 dialysis center clinic closure sudden patients transferred",
+      "October 28 2026 oncology cancer treatment center primary care clinic closing",
+      "October 28 2026 rural hospital closing services emergency department city county",
+      "October 28 2026 emergency department reopened restored hospital services",
+      "October 28 2026 hospice hospital CMS termination CLIA laboratory revoked suspended notice",
+      "October 28 2026 hospital closure ambulance Puerto Rico Guam Virgin Islands American Samoa",
+      "October 28 2026 outpatient clinic closures suspensions provider notice hospital",
+      "October 28 2026 hospital unit service suspending operations effective November local news"
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "source": "Nevada Public Radio",
+        "url": "https://knpr.org/health/2026-08-13/henderson-hospital-announces-closure-of-maternity-nicu-units",
+        "reason": "Older August announcement about late-September Henderson maternity/NICU cessation; not a new October 28 development."
+      },
+      {
+        "source": "ABC7 Chicago / Medical Daily",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/",
+        "reason": "Roseland labor/delivery closure previously announced and recorded; no new effective change during this watch."
+      },
+      {
+        "source": "Maui Now",
+        "url": "https://mauinow.com/2026/09/22/state-maui-health-and-kaiser-permanente-announce-restoration-and-reopening-plans-for-kula-hospital/",
+        "reason": "September Kula Hospital restoration funding and future plan, with ED still closed and no concrete October 28 reopening."
+      },
+      {
+        "source": "CBS Detroit",
+        "url": "https://www.cbsnews.com/detroit/news/sturgis-hospital-closure-rural-michigan-emergency-care/",
+        "reason": "June 2026 Sturgis Hospital shutdown, retrospective account."
+      },
+      {
+        "source": "Previously verified Care Line Watch heartbeat",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T204342-0700-r11-recall12.json",
+        "reason": "October 28 Mercy Health St. Joseph Warren maternity closure already documented pending_review; not a new unique watch finding."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Searches yielded predominantly older or off-topic results and do not constitute exhaustive coverage. The most recent intervening 21:45 PDT heartbeat's contents were not directly available in this connector session, although the earlier verified 20:46 PDT record was retrieved; deduplication against production was not performed. No new positive candidate was identified. An optional attempt to inspect a GitHub tree through the web reader was blocked, but the connected GitHub repository remained readable and writable.",
+    "controls": "No human review approval, public publication, production collector/schedule modifications or task disabling. Exactly one heartbeat file for this execution."
+  }
+}

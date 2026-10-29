@@ -269,9 +269,18 @@ def load_activation(root:Path):
                 raise Error('current owning Oct25 aggregate projection drifted')
         except (edition.Error, ValueError, UnicodeError, ElementTree.ParseError) as exc:
             raise Error('current owning Oct25 aggregate projection invalid') from exc
-    for path,digest in reader.PROFILE_HASHES.items():
-        if _sha(_blob(pages,current,path))!=digest or _sha(reader._read_regular(pages,path))!=digest:raise Error('current corrected Pages profile drifted')
+    _validate_current_profile(pages,current)
     return {'profile':reader.PROFILE,'registry_source_head':head,'registry_sha256':_sha(raw),'approval_commit':ac,'published_pages_commit':published,'current_pages_head':current}
+
+
+def _validate_current_profile(pages: Path, current: str) -> None:
+    # Keep exact-byte checks and their short-circuit order. Report only the
+    # fixed public path and failed side, never host paths or file contents.
+    for path, digest in reader.PROFILE_HASHES.items():
+        if _sha(_blob(pages, current, path)) != digest:
+            raise Error('current corrected Pages profile drifted (committed): '+path)
+        if _sha(reader._read_regular(pages, path)) != digest:
+            raise Error('current corrected Pages profile drifted (working): '+path)
 
 
 def _load_public_activation(root,head,raw,registry):
@@ -299,9 +308,7 @@ def _load_public_activation(root,head,raw,registry):
                 raise Error('current owning Oct25 aggregate projection drifted')
         except (edition.Error,ValueError,UnicodeError,ElementTree.ParseError) as exc:
             raise Error('current owning Oct25 aggregate projection invalid') from exc
-    for path,digest in reader.PROFILE_HASHES.items():
-        if _sha(_blob(pages,current,path)) != digest or _sha(reader._read_regular(pages,path)) != digest:
-            raise Error('current corrected Pages profile drifted')
+    _validate_current_profile(pages,current)
     return {'profile':reader.PROFILE,'registry_source_head':head,'registry_sha256':_sha(raw),
         'published_pages_commit':PUBLISHED_COMMIT,'current_pages_head':current,
         'authority_basis':'fixed_public_history','publication_authorized':False}

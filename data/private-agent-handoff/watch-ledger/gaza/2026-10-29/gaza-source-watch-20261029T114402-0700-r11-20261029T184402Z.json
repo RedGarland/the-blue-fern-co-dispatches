@@ -1,0 +1,124 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T114402-0700-r11-20261029T184402Z",
+  "scheduled_for": "2026-10-29T11:44:51-07:00",
+  "started_at": "2026-10-29T11:44:02-07:00",
+  "completed_at": "2026-10-29T11:45:13-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T10:42:44.694-07:00",
+    "end": "2026-10-29T11:45:13-07:00",
+    "basis": "Start is the verified previous immutable Gaza ops/watch-ledger heartbeat completion; end is current observed local time. Publication or event time, not crawler recency, governs novelty; indeterminate publication times are excluded from in-window positive findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall. The authoritative daily Gaza collector/publisher and its editorial decisions remain unchanged.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T104058-0700-r11-20261029T174058Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T104058-0700-r11-20261029T174058Z.json",
+      "completed_at": "2026-10-29T10:42:44.694-07:00",
+      "verified": "Fetched exact prior heartbeat content from ops/watch-ledger using the GitHub connector before writing. This was the most recent known prior run in the conversation, and the previous run's completed_at established the search boundary."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest displayed update dated 27 October (West Bank), latest Gaza situation report listed 26 October for period ending 22 October. No October 29 in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. General health context, no source-dated in-window Gaza hospital, ambulance, medical-evacuation or health functioning change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/medical-evacuation-of-patients-from-the-gaza-strip.html",
+        "result": "Direct fetch returned HTTP 502 Bad Gateway, same previously documented region-specific failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza October 29 2026 18:00 19:00 airstrike shelling injured",
+      "site:aljazeera.com/news/2026/10/29 gaza killed wounded aid ceasefire Thursday",
+      "site:reuters.com/world/middle-east/ 2026-10-29 Gaza ceasefire attack killed humanitarian",
+      "site:palestinercs.org Gaza October 29 2026 ambulance rescue medical",
+      "site:wfp.org Gaza October 29 2026 flour bakeries food",
+      "site:unicef.org Gaza 29 October 2026 water children",
+      "site:english.wafa.ps 29/10/2026 Gaza Rafah health 21468 patients 6430",
+      "site:english.wafa.ps October 29, 2026 Gaza killed wounded",
+      "October 29 2026 Gaza four aid truck monitoring staff killed Rafah al Mawasi 30 injured",
+      "October 29 2026 Gaza Health Ministry 21468 patients evacuation 6430 Rafah",
+      "October 29 2026 Gaza strikes Jabalia Halawa tents displaced deaths latest 18:00 UTC",
+      "Gaza 29 October 2026 latest 18:00 GMT crossings hostages ceasefire aid Reuters AP"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Occupation",
+        "url": "https://english.wafa.ps/Regions/Details/2",
+        "result": "Accessible. Latest dated 29 October 15:24 Palestine time concerned Hebron, not Gaza. Latest listed Gaza item was the 11:51 Palestine time al-Maghazi civilian vehicle strike already captured in an earlier Gaza recall; no verified newer in-window Gaza item."
+      },
+      {
+        "publisher": "Al Jazeera English",
+        "url": "https://www.aljazeera.com/news/2026/10/29/israeli-strikes-hit-gaza-as-health-ministry-urges-rafah-opening",
+        "result": "Accessible, publication date 29 October without verifiable clock time. Recounts the previously known al-Maghazi strike and October 28 Rafah/al-Mawasi strike, plus reported displacement-camp fire and health ministry figures; cannot verify a distinct newly published in-window item."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://aa.com.tr/en/middle-east/israel-kills-4-palestinians-in-strike-on-government-post-in-gaza-despite-ceasefire-/4104705",
+        "result": "Accessible, 29 October date only. Four dead and 30 injured including six critical reported in an update to October 28 al-Mawasi government post strike. Not a verified new in-window incident or publication."
+      },
+      {
+        "publisher": "WHO/WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "WFP emergency page accessible; no in-window verified Gaza food/aid material change."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest dated homepage news 10 June 2026, no in-window Gaza ambulance or medical transport change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "Direct fetch returned HTTP 403 Forbidden, a known restriction."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "Direct fetch returned restricted URL, a previously documented access restriction."
+      }
+    ],
+    "excluded_or_unresolved": [
+      "Al-Maghazi civilian-vehicle strike (WAFA 29 October 11:51 Palestine time) already captured in prior recalls; Al Jazeera mentions two reported deaths and serious injuries but its date-only page has no verified new publication timestamp.",
+      "Al-Mawasi/Rafah economy-ministry work post struck 28 October, with Thursday reporting four dead, 30 wounded (six critical). A prior heartbeat already identified October 28 Rafah/al-Mawasi casualties as out of window; the Thursday tally has no verified in-window publication time.",
+      "Gaza Health Ministry figures reported by Al Jazeera on 29 October: 21,468 patients/wounded needing travel abroad, 6,430 priority cases, 3,056 evacuated since February; serious follow-up candidate but no verified in-window publication timestamp and prior more-than-20,000 medical evacuation backlog was already known.",
+      "Al Jazeera also reports Jabalia/Yellow Line displacement-tent gunfire, eastern Gaza City shelling and home demolitions, but gives no verified in-window event or publication times. Record for next editorial source verification, not as a confirmed new hourly finding.",
+      "Older OCHA, WHO, UNICEF, WFP items, West Bank-only articles and historical event summaries are not in scope.",
+      "No newly dated, independently traceable, nonduplicate Gaza event or operational change could be established for this 10:42–11:45 PDT window."
+    ],
+    "access_degradation": [
+      {
+        "publisher": "WHO EMRO",
+        "issue": "HTTP 502",
+        "materiality": "Previously known source-specific restriction; WHO global and OCHA accessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "issue": "HTTP 403",
+        "materiality": "Previously known; WFP and OCHA accessible."
+      },
+      {
+        "publisher": "UN News",
+        "issue": "Restricted URL",
+        "materiality": "Previously known; other humanitarian and news outlets accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent source-specific access restrictions; 12 targeted searches completed, OCHA OPT, WHO global, WAFA, Al Jazeera, Anadolu, WFP and PRCS accessible. No newly material degradation relative to preceding run.",
+    "notification_assessment": "No confirmed new in-window qualifying development and no newly material failure or degradation; suppress notification.",
+    "safeguards": "Only this single immutable heartbeat JSON may be created on ops/watch-ledger; no production publication, approval, social posting, task schedule modification or disabling."
+  }
+}

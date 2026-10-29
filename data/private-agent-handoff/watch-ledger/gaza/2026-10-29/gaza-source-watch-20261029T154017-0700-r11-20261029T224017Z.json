@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T154017-0700-r11-20261029T224017Z",
+  "scheduled_for": "2026-10-29T15:44:51-07:00",
+  "started_at": "2026-10-29T15:40:17-07:00",
+  "completed_at": "2026-10-29T15:42:10.131-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T14:50:26.051-07:00",
+    "end": "2026-10-29T15:42:10.131-07:00",
+    "basis": "Start is exact completed_at of prior persisted Gaza Source Watch heartbeat on ops/watch-ledger. Only new, verified, nonduplicate developments published during this window qualify; publication time is not assumed to equal event time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily Gaza collector/publisher remains authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T144837-0700-r11-20261029T214837Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T144837-0700-r11-20261029T214837Z.json",
+      "completed_at": "2026-10-29T14:50:26.051-07:00",
+      "verification": "Fetched exact previous heartbeat from ops/watch-ledger before this run's conclusion."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listing dated 27 Oct (West Bank) and latest Gaza situation report published 26 Oct, covering 22 Oct. No in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; emergency overview and listed regional news carry no in-window Gaza service/casualty/medical evacuation development."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/medical-evacuation-of-patients-from-the-gaza-strip.html",
+        "result": "Direct page returned HTTP 502 Bad Gateway; recurring documented source restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details Gaza October 29 2026 latest Rafah detained killed injured",
+      "site:palestinercs.org October 29 2026 Gaza ambulance medical rescue statement",
+      "Reuters October 29 2026 Gaza ceasefire strikes civilian casualties evening latest",
+      "Associated Press October 29 2026 Gaza civilians strike hostage crossings",
+      "site:aljazeera.com/news/2026/10/29 Gaza latest killed injured hospital",
+      "Gaza health ministry October 29 2026 new casualties statement late afternoon",
+      "October 29 2026 Gaza Rafah crossing new restrictions returnees medical evacuation WHO 22:00 UTC",
+      "October 29 2026 Gaza WFP aid food convoy border access shortage update",
+      "October 29 2026 Gaza UNICEF water sanitation shelter infrastructure damage new",
+      "October 29 2026 UNRWA Gaza humanitarian displacement update 2026",
+      "October 29 2026 Gaza ceasefire negotiations Hamas Israel hostage new 2026 evening",
+      "October 29 2026 Gaza hospital ambulance fuel dialysis surgery evacuation new disruption"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Most recent listed report was 29 Oct at 23:33 Palestine local (14:33 PDT), the already captured Rafah returnee detention story; no newer in-window Gaza article on listing."
+      },
+      {
+        "publisher": "WAFA detail",
+        "url": "https://english.wafa.ps/Pages/Details/176439",
+        "result": "Read and cross-checked with prior persisted heartbeat finding; duplicate predating this window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Arabic homepage accessible, most recent Gaza item listed 10 Aug 2026; no in-window notice."
+      }
+    ],
+    "exclusions": [
+      "Previously captured WAFA Rafah returnee detentions published 29 Oct 23:33 Palestinian local time (14:33 PDT), prior to window and recorded in previous heartbeat.",
+      "WAFA's 29 Oct 19:31 Palestinian-local report on Jabalia drone-strike fatality is from 10:31 PDT and predates window.",
+      "Previously recorded al-Maghazi and Al-Tuffah civilian casualties excluded as duplicates.",
+      "West Bank/Hebron stories and reporting about unrelated Iran/Hormuz events excluded as outside Gaza scope.",
+      "Search results dated 2023–2025 or earlier 2026 excluded; undated ongoing humanitarian indicators were not presented as new hourly developments.",
+      "Unsupported social claims and commentary excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway on medical-evacuation information page",
+        "materiality": "Previously recurring source restriction; WHO global, OCHA OPT, WAFA and PRCS accessible, so supplementary coverage remained usable."
+      }
+    ],
+    "status_rationale": "DEGRADED for WHO EMRO HTTP 502; no newly material watch-wide degradation. No qualifying in-window, independently traceable and nonduplicate Gaza development found across OCHA/WHO checks, 12 additional targeted searches and direct source checks.",
+    "search_limits": "OCHA OPT and WHO checked before the 12 additional targeted searches; no additional targeted searches beyond 12.",
+    "safeguards": "Exactly one new heartbeat on ops/watch-ledger. No approval, publication, production collector, schedule, disabling, or task-state changes."
+  }
+}

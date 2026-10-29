@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T194232-0700-r11-20261029T024313Z",
+  "scheduled_for": "2026-10-28T19:42:32-07:00",
+  "started_at": "2026-10-28T19:42:42-07:00",
+  "completed_at": "2026-10-28T19:43:13-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T18:50:16-07:00",
+    "end_at": "2026-10-28T19:43:13-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous durable Food Line Source Watch heartbeat on ops/watch-ledger completed at 18:50:16 PDT, independently read before this run. Search publication dates, reported event dates, and previous watch duplicates considered separately.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; nationwide production Food Line collection remains authoritative. No approval, publication, schedule change or disablement.",
+    "Twelve date-bounded targeted web searches completed without search-tool errors: 3 sole/last/full-service grocery loss; 3 emergency-distribution cancellation; 3 abrupt food pantry/food bank access loss; 3 official SNAP/WIC/EBT immediate access interruption.",
+    "No new independently verified, nonduplicate qualifying U.S. food-access disruption surfaced in the bounded search window. Search indexing latency and missed local/provider notices remain possible.",
+    "October 28 Kauaʻi Hurricane Lowell recovery notice explicitly says a Hawaiʻi Foodbank Kauaʻi mobile distribution remains scheduled, not canceled. Source: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ .",
+    "El Paso storm damage/early food-bank closures surfaced in the search, but were reported in a prior month, not new in this window: https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms .",
+    "Older 2025 SNAP interruption coverage, unrelated charity/resource/promotion articles, weather recovery distributions that remain scheduled, out-of-scope items, and previous watch duplicates were excluded.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 28 2026 community US",
+        "\"last grocery store\" \"October 28, 2026\" closing fire",
+        "\"sole grocery\" OR \"only full-service grocery\" outage closure Oct 28 2026",
+        "\"food distribution\" canceled weather October 28 2026 food bank",
+        "\"food distribution\" postponed hurricane storm October 28 2026",
+        "\"food bank\" \"distribution\" cancelled flooded outage October 28 2026",
+        "\"food pantry\" \"closed\" October 28 2026 access",
+        "\"food bank\" \"suspend services\" OR \"temporarily closed\" Oct 28 2026",
+        "\"pantry\" \"shut down\" OR \"suspended\" October 28 2026 food",
+        "site:gov \"SNAP\" \"interruption\" OR \"outage\" October 28 2026",
+        "site:gov WIC temporary closure \"October 28, 2026\"",
+        "SNAP EBT benefits system down October 28 2026 official emergency interruption"
+      ]
+    }
+  ]
+}

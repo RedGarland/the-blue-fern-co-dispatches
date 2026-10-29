@@ -9,6 +9,7 @@ import re
 import socket
 import threading
 from dataclasses import dataclass, asdict
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -120,6 +121,118 @@ def _required_paths(pages_root: Path) -> list[str]:
     return paths
 
 
+def _gaza_compact_contract(soup: BeautifulSoup, issues: list[VisualIssue]) -> bool:
+    """Recognize the compact design structurally, not by obsolete heading copy.
+
+    This does not waive visibility: native disclosure content is also exercised
+    by the browser check. Unknown/malformed compact markup remains a failure.
+    """
+    if soup.select_one(".gaza-briefing-hero") is None and soup.select_one(".gaza-monitoring") is None:
+        return False
+    def fail(check: str, message: str) -> None:
+        issues.append(VisualIssue("/gaza/", check, message))
+    def visible(node: Any) -> bool:
+        return node is not None and all(
+            not any(key in getattr(parent, "attrs", {}) for key in ("hidden", "inert", "style"))
+            and str(getattr(parent, "attrs", {}).get("aria-hidden", "")).lower() != "true"
+            for parent in [node, *node.parents]
+        )
+    mains = soup.select("main.home--gaza")
+    cards = soup.select(".gaza-latest-card")
+    disclosures = soup.select(".gaza-monitoring")
+    main = mains[0] if len(mains) == 1 else None
+    card = cards[0] if len(cards) == 1 and cards[0].name == "article" else None
+    disclosure = disclosures[0] if len(disclosures) == 1 and disclosures[0].name == "details" else None
+    if main is None or card is None or card.parent is not main or not visible(card):
+        fail("gaza_latest_card", "Compact Gaza page requires one visible latest article in its main region")
+    else:
+        dates = card.find_all(class_="edition-date", recursive=False)
+        titles = card.find_all("h3", recursive=False)
+        links = card.select("a.button")
+        valid = len(dates) == len(titles) == len(links) == 1
+        if valid:
+            dated = dates[0].get_text(" ", strip=True)
+            try:
+                valid = date.fromisoformat(dated).isoformat() == dated
+            except ValueError:
+                valid = False
+            valid = (valid and bool(titles[0].get_text(" ", strip=True))
+                     and titles[0].get_text(" ", strip=True).lower() not in {"daily briefing", "latest briefing", "latest readable update", dated}
+                     and bool(links[0].get_text(" ", strip=True))
+                     and links[0].get("href") == "editions/" + dated + "/"
+                     and all(visible(node) for node in (dates[0], titles[0], links[0])))
+        if not valid:
+            fail("gaza_latest_card", "Compact latest card needs a visible date, substantive title and matching dated CTA")
+    labels = soup.select(".no-update-label")
+    if main is None or disclosure is None or disclosure.parent is not main or not visible(disclosure):
+        fail("gaza_recent_checks_section", "Compact Gaza page requires one accessible native monitoring disclosure")
+    else:
+        summaries = disclosure.find_all("summary", recursive=False)
+        lists = disclosure.find_all("ul", class_="gaza-check-list", recursive=False)
+        valid = (len(summaries) == len(lists) == 1 and bool(summaries[0].get_text(" ", strip=True))
+                 and visible(summaries[0]) and visible(lists[0])
+                 and bool(labels) and all(visible(label) and any(parent is lists[0] for parent in label.parents) for label in labels)
+                 and summaries[0].get("tabindex", "0") != "-1"
+                 and summaries[0].get("role", "button") == "button")
+        if not valid:
+            fail("gaza_recent_checks_section", "Monitoring disclosure needs a visible summary and all accountability rows in its check list")
+        if card is not None and list(soup.descendants).index(card) > list(soup.descendants).index(disclosure):
+            fail("gaza_latest_card_order", "Latest readable card must precede the monitoring disclosure")
+    return True
+
+
+def _check_compact_gaza_browser(page: Any, issues: list[VisualIssue]) -> None:
+    """Exercise the real native control; never infer CSS visibility from HTML."""
+    if page.locator(".gaza-briefing-hero, .gaza-monitoring").count() == 0:
+        return
+    disclosure = page.locator("details.gaza-monitoring")
+    original_open = None
+    try:
+        card = page.locator("article.gaza-latest-card")
+        summary = disclosure.locator(":scope > summary")
+        if (card.count() != 1 or disclosure.count() != 1 or summary.count() != 1
+                or page.locator(".gaza-latest-card").count() != 1
+                or page.locator(".gaza-monitoring").count() != 1):
+            raise ValueError("latest card/disclosure/summary is missing or ambiguous")
+        if not card.is_visible() or not summary.is_visible():
+            raise ValueError("latest card or monitoring control is not visible")
+        for selector in (":scope > .edition-date", ":scope > h3", "a.button"):
+            node = card.locator(selector)
+            if node.count() != 1 or not node.is_visible():
+                raise ValueError("latest date/title/CTA is not visibly readable")
+        card_box, summary_box = card.bounding_box(), summary.bounding_box()
+        if not card_box or not summary_box or card_box["y"] >= summary_box["y"]:
+            raise ValueError("latest readable card does not appear above monitoring")
+        original_open = disclosure.get_attribute("open") is not None
+        if not original_open:
+            summary.click()
+        if disclosure.get_attribute("open") is None:
+            raise ValueError("native monitoring disclosure did not open")
+        labels = disclosure.locator("ul.gaza-check-list .no-update-label")
+        if labels.count() == 0 or labels.count() != page.locator(".no-update-label").count():
+            raise ValueError("monitoring disclosure omits accountability rows")
+        if any(not labels.nth(index).is_visible() for index in range(labels.count())):
+            raise ValueError("accountability row is hidden after disclosure opens")
+        summary.click()
+        if disclosure.get_attribute("open") is not None:
+            raise ValueError("native monitoring disclosure did not close")
+        if original_open:
+            summary.click()
+            if disclosure.get_attribute("open") is None:
+                raise ValueError("original open disclosure state was not restored")
+    except Exception as exc:
+        issues.append(VisualIssue("/gaza/", "gaza_compact_visibility", str(exc)))
+    finally:
+        if original_open is not None and disclosure.count() == 1:
+            try:
+                if (disclosure.get_attribute("open") is not None) != original_open:
+                    disclosure.locator(":scope > summary").click()
+                if (disclosure.get_attribute("open") is not None) != original_open:
+                    raise ValueError("monitoring state restoration failed")
+            except Exception as exc:
+                issues.append(VisualIssue("/gaza/", "gaza_compact_visibility", str(exc)))
+
+
 def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str, Any]:
     food_path = _find_latest_food_path(pages_root)
     food_dir = pages_root / food_path.strip("/")
@@ -193,6 +306,7 @@ def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str
             ),
             None,
         )
+        compact_gaza = _gaza_compact_contract(gaza_home_soup, issues)
         latest_card = gaza_home_soup.find(class_="gaza-latest-card")
         if latest_heading is not None and ("recent checks" in gaza_heading_texts or latest_heading.get_text(" ", strip=True).lower() == "latest readable update"):
             if latest_card is None:
@@ -231,7 +345,7 @@ def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str
                             "Gaza latest card should appear before Recent Checks",
                         )
                     )
-        if gaza_home_soup.find(class_="no-update-label") is not None:
+        if gaza_home_soup.find(class_="no-update-label") is not None and not compact_gaza:
             if "recent checks" not in gaza_heading_texts:
                 issues.append(
                     VisualIssue(
@@ -696,6 +810,7 @@ def _visual_checks_with_playwright(
                         if hero and float(hero.get("height") or 0) > 620:
                             issues.append(VisualIssue(path, "product_hero_height", f"product landing hero is too tall: {hero.get('height')}px"))
                     if path == "/gaza/":
+                        _check_compact_gaza_browser(page, issues)
                         for text in metrics.get("gazaRecentEditionTexts") or []:
                             match = re.search(r"(20\d{2}-\d{2}-\d{2})\1", str(text))
                             if match:

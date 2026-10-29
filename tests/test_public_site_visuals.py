@@ -3,6 +3,8 @@ from __future__ import annotations
 import base64
 import json
 import shutil
+
+import pytest
 from pathlib import Path
 
 import bluefern_dispatches.generator as generator
@@ -534,3 +536,180 @@ def test_pages_publish_blocks_commit_when_visual_validation_fails(tmp_path: Path
     assert result["ok"] is False
     assert result["committed"] is False
     assert "public site visual validation failed for / [stylesheet]" in "\n".join(result["errors"])
+
+
+# Compact-layout regressions use synthetic copy, never historical editorial data.
+def _compact_gaza_html():
+    return '''<main class="home home--gaza">
+<section class="gaza-briefing-hero"><h1>Source-backed record</h1></section>
+<article class="gaza-latest-card"><p class="edition-date">2026-11-01</p>
+<h3>Fictional field report</h3><p>Attributed field conditions.</p>
+<p><a class="button" href="editions/2026-11-01/">Read briefing</a></p>
+<span hidden><a href="editions/2026-11-01/">Legacy alias</a></span></article>
+<details class="gaza-monitoring"><summary>Monitoring &amp; source notes</summary>
+<ul class="edition-list gaza-check-list"><li class="no-update-check">
+<span class="edition-date">2026-10-31</span><span class="no-update-label">No qualifying update</span>
+<span class="archive-row-note">2 sources checked</span></li></ul></details></main>'''
+
+
+def _compact_issues(document):
+    from bs4 import BeautifulSoup
+    from bluefern_dispatches.public_site_visuals import _gaza_compact_contract
+    issues = []
+    recognized = _gaza_compact_contract(BeautifulSoup(document, "html.parser"), issues)
+    return recognized, {issue.check for issue in issues}
+
+
+def test_compact_gaza_native_disclosure_and_latest_card_pass_static_contract():
+    assert _compact_issues(_compact_gaza_html()) == (True, set())
+
+
+def test_compact_gaza_old_heading_copy_is_not_required():
+    document = _compact_gaza_html()
+    assert "Latest Briefing" not in document and "Recent Checks" not in document
+    assert _compact_issues(document) == (True, set())
+
+
+def test_compact_gaza_unrecognized_layout_does_not_waive_legacy_checks():
+    assert _compact_issues('<h2>Other</h2><span class="no-update-label">No update</span>') == (False, set())
+
+
+@pytest.mark.parametrize("before,after", [
+    ('<article class="gaza-latest-card">', '<article class="gaza-latest-card" hidden>'),
+    ('<h3>Fictional field report</h3>', '<h3 hidden>Fictional field report</h3>'),
+    ('<h3>Fictional field report</h3>', '<h3></h3>'),
+    ('2026-11-01</p>', '2026-02-30</p>'),
+    ('href="editions/2026-11-01/"', 'href="editions/2026-10-31/"'),
+    ('class="button"', 'class="text-link"'),
+    ('<p class="edition-date">2026-11-01</p>', ''),
+    ('<p><a class="button"', '<p hidden><a class="button"'),
+])
+def test_compact_gaza_missing_hidden_or_mismatched_latest_card_fails(before, after):
+    assert "gaza_latest_card" in _compact_issues(_compact_gaza_html().replace(before, after))[1]
+
+
+@pytest.mark.parametrize("before,after", [
+    ('<details class="gaza-monitoring">', '<details class="gaza-monitoring" hidden>'),
+    ('<summary>', '<summary hidden>'),
+    ('<summary>', '<summary tabindex="-1">'),
+    ('<summary>', '<summary role="presentation">'),
+    ('Monitoring &amp; source notes', ''),
+    ('<ul class="edition-list gaza-check-list">', '<ul class="edition-list">'),
+    ('<li class="no-update-check">', '<li class="no-update-check" style="display:none">'),
+    ('<span class="no-update-label">', '<span class="no-update-label" aria-hidden="true">'),
+    ('<details class="gaza-monitoring">', '<div class="gaza-monitoring">'),
+])
+def test_compact_gaza_monitoring_must_be_accessible_and_complete(before, after):
+    assert "gaza_recent_checks_section" in _compact_issues(_compact_gaza_html().replace(before, after))[1]
+
+
+def test_compact_gaza_duplicate_card_or_disclosure_fails():
+    from bs4 import BeautifulSoup
+    for selector, check in [("article", "gaza_latest_card"), ("details", "gaza_recent_checks_section")]:
+        soup = BeautifulSoup(_compact_gaza_html(), "html.parser")
+        duplicate = str(soup.select_one(selector))
+        assert check in _compact_issues(str(soup).replace('</main>', duplicate+'</main>'))[1]
+
+
+def test_compact_gaza_accountability_copy_outside_disclosure_is_not_accepted():
+    # Identical text is not proof that the out-of-container node is owned.
+    document = _compact_gaza_html().replace('</main>', '<span class="no-update-label">No qualifying update</span></main>')
+    assert "gaza_recent_checks_section" in _compact_issues(document)[1]
+
+
+def test_compact_gaza_latest_card_must_appear_before_monitoring():
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(_compact_gaza_html(), "html.parser")
+    card = soup.article.extract(); soup.main.append(card)
+    assert "gaza_latest_card_order" in _compact_issues(str(soup))[1]
+
+
+def test_compact_gaza_full_static_gate_accepts_native_layout(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _assert_html_basics
+    root = _make_pages_root(tmp_path)
+    _write(root / 'gaza/index.html', _compact_gaza_html())
+    issues = []; _assert_html_basics(root, issues)
+    assert not [issue for issue in issues if issue.page == '/gaza/']
+
+
+def test_compact_gaza_existing_legacy_heading_failures_remain(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _assert_html_basics
+    root = _make_pages_root(tmp_path)
+    _write(root / 'gaza/index.html', '<h2>Latest Briefing</h2><span class="no-update-label">No qualifying update</span>')
+    issues = []; _assert_html_basics(root, issues)
+    assert 'gaza_recent_checks_section' in {issue.check for issue in issues}
+
+
+class _CompactLocator:
+    """Protocol-only unit double; never claims rendered browser coverage."""
+    def __init__(self, page, kind):
+        self.page, self.kind = page, kind
+    def count(self):
+        if self.kind == 'marker': return 0 if self.page.fault == 'legacy' else 1
+        if self.kind == 'all-labels': return 2 if self.page.fault == 'outside-row' else 1
+        if self.kind == 'card' and self.page.fault == 'duplicate-card': return 2
+        if self.kind == 'all-cards' and self.page.fault == 'wrong-tag-extra-card': return 2
+        if self.kind == 'all-disclosures' and self.page.fault == 'wrong-tag-extra-disclosure': return 2
+        return 1
+    def locator(self, selector):
+        mapping = {':scope > summary':'summary', ':scope > .edition-date':'date', ':scope > h3':'title', 'a.button':'cta', 'ul.gaza-check-list .no-update-label':'rows'}
+        return _CompactLocator(self.page, mapping[selector])
+    def is_visible(self):
+        if self.page.fault == 'hidden-'+self.kind: return False
+        return self.page.open if self.kind == 'row' else True
+    def bounding_box(self):
+        return {'y':400 if self.kind == 'card' and self.page.fault == 'order' else (100 if self.kind == 'card' else 300)}
+    def get_attribute(self, name):
+        assert name == 'open'; return '' if self.page.open else None
+    def click(self):
+        assert self.kind == 'summary'
+        if (not self.page.open and self.page.fault == 'cannot-open') or (self.page.open and self.page.fault == 'cannot-close'): return
+        self.page.open = not self.page.open
+    def nth(self, index):
+        assert index == 0; return _CompactLocator(self.page, 'row')
+
+
+class _CompactPage:
+    def __init__(self, *, open=False, fault=None): self.open, self.fault = open, fault
+    def locator(self, selector):
+        return _CompactLocator(self, {'.gaza-briefing-hero, .gaza-monitoring':'marker', '.gaza-latest-card':'all-cards', '.gaza-monitoring':'all-disclosures', 'details.gaza-monitoring':'disclosure', 'article.gaza-latest-card':'card', '.no-update-label':'all-labels'}[selector])
+
+
+@pytest.mark.parametrize('initial_open', [False, True])
+def test_compact_gaza_browser_control_protocol_restores_original_state(initial_open):
+    from bluefern_dispatches.public_site_visuals import _check_compact_gaza_browser
+    page = _CompactPage(open=initial_open); issues = []
+    _check_compact_gaza_browser(page, issues)
+    assert not issues and page.open is initial_open
+
+
+@pytest.mark.parametrize('fault', ['hidden-card', 'hidden-summary', 'hidden-date', 'hidden-title', 'hidden-cta', 'hidden-row', 'duplicate-card', 'wrong-tag-extra-card', 'wrong-tag-extra-disclosure', 'outside-row', 'order', 'cannot-open', 'cannot-close'])
+def test_compact_gaza_browser_control_protocol_refuses_visibility_or_control_failure(fault):
+    from bluefern_dispatches.public_site_visuals import _check_compact_gaza_browser
+    page = _CompactPage(fault=fault); issues = []
+    _check_compact_gaza_browser(page, issues)
+    assert 'gaza_compact_visibility' in {issue.check for issue in issues}
+
+
+def test_compact_gaza_browser_control_protocol_leaves_legacy_page_to_existing_checks():
+    from bluefern_dispatches.public_site_visuals import _check_compact_gaza_browser
+    page = _CompactPage(fault='legacy'); issues = []
+    _check_compact_gaza_browser(page, issues)
+    assert not issues and not page.open
+
+
+@pytest.mark.parametrize("css_class,check", [("gaza-latest-card", "gaza_latest_card"), ("gaza-monitoring", "gaza_recent_checks_section")])
+def test_compact_gaza_wrong_tag_duplicate_is_not_ignored(css_class, check):
+    document = _compact_gaza_html().replace('</main>', '<div class="'+css_class+'">Unexpected duplicate</div></main>')
+    assert check in _compact_issues(document)[1]
+
+
+def test_compact_gaza_wrong_tag_monitoring_marker_cannot_fall_back_to_legacy():
+    document = '<main class="home home--gaza"><div class="gaza-monitoring"><summary>Notes</summary></div></main>'
+    recognized, checks = _compact_issues(document)
+    assert recognized and 'gaza_recent_checks_section' in checks
+
+
+def test_compact_gaza_wrong_tag_latest_card_is_rejected():
+    document = _compact_gaza_html().replace('<article class="gaza-latest-card">', '<div class="gaza-latest-card">').replace('</article>', '</div>')
+    assert 'gaza_latest_card' in _compact_issues(document)[1]

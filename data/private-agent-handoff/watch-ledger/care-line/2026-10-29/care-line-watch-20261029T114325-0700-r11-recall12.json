@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T114325-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T11:45:22-07:00",
+  "started_at": "2026-10-29T11:42:29-07:00",
+  "completed_at": "2026-10-29T11:43:25-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T10:48:07-07:00",
+    "end": "2026-10-29T11:43:25-07:00",
+    "basis": "From latest independently verified Care Line Watch heartbeat completed_at to current recall check. Local observation clock; date-only article timestamps are insufficient to prove a new development within this interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Care Line recall. Production national collection remains authoritative and was not changed.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T104807-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T10:48:07-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS Public Notices checked first. Most recent listed entries remained Oct 23, including home health agency terminations in CA and OH; no more recent provider terminations, rescissions, CLIA limitations or suspensions listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" hospital emergency department closed suspended service local news",
+      "\"October 29, 2026\" labor delivery maternity hospital closing service patients",
+      "\"October 29, 2026\" rural hospital emergency department ambulance closure",
+      "\"October 29, 2026\" psychiatric behavioral health unit closing beds admissions",
+      "\"October 29, 2026\" dialysis clinic or oncology infusion service closing",
+      "\"October 29, 2026\" ambulance air medical helicopter base closing",
+      "October 29 2026 primary care clinic doctors office closing temporarily patient appointments",
+      "October 29 2026 emergency department hospital reopening resumed operations after closure",
+      "October 29 2026 rural hospital critical access emergency maternity discontinuing services",
+      "October 29 2026 Puerto Rico Guam Saipan Virgin Islands American Samoa hospital health clinic emergency service closed",
+      "site:gov \"October 29, 2026\" \"hospital\" \"closure\" \"services\"",
+      "\"Thursday\" \"Oct. 29, 2026\" \"hospital\" \"will close\" \"patients\""
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "title": "Watsonville Community Hospital board votes to close maternity services, NICU despite pushback from community members",
+        "publisher": "Lookout Santa Cruz",
+        "url": "https://lookout.co/watsonville-community-hospital-board-votes-to-close-maternity-services-nicu-despite-pushback-from-community-members/story",
+        "source_published_date": "2026-10-29",
+        "reason": "Board decision relates to conditional future action, not an immediately effective closure. Already identified in previous watches; no new access effect within interval."
+      },
+      {
+        "title": "Mercy Health to Consolidate Labor, Delivery Services in Boardman",
+        "publisher": "The Business Journal",
+        "url": "https://businessjournaldaily.com/mercy-health-to-consolidate-labor-delivery-services-in-boardman/",
+        "source_published_date": "2026-10-29",
+        "reason": "October 28 Mercy Health labor and delivery consolidation at St. Joseph Warren was already captured as an October 28 recall finding; re-reporting October 29 is duplicate."
+      },
+      {
+        "title": "Hospital Beds for the Nation’s Sickest Kids Are Disappearing",
+        "publisher": "KFF Health News via Physicians Weekly",
+        "url": "https://www.physiciansweekly.com/post/hospital-beds-for-the-nations-sickest-kids-are-disappearing",
+        "source_published_date": "2026-10-29",
+        "reason": "Retrospective reporting of pediatric intensive care closures from earlier dates; previously reviewed, not a new specific access change in this window."
+      },
+      {
+        "title": "A longtime Portland drug treatment center is shuttering as similar programs for moms face trouble",
+        "publisher": "InvestigateWest",
+        "url": "https://www.investigatewest.org/portland-drug-treatment-center-is-shuttering/",
+        "source_published_date": "2026-10-29",
+        "reason": "Previously recorded Letty Owings treatment center closure; no independently verified new event within interval."
+      },
+      {
+        "title": "West Suburban Medical Center closing temporarily as it runs out of cash to pay employees",
+        "publisher": "WBEZ",
+        "url": "https://www.wbez.org/health-medicine/2026/03/25/west-suburban-medical-center-closing-runs-out-cash-weiss-memorial",
+        "source_published_date": "2026-03-25",
+        "reason": "Historical March 2026 hospital closure; not newly announced."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search-based hourly recall, not an exhaustive nationwide audit. Some results were stale, outside the U.S., or lacked exact publication times. No new verified hospital/essential-service loss, emergency medical suspension, CMS action, or effective restoration found within the 10:48–11:43 PDT interval. Production-level item deduplication not independently audited.",
+    "controls": "One private heartbeat to ops/watch-ledger; no editorial approval, public publication, production changes, schedule changes, or task disabling.",
+    "timing_note": "Runtime began before nominal 11:45:22 hourly slot; recorded scheduled_for reflects the nominal recurrence and observed timestamps reflect actual execution."
+  }
+}

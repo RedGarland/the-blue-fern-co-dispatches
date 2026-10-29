@@ -1,0 +1,132 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T144837-0700-r11-20261029T214837Z",
+  "scheduled_for": "2026-10-29T14:44:51-07:00",
+  "started_at": "2026-10-29T14:48:37-07:00",
+  "completed_at": "2026-10-29T14:50:26.051-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T13:44:49.491-07:00",
+    "end": "2026-10-29T14:50:26.051-07:00",
+    "basis": "Start is exact completed_at of previous persisted Gaza watch heartbeat on ops/watch-ledger. Published-in-window and nonduplicate traceable developments qualify; event time is not inferred from publication time."
+  },
+  "findings": [
+    {
+      "finding_id": "wafa-176439-rafah-returnees-detained-20261029",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176439",
+      "title": "Israeli forces detain three Palestinians returning to Gaza through Rafah crossing",
+      "publisher": "WAFA (Palestinian News & Information Agency)",
+      "source_date": "2026-10-29",
+      "publication_date": "2026-10-29",
+      "publication_datetime": "2026-10-29T23:33:00+02:00",
+      "event_date": "2026-10-29",
+      "event_datetime": null,
+      "location": "Rafah land crossing / Gaza Strip; precise detention site not specified",
+      "affected_population_or_system": "Three named Palestinian returnees to Gaza; civilian detention following crossing access",
+      "exact_supporting_passage": "Israeli occupation forces detained three Palestinians returning to the Gaza Strip through the Rafah land crossing on Thursday evening",
+      "source_type": "Established Palestinian news agency; report attributed to local sources",
+      "classification": "new",
+      "confidence": "medium",
+      "reported_persons": [
+        "Shukri Nihad Ghazal",
+        "Mohammed Raed al-Najjar",
+        "Mohammed Kamal Akeila"
+      ],
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA news homepage followed by article detail",
+        "category": [
+          "detention",
+          "crossings"
+        ],
+        "source_local_publication_time": "29 October 2026 11:33 PM Palestine local (Asia/Hebron, UTC+02:00)",
+        "source_publication_time_pdt": "2026-10-29T14:33:00-07:00",
+        "comparison": "Published after the prior Gaza hourly watch completed at 2026-10-29T13:44:49.491-07:00. Distinct from prior al-Maghazi, al-Tuffah and Jabalia casualty reports.",
+        "limitations": "WAFA attributes the detentions to unnamed local sources; independent corroboration, detention grounds, custody status and precise event time not verified.",
+        "observed_url": "https://english.wafa.ps/Pages/Details/176439"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Production Gaza collector/publisher remains authoritative and unchanged.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T134320-0700-r11-20261029T204320Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T134320-0700-r11-20261029T204320Z.json",
+      "completed_at": "2026-10-29T13:44:49.491-07:00",
+      "verification": "Exact previous heartbeat fetched from GitHub ops/watch-ledger before searching and creating this heartbeat."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest listed Gaza situation report published October 26, covering October 22. No in-window update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no dated in-window Gaza medical-evacuation, facility, fuel or emergency care change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Direct regional situation-report page returned HTTP 502 (known recurring source restriction)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza October 29 2026 22:00 killed injured raid Jabalia Khan Younis",
+      "site:aljazeera.com/news/2026/10/29 Gaza casualties airstrikes Thursday latest October 29",
+      "site:reuters.com/world/middle-east/ Gaza October 29 2026 ceasefire civilian casualties Thursday",
+      "site:apnews.com Gaza October 29 2026 late Thursday aid ceasefire civilian deaths",
+      "site:palestinercs.org 29 October 2026 Gaza medical ambulances casualties",
+      "site:wfp.org Gaza October 29 2026 food supply distribution access",
+      "site:unicef.org Gaza October 29 2026 water children shelters health",
+      "site:unrwa.org Gaza October 29 2026 displacement shelter clinic supplies",
+      "Gaza Rafah Kerem Shalom crossing aid trucks October 29 2026 evening operations",
+      "Gaza medical evacuation fuel hospitals emergency care October 29 2026 WHO health",
+      "Gaza detainees hostages remains handover negotiations ceasefire October 29 2026 afternoon",
+      "Gaza Israeli military operations civilian displacement buildings demolished October 29 2026 evening"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Direct current listing accessed; newly published Gaza detention article at Palestine 23:33 (PDT 14:33) followed and verified at its canonical article."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Arabic homepage accessible; most recent listed Gaza news August 10, 2026; no new report."
+      },
+      {
+        "publisher": "Al Jazeera English",
+        "url": "https://www.aljazeera.com/news/2026/10/29/israeli-strikes-hit-gaza-as-health-ministry-urges-rafah-opening",
+        "result": "Full article inaccessible to this browser check; no unverified details promoted to findings."
+      }
+    ],
+    "exclusions": [
+      "WAFA October 29 Jabalia killing at 19:31 Palestine time (10:31 PDT) predates this observation window and was already identified in an earlier watch.",
+      "WAFA October 29 al-Maghazi civilian vehicle strike was previously captured; not duplicated.",
+      "OCHA/WHO generic or earlier reports and search results from 2023-2025 or earlier October 2026 excluded as outside window.",
+      "WFP general emergency statistics lack a verified in-window change timestamp; excluded.",
+      "No uncorroborated social claims included."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Recurring previously documented source restriction; other authoritative and established reporting sources accessible."
+      },
+      {
+        "source": "Al Jazeera article",
+        "issue": "Article open inaccessible",
+        "materiality": "Source-specific limitation; WAFA direct-source finding verified, other news search results available."
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO 502 and a direct article access restriction occurred; useful OCHA, WHO global, WAFA, PRCS and targeted search coverage completed. A new qualified WAFA detention/crossing development was documented with medium confidence.",
+    "safeguards": "Exactly one new heartbeat file on ops/watch-ledger. No authorizations, production publication, scheduling, disabling or task-state changes."
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T164949-0700-r11-20261029T234949Z",
+  "scheduled_for": "2026-10-29T16:44:51-07:00",
+  "started_at": "2026-10-29T16:49:49-07:00",
+  "completed_at": "2026-10-29T16:51:43.337-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T15:42:10.131-07:00",
+    "end": "2026-10-29T16:51:43.337-07:00",
+    "basis": "Start is exact completed_at of the prior Gaza Source Watch heartbeat fetched from ops/watch-ledger. A source with date only, but no verified publication time, was not assumed new. Event time was not inferred from publication time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production Gaza collection and publication are authoritative and unchanged.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T154017-0700-r11-20261029T224017Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T154017-0700-r11-20261029T224017Z.json",
+      "completed_at": "2026-10-29T15:42:10.131-07:00",
+      "verification": "Fetched exact previous heartbeat via GitHub connector from ops/watch-ledger; located as a newly added Gaza file by comparing the previous known Gaza commit to current branch head."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. No in-window update; latest listed 27 October West Bank snapshot, latest Gaza humanitarian situation report posted October 26 covering October 22."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No dated in-window Gaza healthcare, hospital, fuel, evacuation or access update."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502 Bad Gateway; recurring known WHO regional access restriction."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/medical-evacuation-of-patients-from-the-gaza-strip.html",
+        "result": "HTTP 502 Bad Gateway; recurring known WHO regional access restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"30 October 2026\" Gaza killed wounded aid",
+      "site:english.wafa.ps/Pages/Details/ \"29 October 2026\" Gaza killed injured detained latest",
+      "site:reuters.com/world/middle-east/ Gaza October 29 2026 ceasefire civilians aid evening",
+      "site:apnews.com/article/ Gaza October 29 2026 strikes ceasefire border",
+      "site:aljazeera.com/news/2026/10/29 Gaza hospital casualties ceasefire latest",
+      "site:un.org October 29 2026 Gaza civilians displacement humanitarian briefing",
+      "site:palestinercs.org 29 October 2026 Gaza ambulance emergency hospital",
+      "site:unicef.org 29 October 2026 Gaza water sanitation children",
+      "site:wfp.org Gaza \"29 October 2026\" humanitarian food aid",
+      "site:unrwa.org Gaza October 29 2026 shelter displacement health",
+      "Gaza October 29 2026 hospital fuel dialysis medical evacuation WHO new update",
+      "Gaza Oct 29 2026 Rafah crossing detained hostages ceasefire negotiations civilian casualties evening"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Homepage still lists Rafah returnee detention report October 29 at 23:33 Palestine local (14:33 PDT) as its most recent report; previously captured finding. No fresh October 30 Gaza report visible."
+      },
+      {
+        "publisher": "Al Jazeera English",
+        "url": "https://www.aljazeera.com/amp/news/2026/10/29/israeli-strikes-hit-gaza-as-health-ministry-urges-rafah-opening",
+        "result": "Accessible AMP article dated October 29 (no verified hour); includes al-Maghazi strikes and earlier medical-evacuation figures and other casualties; this URL was already present in the prior 14:50 watch and cannot be classified as newly published in this window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible Arabic homepage; latest featured Gaza notice dates to August 10, 2026. No in-window notice."
+      }
+    ],
+    "exclusions": [
+      "WAFA Rafah crossing detention report published at 14:33 PDT was captured in an earlier watch and is outside the current observation window.",
+      "WAFA Jabalia killing, al-Maghazi car strike and al-Tuffah incidents were previously identified or predate the window.",
+      "Al Jazeera October 29 Gaza strikes/medical evacuation article has no verified in-window publication time and was identified in an earlier watch; cannot count as newly found development. Its historical and same-day detail remains potentially useful to the primary editorial review, not a newly verified hourly finding.",
+      "Most relevant searchable content was older October material or 2025-2026 background; undated or ongoing indicators were not promoted to new events.",
+      "West Bank, unrelated regional events, unsupported social claims, opinion, and duplicates excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean regional site",
+        "issue": "HTTP 502 on regional news and medical evacuation pages",
+        "materiality": "Recurring, previously documented restriction. WHO global and OCHA OPT accessible; targeted search and additional publisher coverage usable. Not newly material watch-wide degradation."
+      }
+    ],
+    "status_rationale": "DEGRADED because both attempted WHO EMRO endpoints returned HTTP 502, while OCHA, WHO global, WAFA, PRCS, Al Jazeera AMP and twelve supplementary targeted searches provided useful coverage. No verified new nonduplicate report published after the prior heartbeat was identified.",
+    "safeguards": "Exactly one durable heartbeat on ops/watch-ledger for this execution. No approvals, publication, production collector, schedule, or task state altered."
+  }
+}

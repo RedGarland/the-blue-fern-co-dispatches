@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T124738-0700-r11-20261029T194738Z",
+  "scheduled_for": "2026-10-29T12:44:51-07:00",
+  "started_at": "2026-10-29T12:47:38-07:00",
+  "completed_at": "2026-10-29T12:50:12.607-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T11:45:13-07:00",
+    "end": "2026-10-29T12:50:12.607-07:00",
+    "basis": "Start is completed_at from the latest prior Gaza heartbeat retrieved by exact GitHub path and identified through branch comparison. Publication/event time rather than crawl recency governs hourly novelty."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not primary production collection or publication.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T114402-0700-r11-20261029T184402Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T114402-0700-r11-20261029T184402Z.json",
+      "completed_at": "2026-10-29T11:45:13-07:00",
+      "verification": "GitHub connector fetched exact content; comparing prior 10:42 commit to ops/watch-ledger showed the 11:44 Gaza heartbeat as the only newer Gaza file."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed Gaza situation report published 26 October and dated 22 October; no October 29 in-window update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no dated in-window change to Gaza hospital functioning, health capacity, ambulances, evacuation, or medical access."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Direct request timed out, continuing prior region-specific access restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza \"29/October/2026\" \"PM\" killed wounded",
+      "Gaza October 29 2026 21:00 Palestine time airstrike civilians killed injured latest",
+      "site:aljazeera.com/news/2026/10/29 Gaza truce Israeli strikes Palestinians October 29",
+      "site:reuters.com/world/middle-east/ Gaza October 29 2026 ceasefire deaths injuries aid",
+      "site:apnews.com/article/ Gaza October 29 2026 civilians ceasefire aid",
+      "site:aa.com.tr/en/middle-east/ Gaza Oct 29 2026 killed injured strikes",
+      "site:un.org Gaza \"29 October 2026\" aid medical fuel hospital civilians",
+      "site:reliefweb.int \"29 Oct 2026\" Gaza healthcare displacement water crossings",
+      "site:wfp.org Gaza \"29 October 2026\" food access supply fuel",
+      "site:unicef.org Gaza \"29 October 2026\" children water shelters",
+      "site:palestinercs.org Gaza \"29 October 2026\" ambulance patient strike",
+      "site:aljazeera.net/news/2026/10/29 غزة مساء الخميس قصف مستشفى مجمع طبي معبر شهداء"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176437",
+        "result": "Article accessible; 29 October 19:31 Palestine local time (10:31 PDT), describing a Palestinian killed in a drone attack near Zainab al-Wazir School east of Jabalia. Published before the prior 11:45 PDT heartbeat completion. WAFA section listing timed out; direct article accessible."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/10/29/5-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%8840-%D9%85%D8%B5%D8%A7%D8%A8%D8%A7-%D9%81%D9%8A-%D8%AA%D9%88%D8%A7%D8%B5%D9%84-%D8%A7%D9%84%D9%82%D8%B5%D9%81",
+        "result": "Article updated 13:32 Mecca time (03:32 PDT), before this window. Contains older al-Maghazi and al-Tuffah incidents plus October 28 strikes. Headline/body counts differ."
+      },
+      {
+        "publisher": "Reuters/AP/Anadolu and humanitarian agencies",
+        "result": "Targeted searches yielded no independently date-verified new in-window Gaza casualty, hospital, crossing, food/water, displacement or ceasefire development."
+      }
+    ],
+    "excluded_or_unresolved": [
+      "WAFA Jabalia killing at 19:31 Palestinian time on October 29: newly surfaced in this query but published at 10:31 PDT, before this window began 11:45 PDT. Flagged as possible previous-watch recall miss, not falsely relabeled a new in-window event.",
+      "Al-Maghazi civilian vehicle incident and Al-Tuffah 11 injuries/ambulance transport were previously recorded in earlier watches; excluded.",
+      "Al-Mawasi/Rafah October 28 government-post strike and the medical-evacuation backlog figures appeared in previously reviewed date-only coverage; lack verified new in-window event/publication timestamp.",
+      "Al Jazeera Arabic roundup headline reports seven deaths, body five, with last update well before window. No attributable distinct in-window incident.",
+      "No separately verified in-window Gaza aid access, food/water, healthcare, displacement, crossing, detention/hostage, ceasefire, infrastructure or civilian-impact update."
+    ],
+    "access_degradation": [
+      {
+        "publisher": "WHO EMRO",
+        "issue": "Timeout on direct emergency report page",
+        "materiality": "Previously known source-specific restriction; OCHA OPT and WHO global accessible."
+      },
+      {
+        "publisher": "WAFA section listing",
+        "issue": "Direct listing timed out, but individual relevant article accessible",
+        "materiality": "Bounded listing failure with alternative search and direct article access."
+      }
+    ],
+    "status_rationale": "DEGRADED due to known WHO EMRO restriction and intermittent WAFA listing timeout. OCHA and WHO global plus established reporting remained available; exactly 12 additional targeted searches were performed. No newly material watch-wide degradation.",
+    "notification_assessment": "No new, time-verified, qualifying nonduplicate in-window event and no newly material failure. Suppress notification.",
+    "safeguards": "Exactly one immutable heartbeat written on ops/watch-ledger; production Gaza publisher, public site, approvals, posts, schedule and task state unchanged."
+  }
+}

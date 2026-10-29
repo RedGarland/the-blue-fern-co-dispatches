@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T064305-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T06:45:22-07:00",
+  "started_at": "2026-10-29T06:43:05-07:00",
+  "completed_at": "2026-10-29T06:44:38.816-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T05:45:45.534-07:00",
+    "end": "2026-10-29T06:44:38.816-07:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed at 05:45:45.534 PDT; bounded recall checks for newly reported or effective healthcare-access changes through this execution. Same-day publications without a reliable posting time are not assumed to fall inside the interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; the authoritative national Care Line production collector remains the source of truth.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T054359-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T05:45:45.534-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Directly retrieved current CMS Public Notices before news searches. Most recent listed notices are three October 23 home-health-termination notices; no October 29 or subsequent-to-prior-hourly notice."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 29 2026 hospital emergency department closed suspended services USA",
+      "October 29 2026 maternity labor delivery unit hospital closing services",
+      "October 29 2026 hospital clinic service line closure announced",
+      "October 29 2026 rural hospital emergency services loss closure",
+      "October 29 2026 behavioral health psychiatric inpatient residential treatment center shutdown",
+      "October 29 2026 dialysis center closure patients access",
+      "October 29 2026 oncology cancer treatment clinic closes suspends",
+      "October 29 2026 primary care clinic closure patients relocated",
+      "October 29 2026 ambulance EMS service shutting down station closure",
+      "October 29 2026 air ambulance medical helicopter base closing operations",
+      "October 29 2026 hospital emergency care services reopen resume restored",
+      "October 29 2026 hospital clinic closes Puerto Rico Guam USVI CNMI Saipan American Samoa"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "title": "Mercy Health to Consolidate Labor, Delivery Services in Boardman",
+        "publisher": "The Business Journal",
+        "url": "https://businessjournaldaily.com/mercy-health-to-consolidate-labor-delivery-services-in-boardman/",
+        "reason": "October 28 Warren, Ohio labor and delivery closure announcement was recorded in an earlier watch; October 29 account is duplicate coverage."
+      },
+      {
+        "title": "A longtime Portland drug treatment center is shuttering as similar programs for moms face trouble",
+        "publisher": "InvestigateWest",
+        "url": "https://www.investigatewest.org/portland-drug-treatment-center-is-shuttering/",
+        "reason": "End-of-October closure of Letty Owings Center was previously examined in the immediately preceding watch; announced earlier and not a newly verified change in this interval."
+      },
+      {
+        "title": "Hospital Beds for the Nation’s Sickest Kids Are Disappearing",
+        "publisher": "KFF Health News / Flathead Beacon",
+        "url": "https://flatheadbeacon.com/2026/10/29/hospital-beds-for-the-nations-sickest-kids-are-disappearing/",
+        "reason": "Retrospective regional pediatric ICU closures, including prior-recorded Missoula closure; no newly established hourly event."
+      },
+      {
+        "title": "Roseland Community Hospital maternity unit rally",
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Published October 28 and repeatedly examined during earlier watches; not new to this interval."
+      },
+      {
+        "title": "Medical Associates of the Pacific temporary primary-care closure, Saipan",
+        "publisher": "Marianas Press",
+        "url": "https://marianaspress.com/news/article/dr-ada-transitions-to-full-time-va-primary-care-physician-on-saipan",
+        "reason": "October 30–November 3 interruption already recorded as pending review in October 29 04:40 heartbeat; exclude duplicate."
+      },
+      {
+        "title": "Hunterdon Medical Center launches virtual nursing program",
+        "publisher": "WRNJ",
+        "url": "https://wrnjradio.com/hunterdon-medical-center-launches-virtual-nursing-program-to-support-patient-care/",
+        "reason": "New virtual-nursing/telehealth support program, not restoration of a previously lost essential service."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Targeted search returns include retrospective, syndicated, international, and future-in-day timestamps. Sources were screened for an actual essential-service access effect and novelty relative to the previous watch. The production collector was not modified or queried directly for full record-level deduplication; this is a nonauthoritative bounded recall.",
+    "controls": "Exactly one private heartbeat committed to ops/watch-ledger; no approval, publication, production collection changes, schedule modification, or task disabling."
+  }
+}

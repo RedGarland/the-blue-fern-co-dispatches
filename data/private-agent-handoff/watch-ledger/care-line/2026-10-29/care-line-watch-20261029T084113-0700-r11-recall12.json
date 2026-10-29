@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T084113-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T08:45:22-07:00",
+  "started_at": "2026-10-29T08:41:13-07:00",
+  "completed_at": "2026-10-29T08:42:22.077-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T07:41:52-07:00",
+    "end": "2026-10-29T08:42:22.077-07:00",
+    "basis": "From the most recent independently retrieved Care Line Watch heartbeat completion; date-only reports cannot reliably be assigned to a particular hourly interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch; the primary national production collector remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T074055-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T07:41:52-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Opened the official CMS Public Notices listing before all additional searches; the most recent entries are three home-health termination notices dated October 23. No October 29 termination, rescission, CLIA limitation/suspension or other qualifying new notice was listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 29 2026 hospital closing emergency department services announced Thursday local news",
+      "October 29 2026 maternity labor delivery unit closure suspension hospital",
+      "October 29 2026 rural hospital emergency room closing suspension services",
+      "October 29 2026 ambulance EMS base closing service suspended county",
+      "October 29 2026 air ambulance medical helicopter base closure suspension",
+      "October 29 2026 behavioral health psychiatric inpatient hospital unit closing services",
+      "October 29 2026 dialysis clinic closing patients relocation",
+      "October 29 2026 oncology cancer clinic closing operations patient care",
+      "October 29 2026 primary care clinic closing temporarily services patients",
+      "October 29 2026 hospital emergency department reopening services restored",
+      "October 29 2026 healthcare services closure Guam Puerto Rico USVI CNMI American Samoa",
+      "October 29 2026 hospital patient access service disruption \"closed\" \"October 29\""
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "title": "PVHCD Board recommends closure of Watsonville Community Hospital’s labor & delivery, NICU",
+        "publisher": "The Pajaronian",
+        "url": "https://pajaronian.com/pvhcd-board-recommends-closure-of-labor-delivery-nicu/",
+        "source_published_date": "2026-10-28",
+        "reason": "A 120-day conditional warning, not a concrete effective closure; already assessed in prior hourly recall."
+      },
+      {
+        "title": "Rally to be held at Roseland Community Hospital in hopes to stop closure of labor and delivery unit",
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "source_published_date": "2026-10-28",
+        "reason": "Previously documented maternity-service development, not a new change during this observation window."
+      },
+      {
+        "title": "Minnesota loses another birth center, this time in Luverne",
+        "publisher": "Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "source_published_date": "2026-10-28",
+        "reason": "Previously recorded Sanford Luverne maternity closure announcement, duplicate."
+      },
+      {
+        "title": "Preston County EMS fee fund tops $510,000 as commission works on ambulance agreements",
+        "publisher": "WDTV",
+        "url": "https://www.wdtv.com/2026/10/29/preston-county-ems-fee-fund-tops-510000-commission-works-ambulance-agreements/",
+        "source_published_date": "2026-10-29",
+        "reason": "Funding and service agreements in progress; reporting does not establish an effective ambulance service loss or restoration."
+      },
+      {
+        "title": "Hunterdon Medical Center launches virtual nursing program to support patient care",
+        "publisher": "WRNJ",
+        "url": "https://wrnjradio.com/hunterdon-medical-center-launches-virtual-nursing-program-to-support-patient-care/",
+        "source_published_date": "2026-10-29",
+        "reason": "New support program, not documented restoration of previously lost essential service."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve targeted web searches covered hospital/ED, maternity, rural emergency, ambulance, air-medical, behavioral health, dialysis, oncology, primary care, reopening and territories. Search discovery is not exhaustive and results include stale, non-US, conditional and unrelated matches. Production collector data was not inspected for full item-level deduplication; prior recall and previous verified watch heartbeat were considered.",
+    "controls": "Created exactly one private watch heartbeat on ops/watch-ledger; no approvals, public publication, source collector changes, schedule edits or task disabling."
+  }
+}

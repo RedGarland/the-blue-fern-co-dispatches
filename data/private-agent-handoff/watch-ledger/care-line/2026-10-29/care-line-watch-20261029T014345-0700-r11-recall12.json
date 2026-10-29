@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T014345-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T01:45:22-07:00",
+  "started_at": "2026-10-29T01:43:45-07:00",
+  "completed_at": "2026-10-29T01:45:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T00:44:16.185-07:00",
+    "end": "2026-10-29T01:45:28-07:00",
+    "basis": "From completion of the immediately preceding verified Care Line Watch heartbeat through this supplementary recall check; late-indexed older reports not treated as new events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary national and U.S.-territory recall of concrete essential healthcare service loss/restoration and official CMS access-risk notices. Production collection remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T004250-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T00:44:16.185-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS current-notices table directly inspected first. Top entries remain the three October 23, 2026 home-health agency termination notices (two CA, one OH); no later termination, rescission, CLIA limitation/suspension, or comparable listing."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing closed services October 28 2026 October 29 2026",
+      "rural hospital obstetrics labor delivery maternity closure announced October 28 2026",
+      "ambulance EMS service shutdown suspended October 28 2026 United States",
+      "air medical helicopter base closed suspended October 28 2026",
+      "dialysis clinic closure patients October 28 2026",
+      "mental health behavioral health hospital inpatient closure October 28 2026",
+      "October 28 2026 hospital closes emergency department service local news",
+      "October 28 2026 cancer center oncology clinic abruptly closing suspending treatment",
+      "October 28 2026 primary care clinic closure doctors patients losing access",
+      "October 28 2026 October 29 2026 ambulance service suspension closure EMS rural",
+      "October 28 2026 hospital clinic emergency department reopened after closure patients",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana Islands hospital emergency service outage closure October 28 2026"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "publisher": "Action News 5 / Gray Media",
+        "url": "https://www.actionnews5.com/video/2026/10/28/preston-county-ambulance-service-pauses-operations-amid-insurance-switch/",
+        "reason": "Preston County ambulance pause video was published October 28 at 00:09 CDT (October 27 22:09 PDT), well before current observation window; no independently verified new change."
+      },
+      {
+        "publisher": "Axios Des Moines",
+        "url": "https://www.axios.com/local/des-moines/2026/10/28/iowa-clinic-unitypoint-health-contract-termination-2027",
+        "reason": "Iowa Clinic–UnityPoint contract expiration threatened for 2027, with negotiation still possible; no effective current service discontinuation documented."
+      },
+      {
+        "publisher": "University of New Mexico Health / Santa Fe New Mexican via GovTech",
+        "url": "https://www.govtech.com/security/unm-health-center-reopens-to-patients-after-cyber-event",
+        "reason": "UNM October 26 service disruption and October 27 restoration already reviewed by previous watch runs, not a new October 29 development."
+      },
+      {
+        "publisher": "Minnesota Public Radio",
+        "url": "https://www.mprnews.org/story/2026/10/28/sanford-luverne-to-end-labor-and-delivery-services-in-april-2027",
+        "reason": "Sanford Luverne maternity loss announcement already included in earlier October 28 recall heartbeat; duplicate."
+      },
+      {
+        "publisher": "Medical Daily / Roseland Community Hospital",
+        "url": "https://www.medicaldaily.com/roseland-hospital-labor-delivery-closure-chicago-south-side-479408",
+        "reason": "Maternity closure announced October 2; no newly reported effective service transition in current hourly window."
+      },
+      {
+        "publisher": "Guam Regional Medical City",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "October 17 storm-related outpatient clinic closure with announced October 20 planned restoration; outside window, no new effective October 29 change."
+      },
+      {
+        "publisher": "Hawaii News Now",
+        "url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/",
+        "reason": "Future repair and reopening plan, no newly effective reopening; September report."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve targeted web searches plus one direct CMS listing check, not exhaustive production collection; search indexing can lag hyperlocal announcements. Prior Care Line heartbeat was directly fetched from ops/watch-ledger before deduplication. No qualifying new effective closure/suspension, official access-risk notice, or concrete restoration verified.",
+    "controls": "Exactly one new JSON heartbeat written to ops/watch-ledger; no approval, public publication, schedule changes, disable actions, or production changes."
+  }
+}

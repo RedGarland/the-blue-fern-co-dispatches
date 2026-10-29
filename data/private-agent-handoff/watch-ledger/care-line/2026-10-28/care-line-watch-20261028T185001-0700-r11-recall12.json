@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T185001-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T18:45:22-07:00",
+  "started_at": "2026-10-28T18:50:01-07:00",
+  "completed_at": "2026-10-28T18:52:32.305-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T17:45:28-07:00",
+    "end": "2026-10-28T18:52:32.305-07:00",
+    "basis": "Prior verified supplementary Care Line heartbeat completed 2026-10-28 17:45:28 PDT; same-day retrospectively indexed stories were screened for missed qualifying events and duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territory healthcare-access recall; production collection remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T174458-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Canonical CMS listing directly checked first. The newest three notices remain October 23 home-health-agency Medicare terminations. No new termination, rescission, CLIA limitation/suspension, or access-risk notice appeared."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "October 28 2026 hospital emergency department closure suspension announced service local patients",
+      "October 28 2026 maternity labor delivery obstetrics unit ending births hospital rural",
+      "October 28 2026 mental behavioral health inpatient unit closure paused services",
+      "October 28 2026 dialysis clinic oncology cancer center closing services patients",
+      "October 28 2026 ambulance service EMS air medical helicopter base shutdown suspended",
+      "October 28 2026 hospital primary care clinic closure suspended patients",
+      "site:beckershospitalreview.com October 28 2026 hospital closes service emergency department maternity announced",
+      "site:beckersbehavioralhealth.com October 28 2026 closed paused inpatient psychiatric unit",
+      "site:ems1.com October 28 2026 ambulance service shut down closure coverage",
+      "\"October 28, 2026\" \"hospital\" \"closing\" \"emergency\" United States",
+      "\"October 28, 2026\" \"clinic\" \"closing\" patients care",
+      "\"Oct. 28, 2026\" \"reopens\" emergency department hospital ambulance services"
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "checked_candidate_sources": [
+      {
+        "publisher": "CMS",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "excluded_no_new_official_notice",
+        "detail": "Newest CMS listing entries dated Oct 23, 2026."
+      },
+      {
+        "publisher": "Becker's Behavioral Health / Capitol News Illinois",
+        "url": "https://www.beckersbehavioralhealth.com/behavioral-health-news/illinois-walks-back-state-mental-health-bed-cuts-keeps-25-of-75/",
+        "disposition": "excluded_out_of_window_future_service_reconfiguration",
+        "detail": "October 28 follow-up cites October 26 coverage and October 15 withdrawal of an application to close all 75 Choate beds. Planned phaseout of 50 by July 2027 is not a newly effective service loss or reopening during this hourly window."
+      },
+      {
+        "publisher": "Hudson County View",
+        "url": "https://hudsoncountyview.com/jersey-city-healthcare-town-hall-hospital-condemnation-vote-occurs-concurrently/",
+        "disposition": "excluded_retrospective_and_non_effective_proceeding",
+        "detail": "October 28 2:37 p.m. EDT story recaps March hospital closure and a condemnation proceeding, without new clinical service closure or reopening in this observation window."
+      },
+      {
+        "publisher": "Minnesota Attorney General",
+        "url": "https://www.ag.state.mn.us/Office/Communications/2026/10/28_Rural-Healthcare.asp",
+        "disposition": "excluded_policy_project_without_effective_service_change",
+        "detail": "New rural maternal healthcare initiative proposes solutions but establishes no immediate closure, suspension or restoration."
+      },
+      {
+        "publisher": "Becker's Hospital Review",
+        "url": "https://www.beckershospitalreview.com/finance/70-hospitals-closing-departments-or-ending-services/",
+        "disposition": "excluded_retrospective_roundup",
+        "detail": "October 22 roundup of previously announced service reductions; no independently verified newly effective change in window."
+      }
+    ],
+    "limitations": "CMS listing plus 12 targeted searches, not nationwide exhaustive surveillance; indexing and timestamp granularity may lag. Search results contained older, retrospective and non-U.S. reports. No production queue access or assertion about primary collection is implied.",
+    "controls": "No approval, public publication, production collector mutation, schedule modification, or disabling."
+  }
+}

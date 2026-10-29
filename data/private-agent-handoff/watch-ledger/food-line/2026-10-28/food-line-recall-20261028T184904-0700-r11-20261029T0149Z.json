@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T184904-0700-r11-20261029T0149Z",
+  "scheduled_for": "2026-10-28T18:45:54-07:00",
+  "started_at": "2026-10-28T18:49:04-07:00",
+  "completed_at": "2026-10-28T18:50:16-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T17:44:52.441-07:00",
+    "end_at": "2026-10-28T18:50:16-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous durable Food Line Source Watch heartbeat fetched from ops/watch-ledger completed 2026-10-28 17:44:52.441 PDT. Date-bounded results were evaluated for new reporting and duplicate status; some results may concern older events.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded high-value recall only. Nationwide production Food Line collection remains authoritative; no editorial approvals, publication, task schedule changes or disablement.",
+    "Twelve targeted web searches completed: three for sole/last/full-service grocery loss, three for disaster-related emergency-food distribution cancellations, three for abrupt pantry/food-bank access loss, and three for official SNAP/WIC/EBT immediate interruptions. No search tool failures.",
+    "No independently verifiable new, nonduplicate qualifying U.S. food-access event was identified in the interval since the prior heartbeat. Searches are not an exhaustive national or social-media review; indexing and local notice latency remain limitations.",
+    "Wymore, Nebraska last-grocery closure coverage was already surfaced in prior runs and excluded as a duplicate: https://www.klkntv.com/city-of-wymore-seeks-residents-input-after-last-grocery-store-closes/.",
+    "Prodisee Pantry cancelled an October 10 Stockton, Alabama distribution because of severe weather; October 7-8 reports are outside this window: https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/.",
+    "Earlier pantry closures, including Ruby's Pantry (April 2026), and earlier full-service grocery losses (August 2026 North Charleston), were historical rather than new: https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites ; https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/.",
+    "Kauaʻi Hurricane Lowell recovery coverage dated October 27 provides food distribution information, not evidence of a new cancelled distribution: https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "No new official SNAP, WIC or EBT access interruption with immediate consequences was established. Excluded generic policy coverage, older incidents, resource guides, donation drives, routine promotions, non-U.S. material, and duplicates.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed OR fire \"October 28, 2026\" United States",
+        "\"sole grocery\" OR \"last grocery store\" fire closed October 28 2026 town",
+        "\"full service grocery store\" closure fire storm Oct 28 2026 community",
+        "\"food distribution\" canceled OR cancelled storm \"October 28, 2026\" food bank",
+        "\"food distribution\" suspended storm flooding outage \"Oct 28 2026\" USA",
+        "food pantry emergency distribution cancelled hurricane October 28 2026 county",
+        "\"food pantry\" \"closed\" \"October 28, 2026\" services",
+        "food bank suspended service outage fire October 28 2026",
+        "\"pantry\" \"temporarily closed\" storm October 28 2026 meals",
+        "site:gov SNAP EBT outage benefits interrupted October 28 2026 state",
+        "site:gov WIC office emergency closure outage \"October 28, 2026\"",
+        "SNAP EBT benefits interrupted suspended October 28 2026 official agency"
+      ]
+    }
+  ]
+}

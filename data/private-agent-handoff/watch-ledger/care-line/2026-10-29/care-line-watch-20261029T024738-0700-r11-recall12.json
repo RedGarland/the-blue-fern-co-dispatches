@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T024738-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T02:45:22-07:00",
+  "started_at": "2026-10-29T02:47:38-07:00",
+  "completed_at": "2026-10-29T02:48:41-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T01:45:28-07:00",
+    "end": "2026-10-29T02:48:41-07:00",
+    "basis": "Completion of latest verified Care Line Watch heartbeat through this run; older late-indexed reports reviewed for missed high-value developments but not treated as new hourly changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall for U.S. states and territories; not the national production collector. Production collection remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T014345-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T01:45:28-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "CMS official listing inspected directly before all targeted searches; top three entries still October 23, 2026 home-health agency terminations (two California, one Ohio). No October 29 termination, rescission, CLIA limitation or suspension, or comparable new access-risk notice listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" hospital emergency department closure suspended",
+      "\"October 29, 2026\" maternity labor delivery hospital stop services closure",
+      "\"October 29, 2026\" ambulance service EMS shut down suspended closed",
+      "\"October 29, 2026\" air ambulance helicopter base closure suspension",
+      "\"October 29, 2026\" dialysis center clinic closure patients",
+      "\"October 29, 2026\" psychiatric behavioral health hospital inpatient closes",
+      "hospital clinic emergency department closed shuts down October 28 2026 United States patients",
+      "October 28 2026 late hospital maternity birthing unit delivery services end local news",
+      "October 28 2026 October 29 2026 rural EMS ambulance base operations suspended closure",
+      "October 28 2026 oncology cancer treatment center or primary care clinic closed patients",
+      "October 28 2026 October 29 2026 hospital emergency room services restored reopened after outage",
+      "Puerto Rico Guam US Virgin Islands American Samoa CNMI October 28 29 2026 hospital emergency service closed suspended"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "publisher": "UNM Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Official October 28 12:39 p.m. Mountain update said clinical operations fully functional; ambulance normal and clinics resumed as of October 27. Service interruption/restoration previously reviewed and outside latest hourly window."
+      },
+      {
+        "publisher": "Minnesota Public Radio",
+        "url": "https://www.mprnews.org/story/2026/10/28/sanford-luverne-to-end-labor-and-delivery-services-in-april-2027",
+        "reason": "Sanford Luverne 2027 maternity closure already recorded in previous October 28 Care Line recall; duplicate."
+      },
+      {
+        "publisher": "CBS News Chicago",
+        "url": "https://www.cbsnews.com/chicago/news/rally-roseland-community-hospital-end-labor-and-delivery-services/",
+        "reason": "October 28 follow-up on previously announced Roseland maternity service suspension anticipated for the weekend; no newly effective closure in this window."
+      },
+      {
+        "publisher": "KFF Health News via Cobb County Courier",
+        "url": "https://cobbcountycourier.com/2026/10/hospital-beds-for-the-nations-sickest-kids-are-disappearing/",
+        "reason": "Retrospective coverage of pediatric hospital service closures in Montana, Oregon, Missouri, Illinois, California; no new October 29 event, prior watch previously discussed Missoula."
+      },
+      {
+        "publisher": "Kaiser Permanente / PRNewswire via BioSpace",
+        "url": "https://www.biospace.com/press-releases/kaiser-permanente-invests-15m-for-behavioral-health-care-at-ucsf-benioff-childrens-hospital-oakland",
+        "reason": "Funding for planned pediatric behavioral health wing expected 2031; no concrete current reopening or service restoration."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "October 28 hurricane recovery summary describes food, utilities, local government and transit status; no new qualifying essential healthcare-service closure/restoration."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Bounded twelve-query recall with a direct CMS table check, not exhaustive; news indexing and official notices can lag. Overnight search results contained dated duplicate, retrospective, non-U.S., and prospective developments; no independently verified new qualifying access change since the prior heartbeat.",
+    "controls": "Exactly one heartbeat created on ops/watch-ledger. No approval, public publication, production changes, schedule modifications, or task disabling."
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T044243-0700-r11-20261029T114243Z",
+  "scheduled_for": "2026-10-29T04:45:54-07:00",
+  "started_at": "2026-10-29T04:42:43-07:00",
+  "completed_at": "2026-10-29T04:44:07.700-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T03:51:06.926-07:00",
+    "end_at": "2026-10-29T04:44:07.700-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified Food Line Source Watch heartbeat on ops/watch-ledger completed at 2026-10-29T03:51:06.926-07:00; screening limited to newly verifiable disruptions since that check.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2,
+      3
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only; nationwide Food Line production collection remains authoritative.",
+    "Completed exactly 12 targeted web searches across four audit miss classes: sole/last/full-service grocery closures or disasters (4), emergency distribution cancellations caused by hazards/outages (3), abrupt pantry or food-bank closure or severe access reduction (3), immediate official SNAP/WIC assistance interruption (2).",
+    "No newly verified qualifying U.S. food-access interruption was found in the October 29, 2026 03:51–04:43 Pacific observation window.",
+    "Kauaʻi Now October 28 Hurricane Lowell recovery article lists a scheduled Friday Hawaiʻi Foodbank Kauaʻi mobile distribution; it does not report a cancellation: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "Guam Department of Public Health and Social Services homepage search listing dated October 27 mentions temporary office closure due to water service interruption, which predates the observation window and is not independently substantiated as a newly occurring SNAP/WIC access interruption.",
+    "One direct-source inspection failed: https://dphss.guam.gov/ timed out, and attempted https://dphss.guam.gov/news/ was inaccessible. Status DEGRADED as a nonfatal source-access failure; search results and other direct-source checks remained useful.",
+    "Search results largely comprised historical grocery fire/closure reports, older pantry disruptions, routine resource listings, unrelated articles, and non-U.S. stories. Retrieval/crawl recency was not substituted for original publication dates.",
+    "No approvals, public publication, schedule changes, or task disabling were performed.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 29 2026",
+        "\"last grocery store\" closure October 28 2026",
+        "\"sole grocery store\" fire closed community October 2026",
+        "\"full service grocery\" fire shut down October 29 2026",
+        "\"food distribution\" canceled storm flooding October 29 2026",
+        "\"food pantry\" \"distribution canceled\" outage October 28 2026",
+        "\"food bank\" canceled distribution storm fire October 29 2026",
+        "\"food pantry\" \"closed indefinitely\" October 29 2026",
+        "\"food bank\" \"suspended services\" October 28 2026",
+        "\"food pantry\" \"temporarily closed\" fire October 29 2026",
+        "site:gov \"SNAP\" \"benefits\" \"interruption\" \"October 29, 2026\"",
+        "site:gov \"WIC\" \"service disruption\" \"October 2026\""
+      ]
+    }
+  ]
+}

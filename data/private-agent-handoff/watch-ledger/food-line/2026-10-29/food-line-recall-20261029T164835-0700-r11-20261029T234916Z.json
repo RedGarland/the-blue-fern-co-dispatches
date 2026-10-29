@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T164835-0700-r11-20261029T234916Z",
+  "scheduled_for": "2026-10-29T16:45:54-07:00",
+  "started_at": "2026-10-29T16:48:35-07:00",
+  "completed_at": "2026-10-29T16:49:16-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T15:46:13.787-07:00",
+    "end_at": "2026-10-29T16:49:16-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Interval begins at the previous verified Food Line Source Watch heartbeat completion. Only newly published, newly reported, or new official service-impact evidence after that time qualifies. Search publication time, not crawl recency, governs.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "This is only a supplementary bounded recall; the nationwide production Food Line collector remains authoritative and was not modified or queried.",
+    "Executed 12 targeted web searches: 3 last/sole/full-service grocery-store loss or closure, 3 weather/damage-related emergency-distribution cancellation, 3 abrupt pantry/food-bank closure or major reduction, and 3 immediate official SNAP/WIC/EBT/food-assistance interruption. All 12 search requests completed; no search/source failures established.",
+    "No newly verifiable qualifying signal published or first reported during 15:46:13–16:49:16 PDT on October 29, 2026. Search results surfaced older events or generic food-access stories.",
+    "Kauaʻi Now October 29 Hurricane Lowell recovery notice states Hawaiʻi Foodbank Kauaʻi's mobile pantry distribution is still scheduled Friday, October 30, 4–5 PM at Hale Līhuʻe. This is a planned distribution, not a cancellation: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ .",
+    "Prodisee Pantry's weather-related cancelled distribution was reported October 7, 2026 and falls before this window; excluded: https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns .",
+    "SNAP-related search hits were predominately October 2025 shutdown reports, older program material, or October 23, 2026 aggregate policy analysis, none a newly official immediate interruption during the interval.",
+    "Search-index latency and narrow recall limit negative assurance: no_findings does not prove no disruption occurred nationwide.",
+    "No article approved, published or posted; no production data or task schedule modified; no automation disabled.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T154501-0700-r11-20261029T224613Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T22:46:13.787Z",
+      "bounded_query_context": [
+        "\"October 29, 2026\" \"only grocery store\" closes fire",
+        "\"October 29, 2026\" \"last grocery store\" closure",
+        "October 29 2026 small town only supermarket fire grocery loss",
+        "October 29 2026 food distribution canceled storm flooding pantry",
+        "October 29 2026 food bank distribution cancelled weather storm power outage",
+        "site:facebook.com food pantry \"October 29\" \"canceled\" distribution 2026",
+        "October 29 2026 food pantry abruptly closed service suspended",
+        "October 29 2026 food bank unexpected closure building damage operations",
+        "October 29 2026 pantry operations suspended emergency closure",
+        "October 29 2026 SNAP benefits interruption EBT system outage state notice",
+        "October 29 2026 WIC office closed benefits outage official state health",
+        "October 29 2026 SNAP suspension benefits delay emergency USDA state agency"
+      ]
+    }
+  ]
+}

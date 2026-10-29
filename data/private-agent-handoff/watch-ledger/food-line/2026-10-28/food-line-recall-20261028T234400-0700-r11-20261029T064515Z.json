@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T234400-0700-r11-20261029T064515Z",
+  "scheduled_for": "2026-10-28T23:45:54-07:00",
+  "started_at": "2026-10-28T23:44:00-07:00",
+  "completed_at": "2026-10-28T23:45:15.595-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T22:50:36-07:00",
+    "end_at": "2026-10-28T23:45:15.595-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Immediately preceding durable Food Line heartbeat completed at 2026-10-28T22:50:36-07:00; supplementary recall for newly verifiable disruptions since that check.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value miss-class recall only; authoritative nationwide Food Line production collector remains unchanged.",
+    "Executed 12 targeted fresh web searches (recency two days): 3 sole/last/full-service grocery access losses; 3 disaster-driven emergency-food distribution cancellations; 3 abrupt pantry/food-bank closures or major service reductions; 3 official SNAP/WIC/EBT interruption searches. All 12 completed; no source/tool failure reported.",
+    "No new qualifying, independently verifiable disruption within the 2026-10-28 22:50:36–23:44 Pacific observation window was established from returned results.",
+    "October 28 Kauaʻi Hurricane Lowell recovery update explicitly reports Hawaiʻi Foodbank Kauaʻi mobile pantry emergency food distribution scheduled Friday (not canceled); closed hurricane resource centers are not established cancelled food distributions. Source: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Search returns included historical or out-of-window SNAP reports (including October 28, 2025 Arizona November-benefits shutdown warning), older policy announcements, and unrelated social-service facility changes, excluded rather than escalated.",
+    "No new verified grocery sole-service loss, sudden pantry shutdown or reduction, disaster-driven distribution cancellation, or official immediate SNAP/WIC/EBT access interruption. Search-index latency and unindexed direct provider notices remain possible.",
+    "No approvals, public publication, social posting, production collection changes, watch schedule changes, or task disabling occurred.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" OR \"last grocery store\" fire closed October 28 2026",
+        "\"sole grocery store\" OR \"only supermarket\" closure fire October 2026",
+        "\"full-service grocery store\" closed fire flood \"October 28\" 2026",
+        "\"food distribution\" canceled storm flood October 28 2026 food bank",
+        "\"food distribution\" suspended \"power outage\" OR \"facility damage\" October 2026",
+        "\"emergency food\" distribution canceled closed hurricane October 28 2026",
+        "\"food pantry\" \"closed\" \"October 28, 2026\" emergency",
+        "\"food bank\" \"temporarily closed\" October 28 2026 flooding",
+        "\"pantry\" \"suspend services\" OR \"operations suspended\" 2026 October",
+        "site:gov \"SNAP\" \"benefits\" \"interruption\" \"October 28, 2026\"",
+        "site:gov \"WIC\" \"services\" \"temporarily unavailable\" October 2026",
+        "\"EBT\" outage \"October 28, 2026\" benefits access state"
+      ]
+    }
+  ]
+}

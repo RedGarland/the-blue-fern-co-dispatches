@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T134320-0700-r11-20261029T204320Z",
+  "scheduled_for": "2026-10-29T13:44:51-07:00",
+  "started_at": "2026-10-29T13:43:20-07:00",
+  "completed_at": "2026-10-29T13:44:49.491-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T12:50:12.607-07:00",
+    "end": "2026-10-29T13:44:49.491-07:00",
+    "basis": "Previous completed Gaza watch heartbeat persisted on ops/watch-ledger; only source/publication/event developments newly traceable within the window qualify, with older reports assessed for duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; authoritative production Gaza collector and publisher not modified.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T124738-0700-r11-20261029T194738Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T124738-0700-r11-20261029T194738Z.json",
+      "completed_at": "2026-10-29T12:50:12.607-07:00",
+      "verification": "Read exact prior JSON from GitHub ops/watch-ledger before writing."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible, newest listed Gaza situation report issued October 26 (covering October 22); no in-window Gaza report."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no in-window dated Gaza health capacity, hospital, evacuation, transport or medical-access change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Direct emergency report page timed out (existing regional access limitation)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza October 29 2026 20:00 Palestinian killed injured shelling",
+      "site:aljazeera.com/news/2026/10/29 Gaza killed injured airstrike ceasefire October 29 afternoon",
+      "site:palestinercs.org Gaza 29 October 2026 ambulance medical teams hospital",
+      "site:wfp.org Gaza 29 October 2026 food assistance supplies fuel",
+      "site:unicef.org Gaza 29 October 2026 children water displaced casualties",
+      "site:unrwa.org Gaza 29 October 2026 aid shelters health",
+      "Gaza Rafah Kerem Shalom crossings humanitarian aid new restriction October 29 2026",
+      "Gaza hospitals medical evacuation dialysis fuel WHO October 29 2026",
+      "Gaza civilian killed injured Israeli strike October 29 2026 midday afternoon October 29",
+      "Gaza ceasefire talks negotiations mediators October 29 2026 new developments",
+      "site:icrc.org Gaza October 29 2026 detainees hostages family reunification",
+      "site:news.un.org Gaza October 29 2026 humanitarian health aid casualties"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible listing; latest article at 20:33 Palestine time (11:33 PDT) and latest listed Gaza drone death at 19:31 Palestine time (10:31 PDT), both before window; previously identified Jabalia death excluded."
+      },
+      {
+        "publisher": "Al Jazeera English",
+        "url": "https://www.aljazeera.com/news/2026/10/29/israeli-strikes-hit-gaza-as-health-ministry-urges-rafah-opening",
+        "result": "October 29 roundup contains previously recorded al-Maghazi attack, al-Mawasi/Rafah prior-day strike, east Gaza City injuries, and previously reviewed medical-evacuation backlog; article has day-only publication date, not a verified in-window time."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Direct update listing accessible; no new October 29 Gaza release."
+      }
+    ],
+    "excluded_or_unresolved": [
+      "WAFA Jabalia death previously flagged as previous-watch recall miss, first published at 10:31 PDT; not an in-window event.",
+      "Al-Maghazi civilian car strike, Al-Tuffah/eastern Gaza City injuries and al-Mawasi/Rafah aid-truck monitor casualties in existing watch coverage; no evidence of distinct in-window development.",
+      "Gaza Health Ministry 21,468 medical evacuation backlog and 6,430 priority cases are date-only, previously reviewed figures; no verified publication time within this run.",
+      "Al Jazeera reports reported direct fire at tents near Halawa displacement camp and demolitions near Yellow Line, but no separately verified in-window time for incident or reporting; not counted as newly qualifying hourly finding.",
+      "Search results included 2025 October 29 stories and earlier-2026 events; excluded as recycled."
+    ],
+    "access_degradation": [
+      {
+        "publisher": "WHO EMRO",
+        "issue": "Timeout on direct regional health-report page",
+        "materiality": "Previously recorded restriction; WHO global and OCHA OPT available."
+      },
+      {
+        "publisher": "UN News",
+        "issue": "Search domain blocked by robots.txt",
+        "materiality": "Previously documented direct-access limitation; humanitarian and established reporting sources accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to source-specific known WHO EMRO timeout and UN News access restriction. Other source checks and 12 additional targeted searches completed. No newly material watch-wide failure.",
+    "notification_assessment": "No verified new qualifying in-window nonduplicate finding and no newly material degradation; suppress notification.",
+    "safeguards": "Exactly one watch heartbeat requested for this run. No production publication, approvals, schedule, or task state modified."
+  }
+}

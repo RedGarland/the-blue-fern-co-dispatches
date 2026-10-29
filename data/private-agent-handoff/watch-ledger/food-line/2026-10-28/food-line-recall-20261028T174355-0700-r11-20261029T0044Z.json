@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T174355-0700-r11-20261029T0044Z",
+  "scheduled_for": "2026-10-28T17:45:54-07:00",
+  "started_at": "2026-10-28T17:43:55-07:00",
+  "completed_at": "2026-10-28T17:44:52.441-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T16:47:27.304-07:00",
+    "end_at": "2026-10-28T17:44:52.441-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently fetched and verified ops/watch-ledger Food Line heartbeat completed at 2026-10-28 16:47:27.304 PDT; selected date-bounded searches for subsequent reporting and reviewed event/publication dates and duplicate status.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; the production nationwide Food Line collector remains authoritative. No approval, publication, schedule changes or task disablement.",
+    "12 targeted fast web searches completed, three each for sole/last full-service grocery closure, disaster-related cancelled food distributions, abrupt pantry or food-bank access loss, and immediate official SNAP/WIC/EBT interruptions. All returned search results without tool failure.",
+    "No newly published and independently verified nonduplicate qualifying disruption established within 2026-10-28 16:47:27 PDT through completion. This is a bounded recall check; fresh localized alerts may not yet be indexed.",
+    "Kauaʻi Hurricane Lowell recovery reporting dated October 27, 2026 described food distribution availability, not a qualifying newly canceled distribution; already examined in the preceding heartbeat: https://kauainownews.com/2026/10/27/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "Santa Clarita Valley Food Pantry abrupt closure result dated January 27, 2026 is historical, not new: https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102.",
+    "State SNAP interruption results prominently referred to October 2025 federal shutdown and were excluded: https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/ and https://www.michigan.gov/whitmer/news/press-releases/2025/10/30/whitmer-leads-21-governors-in-letter-urging-white-house-to-stop-disruption-to-snap.",
+    "October 23, 2026 CBPP SNAP tracker is a national participation/policy update, not a new, officially confirmed same-hour SNAP service outage: https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025.",
+    "Food donation drives, resource guides, routine program announcements, non-U.S. weather stories, generic inflation, unrelated closures, older incidents and duplicates excluded.",
+    {
+      "bounded_query_context": [
+        "October 28 2026 only grocery store closed fire rural town last full service grocer",
+        "October 28 2026 \"sole grocery store\" \"closed\" OR fire OR destroyed",
+        "October 28 2026 \"last grocery store\" closure fire town",
+        "October 28 2026 \"food distribution\" canceled storm flood outage",
+        "October 28 2026 food bank distribution suspended hurricane power outage fire",
+        "October 28 2026 emergency food distribution cancelled flooding storm",
+        "October 28 2026 food pantry suddenly closes unable to serve families",
+        "October 28 2026 food bank closed temporarily power outage facility damage",
+        "October 28 2026 \"food pantry\" closed \"effective immediately\"",
+        "site:gov \"October 28, 2026\" SNAP benefits suspended interrupted outage",
+        "site:gov \"October 28, 2026\" WIC clinic closure benefits service disruption",
+        "October 28 2026 state agency EBT SNAP payment outage interruption"
+      ]
+    }
+  ]
+}

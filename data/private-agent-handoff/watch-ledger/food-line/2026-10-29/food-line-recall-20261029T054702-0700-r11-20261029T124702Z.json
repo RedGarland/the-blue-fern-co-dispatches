@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T054702-0700-r11-20261029T124702Z",
+  "scheduled_for": "2026-10-29T05:45:54-07:00",
+  "started_at": "2026-10-29T05:47:02-07:00",
+  "completed_at": "2026-10-29T05:47:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T04:44:07.700-07:00",
+    "end_at": "2026-10-29T05:47:28-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified watch heartbeat completed 2026-10-29T04:44:07.700-07:00; screen only qualifying newly reported disruptions since then.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": 2
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only; production Food Line collection remains authoritative.",
+    "Completed 12 targeted web searches across sole/last/full-service grocery disruption (4), hazard-related food distribution cancellation (3), abrupt pantry or food-bank major reduction (3), and official SNAP/WIC immediate interruption (2). No qualifying new U.S. disruption was independently verified in this hourly observation window.",
+    "Results surfaced older/unrelated items, including the May 15, 2026 Suisun City Walmart fire (https://abc7news.com/post/walmart-fire-suisun-city-ruled-arson-community-impacted-store-closed-indefinitely/19103613/), September 22, 2026 Madeira Beach grocery reopening (https://stpeterising.com/home/madeira-beachs-longtime-winn-dixie-will-reopen-as-an-aldi-this-week), and October 27, 2025 St. Pete Beach Publix reconstruction coverage (https://stpeterising.com/home/publix-at-dolphin-village-in-st-pete-beach-to-be-rebuilt-into-larger-elevated-new-prototype-store). These do not meet freshness and/or disruption criteria.",
+    "No new independently verified cancellation of an emergency food distribution, abrupt major pantry closure, or official immediately consequential SNAP/WIC interruption was identified. Search-result crawl recency was not treated as report publication date.",
+    "No searched source failed to return results; low relevance was recorded as a coverage limitation rather than fabricating positive findings.",
+    "No approvals, publications, schedule alterations, or task disabling occurred.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" \"closed\" \"October 29\" 2026",
+        "\"last grocery store\" fire closure October 2026",
+        "\"sole grocery store\" \"shut down\" storm October 2026",
+        "\"full-service grocery\" fire \"October 28\" 2026",
+        "\"food distribution\" canceled storm \"October 29\" 2026",
+        "\"food bank\" distribution cancelled flood outage October 2026",
+        "\"mobile food pantry\" canceled weather \"October 29\" 2026",
+        "\"food pantry\" \"closed indefinitely\" October 2026",
+        "\"food bank\" \"services suspended\" October 29 2026",
+        "\"food pantry\" temporarily closed fire flood October 28 2026",
+        "site:gov SNAP benefits disrupted outage \"October 29, 2026\"",
+        "site:gov WIC \"temporarily unavailable\" \"October 2026\""
+      ]
+    }
+  ]
+}

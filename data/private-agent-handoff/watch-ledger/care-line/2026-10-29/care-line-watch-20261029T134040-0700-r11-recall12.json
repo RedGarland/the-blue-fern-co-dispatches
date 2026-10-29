@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T134040-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T13:45:22-07:00",
+  "started_at": "2026-10-29T13:40:40-07:00",
+  "completed_at": "2026-10-29T20:41:59.915Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T19:50:54.942+00:00",
+    "end": "2026-10-29T20:41:59.915Z",
+    "basis": "Previous independently fetched 12:49 PDT Care Line Watch heartbeat completed at 12:50:54.942 PDT; scan covers elapsed time through this run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall; national production collector remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T124905-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T19:50:54.942+00:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "The official public notices listing checked first continued to show October 23 as the latest posted notice. No newly dated Medicare termination, rescission, or CLIA certificate restriction appeared in the recall window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department shutting down closing suspend service October 29 2026 local news",
+      "maternity labor delivery hospital closure announced October 29 2026 local news",
+      "mental health psychiatric behavioral hospital unit closes October 29 2026",
+      "dialysis oncology cancer center service suspended closing October 29 2026",
+      "primary care medical clinic temporarily closes October 29 2026 patients",
+      "rural hospital emergency service suspends October 29 2026",
+      "ambulance EMS station base closes suspends service October 29 2026",
+      "air ambulance helicopter medical base shutdown October 29 2026",
+      "hospital emergency department reopens service restored October 29 2026",
+      "Guam CNMI Puerto Rico US Virgin Islands American Samoa hospital clinic closure October 29 2026",
+      "October 29 2026 CMS provider termination CLIA certificate suspension official notice",
+      "healthcare service access closure emergency clinic October 29 2026 county announced"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "title": "Sanford Luverne Medical Center labor-and-delivery discontinuation",
+        "publisher": "Minnesota Star Tribune / MPR News",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "reason": "October 28 announcement already documented by earlier watches; no new access-effect change within interval."
+      },
+      {
+        "title": "Christ Hospital emergency room closure",
+        "publisher": "ABC7 New York",
+        "url": "https://abc7ny.com/post/community-pushes-back-christ-hospital-emergency-room-announces-closure-2-day-notice-staff/18658827/",
+        "reason": "Retrospective report published months before recall window."
+      },
+      {
+        "title": "Laguna Beach Providence Mission Hospital emergency room",
+        "publisher": "Voice of OC",
+        "url": "https://voiceofoc.org/2026/10/laguna-beach-doubles-down-on-efforts-to-save-citys-only-emergency-room/",
+        "reason": "Previously reported projected 2030 closure; new story about mitigation funding, not an abrupt new service change."
+      },
+      {
+        "title": "LewisGale Hospital Montgomery Radford emergency-care expansion",
+        "publisher": "WSLS",
+        "url": "https://www.wsls.com/news/local/2026/10/26/lewisgale-hospital-montgomery-announces-18-million-investment-to-expand-emergency-care-access-in-radford/",
+        "reason": "Investment announcement without documented restoration of previously lost essential service."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search-index recall did not surface an independently verifiable qualifying same-window announcement or effective access change. Broad internet searches cannot guarantee comprehensive U.S. and territorial local-source coverage or production-item deduplication; earlier Guam direct-site restrictions were not retested and no blocked source was encountered in this run.",
+    "controls": "One private ledger heartbeat only; no approvals, public publication, production modifications, schedule edits, or disabling."
+  }
+}

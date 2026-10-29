@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T074055-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T07:45:22-07:00",
+  "started_at": "2026-10-29T07:40:55-07:00",
+  "completed_at": "2026-10-29T07:41:52-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T06:44:38.816-07:00",
+    "end": "2026-10-29T07:41:52-07:00",
+    "basis": "Starts at latest verified prior hourly Care Line Watch completion. Searches identify fresh published or effective changes, but publication-date-only reports cannot be assigned a specific hour."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall; primary national production collector remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T064305-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T06:44:38.816-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Read the official CMS Public Notices page directly before the targeted searches. The three newest termination notices are dated October 23; no October 29 notice appears."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" hospital emergency department closes temporarily services US",
+      "\"October 29, 2026\" labor delivery maternity closure hospital announced",
+      "\"October 29, 2026\" rural hospital emergency department services suspended",
+      "\"October 29, 2026\" psychiatric behavioral health center closes services patients",
+      "\"October 29, 2026\" dialysis kidney care center closure patients",
+      "\"October 29, 2026\" oncology cancer clinic treatment center closes",
+      "\"October 29, 2026\" family medicine primary care clinic closes patients",
+      "\"October 29, 2026\" ambulance EMS station service closure suspended",
+      "\"October 29, 2026\" medical helicopter air ambulance base closure",
+      "\"October 29, 2026\" reopened restored emergency room maternity services hospital",
+      "\"October 29, 2026\" health department hospital lab CLIA suspension revocation termination",
+      "\"October 29, 2026\" hospital clinic ambulance closing Guam Puerto Rico Saipan Virgin Islands American Samoa Alaska Hawaii"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "title": "Ukiah’s new 16-bed mental health center is up and running",
+        "publisher": "The Mendocino Voice",
+        "url": "https://mendovoice.com/2026/10/ukiahs-new-16-bed-mental-health-center-is-up-and-running/",
+        "source_published_date": "2026-10-29",
+        "reason": "The Anchor Mental Health Rehabilitation Center began accepting residents before October 21; this is a new facility, not a newly effective restoration of a previously lost essential service during the observation window."
+      },
+      {
+        "title": "A longtime Portland drug treatment center is shuttering as similar programs for moms face trouble",
+        "publisher": "InvestigateWest",
+        "url": "https://www.investigatewest.org/portland-drug-treatment-center-is-shuttering/",
+        "source_published_date": "2026-10-29",
+        "reason": "Letty Owings Center end-of-October closure was already reviewed during the two immediately preceding watches; closure had been announced well before this interval."
+      },
+      {
+        "title": "Mercy Health to Consolidate Labor, Delivery Services in Boardman",
+        "publisher": "The Business Journal",
+        "url": "https://businessjournaldaily.com/mercy-health-to-consolidate-labor-delivery-services-in-boardman/",
+        "source_published_date": "2026-10-29",
+        "reason": "St. Joseph Warren Hospital delivery-service cessation was recovered October 28 and is already pending review; duplicate."
+      },
+      {
+        "title": "PVHCD Board recommends closure of Watsonville Community Hospital’s labor & delivery, NICU",
+        "publisher": "The Pajaronian",
+        "url": "https://pajaronian.com/pvhcd-board-recommends-closure-of-labor-delivery-nicu/",
+        "source_published_date": "2026-10-28",
+        "reason": "Conditional 120-day notice, not confirmed effective closure; already reviewed in prior runs."
+      },
+      {
+        "title": "Patient prompts temporary emergency room closure at Doylestown Hospital",
+        "publisher": "Central Bucks Now",
+        "url": "https://centralbucksnews.com/news/public-safety/emergency-rooms-at-doylestown-hospital-closed-until-further-notice/",
+        "source_published_date": "2026-10-22",
+        "reason": "Temporary interruption dated October 22, outside current hourly interval; no new October 29 effect established."
+      },
+      {
+        "title": "Medical Associates of the Pacific temporary closure, Saipan",
+        "publisher": "Marianas Press",
+        "url": "https://marianaspress.com/news/article/dr-ada-transitions-to-full-time-va-primary-care-physician-on-saipan",
+        "source_published_date": "2026-10-29",
+        "reason": "October 30–November 3 interruption already recorded as pending_review in October 29 04:40 watch; duplicate."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve narrowly targeted news searches were screened for U.S. and territory relevance, concrete essential-service access consequences, recency and duplication. Search results included older events, Canada and other countries, proposed closures and new service launches. The production collector was not altered or read for full item-level deduplication; the private watch ledger was used to exclude known recalls.",
+    "controls": "Exactly one heartbeat written to ops/watch-ledger. No approval, public publication, collector modifications, schedule edits or task disabling."
+  }
+}

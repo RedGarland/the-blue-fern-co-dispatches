@@ -2098,6 +2098,69 @@ def _curation_rows(edition_dir: Path) -> list[dict[str, Any]]:
     return []
 
 
+def _gaza_public_listing_rows(edition_dir: Path) -> list[dict[str, Any]]:
+    """Fallback only to positively public, currently rendered, paired story copy.
+
+    This does not enrich old aggregate history or grant correction authority.
+    Explicit edition-level metadata remains authoritative. Unknown/enveloped
+    manifests and ambiguous article markup provide no inferred fallback.
+    """
+    payload = _load_json_file(edition_dir / "curation_manifest.json")
+    if not isinstance(payload, list):
+        return []
+    try:
+        document = (edition_dir / "index.html").read_bytes().decode("utf-8")
+    except (OSError, UnicodeError):
+        return []
+    eligible = [row for row in payload if isinstance(row, dict)
+                and row.get("public_rendered") is True
+                and row.get("included_in_public_summary") is True
+                and row.get("include_decision") == "include"]
+    result: list[dict[str, Any]] = []
+    from .gaza_historical_correction import _StrictHtmlTreeParser, CorrectionValidationError
+    try:
+        nodes = _StrictHtmlTreeParser(document).finish()
+    except CorrectionValidationError:
+        return []
+    def within(node, ancestor):
+        while node is not None:
+            if node is ancestor:
+                return True
+            node = node.parent
+        return False
+    for article_node in (node for node in nodes if node.tag == "article"):
+        descendants = [node for node in nodes if within(node, article_node)]
+        ancestors = []
+        node = article_node.parent
+        while node is not None:
+            ancestors.append(node)
+            node = node.parent
+        # Refuse unsupported visibility and nested articles rather than infer
+        # public copy from hidden content or ambiguous document structure.
+        if any(any(key in node.attrs for key in ("hidden", "inert", "aria-hidden", "style"))
+               or node.tag in ("script", "style", "template")
+               for node in descendants + ancestors):
+            continue
+        if (any(node.tag == "article" for node in ancestors)
+                or sum(node.tag == "article" for node in descendants) != 1):
+            continue
+        headings = [node for node in descendants if node.tag == "h3"]
+        if len(headings) != 1:
+            continue
+        heading = headings[0]
+        title = _html_fragment_text(document[heading.start_tag_end:heading.end_tag_start])
+        article = document[article_node.start:article_node.end]
+        matches = [row for row in eligible if _first_clean_text(row, ("title",)) == title]
+        if len(matches) != 1:
+            continue
+        row = matches[0]
+        summary = _first_clean_text(row, ("summary",))
+        if not summary or summary not in _html_fragment_text(article):
+            continue
+        result.append(row)
+    return result
+
+
 def _sources_count_from_manifest(edition_dir: Path) -> int | None:
     payload = _load_json_file(edition_dir / "sources_manifest.json")
     if isinstance(payload, list):
@@ -2130,8 +2193,10 @@ def briefing_presentation_for_edition(site_root: Path, dispatch: DispatchConfig,
         if not _briefing_title_is_generic(page_title, dispatch, edition_date):
             title = page_title
     curation_rows = _curation_rows(edition_dir)
+    fallback_rows = (_gaza_public_listing_rows(edition_dir) if dispatch.slug == "gaza"
+                     else curation_rows)
     if _briefing_title_is_generic(title, dispatch, edition_date):
-        for row in curation_rows:
+        for row in fallback_rows:
             candidate = _first_clean_text(row, ("title", "headline", "source_title"))
             if not _briefing_title_is_generic(candidate, dispatch, edition_date):
                 title = candidate
@@ -2152,7 +2217,12 @@ def briefing_presentation_for_edition(site_root: Path, dispatch: DispatchConfig,
         ),
     )
     if not summary:
-        for row in curation_rows:
+        summary_rows = fallback_rows
+        if dispatch.slug == "gaza":
+            # Never pair one story headline with another story description.
+            summary_rows = [row for row in fallback_rows
+                            if _first_clean_text(row, ("title",)) == title]
+        for row in summary_rows:
             summary = _first_clean_text(
                 row,
                 (

@@ -1490,7 +1490,12 @@ def _month_number(name: str) -> int:
 def _explicit_dates_from_text(text: str, *, source_date: date | None) -> list[dict[str, Any]]:
     refs: list[dict[str, Any]] = []
     seen: set[str] = set()
+    month_day_pattern = re.compile(rf"\b({MONTH_NAME_PATTERN})\.?\s+(\d{{1,2}})(?:,\s*(20\d{{2}}))?\b", re.I)
+    calendar_matches = list(month_day_pattern.finditer(text))
     for match in re.finditer(r"\b(20\d{2})\b", text):
+        # The year inside a specific date is not a separate January 1 event.
+        if any(calendar.start() <= match.start() < calendar.end() for calendar in calendar_matches):
+            continue
         year = int(match.group(1))
         key = f"year:{year}"
         if key in seen:
@@ -1504,8 +1509,7 @@ def _explicit_dates_from_text(text: str, *, source_date: date | None) -> list[di
                 "relation": "historical" if source_date and year < source_date.year else "current_or_future",
             }
         )
-    month_day_pattern = re.compile(rf"\b({MONTH_NAME_PATTERN})\.?\s+(\d{{1,2}})(?:,\s*(20\d{{2}}))?\b", re.I)
-    for match in month_day_pattern.finditer(text):
+    for match in calendar_matches:
         month = _month_number(match.group(1))
         day = int(match.group(2))
         year = int(match.group(3)) if match.group(3) else (source_date.year if source_date else datetime.now(timezone.utc).year)
@@ -2418,6 +2422,80 @@ def _supports_review_without_full_article(
     )
 
 
+def _date_evidence_without_response_deadlines(sentence: str) -> str:
+    """Do not reuse an explicitly bound reply deadline as an event date.
+
+    Mask only the date occurrence, including its year, rather than removing
+    all dates from a sentence that may also announce a real access change.
+    Eligibility/application deadlines are intentionally outside this guard.
+    """
+    response = r"(?:responses?|repl(?:y|ies)|answers?|respond(?:s|ed|ing)?)"
+    calendar_date = rf"(?P<date>(?:{MONTH_NAME_PATTERN})\.?\s+\d{{1,2}}(?:,\s*20\d{{2}})?)"
+    patterns = (
+        rf"\b{response}\b(?P<context>[^.!?;:\n]{{0,120}}?)\b(?:by|before|on|no later than|due(?:\s+(?:by|on))?)\s+{calendar_date}",
+        rf"\bdeadline\s+for\s+{response}\b(?P<context>[^.!?;:\n]{{0,60}}?)\b(?:is|was|of|on)\s+{calendar_date}",
+        rf"\b{response}\s+deadline(?:\s+(?:is|was|of|on))?\s+{calendar_date}",
+        rf"\b{calendar_date}\s+deadline\s+for\s+{response}\b",
+        rf"\b{calendar_date}\s+{response}\s+deadline\b",
+    )
+    masked = list(sentence)
+    for pattern in patterns:
+        for match in re.finditer(pattern, sentence, re.I):
+            # "Responses explain why coverage will terminate on <date>" binds
+            # the date to termination, not to the response itself.
+            context = match.groupdict().get("context") or ""
+            if re.match(r"\s+(?:explain|confirm|describe|show|detail|state|clarify|indicate)\b", context, re.I):
+                continue
+            if re.search(
+                r"\b(?:will|shall)\s+(?:(?:permanently|temporarily)\s+)?(?:be\s+)?"
+                r"(?:terminate[sd]?|cancel(?:s|ed|led)?|end(?:s|ed)?|close[sd]?|"
+                r"suspend(?:s|ed)?|halt(?:s|ed)?|reopen(?:s|ed)?|restore[sd]?)\b",
+                context, re.I,
+            ):
+                continue
+            start, end = match.span("date")
+            masked[start:end] = " " * (end - start)
+    return "".join(masked)
+
+
+def _access_date_evidence_after_response_deadline(text: str, *, source_date: date | None) -> str:
+    """Retain independently dated access clauses, not oversight/hearing dates."""
+    administrative = re.compile(
+        r"\b(?:responses?|respond\w*|repl(?:y|ies)|answers?|deadline|senators?|"
+        r"hearing|investigat\w*|questions?|request\w*)\b", re.I,
+    )
+    explicit_change = re.compile(
+        r"\b(?:will|shall|plans? to|scheduled to|set to)\s+"
+        r"(?:(?:permanently|temporarily)\s+)?(?:be\s+)?"
+        r"(?:terminate[sd]?|cancel(?:s|ed|led)?|end(?:s|ed)?|close[sd]?|"
+        r"suspend(?:s|ed)?|halt(?:s|ed)?|reopen(?:s|ed)?|restore[sd]?)\b"
+        r"|\b(?:terminates|cancels|ends|closes|suspends|halts|reopens|restores)\b"
+        r"|\b(?:coverage|enrollments?|services?|clinic|hospital)\s+(?:is|are)\s+"
+        r"(?:terminated|cancel(?:ed|led)|ended|closed|suspended|halted|restored)\b",
+        re.I,
+    )
+    retained = []
+    for clause in text.split(";"):
+        if re.search(r"\b(?:not|never|no longer|if|unless|whether|would|could|might|may(?!\s+\d{1,2}\b)|should)\b", clause, re.I):
+            continue
+        if not ACTIONABLE_EVENT_PATTERN.search(clause) or not _keyword_hits(clause, HEALTHCARE_CONTEXT_PATTERNS):
+            continue
+        if not administrative.search(clause):
+            retained.append(clause)
+            continue
+        # Within a mixed clause, keep only a directly stated access-change
+        # predicate and its following date, not an earlier oversight date.
+        for match in explicit_change.finditer(clause):
+            next_admin = administrative.search(clause, match.end())
+            fragment = clause[match.start():next_admin.start() if next_admin else len(clause)]
+            context = clause[max(0, match.start() - 60):match.start()] + fragment
+            if not _keyword_hits(context, HEALTHCARE_CONTEXT_PATTERNS):
+                continue
+            if any(ref.get("kind") not in {"year_reference", "relative_year"} for ref in _all_date_references(fragment, source_date=source_date)):
+                retained.append(fragment)
+    return " ".join(retained)
+
+
 def _sentence_currentness(
     sentence: str,
     *,
@@ -2429,7 +2507,11 @@ def _sentence_currentness(
     positive_hits = _event_positive_hits(sentence)
     access_hits = _keyword_hits(sentence, ACCESS_CONSEQUENCE_PATTERNS)
     context_hits = _keyword_hits(sentence, HEALTHCARE_CONTEXT_PATTERNS)
-    date_refs = _all_date_references(sentence, source_date=source_date)
+    date_evidence = _date_evidence_without_response_deadlines(sentence)
+    response_deadline_removed = date_evidence != sentence
+    if response_deadline_removed:
+        date_evidence = _access_date_evidence_after_response_deadline(date_evidence, source_date=source_date)
+    date_refs = _all_date_references(date_evidence, source_date=source_date)
     has_historical_marker = any(marker in lowered for marker in HISTORICAL_MARKERS) or bool(re.search(r"\bthe hospital closed in\b|\bclosed in 20\d{2}\b|\bpreviously\b", lowered))
     has_recent_background_marker = any(marker in lowered for marker in RECENT_BACKGROUND_MARKERS)
     has_current_announcement = any(marker in lowered for marker in CURRENT_ANNOUNCEMENT_MARKERS) or bool(re.search(r"\bannounced\b|\bsaid\b|\bwill\b|\bplans?\b", lowered))
@@ -2487,7 +2569,12 @@ def _sentence_currentness(
     if date_refs:
         operative_date = next((ref["date"] for ref in date_refs if ref.get("relation") in {"future", "current", "recent_past", "current_or_future"} and ref.get("date")), "")
         prior_event_date = next((ref["date"] for ref in date_refs if ref.get("relation") == "historical" and ref.get("date")), "")
-    if event_type in {"facility_reopening", "service_restoration"} and (has_current_announcement or explicit_future or recent_past):
+    if response_deadline_removed and not date_refs:
+        # A dated oversight/reply request is not a dated access change. Keep
+        # publication provenance separate instead of substituting it here.
+        reasoning_parts.append("response deadline is not an operative healthcare-access date")
+        operative_date = ""
+    elif event_type in {"facility_reopening", "service_restoration"} and (has_current_announcement or explicit_future or recent_past):
         currentness_class = "CURRENT_RESTORATION"
         freshness_role = "RESTORATION_UPDATE"
         reasoning_parts.append("restoration language with current update")
@@ -2495,7 +2582,7 @@ def _sentence_currentness(
         currentness_class = "DATE_UNRESOLVED"
         freshness_role = "UNKNOWN"
         reasoning_parts.append("conflicting future and historical date signals")
-    elif actionable_event and (explicit_future or bool(re.search(rf"\b(?:on|effective|beginning|starting)\s+(?:{MONTH_NAME_PATTERN})\b", sentence, re.I))):
+    elif actionable_event and (explicit_future or bool(re.search(rf"\b(?:on|effective|beginning|starting)\s+(?:{MONTH_NAME_PATTERN})\b", date_evidence, re.I))):
         currentness_class = "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE"
         freshness_role = "FUTURE_EFFECTIVE"
         reasoning_parts.append("future effective date in operative sentence")
@@ -3931,12 +4018,17 @@ def qualify_event_lead(
     if coverage_geography and not geography.get("state"):
         geography.update(coverage_geography)
         geography_provenance.update(coverage_geography_provenance)
+    # A facility in unrelated body/sidebar text is not the coverage subject.
+    # Keep structured input precedence, but scope unstructured coverage entity
+    # extraction to the title and actual operative passage when available.
+    coverage_event = event_type in {"coverage_delay", "coverage_cancellation"}
     subject, provider, subject_provenance = _extract_subject(
         raw_item,
         _text(raw_item, "title"),
-        supporting_passage,
+        (_text(currentness, "operative_event_passage") or supporting_passage)
+        if coverage_event else supporting_passage,
         service_line=service_line,
-        evidence_text=evidence_blob,
+        evidence_text="" if coverage_event else evidence_blob,
     )
     if not subject and not provider:
         coverage_subject, coverage_provider, coverage_subject_provenance = _coverage_subject_from_text(raw_item, supporting_passage or evidence_blob, event_type)

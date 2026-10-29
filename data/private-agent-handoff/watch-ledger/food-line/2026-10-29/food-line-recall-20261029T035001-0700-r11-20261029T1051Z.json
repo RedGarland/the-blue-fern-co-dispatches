@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T035001-0700-r11-20261029T1051Z",
+  "scheduled_for": "2026-10-29T03:45:54-07:00",
+  "started_at": "2026-10-29T03:50:01-07:00",
+  "completed_at": "2026-10-29T03:51:06.926-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T02:49:38-07:00",
+    "end_at": "2026-10-29T03:51:06.926-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous confirmed Food Line watch heartbeat on ops/watch-ledger completed 2026-10-29T02:49:38-07:00; screen only newly verifiable high-value disruptions since that check.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only. The nationwide Food Line production collector remains authoritative and was not changed.",
+    "Completed 12 targeted recency-one-day web searches for sole/last/full-service community grocery loss or disaster, emergency food distribution cancellations from hazards/outages, abrupt pantry/food-bank service reductions, and immediate official SNAP/WIC/EBT access interruptions.",
+    "No new qualifying U.S. food-access disruption was independently substantiated within the observation window. Search results were largely older incidents, broad government pages, guidance, and unrelated news; crawling today does not establish publication today.",
+    "Relevant surfaced Virginia SNAP beverage purchasing eligibility change is scheduled for November 1, 2026 and was not an immediate service interruption during this window.",
+    "Older October 2025 SNAP shutdown reporting, historical grocery stories, routine WIC/EBT guidance, government homepages, disaster background material, donation/promotional notices, and unrelated news were excluded.",
+    "Local unindexed provider notices and search indexing lag remain intrinsic coverage limitations; no technical search failure was observed.",
+    "No approval, publication, social post, task schedule alteration, or disabling occurred.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" OR \"sole grocery store\" fire closed October 29 2026",
+        "\"last grocery store\" OR \"only supermarket\" closure fire October 28 29 2026",
+        "\"full-service grocery\" store burned closed town October 2026",
+        "\"food distribution\" cancelled storm flood fire October 29 2026",
+        "\"food pantry\" distribution canceled due to power outage October 28 29 2026",
+        "\"food bank\" distribution suspended storm October 29 2026",
+        "\"food pantry\" abruptly closed permanently October 29 2026",
+        "\"food bank\" suspends operations closes October 28 29 2026",
+        "\"food pantry\" reduced hours indefinitely funding emergency October 29 2026",
+        "site:gov \"SNAP\" benefits delayed outage suspended October 29 2026",
+        "site:gov \"WIC\" service interruption closed outage October 29 2026",
+        "site:gov \"EBT\" system outage transactions October 28 29 2026"
+      ],
+      "web_search_recency_days": [
+        1
+      ]
+    }
+  ]
+}

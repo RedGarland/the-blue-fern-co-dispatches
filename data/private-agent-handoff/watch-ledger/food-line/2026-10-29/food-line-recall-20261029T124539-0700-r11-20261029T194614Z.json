@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T124539-0700-r11-20261029T194614Z",
+  "scheduled_for": "2026-10-29T12:45:54-07:00",
+  "started_at": "2026-10-29T12:45:39-07:00",
+  "completed_at": "2026-10-29T19:46:42.325Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T11:42:27.579-07:00",
+    "end_at": "2026-10-29T19:46:42.325Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior persisted Food Line Source Watch heartbeat's completed_at through this observation. Publication and event times evaluated independently of search crawl timestamps.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; production Food Line nationwide collection remains authoritative and unchanged.",
+    "Completed 12 targeted fresh web searches across four miss classes (three each): sole/last/full-service grocery loss, disaster-related canceled emergency distribution, abrupt pantry/food-bank service closure/reduction, and immediate official SNAP/WIC/EBT interruption. No search tool or direct-source inspection errors were observed.",
+    "No qualifying newly reported and verifiable U.S. food-access disruption in the bounded observation window.",
+    "October 29 Tennessee Lookout article describes continuing and expanded food pantry deliveries in Memphis, rather than a service closure or reduction: https://tennesseelookout.com/2026/10/29/memphis-immigrant-food-pantry-says-need-remains-high-a-year-after-federal-task-force-entered-city/",
+    "October 28 Kauaʻi hurricane-recovery bulletin indicates an emergency food distribution remains scheduled for Friday, not canceled or suspended: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Other search results included historical Ruby's Pantry shutdown (March 2026), older South Tucson grocery closure coverage, and October 2025 SNAP funding warnings. No fresh official immediate benefits outage was confirmed.",
+    "No historical incidents, resource guides, donations, routine promotions, generic price stories or duplicates were elevated. Zero pending-review findings.",
+    "This bounded recall is not an exhaustive national census; no-findings means no qualifying signal verified by the targeted checks, not proof of nationwide absence.",
+    "No approvals, publication, social posting, schedule changes, or disabling performed.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T114059-0700-r11-20261029T184227Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T18:42:27.579Z",
+      "bounded_query_context": [
+        "\"only grocery store\" closed burned fire town October 29 2026",
+        "\"last grocery store\" closure rural town October 29 2026",
+        "\"full service grocery store\" fire closure October 29 2026 community",
+        "\"food distribution\" canceled hurricane storm flooding October 29 2026",
+        "\"food bank\" canceled distribution power outage October 29 2026",
+        "\"mobile pantry\" cancelled postponed weather storm October 29 2026",
+        "\"food pantry\" abruptly closed October 29 2026 community",
+        "\"food bank\" suspended services indefinitely October 29 2026",
+        "\"pantry\" closed fire flooding power outage October 29 2026",
+        "October 29 2026 SNAP EBT outage interrupted benefits state agency",
+        "October 29 2026 WIC card system outage service suspended state notice",
+        "site:gov October 29 2026 SNAP WIC benefits delay interruption notice"
+      ]
+    }
+  ]
+}

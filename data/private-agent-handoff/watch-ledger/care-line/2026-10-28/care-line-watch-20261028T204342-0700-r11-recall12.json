@@ -1,0 +1,123 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T204342-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T20:45:22-07:00",
+  "started_at": "2026-10-28T20:43:42-07:00",
+  "completed_at": "2026-10-28T20:46:41-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T19:43:36-07:00",
+    "end": "2026-10-28T20:46:41-07:00",
+    "basis": "Previous verified supplementary Care Line watch heartbeat completed 2026-10-28 19:43:36 PDT. Searched for fresh developments and revisited same-day material reports not yet recorded by preceding supplementary watches. A recovered candidate below was announced before this observation interval and is not represented as a new in-window announcement."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-oh-mercy-st-joseph-warren-labor-delivery-closure-20261028",
+      "canonical_source_url": "https://www.aol.com/articles/st-joseph-warren-hospital-ending-195522000.html",
+      "title": "St. Joseph Warren Hospital ending labor and delivery services",
+      "publisher": "WKBN 27 First News (full local report syndicated via AOL)",
+      "exact_supporting_passage": "Labor and delivery services currently provided at Mercy Health St. Joseph Warren Hospital will be discontinued by early December.",
+      "source_published_date": "2026-10-28",
+      "state": "OH",
+      "city": "Warren",
+      "county": "Trumbull",
+      "territory": null,
+      "event_type": "confirmed_future_maternity_unit_closure",
+      "service_line": "hospital_obstetrics_labor_and_delivery",
+      "access_consequences": "Mercy Health has confirmed that labor and delivery at St. Joseph Warren Hospital will end by early December 2026, with hospital deliveries consolidated at St. Elizabeth Boardman Hospital. Local prenatal and postpartum care will continue; the Warren maternity space will become a 25-bed inpatient unit. Patients who previously delivered at the Warren site must use the Boardman location or another maternity provider; specific travel time and last service day are unverified.",
+      "affected_population": "Pregnant patients and families relying on hospital labor and delivery services in Warren and surrounding Trumbull County, Ohio.",
+      "effective_date": null,
+      "announcement_date": "2026-10-28",
+      "confidence": "high",
+      "source_role": "strong_local_reporting_with_direct_health_system_press_release_statements_syndicated_mirror",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line U.S. and territories recall, not primary nationwide collection; production collector remains authoritative.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T194225-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Opened the official CMS Public Notices listing before targeted searches. The most recent entries were October 23 home-health-agency termination notices; no newer provider termination, rescission, CLIA limitation/suspension, or similar notice was listed."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 1,
+    "targeted_queries": [
+      "October 28 2026 hospital emergency department closing suspends service rural medical center US",
+      "October 28 2026 hospital maternity labor delivery unit closure suspension announced",
+      "October 28 2026 ambulance EMS air medical base closure service suspended",
+      "October 28 2026 hospital psychiatric inpatient behavioral health unit closes suspends",
+      "St Joseph Warren hospital end labor delivery December 2026 Mercy Health October 28 2026 WKBN",
+      "October 28 2026 emergency department ambulance services close terminate hospital hours",
+      "October 28 2026 dialysis clinic closing patients oncology primary care access",
+      "October 28 2026 rural hospital closure reopening services emergency maternity confirmed",
+      "site:mercy.com St. Joseph Warren December labor 2026",
+      "site:wkbn.com St. Joseph Warren labor and delivery October 28 2026",
+      "October 28 2026 hospital service closure emergency room EMS new primary care Puerto Rico Guam American Samoa",
+      "October 28 2026 ambulance service ceases operation air medical base closure reopening local news"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "CMS",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "disposition": "no_new_official_notice",
+        "detail": "Newest notices date to October 23."
+      },
+      {
+        "publisher": "WKBN (AOL syndicated copy)",
+        "url": "https://www.aol.com/articles/st-joseph-warren-hospital-ending-195522000.html",
+        "disposition": "included_new_to_watch_retrospective_same_day_recall_pending_review",
+        "detail": "Mercy Health confirms early-December closure of Warren labor and delivery and transfer of deliveries to St. Elizabeth Boardman. Report was published earlier October 28 and updated 00:50 UTC October 29 (17:50 PDT October 28); this predates the current 19:43–20:46 PDT observation window. Exact closure day unknown. No production dedup verified."
+      },
+      {
+        "publisher": "San Gorgonio Memorial Hospital",
+        "url": "https://www.sgmh.org/files/852ed1157/SGMH%2BOB%2BPublic%2BClosure%2BNotice.pdf",
+        "disposition": "excluded_previously_announced_future_closure",
+        "detail": "Official notice shows board initiated discontinuation process August 25, 2026, with intended December 31 cessation; no new October 28 change established."
+      },
+      {
+        "publisher": "Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_duplicate_prior_supplementary_watch",
+        "detail": "Sanford Luverne maternity closure was already in 11:51 PDT verified watch heartbeat."
+      },
+      {
+        "publisher": "WGN (AOL syndicated report)",
+        "url": "https://www.aol.com/articles/maternity-ward-roseland-hospital-faces-183053000.html",
+        "disposition": "excluded_previously_announced",
+        "detail": "Roseland maternity closure effective October 31 had been announced earlier; October 28 follow-up did not establish a new decision."
+      },
+      {
+        "publisher": "Guam Regional Medical City",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "disposition": "excluded_older_temporary_interruption",
+        "detail": "October 17 notice on October 19 clinics closure is outside the observation window."
+      },
+      {
+        "publisher": "WAND",
+        "url": "https://www.wandtv.com/2026/09/16/air-evac-closes-base-decatur-airport/",
+        "disposition": "excluded_older_air_medical_base_closure",
+        "detail": "Decatur air-medical base closure occurred in September."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "WKBN original website",
+        "issue": "Original wkbn.com reporting inaccessible to direct retrieval because of robots.txt restrictions.",
+        "fallback": "Full local WKBN report was retrieved and verified via its AOL syndicated copy.",
+        "coverage_impact": "Original page could not be independently opened; report's relevant quoted Mercy Health statement is accessible."
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "Twelve targeted searches plus CMS are non-exhaustive. The one candidate is a same-day retrospectively recovered miss rather than an announcement occurring within the strict hourly window. Previous supplementary watch heartbeat did not list it, but direct production queue deduplication was not performed. Date of actual cessation within early December is unconfirmed.",
+    "controls": "No review approval, public publication, production collector modification, schedule change, or disabling. Exactly one private heartbeat is intended for this execution."
+  }
+}

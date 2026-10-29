@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T214249-0700-r11-20261029T044249Z",
+  "scheduled_for": "2026-10-28T21:42:49-07:00",
+  "started_at": "2026-10-28T21:42:49-07:00",
+  "completed_at": "2026-10-28T21:43:27-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T20:43:15-07:00",
+    "end_at": "2026-10-28T21:43:27-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified durable Food Line heartbeat on ops/watch-ledger completed at 20:43:15 PDT on 2026-10-28; check covers new qualifying developments since that time.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded Food Line recall watch only; authoritative nationwide production collection remains unchanged.",
+    "12 targeted recency-one-day web searches returned usable results: 4 sole/last/full-service grocery loss, 3 canceled storm/fire/disaster distributions, 2 abrupt pantry/food-bank closure/access reduction, 3 SNAP/WIC/EBT immediate interruptions.",
+    "No newly reported and independently verifiable qualifying event since the previous watch. Search results mostly reflected historic grocery, pantry and benefit-interruption reports; no current official SNAP/WIC service interruption with immediate access consequences was confirmed.",
+    "Kauaʻi October 28 Hurricane Lowell recovery update confirms a mobile pantry distribution remains scheduled for Friday, rather than canceled. Hurricane resource-center closure does not establish interruption of a food distribution: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "Santa Clarita Valley Food Pantry strike closure dates to January 27, 2026: https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102.",
+    "El Pasoans Fighting Hunger storm damage/closure dates to September 2026, outside window: https://spectrumlocalnews.com/tx/austin/news/2026/09/28/el-paso-braces-for-another-round-of-rain-after-already-shutting-down-a-food-bank-.",
+    "October 28 SNAP suspension search results were principally October 2025 shutdown stories, not October 2026 interruptions: https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-lone-star-card-how-to-help/.",
+    "No editorial approval, public publication, schedule modification, automation disablement or production collector change. Limitations: very recent local/provider notices may not yet be indexed; some returned matches are outside the search window.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 28 2026 town",
+        "\"last grocery store\" \"October 28, 2026\" closing",
+        "\"only supermarket\" fire closing Wednesday October 28 2026",
+        "\"full-service grocery store\" closing October 28 2026 rural",
+        "\"food distribution\" canceled storm October 28 2026",
+        "\"food pantry\" distribution cancelled power outage October 28 2026",
+        "\"food bank\" emergency distribution suspended flooding October 28 2026",
+        "\"food pantry\" abruptly closed October 28 2026",
+        "\"food bank\" closes temporarily damage October 28 2026",
+        "\"SNAP benefits\" \"service interruption\" October 28 2026",
+        "\"WIC\" \"office closure\" benefits October 28 2026",
+        "\"EBT\" \"outage\" \"October 28, 2026\" state"
+      ]
+    }
+  ]
+}

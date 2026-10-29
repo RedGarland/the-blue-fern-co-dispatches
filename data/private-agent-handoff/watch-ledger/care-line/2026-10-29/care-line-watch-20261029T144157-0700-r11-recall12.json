@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T144157-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T14:45:22-07:00",
+  "started_at": "2026-10-29T14:41:57-07:00",
+  "completed_at": "2026-10-29T14:43:33.678-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T13:41:59.915-07:00",
+    "end": "2026-10-29T14:43:33.678-07:00",
+    "basis": "Previous verified Care Line heartbeat completed at 13:41:59.915 PDT. The October 29 VHC report is an earlier same-day recall candidate newly detected in this watch, not a claim its publication or service change occurred during this hour."
+  },
+  "findings": [
+    {
+      "finding_id": "care-2026-10-29-vhc-west-springfield-primary-care-closure",
+      "canonical_source_url": "https://www.bizjournals.com/washington/news/2026/10/29/vhc-health-national-landing-west-springfield.html",
+      "title": "Health system closes National Landing urgent care, West Springfield primary care location",
+      "publisher": "Washington Business Journal",
+      "exact_supporting_passage": "Health system closes National Landing urgent care, West Springfield primary care location",
+      "source_published_date": "2026-10-29",
+      "state": "Virginia",
+      "city": "West Springfield",
+      "county": "Fairfax County",
+      "territory": null,
+      "event_type": "primary_care_location_closure",
+      "service_line": "primary care",
+      "access_consequences": "VHC Health's West Springfield primary care location has closed. The source preview identifies a separate National Landing urgent-care closure while noting primary care remains at National Landing. Exact closure dates, alternative arrangements and number of patients affected could not be verified from available article text.",
+      "affected_population": "Patients using the West Springfield VHC primary care location; number unknown.",
+      "effective_date": null,
+      "announcement_date": null,
+      "confidence": "medium-high",
+      "source_role": "local_reporting",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; Care Line production collection remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T134040-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T13:41:59.915-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Official CMS listing inspected before targeted web searches; newest visible notices still dated October 23, 2026."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "October 29 2026 hospital emergency department closes suspends services rural local news",
+      "October 29 2026 labor delivery maternity unit hospital closing suspension",
+      "October 29 2026 behavioral health psychiatric inpatient unit closing suspends",
+      "October 29 2026 dialysis oncology cancer clinic closure patients",
+      "October 29 2026 ambulance EMS station service suspended shut down",
+      "October 29 2026 air ambulance medevac base shutting down closure",
+      "October 29 2026 primary care health center clinic closing patients",
+      "October 29 2026 hospital emergency maternity service reopens resumes restored",
+      "October 29 2026 rural hospital urgent care emergency service cut closure",
+      "October 29 2026 Guam CNMI Saipan American Samoa clinic hospital closure suspension",
+      "October 29 2026 Puerto Rico US Virgin Islands hospital clinic services closed suspended",
+      "October 29 2026 hospital closes emergency room obstetrics ambulance local report"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Sanford Luverne Medical Center scheduled labor and delivery discontinuation",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "reason": "October 28 announcement was already noted by previous watch; October 29 republication does not constitute a new service change."
+      },
+      {
+        "title": "Roseland Community Hospital maternity-unit closure",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Previously documented and reported October 28."
+      },
+      {
+        "title": "Baptist Health central OB Hub",
+        "url": "https://arkadelphian.com/2026/10/29/baptist-health-launches-central-ob-hub-for-delivery-hospitals/",
+        "reason": "New coordination program, not restoration of previously lost essential service."
+      }
+    ],
+    "adjacent_service_change": {
+      "title": "VHC Health National Landing urgent-care clinic closure",
+      "source_url": "https://www.bizjournals.com/washington/news/2026/10/29/vhc-health-national-landing-west-springfield.html",
+      "disposition": "Documented in supporting source/context but not separately counted: urgent care is outside the watch's specifically enumerated ED/emergency-service classes; primary care at National Landing reportedly remains available."
+    },
+    "source_failures": [
+      {
+        "source": "Washington Business Journal article body",
+        "issue": "Full article inaccessible in web view (JavaScript/subscription gating); headline, publisher, publication date, updated time and accessible preview provide direct closure evidence but not effective dates or patient arrangements.",
+        "materiality": "Limits details of one qualifying finding; full detail unavailable, so run marked DEGRADED rather than aborting."
+      }
+    ],
+    "limitations": "Search-based coverage is necessarily non-exhaustive, especially territorial local outlets. The VHC item was published October 29 and updated at 2:07pm EDT (11:07am PDT), before this search window, but was not in the previous verified watch ledger; record is a same-day recall, not a confirmed newly occurring change within the hour. Production deduplication remains outstanding.",
+    "controls": "Exactly one private heartbeat; findings pending_review only; no approval, public publication, production modifications, schedule change, or task disabling."
+  }
+}

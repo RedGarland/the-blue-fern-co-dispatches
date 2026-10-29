@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T154501-0700-r11-20261029T224613Z",
+  "scheduled_for": "2026-10-29T15:45:54-07:00",
+  "started_at": "2026-10-29T15:45:01-07:00",
+  "completed_at": "2026-10-29T22:46:13.787Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T21:48:38.220Z",
+    "end_at": "2026-10-29T22:46:13.787Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completion of preceding verified Food Line Source Watch heartbeat (14:48:38.220 PDT); search prioritizes events first reported or verifiable after that time rather than crawl timestamps.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; production nationwide Food Line collector is authoritative and was not queried or changed.",
+    "Executed 12 bounded targeted web searches across sole/last/full-service grocer losses (4), storm/fire/outage-canceled emergency distributions (3), abrupt pantry/food-bank closures or material access reductions (2), and newly official SNAP/WIC/EBT/food-assistance interruption (3). All searches returned responses; no material query or source access failures encountered.",
+    "No verified, newly reported qualifying disruption within the current observation window. Results included historical closure/fire stories and generic retail/food-security coverage without a new qualifying incident.",
+    "October 29 WAMC rural grocery-store report is a broader assessment, not a new last/sole grocer closure: https://www.wamc.org/news/2026-10-29/report-on-the-state-of-rural-grocery-stores-in-the-adirondacks-released .",
+    "October 29 Pittsburgh Wegmans opening announcement adds supply rather than losing grocery access; excluded: https://www.post-gazette.com/business/development/2026/10/29/wegmans-galleria-grocery-mt-lebanon/stories/202610290063 .",
+    "Kauaʻi Oct 28 Hurricane Lowell recovery notice explicitly says the Foodbank mobile-pantry distribution remains scheduled Friday, 4–5 PM, Hale Līhuʻe; this is neither a cancellation nor newly published within the watch window: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ .",
+    "SNAP/WIC searches surfaced older October 2025 government-shutdown coverage and undated/generic program material, but no newly verifiable official benefits interruption in this observation interval.",
+    "Search-index latency, incomplete local-news indexing, and the intentionally narrow 12-query recall mean no_findings does not establish nationwide absence.",
+    "No content approved/published, no social post, no production collection mutation, no schedule modification, and no task disabling.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T144733-0700-r11-20261029T2148Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T21:48:38.220Z",
+      "bounded_query_context": [
+        "October 29 2026 \"only grocery store\" fire closure town",
+        "October 29 2026 \"last grocery store\" closing community",
+        "October 29 2026 \"sole grocery\" flooded fire destroyed",
+        "October 29 2026 \"full-service grocery store\" shut down community",
+        "October 29 2026 emergency food distribution canceled storm flooding",
+        "October 29 2026 food pantry distribution cancelled power outage damage",
+        "October 29 2026 food bank emergency distribution suspended hurricane",
+        "October 29 2026 food pantry closed unexpectedly residents access",
+        "October 29 2026 food bank pantry temporarily closed fire flooding",
+        "October 29 2026 SNAP EBT benefits outage access state official",
+        "October 29 2026 WIC benefits system outage closed official state",
+        "October 29 2026 food assistance benefits delayed interrupted agency notice"
+      ]
+    }
+  ]
+}

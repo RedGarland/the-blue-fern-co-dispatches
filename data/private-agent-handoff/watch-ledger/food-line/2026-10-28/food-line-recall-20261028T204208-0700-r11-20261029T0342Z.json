@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T204208-0700-r11-20261029T0342Z",
+  "scheduled_for": "2026-10-28T20:42:08-07:00",
+  "started_at": "2026-10-28T20:42:08-07:00",
+  "completed_at": "2026-10-28T20:43:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T19:43:13-07:00",
+    "end_at": "2026-10-28T20:43:15-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Read latest available prior durable Food Line heartbeat on ops/watch-ledger, completed 19:43:13 PDT on 2026-10-28; evaluated newly reported incidents rather than recrawls of old sources.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded Food Line recall; primary nationwide production collector remains authoritative. No editorial approval, publication, schedule adjustment, or disablement.",
+    "All 12 targeted web searches returned results without tool errors: 3 for sole/last/full-service grocery loss; 3 for storm/fire/flood/disaster distribution cancellation; 3 for abrupt pantry/food-bank service loss; 3 for immediate official SNAP/WIC/EBT interruptions.",
+    "No verifiable new nonduplicate qualifying U.S. food-access disruption published or discovered for this watch interval. Search indexing delays, unindexed local notices, and provider-only updates remain limitations.",
+    "Spencer, New York sole-grocery fire was reported September 11-14, 2026, outside this interval: https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/.",
+    "October 28 Kauaʻi Hurricane Lowell recovery article had already been reviewed by prior watch and does not establish a new cancellation: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "Ashe Food Pantry October 27 demand-rise article concerns usage pressure, not abrupt facility closure or service access reduction in the target classes: https://www.ashepostandtimes.com/news/a-perfect-storm-requests-for-help-rise-nearly-30-at-ashe-food-pantry/article_f9a99fa1-e650-45dc-8896-3bb8881ee0e3.html.",
+    "Previous El Paso storm-damage food-bank closure was from an earlier month; Ruby's Pantry multi-site closure was April 2026; older SNAP benefit interruption reports predate this window. Excluded promotions, routine distributions, resource guides, non-U.S. items, and duplicate/historical events.",
+    "No new official SNAP/WIC/EBT interruption with immediate verified access consequences was found.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" \"October 28, 2026\" closed fire town",
+        "\"last grocery store\" fire closure \"Oct 28\" \"2026\"",
+        "\"full service grocery\" storm damage closed October 28 2026",
+        "\"food distribution\" canceled October 28 2026 storm flood food bank",
+        "\"food distribution\" postponed \"October 29\" 2026 hurricane storm",
+        "\"food bank\" distribution canceled Wednesday Oct 28 2026 weather",
+        "\"food pantry\" abruptly closing October 28 2026",
+        "\"food pantry\" temporarily closed Oct 28 2026 flooding outage",
+        "\"food bank\" suspends services today October 28 2026",
+        "site:gov SNAP EBT interruption outage October 28 2026 benefits",
+        "site:gov WIC offices closed hurricane October 28 2026",
+        "\"SNAP\" \"EBT\" \"outage\" \"October 28, 2026\" state"
+      ]
+    }
+  ]
+}

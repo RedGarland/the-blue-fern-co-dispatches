@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T014424-0700-r11-20261029T084600Z",
+  "scheduled_for": "2026-10-29T01:45:54-07:00",
+  "started_at": "2026-10-29T01:44:24-07:00",
+  "completed_at": "2026-10-29T01:46:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T00:44:32.344-07:00",
+    "end_at": "2026-10-29T01:46:00-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Immediately preceding durable Food Line watch heartbeat on ops/watch-ledger completed 2026-10-29T00:44:32.344-07:00; restrict positive findings to newly verifiable qualifying disruptions in the subsequent observation window.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; production Food Line nationwide collector remains authoritative.",
+    "All 12 bounded targeted web searches returned usable material, including fresh local-news pages and official-domain queries; no search/tool failure occurred. Four classes checked: loss of sole/last/full-service grocery; weather/damage-related emergency distribution cancellations; abrupt pantry/food-bank shutdowns or major reductions; official immediate SNAP/WIC/EBT interruptions.",
+    "No disruption established to have newly occurred or been published during the October 29, 2026 00:44:32–01:45 Pacific observation window.",
+    "KNOE reported closure of Dubach, Louisiana community food pantry after a council vote, published October 28 at 18:25 CDT (16:25 PDT), hours BEFORE the previous check, with no independently dated new development during this run window; excluded as out-of-window despite high-value subject matter: https://www.knoe.com/2026/10/28/dubach-food-pantry-closes-after-town-council-vote/",
+    "KLKN reported Wymore, Nebraska had lost its final grocery store on October 27 at 14:46 CDT; excluded as out-of-window: https://www.klkntv.com/city-of-wymore-seeks-residents-input-after-last-grocery-store-closes/",
+    "Other returned articles were older grocery fires or store closures, historical food-bank/pantry service disruptions, older federal SNAP shutdown coverage (mostly 2025), current benefit-card security proposals without interrupted access, or service distributions that remained scheduled.",
+    "No qualified canceled emergency distribution or newly documented immediate official SNAP/WIC/EBT benefits interruption was verified. Search-index lag and unindexed local/official notices remain possible.",
+    "No editorial review decisions, publication, social posting, changes to the production collector, schedule, or task state.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 28 2026 town",
+        "\"last grocery store\" closure October 28 2026 community",
+        "\"sole grocery store\" fire October 28 2026",
+        "\"food distribution\" canceled storm October 28 2026",
+        "\"food pantry\" \"closed\" \"October 28, 2026\" emergency",
+        "\"food bank\" \"suspended\" services October 28 2026",
+        "site:gov \"SNAP\" \"October 28, 2026\" benefits delay interruption",
+        "site:gov \"WIC\" \"October 28, 2026\" service outage closed",
+        "\"Wymore Super Foods\" closure 2026 October 28",
+        "grocery store \"only\" shut down \"Oct. 28, 2026\"",
+        "\"food pantry\" \"closed\" \"Oct. 29, 2026\"",
+        "site:gov SNAP WIC EBT outage \"October 29, 2026\""
+      ],
+      "web_search_recency_days": 2
+    }
+  ]
+}

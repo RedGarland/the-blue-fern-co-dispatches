@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T164710-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T16:45:22-07:00",
+  "started_at": "2026-10-29T16:47:10-07:00",
+  "completed_at": "2026-10-29T16:49:56-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T15:47:37.785-07:00",
+    "end": "2026-10-29T16:49:56-07:00",
+    "basis": "Previous independently verified Care Line watch heartbeat completed 15:47:37.785 PDT. October 29 same-day reports were assessed for previously unrecorded high-value access loss. New discovery is distinguished from event and article timestamps."
+  },
+  "findings": [
+    {
+      "finding_id": "care-2026-10-29-massillon-ovp-80-bed-addiction-recovery-center-closure",
+      "canonical_source_url": "https://www.aol.com/articles/80-bed-recovery-center-closes-164727000.html",
+      "title": "80-bed recovery center closes at Massillon health hub after 8 months",
+      "publisher": "The Massillon Independent (syndicated via AOL)",
+      "exact_supporting_passage": "It shut its doors on Oct. 16 due to apparent medical reimbursement shortfalls.",
+      "source_published_date": "2026-10-29",
+      "state": "Ohio",
+      "city": "Massillon",
+      "county": "Stark County",
+      "territory": null,
+      "event_type": "behavioral_health_residential_treatment_closure",
+      "service_line": "inpatient/residential substance use disorder treatment and addiction recovery",
+      "access_consequences": "An 80-bed addiction recovery facility operated by Ohio Valley Physicians Health at the Massillon Community Health & Innovation Center, 870 Amherst Road NE, reportedly stopped operating on October 16, 2026. This is a newly discovered same-day published recall, not an event occurring in the present hourly window. Further confirmation of patient transfers and operator statement is unavailable.",
+      "affected_population": "Patients seeking residential addiction recovery treatment in Massillon/Stark County and surrounding areas; number of occupied beds or transferred patients unknown.",
+      "effective_date": "2026-10-16",
+      "announcement_date": null,
+      "confidence": "medium",
+      "source_role": "local_reporting_syndicated_search_preview",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall; production collection remains authoritative. This watch does not approve or publish any candidate.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T154637-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T15:47:37.785-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Direct CMS listing checked first; latest notices were October 23, including home-health termination notices in CA and OH. No newly dated official termination, rescission or CLIA notice."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "October 29 2026 hospital emergency department closed shut down service announced Thursday USA",
+      "October 29 2026 hospital maternity labor delivery obstetrics closing announced service",
+      "October 29 2026 behavioral health psychiatric facility closed suspended patient care clinic",
+      "October 29 2026 dialysis oncology chemotherapy primary care clinic closing service patients",
+      "October 29 2026 rural hospital emergency service closed suspension county news",
+      "October 29 2026 ambulance EMS station air medical helicopter base closed suspended flights",
+      "October 29 2026 CMS state health department emergency suspension CLIA provider termination rescission facility service",
+      "October 29 2026 hospital emergency department reopened resumed admissions after closure",
+      "October 29 2026 Guam Saipan Northern Mariana Islands health center hospital clinic medical service closure suspension",
+      "October 29 2026 Puerto Rico US Virgin Islands hospital emergency dialysis clinic ambulance health services suspended",
+      "October 29 2026 American Samoa clinic hospital primary care emergency medical service closed restored",
+      "October 29 2026 outpatient treatment rehabilitation substance use detox clinic closing permanent services patient transfers local news"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Letty Owings Center residential treatment closure, Portland",
+        "url": "https://www.investigatewest.org/portland-drug-treatment-center-is-shuttering/",
+        "reason": "Previously explicitly identified and excluded at 05:43 and later Care Line watch heartbeats: operator announced in September, stopped admissions in July and plans end-of-October closure. October 29 reporting is retrospective, not a new qualifying hourly change; no duplicate finding recorded."
+      },
+      {
+        "title": "Greene County ambulance contract talks, Illinois",
+        "url": "https://wlds.com/greene-co-board-tables-action-on-placing-county-ambulance-service-out-for-bid/",
+        "reason": "Board tabled bidding and current contract expires November 9; no actual suspension, loss or restoration established."
+      },
+      {
+        "title": "Sanford Luverne and Roseland maternity developments",
+        "url": null,
+        "reason": "Previously reported in earlier same-day recall heartbeats, with no new concrete implementation during this window."
+      },
+      {
+        "title": "Guam typhoon-related clinic service interruption",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "October 17 notice for October 19 clinic closure predates the present observation window."
+      },
+      {
+        "title": "UNM HSC cybersecurity-related ambulance diversion and restoration",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "October 26-28 disruption already documented in previous watches."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://www.aol.com/articles/80-bed-recovery-center-closes-164727000.html",
+        "failure": "Full syndicated Massillon Independent story could not be opened (DisabledError). Search-index preview supplied reporter attribution, publication timestamp, location, 80-bed capacity, October 16 closure and supporting passage; exact source body and patient disposition remain unverified.",
+        "impact": "Partial verification of one newly discovered qualifying recall; search coverage otherwise remained useful."
+      }
+    ],
+    "limitations": "Twelve search queries provide targeted recall only; complete territorial/local-news coverage cannot be guaranteed. Massillon closure occurred October 16 and October 29 article publication predates the current hourly window; it is marked as an unrecorded same-day recall discovery, not a newly effective change. Production deduplication pending.",
+    "controls": "Exactly one private ops/watch-ledger heartbeat; no approval, public publication, production collector modifications, schedule changes or task disabling."
+  }
+}

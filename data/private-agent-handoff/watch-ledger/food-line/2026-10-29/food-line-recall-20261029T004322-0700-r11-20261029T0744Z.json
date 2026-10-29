@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T004322-0700-r11-20261029T0744Z",
+  "scheduled_for": "2026-10-29T00:45:54-07:00",
+  "started_at": "2026-10-29T00:43:22-07:00",
+  "completed_at": "2026-10-29T07:44:32.344-00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T23:45:15.595-07:00",
+    "end_at": "2026-10-29T07:44:32.344-00:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Immediately preceding durable Food Line watch heartbeat completed at 2026-10-28T23:45:15.595-07:00; supplementary recall for newly verifiable disruptions since that check.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only across four audit-priority classes; authoritative Food Line national production collection remains unchanged.",
+    "All 12 targeted web searches completed with 2-day recency preference: 3 sole/last/full-service grocery losses, 3 weather/damage emergency food-distribution cancellations, 3 abrupt pantry/food-bank closures or service reductions, 3 official SNAP/WIC/EBT access interruptions. No search/tool failure was reported.",
+    "No newly reported, sufficiently evidenced qualifying U.S. food-access disruption was established inside the 2026-10-28 23:45:15–2026-10-29 00:44 Pacific observation window.",
+    "Search returned an October 27 Utah account of Community Action Services' planned Heber City pantry closure and immediate Provo pantry hours reduction; it predates the observation window and contains conflicting reports about Heber service status, so is excluded from this run. https://hoodline.com/2026/10/provo-food-bank-cuts-15-jobs-will-shutter-heber-pantry-in-november/",
+    "Kauaʻi Hurricane Lowell recovery coverage dated October 28 says a Hawaiʻi Foodbank Kauaʻi mobile pantry emergency distribution remained scheduled for Friday, not canceled. https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Other returns were older grocery fires, historical food bank closures, past SNAP/WIC interruption articles (mostly 2025), planned assistance or generic resource notices, or unrelated jurisdictions; excluded. Search-index latency and unindexed provider notices remain possible.",
+    "No approvals, publication, social posting, production collector, schedule, or task-state changes were made.",
+    {
+      "bounded_query_context": [
+        "October 29 2026 \"only grocery store\" closed fire community",
+        "October 28 2026 \"last grocery store\" closure disaster supermarket",
+        "October 29 2026 \"full service grocery\" fire closed rural town",
+        "October 29 2026 food bank distribution canceled storm flood outage",
+        "October 28 2026 emergency food distribution cancelled due to storm power outage",
+        "October 29 2026 food pantry distribution suspended damage flooding",
+        "October 29 2026 food pantry suddenly closed services suspended",
+        "October 28 2026 food bank temporarily closes service food access",
+        "October 29 2026 food pantry hours cut immediate closure clients",
+        "site:gov October 29 2026 SNAP EBT benefits delayed system outage state notice",
+        "site:gov October 28 2026 WIC services suspended office closure outage",
+        "October 29 2026 official SNAP food assistance interruption EBT system down"
+      ],
+      "web_search_recency_days": 2
+    }
+  ]
+}

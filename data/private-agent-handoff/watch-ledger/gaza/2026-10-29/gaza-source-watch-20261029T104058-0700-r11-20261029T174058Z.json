@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T104058-0700-r11-20261029T174058Z",
+  "scheduled_for": "2026-10-29T10:44:51-07:00",
+  "started_at": "2026-10-29T10:40:58-07:00",
+  "completed_at": "2026-10-29T10:42:44.694-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T09:46:35.392-07:00",
+    "end": "2026-10-29T10:42:44.694-07:00",
+    "basis": "The immediately preceding immutable ops/watch-ledger Gaza heartbeat was fetched and verified. Event and publication times govern novelty; crawler timestamps do not. Schedule timestamp reflects nominal 10:44:51 recurrence; this invocation started early at the supplied 10:40:58 local run time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; the authoritative Gaza production collector/publisher is unchanged.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T094450-0700-r11-20261029T164450Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T094450-0700-r11-20261029T164450Z.json",
+      "completed_at": "2026-10-29T09:46:35.392-07:00",
+      "verified": "Fetched exact file through GitHub connector on ops/watch-ledger before searching; directory listing confirmed it was the latest available heartbeat."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listing 27 October West Bank snapshot, 26 October Gaza situation report for 22 October. No in-window Gaza report."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no dated in-window Gaza health-system, ambulance, medical evacuation, fuel, or hospital-functioning change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway, pre-existing source-specific restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 29 2026 latest 20:00 local airstrike civilians hospital injuries WAFA",
+      "site:english.wafa.ps 29/October/2026 Gaza casualties killed wounded latest",
+      "site:aljazeera.com/news/2026/10/29 Gaza ceasefire killed wounded October 29",
+      "site:reuters.com/world/middle-east/ October 29 2026 Gaza Israel ceasefire civilians",
+      "site:un.org/unispal 29 October 2026 Gaza civilian humanitarian aid crossings",
+      "site:reliefweb.int Gaza October 29 2026 health fuel aid displacement",
+      "site:english.wafa.ps/Pages/Details/ \"29/October/2026\" \"Gaza\" 07:00 PM",
+      "site:aljazeera.net/news/2026/10/29 غزة مساء اليوم قصف مستشفى الهلال الأحمر إصابات",
+      "site:aa.com.tr/en/middle-east/ \"Oct 29, 2026\" Gaza killed civilians humanitarian",
+      "site:apnews.com/article/ October 29 2026 Gaza aid killed strikes",
+      "site:unicef.org OR site:wfp.org OR site:icrc.org Gaza \"29 October 2026\" water hospital aid",
+      "Gaza October 29 2026 20:00 Palestinian time ceasefire air strike Rafah Maghazi Shuja'iyya civilian"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Occupation",
+        "url": "https://english.wafa.ps/Regions/Details/2",
+        "result": "Accessible; newest 29 October 15:24 Palestine time article concerned displacement in Hebron in the West Bank, not Gaza. Latest Gaza item (al-Maghazi civilian vehicle strike) was published 11:51 Palestine time and was captured by previous recall."
+      },
+      {
+        "publisher": "Al Jazeera Arabic Palestine",
+        "url": "https://www.aljazeera.net/where/palestine/",
+        "result": "Accessible. October 29 Gaza casualty roundup listed but its last update was 13:32 Mecca time (03:32 PDT), before window. Header states 7 killed, body states 5; cannot reconcile count."
+      },
+      {
+        "publisher": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible, no independently verified new Gaza humanitarian or civilian-impact story published in window."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible, latest dated site news June 2026; no in-window update."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible, no in-window dated Gaza food or aid-access change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403 Forbidden, already documented."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "Restricted URL, already documented."
+      }
+    ],
+    "excluded_or_unresolved": [
+      "WAFA October 29 11:51 Palestine time: al-Maghazi civilian vehicle strike injuring several people, previously logged 03:47 PDT; not a new event for this window.",
+      "Al Jazeera October 29 al-Maghazi two deaths appeared in a 13:32 Mecca-time update (03:32 PDT) and was already noted as possible earlier follow-up. Do not duplicate or add counts without verification.",
+      "Al-Tuffah October 29 shelling with 11 wounded and PRCS transport was recorded in prior heartbeat; excluded.",
+      "October 28 Rafah/al-Mawasi and other civilian casualty incidents and historical 2025 or earlier 2026 stories are outside window.",
+      "WAFA latest October 29 Hebron displacement, demolitions and detention items concern the West Bank, not Gaza.",
+      "Al Jazeera Gaza roundup headline reports 7 killed and body 5; no timestamped new in-window update; unresolved tally inconsistency, not a distinct finding.",
+      "No newly verified in-window Gaza incident in casualty, displacement, aid/food/water, health, WASH, crossing, detention/hostage, ceasefire, or military-civilian impact classes."
+    ],
+    "access_degradation": [
+      {
+        "publisher": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Persistent known restriction, WHO global plus OCHA accessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "issue": "HTTP 403 Forbidden",
+        "materiality": "Persistent known restriction, alternative humanitarian reporting accessible."
+      },
+      {
+        "publisher": "UN News",
+        "issue": "Restricted URL",
+        "materiality": "Persistent known restriction, established news and UN sources accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to three previously documented direct-source restrictions, not a newly material watch-wide deterioration. OCHA OPT, WHO global, WAFA, Al Jazeera, Reuters, PRCS and WFP were accessible, and 12 additional targeted searches completed.",
+    "notification_assessment": "No new qualifying nonduplicate in-window finding; no newly material failure/degradation. Do not notify.",
+    "safeguards": "Exactly one immutable heartbeat JSON only on ops/watch-ledger. No publication, approvals, social posting, production collector, schedule changes or task disabling."
+  }
+}

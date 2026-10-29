@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T024841-0700-r11-20261029T094938Z",
+  "scheduled_for": "2026-10-29T02:45:54-07:00",
+  "started_at": "2026-10-29T02:48:41-07:00",
+  "completed_at": "2026-10-29T02:49:38-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T01:46:00-07:00",
+    "end_at": "2026-10-29T02:49:38-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Immediately preceding confirmed durable Food Line watch heartbeat on ops/watch-ledger completed 2026-10-29T01:46:00-07:00; report only newly verifiable qualifying disruptions since that check.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; authoritative nationwide Food Line production collector unchanged.",
+    "Completed 12 targeted web searches spanning sole/last/full-service community grocery losses; storm/flood/fire/outage/damage cancellations of emergency food distributions; abrupt food pantry/food bank service interruptions; and new official SNAP/WIC/EBT benefits interruptions with immediate food access consequences.",
+    "No newly published or independently substantiated qualifying disruption was found within October 29, 2026 01:46–02:49 PDT. Search results predominantly referenced historical incidents or unrelated material; do not treat search recency or crawl time as event publication time.",
+    "Excluded out-of-window grocery-store losses in Wymore, Nebraska (reported October 27, 2026), Spencer, New York (September 2026), Eastport, Maine (August 2026), and older local closures. Dubach, Louisiana food-pantry closure was already identified as October 28 at 16:25 PDT in the prior heartbeat; no fresh development established.",
+    "Excluded September 2026 El Paso food bank weather-damage suspension; October 2025 SNAP shutdown stories; June 2026 Illinois WIC outage; routine service guidance, promotional items, generic inflation, and non-U.S. incidents.",
+    "A Parachute, Colorado grocery closure retrospective/rewrite appeared in search results, but no change newly arising in this observation window could be established.",
+    "No official state/provider notice in the period confirmed a new immediate SNAP/WIC/food assistance disruption or a newly canceled emergency distribution. Local unindexed notices/search-index lag remain coverage limitations, not observed execution failure.",
+    "No review approval, publication, public posting, schedule change, task disablement, or production collection mutation occurred.",
+    {
+      "bounded_query_context": [
+        "October 29 2026 \"only grocery store\" closed fire town",
+        "October 28 2026 \"last grocery store\" closure fire rural",
+        "\"sole grocery store\" damaged fire closed October 2026",
+        "food bank \"distribution canceled\" storm flooding October 28 2026",
+        "food pantry \"distribution cancelled\" outage storm October 29 2026",
+        "food pantry \"temporarily closed\" \"October 28\" \"2026\" damage",
+        "SNAP benefits outage interruption delayed October 29 2026 state agency",
+        "WIC EBT benefits unavailable outage October 28 2026 state",
+        "\"Oct 29, 2026\" \"food pantry\" \"closed\" OR \"cancelled\" -2025",
+        "\"Oct 28, 2026\" \"food bank\" \"closed\" flood storm fire",
+        "\"Oct 29, 2026\" \"grocery\" \"only\" closed town -2025",
+        "site:gov \"October 28, 2026\" \"SNAP\" \"outage\" OR \"delayed\" OR \"suspended\""
+      ],
+      "web_search_recency_days": [
+        1,
+        2
+      ]
+    }
+  ]
+}

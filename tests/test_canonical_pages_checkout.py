@@ -366,13 +366,19 @@ def test_cli_requires_explicit_create_and_reports_retained_refusal(fixture):
 
 
 def test_ci_selects_new_safety_suite_without_dropping_existing_guards():
-    workflow = (Path(__file__).parents[1] / ".github/workflows/dispatch-validation.yml").read_text()
-    commands = [line for line in workflow.splitlines() if "run: python -m pytest" in line]
+    import shlex
+    import yaml
+
+    workflow = yaml.safe_load((Path(__file__).parents[1] / ".github/workflows/dispatch-validation.yml").read_text())
+    commands = [step["run"] for step in workflow["jobs"]["validate"]["steps"]
+                if step.get("name") == "Run focused validation tests"]
     assert len(commands) == 1
+    selected = shlex.split(commands[0])
+    assert selected[:3] == ["python", "-m", "pytest"]
     for name in ("test_canonical_pages_checkout.py", "test_gaza_public_history_reconciliation.py",
                  "test_gaza_correction_activation.py", "test_compact_pytest_basetemp.py",
                  "test_validation_profiles.py", "test_fixture_lifecycle.py"):
-        assert commands[0].count("tests/" + name) == 1
+        assert selected.count("tests/" + name) == 1
 
 
 def test_duplicate_real_stage_zero_index_entry_must_refuse(fixture):

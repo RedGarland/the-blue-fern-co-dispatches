@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T075007-0700-r11-20261029T145106Z",
+  "scheduled_for": "2026-10-29T07:45:54-07:00",
+  "started_at": "2026-10-29T07:50:07-07:00",
+  "completed_at": "2026-10-29T07:51:06.275-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T06:46:20.691-07:00",
+    "end_at": "2026-10-29T07:51:06.275-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the verified prior Food Line Source Watch heartbeat completed_at on ops/watch-ledger. Restrict inclusion to newly verifiable qualifying developments since that check.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall for high-value Food Line misses only; nationwide production collection remains authoritative.",
+    "Completed 12 targeted web searches: sole/last/full-service grocery-store loss (3), disaster or outage-related food-distribution cancellations (3), abrupt food pantry/food-bank service closure or reduction (3), immediate official SNAP/WIC/EBT interruption (3).",
+    "No qualifying new U.S. food-access disruption with verifiable immediate impact was established since 2026-10-29 06:46:20 Pacific. Search result recency was not equated with event publication date.",
+    "Relevant Kauaʻi County hurricane-recovery article dated Oct 28 confirms a Friday emergency food distribution remains scheduled rather than canceled: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ .",
+    "Other results included historical grocery closure/disaster reports, October 2025 SNAP shutdown pieces, October 7 or 23, 2026 general policy/participation reporting and routine assistance resources, not qualifying new interruptions.",
+    "No search/source request failed materially in this run. Negative supplemental findings do not establish comprehensive nationwide absence.",
+    "No review approval, public publication, production runner change, task schedule alteration or disabling occurred.",
+    {
+      "bounded_query_context": [
+        "October 29 2026 \"only grocery store\" closed fire town",
+        "October 29 2026 \"last grocery store\" fire closure community",
+        "October 28 29 2026 rural \"full-service grocery\" shutting down fire",
+        "October 29 2026 \"food distribution\" canceled storm flood hurricane",
+        "October 29 2026 \"food pantry\" distribution cancelled power outage fire",
+        "October 29 2026 \"food bank\" suspended distribution damage weather",
+        "October 29 2026 pantry closing abruptly community food access",
+        "October 29 2026 food bank closed indefinitely lost facility service",
+        "October 29 2026 \"food pantry\" temporarily closed due to fire outage",
+        "October 29 2026 state SNAP benefits delayed interrupted EBT outage official",
+        "October 29 2026 WIC clinic shut down services outage state agency",
+        "site:gov October 29 2026 SNAP WIC emergency benefits service interruption EBT failure"
+      ]
+    }
+  ]
+}

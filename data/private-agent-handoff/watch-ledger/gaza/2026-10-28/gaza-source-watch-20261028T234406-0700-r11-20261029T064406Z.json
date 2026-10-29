@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T234406-0700-r11-20261029T064406Z",
+  "scheduled_for": "2026-10-28T23:44:51-07:00",
+  "started_at": "2026-10-28T23:44:06-07:00",
+  "completed_at": "2026-10-28T23:47:49.513-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T22:50:49.871-07:00",
+    "end": "2026-10-28T23:47:49.513-07:00",
+    "basis": "Previous Gaza Source Watch heartbeat completed 22:50:49.871 PDT, verified on ops/watch-ledger; current observation completed at 23:47:49.513 PDT. Source and event dates independently evaluated; source publishing hour unavailable."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261029-al-tuffah-sanfur-home-shelling-11-injured-aj-arabic",
+      "canonical_source_url": "https://www.aljazeera.net/news/2026/10/29/5-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%8840-%D9%85%D8%B5%D8%A7%D8%A8%D8%A7-%D9%81%D9%8A-%D8%AA%D9%88%D8%A7%D8%B5%D9%84-%D8%A7%D9%84%D9%82%D8%B5%D9%81",
+      "title": "Eleven Palestinians, including women and children, reportedly injured in shelling of a home in Gaza City's Al-Tuffah neighborhood",
+      "publisher": "Al Jazeera Arabic",
+      "source_date": "2026-10-29",
+      "publication_date": "2026-10-29",
+      "event_date": null,
+      "location": "Near Al-Sanafour (Sanfur) junction, Al-Tuffah neighborhood, northeastern Gaza City, Gaza Strip",
+      "affected_population_or_system": "11 Palestinians reportedly injured, including women and children; Palestine Red Crescent Society ambulance teams reportedly transported 11 injured people to Al-Saraya field hospital in Gaza City",
+      "exact_supporting_passage": "وأصيب 11 فلسطينيا بينهم نساء وأطفال جراء إطلاق قذيفة مدفعية إسرائيلية على منزل قرب مفترق السنافور في حي التفاح",
+      "source_type": "Established news outlet, Arabic agency-compiled reporting attributing medical transport to a Palestine Red Crescent Society statement; PRCS original statement was not directly retrieved",
+      "new_or_follow_up": "new",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_during_run": "2026-10-28T23:44:06-07:00 to 2026-10-28T23:47:49.513-07:00",
+        "source_local_publication_date": "2026-10-29",
+        "source_publication_hour": null,
+        "event_time": null,
+        "verification": "Al Jazeera Arabic article directly read (29 Oct 2026); article describes this event before 'earlier Wednesday' incidents, consistent with a fresh Thursday report, but does not independently timestamp the shelling or posting. PRCS attributed 11 casualty transport; official PRCS site did not show this statement in its public homepage news list.",
+        "deduplication": "Previous 22:50:49.871 PDT Gaza heartbeat lists no finding and covered pre-29 Oct Gaza reports. Earlier Gaza City artillery report from live update (27 Oct source date) counted seven injured but lacked exact location and incident time; cannot prove incident non-overlap. Do not sum the eleven with the seven or totals in the compilation. Treat as newly surfaced distinct Al-Tuffah home-shelling report pending editorial cross-check.",
+        "limits": "Exact incident/publication hour and independent PRCS statement unavailable; article's 5 deaths and ~40 injuries aggregate repeats multiple 28 Oct incidents, not promoted as new."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production collector/editor/publisher remains authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T224948-0700-r11-20261029T054948Z",
+      "completed_at": "2026-10-28T22:50:49.871-07:00",
+      "verified_by": "GitHub compare_commits and fetch_file, ops/watch-ledger",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-28/gaza-source-watch-20261028T224948-0700-r11-20261029T054948Z.json"
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Most recent overall update 27 Oct is West Bank; latest Gaza humanitarian report published 26 Oct covering 22 Oct. No in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible via official WHO homepage Gaza emergency link; no in-window dated hospital, ambulance, medical evacuation, fuel or functioning-capacity change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway (previously documented source-specific access restriction)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 28 2026 late evening new casualties Israeli attacks 28 October 2026",
+      "site:ochaopt.org Gaza 28 October 2026 humanitarian situation latest aid crossing",
+      "site:who.int Gaza 28 October 2026 hospitals medical evacuation health aid",
+      "Gaza 28 October 2026 evening civilian casualties injuries medics ambulance Reuters AFP AP",
+      "site:unicef.org Gaza 28 October 2026 water children damage aid",
+      "Gaza 28 October 2026 crossing Rafah Kerem Shalom aid access deliveries WFP",
+      "October 29 2026 Gaza early morning latest Reuters Palestinian casualties ceasefire",
+      "October 28 2026 Gaza Wednesday late night Al Jazeera live Palestinians injured killed",
+      "October 28 2026 Gaza new displacement flooding rainfall municipal drainage shelters",
+      "October 28 2026 Gaza Palestinian medical evacuation hospitals ambulance oxygen generator fuel",
+      "October 28 2026 Gaza aid convoy food deliveries WFP UNRWA closures Kerem Shalom Rafah",
+      "October 28 2026 Gaza ceasefire negotiations hostages detention releases strikes civilians"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/10/29/5-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%8840-%D9%85%D8%B5%D8%A7%D8%A8%D8%A7-%D9%81%D9%8A-%D8%AA%D9%88%D8%A7%D8%B5%D9%84-%D8%A7%D9%84%D9%82%D8%B5%D9%81",
+        "result": "Direct 29 Oct dated agency-compiled article reports 11 injured Al-Tuffah home shelling and PRCS ambulance transfer; no exact publication hour; incident time not independently verified."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Current top latest Gaza casualty items dated Oct 28 16:23 and 13:24 local Ramallah time; earlier known reports. No new 29 Oct Gaza item visible."
+      },
+      {
+        "publisher": "Al Jazeera English",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Gaza winter flooding article dated Oct 28 already logged; no newly dated distinct Gaza item on listing."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Homepage accessible but site news list does not verify the attributed Oct 29 incident; no official original statement retrieved."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible emergency overview; no newly dated in-window food-assistance operation change."
+      }
+    ],
+    "excluded_or_unresolved": [
+      "Al Jazeera Arabic 29 Oct summary's five fatalities and approximately 40 injuries largely reflect incidents described as Wednesday 28 Oct (including Rafah checkpoint strike, Khan Younis, Nuseirat and Deir al Balah); do not treat aggregate as fresh casualties.",
+      "Prior 28 Oct Gaza city seven-injury artillery live headline may share broad region but event identity is not sufficiently documented; eleven-injury home-shelling report is flagged for deduplication and must not be added to cumulative totals.",
+      "Earlier 28 Oct flooding, 20% municipal drainage capacity, and WFP funding cut are recycled/out of hourly window.",
+      "West Bank-only events, election commentary, unsupported social claims, and older dated results excluded.",
+      "Publication time and direct PRCS corroboration of Al-Tuffah event unavailable. Source dated 29 Oct Gaza local; date alone does not establish exact hourly inclusion. Newly surfaced relative to preceding checked heartbeat, retained at medium rather than high confidence."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO oPt",
+        "issue": "HTTP 502",
+        "materiality": "Persistent prior known restriction; WHO global and OCHA OPT accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED for continuing WHO EMRO source-specific 502; useful OCHA, WHO global and alternate reporting coverage remained. No newly material watch-wide failure.",
+    "coverage_assessment": "OCHA OPT and WHO first, 12 supplementary targeted searches total, direct checks of WAFA, AJ English/Arabic, PRCS and WFP. One newly surfaced Al-Tuffah casualty report from established publisher, with publication-hour and independent-source limitations. No additional confirmed new in-window classes.",
+    "notification_assessment": "One newly surfaced qualifying casualty report at medium confidence with dedupe caution; report rather than suppress as no_findings.",
+    "safeguards": "Exactly one new private-ledger heartbeat, ops/watch-ledger only. No approvals, public publication, production collector, social, schedule, or task-disable changes."
+  }
+}

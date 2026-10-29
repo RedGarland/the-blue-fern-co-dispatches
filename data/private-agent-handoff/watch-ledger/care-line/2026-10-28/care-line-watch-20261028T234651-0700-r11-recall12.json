@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T234651-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T23:45:22-07:00",
+  "started_at": "2026-10-28T23:46:51-07:00",
+  "completed_at": "2026-10-28T23:48:18.699-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T22:45:18-07:00",
+    "end": "2026-10-28T23:48:18.699-07:00",
+    "basis": "End of immediately preceding directly verified Care Line Watch heartbeat to this run completion."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary national/territorial high-value recall for concrete healthcare service loss/restoration and CMS access-risk notices; authoritative production collection is not modified.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T224353-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Opened official CMS table before targeted searches. Latest are three Oct 23 home-health termination notices (CA, CA, OH). No Oct 28 new termination, rescission, CLIA limitation/suspension, or similar notice."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing closed suspended services October 28 2026 United States",
+      "hospital labor delivery maternity unit to close October 28 2026 announcement",
+      "rural hospital emergency department shutting down temporarily October 28 2026",
+      "behavioral health psychiatric inpatient unit closure suspends admissions October 28 2026",
+      "dialysis clinic closure patients October 28 2026",
+      "cancer center oncology treatment service closure October 28 2026",
+      "primary care clinic closing patients October 28 2026",
+      "ambulance service EMS ceases operations October 28 2026",
+      "air ambulance helicopter base closure October 28 2026",
+      "hospital emergency maternity reopens resumes services October 28 2026",
+      "site:cms.gov/medicare/health-safety-standards \"2026-10-28\" \"termination\"",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana Islands hospital clinic ambulance closure October 28 2026"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "publisher": "Santa Cruz Local",
+        "url": "https://santacruzlocal.org/2026/10/28/watsonville-community-hospital-moves-to-shutter-labor-and-delivery/",
+        "source_published_at": "2026-10-28T22:49:35-07:00",
+        "reason": "Watsonville Community Hospital maternity closure remains conditional and not final; local article says second reading and formal 120-day notice pending, no effective closure and service continues. Potential early March 2027 change not a concrete access effect within watch window."
+      },
+      {
+        "publisher": "The Pajaronian",
+        "url": "https://pajaronian.com/pvhcd-board-recommends-closure-of-labor-delivery-nicu/",
+        "source_published_date": "2026-10-28",
+        "reason": "Corroborates 3-2 board recommendation to initiate conditional closure notice. Labor/delivery remains open, outcome reversible if funding improves; do not equate formal deliberation with completed service closure. NICU had already closed in July."
+      },
+      {
+        "publisher": "Minnesota Public Radio / Star Tribune",
+        "url": "https://www.mprnews.org/story/2026/10/28/sanford-luverne-to-end-labor-and-delivery-services-in-april-2027",
+        "reason": "Sanford Luverne maternity closure was already recorded in an earlier Oct 28 recall heartbeat; duplicate."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Roseland maternity unit closure already announced/previously reviewed; rally is not a new effective service change."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://www.ksat.com/health/2026/10/26/a-cybersecurity-issue-forces-a-major-new-mexico-hospital-to-divert-patients-and-close-clinics/",
+        "reason": "UNM Health interruption dated Oct 26; restoration already recorded in earlier watch. Not new in this window."
+      },
+      {
+        "publisher": "KSL",
+        "url": "https://www.ksl.com/article/51641229/new-pediatric-unit-to-help-davis-county-families-stay-close-to-home",
+        "reason": "New pediatric unit expansion rather than abrupt restoration of a previously lost essential service, and initial report predates window."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Only twelve bounded search queries; search indices can lag local announcements. CMS table current as accessed; no independent production collection dedup required for positives because none qualified. Board closure proposal remains worth follow-up only after definitive effective service change, not a watch finding.",
+    "controls": "No approval, publication, schedule changes or disabling. Exactly one heartbeat JSON for this execution."
+  }
+}

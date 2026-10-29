@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261028T214430-0700-r11-recall12",
+  "scheduled_for": "2026-10-28T21:45:22-07:00",
+  "started_at": "2026-10-28T21:44:30-07:00",
+  "completed_at": "2026-10-28T21:45:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T20:46:41-07:00",
+    "end": "2026-10-28T21:45:23-07:00",
+    "basis": "From the preceding committed supplementary Care Line heartbeat completion through this watch. Also checked recent source updates for previously announced events, excluding duplicates and retrospective stories."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S.-and-territory Care Line recall. Production collector is authoritative; no production deduplication, approval, or publication was performed.",
+    "previous_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-28/care-line-watch-20261028T204342-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Directly retrieved official CMS Public Notices before search queries; latest listed notices dated October 23 (California and Ohio home-health terminations); no October 28 provider termination, rescission, CLIA limitation/revocation, or other newly posted access-risk notice."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 1,
+    "targeted_queries": [
+      "October 28 2026 hospital emergency department closed tonight suspended emergency services local news",
+      "October 28 2026 hospital labor delivery maternity unit closure announced evening",
+      "October 28 2026 hospital behavioral health inpatient psychiatric unit closure announced",
+      "October 28 2026 ambulance EMS rescue squad service suspended closed air medical base",
+      "October 28 2026 dialysis oncology cancer center clinic closure suspension patients",
+      "October 28 2026 rural health clinic primary care hospital closure emergency department reopening",
+      "Oct 28 2026 \"reopen\" emergency department hospital ambulance services restored",
+      "Oct 28 2026 \"temporarily closed\" \"emergency department\" hospital overnight",
+      "Oct 28 2026 \"will close\" \"emergency\" hospital services announced",
+      "Oct 28 2026 \"suspend\" ambulance services emergency medical base",
+      "October 28 2026 hospital clinic closure medical services Puerto Rico Guam Virgin Islands Northern Mariana Islands American Samoa",
+      "Oct 28 2026 new oncology dialysis primary care clinics closing patients local news"
+    ],
+    "checked_candidate_sources": [
+      {
+        "publisher": "University of New Mexico Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "disposition": "excluded_duplicate_previously_restored",
+        "detail": "October 28 12:39 p.m. MDT update reconfirmed all clinical operations fully functional; October 27 update established restoration of ambulance traffic and clinic appointments. No new change in this hourly window."
+      },
+      {
+        "publisher": "WKBN 27 First News (syndicated by AOL)",
+        "url": "https://www.aol.com/articles/st-joseph-warren-hospital-ending-195522000.html",
+        "disposition": "excluded_previous_watch_finding",
+        "detail": "Mercy Health St. Joseph Warren labor-and-delivery shutdown by early December 2026 already recorded in previous 20:43 PDT supplemental heartbeat as pending_review."
+      },
+      {
+        "publisher": "Minnesota Star Tribune",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "disposition": "excluded_previous_watch_finding",
+        "detail": "Sanford Luverne scheduled maternity closure already recorded earlier October 28 as pending_review; no new in-window decision."
+      },
+      {
+        "publisher": "CBS News Chicago",
+        "url": "https://www.cbsnews.com/chicago/news/rally-roseland-community-hospital-end-labor-and-delivery-services/",
+        "disposition": "excluded_retroactive_coverage",
+        "detail": "October 28 daytime rally concerning an already announced October 31 Roseland Community Hospital obstetric unit closure, not a new closure decision."
+      },
+      {
+        "publisher": "The Hoboken Girl",
+        "url": "https://www.hobokengirl.com/heights-university-hospital-jersey-city-close/",
+        "disposition": "excluded_old_event",
+        "detail": "Heights University Hospital emergency department March 2026 discontinuation, not an October 28 event."
+      }
+    ],
+    "search_summary": "Twelve targeted web searches covered hospitals/ED, maternity, inpatient behavioral health, ambulances/air-medical, dialysis, oncology, primary care, emergency/rural service loss and reopening, plus U.S. territories. Recent results were primarily previously identified events, older reports, non-U.S. incidents, or proposals. No confirmed new qualifying healthcare-access change was found in the window.",
+    "source_failures": [],
+    "limitations": [
+      "Search indexing and publication time lags mean no_findings is not proof that no access event occurred.",
+      "Supplementary watch does not access production collector state or guarantee production deduplication; previous watch heartbeats were checked to exclude repeats."
+    ],
+    "side_effects": "One private watch-ledger heartbeat only. No approvals, publication, social posts, schedule changes, disabling, or production-run mutations."
+  }
+}

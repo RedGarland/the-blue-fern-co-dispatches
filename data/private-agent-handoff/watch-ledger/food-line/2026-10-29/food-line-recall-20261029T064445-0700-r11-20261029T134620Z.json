@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T064445-0700-r11-20261029T134620Z",
+  "scheduled_for": "2026-10-29T06:45:54-07:00",
+  "started_at": "2026-10-29T06:44:45-07:00",
+  "completed_at": "2026-10-29T06:46:20.691-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T05:47:28-07:00",
+    "end_at": "2026-10-29T06:46:20.691-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "The prior verified Food Line Source Watch heartbeat on ops/watch-ledger completed at 2026-10-29T05:47:28-07:00; screen only newly verifiable qualifying disruptions since that check.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2,
+      3
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded high-value miss-class recall only; nationwide Food Line production collection remains authoritative.",
+    "Completed 12 targeted searches across last/only/full-service grocery loss (4), storm/fire/outage-related emergency food distribution cancellations (3), abrupt pantry/food-bank service loss (3), and official immediate SNAP/WIC benefits or service interruption (2).",
+    "No newly verified qualifying U.S. food-access disruption was established for the October 29, 2026 05:47–06:46 Pacific observation window. Search result snippets were assessed by actual publication date and applicability, not crawler recency.",
+    "The results chiefly pointed to older grocery-fire stories, broad government indexes and policy pages, historic SNAP delay reporting, and routine listings; no direct primary notice or newly dated local incident met the criteria.",
+    "Guam DPHSS homepage currently lists an October 27 water-service-related temporary office closure, already considered in an earlier watch and outside this hourly interval: https://dphss.guam.gov/. The same page's listed November 28 WIC clinic closure is a future calendar entry, not an immediate interruption.",
+    "No source/search operation materially failed in this execution; search relevance and temporal indexing are inherently limited, so a negative supplemental search does not assert nationwide absence.",
+    "No approval, public publication, production collection changes, schedule alterations, or task disabling occurred.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 29 2026 town USA",
+        "\"last grocery store\" closing fire \"October 29\" \"2026\"",
+        "\"sole grocery store\" fire shutdown October 2026 community",
+        "\"full service grocery store\" burned closed October 28 29 2026 rural",
+        "\"food distribution\" canceled storm flooding \"October 29, 2026\"",
+        "\"food pantry\" \"distribution canceled\" power outage October 29 2026",
+        "\"food bank\" \"distribution cancelled\" storm fire Oct 29 2026 US",
+        "\"food pantry\" \"closed indefinitely\" \"October 29\" 2026",
+        "\"food bank\" \"suspended services\" October 29 2026",
+        "\"food pantry\" \"temporarily closed\" fire October 28 29 2026",
+        "site:gov \"SNAP\" \"benefits delayed\" \"October 29, 2026\"",
+        "site:gov \"WIC\" \"service interruption\" October 2026"
+      ]
+    }
+  ]
+}

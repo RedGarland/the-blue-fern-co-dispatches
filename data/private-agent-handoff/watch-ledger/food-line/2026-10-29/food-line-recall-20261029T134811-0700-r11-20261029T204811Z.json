@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T134811-0700-r11-20261029T204811Z",
+  "scheduled_for": "2026-10-29T13:45:54-07:00",
+  "started_at": "2026-10-29T13:48:11-07:00",
+  "completed_at": "2026-10-29T20:50:13.695Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T19:46:42.325Z",
+    "end_at": "2026-10-29T20:50:13.695Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at from the immediately prior verified Food Line Source Watch heartbeat, persisted on ops/watch-ledger at 2026-10-29 12:46:42 PDT. Qualifying event/source publication timing assessed separately from crawl timing.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary high-value Food Line recall only; production nationwide collection remains authoritative and was not modified.",
+    "Completed 12 targeted news/web queries, three each for sole/last/full-service grocery-store loss, weather/disaster/outage-driven distribution cancellation, abrupt pantry/food-bank shutdown or major reduction, and official immediate SNAP/WIC/EBT disruption. All 12 search requests returned results; no qualifying source was uninspectable.",
+    "No newly published/verified food-access disruption satisfying the four scoped miss classes was confirmed since the previous 12:46:42 Pacific heartbeat. A blank result is not evidence that no incidents occurred nationwide.",
+    "Excluded September 14 report of Spencer, New York's only grocery store burning down: historical, well before observation interval (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/).",
+    "Excluded October 28 Kauaʻi hurricane recovery bulletin: Hawaiʻi Foodbank Kauaʻi listed Friday's emergency food distribution as still scheduled, not canceled (https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/).",
+    "Excluded October 27 Delaware coverage of meals made available to schoolchildren after Lulu M. Ross Elementary fire: meal distributions operated, not canceled, and report predates window (https://www.wboc.com/news/food-distribution-sites-providing-meals-to-those-who-are-facing-food-insecurity-after-recent-fire/article_e888e699-d55f-46af-aa99-58b9ab7d7660.html).",
+    "Excluded October 29 Reuters retrospective on August freezer malfunctions at at least six U.S. military commissaries: cybersecurity investigation newly reported, but no newly occurring sole-grocer closure, emergency food distribution cancellation, pantry shutdown, or current official assistance interruption (https://www.reuters.com/technology/pentagon-treating-military-base-freezer-malfunctions-suspected-cyberattack-2026-10-29/).",
+    "Excluded older Ruby's Pantry closures, historical grocery losses, preannounced closures, resource or donation promotion, and general food-price coverage; no verified new official SNAP/WIC/EBT outage.",
+    "Search output freshness/crawl timestamps do not establish new events; the observation window is narrow and limited to specified miss classes.",
+    "No approval, publishing, posting, production collector mutation, schedule modification or disabling occurred.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T124539-0700-r11-20261029T194614Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T19:46:42.325Z",
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire \"October 29, 2026\"",
+        "\"last grocery store\" closure fire \"October 29\" 2026",
+        "community sole full service grocery store destroyed fire closing October 2026 local news",
+        "food distribution canceled due to storm flooding Thursday October 29 2026",
+        "food bank canceled food distribution weather outage fire October 29 2026",
+        "emergency food giveaway postponed flood storm October 29 2026",
+        "food pantry suddenly closed permanently October 29 2026 local news",
+        "food bank services suspended closure damaged building October 29 2026",
+        "pantry shut down October 29 2026 no longer distributing food",
+        "SNAP benefits EBT outage interruption October 29 2026 state agency",
+        "WIC service benefits interruption October 29 2026 state health department",
+        "official SNAP WIC office closure outage benefits delayed October 29 2026"
+      ]
+    }
+  ]
+}

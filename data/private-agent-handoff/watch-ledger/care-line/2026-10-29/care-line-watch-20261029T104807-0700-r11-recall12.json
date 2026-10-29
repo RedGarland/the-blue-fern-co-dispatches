@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T104807-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T10:45:22-07:00",
+  "started_at": "2026-10-29T10:46:41-07:00",
+  "completed_at": "2026-10-29T10:48:07-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T09:44:04.774-07:00",
+    "end": "2026-10-29T10:48:07-07:00",
+    "basis": "From independently verified previous Care Line Watch heartbeat completed_at through this recall scan; published date alone cannot place a report inside the hourly interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall only. Primary national production collector is authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T094250-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T09:44:04.774-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Current CMS Public Notices listing found no Oct 29/Oct 28 entries; latest posted terminations are Oct 23 home health agencies in CA and OH. An obsolete CMS URL initially failed, after which the canonical official listing was successfully checked before targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 29 2026 hospital emergency department closing announced Thursday patients service shutdown",
+      "October 29 2026 labor delivery maternity neonatal hospital closing today announcement",
+      "October 29 2026 rural hospital emergency service suspended closure effective",
+      "October 29 2026 EMS ambulance service station base shuts down coverage county",
+      "October 29 2026 air medical ambulance helicopter base closure suspended response",
+      "October 29 2026 psychiatric behavioral health residential treatment center closing beds",
+      "October 29 2026 dialysis oncology cancer infusion clinic closing services patients",
+      "October 29 2026 primary care clinic temporary closure reopening lost service Guam Saipan Puerto Rico Virgin Islands",
+      "site:gov \"October 29, 2026\" \"hospital\" \"closure\" \"emergency\" services",
+      "\"Oct. 29, 2026\" \"ambulance\" \"suspended\" OR \"closed\" United States",
+      "\"Oct. 29, 2026\" \"reopened\" \"emergency department\" OR \"maternity\" hospital",
+      "\"October 29, 2026\" \"hospital\" \"clinic\" closure \"Puerto Rico\" OR \"Guam\" OR \"Virgin Islands\" OR \"American Samoa\" OR \"Saipan\""
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "title": "Hospital Beds for the Nation's Sickest Kids Are Disappearing",
+        "publisher": "KFF Health News via Flathead Beacon",
+        "url": "https://flatheadbeacon.com/2026/10/29/hospital-beds-for-the-nations-sickest-kids-are-disappearing/",
+        "reason": "Retrospective previously identified PICU/pediatric inpatient service losses; no new event in interval."
+      },
+      {
+        "title": "A longtime Portland drug treatment center is shuttering as similar programs for moms face trouble",
+        "publisher": "InvestigateWest",
+        "url": "https://www.investigatewest.org/portland-drug-treatment-center-is-shuttering/",
+        "reason": "Letty Owings residential treatment closure announced prior to hourly interval; identified in prior 05:43 watch, duplicate/retrospective."
+      },
+      {
+        "title": "TONHC Ambulatory Care Services Closed on Nov. 2, 2026, and Nov. 11, 2026",
+        "publisher": "Tohono O'odham Nation",
+        "url": "https://www.tonation-nsn.gov/tonhc-ambulatory-care-services-closed-on-nov-2-2026-and-nov-11-2026/",
+        "source_published_date": "2026-10-27",
+        "reason": "Official routine future scheduled closure announcement posted Oct 27; not an abrupt new access loss in current hourly window."
+      },
+      {
+        "title": "State says it will keep 25 mental health beds at Choate",
+        "publisher": "Capitol News Illinois",
+        "url": "https://capitolnewsillinois.com/news/state-says-it-will-keep-25-mental-health-beds-at-choate-expand-regional-jobs/",
+        "reason": "Previously reviewed planned partial phaseout into 2027 and unchanged access; not a newly effective closure."
+      },
+      {
+        "title": "UNM Health cybersecurity incident recovery",
+        "publisher": "UNM Health Sciences Center",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Oct 28 previously recorded restoration, not new in window."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "obsolete CMS URL",
+        "severity": "non-material",
+        "resolution": "Official CMS Public Notices retrieved successfully from canonical URL before all targeted searches."
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "Search-based supplementary recall is not comprehensive; some targeted searches returned unrelated or stale/overseas matches. No independently verified new qualifying service loss, CMS action, ambulance closure or effective restoration in the hourly interval. Production collector not independently audited for full item-level deduplication.",
+    "controls": "Exactly one private heartbeat committed on ops/watch-ledger. No approval, public publication, production alterations, schedule changes, or task disabling."
+  }
+}

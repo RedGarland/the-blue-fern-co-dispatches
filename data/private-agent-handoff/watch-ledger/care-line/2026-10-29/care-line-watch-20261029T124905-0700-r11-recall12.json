@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T124905-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T12:45:22-07:00",
+  "started_at": "2026-10-29T12:49:05-07:00",
+  "completed_at": "2026-10-29T19:50:54.942+00:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T10:48:07-07:00",
+    "end": "2026-10-29T19:50:54.942+00:00",
+    "basis": "The last independently verified prior Care Line Watch heartbeat was completed at 10:48:07 PDT. A newer immediately preceding hourly heartbeat could not be independently identified; the widened recall window was used conservatively to avoid misses."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall only; primary national production collector remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T104807-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T10:48:07-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Current official CMS listing remained at October 23, with no newly dated provider termination, rescission or CLIA restriction in the recall interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department ER closing closed October 29 2026 rural healthcare service",
+      "labor and delivery maternity services closing suspended October 29 2026 hospital",
+      "ambulance EMS station base permanently closed suspended service October 29 2026",
+      "behavioral health psychiatric inpatient unit closing closure October 29 2026 hospital",
+      "dialysis center closure shutting patients October 29 2026",
+      "cancer oncology infusion clinic closing suspended October 29 2026 patients",
+      "primary care clinic closes permanently October 29 2026 patients",
+      "medical helicopter air ambulance base closure October 29 2026 rural",
+      "health clinic emergency department reopened service restored October 29 2026 United States after closure",
+      "site:guampdn.com OR site:saipantribune.com OR site:postguam.com health clinic hospital suspended October 29 2026",
+      "site:newsisland.com OR site:stthomassource.com OR site:elnuevodia.com hospital clinic closure services October 29 2026",
+      "rural hospital emergency medical services paused stopped operating October 29 2026 United States"
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "title": "Roseland Community Hospital labor-and-delivery suspension",
+        "publisher": "ABC7 Chicago / CBS Chicago",
+        "url": "https://www.cbsnews.com/chicago/news/rally-roseland-community-hospital-end-labor-and-delivery-services/",
+        "reason": "October 28 reporting on previously announced suspension; previously recorded."
+      },
+      {
+        "title": "Sanford Luverne Medical Center childbirth services scheduled to end",
+        "publisher": "Bring Me The News",
+        "url": "https://bringmethenews.com/minnesota-news/sanford-health-plans-to-stop-birth-services-at-luverne-hospital",
+        "reason": "Report revisits October 28 announcement already recorded; no new status change."
+      },
+      {
+        "title": "UNM cybersecurity disruption and restoration",
+        "publisher": "University of New Mexico Health Sciences",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Previously recorded October 28 incident; no independently confirmed new interruption or restoration in this window."
+      },
+      {
+        "title": "North Carolina Highway 12 reopening at Pea Island",
+        "publisher": "Island Free Press",
+        "url": "https://islandfreepress.org/outer-banks-news/n-c-12-to-reopen-on-pea-island-at-4-p-m-thursday-with-one-lane-detour-emergency-ferry-service-to-end-friday/",
+        "reason": "Road and emergency ferry access restoration, not a restoration of a qualifying healthcare service or ambulance/base."
+      },
+      {
+        "title": "MaineHealth Lincoln birthing unit closure advocacy",
+        "publisher": "Maine Beacon",
+        "url": "https://mainebeacon.com/midcoast-mothers-family-physicians-fight-mainehealths-birthing-unit-closure/",
+        "reason": "Follow-up advocacy article on pre-existing closure; no newly verified decision or effective access event in window."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "guampdn.com",
+        "failure": "robots.txt blocked access",
+        "category": "territorial local-news source",
+        "resolution": "Other web results were available, but Guam local-source coverage was not fully replicated."
+      },
+      {
+        "source": "postguam.com",
+        "failure": "robots.txt blocked access",
+        "category": "territorial local-news source",
+        "resolution": "Other web results were available, but Guam local-source coverage was not fully replicated."
+      }
+    ],
+    "material_degradation": true,
+    "limitations": "Robots restrictions blocked two Guam local news domains during territorial scan; no confirmed new qualifying service closure, ambulance/base loss, CMS action, or concrete restoration from remaining results. Search-based recall cannot establish nationwide completeness or production-item-level deduplication; the immediately previous hourly heartbeat was not independently identified.",
+    "controls": "Exactly one private heartbeat intended on ops/watch-ledger; no approval, public publication, production modification, schedule changes, or task disabling."
+  }
+}

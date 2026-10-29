@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T094906-0700-r11-20261029T164906Z",
+  "scheduled_for": "2026-10-29T09:45:54-07:00",
+  "started_at": "2026-10-29T09:49:06-07:00",
+  "completed_at": "2026-10-29T16:50:08.866Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T08:44:08-07:00",
+    "end_at": "2026-10-29T16:50:08.866Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently read Food Line Source Watch heartbeat completed_at on ops/watch-ledger; new and independently source-supported qualifying incidents only.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only; authoritative nationwide Food Line production collector remains unchanged.",
+    "Ran 12 distinct targeted web searches: sole/last/full-service grocery-store loss (3); emergency distribution cancellations due to disaster/outage/facility damage (3); abrupt food pantry/bank closure or major access reduction (3); immediate official SNAP/WIC/EBT interruption (3). Searches returned results; no material source-search access failures observed.",
+    "No newly verifiable high-value food-access disruption within 2026-10-29 08:44:08 to this completion time Pacific met the user-defined eligibility rules. Web-index recency and article age may differ; searched results included older and unrelated reports.",
+    "Inspected fresh Kaua‘i Now Hurricane Lowell recovery bulletin dated October 28, 2026: Hawai‘i Foodbank Kaua‘i's remaining distribution is scheduled Friday, not canceled; no qualifying immediate new service loss. https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Excluded Ruby's Pantry cross-Midwest shutdown from March/April 2026, older grocery-store closures, Oct 2025 SNAP interruption stories and general SNAP policy discussion as historical/out-of-window.",
+    "No official newly issued acute SNAP/WIC issuance/service interruption independently established. No donation drives, routine resource guides, opinion, generic inflation reporting, or unverified duplicates retained.",
+    "Some result indexing prioritized older lexical matches despite recency filter; absence of verified findings is not proof of no disruptions nationwide. Follow-up is within primary production collector or next watch.",
+    "No approval, public publication/posting, schedule adjustment, primary production mutation, or disabling.",
+    {
+      "bounded_query_context": [
+        "October 29 2026 \"only grocery store\" closed fire town",
+        "October 29 2026 \"last grocery store\" fire closing community",
+        "October 29 2026 \"sole grocery store\" \"closed\" rural",
+        "October 29 2026 food bank distribution canceled storm flood outage",
+        "October 29 2026 food pantry distribution cancelled weather damage",
+        "October 29 2026 emergency food distribution suspended flooding fire",
+        "October 29 2026 food pantry suddenly closes operations community",
+        "October 29 2026 food bank closes until further notice access",
+        "October 29 2026 pantry forced to shut down food assistance",
+        "October 29 2026 SNAP EBT benefits interrupted outage state notice",
+        "October 29 2026 WIC benefits service interruption outage state",
+        "October 29 2026 SNAP benefit issuance delayed state agency notice"
+      ]
+    }
+  ]
+}

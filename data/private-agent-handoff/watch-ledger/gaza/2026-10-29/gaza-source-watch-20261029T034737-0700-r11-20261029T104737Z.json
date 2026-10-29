@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T034737-0700-r11-20261029T104737Z",
+  "scheduled_for": "2026-10-29T03:44:51-07:00",
+  "started_at": "2026-10-29T03:47:37-07:00",
+  "completed_at": "2026-10-29T03:49:34.296-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T02:48:58.067-07:00",
+    "end": "2026-10-29T03:49:34.296-07:00",
+    "basis": "Continuation from verified prior ops/watch-ledger Gaza heartbeat completion. Newly published reports in the observation window count as discoveries when not previously recorded; incident occurrence time is separately treated as unknown."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261029-almaghazi-civilian-vehicle-injuries-wafa-176424",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176424",
+      "title": "Several Palestinians injured in Israeli airstrike on civilian vehicle in central Gaza",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-29",
+      "publication_date": "2026-10-29",
+      "publication_time_local": "11:51 AM (as displayed by publisher; timezone not explicitly stated)",
+      "publication_datetime": null,
+      "event_date": "2026-10-29",
+      "event_time": null,
+      "location": "Near the entrance to al-Maghazi refugee camp, central Gaza Strip",
+      "affected_population_or_system": "Palestinian civilian vehicle occupants / people in vicinity; injuries reported, exact number not specified",
+      "affected_population_system": "Palestinian civilians in or near vehicle; reported injuries, number not specified",
+      "casualty_count_injured": null,
+      "casualty_count_killed": null,
+      "supporting_passage_exact": "Several Palestinians were injured on Thursday in an Israeli airstrike targeting a civilian vehicle",
+      "source_type": "Official Palestinian news agency report; single-source reporting",
+      "classification": "new",
+      "new_or_follow_up": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_in_watch_window": true,
+        "publication_date_and_local_clock_verified_from_source": true,
+        "source_page_displayed_time": "29/October/2026 11:51 AM",
+        "estimated_publication_time_pdt": "2026-10-29T02:51:00-07:00 (assuming publisher shows Ramallah/Israel local UTC+02; conversion not independently confirmed)",
+        "independent_corrobation": null,
+        "incident_time_verified": false,
+        "dedupe_check": "Previous completed heartbeat ended at 02:48:58 PDT, reported earlier Al-Tuffah shelling and October 28 Rafah/Nuseirat incidents but did not include this October 29 al-Maghazi vehicle strike. Distinct location and target; no additive casualty total inferred.",
+        "scope": "Newly published casualty incident report, not automatic approval or production publication."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary Gaza collector, editor and publisher remain authoritative.",
+    "prior_verified_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T024741-0700-r11-20261029T094741Z",
+      "completed_at": "2026-10-29T02:48:58.067-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T024741-0700-r11-20261029T094741Z.json",
+      "verification": "Read through connected GitHub repository on ops/watch-ledger, including previous coverage and excluded incidents."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Gaza-related news index latest situation report published 26 October for 22 October; no new in-window item."
+      },
+      {
+        "publisher": "WHO EMRO oPt news",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "result": "Failed HTTP 502. Known persistent, source-specific access limitation."
+      },
+      {
+        "publisher": "WHO global emergencies",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated in-window hospital, medical evacuation or health service change on this page."
+      },
+      {
+        "publisher": "WHO global news",
+        "url": "https://www.who.int/news",
+        "result": "Accessible. No newly dated Gaza report shown."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 29 2026 overnight Palestinians killed injured strike ambulance 2026",
+      "site:english.wafa.ps 29 October 2026 Gaza killed wounded shelling",
+      "site:aljazeera.com/news/2026/10/29 Gaza civilians attacks ceasefire",
+      "site:reuters.com/world/middle-east/ 29 October 2026 Gaza ceasefire civilians",
+      "site:unicef.org Gaza October 29 2026 children water nutrition humanitarian",
+      "site:who.int/news 29 October 2026 Gaza medical evacuation hospitals",
+      "site:palestinercs.org 29 October 2026 Gaza ambulance casualties",
+      "site:ochaopt.org 29 October 2026 Gaza crossing displacement fuel aid",
+      "site:wfp.org Gaza October 29 2026 food aid crossings",
+      "site:icrc.org/en Gaza October 29 2026 hostages medical crossings",
+      "Gaza 29 October 2026 Al Tuffah Sanafour shelling injured hospital new update",
+      "Gaza October 29 2026 09:00 UTC overnight latest deaths hospital Reuters AP"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "October 29 11:51 AM local-clock report of injuries in al-Maghazi vehicle strike. Verified article page and distinct from earlier casualty items."
+      },
+      {
+        "publisher": "WAFA October 28 previous report",
+        "url": "https://english.wafa.ps/Pages/Details/176412",
+        "result": "October 28 16:23 article recapped earlier Rafah, Nuseirat, Khan Yunis injuries; excluded as outside window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "General health emergency page, no new dated development."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible general food assistance page; no newly verifiable in-window access change."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Homepage accessible; English latest news older than watch window."
+      }
+    ],
+    "excluded_or_unresolved": [
+      "October 28 reported Rafah Ministry of Economy facility strike and Nuseirat injuries previously published before current watch; excluded as recycled.",
+      "Earlier Al-Tuffah/Al-Sanafour 11-injured shelling previously ledgered; excluded as duplicate.",
+      "Search surfaced OCHA Oct 29 reports from 2025, not 2026; excluded despite identical day/month.",
+      "No newly verified changes in displacement, crossings, food/water distribution, medical evacuation, detention/hostages, negotiations or infrastructure.",
+      "Al-Maghazi injured count and incident exact time are unknown; do not invent or combine with previous totals."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO oPt news",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Recurring source-specific failure; WHO global and OCHA accessible, so useful coverage persists. DEGRADED status rather than abort."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked before 12 targeted searches; direct WAFA and other publisher checks verified one newly surfaced civilian-casualty incident and excluded prior events.",
+    "status_rationale": "DEGRADED due to persistent WHO EMRO 502; outcome findings because one new distinct credible report was found.",
+    "notification_assessment": "Notify because one newly published qualifying casualty report found; do not characterize this as independent confirmation or a verified casualty number.",
+    "safeguards": "Only one heartbeat file to ops/watch-ledger; no publication, approval, scheduling, primary pipeline, or other mutations."
+  }
+}

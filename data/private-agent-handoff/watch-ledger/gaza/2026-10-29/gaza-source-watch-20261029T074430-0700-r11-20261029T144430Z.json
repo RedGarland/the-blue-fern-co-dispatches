@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T074430-0700-r11-20261029T144430Z",
+  "scheduled_for": "2026-10-29T07:44:51-07:00",
+  "started_at": "2026-10-29T07:44:30-07:00",
+  "completed_at": "2026-10-29T07:45:29-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T06:51:03-07:00",
+    "end": "2026-10-29T07:45:29-07:00",
+    "basis": "Start is prior verified Gaza watch-ledger heartbeat completed_at (06:51:03 PDT), read from ops/watch-ledger. Searched newly traceable Gaza developments; publication and event dates/updates were evaluated independently of web crawl times."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; authoritative production collector and publisher remain unchanged.",
+    "prior_verified_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T064932-0700-r11-20261029T134932Z",
+      "completed_at": "2026-10-29T06:51:03-07:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T064932-0700-r11-20261029T134932Z.json",
+      "verification": "Connected GitHub fetch_file read on ops/watch-ledger."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest update index has no Gaza-specific release later than 26 Oct 2026; latest listed 27 Oct entry was West Bank only. The 26 Oct Humanitarian Situation Report relates to 22 Oct; no new in-window change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway (persistent, previously documented source restriction)."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Current page has no news/publications documenting an in-window Gaza hospital, medical evacuation, fuel, or healthcare disruption change."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ 29 October 2026 17: Gaza killed injured strike civilians",
+      "site:wafa.ps 29 أكتوبر 2026 الساعة 17 غزة شهيد إصابات قصف",
+      "site:aljazeera.net/news/2026/10/29 غزة 29 أكتوبر 2026 17:00 شهداء مصابين معبر مستشفى",
+      "site:aljazeera.com/news/2026/10/29 Gaza October 29 2026 new attacks casualties humanitarian 14:00 GMT",
+      "site:reuters.com/world/middle-east/ Gaza October 29 2026 14:00 GMT strikes ceasefire aid",
+      "site:apnews.com/article/ Gaza October 29 2026 hospital civilian killed injured",
+      "site:unicef.org Gaza 29 October 2026 children water aid health",
+      "site:wfp.org Gaza 29 October 2026 food access trucks crossing",
+      "site:icrc.org Gaza 29 October 2026 Red Cross detainees hostage ambulance",
+      "site:msf.org Gaza October 29 2026 hospitals displacement medical care",
+      "site:un.org/unispal/ Gaza 29 October 2026 humanitarian operations crossings ceasefire",
+      "Gaza October 29 2026 14:00 UTC 15:00 UTC al Maghazi Al Tuffah Nasser hospital airstrike civilians AFP WAFA"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; most recent listed report at 15:24 Palestine-local (05:24 PDT) concerned displacement in Hebron, West Bank; Gaza vehicle-strike injuries article at 11:51 Palestine-local was previously logged, not new."
+      },
+      {
+        "publisher": "Al Jazeera Arabic Palestine index",
+        "url": "https://www.aljazeera.net/where/mideast/arab/palestine/",
+        "result": "Accessible. The 29 Oct Gaza casualties article had last-update time 13:32 Mecca (03:32 PDT), predating search window. Headline says seven killed but body lead says five; article separately mentions two deaths near al-Maghazi; no verified in-window update."
+      },
+      {
+        "publisher": "Al Jazeera English",
+        "url": "https://www.aljazeera.com/news/",
+        "result": "Accessible current index; no clearly verified, in-window qualifying new Gaza event."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible region index; no timestamped new in-window Gaza incident or critical humanitarian access change surfaced."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest English site news older. No newly dated Gaza ambulance/hospital operations update found."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible general emergency page; no dated new in-window Gaza food or aid access event."
+      },
+      {
+        "publisher": "ICRC",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible general page; no new in-window detainee, hostage or relief operations development."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Direct access timed out. Supplemental targeted search produced no new attributable in-window finding."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403 Forbidden (previously documented restriction)."
+      }
+    ],
+    "excluded_or_unresolved": [
+      "WAFA 29 October al-Maghazi vehicle strike injuries previously captured in the 03:47 PDT watch heartbeat; excluded as duplicate.",
+      "Al Jazeera Arabic 29 Oct report mentioned two deaths near al-Maghazi, but last updated 13:32 Mecca (03:32 PDT), before the prior watch cutoff. Earlier ledger documented this possible severity follow-up; do not double-count or treat as newly surfaced. Article has conflicting killed counts in headline and body.",
+      "Al-Tuffah shelling injuring 11 Palestinians was previously captured; no qualifying in-window follow-up.",
+      "WAFA 15:24 Palestine-local report concerns Hebron (West Bank), excluded as outside Gaza scope.",
+      "Search results containing dated 2025, September 2026, and earlier October 2026 material excluded as recycled or outside observation window.",
+      "No separately verified new Gaza civilian casualty, displacement, aid/food/water access, healthcare, hospital, infrastructure, crossing, detainee/hostage, ceasefire negotiation, or military civilian-impact change in window."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Previously documented ongoing restriction, supplemented by accessible WHO global and OCHA OPT."
+      },
+      {
+        "source": "UNRWA",
+        "issue": "HTTP 403 Forbidden",
+        "materiality": "Previously documented restriction, alternative humanitarian sources available."
+      },
+      {
+        "source": "UNICEF direct page",
+        "issue": "Direct fetch timeout",
+        "materiality": "Individual transient page timeout; targeted search and other humanitarian publishers remained available."
+      }
+    ],
+    "status_rationale": "DEGRADED for the persistent source-specific WHO EMRO and UNRWA restrictions plus a transient UNICEF timeout. Bounded searches and alternative authoritative coverage completed; no newly material watch-wide degradation.",
+    "notification_assessment": "No new qualifying in-window development or newly material watch-wide degradation; no user notification.",
+    "safeguards": "One new immutable heartbeat on ops/watch-ledger only; no collector, production, publication, approvals or schedule changes."
+  }
+}

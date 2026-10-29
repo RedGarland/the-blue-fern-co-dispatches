@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T114059-0700-r11-20261029T184227Z",
+  "scheduled_for": "2026-10-29T11:45:54-07:00",
+  "started_at": "2026-10-29T11:40:59-07:00",
+  "completed_at": "2026-10-29T18:42:27.579Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T10:51:54.038-07:00",
+    "end_at": "2026-10-29T18:42:27.579Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Verified prior watch heartbeat from ops/watch-ledger, 2026-10-29 10:51:54.038 PDT, through this run; discovery judged by source publication and event time, not search crawl time.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only. The primary nationwide Food Line production collector remains authoritative and unchanged.",
+    "Completed 12 targeted web searches (3 each for sole/last/full-service grocery loss; disaster-caused food distribution cancellations; abrupt pantry/food bank closure/access reduction; and official immediate SNAP/WIC/EBT interruption). No search execution or source-fetch failure was observed.",
+    "No independently verified new, qualifying U.S. food-access disruption first reported or newly confirmed in this observation window.",
+    "Older sole-grocery loss in Spencer, NY was dated September 14, 2026, not a new October 29 incident: https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+    "Kauaʻi hurricane-recovery bulletin (October 28, 2026) referenced food assistance rather than a newly canceled distribution: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Many retrieved SNAP shutdown or delay results concern October-November 2025, not a new 2026 immediate service interruption. A general EBT troubleshooting article was not an official outage notice: https://www.propel.app/snap/why-is-my-ebt-card-not-working-today/",
+    "Search engines returned historical and irrelevant material despite the 2-day freshness parameter; explicit date validation prevented carrying forward historical events. No recent direct official outage/cancellation notice was identified by the bounded searches.",
+    "No routine guides, donation promotions, generic inflation, historical stories or duplicates were elevated; zero pending_review findings.",
+    "Bounded searches are not an exhaustive national census, and absence of a newly found signal does not establish that no qualifying disruption occurred nationally.",
+    "Nominal hourly calendar occurrence falls at 11:45:54 PDT; runtime started at 11:40:59 PDT before that nominal timestamp. This is an early-triggered run, not evidence of publication or a schedule change.",
+    "No approvals, publication, social posting, schedule changes, or disabling were performed.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T105004-0700-r11-20261029T175004Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T17:51:54.038Z",
+      "bounded_query_context": [
+        "October 29 2026 \"only grocery store\" closed fire community",
+        "October 29 2026 \"last grocery store\" shut down town",
+        "October 29 2026 \"sole supermarket\" \"closed\" rural",
+        "October 29 2026 \"food distribution\" canceled storm flood",
+        "October 29 2026 \"food bank\" \"cancelled\" distribution weather",
+        "October 29 2026 \"mobile pantry\" \"postponed\" power outage storm",
+        "October 29 2026 food pantry abruptly closed indefinitely families",
+        "October 29 2026 \"food bank\" temporarily closed due to fire power",
+        "October 29 2026 pantry suspended operations food assistance immediate",
+        "October 29 2026 SNAP EBT system outage benefits interrupted agency notice",
+        "October 29 2026 WIC benefits service suspended card outage official notice",
+        "site:gov October 29 2026 SNAP WIC EBT delay disruption recipients"
+      ]
+    }
+  ]
+}

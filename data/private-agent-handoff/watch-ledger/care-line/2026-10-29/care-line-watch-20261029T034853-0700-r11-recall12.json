@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T034853-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T03:45:22-07:00",
+  "started_at": "2026-10-29T03:48:53-07:00",
+  "completed_at": "2026-10-29T03:50:07.376-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T02:48:41-07:00",
+    "end": "2026-10-29T03:50:07.376-07:00",
+    "basis": "From latest verified Care Line Watch heartbeat completion to this run; older or reindexed reports checked for high-value recall but not presented as newly effective events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded U.S.-and-territories healthcare-access recall. Production collector remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T024738-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T02:48:41-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS table directly opened and inspected before targeted searches. Latest entries dated October 23: My Families Healthcare (CA), 1ST AIDE HOME HEALTH AGENCY (CA), Moonlight Home Health Care Inc (OH); no new October 29 terminations, rescissions, CLIA limitations or suspensions, or comparable notices."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" hospital closure emergency department service suspended United States",
+      "\"October 28, 2026\" hospital closing emergency department rural services",
+      "\"October 29, 2026\" maternity labor delivery hospital closing",
+      "\"October 28, 2026\" psychiatric behavioral health inpatient unit closure",
+      "\"October 29, 2026\" dialysis center closing patients",
+      "\"October 28, 2026\" oncology cancer clinic closure services",
+      "\"October 29, 2026\" primary care clinic closing patient care",
+      "\"October 29, 2026\" ambulance EMS service ceases operation",
+      "\"October 28, 2026\" air ambulance base closure suspended helicopter",
+      "\"October 29, 2026\" hospital emergency department reopens resumes services",
+      "\"October 28, 2026\" hospital operations restored reopening emergency services",
+      "\"October 29, 2026\" Puerto Rico Guam Virgin Islands hospital medical services closure suspension"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "publisher": "Lookout Santa Cruz",
+        "url": "https://lookout.co/watsonville-community-hospital-board-votes-to-close-maternity-services-nicu-despite-pushback-from-community-members/story",
+        "reason": "October 28 Watsonville Community Hospital board 3-2 decision remains reversible and subject to a 120-day state notice and public hearing. Both maternity services and NICU remain operating; no actual immediate loss. Previously reviewed as conditional."
+      },
+      {
+        "publisher": "ABC7 Chicago",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "October 28 follow-up regarding previously announced Roseland labor/delivery suspension by end of October; no distinct new event in this hourly window."
+      },
+      {
+        "publisher": "WABI",
+        "url": "https://www.wabi.tv/2026/10/23/longtime-emts-retirement-ends-maines-only-all-volunteer-ambulance-service/",
+        "reason": "Previously announced October 23 Dennys River Ambulance cessation scheduled November 30; outside current hourly window."
+      },
+      {
+        "publisher": "ABC 33/40",
+        "url": "https://abc3340.com/news/local/greene-county-ems-suspends-ambulance-service",
+        "reason": "Greene County Alabama EMS temporary suspension reported months earlier; not new."
+      },
+      {
+        "publisher": "KRCR",
+        "url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times",
+        "reason": "Tehama County air ambulance base loss reported the previous month, not a new event."
+      },
+      {
+        "publisher": "WAND",
+        "url": "https://www.wandtv.com/2026/09/16/air-evac-closes-base-decatur-airport/",
+        "reason": "Air Evac Decatur base closure occurred September 2026; retrospective."
+      },
+      {
+        "publisher": "CBS Chicago",
+        "url": "https://www.cbsnews.com/chicago/news/west-suburban-medical-center-clinic-testing-outpatient-services/",
+        "reason": "Partial outpatient service resumption occurred months earlier, not new."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Twelve bounded targeted searches (October 28-29, 2026, recency 2 days) and a first-pass direct CMS check. Results skewed older/retrospective, and news indexing can lag; zero new qualifying developments could be verified in the observed window. No inference that the national collector's queue is empty.",
+    "controls": "One private heartbeat on ops/watch-ledger only; no approval, public publication, production change, schedule modification, or task disabling."
+  }
+}

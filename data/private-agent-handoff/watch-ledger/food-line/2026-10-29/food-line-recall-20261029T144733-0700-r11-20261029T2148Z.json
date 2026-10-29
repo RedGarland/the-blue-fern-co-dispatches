@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T144733-0700-r11-20261029T2148Z",
+  "scheduled_for": "2026-10-29T14:45:54-07:00",
+  "started_at": "2026-10-29T14:47:33-07:00",
+  "completed_at": "2026-10-29T21:48:38.220Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T20:50:13.695Z",
+    "end_at": "2026-10-29T21:48:38.220Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of the previous verified ops/watch-ledger Food Line Source Watch heartbeat (13:50:13 PDT); newly published or verifiable events within the interval prioritized, not search crawl time.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary targeted recall only. Authoritative nationwide production Food Line collection was not queried or modified.",
+    "Executed 12 bounded targeted web searches (four last/sole/full-service grocery losses, four hazard-related emergency distribution cancellations, two abrupt food pantry/food-bank access reductions, and two official SNAP/WIC/EBT access interruptions). All 12 executed and returned search results; direct source inspection succeeded.",
+    "No new incident satisfying the four priority classes was verified during the observation interval. Search index latency and imperfect local indexing mean this does not imply comprehensive nationwide absence.",
+    "Excluded September 14, 2026 Spencer, NY sole-grocer fire (historical): https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/ .",
+    "Excluded August 13, 2026 North Charleston, SC last full-service grocery closure (historical): https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/ .",
+    "Excluded April 1, 2026 Ruby's Pantry regional network shutdown (historical): https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites .",
+    "Inspected October 28 Kauaʻi Hurricane Lowell recovery notice. It states Hawaiʻi Foodbank Kauaʻi emergency mobile-pantry distribution remains scheduled Friday at Hale Līhuʻe; no cancellation: https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ .",
+    "No newly verified official SNAP, WIC or EBT immediate benefit interruption appeared in these targeted results; routine guidance, older closures, reopening stories, funding appeals and unrelated retail content excluded.",
+    "No approval, publication, social posting, collector mutation, schedule modification, or task disabling occurred.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T134811-0700-r11-20261029T204811Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T20:50:13.695Z",
+      "bounded_query_context": [
+        "\"only grocery store\" \"October 29, 2026\" fire closed",
+        "\"last grocery store\" closure fire October 29 2026",
+        "\"sole grocery store\" \"October 29\" 2026 closed",
+        "\"full service grocery store\" closed fire town October 29 2026",
+        "\"food distribution\" canceled storm flood October 29 2026",
+        "\"food bank\" distribution cancelled Thursday October 29 2026 weather",
+        "\"emergency food distribution\" postponed fire flood outage October 29 2026",
+        "food pantry distribution canceled hurricane Lowell October 29 2026",
+        "food pantry abruptly closes service suspended October 29 2026",
+        "\"food bank\" \"closed\" \"October 29, 2026\" services",
+        "site:gov SNAP EBT benefits outage delayed October 29 2026",
+        "site:gov WIC services temporarily suspended closed October 29 2026 outage"
+      ]
+    }
+  ]
+}

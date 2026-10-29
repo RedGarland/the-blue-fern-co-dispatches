@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T154637-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T15:45:22-07:00",
+  "started_at": "2026-10-29T15:46:37-07:00",
+  "completed_at": "2026-10-29T15:47:37.785-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T14:43:33.678-07:00",
+    "end": "2026-10-29T15:47:37.785-07:00",
+    "basis": "Previous verified Care Line watch heartbeat completed at 14:43:33.678 PDT. Search based on October 29 reports newly retrievable during this interval, with same-day recall review and explicit duplicate exclusion."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall; production national collector remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T144157-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T14:43:33.678-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Direct official listing opened before any additional targeted searches; most recent notices remained October 23, 2026. October 23 entries for CA and OH home-health agencies were previously available, not new in this window."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "October 29 2026 hospital emergency department closed suspended services local news",
+      "October 29 2026 labor delivery maternity unit closing suspended hospital news",
+      "October 29 2026 rural hospital emergency room service shutdown restoration local",
+      "October 29 2026 mental health behavioral health psychiatric treatment facility closed patients",
+      "October 29 2026 dialysis center oncology chemotherapy clinic primary care practice permanently closing patients",
+      "October 29 2026 ambulance service EMS station closure suspension county",
+      "October 29 2026 air ambulance medical helicopter base closing suspended service",
+      "October 29 2026 CMS CLIA license suspended provider termination healthcare access state agency",
+      "2026 October 29 hospital emergency department reopening after shutdown restored patient services",
+      "October 29 2026 Guam Saipan American Samoa health center clinic hospital service closure suspended",
+      "October 29 2026 Puerto Rico U.S. Virgin Islands hospital ambulance emergency service closure",
+      "Thursday October 29 2026 medical clinic urgent care health center closing \"patients\" \"service\""
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "VHC Health West Springfield primary care closure",
+        "url": "https://www.bizjournals.com/washington/news/2026/10/29/vhc-health-national-landing-west-springfield.html",
+        "reason": "Already recorded as pending_review in previous verified 14:43 PDT heartbeat; no new corroborating effective-date development located."
+      },
+      {
+        "title": "Roseland Community Hospital maternity-unit discontinuation",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Previously announced and reported October 28; no new service status or confirmed intervention since previous check."
+      },
+      {
+        "title": "Preston County ambulance service fee and contracts",
+        "url": "https://www.wdtv.com/2026/10/29/preston-county-ems-fee-fund-tops-510000-commission-works-ambulance-agreements/",
+        "reason": "Funding and pending agreements do not establish a concrete EMS service loss or restoration; report also predates current window."
+      },
+      {
+        "title": "Delta Health Home Health scheduled closure",
+        "url": "https://deltahealthco.org/news/delta-health-home-health-closure-update/",
+        "reason": "September 17 announcement of closure no later than October 31; no new implementation evidence in this window."
+      },
+      {
+        "title": "Baptist Health central OB hub",
+        "url": "https://arkadelphian.com/2026/10/29/baptist-health-launches-central-ob-hub-for-delivery-hospitals/",
+        "reason": "New coordination program, not abrupt reopening of a previously lost essential service."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "A bounded 12-search recall cannot guarantee complete US or territorial coverage; especially limited Guam, Northern Mariana Islands, American Samoa, Puerto Rico and US Virgin Islands local indexing. Unverified search matches were not treated as healthcare-access changes.",
+    "controls": "Exactly one private ledger heartbeat for this run; no content approval, publication, production changes, schedule edits or disabling."
+  }
+}

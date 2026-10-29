@@ -13,6 +13,37 @@ import pytest
 from bluefern_dispatches import canonical_pages_checkout as cp
 
 
+def _isolate_fixture_git(tmp_path, monkeypatch):
+    """Give synthetic repositories their own Git config, not the CI host's.
+
+    Only Git subprocesses confined to this test's tmp_path receive an explicit
+    system-config file. Production _git/_config_guard and their environment
+    checks are unchanged. Intentional local/HOME/XDG config remains observable;
+    tests may also populate the synthetic system file to prove refusal.
+    """
+    settings = tmp_path / "git-environment"
+    settings.mkdir()
+    home, xdg = settings / "home", settings / "xdg"
+    home.mkdir(); xdg.mkdir()
+    system = settings / "system.gitconfig"
+    system.write_text("")
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("USERPROFILE", str(home))
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(xdg))
+    real_run = subprocess.run
+
+    def fixture_run(command, *args, **kwargs):
+        if isinstance(command, (list, tuple)) and command[0] == "git":
+            assert len(command) > 2 and command[1] == "-C"
+            assert Path(command[2]).resolve(strict=True).is_relative_to(tmp_path.resolve(strict=True))
+            env = dict(kwargs.get("env") or os.environ)
+            env["GIT_CONFIG_SYSTEM"] = str(system)
+            kwargs["env"] = env
+        return real_run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", fixture_run)
+
+
 def git(root, *args, data=None):
     result = subprocess.run(["git", "-C", str(root), *args], input=data,
                             capture_output=True, check=True)
@@ -20,7 +51,8 @@ def git(root, *args, data=None):
 
 
 @pytest.fixture
-def fixture(tmp_path):
+def fixture(tmp_path, monkeypatch):
+    _isolate_fixture_git(tmp_path, monkeypatch)
     source, parent = tmp_path / "source", tmp_path / "private"
     source.mkdir(); parent.mkdir()
     template = parent.parent / "reviewed-template"; template.mkdir()
@@ -419,3 +451,28 @@ def test_redirected_git_config_refuses_before_git_reads_it(fixture, monkeypatch)
     with pytest.raises(cp.CheckoutRefused, match="link/reparse"):
         clone(fixture)
     assert not destination.exists()
+
+
+def test_fixture_system_config_remains_visible_to_production_guard(fixture):
+    _, parent, destination, _ = fixture
+    system = parent.parent / "git-environment/system.gitconfig"
+    system.write_text('[filter "synthetic"]\n\tsmudge = must-not-execute\n')
+    with pytest.raises(cp.CheckoutRefused, match="execution/redirect configuration"):
+        clone(fixture)
+    assert not destination.exists()
+
+
+def test_fixture_xdg_config_remains_visible_to_production_guard(fixture):
+    _, parent, destination, _ = fixture
+    xdg = Path(os.environ["XDG_CONFIG_HOME"]) / "git"
+    xdg.mkdir()
+    (xdg / "config").write_text('[filter "synthetic"]\n\tsmudge = must-not-execute\n')
+    with pytest.raises(cp.CheckoutRefused, match="execution/redirect configuration"):
+        clone(fixture)
+    assert not destination.exists()
+
+
+def test_fixture_git_adapter_never_runs_outside_its_synthetic_root(fixture):
+    source, _, _, _ = fixture
+    with pytest.raises(AssertionError):
+        git(source.parent.parent, "config", "--list")

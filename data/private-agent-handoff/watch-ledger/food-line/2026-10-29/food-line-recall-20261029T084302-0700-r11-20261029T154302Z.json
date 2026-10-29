@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T084302-0700-r11-20261029T154302Z",
+  "scheduled_for": "2026-10-29T08:43:02-07:00",
+  "started_at": "2026-10-29T08:43:02-07:00",
+  "completed_at": "2026-10-29T08:44:08-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T07:51:06.275-07:00",
+    "end_at": "2026-10-29T08:44:08-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the independently read prior Food Line Source Watch heartbeat completed_at on ops/watch-ledger. Newly published/confirmed qualifying disruptions only, not search-result recency.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1,
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Food Line recall only; authoritative nationwide production collection remains unchanged.",
+    "Completed exactly 12 targeted web searches: sole/last/full-service grocery loss (3); disaster/outage-driven distribution cancellations (2); abrupt food bank/pantry closure or serious service reduction (3); official SNAP/WIC/EBT interruption (4). No material search/source failure.",
+    "No newly confirmed qualifying U.S. disruption published or occurring since the prior 07:51:06 Pacific checkpoint was established. Freshly crawled historical material does not qualify as a new event.",
+    "Excluded Bienvenidos Food Bank Denver October 29 CLOSED THIS WEEK calendar entry: scheduled closure without evidence of sudden service loss or disaster-related cancellation (https://bienvenidosfoodbank.org/event/food-pantry-5-2-19/).",
+    "Excluded Montgomery County calendar listing for So What Else distributions canceled October 26–30 across Montgomery County, Washington DC and Baltimore: provider's preannounced Food Rescue Week, not storm/fire/flood/outage/facility damage or abrupt new closure (https://www.trumba.com/events-calendar/md/montgomery-county).",
+    "Excluded Central District Health Boise WIC clinic October 29 one-day staff training closure; telehealth/telephone assistance remains advertised, and this is a planned event rather than an acute benefits interruption (https://cdh.idaho.gov/news/entry/20716).",
+    "Excluded 2026-09-11/14 Spencer NY only-grocery-store fire, older grocery incidents, and October 2025 government shutdown/SNAP reports as outside this window (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/).",
+    "Excluded October 28 2026 Fredericksburg TX H-E-B store remodel (store remains operational), other retail changes without sole-food-access-loss corroboration, and generic enrollment/policy reporting.",
+    "The time window is narrow; absence of independently verified news is not evidence of zero nationwide disruptions. Only high-value audited miss classes were searched.",
+    "Run invoked at 08:43:02 Pacific, preceding nominal hourly :45:54 recurrence, so scheduled_for reflects observed invocation instead of a later nominal trigger; schedule was not modified.",
+    "No review approval, publication, posting, production collector changes, schedule alteration or disabling occurred.",
+    {
+      "bounded_query_context": [
+        "October 29 2026 last grocery store closes fire town community food access today",
+        "October 29 2026 food pantry food bank suddenly closed service suspended today",
+        "October 29 2026 food distribution canceled storm flood power outage food bank",
+        "October 29 2026 SNAP WIC EBT outage benefits delayed interruption state agency",
+        "site:gov \"October 29, 2026\" \"SNAP\" \"delayed\" \"benefits\"",
+        "site:gov \"October 29, 2026\" \"WIC\" \"closed\" \"services\"",
+        "\"October 29, 2026\" \"food pantry\" \"closed\" \"until further notice\"",
+        "\"October 29, 2026\" \"grocery store\" \"only\" \"closed\"",
+        "\"October 29, 2026\" \"food distribution\" \"canceled\" storm",
+        "\"October 29, 2026\" \"food bank\" \"closed\" flood hurricane",
+        "\"Oct 29, 2026\" \"EBT\" \"outage\" \"benefits\"",
+        "\"October 29, 2026\" \"only grocery\" fire closed rural"
+      ]
+    }
+  ]
+}

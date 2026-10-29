@@ -353,6 +353,7 @@ def test_care_line_scheduler_operational_health_includes_verify_checkout_excepti
     assert health["details"]["failed_source_diagnostics"] == []
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="Requires WindowsIdentity in the Windows-only scheduler wrapper")
 def test_care_line_windows_wrapper_writes_diagnostic_receipt_on_python_launch_failure(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     (repo / "scripts" / "windows").mkdir(parents=True, exist_ok=True)

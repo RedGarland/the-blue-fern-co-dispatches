@@ -22,10 +22,30 @@ permissions:
 
 jobs:
   validate:
+    needs: [validate_windows]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: src
     steps:
+      - name: Refuse cancelled validation
+        if: cancelled()
+        run: exit 1
+
+      - name: Require Windows scheduler validation
+        if: always()
+        env:
+          WINDOWS_RESULT: ${{ needs.validate_windows.result }}
+        run: |
+          python - <<'PY_GATE'
+          import os
+
+          result = os.environ.get("WINDOWS_RESULT", "unknown")
+          if result != "success":
+              raise SystemExit(f"Required Windows validation did not succeed: {result}")
+          print("Windows scheduler validation succeeded")
+          PY_GATE
+
       - name: Check out repository
         uses: actions/checkout@v4
 
@@ -110,3 +130,34 @@ jobs:
       # Broader Gaza/Cascadia/Care Line suites are deferred here to keep the
       # workflow conservative and avoid coupling Phase 2 to unrelated worktree noise.
 
+  validate_windows:
+    name: Care scheduler wrapper (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      PYTHONPATH: src
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install scheduler test dependency
+        run: python -m pip install pytest
+
+      - name: Prepare explicit Windows test root
+        shell: pwsh
+        run: |
+          $testRoot = Join-Path $env:RUNNER_TEMP "bluefern-care-scheduler-validation"
+          New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
+          "DISPATCHES_TEST_ROOT=$testRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          python -c "import shutil,sys; free=shutil.disk_usage(sys.argv[1]).free; required=2*1024**3; print(f'test root: {free} free bytes; {required} required'); sys.exit(0 if free >= required else 1)" "$testRoot"
+
+      - name: Run complete scheduler wrapper suite on Windows
+        shell: pwsh
+        run: python -m pytest -q -p no:cacheprovider --basetemp "$env:DISPATCHES_TEST_ROOT/pytest" tests/test_care_line_collection_scheduler_wrapper.py

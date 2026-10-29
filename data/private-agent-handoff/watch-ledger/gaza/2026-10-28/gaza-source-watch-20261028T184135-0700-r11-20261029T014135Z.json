@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261028T184135-0700-r11-20261029T014135Z",
+  "scheduled_for": "2026-10-28T18:44:51-07:00",
+  "started_at": "2026-10-28T18:41:35-07:00",
+  "completed_at": "2026-10-28T18:43:05-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-28T17:44:46.426-07:00",
+    "end": "2026-10-28T18:43:05-07:00",
+    "basis": "From the verified previous hourly Gaza Source Watch completion to this run's source-observation cutoff. Publication time, indexing time, and event occurrence time are distinct; older incidents are not reclassified as new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch. Authoritative production collection/publication remains separate and unchanged.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261028T174259-0700-r11-20261029T004259Z",
+      "completed_at": "2026-10-28T17:44:46.426-07:00",
+      "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-10-28/gaza-source-watch-20261028T174259-0700-r11-20261029T004259Z.json"
+    },
+    "primary_sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed update Oct 27 (West Bank-only); latest Gaza situation report published Oct 26 (covering Oct 12–18). No newly published in-window Gaza operational change."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No in-window, freshly dated Gaza-specific health, ambulance, hospital, fuel, evacuation, or capacity update visible."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Fetch returned HTTP 502 Bad Gateway; same longstanding regional endpoint restriction. Global WHO page used as fallback."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 29 2026 latest Israeli strike killed injured civilians 28 October evening updates",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"29/10/2026\" killed injured",
+      "site:aa.com.tr/en/middle-east/ \"Oct 29, 2026\" Gaza casualties",
+      "site:aljazeera.com/news/2026/10/29 Gaza Palestinians strikes injured displaced",
+      "site:reuters.com/world/middle-east/ Gaza Oct 29 2026 humanitarian ceasefire civilian casualties",
+      "site:apnews.com/article/ Gaza October 29 2026 airstrike ceasefire civilians",
+      "Gaza October 29 2026 UN OCHA WHO hospital evacuations supplies fuel ambulance patients",
+      "site:unicef.org \"Gaza\" \"28 October 2026\" OR \"29 October 2026\" children water displaced",
+      "site:wfp.org OR site:unrwa.org \"Gaza\" \"28 October 2026\" OR \"29 October 2026\" food aid crossings",
+      "site:icrc.org OR site:msf.org \"Gaza\" \"28 October 2026\" OR \"29 October 2026\" health",
+      "Gaza 29 October 2026 Rafah Kerem Shalom crossings hostages ceasefire talks aid restrictions",
+      "Gaza October 29 2026 municipal water desalination rain drainage displacement infrastructure hospital new update"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Page observed Oct 29 local to publisher. Latest Oct 28 Gaza items at 16:23 and 13:24 publisher-local; both captured in earlier watches; newer items are West Bank, diplomacy and condolences. No distinct new Gaza event."
+      },
+      {
+        "publisher": "Reuters Israel and Hamas",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Accessible; latest visible headlines concerned Israeli election, West Bank and political reactions. No distinct in-window Gaza civilian-impact or aid-access change."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; Oct 28 flood/drainage report previously identified; newer listed reporting centered on elections/West Bank. No new verified Gaza event."
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/",
+        "result": "Accessible. Previously known Gaza nutrition essay and Oct 22 children's casualty statement remain featured; no freshly dated health, water or nutrition capacity change."
+      }
+    ],
+    "exclusion_and_dedupe": [
+      "Anadolu Oct 28 article 4103255 (five killed and 32 injured) was already recorded as a casualty-toll follow-up. Its incident descriptions overlap previous WAFA/Anadolu coverage; cannot treat indexing or undated edits as new events.",
+      "WAFA's al-Mawasi/Rafah, al-Qarara/Khan Younis, Nuseirat and al-Bayouk reports are previously captured.",
+      "Al Jazeera's Gaza City artillery injuries and reported 20% drainage capacity were captured in an earlier Oct 28 heartbeat.",
+      "OCHA reports published earlier in October and WHO general statements are out of window; October 29 reporting from 2023/2025 and West Bank-only items excluded.",
+      "No unsupported social claims, opinion, recycled coverage, or uncorroborated alleged changes promoted to findings."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 regional OPT endpoint",
+        "materiality": "Pre-existing source-specific degradation, not a new material watch-wide failure. WHO global and OCHA OPT accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED records WHO regional source access restriction although alternate authoritative coverage remained useful. No newly material coverage failure; outcome no_findings.",
+    "notification_assessment": "No newly verified, nonduplicate qualifying Gaza development and no newly material watch degradation. Notification not warranted.",
+    "safeguards": "Only one new private watch ledger heartbeat on ops/watch-ledger; no publication, approval, production mutation, schedule change or task disablement."
+  }
+}

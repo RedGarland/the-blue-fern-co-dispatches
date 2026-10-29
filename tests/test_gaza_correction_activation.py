@@ -250,3 +250,81 @@ def test_public_history_does_not_silently_activate_a_fresh_source(public_active,
     assert activation.load_activation(fresh) is None
     with pytest.raises(reader.CorrectedManifestError,match='pending corrected profile'):
         reader.corrected_profile_for_outputs(fresh,'2026-10-28')
+
+
+@pytest.mark.parametrize('fixture_name',['activated','public_active'])
+@pytest.mark.parametrize('side',['working','committed'])
+def test_current_profile_diagnostic_identifies_loader_side(request,fixture_name,side):
+    root=request.getfixturevalue(fixture_name)
+    pages=root/'bluefern-dispatches-pages'
+    path=reader.CORRECTION_PATH
+    target=pages/path;original=target.read_bytes()
+    target.write_bytes(original+b' ')
+    if side=='committed':
+        commit(pages,'SYNTHETIC diagnostic committed drift')
+        # Working bytes alone must not excuse drift in the current Git blob.
+        target.write_bytes(original)
+    with pytest.raises(activation.Error) as caught:
+        activation.load_activation(root)
+    assert str(caught.value)==f'current corrected Pages profile drifted ({side}): {path}'
+    assert str(root) not in str(caught.value)
+
+
+@pytest.mark.parametrize('side',['working','committed'])
+@pytest.mark.parametrize('path',tuple(reader.PROFILE_HASHES))
+def test_current_profile_diagnostic_exact_path_and_short_circuit(monkeypatch,side,path):
+    paths=tuple(reader.PROFILE_HASHES)
+    payloads={p:('SYNTHETIC '+p+'\n').encode() for p in paths}
+    monkeypatch.setattr(reader,'PROFILE_HASHES',{p:hashlib.sha256(b).hexdigest() for p,b in payloads.items()})
+    calls=[]
+    def read(which,p):
+        calls.append((which,p))
+        return payloads[p]+(b' drift' if (which,p)==(side,path) else b'')
+    monkeypatch.setattr(activation,'_blob',lambda root,head,p:read('committed',p))
+    monkeypatch.setattr(reader,'_read_regular',lambda root,p:read('working',p))
+    with pytest.raises(activation.Error) as caught:
+        activation._validate_current_profile(Path('synthetic-pages'),'a'*40)
+    assert str(caught.value)==f'current corrected Pages profile drifted ({side}): {path}'
+    expected=[]
+    for p in paths:
+        expected.append(('committed',p))
+        if (side,path)==('committed',p):break
+        expected.append(('working',p))
+        if (side,path)==('working',p):break
+    assert calls==expected
+
+
+@pytest.mark.parametrize('changed',[b'line\r\n',b'\xef\xbb\xbfline\n',b'line\n ',b'Line\n'])
+def test_current_profile_diagnostic_never_normalizes_working_bytes(monkeypatch,changed):
+    path=reader.CORRECTION_PATH;original=b'line\n'
+    monkeypatch.setattr(reader,'PROFILE_HASHES',{path:hashlib.sha256(original).hexdigest()})
+    monkeypatch.setattr(activation,'_blob',lambda *args:original)
+    monkeypatch.setattr(reader,'_read_regular',lambda *args:changed)
+    with pytest.raises(activation.Error) as caught:
+        activation._validate_current_profile(Path('synthetic-pages'),'a'*40)
+    assert str(caught.value)==f'current corrected Pages profile drifted (working): {path}'
+
+
+def test_current_profile_diagnostic_preserves_read_guard_exception(monkeypatch):
+    path=reader.CORRECTION_PATH;original=b'exact'
+    monkeypatch.setattr(reader,'PROFILE_HASHES',{path:hashlib.sha256(original).hexdigest()})
+    monkeypatch.setattr(activation,'_blob',lambda *args:original)
+    failure=reader.CorrectedManifestError('corrected profile links/reparse points forbidden')
+    def forbidden(*args):raise failure
+    monkeypatch.setattr(reader,'_read_regular',forbidden)
+    with pytest.raises(reader.CorrectedManifestError) as caught:
+        activation._validate_current_profile(Path('synthetic-pages'),'a'*40)
+    assert caught.value is failure
+
+
+def test_current_profile_diagnostic_accepts_only_all_exact_bytes(monkeypatch):
+    paths=tuple(reader.PROFILE_HASHES)
+    payloads={p:('SYNTHETIC '+p+'\n').encode() for p in paths}
+    monkeypatch.setattr(reader,'PROFILE_HASHES',{p:hashlib.sha256(b).hexdigest() for p,b in payloads.items()})
+    calls=[]
+    def read(which,p):
+        calls.append((which,p));return payloads[p]
+    monkeypatch.setattr(activation,'_blob',lambda root,head,p:read('committed',p))
+    monkeypatch.setattr(reader,'_read_regular',lambda root,p:read('working',p))
+    assert activation._validate_current_profile(Path('synthetic-pages'),'a'*40) is None
+    assert calls==[(side,p) for p in paths for side in ('committed','working')]

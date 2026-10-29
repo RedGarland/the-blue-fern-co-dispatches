@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261028T224937-0700-r11-20261029T055036Z",
+  "scheduled_for": "2026-10-28T22:49:37-07:00",
+  "started_at": "2026-10-28T22:49:37-07:00",
+  "completed_at": "2026-10-28T22:50:36-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-28T21:43:27-07:00",
+    "end_at": "2026-10-28T22:50:36-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last durable Food Line heartbeat on ops/watch-ledger completed at 2026-10-28T21:43:27-07:00; check for newly verifiable disruptions since then.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; authoritative production nationwide collector unchanged.",
+    "12 targeted web searches with one-day freshness filters: 3 sole/last/full-service grocery store loss, 3 disaster-canceled distributions, 3 abrupt pantry/food-bank closures or reductions, 3 immediate official SNAP/WIC/EBT interruptions. All search requests returned usable results; no search/tool failure was encountered.",
+    "No new and independently verifiable qualifying event identified in this bounded search window. Most hits were older or unrelated, including 2025 SNAP shutdown reports and earlier 2026 pantry/grocery incidents.",
+    "Kauaʻi Now October 28 Hurricane Lowell recovery update states Hawaiʻi Foodbank Kauaʻi mobile pantry emergency distribution is still scheduled for Friday, not canceled; separately closed hurricane resource centers are not established food distribution cancellations. https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Allegan County Food Pantry permanent closure reported September 22 and effective October 2, 2026; outside window: https://arcwestmichigan.com/news/local/allegan-county-food-pantry-to-close-permanently-next-week-211-assistance-board-directors",
+    "Texas Tribune SNAP shutdown coverage dated October 28, 2025, not October 2026: https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+    "Search-index latency and unindexed direct notices remain possible; no evidence here establishing a current SNAP/WIC/EBT benefit access interruption.",
+    "No editorial approval, publication, changes to production collection, watch schedule, or automation state.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire town \"October 28\" 2026",
+        "\"last grocery store\" closure fire community \"October 28, 2026\"",
+        "\"only full-service grocery\" closed \"October 28\" 2026",
+        "\"food distribution\" cancelled storm flood \"October 28\" 2026",
+        "\"food distribution\" canceled outage Wednesday October 28 2026",
+        "\"food bank\" emergency distribution suspended hurricane October 28 2026",
+        "\"food pantry\" \"temporarily closed\" \"October 28, 2026\"",
+        "\"food bank\" \"closed\" \"Wednesday\" \"October 28\" \"2026\"",
+        "\"food pantry\" \"fire\" \"closure\" \"October 28\" 2026",
+        "site:gov \"SNAP\" \"service interruption\" October 28 2026",
+        "site:gov \"WIC\" \"closed\" \"October 28, 2026\" benefits",
+        "EBT SNAP outage benefits inaccessible October 28 2026 state"
+      ]
+    }
+  ]
+}

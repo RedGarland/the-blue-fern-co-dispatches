@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T044058-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T04:45:22-07:00",
+  "started_at": "2026-10-29T04:40:58-07:00",
+  "completed_at": "2026-10-29T04:42:36.496-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T03:50:07.376-07:00",
+    "end": "2026-10-29T04:42:36.496-07:00",
+    "basis": "From most recent verified Care Line Watch heartbeat completion through this bounded recall. A report published on October 29 without an hour stamp cannot be placed conclusively inside the hourly window; retained as a newly recovered same-day potential miss."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261029-mp-saipan-medical-associates-temporary-closure",
+      "canonical_source_url": "https://marianaspress.com/news/article/dr-ada-transitions-to-full-time-va-primary-care-physician-on-saipan",
+      "title": "Dr. Ada transitions to full-time VA primary care physician on Saipan",
+      "publisher": "Marianas Press",
+      "exact_supporting_passage": "the clinic will be closed from October 30 to November 3",
+      "source_published_date": "2026-10-29",
+      "state": null,
+      "city": "Saipan",
+      "county": null,
+      "territory": "Commonwealth of the Northern Mariana Islands",
+      "event_type": "scheduled_temporary_closure_for_relocation",
+      "service_line": "primary care / outpatient clinic (Medical Associates of the Pacific, LLC)",
+      "access_consequences": "Clinic states it will be closed October 30-November 3, 2026, while moving to the MH-1 Building next door. Short-term interruption of local clinic visits is expected; article says nurse practitioners and other clinicians will continue afterward. No evidence of permanent clinic closure. Dr. Ada is moving to full-time VA primary care; impact on her previous private-practice panel is not quantified.",
+      "affected_population": "Medical Associates of the Pacific patients in Saipan; number of affected visits/patients unknown.",
+      "effective_date": "2026-10-30",
+      "scheduled_end_date": "2026-11-03",
+      "announcement_date": "2026-10-29",
+      "confidence": "high",
+      "source_role": "strong_local_reporting_with_attributed_provider_statement",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "timing_note": "Source provides the calendar date but not publication time. Treat as same-day recall, not proof of announcement after the prior hourly heartbeat."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded U.S. and territories healthcare-access recall; production national collection remains authoritative. No approval or public publication.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T034853-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T03:50:07.376-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "summary": "Official CMS table directly accessed before any targeted web searches; latest notices dated Oct 23, no Oct 29 provider terminations, rescissions, CLIA limitations or suspensions."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 29 2026 hospital closure emergency department suspended services local news",
+      "October 29 2026 rural hospital emergency department shutting down access patients",
+      "October 29 2026 maternity labor delivery birthing unit hospital closure announcement",
+      "October 29 2026 behavioral health psychiatric inpatient unit closing suspension",
+      "October 29 2026 dialysis center shutting closing patients relocated",
+      "October 29 2026 oncology cancer clinic stops services closes",
+      "October 29 2026 primary care clinic closes loses doctors patients service",
+      "October 29 2026 EMS ambulance service shuts down suspends coverage town",
+      "October 29 2026 air ambulance medical helicopter base closes service suspended",
+      "October 29 2026 hospital emergency department reopens resumes restored services",
+      "October 29 2026 Puerto Rico Guam US Virgin Islands hospital clinic closure disruption",
+      "October 28 2026 October 29 hospital service closure ambulance maternity dialysis emergency services effective new"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Storm recovery notice included no new concrete healthcare-facility service closure or reopening."
+      },
+      {
+        "publisher": "Cleveland 19",
+        "url": "https://www.cleveland19.com/2026/09/20/ill-just-have-go-further-patients-brace-longer-commutes-geneva-cancer-center-closes/",
+        "reason": "Geneva oncology center closure reported September 19; not new."
+      },
+      {
+        "publisher": "ABQ RAW",
+        "url": "https://abqraw.com/post/cyber-attack-cripples-university-of-new-mexico-hospital-system-forces-closures/",
+        "reason": "UNM Health incident reported October 26 and previously reviewed/resolved; no fresh Oct 29 access-loss update verified."
+      }
+    ],
+    "source_failures": [],
+    "material_degradation": false,
+    "limitations": "Search recency sometimes returned older or non-US results despite date terms. Oct 29 Saipan source lacked publication hour; flagged as recovered same-day candidate pending production deduplication. No inference that the production collector has missed it.",
+    "controls": "Exactly one private JSON heartbeat created on ops/watch-ledger; no approval, production update, public publication, schedule modification, or task disabling."
+  }
+}

@@ -340,6 +340,10 @@ def _write_scheduler_log(
         f"child_process_id={child.pid if child else record.get('child_process_id')}",
         f"child_exit_code={child.returncode if child else record.get('child_exit_code')}",
     ]
+    if "wrapper_exit_code" in record:
+        lines.append(f"wrapper_exit_code={record['wrapper_exit_code']}")
+    if "operational_health_export" in record:
+        lines.append("operational_health_export=" + json.dumps(record["operational_health_export"], sort_keys=True))
     if record.get("wrapper_exception_type") or record.get("wrapper_exception_message"):
         lines.extend(
             [
@@ -386,7 +390,7 @@ def _bounded_failure_diagnostics(manifest: dict[str, Any] | None, *, limit: int 
     return result
 
 
-def _write_operational_health_receipt(root: Path, record: dict[str, Any]) -> None:
+def _write_operational_health_receipt(root: Path, record: dict[str, Any]) -> dict[str, str]:
     status = str(record.get("status") or "failure")
     receipt = build_care_line_operational_receipt(
         task_key="care_line_collection",
@@ -421,7 +425,49 @@ def _write_operational_health_receipt(root: Path, record: dict[str, Any]) -> Non
             "failed_source_diagnostics": record.get("failed_source_diagnostics") or [],
         },
     )
-    write_operational_receipt(root, receipt)
+    written = write_operational_receipt(root, receipt)
+    return {"receipt_path": str(written.receipt_path), "latest_path": str(written.latest_path)}
+
+
+def _complete_operational_health_export(
+    root: Path,
+    record: dict[str, Any],
+    *,
+    receipt_path: Path,
+    log_path: Path,
+    collection_exit_code: int,
+    child: ChildExecution | None = None,
+    collection_exception: Exception | None = None,
+) -> tuple[int, dict[str, Any]]:
+    """Report export failure without rewriting the durable collection outcome."""
+    wrapper_exit_code = collection_exit_code
+    try:
+        paths = _write_operational_health_receipt(root, record)
+    except Exception as exc:
+        # The per-run receipt may already exist. Do not retry with a fabricated
+        # collection failure or claim either write succeeded after an error.
+        record["operational_health_export"] = {
+            "status": "failure",
+            "completed_at": utc_now(),
+            "failure_stage": "operational_health_export",
+            "exception_type": type(exc).__name__,
+            "exception_message": str(exc),
+            "latest_pointer_status": "unknown",
+        }
+        wrapper_exit_code = collection_exit_code or 1
+    else:
+        record["operational_health_export"] = {
+            "status": "success",
+            "completed_at": utc_now(),
+            "latest_pointer_status": "written",
+            **paths,
+        }
+    record["wrapper_exit_code"] = wrapper_exit_code
+    # A failure to persist this diagnostic must propagate, not be mistaken for
+    # a collection/child failure or silently converted into a successful exit.
+    atomic_write_json(receipt_path, record)
+    _write_scheduler_log(log_path, record=record, child=child, exc=collection_exception)
+    return wrapper_exit_code, record
 
 
 def _finalize_failure(record: dict[str, Any], *, exc: Exception, stage: str) -> None:
@@ -549,6 +595,7 @@ def run_collection_once(
     atomic_write_json(receipt_path, receipt)
     _write_scheduler_log(log_path, record=receipt)
     lock_status = "already_running"
+    terminal_outcome_recorded = False
     try:
         lock_status = lock.acquire()
         receipt["stale_lock_recovered"] = lock.stale_recovered
@@ -564,9 +611,11 @@ def run_collection_once(
                 }
             )
             atomic_write_json(receipt_path, receipt)
+            terminal_outcome_recorded = True
             _write_scheduler_log(log_path, record=receipt)
-            _write_operational_health_receipt(root, receipt)
-            return 0, receipt
+            return _complete_operational_health_export(
+                root, receipt, receipt_path=receipt_path, log_path=log_path, collection_exit_code=0,
+            )
 
         failure_stage = "verify_checkout"
         source_commit = verify_checkout(root, branch)
@@ -600,16 +649,23 @@ def run_collection_once(
             receipt["status"] = receipt["status"] if child.returncode else "failure"
             receipt["ok"] = child.returncode == 0 and not pipeline_parse_error and pipeline_status in SUCCESS_STATUSES
         atomic_write_json(receipt_path, receipt)
+        terminal_outcome_recorded = True
         _write_scheduler_log(log_path, record=receipt, child=child)
-        _write_operational_health_receipt(root, receipt)
-        return (0 if receipt["ok"] else (child.returncode or 1)), receipt
+        return _complete_operational_health_export(
+            root, receipt, receipt_path=receipt_path, log_path=log_path,
+            collection_exit_code=0 if receipt["ok"] else (child.returncode or 1), child=child,
+        )
     except Exception as exc:
+        if terminal_outcome_recorded:
+            raise
         stage = locals().get("failure_stage", "unknown")
         _finalize_failure(receipt, exc=exc, stage=stage)
         atomic_write_json(receipt_path, receipt)
         _write_scheduler_log(log_path, record=receipt, exc=exc)
-        _write_operational_health_receipt(root, receipt)
-        return 1, receipt
+        return _complete_operational_health_export(
+            root, receipt, receipt_path=receipt_path, log_path=log_path,
+            collection_exit_code=1, collection_exception=exc,
+        )
     finally:
         lock.release()
 

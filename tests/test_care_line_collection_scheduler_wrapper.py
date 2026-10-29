@@ -346,13 +346,14 @@ def test_care_line_scheduler_operational_health_includes_verify_checkout_excepti
         (tmp_path / "status" / "operational-health" / "care-line" / "2026-08-16" / "runs").glob("*.json")
     )
     health = json.loads(health_receipt.read_text(encoding="utf-8"))
-    assert health["status"] == "failed"
+    assert health["status"] == "FAILED"
     assert health["details"]["failure_stage"] == "verify_checkout"
     assert health["details"]["wrapper_exception_type"] == "SchedulerError"
     assert "ops/operator/runs/2026-09-26/runner-sync-apply.json" in health["details"]["wrapper_exception_message"]
     assert health["details"]["failed_source_diagnostics"] == []
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="Requires WindowsIdentity in the Windows-only scheduler wrapper")
 def test_care_line_windows_wrapper_writes_diagnostic_receipt_on_python_launch_failure(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     (repo / "scripts" / "windows").mkdir(parents=True, exist_ok=True)
@@ -418,3 +419,223 @@ def test_care_line_windows_wrapper_writes_diagnostic_receipt_on_python_launch_fa
     assert "status=failure" in log_text
     assert "failure_stage=launch_python" in log_text
     assert "missing-python.exe" in log_text
+
+
+def _health_export_case(tmp_path, monkeypatch, outcome):
+    scheduler = _load_scheduler_module(Path(__file__).resolve().parents[1])
+    state = {"released": False, "child_calls": 0}
+
+    class DummyLock:
+        def __init__(self, path):
+            self.stale_recovered = False
+
+        def acquire(self):
+            return "already_running" if outcome == "already_running" else "acquired"
+
+        def release(self):
+            state["released"] = True
+
+    def verify_checkout(root, branch):
+        if outcome == "verify_failure":
+            raise scheduler.SchedulerError("synthetic checkout failure")
+        return "synthetic-source-head"
+
+    def fake_child(command, *, cwd):
+        state["child_calls"] += 1
+        assert "--collection-only" in command
+        assert "--run-id" not in command
+        manifest = {
+            "run_id": "synthetic-pipeline-run", "status": outcome,
+            "successful_attempt_count": 2, "failed_source_count": 1,
+            "manual_review_count": 3,
+            "run_manifest_path": "synthetic/run-manifest.json",
+        }
+        return scheduler.ChildExecution(
+            pid=1234, returncode=7 if outcome == "failure" else 0,
+            stdout=json.dumps({"run_manifest": manifest}), stderr="synthetic child stderr",
+        )
+
+    monkeypatch.setattr(scheduler, "SchedulerLock", DummyLock)
+    monkeypatch.setattr(scheduler, "verify_checkout", verify_checkout)
+    monkeypatch.setattr(scheduler, "run_preflight", lambda root: None)
+    monkeypatch.setattr(scheduler, "_run_child", fake_child)
+    kwargs = dict(
+        run_date="2026-10-29", branch=scheduler.PRODUCTION_BRANCH,
+        run_id="synthetic-export-test", smoke_test=False, include_partial=True,
+        include_manual_review=False, allow_insecure_tls=False,
+        max_sources=None, fetch_timeout=20, max_items_per_source=None,
+        active_queue_limit=150, low_priority_cap=25,
+    )
+    health_base = tmp_path / "status/operational-health/care-line/2026-10-29"
+    paths = {
+        "receipt": tmp_path / scheduler.RECEIPT_ROOT / kwargs["run_date"] / (kwargs["run_id"] + ".json"),
+        "log": tmp_path / scheduler.LOG_ROOT / kwargs["run_date"] / (kwargs["run_id"] + ".log"),
+        "per_run": health_base / "runs" / ("care_line_collection-" + kwargs["run_id"] + ".json"),
+        "latest": health_base / "latest.json",
+    }
+    return scheduler, state, kwargs, paths
+
+
+@pytest.mark.parametrize("outcome", ["success", "partial_success", "failure", "already_running", "verify_failure"])
+@pytest.mark.parametrize("failed_write", ["per_run", "latest"])
+def test_health_export_failure_preserves_collection_outcome(tmp_path, monkeypatch, outcome, failed_write):
+    from bluefern_dispatches import operational_health as health
+
+    scheduler, state, kwargs, paths = _health_export_case(tmp_path, monkeypatch, outcome)
+    writes = []
+    original_write = health.atomic_write_json
+    before_export = {}
+
+    def fail_selected_write(path, value):
+        if not writes:
+            before_export.update(json.loads(paths["receipt"].read_text()))
+        writes.append(path)
+        if path == paths[failed_write]:
+            raise OSError("synthetic export failure")
+        original_write(path, value)
+
+    monkeypatch.setattr(health, "atomic_write_json", fail_selected_write)
+    code, record = scheduler.run_collection_once(tmp_path, **kwargs)
+    assert code == (7 if outcome == "failure" else 1)
+    assert record["wrapper_exit_code"] == code
+    assert record["status"] == ("failure" if outcome == "verify_failure" else outcome)
+    assert record["ok"] is (outcome in {"success", "partial_success", "already_running"})
+    assert {key: value for key, value in record.items() if key not in {"operational_health_export", "wrapper_exit_code"}} == before_export
+    assert record["operational_health_export"] == {
+        "status": "failure", "completed_at": record["operational_health_export"]["completed_at"],
+        "failure_stage": "operational_health_export", "exception_type": "OSError",
+        "exception_message": "synthetic export failure", "latest_pointer_status": "unknown",
+    }
+    assert not paths["latest"].exists()
+    assert writes == ([paths["per_run"]] if failed_write == "per_run" else [paths["per_run"], paths["latest"]])
+    if failed_write == "latest":
+        exported = json.loads(paths["per_run"].read_text())
+        expected_health = {"success": "SUCCESS", "partial_success": "DEGRADED", "failure": "FAILED", "already_running": "SAFE_NO_OP", "verify_failure": "FAILED"}
+        assert exported["status"] == expected_health[outcome]
+        assert exported["classification"] == record["status"]
+    else:
+        assert not paths["per_run"].exists()
+    assert json.loads(paths["receipt"].read_text()) == record
+    log = paths["log"].read_text()
+    assert '"latest_pointer_status": "unknown"' in log
+    assert f"wrapper_exit_code={code}" in log
+    assert state["released"] and state["child_calls"] == (0 if outcome in {"already_running", "verify_failure"} else 1)
+    assert not any(record["publication_side_effects"].values())
+    if outcome == "verify_failure":
+        assert record["failure_stage"] == "verify_checkout"
+        assert record["wrapper_exception_type"] == "SchedulerError"
+        assert "synthetic checkout failure" in log
+    else:
+        assert record["failure_stage"] is None
+        assert record["wrapper_exception_type"] is None
+    if state["child_calls"]:
+        assert "[stdout]" in log and "[stderr]" in log and "synthetic child stderr" in log
+
+
+@pytest.mark.parametrize("outcome", ["success", "partial_success", "failure", "already_running", "verify_failure"])
+def test_health_export_success_records_both_returned_paths(tmp_path, monkeypatch, outcome):
+    scheduler, state, kwargs, paths = _health_export_case(tmp_path, monkeypatch, outcome)
+    code, record = scheduler.run_collection_once(tmp_path, **kwargs)
+    assert code == (7 if outcome == "failure" else 1 if outcome == "verify_failure" else 0)
+    assert record["wrapper_exit_code"] == code
+    assert record["operational_health_export"]["status"] == "success"
+    assert record["operational_health_export"]["latest_pointer_status"] == "written"
+    assert record["operational_health_export"]["receipt_path"] == str(paths["per_run"])
+    assert record["operational_health_export"]["latest_path"] == str(paths["latest"])
+    assert json.loads(paths["receipt"].read_text()) == record
+    assert paths["latest"].read_bytes() == paths["per_run"].read_bytes()
+    assert state["released"]
+
+
+@pytest.mark.parametrize("diagnostic_write", ["receipt", "log"])
+def test_health_export_diagnostic_write_failure_propagates_without_collection_reclassification(tmp_path, monkeypatch, diagnostic_write):
+    from bluefern_dispatches import operational_health as health
+
+    scheduler, state, kwargs, paths = _health_export_case(tmp_path, monkeypatch, "partial_success")
+    attempts = []
+
+    def fail_export(path, value):
+        attempts.append(path)
+        raise OSError("synthetic export failure")
+
+    monkeypatch.setattr(health, "atomic_write_json", fail_export)
+    if diagnostic_write == "receipt":
+        original = scheduler.atomic_write_json
+
+        def fail_diagnostic(path, value):
+            if "operational_health_export" in value:
+                raise OSError("synthetic diagnostic write failure")
+            return original(path, value)
+        monkeypatch.setattr(scheduler, "atomic_write_json", fail_diagnostic)
+    else:
+        original = scheduler._write_scheduler_log
+
+        def fail_diagnostic(path, *, record, **extra):
+            if "operational_health_export" in record:
+                raise OSError("synthetic diagnostic write failure")
+            return original(path, record=record, **extra)
+        monkeypatch.setattr(scheduler, "_write_scheduler_log", fail_diagnostic)
+    with pytest.raises(OSError, match="synthetic diagnostic write failure"):
+        scheduler.run_collection_once(tmp_path, **kwargs)
+    persisted = json.loads(paths["receipt"].read_text())
+    assert persisted["status"] == "partial_success" and persisted["pipeline_exit_code"] == 0
+    assert persisted["wrapper_exception_type"] is None and persisted["failure_stage"] is None
+    assert attempts == [paths["per_run"]]
+    assert state["released"]
+
+
+def test_health_export_does_not_swallow_interruption_or_claim_pointer_success(tmp_path, monkeypatch):
+    from bluefern_dispatches import operational_health as health
+
+    scheduler, state, kwargs, paths = _health_export_case(tmp_path, monkeypatch, "partial_success")
+    original = health.atomic_write_json
+
+    class SimulatedInterruption(BaseException):
+        pass
+
+    def interrupt_latest(path, value):
+        if path == paths["latest"]:
+            raise SimulatedInterruption()
+        return original(path, value)
+
+    monkeypatch.setattr(health, "atomic_write_json", interrupt_latest)
+    with pytest.raises(SimulatedInterruption):
+        scheduler.run_collection_once(tmp_path, **kwargs)
+    persisted = json.loads(paths["receipt"].read_text())
+    assert persisted["status"] == "partial_success"
+    assert "operational_health_export" not in persisted
+    assert json.loads(paths["per_run"].read_text())["status"] == "DEGRADED"
+    assert not paths["latest"].exists()
+    assert state["released"]
+
+
+@pytest.mark.parametrize("outcome", ["partial_success", "already_running"])
+def test_terminal_log_failure_preserves_already_durable_collection_receipt(tmp_path, monkeypatch, outcome):
+    scheduler, state, kwargs, paths = _health_export_case(tmp_path, monkeypatch, outcome)
+    original = scheduler._write_scheduler_log
+    before_failure = {}
+    export_calls = []
+
+    def unexpected_export(root, record):
+        export_calls.append(record)
+        raise AssertionError("Health export must not run after terminal log failure")
+
+    def fail_terminal_log(path, *, record, **extra):
+        if record["completed_at"] is not None:
+            before_failure.update(json.loads(paths["receipt"].read_text()))
+            raise OSError("synthetic first terminal log failure")
+        return original(path, record=record, **extra)
+
+    monkeypatch.setattr(scheduler, "_write_scheduler_log", fail_terminal_log)
+    monkeypatch.setattr(scheduler, "_write_operational_health_receipt", unexpected_export)
+    with pytest.raises(OSError, match="synthetic first terminal log failure"):
+        scheduler.run_collection_once(tmp_path, **kwargs)
+    persisted = json.loads(paths["receipt"].read_text())
+    assert persisted == before_failure
+    assert persisted["status"] == outcome and persisted["ok"] is True
+    assert persisted["failure_stage"] is None and persisted["wrapper_exception_type"] is None
+    assert "operational_health_export" not in persisted
+    assert not paths["per_run"].exists() and not paths["latest"].exists()
+    assert state["released"]
+    assert export_calls == []
+    assert state["child_calls"] == (0 if outcome == "already_running" else 1)

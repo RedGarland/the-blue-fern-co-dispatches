@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T164451-0700-r11-20261030T234341Z",
+  "scheduled_for": "2026-10-30T16:44:51-07:00",
+  "started_at": "2026-10-30T16:43:41-07:00",
+  "completed_at": "2026-10-30T16:45:05.752-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T14:46:21.364-07:00",
+    "end": "2026-10-30T16:45:05.752-07:00",
+    "basis": "Since the latest previously verified Gaza watch heartbeat available to this execution (14:46 PDT); this is an intentionally overlapping conservative recall window if a later heartbeat exists. Search results assessed against original event and publication dates, including source-local calendar rollover, to reject recycled or duplicate developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch only; primary daily production Gaza publisher and collector remain authoritative.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T144451-0700-r11-20261030T214523Z.json",
+      "completed_at": "2026-10-30T14:46:21.364-07:00",
+      "known_positive_finding_ids": [
+        "gaza-20261030-khan-younis-al-maslakh-12-injured-wafa-176452",
+        "gaza-20261030-khan-younis-child-wounds-wafa-176450",
+        "gaza-20261030-ohchr-yellow-line-expansion-displacement"
+      ]
+    },
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest homepage updates October 27 West Bank snapshot and October 26 Gaza report dated October 22; no new in-window Gaza report."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Latest listed news/videos did not establish a new in-window Gaza medical evacuation, hospital, EMS, fuel or health-capacity development."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502, recurring previously documented source-specific failure."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "result": "Accessible. Static background and dashboard links; no verified newly dated Gaza development in text."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"Friday, October 30, 2026\" \"Saturday, October 31, 2026\" killed injured",
+      "Reuters Gaza Oct 30 2026 late Friday October 31 airstrike ceasefire casualties",
+      "AP News Gaza Friday October 30 2026 evening Israel ceasefire civilian wounded killed",
+      "site:aljazeera.com/news/2026/10/31 Gaza Saturday October 31 2026 strike displacement killed",
+      "site:english.wafa.ps/Pages/Details/ \"Saturday, October 31, 2026\" Gaza Khan Younis medical",
+      "site:ohchr.org Gaza \"30 October 2026\" \"31 October 2026\" displaced yellow line",
+      "Gaza \"30 October 2026\" \"ambulance\" \"hospital\" \"medical evacuation\" WHO Red Crescent",
+      "site:wfp.org Gaza Oct 30 2026 food parcels meal shortage crossing",
+      "site:unicef.org Gaza \"30 October 2026\" children shelter water supplies",
+      "Gaza Rafah Kerem Shalom crossing October 30 2026 Friday late evening humanitarian aid fuel",
+      "Gaza October 30 2026 ceasefire negotiation Hamas Israel detainees hostages handover new developments",
+      "Gaza October 30 2026 31 nighttime civilian casualties displacement Yellow Line homes demolition reports"
+    ],
+    "search_recency_days": 1,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Gaza casualty headlines at October 30 18:02 and 16:47 Palestinian time were documented in earlier watch findings; newer 22:23 headline is West Bank, outside Gaza scope. No in-window Gaza incident found."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "October 30 Yellow Line displacement previously recorded; Gaza damage image/caption alone did not establish newly dated nonduplicate casualty or displacement increment. Other prominent headlines about West Bank or Israeli politics."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible. No new in-window Gaza food or logistics service change identified. October funding-related cuts previously documented."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible background page; no in-window new casualty, water, education or health event established."
+      },
+      {
+        "publisher": "Palestine Red Crescent",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest prominent homepage news June 2026; no new Gaza ambulance or EMS event identified."
+      },
+      {
+        "publisher": "UN News Gaza",
+        "url": "https://news.un.org/en/focus/gaza",
+        "result": "Not accessible via browser tool; recurring known limitation."
+      }
+    ],
+    "examined_exclusions": [
+      "Anadolu October 30 report of two Palestinians wounded in a Gaza City apartment strike describes early Friday, before the current observation window; not counted as a new development.",
+      "WAFA October 30 Khan Younis drone-strike injury report (at least 12 injured), the death of child Yamen Hisham Yahya Saqr, and the October 30 OHCHR Yellow Line displacement follow-up were already captured in positive Gaza watch heartbeats; duplicates.",
+      "Reuters October 26 UN inquiry and October 30 West Bank Hebron demolition reports excluded (outside window or geography).",
+      "October 2025 hostage handovers and older aid/crossing and WFP updates excluded as recycled.",
+      "October 30 Bureij damage photo caption did not establish a new and independently traceable in-window incident chronology; no speculative promotion.",
+      "No verified new in-window Gaza civilian casualty, displacement, aid/food/water, health/ambulance/transport/fuel/evacuation/capacity, infrastructure, crossing, detention/hostage, ceasefire or military-operation civilian-impact change."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Previously documented recurring source failure; WHO global and Health Cluster accessible."
+      },
+      {
+        "source": "UN News Gaza",
+        "issue": "Inaccessible to this browser tool",
+        "materiality": "Previously documented; alternative humanitarian and established reporting available."
+      }
+    ],
+    "status_rationale": "DEGRADED for persistent WHO EMRO 502 and inaccessible UN News; OCHA OPT, WHO global and Health Cluster, WAFA, UNICEF, WFP, PRCS and Al Jazeera remained accessible. No newly material watch-wide coverage regression, and no new qualifying verified nonduplicate Gaza developments identified.",
+    "safeguards": "Exactly one append-only JSON heartbeat on ops/watch-ledger. No approval, publication, social post, production workflow, automation schedule, or task enablement/disablement changes."
+  }
+}

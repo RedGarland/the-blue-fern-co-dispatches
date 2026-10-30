@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T224447-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T22:45:22-07:00",
+  "started_at": "2026-10-29T22:44:47-07:00",
+  "completed_at": "2026-10-29T22:46:46.515-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T21:48:56.576-07:00",
+    "end": "2026-10-29T22:46:46.515-07:00",
+    "basis": "Previous independently verified Care Line Watch completed_at through current bounded recall; historical discovered stories assessed for genuinely new corroborated access changes and deduplicated."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; national and territorial production collector remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T214803-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T21:48:56.576-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Direct CMS canonical listing retrieved before targeted searches; latest dated notices were October 23, including California and Ohio home health terminations. No newer official listed notices."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" hospital \"emergency department\" closed suspended diverting ambulances",
+      "\"October 29, 2026\" hospital \"labor and delivery\" maternity services closed reopening",
+      "\"October 29, 2026\" behavioral health psychiatric addiction center closed suspended care",
+      "\"October 29, 2026\" dialysis cancer oncology clinic shut down services access",
+      "\"October 29, 2026\" primary care family medicine clinic temporarily closed patients",
+      "\"October 29, 2026\" rural hospital emergency services closing suspension patients",
+      "\"October 29, 2026\" ambulance EMS station service closed suspended county",
+      "\"October 29, 2026\" air ambulance helicopter medical base closing suspended",
+      "October 29 2026 emergency department reopening restored hospital clinic dialysis access United States",
+      "October 29 30 2026 Guam Puerto Rico US Virgin Islands Saipan American Samoa hospital clinic emergency service suspended closed",
+      "October 29 2026 hospital closure oncology dialysis behavioral health urgent care local news access disrupted",
+      "October 30 2026 hospital clinic ambulance maternity closure suspension US"
+    ],
+    "search_execution": "Eight recent fast searches, followed by four recent slow searches (12 total); article follow-up opens/clicks were not additional search queries.",
+    "reviewed_exclusions": [
+      {
+        "title": "Letty Owings Center, Portland OR",
+        "url": "https://www.investigatewest.org/portland-drug-treatment-center-is-shuttering/",
+        "reason": "October 29 report of an already reviewed closure; duplicate historical event, no newly timed access change."
+      },
+      {
+        "title": "UNM Health cybersecurity disruption and resumption",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "October 26-28 temporary ambulance diversion and restoration already identified in earlier watch; no October 29 new access change."
+      },
+      {
+        "title": "Guam Regional Medical City typhoon Champi suspensions/reopening",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/",
+        "reason": "October 17-19 typhoon response and restoration, historical and previously reviewed."
+      },
+      {
+        "title": "MultiCare Rockwood Access Clinic, Spokane WA",
+        "url": "https://www.beckershospitalreview.com/finance/multicare-to-shutter-multiple-clinics-affecting-83-workers/",
+        "reason": "September 9 prior announcement scheduled October 27 Access Clinic shutdown; not a newly announced event in this hourly window, and actual October 27 completion was not independently verified."
+      },
+      {
+        "title": "Cheshire Medical Center Farnum Inpatient Rehabilitation Unit, Keene NH",
+        "url": "https://www.beckershospitalreview.com/finance/70-hospitals-closing-departments-or-ending-services/",
+        "reason": "Preannounced planned October 30 rehabilitation unit closure in an October 22 roundup, with admissions already halted; no new status or change established in this hourly interval, not one of the most targeted urgent-service miss classes."
+      },
+      {
+        "title": "Carle Health Rantoul clinic, Sharon Regional EMS restrictions, Massillon addiction center, Munson and Warren maternity transitions",
+        "url": null,
+        "reason": "Prior same-day Care Line watch findings; excluded as duplicates."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Selective 12-query recall is not an exhaustive state/territory surveillance feed. Many results were outdated, non-U.S., prospective, or duplicates; no newly verifiable qualifying access change established. Production collector remains authoritative.",
+    "controls": "Created exactly one private heartbeat on ops/watch-ledger; no approvals, publication, schedule modifications, or task disabling."
+  }
+}

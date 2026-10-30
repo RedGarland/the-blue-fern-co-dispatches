@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T185037-0700-r11-20261030T015037Z",
+  "scheduled_for": "2026-10-29T18:45:54-07:00",
+  "started_at": "2026-10-29T18:50:37-07:00",
+  "completed_at": "2026-10-29T18:52:35.567-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T17:48:49-07:00",
+    "end_at": "2026-10-29T18:52:35.567-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at the prior verified Food Line Source Watch heartbeat completion, ends with this run's observation. Newly reported and official service-impact evidence must be dated within the interval; crawl dates alone do not establish recency.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only; the nationwide Food Line production collector remains authoritative and was not queried or modified.",
+    "Completed 12 targeted web searches: 4 sole/last/full-service community grocery losses, 3 storm/damage-related emergency food-distribution cancellations, 2 abrupt pantry or food-bank access reductions, and 3 official immediate SNAP/WIC/EBT/food-assistance interruptions. No search transport failures reported.",
+    "No newly supported qualifying U.S. food-access disruption published or first reported within 2026-10-29 17:48:49–this run's completion (PDT). Search results were largely historical, nonqualifying, or unrelated; no positive finding was inferred from a recency-only crawl.",
+    "October 29 Kauaʻi Now Hurricane Lowell recovery update explicitly says Hawaiʻi Foodbank Kauaʻi mobile pantry has a Friday October 30 distribution still scheduled 4–5 p.m. at Hale Līhuʻe, not a canceled distribution: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ .",
+    "Prodisee Pantry Stockton weather cancellation was published October 7–8, 2026, well before the window; excluded: https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/ .",
+    "Search hits for supermarket closures concerned previously announced Winn-Dixie closures (September 27, 2026) or older food-desert stories; no newly verified sole/full-service store loss in this interval: https://www.inc.com/amaya-nichole/winn-dixie-closing-stores-2026-updated-list-doomed-locations/91410164 .",
+    "Official Massachusetts EBT transition page describes an April 26–27, 2025 interruption, not a new October 29, 2026 outage: https://www.mass.gov/info-details/ebt-vendor-change-important-information .",
+    "No approvals, publication, social posting, production changes, schedule changes, or task disabling occurred. Negative finding is limited by source-index lag and targeted-search scope.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T174812-0700-r11-20261030T004849Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T17:48:49-07:00",
+      "bounded_query_context": [
+        "\"only grocery store\" fire closure \"October 29\" 2026",
+        "\"last grocery store\" closed \"October 29\" 2026",
+        "\"sole grocery store\" fire closure October 2026",
+        "\"full-service grocery store\" closes 2026 October 29",
+        "\"food distribution\" canceled storm October 29 2026",
+        "\"food pantry\" distribution cancelled flooding hurricane October 29 2026",
+        "food bank distribution suspended power outage fire October 29 2026",
+        "food pantry abruptly closed indefinitely October 29 2026",
+        "food bank emergency closure service interruption October 29 2026",
+        "site:gov October 29 2026 SNAP benefits disruption EBT outage",
+        "site:gov October 29 2026 WIC office emergency closed benefits interrupted",
+        "October 29 2026 SNAP WIC outage benefits suspended official notice"
+      ]
+    }
+  ]
+}

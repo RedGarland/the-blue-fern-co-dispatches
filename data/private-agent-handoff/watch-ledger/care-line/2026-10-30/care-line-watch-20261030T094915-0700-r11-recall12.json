@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T094915-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T09:45:22-07:00",
+  "started_at": "2026-10-30T09:49:15-07:00",
+  "completed_at": "2026-10-30T09:51:41-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T08:48:58-07:00",
+    "end": "2026-10-30T09:51:41-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at to this observation. Targeted searches also inspected recently published retrospective reports for missed high-value service changes. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territories healthcare-access recall; not the primary national production collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T084756-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T08:48:58-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Checked and opened official CMS Public Notices before targeted searches. Newest displayed notices remained October 23, 2026; no new terminations, rescissions, CLIA restrictions or similar notices in this observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended October 30 2026 rural service loss United States",
+      "maternity labor delivery unit closure effective October 30 2026 hospital",
+      "outpatient behavioral health clinic closes October 30 2026 patients",
+      "ambulance service air medical base closed suspended October 30 2026",
+      "hospital clinic closures services suspended October 29 2026 October 30 2026 local news",
+      "dialysis center shut down October 29 2026 patients displaced",
+      "oncology cancer treatment center closing October 30 2026 October 29",
+      "emergency medical services ambulance station closure Friday October 30 2026",
+      "healthcare clinic hospital services reopen resume today October 30 2026 after closure",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital clinic suspension closure October 29 30 2026",
+      "hospital labor delivery unit permanently closed as of October 30 2026 local news",
+      "mental health inpatient facility closes Friday October 30 2026 United States"
+    ],
+    "search_execution": "Twelve additional targeted web search queries with two-day recency filters, followed by direct review of selected results and prior heartbeat for deduplication. Many surfaced results were historical, tangential or outside the United States.",
+    "coverage_classes": [
+      "Hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures and suspensions",
+      "Emergency and rural service losses",
+      "Ambulance, air-medical and base closures or suspensions",
+      "CMS provider termination, rescission, CLIA limitations/revocations and related notices",
+      "Effective reopening/restoration of previously lost essential services",
+      "United States territories; indexing coverage limited"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Gateway Regional Medical Center, Granite City, Illinois",
+        "source_url": "https://www.stl.news/gateway-regional-faces-121m-debt-medicare-deadline/",
+        "reason": "October 30 secondary report concerns a proposed November 17 Medicare termination, not an effective termination or CMS public notice. An anonymous employee described fourth-floor closure/furloughs without confirmed affected service line, patient consequences, or effective date. Insufficient evidence of a distinct qualifying access change; source follow-up warranted if verified."
+      },
+      {
+        "name": "Kairos NW Interval House youth behavioral-health respite home, Medford, Oregon",
+        "source_url": "https://oregoncapitalchronicle.com/2026/10/30/oregon-needs-more-youth-respite-homes-but-funding-problems-stand-in-the-way/",
+        "reason": "October 30 reporting describes a closure in 2025, not a new development or new restoration during this observation."
+      },
+      {
+        "name": "Sanford Luverne Medical Center maternity services, Minnesota",
+        "source_url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "reason": "October 28 prospective closure already identified by prior watches; no newly effective loss."
+      },
+      {
+        "name": "Roseland Community Hospital maternity service, Chicago, Illinois",
+        "source_url": "https://www.nbcchicago.com/news/local/exclusive-roseland-hospital-to-eliminate-pregnancy-care-this-fall/3996078/",
+        "reason": "Previously announced prospective October 31 closure; no new effective change or operational confirmation this window."
+      },
+      {
+        "name": "Comprehensive Life Resources Pearl Youth Residence and Clarvida Project RENEW",
+        "source_url": "https://bhbusiness.com/2026/10/02/layoffs-closures-planned-at-newport-healthcare-clarvida-comprehensive-life-resources/",
+        "reason": "Previously reported October 2 future closures; no new implementation reported this window."
+      },
+      {
+        "name": "UNM Health temporary cyber-disruption",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Earlier October 28 disruption/restoration previously documented; no newly confirmed discrete access change."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.youtube.com/embed/F7qFMfUrZlU?feature=oembed",
+        "error": "Embedded First Alert 4 video linked in Gateway Regional secondary report returned DisabledError; no independent confirmation of anonymous account of hospital fourth-floor closure. Other searches and official CMS listing were accessible."
+      }
+    ],
+    "limitations": "The linked primary video was inaccessible; no independent evidence established an effective additional service closure at Gateway. This one source failure makes status DEGRADED per source-failure rule, but did not materially compromise the broader bounded watch. Low-indexed local and territorial events may be missed. No new nonduplicate qualifying healthcare-access change was substantiated.",
+    "controls": "Exactly one private branch heartbeat for this execution. No review approval, public publication, changes to production collector, schedule modifications, or task disabling."
+  }
+}

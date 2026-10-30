@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T074451-0700-r11-20261030T144821Z",
+  "scheduled_for": "2026-10-30T07:44:51-07:00",
+  "started_at": "2026-10-30T07:48:21-07:00",
+  "completed_at": "2026-10-30T07:49:22-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T06:47:31-07:00",
+    "end": "2026-10-30T07:49:22-07:00",
+    "basis": "Verified prior Gaza ops/watch-ledger heartbeat completed_at; in-window source/publication or event timestamp required, with previously observed and date-only unverified reports excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; primary production collector and publisher are authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T064451-0700-r11-20261030T134645Z.json",
+      "verified": true,
+      "completed_at": "2026-10-30T06:47:31-07:00",
+      "outcome": "no_findings"
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent Gaza-containing situation report on listing published 26 October; no in-window Gaza update.",
+        "web_ref": "turn224470view0"
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Overview/latest-news list shows no in-window Gaza health capacity, evacuation, or transport update.",
+        "web_ref": "turn224470view1"
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/palestine-press-releases/",
+        "result": "HTTP 502 Bad Gateway; ongoing known restriction.",
+        "web_ref": "turn224470view2"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 30 2026 morning civilians killed injured Israeli strikes Reuters AP",
+      "site:ochaopt.org Gaza 30 October 2026 humanitarian situation update",
+      "site:who.int Gaza 30 October 2026 medical evacuation hospital health",
+      "site:unicef.org Gaza 30 October 2026 water children aid",
+      "site:unrwa.org Gaza 30 October 2026 food shelters displacement",
+      "site:wfp.org Gaza October 30 2026 food access aid trucks",
+      "site:palestine.un.org Gaza October 30 2026 crossing fuel aid",
+      "Gaza October 30 2026 ambulances hospital casualties Palestinian health ministry",
+      "Gaza October 30 2026 ceasefire hostage talks border crossings Reuters AFP",
+      "Gaza October 30 2026 civilian casualties strike displacement Al Jazeera Middle East Eye WAFA",
+      "Gaza October 30 2026 Red Crescent ambulance access rescue operations",
+      "Gaza October 30 2026 Gaza humanitarian crisis UN News ReliefWeb OCHA"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest 30 October items through 16:21 Palestine time are West Bank items; 16:17 displacement report explicitly concerns Hebron, outside Gaza scope; newest visible Gaza casualty item dated 29 October 19:31 Palestine time and previously seen.",
+        "web_refs": [
+          "turn224470view3",
+          "turn359119view0"
+        ]
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/tag/israel-palestine-conflict/",
+        "result": "Latest October 30 visible items are political/election coverage, West Bank news or opinion; no verified in-window Gaza civilian-impact story.",
+        "web_ref": "turn224470view4"
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible; top Gaza newsroom item dated 10 August 2026; no in-window emergency/ambulance update.",
+        "web_ref": "turn224470view5"
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/2-palestinians-wounded-as-israeli-attacks-continue-in-gaza-despite-ceasefire/4105670",
+        "result": "Previously observed Gaza two-wounded report remains directly inaccessible; no newly verified timestamp or development.",
+        "web_ref": "turn224470view6"
+      }
+    ],
+    "exclusions": [
+      "OCHA and WHO older updates are outside the observation window.",
+      "WAFA's new 16:17 Palestine-time displaced-families story concerns Hebron in the West Bank and is outside Gaza scope.",
+      "Previously seen Oct 29 Gaza casualty coverage and the previously observed Anadolu Oct 30 two-wounded item excluded as duplicate/insufficiently timestamped.",
+      "Opinion, general background, unsourced claims and date-only recycled content excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "502 Bad Gateway",
+        "materiality": "Known recurring restriction; WHO global and OCHA accessible."
+      },
+      {
+        "source": "Anadolu specific article",
+        "issue": "Direct page inaccessible",
+        "materiality": "Known restriction affecting corroboration of an already-seen item."
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO and one individual Anadolu article remained inaccessible. Useful alternative source coverage obtained; no newly material degradation and no verified in-window nonduplicate Gaza event.",
+    "safeguards": "Exactly one append-only private ops/watch-ledger JSON heartbeat intended; no approval, release, publication, primary collector, schedule or task change."
+  }
+}

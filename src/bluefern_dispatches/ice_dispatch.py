@@ -1430,11 +1430,43 @@ def _extract_passage(html_text: str, title: str) -> str | None:
     return None
 
 
+def _has_force_event_signal(text: str) -> bool:
+    """Do not confuse agency names or an arrestee's criminal history with force.
+
+    This is only a collection hint, not an editorial verification decision.
+    Alleged agency force and related officer accountability remain reviewable.
+    """
+    signal = re.compile(r"\b(?:shootings?|firearms?|force|taser(?:s|ed|ing)?|pursuits?)\b", re.IGNORECASE)
+    history = re.compile(
+        r"\b(?:convicted|convictions?|criminal (?:history|record)|history of|"
+        r"prior (?:offen[cs]es?|crimes?|convictions?)|wanted for|charged with)\b",
+        re.IGNORECASE,
+    )
+    arrest = re.compile(
+        r"\b(?:arrest(?:ed|s|ing)?|detain(?:ed|s|ing)?|detention|"
+        r"deport(?:ed|s|ing|ations?)?|remove[ds]?|removing|removals?)\b",
+        re.IGNORECASE,
+    )
+    agency_actor = re.compile(
+        r"\b(?:ICE|CBP|DHS|immigration|federal)(?:\s+(?:officers?|agents?))?\s+"
+        r"(?:(?:who|that|was|were|is|are|allegedly|reportedly)\s+)*"
+        r"(?:fired|shot|discharged|used|deployed|pursued|tasered|"
+        r"charged|indicted|accused|investigated)\b|"
+        r"\b(?:ICE|CBP|DHS)(?:'s|’s)\s+(?:alleged\s+)?use of force\b",
+        re.IGNORECASE,
+    )
+    for sentence in re.split(r"[.!?]\s+|[\r\n]+", text):
+        historical_arrest = history.search(sentence) and arrest.search(sentence)
+        if signal.search(sentence) and (not historical_arrest or agency_actor.search(sentence)):
+            return True
+    return False
+
+
 def _infer_category(text: str) -> str:
     lower = text.lower()
     if any(term in lower for term in ("death", "died", "fatal", "medical", "hospital", "suicide")):
         return IceCategory.FATALITIES_MEDICAL.value
-    if any(term in lower for term in ("shooting", "firearm", "force", "taser", "pursuit")):
+    if _has_force_event_signal(text):
         return IceCategory.USE_OF_FORCE.value
     if any(term in lower for term in ("detention", "detainee", "facility", "custody", "contract", "jail")):
         return IceCategory.DETENTION.value
@@ -1450,6 +1482,18 @@ def _infer_category(text: str) -> str:
 
 
 def _infer_location(text: str) -> dict[str, Any]:
+    # A newsroom WASHINGTON dateline is not Washington-state event geography.
+    # Remove only dateline-shaped tokens, preserving an explicit event-location
+    # preposition and any independently stated location later in the passage.
+    dateline = re.compile(r"\bWASHINGTON(?:,?\s+D\.?C\.?)?\s*(?:[–—]\s*|-\s+)")
+
+    def without_dateline(match: re.Match[str]) -> str:
+        prefix = text[:match.start()]
+        if re.search(r"\b(?:in|near|at|outside|across|within|from|throughout|around|along|into|towards?|to|through|state of)\s+$", prefix, re.IGNORECASE):
+            return match.group(0)
+        return ""
+
+    text = dateline.sub(without_dateline, text)
     lower = text.lower()
     city_state = re.search(r"\b(?:in|near|at)\s+([A-Z][A-Za-z .'-]{2,60}),\s+([A-Z][A-Za-z .'-]{2,40})\b", text)
     if city_state:

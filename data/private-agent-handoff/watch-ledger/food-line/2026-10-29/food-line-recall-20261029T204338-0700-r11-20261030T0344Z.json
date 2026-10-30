@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T204338-0700-r11-20261030T0344Z",
+  "scheduled_for": "2026-10-29T20:45:54-07:00",
+  "started_at": "2026-10-29T20:43:38-07:00",
+  "completed_at": "2026-10-29T20:44:41.478-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T19:49:31.000-07:00",
+    "end_at": "2026-10-29T20:44:41.478-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified food-line heartbeat completion to current observation. Require a new direct, attributable source publication/update or official notice evidencing an immediate disruption within this window; search indexing/crawl time alone is not publication time.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1,
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary Food Line recall only. Primary production nationwide collection remains authoritative and was not queried or changed.",
+    "Executed 12 targeted web searches: four sole/last/full-service grocery store closure or fire; three canceled/suspended emergency distributions due to disaster; two abrupt pantry/food-bank closures; three official SNAP/WIC/EBT immediate access interruptions. Searches returned results; no search transport failures were observed.",
+    "No fresh, attributable, qualifying new loss of food access was verified after the preceding 2026-10-29T19:49:31-07:00 heartbeat. Negative result is limited by local-news publication/indexing latency, query scope, and the source timestamps available.",
+    "Spencer, NY only grocery store fire and resulting loss were reported September 14, 2026, so were excluded as historical. https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+    "Parachute, CO grocery store closure was reported September 10, 2026, so was excluded as historical. https://www.thestreet.com/retail/clarks-market-store-closure-parachute-colorado",
+    "Kauaʻi Now October 29 Hurricane Lowell recovery report notes an emergency food distribution still scheduled for October 30; it does not establish a cancellation or new service loss. https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "October 7–9 storm-related Prodisee Pantry cancellation is historical, not a newly announced closure in this interval. https://mynbc15.com/news/local/isaias-weather-closures-and-cancellations",
+    "October 29 San Francisco small-grocer affordability pilot is routine planned access/price improvement, not a disruption. https://sfist.com/2026/10/29/sf-supervisors-new-grocery-pilot-program-aims-to-cut-prices-by-up-to-25/",
+    "Search returns for SNAP-related November benefit interruptions overwhelmingly described October–November 2025 shutdown or older policy impacts; no new October 29, 2026 official immediate suspension verified.",
+    "No approval, publication, social posting, production mutation, schedule change, or task disabling occurred.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T194821-0700-r11-20261030T024821Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T19:49:31.000-07:00",
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 29 2026 community",
+        "\"last grocery store\" shut down October 29 2026",
+        "\"sole grocery store\" destroyed fire \"October\" \"2026\"",
+        "\"full service grocery\" closed town October 29 2026",
+        "\"food distribution\" canceled storm hurricane October 29 2026",
+        "\"food pantry\" canceled distribution weather October 29 2026",
+        "\"food bank\" distribution suspended outage flood October 29 2026",
+        "\"food pantry\" \"closed\" \"October 29, 2026\" emergency",
+        "food bank abruptly closes pantry service October 29 2026 local news",
+        "site:gov \"October 29, 2026\" SNAP EBT benefits system outage interruption",
+        "site:gov \"October 29, 2026\" WIC suspended closed emergency notice",
+        "\"October 29, 2026\" \"SNAP\" \"outage\" OR \"suspended\" OR \"delayed\" EBT"
+      ]
+    }
+  ]
+}

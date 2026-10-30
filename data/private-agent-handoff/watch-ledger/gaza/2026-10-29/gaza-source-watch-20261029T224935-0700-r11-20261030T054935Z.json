@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T224935-0700-r11-20261030T054935Z",
+  "scheduled_for": "2026-10-29T22:44:51-07:00",
+  "started_at": "2026-10-29T22:49:35-07:00",
+  "completed_at": "2026-10-29T22:50:48-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T21:49:15-07:00",
+    "end": "2026-10-29T22:50:48-07:00",
+    "basis": "Most recent verified hourly Gaza heartbeat completion through current observation. Palestine-local Oct 30 calendar dates alone were not counted as in-window evidence."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary missed-development recall; production Gaza collector and publisher remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T214759-0700-r11-20261030T044759Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T214759-0700-r11-20261030T044759Z.json",
+      "completed_at": "2026-10-29T21:49:15-07:00",
+      "verification": "Read directly from GitHub ops/watch-ledger immediately before search."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; homepage latest Oct 27 West Bank snapshot, Oct 26 situation report of Oct 22, and Oct 23 Gaza impact snapshot of Oct 21. No Gaza in-window change."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway (recurrent)."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest same Oct 27, 26 and 23 items, no new Gaza in-window bulletin."
+      },
+      {
+        "publisher": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; standing overview and links, no in-window medical evacuation, functionality, medical-supply or care-capacity announcement identified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"30/October/2026\" Gaza Friday casualties detention Rafah",
+      "site:reuters.com/world/middle-east/ Gaza \"October 30, 2026\" Palestinians killed ceasefire",
+      "site:apnews.com/article/ Gaza \"October 30, 2026\" strikes hospitals aid",
+      "site:aljazeera.com/news/2026/10/30 Gaza Israel killed aid ceasefire morning",
+      "site:un.org \"30 October 2026\" Gaza humanitarian aid health evacuation crossing",
+      "site:who.int \"30 October 2026\" Gaza medical evacuation health hospital",
+      "site:wfp.org OR site:unicef.org \"30 October 2026\" Gaza water food aid",
+      "Gaza October 30 2026 Friday morning killed wounded Israeli attacks ceasefire",
+      "site:english.wafa.ps/Pages/Details/ \"30/October/2026\" \"Gaza\"",
+      "site:theguardian.com/world/2026/oct/30 Gaza ceasefire crossing medical strike",
+      "site:middleeasteye.net/news \"30 October 2026\" Gaza killed injured detained",
+      "\"30 October 2026\" Gaza medical evacuation Rafah aid fuel ambulances water hospital"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible, latest relevant Gaza reporting remains Oct 29 19:31 Palestine time Jabalia fatality and Oct 29 23:33 Palestine time three Rafah returnee detentions; both were already considered in earlier watch windows."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/",
+        "result": "Accessible. Most recent Gaza story on listing is Oct 29 strikes/Rafah medical treatment coverage, already earlier than bounded window; Oct 30 entries seen were unrelated to Gaza."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible Arabic home, no new dated Gaza ambulance, hospital, response or medevac change independently verified."
+      },
+      {
+        "publisher": "UNICEF Gaza",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible, background emergency page only; no new verified in-window change."
+      },
+      {
+        "publisher": "WFP Palestine",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible, existing emergency information; no newly dated in-window Gaza access/food delivery shift."
+      },
+      {
+        "publisher": "UN News Gaza tag",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "Restricted fetch failure, recurrent."
+      }
+    ],
+    "exclusions": [
+      "Already documented October 29 Jabalia fatality near Zainab al-Wazir School and the three returnee detentions at Rafah, absent any verified new development.",
+      "Oct 29 Al Jazeera coverage about Gaza strikes, treatment-evacuation needs and Rafah, older than previous watch completion.",
+      "Search hits dating from 2025, January-September 2026 and earlier October 2026; no publication/event timestamps placing a distinct Gaza development within the bounded America/Los_Angeles window.",
+      "Unrelated Israel election, Iran/Yemen, West Bank, opinion and commentary coverage; unsupported social claims not used."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "issue": "HTTP 502",
+        "materiality": "Repeated prior restriction; WHO global and OCHA accessible; not newly material."
+      },
+      {
+        "source": "UN News Gaza tag",
+        "issue": "Restricted fetch failure",
+        "materiality": "Repeated prior restriction; other UN humanitarian sites and established reporting accessible; not newly material."
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO and UN News direct endpoints remain inaccessible, but substantial alternate primary/established coverage was available. Twelve supplementary targeted searches and direct publisher checks found no newly verified, nonduplicate, in-window Gaza development. No newly material failure/degradation identified.",
+    "safeguards": "One append-only heartbeat under ops/watch-ledger; no production/publication, approval, schedule or task changes."
+  }
+}

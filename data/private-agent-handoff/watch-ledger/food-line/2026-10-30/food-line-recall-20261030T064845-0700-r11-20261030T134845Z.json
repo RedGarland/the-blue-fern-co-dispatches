@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T064845-0700-r11-20261030T134845Z",
+  "scheduled_for": "2026-10-30T06:45:54-07:00",
+  "started_at": "2026-10-30T06:48:45-07:00",
+  "completed_at": "2026-10-30T13:49:36.042Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T12:51:43.484Z",
+    "end_at": "2026-10-30T13:49:36.042Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since preceding independently verified Food Line recall heartbeat completed at 2026-10-30 05:51:43.484 PDT; classify by actual publication/event time rather than indexing time.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; authoritative nationwide Food Line production collector unchanged. Searched sole/last/full-service grocery closures or disaster loss, emergency distribution cancellations due to storm/flood/fire/outage, sudden pantry or food-bank service interruptions, and new official SNAP/WIC/EBT immediate-access interruptions.",
+    "All 12 targeted web queries returned results without reported search-tool errors; no new qualifying and independently verifiable incident in the stated Pacific observation window.",
+    "Search results were mainly stale historical grocery closures, general retail/opening stories, old 2025 SNAP shutdown articles, standing agency policies, and unrelated resources; none established a newly effective food-access disruption during this window.",
+    "Freshly crawled notices are not necessarily newly published. Examples excluded: Michigan governor October 30 2025 SNAP releases (2025 event) and Aurora NC recent new market opening (increased access), not interruption.",
+    "Search limitations: indexing delay, incomplete local reporting and ephemeral provider notices; no finding does not prove absence.",
+    "Preceding heartbeat read from branch ops/watch-ledger: data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T055038-0700-r11-20261030T125038Z.json",
+    "No review approval, publishing, social posting, production mutation, schedule alteration, or task disabling.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" \"closed\" \"October 30\" 2026",
+        "\"only grocery\" fire closure October 29 30 2026 community",
+        "\"last grocery store\" \"closing\" October 2026 town",
+        "\"food distribution\" \"canceled\" storm October 30 2026",
+        "\"emergency food distribution\" \"cancelled\" flood hurricane October 29 30 2026",
+        "food bank mobile distribution canceled power outage fire October 30 2026",
+        "\"food pantry\" \"closed until further notice\" October 30 2026",
+        "\"food bank\" \"suspending services\" October 2026",
+        "\"food pantry\" \"temporarily closed\" storm flood October 30 2026",
+        "site:gov \"SNAP\" benefits interruption delay October 30 2026",
+        "site:gov \"WIC\" services suspended closed October 30 2026",
+        "site:gov EBT outage benefits unavailable October 29 30 2026"
+      ]
+    }
+  ]
+}

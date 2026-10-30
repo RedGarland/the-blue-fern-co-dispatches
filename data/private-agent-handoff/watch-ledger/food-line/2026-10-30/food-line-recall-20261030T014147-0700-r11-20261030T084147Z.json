@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T014147-0700-r11-20261030T084147Z",
+  "scheduled_for": "2026-10-30T01:45:54-07:00",
+  "started_at": "2026-10-30T01:41:47-07:00",
+  "completed_at": "2026-10-30T08:43:00.605Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T00:46:51.747-07:00",
+    "end_at": "2026-10-30T08:43:00.605Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the completed_at timestamp of the latest verified prior hourly Food Line heartbeat on ops/watch-ledger, converted to America/Los_Angeles. Search-index recency alone does not establish a new disruption.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall watch, not primary nationwide Food Line collection. Primary production collection remains authoritative.",
+    "12 targeted web searches completed across four high-value categories: sole/last/full-service grocery loss (3); canceled emergency food distribution (3); abrupt pantry/food-bank closure/access reduction (3); immediate official SNAP/WIC/EBT interruption (3). All web search requests returned; no transport error observed.",
+    "No newly source-dated, verifiable qualifying U.S. food-access disruption was found within the latest verified heartbeat interval. Search-index recency mismatches and local-source indexing gaps limit sensitivity; this is not proof of nationwide absence.",
+    "October 29 Kauaʻi Now Hurricane Lowell recovery notice says the October 30 Hawaiʻi Foodbank Kauaʻi emergency distribution remains scheduled for 4–5 p.m., so it is not a cancellation: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Older unrelated/historical grocery closures, international food-bank fires (including Baker Lake, Nunavut, Canada in May 2026), routine SNAP program guidance, and October/November 2025 shutdown-benefit stories excluded.",
+    "Prior verified heartbeat: data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T004520-0700-r11-20261030T074520Z.json; prior completed_at 2026-10-30T07:46:51.747Z.",
+    "No approvals, public publication, social posting, schedule change, automation disabling, or production collector modifications performed.",
+    {
+      "bounded_query_context": [
+        "October 30 2026 only grocery store town fire closure no alternative",
+        "October 30 2026 last grocery store shuts down rural residents",
+        "October 29 2026 sole full service supermarket fire closed access",
+        "October 30 2026 emergency food distribution canceled storm flood hurricane",
+        "October 30 2026 food bank distribution suspended power outage building damage",
+        "October 30 2026 Kauai Hawaii hurricane food distribution cancelled",
+        "October 30 2026 food pantry abruptly closed indefinitely families",
+        "October 30 2026 food pantry fire suspended operations",
+        "October 30 2026 food bank shuts doors reduces services immediately",
+        "site:gov October 30 2026 SNAP EBT outage cannot access benefits",
+        "site:gov October 30 2026 WIC benefits suspended system outage",
+        "October 30 2026 SNAP food assistance payments delayed official interruption"
+      ]
+    }
+  ]
+}

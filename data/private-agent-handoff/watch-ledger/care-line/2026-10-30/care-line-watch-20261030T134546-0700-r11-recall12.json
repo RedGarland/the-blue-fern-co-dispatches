@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T134546-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T13:45:22-07:00",
+  "started_at": "2026-10-30T13:45:46-07:00",
+  "completed_at": "2026-10-30T13:46:27-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T12:43:07-07:00",
+    "end": "2026-10-30T13:46:27-07:00",
+    "basis": "From previously verified Care Line Watch heartbeat through current bounded supplementary recall. Retrospective discoveries are considered only when not previously recorded; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not the primary U.S. or territory collection/publishing pipeline.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T124227-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T12:43:07-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Current CMS Public Notices listing successfully retrieved first, with latest visible notices dated October 23. No new listed terminations, rescissions, or CLIA actions within the observation period."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended operations October 30 2026 October 29 2026",
+      "maternity labor delivery obstetrics unit closing suspended service October 30 2026",
+      "rural hospital clinic shuttered ceased patient care October 30 2026 October 29",
+      "ambulance EMS air medical base closure suspended October 30 2026",
+      "October 30 2026 behavioral health psychiatric facility emergency closure patients transfer United States",
+      "October 30 2026 dialysis center oncology infusion services closed suspended patients",
+      "October 30 2026 primary care clinic closing today last day patient access",
+      "October 30 2026 ambulance service shuts down ceases 911 coverage local news",
+      "October 30 2026 reopened emergency department emergency care resumed after closure United States",
+      "October 30 2026 Puerto Rico Guam US Virgin Islands American Samoa hospital clinic maternity dialysis interrupted suspended",
+      "October 30 2026 air ambulance helicopter base shuts down closure EMS rural service",
+      "October 30 2026 hospital specialty unit \"closed\" \"patients\" announced Friday"
+    ],
+    "targeted_search_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "coverage_classes": [
+      "hospital, ED, maternity, behavioral health, dialysis, oncology, primary-care closures and suspensions",
+      "rural/emergency service losses",
+      "ambulance, air-medical and EMS-base disruptions",
+      "CMS termination, rescission and CLIA actions",
+      "effective restoration or reopening of previously lost essential services",
+      "50 states, District of Columbia and U.S. territories (indexed recall is non-exhaustive)"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Community Medical Center, Missoula, MT",
+        "reason": "Pediatric intensive-care loss already recorded earlier October 30; duplicate.",
+        "source_url": "https://www.physiciansweekly.com/post/hospital-beds-for-the-nations-sickest-kids-are-disappearing"
+      },
+      {
+        "name": "St. Vincent Medical Center, Portland, OR",
+        "reason": "Article published October 29 describes pediatric ICU closure from November 2025; historical, not new access change this hour.",
+        "source_url": "https://www.physiciansweekly.com/post/hospital-beds-for-the-nations-sickest-kids-are-disappearing"
+      },
+      {
+        "name": "Sanford Luverne Medical Center, Luverne, MN",
+        "reason": "October 28 reporting on previously recognized maternity-service closure; no newly established access event this hour.",
+        "source_url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872"
+      },
+      {
+        "name": "Sharon Regional Medical Center, Sharon, PA",
+        "reason": "Inpatient-service suspension previously reported and recorded in earlier watch; not a newly discovered event."
+      },
+      {
+        "name": "Gateway Regional Medical Center, Granite City, IL",
+        "reason": "October 30 report says November 17 Medicare termination remains proposed, not effective; no new verified service loss in window.",
+        "source_url": "https://www.stl.news/gateway-regional-faces-121m-debt-medicare-deadline/"
+      },
+      {
+        "name": "UNM Health, Albuquerque, NM",
+        "reason": "Official full restoration dated October 28; previously documented, not newly effective this hour.",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc"
+      },
+      {
+        "name": "Kula Hospital, Maui, HI",
+        "reason": "September restoration funding announcement; hospital and ED still closed and no effective reopening date.",
+        "source_url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/"
+      },
+      {
+        "name": "Guam Regional Medical City, Dededo, GU",
+        "reason": "October 17 announcement of temporary outpatient closure for October 19 with expected October 20 resumption, outside recall window.",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/"
+      }
+    ],
+    "source_failures": [],
+    "limitations": "No newly confirmed qualifying development found. Search indexing is uneven for small rural facilities and territories. Historical events in newly surfaced articles were screened for duplicates and excluded. No material retrieval failure observed.",
+    "controls": "Exactly one heartbeat to ops/watch-ledger; no approval, publication, schedule change, task disabling, or production collector modification."
+  }
+}

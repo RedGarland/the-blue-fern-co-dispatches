@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T064837-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T06:45:22-07:00",
+  "started_at": "2026-10-30T06:48:37-07:00",
+  "completed_at": "2026-10-30T06:50:38.597-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T05:48:16.503-07:00",
+    "end": "2026-10-30T06:50:38.597-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through this observation; bounded retrospective high-value recall permitted, with production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for U.S. states and territories, not a primary national collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T054553-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T05:48:16.503-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "CMS current listing inspected and shows no newer notices; canonical page accessible. An incorrect legacy CMS URL failed before locating the live page."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_method": "Twelve targeted fast web searches in one batch, after CMS check; recency bounded to 3 or 7 days, followed by source inspection without further keyword searches.",
+    "targeted_queries": [
+      "hospital emergency department closure suspension October 30 2026 local news",
+      "hospital labor delivery maternity unit closure services October 29 30 2026",
+      "rural hospital emergency services suspension October 29 30 2026",
+      "behavioral mental health inpatient psychiatric facility closing October 30 2026",
+      "dialysis center patients closure October 2026 local news",
+      "oncology cancer treatment clinic closure October 30 2026",
+      "primary care urgent care clinic temporarily closed October 30 2026 local",
+      "ambulance EMS service shutting down closing base October 29 30 2026",
+      "medical helicopter air ambulance base closure suspended October 2026",
+      "hospital ED maternity dialysis reopened restored October 30 2026 patients",
+      "Puerto Rico Guam US Virgin Islands CNMI American Samoa health clinic hospital ambulance service suspended reopened October 2026",
+      "hospital clinic closure announced October 29 2026 effective date confirmed"
+    ],
+    "coverage_classes": [
+      "hospital, emergency department, maternity, rural hospital and pediatric services",
+      "behavioral health, dialysis, oncology, primary care and urgent care",
+      "ambulance/EMS, air-medical and base closures",
+      "CMS provider termination, rescission and CLIA enforcement notices",
+      "effective restoration/reopening of previously lost essential services",
+      "U.S. territories, subject to local indexing limitations"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Roseland Community Hospital labor and delivery suspension, Chicago IL",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Reported October 28 as scheduled for the end of October; prior October 29 heartbeats already reviewed the planned suspension, and this run found no new confirmed effective closure or distinct update."
+      },
+      {
+        "name": "UNM Health ambulance diversion and appointment/surgery suspension, Albuquerque NM",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Occurred October 26; official October 27–28 updates confirm services restored, and earlier watch evidence already considered the episode. No distinct new loss or restoration in this window."
+      },
+      {
+        "name": "Watsonville Community Hospital possible maternity/NICU closure, Watsonville CA",
+        "source_url": "https://pajaronian.com/pvhcd-board-recommends-closure-of-labor-delivery-nicu/",
+        "reason": "A 120-day potential closure notice, not a verified effective service interruption; previously reviewed."
+      },
+      {
+        "name": "Waybridge Clinics Omaha NE and Nashville TN closures",
+        "reason": "Both final patient-care days October 30 were already identified in the verified 01:49 PDT heartbeat."
+      },
+      {
+        "name": "Community Medical Center Missoula MT pediatric intensive care closure",
+        "reason": "Identified by immediately preceding 05:45 PDT heartbeat; no new service-line change."
+      },
+      {
+        "name": "Historical Chicago-area obstetric closures and September Henderson Hospital maternity/NICU closure",
+        "reason": "Older known service losses without new effective or announced actions this window."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/medicare-general-information/medicare-approved-facilities-and-suppliers/public-notices",
+        "error": "Direct-open Internal Error for an incorrect legacy CMS path; canonical CMS page found and examined successfully, leaving official notice coverage intact."
+      }
+    ],
+    "limitations": "DEGRADED under the source-failure rule for one unsuccessful CMS legacy-path open; canonical official CMS Public Notices was fully accessible, and all 12 targeted searches returned usable results. No newly qualifying service loss, provider enforcement action or effective restoration verified. Local/territorial indexing may omit some low-visibility changes.",
+    "controls": "Exactly one private ops/watch-ledger heartbeat. No editorial approval, public publishing, production collector mutation, schedule change, or task disabling."
+  }
+}

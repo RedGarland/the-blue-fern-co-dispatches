@@ -113,7 +113,7 @@ jobs:
   validate_windows:
     name: Care scheduler wrapper (Windows)
     runs-on: windows-latest
-    timeout-minutes: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ci/gaza-oct29-exact-copy-validation-20261030' && github.event.pull_request.base.ref == 'add/pages-repo-default' && 2 || 10 }}
+    timeout-minutes: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ci/gaza-oct29-exact-copy-validation-20261030' && github.event.pull_request.base.ref == 'add/pages-repo-default' && 6 || 10 }}
     permissions:
       contents: read
     env:

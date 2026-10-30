@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T024420-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T02:45:22-07:00",
+  "started_at": "2026-10-30T02:44:20-07:00",
+  "completed_at": "2026-10-30T02:45:54-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T01:54:07.669-07:00",
+    "end": "2026-10-30T02:45:54-07:00",
+    "basis": "Previous verified Care Line watch heartbeat completed_at to current local observation. Retrospective discoveries were screened and existing watch-ledger findings excluded; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary national and territorial healthcare-access recall, not the production collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T014925-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T01:54:07.669-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "evidence": "CMS Public Notices page accessed before targeted searching; three newest listings dated October 23, 2026 (home health termination notices)."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_method": "Twelve targeted web searches (fast, three-day recency), followed only by direct source opens and prior-ledger inspection; no additional search queries.",
+    "targeted_queries": [
+      "\"hospital\" \"emergency department\" closed October 29 2026 healthcare",
+      "rural hospital emergency services suspended closed October 29 30 2026",
+      "labor delivery maternity birthing unit closing closed October 29 30 2026",
+      "behavioral health mental health clinic addiction treatment closed October 29 30 2026 patients",
+      "dialysis center oncology cancer treatment clinic closure October 29 30 2026",
+      "primary care urgent care clinic temporarily closed patients October 29 30 2026",
+      "ambulance EMS service closed base suspended air medical helicopter October 29 30 2026",
+      "hospital emergency services reopened resumed restored October 29 30 2026",
+      "Puerto Rico hospital sala de emergencia cierre suspendido 29 30 octubre 2026",
+      "Guam CNMI Saipan hospital clinic closure emergency services October 2026",
+      "US Virgin Islands American Samoa hospital ambulance health clinic closed October 2026",
+      "Medicare termination CLIA suspension provider hospital October 29 30 2026 notices"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Sanford Luverne Medical Center labor/delivery and newborn service closure announced for April 2027",
+        "source_url": "https://minneapolimedia.town.news/g/coon-rapids-mn/n/394681/minneapolimedia-news-minnesota-launches-rural-maternity-care-project",
+        "reason": "Concrete planned maternity loss, already examined and excluded as duplicate in immediately preceding verified Care Line heartbeat; no new effective change."
+      },
+      {
+        "name": "UNM Health ambulance diversions and clinical operations restored",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Provider's October 27-28 updates establish ambulance and clinic restoration before this window; previously documented, no new change."
+      },
+      {
+        "name": "Sí Se Puede Behavioral Health Center reaches full operating capacity",
+        "source_url": "https://pajaronian.com/si-se-puede-behavioral-health-center-in-full-capacity/",
+        "reason": "October 29 indexed report describes newly opened/expanded treatment capacity as of October 19, not reactivation of a previously lost essential service; direct article timed out, so details beyond indexed report unverified."
+      },
+      {
+        "name": "Chippewa Valley Health Cooperative new hospital timeline",
+        "source_url": "https://civicmedia.us/news/2026/10/29/chippewa-valley-health-cooperative-new-hospital",
+        "reason": "Future hospital development timeline, not an actual new loss or restoration of clinical operations."
+      },
+      {
+        "name": "Kauaʻi County hurricane recovery update",
+        "source_url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Accessible regional update did not substantiate a new healthcare facility/service closure or restoration."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://pajaronian.com/si-se-puede-behavioral-health-center-in-full-capacity/",
+        "failure": "Direct article page timed out on initial open and a retry; search-index excerpt remained accessible.",
+        "impact": "Limited verification of a nonqualifying new capacity/opening lead; no material failure of CMS or targeted search coverage."
+      }
+    ],
+    "limitations": "Search indexing is not exhaustive and territorial hits were sparse; direct Pajaronian article access failed despite retry. Remaining CMS and targeted searches completed. DEGRADED conservatively records a source access failure; it did not prevent assessment of the five required miss classes. Production collector and downstream deduplication remain authoritative.",
+    "controls": "One private ops/watch-ledger heartbeat only. No editorial review approval, public publication, schedule changes, or task disabling."
+  }
+}

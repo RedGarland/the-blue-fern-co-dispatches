@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T194104-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T19:45:22-07:00",
+  "started_at": "2026-10-29T19:41:04-07:00",
+  "completed_at": "2026-10-29T19:42:47.237-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T18:52:12-07:00",
+    "end": "2026-10-29T19:42:47.238-07:00",
+    "basis": "From completed_at of the newest independently fetched Care Line heartbeat on ops/watch-ledger through this recall check. Retrospective same-day developments were also assessed for possible misses, but previously logged stories were excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only. Primary production national and territory collector remains authoritative; this run did not conduct editorial review, publication, or approvals.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T184937-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T18:52:12-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "CMS Public Notices listing opened before the 12 targeted searches; most recent entries were three October 23 home-health agency termination notices (two CA, one OH). No later-dated public notice appeared."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" hospital emergency department temporarily closed suspended patient diversion",
+      "\"October 29, 2026\" labor delivery birthing maternity service closed suspended hospital",
+      "\"October 29, 2026\" behavioral health psychiatric residential substance abuse facility closing closed",
+      "\"October 29, 2026\" dialysis oncology cancer chemotherapy facility closing suspension clinic",
+      "\"October 29, 2026\" primary care rural hospital clinic closure emergency service loss",
+      "\"October 29, 2026\" ambulance EMS air medical base closure stop service",
+      "hospital clinic \"closing\" \"October 29, 2026\" emergency services patients 2026",
+      "hospital ED maternity cancer behavioral health \"October 30, 2026\" closing patients United States",
+      "Guam Saipan CNMI American Samoa hospital emergency clinic closed suspended October 29 2026",
+      "Puerto Rico Virgin Islands hospital sala de emergencia cierre suspensión octubre 29 2026",
+      "October 29 2026 EMS ambulance air ambulance base shut down county service",
+      "October 29 2026 reopened restored hospital emergency department maternity dialysis clinic after closure"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Hancock County Ambulance Service plans to end La Harpe agreement",
+        "url": "https://www.wgem.com/2026/10/29/hancock-county-ambulance-service-planning-end-agreement-with-la-harpe-after-unanswered-notice/",
+        "reason": "WGEM reported a planned service agreement withdrawal with no verified effective date or actual change in EMS coverage. La Harpe is pursuing another agency; not recorded absent a concrete access effect."
+      },
+      {
+        "title": "Watsonville Community Hospital financial risk and possible closure of maternity/NICU",
+        "url": "https://www.montereycountynow.com/news/local_news/funding-cuts-to-medical-care-signal-a-tenuous-future-for-local-patients-and-hospitals/article_fd810dcb-8724-41ca-b072-71b001737e09.html",
+        "reason": "Discussion of possible closure and potential board process, not an effected service closure. Previously monitored Watsonville risks; no new decided effective access change substantiated."
+      },
+      {
+        "title": "Guam Regional Medical City/GMHA typhoon Champi outpatient and non-emergency suspensions",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "Pre-existing October 17-19 storm response; outpatient reopening expected October 20; no newly verified October 29 change."
+      },
+      {
+        "title": "Munson Grayling-Otsego maternity transition; St. Joseph Warren maternity plan; Sharon Regional EMS diversions; Massillon addiction center; VHC Health closures",
+        "url": null,
+        "reason": "All already included in earlier October 29 Care Line heartbeat findings. No repeat entries."
+      },
+      {
+        "title": "Kaiser Permanente planned UCSF Oakland new pediatric behavioral-health wing",
+        "url": "https://www.biospace.com/press-releases/kaiser-permanente-invests-15m-for-behavioral-health-care-at-ucsf-benioff-childrens-hospital-oakland",
+        "reason": "Construction/funding of future facility expected 2031, not current restoration or reopening."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "A cap of 12 broad targeted search queries limits recall coverage and cannot establish absence of unindexed or inaccessible local/territory notices; CMS itself was accessible. One source article described an impending ambulance agreement termination, but a defined effective service change was not established. No material search failures were observed.",
+    "controls": "Exactly one heartbeat file written to ops/watch-ledger. No production publication, approval, schedule modification, or disabling."
+  }
+}

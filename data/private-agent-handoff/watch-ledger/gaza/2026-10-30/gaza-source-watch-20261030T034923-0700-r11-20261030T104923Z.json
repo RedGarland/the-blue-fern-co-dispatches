@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T034923-0700-r11-20261030T104923Z",
+  "scheduled_for": "2026-10-30T03:44:51-07:00",
+  "started_at": "2026-10-30T03:49:23-07:00",
+  "completed_at": "2026-10-30T03:50:41-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T02:47:43-07:00",
+    "end": "2026-10-30T03:50:41-07:00",
+    "basis": "Starts at the completed_at timestamp from the latest verified prior Gaza watch heartbeat on ops/watch-ledger; event/publication dates must support hourly novelty."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; primary daily Gaza collector/publisher remains authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T024608-0700-r11-20261030T094608Z.json",
+      "completed_at": "2026-10-30T02:47:43-07:00",
+      "verified": "Fetched exact prior heartbeat content from ops/watch-ledger; no_findings and Anadolu two-wounded story previously observed but publication/event time not confirmed."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent update dated Oct 27 for West Bank, latest Gaza humanitarian report published Oct 26; no report issued during window.",
+        "web_ref": "turn326262view0"
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; general crisis status, no verified new Gaza operational report during window.",
+        "web_ref": "turn326262view2"
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/palestine-press-releases/",
+        "result": "HTTP 502 Bad Gateway, continuing previously observed access restriction.",
+        "web_ref": "turn326262view1"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza October 30 2026 strike killed wounded Gaza city Jabalia Rafah",
+      "site:aa.com.tr/en/middle-east/ Gaza October 30 2026 injured killed ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza October 30 2026 civilian aid ceasefire",
+      "site:apnews.com/article/ Gaza Oct 30 2026 casualties humanitarian",
+      "site:aljazeera.com/news/2026/10/30/ Gaza strike displacement ceasefire",
+      "site:middleeasteye.net Gaza October 30 2026 killed wounded crossing aid",
+      "site:news.un.org/en/ Gaza October 30 2026 crossings humanitarian",
+      "site:unicef.org OR site:wfp.org Gaza Oct 30 2026 food water children displacement",
+      "site:palestinercs.org Gaza Oct 30 2026 ambulance hospital emergency",
+      "Gaza October 30 2026 medical evacuation hospitals fuel WHO minister health",
+      "\"2 Palestinians wounded as Israeli attacks continue in Gaza despite ceasefire\" \"October 30\" time published",
+      "Gaza October 30 2026 Sheikh Radwan apartment missile two injured Safatawi Qizan al Najjar latest local 12:00"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest dated items on Oct 30 are West Bank-related at 09:13-11:20 Palestine local time; newest visible Gaza casualty item is Oct 29 19:31 Palestine local, before watch window.",
+        "web_ref": "turn333707view1"
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/2-palestinians-wounded-as-israeli-attacks-continue-in-gaza-despite-ceasefire/4105670",
+        "result": "Article confirmed Oct 30 date but no source-specific publication time. Reports early Friday two minor injuries in Sheikh Radwan, demolitions east of al-Masdar, firing toward tents south of Khan Younis. Article/headline had already been observed and excluded as undated in previous watch; evidence does not demonstrate new in-window event or source publication.",
+        "web_ref": "turn333707view0"
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-strikes-destroy-2-homes-in-gaza-displacing-dozens-of-families/4105491",
+        "result": "Oct 29 report of two destroyed buildings in Safatawi and Bureij and dozens of families displaced; older event outside window.",
+        "web_ref": "turn418740view0"
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/tag/israel-palestine-conflict/",
+        "result": "Accessible; Oct 30 prominent items in tag are opinion, West Bank, Israeli election or elsewhere, not a new verified in-window Gaza humanitarian event.",
+        "web_ref": "turn914286view0"
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible; newest front-page operational Gaza item dated Aug 10, 2026.",
+        "web_ref": "turn914286view1"
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403 Forbidden, recurring restriction.",
+        "web_ref": "turn914286view2"
+      }
+    ],
+    "exclusions": [
+      "Anadolu Oct 30 two-wounded Sheikh Radwan report: date verified but early-Friday event has no independently verified in-window timing; previous watch already observed headline; not counted as a new hourly development.",
+      "Anadolu Oct 29 two homes destroyed/displaced families report: date/event before watch window.",
+      "WAFA Oct 29 Jabalia killing and Gaza tolls: prior/older events.",
+      "Oct 30 WAFA entries concerning West Bank excluded as out of scope.",
+      "Third-party reposts of Anadolu and unverified social/aggregator claims excluded; recirculated, unrelated, opinion and historical results excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502",
+        "materiality": "Persistent restriction already documented; WHO global and OCHA accessible."
+      },
+      {
+        "source": "UN News",
+        "issue": "robots.txt blocked domain-targeted search",
+        "materiality": "Previously documented; alternative sources accessible."
+      },
+      {
+        "source": "UNRWA",
+        "issue": "HTTP 403",
+        "materiality": "Previously documented; alternatives accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring partial source access failures. No newly material watch-wide degradation; usable authoritative/established reporting remained. No verified, nonduplicate development evidenced within the hourly window.",
+    "safeguards": "One append-only heartbeat on ops/watch-ledger; no approvals, publication, schedule, production or task state changes."
+  }
+}

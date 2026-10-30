@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T234217-0700-r11-20261030T064217Z",
+  "scheduled_for": "2026-10-29T23:44:51-07:00",
+  "started_at": "2026-10-29T23:42:17-07:00",
+  "completed_at": "2026-10-29T23:43:16-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T22:50:48-07:00",
+    "end": "2026-10-29T23:43:16-07:00",
+    "basis": "Directly verified prior ops/watch-ledger heartbeat completed_at through current observation; Palestine-local calendar date alone does not establish a new event."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production Gaza publisher and collector remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T224935-0700-r11-20261030T054935Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T224935-0700-r11-20261030T054935Z.json",
+      "completed_at": "2026-10-29T22:50:48-07:00",
+      "verification": "Fetched direct from ops/watch-ledger immediately before checks."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; newest listed is Oct 27 West Bank snapshot, then Oct 26 humanitarian report; no in-window Gaza update."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest items dated Oct 27, Oct 26 and Oct 23, not an in-window Gaza change."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, previously observed."
+      },
+      {
+        "publisher": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; standing emergency overview, no in-window new Gaza care capacity, ambulance, fuel or medical evacuation announcement."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"30/October/2026\" Gaza killed wounded Rafah detained",
+      "site:english.wafa.ps \"30/October/2026\" Gaza hospital ambulance aid crossing",
+      "site:reuters.com/world/middle-east/ Gaza \"October 30, 2026\" ceasefire civilians strikes",
+      "site:apnews.com/article/ Gaza \"October 30, 2026\" Israel humanitarian",
+      "site:aljazeera.com/news/2026/10/30/ Gaza casualties ceasefire Rafah",
+      "site:un.org \"30 October 2026\" Gaza humanitarian civilians",
+      "site:who.int \"30 October 2026\" Gaza health hospital evacuation",
+      "site:unicef.org Gaza October 30 2026 children water displacement",
+      "site:wfp.org Gaza October 30 2026 food trucks access",
+      "Gaza October 30 2026 morning killed injured Israeli forces ceasefire",
+      "Gaza October 30 2026 Friday Rafah crossing detainees hostage aid fuel ambulances",
+      "site:theguardian.com/world/2026/oct/30 Gaza OR site:middleeasteye.net/news Gaza Oct 30 2026 civilians"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Homepage timed out; already-known Rafah-returnee detention article accessible with Oct 29 23:33 Palestine-local timestamp, well before the search window. No verified Oct 30 Gaza incident."
+      },
+      {
+        "publisher": "WAFA detention article",
+        "url": "https://english.wafa.ps/Pages/Details/176439",
+        "result": "Accessible; Oct 29 23:33 Palestine time report of three detainees is prior-window and already logged."
+      },
+      {
+        "publisher": "Al Jazeera news / Middle East",
+        "url": "https://www.aljazeera.com/middle-east/",
+        "result": "Accessible; Oct 30 entries reviewed were predominantly Syria, Yemen, Israel election, Iran; no verified new in-window Gaza development."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible; surfaced Gaza items dated Aug 10 and Jun 10, none in-window."
+      },
+      {
+        "publisher": "UNICEF Gaza",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible; standing emergency page with latest linked news dated Oct 16, no in-window new development."
+      },
+      {
+        "publisher": "WFP Palestine",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; background emergency situation without an in-window dated change."
+      },
+      {
+        "publisher": "UN News Gaza tag",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "Restricted fetch failure, recurrent."
+      }
+    ],
+    "exclusions": [
+      "WAFA Oct 29 23:33 Palestine-local three Rafah-returnee detentions already reported in earlier watch; not new.",
+      "Earlier Oct 29 Jabalia fatality and Oct 29 strikes not new; no corroborated distinct in-window update.",
+      "Oct 30 search hits lacking verifiable Gaza event/publication timing or older source dates; no backdating from Palestine calendar date alone.",
+      "West Bank items, Israel electoral politics, Syria, Yemen, Iran, commentary and unsourced social posts excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Recurrent, previously documented; WHO global portal and OCHA accessible, not newly material."
+      },
+      {
+        "source": "UN News Gaza tag",
+        "issue": "Restricted fetch failure",
+        "materiality": "Recurrent; other primary humanitarian sources accessible, not newly material."
+      },
+      {
+        "source": "WAFA English homepage",
+        "issue": "Timeout",
+        "materiality": "Individual known WAFA article remained accessible; no established watch-wide material coverage loss."
+      }
+    ],
+    "status_rationale": "DEGRADED due to partial direct-source access failures despite sufficient alternative primary and established publisher coverage. Twelve additional targeted searches and direct checks yielded no verified nonduplicate developments in the bounded America/Los_Angeles window. No newly material degradation.",
+    "safeguards": "Exactly one append-only heartbeat intended for ops/watch-ledger; no production, publication, approvals or automation schedule changes."
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T174812-0700-r11-20261030T004849Z",
+  "scheduled_for": "2026-10-29T17:45:54-07:00",
+  "started_at": "2026-10-29T17:48:12-07:00",
+  "completed_at": "2026-10-29T17:48:49-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T16:49:16-07:00",
+    "end_at": "2026-10-29T17:48:49-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From the previous verified Food Line Source Watch heartbeat completion to this run's observation timestamp. Only new official or source-supported food-access disruptions first reported during this interval qualify; article publication timestamps take precedence over crawl times.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only; the nationwide production Food Line collector remains authoritative and was neither modified nor treated as replaced.",
+    "Completed 12 targeted web searches: 3 sole/last grocery-store loss, 3 weather/damage-related emergency-distribution cancellations, 3 abrupt pantry/food-bank closures or reductions, and 3 immediate SNAP/WIC/EBT service interruptions. No query failure was reported.",
+    "Within 2026-10-29 16:49:16–17:48:49 PDT, no newly verified, qualifying U.S. food-access disruption was identified.",
+    "Spencer, NY sole-grocery fire coverage is dated September 11–14, 2026 (https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/). Akron, OH Roush's Market fire reporting is from May 30, 2026 (https://www.cleveland19.com/2026/05/30/akron-fire-crews-battle-commercial-building-fire/). Both are historical, not new developments.",
+    "Ruby's Pantry network shutdown reporting is dated April 3, 2026 (https://www.independent.co.uk/news/world/americas/rubys-pantry-closure-food-bank-minnesota-north-dakota-b2951335.html); excluded as historical.",
+    "Direct Gleaners Community Food Bank/PantryNet mobile-distribution page gives generic weather-watch guidance and explicitly defines WEATHER WATCH as a still-planned distribution; no confirmed new cancellation with a timestamp was exposed in its readable text (https://pantrynet.org/mobile-distribution-events/).",
+    "USDA Food and Nutrition Administration California disaster assistance update concerns an October 20, 2026 waiver for food lost to Tropical Storm Rachel, not a new interruption in this window (https://fna-bwbufwdzbabpezgc.z01.azurefd.us/disaster/california).",
+    "SNAP results included October 2025 shutdown articles, historical EBT access changes, and monitoring aggregators rather than a newly dated official interruption. No claims of nationwide normal operation inferred from unofficial outage trackers.",
+    "Search indexing delay and source-site dynamic calendars limit the assurance of a negative finding. Publication date and event date both screened; direct-source text preferred.",
+    "No editorial approvals, public publications, schedule changes, task disabling, or production collector mutations.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T164835-0700-r11-20261029T234916Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T16:49:16-07:00",
+      "bounded_query_context": [
+        "October 29 2026 \"only grocery store\" closed fire community",
+        "October 29 2026 \"last grocery store\" fire closure",
+        "October 29 2026 \"sole grocery\" \"closed\" fire",
+        "October 29 2026 food bank distribution canceled storm flood outage",
+        "October 29 2026 food pantry distribution cancelled weather emergency",
+        "October 29 2026 \"food distribution\" suspended storm fire damage",
+        "October 29 2026 \"food pantry\" \"closed\" suddenly",
+        "October 29 2026 food bank closure abrupt service suspension",
+        "October 29 2026 food pantry \"temporarily closed\" damage",
+        "October 29 2026 state SNAP benefits suspended delay system outage official",
+        "October 29 2026 WIC benefits interruption outage official state",
+        "October 29 2026 \"SNAP\" \"EBT\" outage unable to access benefits"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T204418-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T20:45:22-07:00",
+  "started_at": "2026-10-29T20:44:18-07:00",
+  "completed_at": "2026-10-29T20:46:17.655-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T19:42:47.237-07:00",
+    "end": "2026-10-29T20:46:17.655-07:00",
+    "basis": "Previous independently verified Care Line watch heartbeat completed_at through this check. Retrospective same-day events newly recovered are in scope for supplementary recall, subject to deduplication."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261029-il-rantoul-carle-health-temporary-clinic-closure",
+      "canonical_source_url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/",
+      "title": "Carle Health temporarily closes Rantoul clinic over high moisture levels",
+      "publisher": "WAND News",
+      "exact_supporting_passage": "According to Carle, current appointments will be relocated to other clinics in the region while the building is closed.",
+      "source_published_date": "2026-10-29",
+      "state": "Illinois",
+      "city": "Rantoul",
+      "county": "Champaign",
+      "territory": null,
+      "event_type": "temporary_outpatient_clinic_closure",
+      "service_line": "Outpatient clinic; specific specialties including primary care not independently confirmed",
+      "access_consequences": "Rantoul clinic temporarily closed owing to elevated moisture; current appointments relocated to other regional clinics, with Carle to contact patients. No reopening date announced.",
+      "affected_population": "Patients scheduled at the Rantoul clinic; number of patients and specific specialty populations unknown.",
+      "effective_date": null,
+      "announcement_date": "2026-10-29",
+      "confidence": "medium",
+      "source_role": "local_reporting_quoting_health_system",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "evidence_notes": "WAND indexed article gives local Oct 29 publication at 8:23 p.m. CDT (6:23 p.m. PDT); prior to this window, but not found in prior heartbeat. Direct retrieval of WAND article failed with DisabledError; supporting quote and details are preserved from accessible indexed snippet. Full article and precise clinic specialties unavailable. Do not treat as verified permanent closure."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production national and territory collection remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T194104-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T19:42:47.237-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Opened the canonical CMS Public Notices page before all targeted searches. Latest dated entries remain October 23 California/Ohio home-health terminations; no October 29 notices visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" hospital emergency department closed ambulance diverted service suspension",
+      "\"October 29, 2026\" labor delivery maternity birthing unit closing hospital service",
+      "\"October 29, 2026\" psychiatric behavioral health addiction treatment center closes patients",
+      "\"October 29, 2026\" dialysis oncology primary care clinic closure suspended care",
+      "\"October 29, 2026\" ambulance EMS air medical base closing suspended service",
+      "\"October 29, 2026\" hospital reopening emergency maternity clinic restored service after closure",
+      "Watsonville Community Hospital board October 28 2026 voted maternity NICU decision latest October 29",
+      "2026 October 29 2026 rural hospital emergency department ambulance diversion closure announcement local news",
+      "2026 October 29 dialysis centers shut down temporarily chemotherapy oncology cancellation clinic patients",
+      "2026 October 29 \"air ambulance\" \"base\" closes EMS emergency coverage end",
+      "2026 October 29 Puerto Rico Guam CNMI Saipan US Virgin Islands American Samoa hospital clinic closed suspended emergency service",
+      "2026 October 29 2026 healthcare clinic hospital services resumed reopened after sudden shutdown surgery cancer rural"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Watsonville Community Hospital maternity/NICU board action",
+        "url": "https://santacruzlocal.org/2026/10/28/watsonville-community-hospital-moves-to-shutter-labor-and-delivery/",
+        "reason": "Board moved closure process forward October 28; labor/delivery remains open, additional resolution/120-day notice needed and no actual service change in this watch window. Pre-existing NICU closure in July is not a new shutdown."
+      },
+      {
+        "title": "Massillon addiction-recovery center; Sharon Regional cardiac/EMS diversion; Warren and Munson maternity transitions",
+        "url": null,
+        "reason": "Already documented in earlier October 29 Care Line heartbeat findings; not repeated."
+      },
+      {
+        "title": "Sí Se Puede Behavioral Health Center, Watsonville",
+        "url": "https://pajaronian.com/si-se-puede-behavioral-health-center-in-full-capacity/",
+        "reason": "October 19 expansion/new capacity, not abrupt restoration of a previously lost service; outside effective-hour window."
+      },
+      {
+        "title": "UNM Health cybersecurity disruption",
+        "url": "https://apnews.com/article/7a3593f8a3cee4ca895774ab1574919f",
+        "reason": "October 26 temporary diversion/partial recovery, already known and not newly changed."
+      },
+      {
+        "title": "Hancock County/La Harpe ambulance agreement",
+        "url": "https://www.wgem.com/2026/10/29/hancock-county-ambulance-service-planning-end-agreement-with-la-harpe-after-unanswered-notice/",
+        "reason": "Intent to withdraw agreement without verified effective access change; previously excluded."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "WAND News — Carle Rantoul clinic",
+        "url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/",
+        "failure": "Direct open returned DisabledError; indexed article content and Carle-attributed statement available.",
+        "materiality": "Partial evidence limitation; status DEGRADED, not FAILED."
+      }
+    ],
+    "limitations": "Twelve bounded search queries cannot exhaust all U.S. local and territorial developments. WAND full-text retrieval failed and precise Carle Rantoul specialty list/effective closure time remain unverified; retain pending_review medium confidence until independent source confirmation.",
+    "controls": "Only this private handoff heartbeat file is created. No approval, public publication, schedule modification or task disabling."
+  }
+}

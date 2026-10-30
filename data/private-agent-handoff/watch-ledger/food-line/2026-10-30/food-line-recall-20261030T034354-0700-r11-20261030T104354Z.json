@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T034354-0700-r11-20261030T104354Z",
+  "scheduled_for": "2026-10-30T03:45:54-07:00",
+  "started_at": "2026-10-30T03:43:54-07:00",
+  "completed_at": "2026-10-30T10:45:01.107Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T02:51:39.658-07:00",
+    "end_at": "2026-10-30T10:45:01.107Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified Food Line heartbeat completed at 2026-10-30T09:51:39.658Z (02:51:39.658 PDT); identify directly sourced newly reported qualifying changes through this run, not incidents merely reindexed or published earlier.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      3,
+      null
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch limited to four high-value missed-disruption classes. Production nationwide Food Line collection remains authoritative.",
+    "Twelve targeted web searches completed: three per class for sole/last/full-service grocery-store loss; storm/flood/fire/outage-related distribution cancellation; abrupt pantry/food-bank service reduction or closure; official SNAP/WIC/EBT interruption with immediate access effects. Search tool returned no reported transport errors.",
+    "No verifiable source-dated new qualifying disruption was found within this check's Pacific window. Limited indexing and regional/provider coverage mean this is not a proof of absence.",
+    "Historical incident results excluded: Spencer NY Shur Fine fire (September 11); Akron OH Roush's Market fire (May 30); El Paso TX flood-related food bank service closure (September 25); South Hayward Parish pantry closure (August); 2025 SNAP interruption coverage; earlier Ruby's Pantry closure.",
+    "Kauaʻi Now's October 29 Hurricane Lowell recovery notice explicitly lists a Friday October 30 4–5 p.m. Hawaiʻi Foodbank Kauaʻi mobile pantry distribution at Hale Līhuʻe as still scheduled; it does not establish cancellation: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "WHYY Oct. 29 report on Milford DE Lulu M. Ross Elementary fire describes school meals redistributed via meal hubs, not canceled emergency food distribution; incident dated Oct. 25 and outside search window: https://whyy.org/articles/lulu-ross-elementary-school-fire-delaware/",
+    "Prior verified watch-ledger heartbeat: data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T025031-0700-r11-20261030T095031Z.json",
+    "No editorial approvals, public publication, social posts, production collector changes, schedule changes, or disabling performed.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 29 30 2026 rural town",
+        "\"food distribution\" canceled storm flooding October 29 30 2026 pantry",
+        "\"food pantry\" closed unexpectedly October 29 30 2026",
+        "site:gov SNAP WIC benefits outage interruption October 29 30 2026",
+        "October 30 2026 town \"only grocery store\" closing loss residents",
+        "October 29 2026 \"last grocery store\" closure town community",
+        "October 30 2026 food bank \"distribution canceled\" storm",
+        "October 29 2026 \"food distribution\" \"canceled\" hurricane flood fire",
+        "October 30 2026 \"food pantry\" \"shut down\" abruptly access",
+        "October 29 2026 \"food bank\" closed warehouse fire flood",
+        "October 30 2026 \"SNAP\" \"system outage\" benefits state",
+        "October 29 2026 site:gov \"WIC\" \"closed\" \"outage\" benefits"
+      ]
+    }
+  ]
+}

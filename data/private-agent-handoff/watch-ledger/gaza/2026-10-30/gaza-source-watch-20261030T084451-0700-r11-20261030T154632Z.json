@@ -1,0 +1,171 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T084451-0700-r11-20261030T154632Z",
+  "scheduled_for": "2026-10-30T08:44:51-07:00",
+  "started_at": "2026-10-30T08:44:54-07:00",
+  "completed_at": "2026-10-30T08:46:32-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T07:49:22-07:00",
+    "end": "2026-10-30T08:46:32-07:00",
+    "basis": "Verified preceding Gaza ops/watch-ledger heartbeat completed_at; reconciled newly appeared publisher items against the prior direct-source snapshot. A WAFA item was published 2m22s before prior heartbeat completion but after its publisher snapshot, and is explicitly marked a bounded overlap capture rather than misrepresented as in-window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261030-khan-younis-child-wounds-wafa-176450",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176450",
+      "title": "Minor succumbs to wounds due to Israeli army gunfire south of Khan Younis",
+      "publisher": "WAFA — Palestinian News & Information Agency",
+      "source_date": "2026-10-30",
+      "publication_date": "2026-10-30",
+      "publication_time": "2026-10-30T16:47:00+02:00",
+      "event_date": "2026-10-30",
+      "underlying_injury_date": "2026-10-28",
+      "location": "Qizan Rashwan, south of Khan Younis, Gaza Strip",
+      "affected_population_or_system": "Civilian child; fatality from earlier gunshot wound",
+      "exact_supporting_passage": "Eight-year-old Yamen Hisham Yahya Saqr died of his wounds sustained after being shot by Israeli occupation forces",
+      "source_type": "Palestinian official news agency, directly accessible article",
+      "classification": "new",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "observed_during": "2026-10-30T08:44:54-07:00/2026-10-30T08:46:32-07:00",
+        "source_reference": "turn472630view0",
+        "status": "New to supplementary recall watch; borderline overlap, not newly published within strict start/end",
+        "chronological_note": "WAFA publication converted from Asia/Gaza to America/Los_Angeles was 07:47 PDT, 2m22s before previous completion. Prior heartbeat's WAFA snapshot had latest item at 16:21 Gaza local time, so this specific 16:47 article was not previously observed.",
+        "secondary_detail": "The same report describes recovery of the body of a 47-year-old man from an earlier airstrike; treated as historical body recovery and not a second newly killed individual."
+      }
+    },
+    {
+      "finding_id": "gaza-20261030-ohchr-yellow-line-expansion-displacement",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/10/30/ethnic-cleansing-fears-rise-as-israel-squeezes-space-in-gaza-un",
+      "title": "Ethnic cleansing fears rise as Israel squeezes space in Gaza: UN",
+      "publisher": "Al Jazeera English, reporting an OHCHR statement issued on 30 October",
+      "source_date": "2026-10-30",
+      "publication_date": "2026-10-30",
+      "publication_time": null,
+      "event_date": null,
+      "event_period": "preceding two weeks, with tent-strike report on 2026-10-25",
+      "location": "Shujayea in Gaza City; eastern Bureij, eastern Deir al-Balah and eastern al-Maghazi, central Gaza Strip",
+      "affected_population_or_system": "Displaced Palestinian households, shelters and remaining civilian buildings near the Yellow Line",
+      "exact_supporting_passage": "The OHCHR documented the westward expansion of the Israeli military over the past two weeks",
+      "source_type": "Established reporting attributing documentation and 30 October statement to UN OHCHR; original OHCHR site blocked in this environment",
+      "classification": "follow-up",
+      "confidence": "medium-high for publication and reported statement; medium for uncrosschecked local displacement estimate",
+      "bounded_discovery_context": {
+        "observed_during": "2026-10-30T08:44:54-07:00/2026-10-30T08:46:32-07:00",
+        "source_reference": "turn472630view1",
+        "status": "Newly visible after prior Al Jazeera publisher snapshot, but exact intraday publication time unavailable",
+        "summary": "Al Jazeera says a new Friday OHCHR statement documents additional westward encroachment and resultant displacement, destruction of structures and attacks on shelters. Reports, attributed to Gaza's public works/housing ministry, that a Sunday tent fire displaced approximately 200 families/800 people; not independently verified as a fresh Friday event.",
+        "caution": "Underlying tent incident was previously discussed in 27 October UN coverage; not counted as a separate newly occurring event or fresh 200-family loss. Newly issued OHCHR statement classified follow-up, not a second displacement event.",
+        "official_statement_url": null,
+        "official_statement_access": "OHCHR press-releases and statements pages returned HTTP 403"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall only; primary production collector and publisher remain authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T074451-0700-r11-20261030T144821Z.json",
+      "verified": true,
+      "completed_at": "2026-10-30T07:49:22-07:00",
+      "outcome": "no_findings"
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest Gaza-containing humanitarian situation report on listing dated 26 Oct, not in this hour.",
+        "web_ref": "turn889991view0"
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no current-hour Gaza health, evacuation, ambulance or capacity update in latest-news listing.",
+        "web_ref": "turn889991view1"
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/palestine-press-releases/",
+        "result": "HTTP 502; known recurring restriction.",
+        "web_ref": "turn889991view2"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 30 2026 17:00 18:00 19:00 latest killed wounded strikes civilians",
+      "site:ochaopt.org Gaza 30 October 2026 humanitarian updates",
+      "site:who.int Gaza 30 October 2026 medical evacuation ambulance health",
+      "site:unicef.org Gaza October 30 2026 children water aid",
+      "site:unrwa.org Gaza October 30 2026 shelters displacement",
+      "site:wfp.org Gaza October 30 2026 crossings food access",
+      "site:palestine.un.org Gaza 30 October 2026 fuel crossings",
+      "site:english.wafa.ps Gaza October 30 2026 injured killed displaced 18 19",
+      "Gaza October 30 2026 ceasefire hostage negotiations Reuters AFP AP newest",
+      "Gaza October 30 2026 hospital fuel transport Palestinian Red Crescent evacuation",
+      "site:aljazeera.com/news/2026/10/30 Gaza Israel killed aid hospitals",
+      "Gaza 30 October 2026 latest UN News Reliefweb armed attacks civilian impact"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Freshly visible 16:47 Gaza-local report of child succumbing to wounds; converted to 07:47 PDT, an overlap of 2m22s; article verified directly.",
+        "web_refs": [
+          "turn810333view0",
+          "turn472630view0"
+        ]
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/tag/israel-palestine-conflict/",
+        "result": "Newly visible 30 Oct OHCHR statement-based report on military westward expansion/displacement; intraday publication time not shown.",
+        "web_refs": [
+          "turn810333view1",
+          "turn472630view1"
+        ]
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible; no 30 Oct Gaza health/ambulance item on main news listing.",
+        "web_ref": "turn810333view2"
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Accessible; latest listed UN story dated 27 Oct. Previously reported Shujayea camp fires / roughly 200 families displaced; excluded as repeat event.",
+        "web_ref": "turn107666view0"
+      }
+    ],
+    "exclusions": [
+      "OCHA/WHO previously published reports and broad background excluded.",
+      "Hebron and other West Bank actions excluded as outside Gaza scope.",
+      "Repeated 27 October UN account of Shujayea fire / approximately 200 families excluded as an independent new event; 30 October OHCHR re-assessment treated only as follow-up.",
+      "Earlier October 29 Gaza casualty items and prior Anadolu two-wounded item excluded as previously seen or insufficiently timestamped.",
+      "Opinion, unsupported social allegations, unsourced statistics and general election commentary excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "502 Bad Gateway",
+        "materiality": "Recurring issue; WHO global and OCHA accessible."
+      },
+      {
+        "source": "UN OHCHR",
+        "issue": "403 Forbidden on press-release and statements index",
+        "materiality": "Unable to directly confirm original 30 Oct OHCHR statement; Al Jazeera report gives attributable evidence."
+      },
+      {
+        "source": "UN unispal",
+        "issue": "403 Forbidden",
+        "materiality": "Alternative UN Palestine website accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to source-access restrictions, not watch-wide failure. Two source-traceable watch leads: one newly observed child death (bounded previous-run overlap), and one newly reported UN human-rights follow-up on forced displacement; no duplicate event double-counted.",
+    "safeguards": "Exactly one append-only private ops/watch-ledger JSON heartbeat; no approvals, release, publication, primary collector, schedule, or task change."
+  }
+}

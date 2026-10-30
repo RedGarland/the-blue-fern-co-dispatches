@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T104517-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T10:45:22-07:00",
+  "started_at": "2026-10-30T10:45:17-07:00",
+  "completed_at": "2026-10-30T10:47:27.557-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T09:51:41-07:00",
+    "end": "2026-10-30T10:47:27.557-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through this run, with limited retrospective recall for newly discovered high-value service losses. Production collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-us-pa-sharon-regional-inpatient-suspension-20261029",
+      "canonical_source_url": "https://www.healthcaretech.news/hospitals/sharon-regional-pauses-inpatient-care-payroll",
+      "title": "Sharon Regional Medical Center pauses inpatient services; emergency department remains open",
+      "publisher": "Healthcare Technology News",
+      "exact_supporting_passage": "Sharon Regional Medical Center in Pennsylvania has paused inpatient services after struggling to meet payroll",
+      "source_published_date": "2026-10-30",
+      "state": "Pennsylvania",
+      "city": "Sharon",
+      "county": "Mercer",
+      "territory": null,
+      "event_type": "hospital_inpatient_service_suspension",
+      "service_line": "Inpatient hospital care (specific wards and specialties unconfirmed); emergency department remains open",
+      "access_consequences": "Inpatient admissions/services have been paused; the report says the hospital would arrange transfers to other facilities if the pause continues. Actual patient transfer count, inpatient bed count and reopening date are unknown.",
+      "affected_population": "Patients requiring inpatient care in Sharon and the surrounding Mercer County catchment; exact number unknown",
+      "effective_date": null,
+      "announcement_date": "2026-10-29",
+      "confidence": "medium",
+      "source_role": "secondary_reporting_attributing_october_29_hospital_statement_to_beckers_hospital_review; indexed_article_content_only",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded U.S. and territories recall; does not supersede production national collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T094915-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T09:51:41-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Official list verified before all non-CMS targeted searches; no new October 30 public notice. Initial obsolete CMS URL could not be opened, so canonical list was found and opened successfully."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 30, 2026\" hospital emergency department closed suspended services today",
+      "\"October 30, 2026\" maternity labor delivery unit closes hospital effective",
+      "\"October 30, 2026\" behavioral health clinic closes patients treatment",
+      "\"October 30, 2026\" dialysis clinic closure patients treatment services",
+      "\"October 30, 2026\" ambulance service closed station air medical base",
+      "\"October 30, 2026\" oncology cancer center clinic closing patient services",
+      "\"Sharon Regional Medical Center\" \"paused\" inpatient \"October 29\" 2026",
+      "\"Colorful Resilience\" mental health permanently closed October 30 2026 location",
+      "\"Community Health Alliance\" \"North Valleys\" \"October 30\" 2026 close",
+      "\"October 30, 2026\" rural hospital service reopened resumed restored after closure",
+      "\"October 30, 2026\" clinic emergency room hospital closes or suspends services rural",
+      "\"October 30, 2026\" Puerto Rico Guam Virgin Islands clinic hospital closed suspended emergency"
+    ],
+    "coverage_classes": [
+      "Hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures and suspensions",
+      "Emergency and rural service losses",
+      "Ambulance, air-medical and base closures/suspensions",
+      "CMS provider terminations, rescissions and CLIA actions",
+      "Concrete and effective restoration of previously lost essential services",
+      "States and territories; sparse local/territorial indexing limits completeness"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Colorful Resilience, West Springfield, Massachusetts",
+        "source_url": "https://colorfulresilience.com/",
+        "reason": "Inconsistent official-site retrieval: search cache said permanently closed effective Oct 30 while directly opened page says final operations Oct 31; no reliably established Oct 30 completed closure. Prospective transition only; recheck after effective date."
+      },
+      {
+        "name": "Community Health Alliance North Valleys Health Center, Reno, Nevada",
+        "source_url": "https://www.chanevada.org/news/community-health-alliance-announces-closure-of-north-valleys-health-center",
+        "reason": "Closure for Oct 30 was announced Sep 17 and was already documented in earlier healthcare coverage; no independent new operational confirmation during watch. Official article timed out when opened."
+      },
+      {
+        "name": "Waybridge Clinics, Omaha NE and Nashville TN",
+        "source_url": "https://www.waybridgeclinics.com/closing",
+        "reason": "Previously recorded by this watch during Oct 30 01:54 run; no new development."
+      },
+      {
+        "name": "FAVOR Inc., Wethersfield, Connecticut",
+        "source_url": "https://www.nbcconnecticut.com/news/local/longtime-dcf-partner-nonprofit-helping-kids-in-crisis-to-close-by-end-of-october/3785394/",
+        "reason": "Navigation/advocacy nonprofit winding down, not a direct clinical service suspension in designated high-value miss classes; previously announced Oct 15."
+      },
+      {
+        "name": "Kickapoo Tribal Health Center Building Q, Oklahoma",
+        "source_url": "https://okkthc.com/",
+        "reason": "Temporary renovation relocation with patient appointments reassigned to other areas rather than demonstrated loss of access."
+      },
+      {
+        "name": "Calhoun Liberty Medical Center, Florida",
+        "source_url": "https://www.wusf.org/health-news-florida/2026-10-30/rural-calhoun-liberty-hospital-is-getting-a-2-5-million-state-grant-to-expand-access-to-care",
+        "reason": "Grant for planned future expansion, not a concrete restoration of previously lost service."
+      },
+      {
+        "name": "deCastro Clinic, St. John, British Virgin Islands",
+        "source_url": "https://welcometovi.com/alerts",
+        "reason": "British Virgin Islands are outside U.S. and territory scope; dated Oct 29."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertificationgeninfo/public-notices",
+        "error": "Obsolete CMS URL inaccessible; canonical CMS Public Notices listing subsequently opened successfully."
+      },
+      {
+        "url": "https://www.healthcaretech.news/hospitals/sharon-regional-pauses-inpatient-care-payroll",
+        "error": "Direct article fetch returned DisabledError; indexed search passage and dated attribution to a Becker's Hospital Review Oct 29 hospital statement were accessible. Primary Becker source could not be opened or independently validated."
+      },
+      {
+        "url": "https://www.beckershospitalreview.com/",
+        "error": "Primary publication homepage timed out during attempted corroboration."
+      },
+      {
+        "url": "https://www.chanevada.org/news/community-health-alliance-announces-closure-of-north-valleys-health-center",
+        "error": "Provider closure announcement timed out; corroborating Sept 17 article summary available."
+      }
+    ],
+    "limitations": "Sharon Regional inpatient suspension is reported by a secondary outlet citing an Oct 29 hospital statement; the full secondary article and attributed primary reporting were inaccessible, so scope, exact effective time and consequences remain unverified. DEGRADED per source-failure rule. This is a retrospective discovery of a reported Oct 29 change, not proof the suspension began in the current hour. The Oct 30 closure claim for Colorful Resilience is internally inconsistent and was excluded. No new CMS notice found.",
+    "controls": "Exactly one private branch heartbeat. Finding pending_review. No editorial approval, publication, production collector change, schedule change or disabling."
+  }
+}

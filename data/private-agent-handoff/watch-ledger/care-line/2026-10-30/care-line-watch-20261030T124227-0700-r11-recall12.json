@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T124227-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T12:45:22-07:00",
+  "started_at": "2026-10-30T12:42:27-07:00",
+  "completed_at": "2026-10-30T12:43:07-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T11:49:44.724-07:00",
+    "end": "2026-10-30T12:43:07-07:00",
+    "basis": "Previous independently verified Care Line Watch heartbeat through this bounded execution; retrospective recall is used only to find newly discovered access changes. Production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; no production-collector substitution.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T114819-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T11:49:44.724-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Official current CMS Public Notices listing retrieved; latest visible entry dated October 23, 2026. No fresh termination, rescission, or CLIA notice in this window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed or suspended October 30 2026 local news",
+      "maternity labor delivery birthing unit closes October 29 30 2026 hospital",
+      "rural hospital inpatient emergency services suspended October 30 2026",
+      "behavioral health mental health psychiatric facility closes services October 30 2026",
+      "dialysis kidney center sudden closure October 30 2026 patients",
+      "cancer oncology treatment clinic closure suspended October 30 2026",
+      "primary care clinic closure effective October 30 2026 patients",
+      "ambulance EMS coverage base closing suspended October 30 2026",
+      "air medical helicopter ambulance base shutdown closure October 2026",
+      "hospital emergency department reopened restored services October 30 2026",
+      "hospital service closures announced October 30 2026 layoffs patients transferred",
+      "Puerto Rico Guam Virgin Islands Northern Mariana American Samoa healthcare clinic hospital closure October 2026"
+    ],
+    "targeted_search_recency_days": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      7,
+      3,
+      3,
+      7
+    ],
+    "coverage_classes": [
+      "hospital, ED, maternity, behavioral health, dialysis, oncology and primary care service closure/suspension",
+      "emergency and rural service loss",
+      "ambulance, air-medical and base closure/suspension",
+      "CMS provider terminations, rescissions and CLIA actions",
+      "concrete essential-service reopening/restoration",
+      "U.S. states and territories (limited indexed coverage)"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Comprehensive Life Resources Pearl Youth Residence, Tacoma, WA",
+        "reason": "October 2 report of previously announced November 21 closure, no distinct new access event within this window.",
+        "source_url": "https://bhbusiness.com/2026/10/02/layoffs-closures-planned-at-newport-healthcare-clarvida-comprehensive-life-resources/"
+      },
+      {
+        "name": "Clarvida Project RENEW, Anaheim and Santa Ana, CA",
+        "reason": "October 2 report of November 1 planned site closures; no new announcement or operational confirmation in this window.",
+        "source_url": "https://bhbusiness.com/2026/10/02/layoffs-closures-planned-at-newport-healthcare-clarvida-comprehensive-life-resources/"
+      },
+      {
+        "name": "Newport Healthcare St. Cloud, Minnesota",
+        "reason": "October 2 corrected report confirms facility remains open with reduced staffing; no confirmed loss of services.",
+        "source_url": "https://bhbusiness.com/2026/10/02/layoffs-closures-planned-at-newport-healthcare-clarvida-comprehensive-life-resources/"
+      },
+      {
+        "name": "Multi-system layoffs tracker",
+        "reason": "Staffing, finance and prospective job reductions alone do not demonstrate a new, concrete service-line loss.",
+        "source_url": "https://www.fiercehealthcare.com/finance/fierce-healthcare-layoff-tracker-2026-job-cuts-eliminations-health-systems-hospitals"
+      },
+      {
+        "name": "Sharon Regional Medical Center, Sharon, PA",
+        "reason": "Inpatient suspension was already recorded in October 30 10:47 watch; no new access consequence verified this hour."
+      },
+      {
+        "name": "Community Medical Center, Missoula, MT",
+        "reason": "Pediatric ICU closure already recorded in October 30 05:48 watch; not a new discovery."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "No qualifying newly discovered event verified during this bounded watch. Search index returned a sparse set of distinct results, including older October reporting; rural and territory coverage remains non-exhaustive. The scheduled timestamp is the nominal hourly marker; this execution began before it. No material retrieval failure was observed.",
+    "controls": "Exactly one durable heartbeat created on ops/watch-ledger; no approval, publishing, schedule changes, disabling or primary collector modification."
+  }
+}

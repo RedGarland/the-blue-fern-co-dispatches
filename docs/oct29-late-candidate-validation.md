@@ -1,34 +1,35 @@
-# One-shot October 29 late-edition validation
+# Private October 29 and October 30 candidate validation
 
-This draft-only packet is not a production source fix, scheduled-run repair, publication, or merge request.
+This draft PR is a private validation harness, not a production source fix, scheduled-run repair, merge request, or publication.
 
-## Binding and provenance
-- Production source stays pinned to `5a6c591831654c9e9e307711b74a268ce00d8d0d`.
-- The untouched Pages baseline is `a952b7669ea16504b953fbd933cb226b4c643101`.
-- Manual input is a newly reconstructed, newly hashed derivative of the retained source-review metadata and the three exact approved sentences. Earlier local packet bytes could not be reread; no byte identity with that packet is claimed.
-- Article titles/URLs were independently verified. The earlier observed review batch time is retained explicitly, not relabelled as a fresh retrieval. Publisher dates remain date-only because timezone was not verified.
-- Approval metadata records the earlier editorial approval and the separate draft-CI authorization; the CI job has no publication authority.
+## Immutable bindings
+Production generation stays at `5a6c591831654c9e9e307711b74a268ce00d8d0d`; the actual public Pages baseline stays at `a952b7669ea16504b953fbd933cb226b4c643101`.
+The six summary sentences are the exact separately approved copy. October29 input is newly reconstructed from retained observations, not claimed byte-identical to inaccessible earlier local input. October30 input retains the research worker's actual successful web observations and subsequent access limitation. Publisher dates remain date-only; no invented timezone, original-page hash or full-text snapshot is supplied.
+October30's separate provenance file is editorial evidence, not extra source records or proof of independent sourcing. It distinguishes the Friday death from the earlier Wednesday shooting and keeps all three Friday events separate.
 
-## Execution and budget
-Only the exact same-repository PR branch `ci/gaza-oct29-exact-copy-validation-20261030` receives the new candidate job and temporary shorter job timeouts.
-One workflow run is planned; no automatic retry.
-Configured job limits sum to 20 minutes: core10 + Windows2 + historical visual3 + candidate4 + aggregate1.
-Other branches retain their existing limits: Windows10, historical visual15, and explicit360 for previously unspecified core/aggregate jobs (GitHub default).
-Queue and cancellation/teardown time are not an elapsed-time guarantee. A timeout is failure, not permission to skip a check.
-The existing `validate` gate is unchanged apart from its branch-specific timeout. Completion additionally requires the separate `oct29_candidate` job and overall workflow to succeed; a green `validate` result alone is insufficient.
+## First attempt and correction
+Run41096138581 at head489a680a4761e9bc2a51fd1105dd5787bb0ff4c5 failed the source-copy assertion because protected clean_feed_text maps the approved U+2019 in “camp’s” to U+0027. Normal generation had reached3source/3included-story/1publisher counts before that strict assertion. The dated candidate composition and browser stages were not reached. First-failure artifact12995198587 is retained unchanged (ZIP SHA2560d0d7a929ccf144bbf8546519115a0016d0adbb43e150d14bacdb4dc58db1eb0). The first log did not print raw summaries, so the punctuation diagnosis is based on the pinned source code, not a claim to have inspected inaccessible ZIP contents.
+The existing core reached95% with no shown assertion failure before cancellation under its10-minute limit; this is not a complete pass. Windows and historical-layout visual jobs passed. API job durations total780seconds (25+53+54+644+4), conservatively13minutes including cancellation/cleanup. The original20-minute allowance therefore has7minutes remaining; no second run was started under that allowance.
 
-## Required checks
-Run unchanged production generation with no thin-edition, date-window, source/dedupe or correction override.
-Inspect actual source and story dedupe results. If any of the three exact approved reports is excluded/merged or its copy changes, stop before creating a release candidate; do not insert dates/numbers to influence the heuristic.
-Preserve raw output and diagnostics, then apply the documented presentation/timing late layer to a fresh private candidate.
-Verify exact nine-path delta, all baseline leaf bytes outside that delta, all147 existing archive/RSS dates, existing RSS item content, unchanged Oct28/correction/audio/CSS/history, current source bindings and truthful timing.
-The shared root/directory updates use existing template helpers and must preserve unrelated article cards.
-Run dated Gaza scope validation for seven Gaza paths and existing sitewide scope for the two shared surfaces, with a separate exact-nine allowlist. Gaza does not support the Food/Care release-manifest option.
-Run the unchanged seven-route browser validator plus the October29 dated page; retain screenshots and hashes for independent inspection.
-No source files under production runtime src/scripts/assets/.github may change.
-The standard core job already selects all five Gaza daily-profile suites; there is no additional unrelated full-project release requirement.
+Raw validation now permits exactly one known normalizer substitution in the October29 first sentence, retaining every source/story/dedupe gate. Candidate-only restoration changes precisely one source summary, one story summary, one nested source summary and two HTML occurrences, with reversible byte proofs and hashes. Raw output remains untouched. Final exact-approved-copy checks remain mandatory. October30 has no permitted text transformation and its source manifest must remain byte-identical to raw generation.
 
-## Outputs and stop conditions
-Artifacts retain input/approval hashes, activation proof, generation/dedupe diagnostics, raw edition, exact nine-file candidate payload, late-layer field deltas, timing review, complete baseline inventory and composed tree proof, and browser evidence.
-Any mismatch, timeout, missing evidence or browser failure fails closed.
-Do not merge this PR, adopt it on a runner, push Pages, publish audio/social, weaken a gate or start another run automatically.
+## Authorized additional validation budget
+The user approved the separate request for up to3further runs with a combined60-job-minute cap at2026-10-30 17:44UTC (minute precision), approval reference Sentinel_162d155632c08191bca4fc2ddb8aa9b8, answering request Sentinel_9cbd4dccb7708191b1cfefddacb8d676. This additional budget starts at0runs/0seconds independently of the original completed13minutes. It covers necessary test-only corrections, not production-runner or security changes. Site and social publication are outside this job.
+The first successor run has a24-minute configured aggregate maximum: unchanged core14 + Windows2 + historical visual3 + combined candidate4 + aggregate1. Only the exact same-repository draft PR branch `ci/gaza-oct29-exact-copy-validation-20261030` receives those temporary limits/new candidate job. Other branches retain existing defaults (Windows10, historical visual15, explicit360 for formerly unspecified jobs).
+No automatic retry. Re-read terminal actual job times before any further run, and bound its sum of job limits to the remaining approved budget. Queue and cancellation/teardown time are not a wall-time guarantee; timeout means failure, not permission to skip checks.
+The existing core commands/tests, Windows gate, historical visual assertions and aggregate failure gates are unchanged. A green existing `validate` status alone is not sufficient: the combined candidate job and workflow must pass.
+
+## Two isolated generation stages
+1. Generate October29 from a fresh source5a6 runtime and authentic Pagesa952 with no thin, date-window, source/dedupe or correction override. Preserve raw results, both actual dedupe reports and source evidence. Restore only the approved apostrophe, apply the documented limitation/timing layer, and validate its exact9-path delta and browser routes.
+2. Preserve the real a952 checkout untouched. A second isolated Pages checkout receives exactly those9 validated files. Create a LOCAL ONLY commit S29 with sole parenta952 and exact validated candidate tree. This commit is explicitly PRIVATE and UNPUBLISHED; it is never pushed and does not constitute publication evidence. Record its actual OID, tree, parent and9-path proof.
+3. Start a fresh source5a6 runtime and a fresh Python process for October30 with S29 as its nested Pages baseline. The unchanged activation/history contracts check the authentic published October25 correction and descendant preservation; they do not claim S29 was published. No registry or guard is changed. Require both source and story dedupe to inspect October29, and stop if any exact approved report is excluded, merged or changed.
+4. Validate October30's9-path addition over S29. Then compare the final composed candidate to REAL public a952: exactly13 paths (8dated files+5shared surfaces). Preserve all147 prior dates, October29's4dated bytes and aggregate rows/RSS item, prior correction/history/audio/CSS/non-Gaza cards, and all baseline leaves outside the exact delta.
+
+## Required evidence
+Each stage checks exact source/story/nested/rendered copy and URL bindings, three distinct reports, publisher counts (October29 WAFA only; October30 WAFA and Anadolu), truthful visible limitation labels, generation versus publication timing, no invented RSS/HTML publication clocks, real local navigation/assets, and unchanged protected source.
+Use existing dated Gaza scope validation for7 Gaza paths plus existing sitewide scope for2shared paths and strict explicit allowlists. No unsupported Gaza release-manifest mode.
+Run unchanged seven-route browser gates and each new dated page; recheck October29 on the FINAL combined tree. Retain route identities, HTTP200 results, screenshots and verified hashes. Existing historical-layout CI alone does not certify new editions.
+Artifacts retain original input/approval/provenance bytes and hashes, raw generation/dedupe outputs, field/typography deltas, baseline inventories, both9-path payloads, final13-path payload and tree proof, and browser evidence. Log output mirrors observed copy/dedupe proofs and, only after browser success, the public candidate payload as base64 for exact read-only connector recovery when ZIP extraction is unavailable.
+Any mismatch, missing evidence, timeout or browser failure fails closed. An independently valid October29 artifact remains available if the later October30 stage fails; no publication follows automatically.
+
+No merge, remote push, deployment, audio, social posting, runner installation, security change, production repair or automatic retry is performed.

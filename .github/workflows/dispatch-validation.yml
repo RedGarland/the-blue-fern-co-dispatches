@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   validate_core:
-    timeout-minutes: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ci/gaza-oct29-exact-copy-validation-20261030' && github.event.pull_request.base.ref == 'add/pages-repo-default' && 10 || 360 }}
+    timeout-minutes: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ci/gaza-oct29-exact-copy-validation-20261030' && github.event.pull_request.base.ref == 'add/pages-repo-default' && 14 || 360 }}
     needs: [validate_windows]
     if: ${{ always() }}
     runs-on: ubuntu-latest
@@ -191,7 +191,7 @@ jobs:
 
 
   oct29_candidate:
-    name: Exact approved October 29 private candidate
+    name: Exact approved October 29 and 30 private candidates
     if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ci/gaza-oct29-exact-copy-validation-20261030' && github.event.pull_request.base.ref == 'add/pages-repo-default' }}
     runs-on: ubuntu-latest
     timeout-minutes: 4
@@ -218,6 +218,19 @@ jobs:
           path: runtime/bluefern-dispatches-pages
           fetch-depth: 3
           persist-credentials: false
+      - name: Check out isolated unchanged source for October 30
+        uses: actions/checkout@v4
+        with:
+          ref: 5a6c591831654c9e9e307711b74a268ce00d8d0d
+          path: runtime30
+          persist-credentials: false
+      - name: Check out authentic second Pages history
+        uses: actions/checkout@v4
+        with:
+          ref: a952b7669ea16504b953fbd933cb226b4c643101
+          path: runtime30/bluefern-dispatches-pages
+          fetch-depth: 3
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -226,20 +239,20 @@ jobs:
         run: |
           python -m pip install -r runtime/requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Regenerate exact copy and validate candidate without publication
+      - name: Validate both exact editions with private sequential history only
         run: |
-          python harness/scripts/validate_oct29_late_candidate.py \
-            --runtime "$GITHUB_WORKSPACE/runtime" \
-            --candidate "$RUNNER_TEMP/gaza-oct29-candidate" \
-            --evidence "$RUNNER_TEMP/gaza-oct29-evidence" \
-            --inputs "$GITHUB_WORKSPACE/harness/tests/fixtures/gaza/oct29_late_validation/manual_sources.json" \
-            --approval "$GITHUB_WORKSPACE/harness/tests/fixtures/gaza/oct29_late_validation/approval.json"
+          python harness/scripts/validate_gaza_two_day_candidates.py \
+            --runtime29 "$GITHUB_WORKSPACE/runtime" \
+            --runtime30 "$GITHUB_WORKSPACE/runtime30" \
+            --candidates "$RUNNER_TEMP/gaza-approved-candidates" \
+            --evidence "$RUNNER_TEMP/gaza-approved-evidence" \
+            --fixtures "$GITHUB_WORKSPACE/harness/tests/fixtures/gaza"
       - name: Retain candidate and failure evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gaza-oct29-exact-copy-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/gaza-oct29-evidence
+          name: gaza-approved-oct29-oct30-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gaza-approved-evidence
           if-no-files-found: error
           retention-days: 7
 

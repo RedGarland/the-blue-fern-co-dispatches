@@ -30,5 +30,33 @@
   "title": "October 29 late edition: three WAFA reports from Gaza",
   "summary": "Three reports from one publisher, WAFA, without independent corroboration. Partial coverage, not a full daily briefing.",
   "disclosure": "This October 29 late edition is based on three manually reviewed WAFA reports. The later reports were not available to the morning run. These are one publisher’s reports, not independent corroboration. Coverage is incomplete; this is not a full daily briefing or a completion of the morning provider coverage.",
-  "editorial_approval_time_utc": "2026-10-30 15:44 (minute precision)"
+  "editorial_approval_time_utc": "2026-10-30 15:44 (minute precision)",
+  "publishers": [
+    "WAFA"
+  ],
+  "source_observed_at": {
+    "https://english.wafa.ps/Pages/Details/176424": "2026-10-30T04:56:39Z",
+    "https://english.wafa.ps/Pages/Details/176437": "2026-10-30T04:56:39Z",
+    "https://english.wafa.ps/Pages/Details/176439": "2026-10-30T04:56:39Z"
+  },
+  "edition_type": "limited_source_late_edition",
+  "generation_route": "approved_manual_late_edition",
+  "required_visible_label": "late edition",
+  "collection_scope": "Three WAFA reports only; automatic provider coverage not completed by this manual review.",
+  "source_evidence_note": "Approved paraphrases of previously inspected WAFA article bodies; not full-text snapshots. Reconstructed input metadata has separately recorded provenance. Publisher dates remain date-only; timezone unverified.",
+  "retrieval_batch_classification": "manual_late_edition_review",
+  "additional_ci_authorization": {
+    "approved_time_utc": "2026-10-30 17:44 UTC (minute precision)",
+    "approval_reference": "Sentinel_162d155632c08191bca4fc2ddb8aa9b8",
+    "request_reference": "Sentinel_9cbd4dccb7708191b1cfefddacb8d676",
+    "scope": "Up to three further private validation runs for October29 and October30, including necessary test-only corrections.",
+    "maximum_further_runs": 3,
+    "combined_job_budget_seconds": 3600,
+    "accounting": "New grant tracked independently of the original completed780seconds. Conservative actual started-to-completed job durations. Before each further trigger the configured sum must fit the remaining approved budget.",
+    "first_run_configured_job_minutes": 24,
+    "publication_in_job": false,
+    "merge_authorized": false,
+    "production_runner_changes_authorized": false,
+    "security_changes_authorized": false
+  }
 }

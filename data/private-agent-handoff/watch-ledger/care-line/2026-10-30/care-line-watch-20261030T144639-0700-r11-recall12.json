@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T144639-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T14:45:22-07:00",
+  "started_at": "2026-10-30T14:46:39-07:00",
+  "completed_at": "2026-10-30T14:47:39.498-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T13:46:27-07:00",
+    "end": "2026-10-30T14:47:39.498-07:00",
+    "basis": "From the previously verified Care Line Watch heartbeat through the current bounded supplementary recall. New indexed retrospective events were screened for duplicates and concrete access consequences; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not the primary national or territory collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T134546-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T13:46:27-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "The live official CMS Public Notices page was retrieved and reviewed first; latest listings are dated October 23, 2026. No newer listed termination, rescission, CLIA limitation, suspension or related access-risk notice."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 30 2026 hospital emergency department closure suspension services announced today United States",
+      "October 30 2026 maternity labor delivery unit closure suspension hospital",
+      "October 30 2026 psychiatric behavioral health hospital inpatient unit closure suspension",
+      "October 30 2026 dialysis clinic cancer center oncology service closed suspended patients",
+      "October 30 2026 rural hospital critical access emergency department shutdown closures",
+      "October 30 2026 ambulance EMS air medical helicopter base closure suspended service",
+      "site:beckershospitalreview.com October 30 2026 closes hospital service inpatient emergency unit",
+      "October 30 2026 clinic primary care office closing permanently patients Friday United States",
+      "October 30 2026 hospital reopened emergency department resumed ambulance diversion after suspension",
+      "October 30 2026 Medicaid CMS provider Medicare participation termination CLIA suspension healthcare notice",
+      "October 30 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital clinic emergency service closure",
+      "October 30 2026 ambulance service county EMS station closing base coverage October 2026"
+    ],
+    "targeted_search_recency_days": [
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "coverage_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "rural and emergency service loss",
+      "ambulance/air-medical/EMS base cessation",
+      "CMS Medicare termination, rescission, CLIA limitation/suspension",
+      "effective reopening/restoration of previously lost essential services",
+      "50 states, DC and U.S. territories (search indexing is non-exhaustive)"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Sharon Regional Medical Center, Sharon, PA",
+        "reason": "Inpatient service suspension already captured in the October 30 10:45 a.m. watch; duplicate."
+      },
+      {
+        "name": "Community Medical Center, Missoula, MT",
+        "reason": "Pediatric intensive care loss already captured in the October 30 5:45 a.m. watch; duplicate."
+      },
+      {
+        "name": "Sanford Luverne Medical Center, Luverne, MN",
+        "reason": "October 28/29 coverage announces April 2027 labor/delivery cessation, previously reviewed; not an observed new or effective service loss this hour.",
+        "source_url": "https://www.mprnews.org/story/2026/10/28/sanford-luverne-to-end-labor-and-delivery-services-in-april-2027"
+      },
+      {
+        "name": "Roseland Community Hospital, Chicago, IL",
+        "reason": "October 28 rally about previously reported labor/delivery unit closure; no new independently confirmed operational change in this window.",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/"
+      },
+      {
+        "name": "UNM Health, Albuquerque, NM",
+        "reason": "October 26 cybersecurity diversion and clinic cancellations with earlier resumption; previously documented, not new this hour.",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc"
+      },
+      {
+        "name": "Guam Regional Medical City, Guam",
+        "reason": "October 17 typhoon precautionary outpatient closure for October 19, expected resumption October 20; outside current window.",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/"
+      },
+      {
+        "name": "Birch Shore Primary Care, Manistee, MI",
+        "reason": "New independent clinic opening is not reopening of a previously lost essential service; ordinary access expansion.",
+        "source_url": "https://www.manisteenews.com/news/article/two-physicians-open-independent-clinic-manistee-22494466.php"
+      },
+      {
+        "name": "Hillsboro/Peabody EMS station, Marion County, KS",
+        "reason": "Dispute over future EMS base funding, not a documented existing ambulance/base suspension or closure.",
+        "source_url": "https://www.starj.com/direct/schisms_emerge_over_ems_station%2B5806ems%2B53636869736d7320656d65726765206f76657220454d532073746174696f6e"
+      }
+    ],
+    "source_failures": [],
+    "limitations": "No new concrete qualifying access loss/restoration or CMS action verified in the indexed results. Search coverage is incomplete for rural communities and territories, and publication/search-index timing can lag real events. No material source retrieval failure occurred. News/risk/proposal commentary without service effect excluded.",
+    "controls": "Exactly one heartbeat committed to ops/watch-ledger. No public publication, editorial approval, schedule update, task disable, or production change."
+  }
+}

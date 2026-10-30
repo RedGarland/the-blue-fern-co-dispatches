@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T094451-0700-r11-20261030T164809Z",
+  "scheduled_for": "2026-10-30T09:44:51-07:00",
+  "started_at": "2026-10-30T09:48:09-07:00",
+  "completed_at": "2026-10-30T09:50:01.925-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T08:46:32-07:00",
+    "end": "2026-10-30T09:50:01.925-07:00",
+    "basis": "Previous committed Gaza heartbeat completed_at, using local America/Los_Angeles date/window. Prior findings were read before deduplication."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261030-khan-younis-al-maslakh-12-injured-wafa-176452",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176452",
+      "title": "At least 12 Palestinians injured in Israeli drone strike west of Khan Younis",
+      "publisher": "WAFA — Palestinian News & Information Agency",
+      "source_date": "2026-10-30",
+      "publication_date": "2026-10-30",
+      "publication_time": "2026-10-30T18:02:00+02:00",
+      "event_date": "2026-10-30",
+      "event_time": null,
+      "location": "al-Maslakh area, west of Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "At least 12 Palestinians injured, including a man, his wife, and their children, according to WAFA",
+      "exact_supporting_passage": "At least 12 Palestinians, including a man, his wife and their children, were injured on Friday in an Israeli drone strike",
+      "source_type": "Palestinian official news agency; directly accessible named publication",
+      "classification": "new",
+      "confidence": "medium-high for traceable report and publication timestamp; medium for underlying incident pending independent confirmation",
+      "bounded_discovery_context": {
+        "observed_during": "2026-10-30T09:48:09-07:00/2026-10-30T09:50:01.925-07:00",
+        "source_reference": "turn419114view0",
+        "first_observed": "WAFA homepage latest news link, then direct article read",
+        "reporting_time_local": "2026-10-30T09:02:00-07:00",
+        "new_since_previous_completion": true,
+        "previous_heartbeat_completed_at": "2026-10-30T08:46:32-07:00",
+        "event_vs_publication": "Event reported as occurring Friday; precise event time not supplied.",
+        "verification_limit": "Single named Palestinian news agency report; other independent corroboration not found in bounded check."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T084451-0700-r11-20261030T154632Z.json",
+      "verified": true,
+      "completed_at": "2026-10-30T08:46:32-07:00",
+      "outcome": "findings",
+      "prior_finding_ids": [
+        "gaza-20261030-khan-younis-child-wounds-wafa-176450",
+        "gaza-20261030-ohchr-yellow-line-expansion-displacement"
+      ]
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; most recent listed Gaza humanitarian situation report is dated 26 October, covering 22 October and earlier; no new current-hour Gaza update.",
+        "web_ref": "turn971147view0"
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway (previously documented recurring restriction).",
+        "web_ref": "turn971147view1"
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no verifiable new in-window Gaza health, evacuation or facility-capacity announcement observed.",
+        "web_ref": "turn126657view0"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian 30 October 2026 situation update",
+      "site:who.int Gaza 30 October 2026 health emergency hospital evacuation",
+      "site:english.wafa.ps Gaza October 30 2026 16:00 wounded killed displacement",
+      "Gaza October 30 2026 latest civilians wounded killed Al Jazeera 16:00 GMT",
+      "site:english.wafa.ps/Pages/Details/ 30/October/2026 Gaza killed wounded",
+      "site:reuters.com/world/middle-east/ Gaza October 30 2026 Palestinian ceasefire airstrikes",
+      "site:unicef.org Gaza October 30 2026 displacement water children",
+      "site:wfp.org Gaza October 30 2026 food access crossings",
+      "Gaza October 30 2026 16:00 UTC 17:00 UTC killed strikes latest Khan Younis Bureij",
+      "site:english.wafa.ps 2026 October 30 Gaza today Israeli casualties",
+      "site:apnews.com/article/ Gaza October 30 2026 ceasefire civilians aid",
+      "site:un.org OR site:ohchr.org Gaza October 30 2026 ceasefire displacement health"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "New report posted at 18:02 Palestine time (09:02 PDT), directly verified at /Pages/Details/176452; at least 12 injured west of Khan Younis.",
+        "web_refs": [
+          "turn549392view0",
+          "turn419114view0"
+        ]
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Existing 30 Oct OHCHR Yellow Line/displacement item already captured in the previous heartbeat; excluded duplicate.",
+        "web_refs": [
+          "turn549392view1",
+          "turn549392view2"
+        ]
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible; main news listing displayed no new 30 Oct Gaza ambulance/health incident.",
+        "web_ref": "turn126657view1"
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Accessible; latest listed stories dated 27 October; none newly qualifying.",
+        "web_ref": "turn126657view2"
+      }
+    ],
+    "exclusions": [
+      "Previous heartbeat's Khan Younis child death (WAFA 176450) and OHCHR Yellow Line displacement follow-up excluded as duplicates.",
+      "OCHA reports dated 26 October and older WHO/WFP/UNICEF material excluded as historical.",
+      "West Bank, Hebron, Lebanon, Israeli election stories, and opinion excluded as outside scope.",
+      "Al Jazeera photo caption of damaged Bureij homes on 30 October not counted as independent new incident without report detailing occurrence and chronology.",
+      "Unsourced social allegations and unverified totals excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "502 Bad Gateway",
+        "materiality": "Recurring prior-run restriction; WHO global and OCHA accessible; useful bounded coverage remained."
+      }
+    ],
+    "status_rationale": "DEGRADED for persistent WHO EMRO access failure, not material new watch-wide failure. One new directly sourced in-window civilian-casualty report qualified.",
+    "safeguards": "One append-only heartbeat on ops/watch-ledger; no approvals, public publication, primary production, scheduling or automation changes."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T234533-0700-r11-20261030T064533Z",
+  "scheduled_for": "2026-10-29T23:45:54-07:00",
+  "started_at": "2026-10-29T23:45:33-07:00",
+  "completed_at": "2026-10-30T06:46:44.118Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T21:50:19.495-07:00",
+    "end_at": "2026-10-30T06:46:44.118Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Most recently directly verified earlier heartbeat completed 2026-10-29 21:50:19 PDT. Its completion is used as the lower bound to avoid an unverified gap; searches prioritize newly published/updated sources, and recency of crawl alone is not evidence of a new event.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary Food Line recall only; production nationwide collection remains authoritative and was not modified.",
+    "All 12 targeted web searches returned successfully: 3 sole/last/full-service grocery loss, 3 canceled storm/disaster distribution, 3 abrupt food-pantry/bank service reduction, 3 SNAP/WIC/EBT immediate-access interruption. Two direct article inspections completed.",
+    "No newly verified qualifying disruption was published or formally notified within the observation window. Search-result pages frequently surfaced 2025 SNAP shutdown articles or older grocery closure stories; these are not new 2026 interruptions.",
+    "Excluded KLCC October 29 2026 report on Drain, Oregon, because the Ray's Food Place closure occurred in February 2026, not in this hourly observation window: https://www.klcc.org/politics-government/2026-10-29/in-drain-the-race-for-mayor-comes-down-to-city-utilities-and-two-vacant-storefronts",
+    "Kauaʻi Now October 29 2026 Hurricane Lowell recovery bulletin confirms Hawaiʻi Foodbank Kauaʻi mobile pantry is still scheduled Friday October 30 4–5 PM at Hale Līhuʻe rather than canceled: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "No material search/source transport errors observed. Zero-result coverage is limited by indexing latency, explicit queries and no proof of exhaustive nationwide search. No content approval, publication, social posting, schedule changes or disabling performed.",
+    {
+      "last_verified_prior_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T214909-0700-r11-20261030T044909Z.json",
+      "last_verified_prior_heartbeat_completed_at": "2026-10-29T21:50:19.495-07:00",
+      "bounded_query_context": [
+        "October 29 2026 only grocery store fire closes town residents food access",
+        "October 29 2026 last grocery store shuts down small town food desert",
+        "October 29 2026 sole full service grocery store closed flooding storm fire",
+        "October 29 2026 food bank emergency distribution canceled storm flooding power outage",
+        "October 29 2026 mobile food pantry distribution cancelled hurricane flood storm",
+        "October 29 2026 county food distribution suspended due to facilities damage",
+        "October 29 2026 food pantry abruptly closing immediately services suspended",
+        "October 29 2026 food bank shut down until further notice closure service",
+        "October 29 2026 pantry access reduced fire outage local news",
+        "site:gov October 29 2026 SNAP EBT benefits outage interruption notice",
+        "October 29 2026 WIC benefits services temporarily unavailable state agency",
+        "October 29 2026 SNAP food assistance EBT system down benefits disruption October 30"
+      ]
+    }
+  ]
+}

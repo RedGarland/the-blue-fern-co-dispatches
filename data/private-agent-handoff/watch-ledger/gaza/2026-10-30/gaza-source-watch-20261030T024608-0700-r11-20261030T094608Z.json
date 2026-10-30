@@ -1,0 +1,140 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T024608-0700-r11-20261030T094608Z",
+  "scheduled_for": "2026-10-30T02:44:51-07:00",
+  "started_at": "2026-10-30T02:46:08-07:00",
+  "completed_at": "2026-10-30T02:47:43-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T01:44:40.462-07:00",
+    "end": "2026-10-30T02:47:43-07:00",
+    "basis": "From the completed_at timestamp of the latest verified prior Gaza watch heartbeat on ops/watch-ledger to this run's observation; Palestine-local dates alone do not establish new hourly developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production Gaza publisher/collector remains authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T014248-0700-r11-20261030T084248Z.json",
+      "completed_at": "2026-10-30T01:44:40.462-07:00",
+      "verified": "Exact prior heartbeat fetched from ops/watch-ledger; previous outcome no_findings."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest update Oct 27 (West Bank); latest Gaza situation report published Oct 26, covering Oct 22. No in-window Gaza update.",
+        "web_ref": "turn262815view5"
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; standing humanitarian/health context but no newly published operational Gaza report in watch window.",
+        "web_ref": "turn460532view1"
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; restriction previously documented.",
+        "web_ref": "turn460532view2"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"October 30, 2026\" casualties Rafah detention crossing",
+      "site:reuters.com/world/middle-east/ Gaza \"October 30, 2026\" civilians ceasefire aid",
+      "site:apnews.com/article/ Gaza \"October 30, 2026\" wounded killed relief",
+      "site:aljazeera.com/news/2026/10/30/ Gaza Israeli military strikes aid ceasefire",
+      "site:middleeasteye.net/news/gaza October 30 2026 deaths crossing hostages",
+      "site:aa.com.tr/en/middle-east/ Gaza October 30 2026 killed injured displaced",
+      "site:news.un.org/en/ Gaza October 30 2026 humanitarian news",
+      "site:unicef.org Gaza October 30 2026 water children humanitarian",
+      "site:wfp.org Gaza October 30 2026 food distribution border",
+      "site:palestinercs.org Gaza October 30 2026 ambulance hospital",
+      "Gaza October 30 2026 hospital functioning fuel medical evacuation emergency WHO latest",
+      "Gaza October 30 2026 Rafah crossing detentions hostage ceasefire civilians October 30 morning"
+    ],
+    "targeted_search_result": "No verifiably new, nonduplicate Gaza development published or evidenced in the watch window. Returned substantive WFP and UNICEF reports were older. UN News domain-restricted. Some publisher-filtered searches returned no current eligible report.",
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Oct 30 11:07–11:20 Palestine-local latest stories concern Tulkarm, Nablus and Ramallah (West Bank), outside Gaza scope. Most recent visible Gaza strike report bears Oct 29 19:31 Palestine-local, before watch window; prior-window coverage already included the Jabalia casualty.",
+        "web_ref": "turn262815view0"
+      },
+      {
+        "publisher": "Al Jazeera Israel-Palestine conflict",
+        "url": "https://www.aljazeera.com/tag/israel-palestine-conflict/",
+        "result": "Accessible; latest relevant Gaza strike/medical evacuation story dated Oct 29, not in watch window; Oct 30 items chiefly about West Bank or Israeli political developments.",
+        "web_refs": [
+          "turn587997view0",
+          "turn197489view1"
+        ]
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible. Feed shows an undated Gaza two-wounded headline without a verifiable publication/event time, so not promoted into an hourly finding; no independent in-window confirmation.",
+        "web_ref": "turn587997view1"
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible; newest visible Gaza operational announcement Aug 10, 2026; no new ambulance or hospital incident.",
+        "web_ref": "turn262815view2"
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/",
+        "result": "Accessible; latest highlighted Gaza statement dated Oct 22, 2026.",
+        "web_ref": "turn587997view2"
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; no independently verified new in-window food access development.",
+        "web_ref": "turn587997view3"
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403; recurring access restriction.",
+        "web_ref": "turn262815view3"
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Direct access restricted, and domain-targeted search blocked by robots; recurring restriction.",
+        "web_ref": "turn262815view4"
+      }
+    ],
+    "exclusions": [
+      "West Bank-only Oct 30 incidents excluded as out of Gaza scope.",
+      "Oct 29 Maghazi, Jabalia, Rafah strikes, Gaza Health Ministry evacuation/casualty figures and Rafah returnee detentions excluded as outside window, previously captured or not newly evidenced.",
+      "Anadolu feed's unverified-time two-wounded Gaza headline not counted because in-window novelty cannot be established.",
+      "Older WFP/UNICEF reports, unsourced claims, opinion, social-media assertions and undated search snippets excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "issue": "HTTP 502",
+        "materiality": "Continuing previously documented restriction; alternative WHO global/OCHA sources accessible."
+      },
+      {
+        "source": "UNRWA",
+        "issue": "HTTP 403",
+        "materiality": "Continuing previously documented restriction."
+      },
+      {
+        "source": "UN News",
+        "issue": "Access restricted/robots",
+        "materiality": "Continuing previously documented restriction."
+      }
+    ],
+    "status_rationale": "DEGRADED for recurring partial source restrictions; sufficient independent coverage remained. No newly material watch-wide failure, and no verified qualifying new or nonduplicate Gaza event.",
+    "safeguards": "Exactly one append-only heartbeat committed to ops/watch-ledger; no approvals, publications, production, schedules or task state modified."
+  }
+}

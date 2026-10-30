@@ -1,0 +1,34 @@
+{
+  "schema_version": "gaza_oct29_late_candidate_validation_v1",
+  "edition_date": "2026-10-29",
+  "source_sha": "5a6c591831654c9e9e307711b74a268ce00d8d0d",
+  "pages_sha": "a952b7669ea16504b953fbd933cb226b4c643101",
+  "ci_approved_at": "2026-10-30T16:54:41Z",
+  "scope": "Draft-only Linux CI validation; existing site-only publication consent remains conditional on validation. This job cannot publish.",
+  "publication_authorized_in_this_job": false,
+  "merge_authorized": false,
+  "audio_authorized": false,
+  "social_authorized": false,
+  "runner_change_authorized": false,
+  "packet_provenance": "New packet reconstructed from verified canonical publisher titles/URLs and retained generation-worker observations of original required metadata, with only the three approved summaries substituted editorially. Original packet bytes are inaccessible: this is a newly hashed derivative, not a byte-identical copy. Prior article-review batch time is retained; no fresh retrieval is claimed. Source dates are date-only; publisher timezone unverified.",
+  "approved_copy": [
+    {
+      "url": "https://english.wafa.ps/Pages/Details/176424",
+      "summary": "WAFA reported several Palestinians injured in an Israeli airstrike on a civilian vehicle near al-Maghazi camp’s entrance."
+    },
+    {
+      "url": "https://english.wafa.ps/Pages/Details/176437",
+      "summary": "Citing local sources, WAFA reported one Palestinian killed in an Israeli drone strike near Zainab al-Wazir School, east of Jabalia."
+    },
+    {
+      "url": "https://english.wafa.ps/Pages/Details/176439",
+      "summary": "Citing local sources, WAFA reported three Palestinians detained after returning to Gaza through Rafah crossing."
+    }
+  ],
+  "source_observation_batch": "2026-10-30T04:56:39Z",
+  "label": "Limited-source late edition",
+  "title": "October 29 late edition: three WAFA reports from Gaza",
+  "summary": "Three reports from one publisher, WAFA, without independent corroboration. Partial coverage, not a full daily briefing.",
+  "disclosure": "This October 29 late edition is based on three manually reviewed WAFA reports. The later reports were not available to the morning run. These are one publisher’s reports, not independent corroboration. Coverage is incomplete; this is not a full daily briefing or a completion of the morning provider coverage.",
+  "editorial_approval_time_utc": "2026-10-30 15:44 (minute precision)"
+}

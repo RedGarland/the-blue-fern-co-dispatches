@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T234918-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T23:45:22-07:00",
+  "started_at": "2026-10-29T23:49:18-07:00",
+  "completed_at": "2026-10-29T23:50:45-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T22:46:46.515-07:00",
+    "end": "2026-10-29T23:50:45-07:00",
+    "basis": "Verified preceding Care Line Watch completed_at to the current execution, with retrospective search hits checked for material newly reported operational changes; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall; not the primary nationwide/territorial collector or an editorial approval/publication mechanism.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T224447-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T22:46:46.515-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Direct canonical CMS page retrieved before additional targeted searches. Its newest posted termination notices remain October 23, 2026; no October 29/30 entries found."
+    },
+    "additional_targeted_searches": 12,
+    "search_methods": "Eight recent fast searches and four focused slow searches; follow-up source opens did not add searches.",
+    "targeted_queries": [
+      "October 29 2026 hospital emergency department temporary closure diversion reopening ambulance local news",
+      "October 29 30 2026 maternity labor delivery service closing suspended reopened hospital",
+      "October 29 30 2026 inpatient psychiatric behavioral health substance use treatment center closes patients",
+      "October 29 30 2026 dialysis center closure oncology infusion clinic suspended services",
+      "October 29 30 2026 rural hospital emergency room closure urgent emergency service suspended",
+      "October 29 30 2026 ambulance EMS station base air medical helicopter shutdown county",
+      "October 29 30 2026 primary care clinic health center closure patients relocated",
+      "October 29 30 2026 Puerto Rico Guam Virgin Islands American Samoa CNMI hospital closure emergency clinic service interruption",
+      "site:beckershospitalreview.com 2026 October 29 30 closing hospital department patient access",
+      "\"Oct 29, 2026\" \"clinic\" \"closed\" \"patients\" healthcare",
+      "\"Oct 29, 2026\" \"ambulance\" \"service\" \"closed\" hospital",
+      "\"October 30, 2026\" \"hospital\" \"services\" \"closed\" emergency United States"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Carle Health Rantoul outpatient clinic moisture-related temporary closure",
+        "source_url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/",
+        "reason": "Published October 29 and already captured by the earlier 20:44 Care Line watch; duplicate and no new reopening."
+      },
+      {
+        "title": "Sharon Regional Medical Center suspended cardiac catheterization and ambulance specialty restrictions",
+        "source_url": "https://www.post-gazette.com/business/healthcare-business/2026/10/29/sharon-regional-medical-center-heart-catheterization-suspended/stories/202610290064",
+        "reason": "Already captured by earlier Care Line watch; October 29 article adds no verified new late-night operational development."
+      },
+      {
+        "title": "Roseland Community Hospital labor-and-delivery announced closure",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "October 28 reporting, already documented; no newly verified October 29 late-night change."
+      },
+      {
+        "title": "Community Health Alliance North Valleys Reno and Partnership Health Center Seeley Lake future clinic closures",
+        "source_url": "https://www.fqhctalent.com/weekly/2026-W42",
+        "reason": "Older October reporting identifies October 30 and 31 planned effective dates, not an announcement or independently confirmed new service loss in this hourly window."
+      },
+      {
+        "title": "Greene County / Boyd Memorial ambulance financing dispute",
+        "source_url": "https://www.myjournalcourier.com/news/article/greene-county-ambulance-bid-boyd-memorial-dispute-22486173.php",
+        "reason": "Funding dispute and conditional future reduction, not an actual access/service change."
+      },
+      {
+        "title": "Cheshire Medical Center Farnum rehabilitation closure",
+        "source_url": "https://www.beckershospitalreview.com/finance/70-hospitals-closing-departments-or-ending-services/",
+        "reason": "Previously announced October 30 date and no newly confirmed change or unexpected closure in this observation window."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "12-query bounded recall cannot establish complete nationwide or territorial coverage; many results were historical, prospective, geographically outside the U.S., or previously reviewed. No new qualifying report or official notice independently verified in this observation window.",
+    "controls": "Exactly one heartbeat was created on ops/watch-ledger. No approval, production publication, schedule change, or task disablement."
+  }
+}

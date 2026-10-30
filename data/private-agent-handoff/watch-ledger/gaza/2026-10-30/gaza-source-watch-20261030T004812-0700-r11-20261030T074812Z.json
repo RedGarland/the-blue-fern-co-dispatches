@@ -1,0 +1,132 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T004812-0700-r11-20261030T074812Z",
+  "scheduled_for": "2026-10-30T00:44:51-07:00",
+  "started_at": "2026-10-30T00:48:12-07:00",
+  "completed_at": "2026-10-30T00:49:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T23:43:16-07:00",
+    "end": "2026-10-30T00:49:30-07:00",
+    "basis": "Verified preceding 2026-10-29 23:42 source-watch heartbeat completed_at through current observation; source dates in Palestine local time are not presumed to fall within the Los Angeles hourly window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only. Primary Gaza production collector/publisher remains authoritative; no editorial or publication decision taken.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T234217-0700-r11-20261030T064217Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T234217-0700-r11-20261030T064217Z.json",
+      "completed_at": "2026-10-29T23:43:16-07:00",
+      "verification": "Exact prior JSON fetched on ops/watch-ledger, including exclusions and time boundaries."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Direct listing accessible; latest entry 27 Oct West Bank snapshot, latest humanitarian report posted 26 Oct and dated 22 Oct; no in-window Gaza report.",
+        "citation": "turn749858view0"
+      },
+      {
+        "publisher": "WHO global emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Current content is background description of healthcare stress without a new in-window Gaza development.",
+        "citation": "turn749858view1"
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring access restriction, not newly material.",
+        "citation": "turn749858view2"
+      },
+      {
+        "publisher": "WHO EMRO situation report",
+        "url": "https://www.emro.who.int/images/stories/palestine/SItrep73.pdf",
+        "result": "Search result issue 73 summarizing through 30 September 2026, not in-window.",
+        "citation": "turn822520news17"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ 30 October 2026 Gaza killed injured displaced",
+      "site:reuters.com/world/middle-east/ Gaza October 30 2026 ceasefire killed aid Rafah",
+      "site:apnews.com/article/ Gaza October 30 2026 Israeli attacks civilians humanitarian",
+      "site:aljazeera.com/news/2026/10/30/ Gaza casualties ceasefire crossing",
+      "site:news.un.org/en Gaza October 30 2026 humanitarian casualties",
+      "site:unicef.org Gaza October 30 2026 children water",
+      "site:wfp.org Gaza October 30 2026 food trucks access",
+      "site:icrc.org Gaza October 30 2026 Red Cross medical civilian",
+      "site:palestinercs.org Gaza October 30 2026 ambulance hospital",
+      "site:ohchr.org Gaza October 30 2026 civilians strikes",
+      "Gaza October 30 2026 morning hospital medical evacuation WHO fuel ambulance",
+      "Gaza October 30 2026 Israeli operations Rafah crossing detainees hostages displacement food"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Direct listing accessible. Latest 30 Oct article is Hebron, published 09:13 Palestine local time (23:13 PDT Oct 29), before prior watch completion; latest Gaza casualty article 29 Oct 19:31 Palestine time (09:31 PDT Oct 29). Three-returnee Rafah detentions 29 Oct 23:33 Palestine time previously recorded. No verified new in-window Gaza report.",
+        "citation": "turn749858view3"
+      },
+      {
+        "publisher": "Al Jazeera Middle East",
+        "url": "https://www.aljazeera.com/middle-east/",
+        "result": "Accessible; displayed 30 Oct headlines concerned West Bank, Israel election, Syria and Yemen, not a distinct new Gaza humanitarian development.",
+        "citation": "turn749858view4"
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible; latest visible Gaza field-hospital item dated 10 August 2026; no in-window ambulance/care change.",
+        "citation": "turn749858view5"
+      },
+      {
+        "publisher": "ICRC",
+        "url": "https://www.icrc.org/en",
+        "result": "Accessible; Gaza appeal and background, but no verified new October 30 in-window operational update.",
+        "citation": "turn158064news60"
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/appeals/state-of-palestine",
+        "result": "Accessible standing appeal; older needs figures, no in-window new Gaza event.",
+        "citation": "turn158064news49"
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news/wfp-food-convoys-keep-moving-gaza-starvation-drives-lawlessness-leaving-most-vulnerable",
+        "result": "Search surfaced old 8 August 2025 article; excluded as stale.",
+        "citation": "turn158064news59"
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en",
+        "result": "Domain direct access blocked by robots; alternative UN agency sites accessible; recurrent restriction."
+      }
+    ],
+    "exclusions": [
+      "Older Gaza reports, including WAFA northern Gaza drone-strike fatality at 29 Oct 19:31 Palestine local time, excluded as prior-window.",
+      "Previously logged Oct 29 Rafah crossing three returnee detentions excluded as duplicate.",
+      "WAFA Oct 30 09:13 Palestine local Hebron development excluded as outside Gaza scope and prior-window in Los Angeles.",
+      "Search-indexed Oct 30 pages without timestamped new in-window Gaza events excluded; Palestine-local calendar label not equated to hourly freshness.",
+      "West Bank and Israel domestic political stories, older humanitarian situation summaries, opinion and unsourced claims excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Recurring, previously documented; WHO global and OCHA accessible; not a new material watch-wide failure."
+      },
+      {
+        "source": "UN News",
+        "issue": "Access blocked by robots.txt",
+        "materiality": "Recurring restriction; other UN agency sources available, not newly material."
+      }
+    ],
+    "status_rationale": "DEGRADED for recurring partial primary-source access failure. OCHA OPT and WHO were explicitly checked before exactly 12 additional targeted searches. Accessible authoritative and established sources supplied useful coverage, but yielded no verified new nonduplicate Gaza development between the previous heartbeat completion and current observation. No new material degradation requiring alert.",
+    "safeguards": "Exactly one append-only heartbeat in ops/watch-ledger. No changes to production, publication, approvals, schedule or enabled state."
+  }
+}

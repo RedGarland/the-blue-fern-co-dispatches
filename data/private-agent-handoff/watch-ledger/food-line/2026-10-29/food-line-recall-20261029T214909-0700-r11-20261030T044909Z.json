@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T214909-0700-r11-20261030T044909Z",
+  "scheduled_for": "2026-10-29T21:45:54-07:00",
+  "started_at": "2026-10-29T21:49:09-07:00",
+  "completed_at": "2026-10-30T04:50:19.495Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T20:44:54.026846-07:00",
+    "end_at": "2026-10-30T04:50:19.495Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous hourly invocation timestamp is available from automation run metadata; the exact prior heartbeat completion was not independently resolved, so the window begins at the prior invocation to avoid missed coverage. Require dated new source publication/update or official notice of immediate disruption; indexing or crawling recency alone is insufficient.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall watch only. Production nationwide Food Line collection remains authoritative and was not modified.",
+    "Completed 12 targeted web search queries over the four required miss classes (3 sole/last/full-service grocery loss, 2 weather/disaster emergency distribution cancellation, 3 abrupt pantry/food-bank closure or access reduction, 3 SNAP/WIC/EBT immediate interruptions, 1 territories/storm distribution cancellation). No targeted search transport error observed.",
+    "No new qualifying food-access disruption verified in the observation window. Older incidents, 2025 shutdown/SNAP reports, routine program guidance and generic unrelated results excluded.",
+    "October 29 2026 Kauaʻi Now Hurricane Lowell recovery bulletin explicitly confirms Hawaiʻi Foodbank Kauaʻi emergency mobile pantry distribution remains scheduled for Friday October 30, 4–5 p.m., Hale Līhuʻe; not a cancellation. https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Virginia DSS SNAP beverage purchasing eligibility change scheduled November 1 is not a newly reported immediate benefit interruption; excluded. https://dss.virginia.gov/relief/food-assistance/ebt/",
+    "Search hits for October 29 2025 SNAP disruptions are prior-year events, not fresh October 29 2026 notices; excluded. https://www.opb.org/article/2025/10/29/think-out-loud-oregon-food-pantries-prepare-snap-benefits/",
+    "Negative result is bounded by targeted query scope, publisher update timing and search indexing latency. No approvals, publication, social posting, production edits, schedule edits or task disabling occurred.",
+    {
+      "last_verified_prior_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T194821-0700-r11-20261030T024821Z.json",
+      "last_verified_prior_heartbeat_completed_at": "2026-10-29T19:49:31.000-07:00",
+      "prior_hourly_invocation_time": "2026-10-29T20:44:54.026846-07:00",
+      "bounded_query_context": [
+        "October 29 2026 sole grocery store burned closed only grocery store town local news",
+        "October 29 2026 last grocery store closed community food desert fire",
+        "October 29 2026 full service grocery store closed fire small town residents",
+        "October 29 2026 emergency food distribution canceled storm flood power outage",
+        "October 29 2026 food bank distribution cancelled weather facility damaged",
+        "October 29 2026 food pantry suddenly closed indefinitely local news",
+        "October 29 2026 food bank suspends services emergency closure",
+        "site:gov October 29 2026 SNAP benefits interrupted EBT outage official notice",
+        "October 29 2026 WIC office program services suspended emergency notice",
+        "October 29 2026 SNAP EBT interruption emergency government outage local",
+        "October 29 2026 food assistance distribution canceled hurricane Kauai Guam Puerto Rico",
+        "October 29 2026 food pantry major reduced hours closure flood fire outage"
+      ]
+    }
+  ]
+}

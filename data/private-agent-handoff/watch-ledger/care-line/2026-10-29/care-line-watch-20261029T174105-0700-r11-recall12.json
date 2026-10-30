@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T174105-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T17:45:22-07:00",
+  "started_at": "2026-10-29T17:41:05-07:00",
+  "completed_at": "2026-10-29T17:42:49.450-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T16:49:56-07:00",
+    "end": "2026-10-29T17:42:49.450-07:00",
+    "basis": "Last verified Care Line heartbeat finished at 16:49:56 PDT. Same-day retrospective reports checked for newly identified access loss; publication/event timestamps distinguished from current hourly discovery."
+  },
+  "findings": [
+    {
+      "finding_id": "care-2026-10-29-sharon-regional-cath-lab-suspension-ems-diversions",
+      "canonical_source_url": "https://www.post-gazette.com/business/healthcare-business/2026/10/29/sharon-regional-medical-center-heart-catheterization-suspended/stories/202610290064",
+      "title": "Sharon Regional Medical Center suspends critical heart care",
+      "publisher": "Pittsburgh Post-Gazette",
+      "exact_supporting_passage": "Sharon Regional’s heart catheterization lab suspended procedures about six weeks ago.",
+      "source_published_date": "2026-10-29",
+      "state": "Pennsylvania",
+      "city": "Sharon",
+      "county": "Mercer County",
+      "territory": null,
+      "event_type": "emergency_cardiac_service_suspension_and_ems_diversion",
+      "service_line": "Cardiac catheterization/interventional heart attack care; ambulance intake for cardiac, stroke and trauma cases",
+      "access_consequences": "The hospital reportedly suspended its cardiac catheterization procedures roughly six weeks before the October 29 report. An EMS official said the nearest mechanical clot-removal cardiac facility is about 40 minutes away and county EMS agencies were notified on October 28 that Sharon Regional was not accepting stroke, cardiac or trauma ambulance patients. Ongoing diversions for specialized care were reported. Hospital management did not confirm the report; duration, exact scope and restoration timing unknown.",
+      "affected_population": "Mercer County-area patients needing time-critical cardiac catheterization and stroke, cardiac or trauma ambulance transport; numbers affected unknown.",
+      "effective_date": null,
+      "announcement_date": "2026-10-28",
+      "confidence": "medium",
+      "source_role": "local_reporting_with_named_ems_official_via_search_extraction",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production collection is authoritative. No approval or publication.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T164710-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T16:49:56-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Official listing opened before additional searches. Newest entries remain three October 23 home-health agency termination notices (CA and OH), with no October 29 notices."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "October 29 2026 hospital emergency department closes suspends services US",
+      "October 29 2026 labor delivery maternity unit closure suspended services hospital",
+      "October 29 2026 rural hospital primary care clinic closes patients",
+      "October 29 2026 psychiatric behavioral health addiction treatment facility closure patients",
+      "October 29 2026 dialysis center closure patients services",
+      "October 29 2026 oncology cancer treatment center closure suspended service",
+      "October 29 2026 ambulance EMS service closure suspension rural county",
+      "October 29 2026 air ambulance helicopter medevac base closing",
+      "October 29 2026 emergency department hospital service reopened restored",
+      "site:.gov \"October 29, 2026\" hospital clinic closure service suspension notice",
+      "October 29 2026 Guam CNMI Saipan hospital clinic closure health services notice",
+      "October 29 2026 Puerto Rico US Virgin Islands American Samoa medical clinic emergency closures"
+    ],
+    "publication_timing": "Pittsburgh Post-Gazette article dated October 29, 2026 with publication time 5:53 p.m. Eastern (2:53 p.m. PDT), predating this observation window. This is a newly surfaced same-day recall, not a claim that the cath-lab suspension or EMS restrictions began this hour.",
+    "reviewed_exclusions": [
+      {
+        "title": "Medical Associates of the Pacific temporary primary care relocation closure, Saipan",
+        "reason": "Already recorded by an earlier October 29 Care Line recall; exclude duplicate."
+      },
+      {
+        "title": "VHC Health urgent care and primary care site closures in Northern Virginia",
+        "reason": "Already captured earlier October 29; exclude duplicate."
+      },
+      {
+        "title": "Massillon 80-bed addiction recovery center closure",
+        "reason": "Captured by immediately preceding verified Care Line watch; exclude duplicate."
+      },
+      {
+        "title": "Roseland and Henderson maternity unit reports",
+        "reason": "Previously covered or older known developments, not new access effect during this watch."
+      },
+      {
+        "title": "UNM Health disruption/restoration",
+        "reason": "Earlier reporting and previously recorded; no new change."
+      },
+      {
+        "title": "Letty Owings Portland treatment center closure",
+        "reason": "Earlier announced and reviewed repeatedly; exclude duplicate."
+      },
+      {
+        "title": "Healthcare ownership, proposals, general rural hospital financial pressure",
+        "reason": "Excluded absent confirmed changed access."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://www.post-gazette.com/business/healthcare-business/2026/10/29/sharon-regional-medical-center-heart-catheterization-suspended/stories/202610290064",
+        "failure": "Direct article open exposed site navigation without article text; search/news extraction included full local reporting and quotations attributed to the Mercer County Pre-Hospital Care Council president. Independent hospital confirmation was unavailable.",
+        "impact": "Finding supported by local report but direct primary text and hospital statement could not be verified; DEGRADED as requested."
+      }
+    ],
+    "limitations": "Twelve targeted queries are bounded recall, not comprehensive national/territorial collection. The cath-lab closure is retrospective and exact suspension date is not established. EMS diversion notice reported for October 28; restrictions may change. Production deduplication pending.",
+    "controls": "Exactly one JSON heartbeat written to private ops/watch-ledger branch; no approvals, public publication, schedule edits or disabling."
+  }
+}

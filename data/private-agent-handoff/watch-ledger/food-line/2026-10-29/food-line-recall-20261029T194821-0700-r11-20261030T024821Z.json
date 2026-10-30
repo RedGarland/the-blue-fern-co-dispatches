@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261029T194821-0700-r11-20261030T024821Z",
+  "scheduled_for": "2026-10-29T19:45:54-07:00",
+  "started_at": "2026-10-29T19:48:21-07:00",
+  "completed_at": "2026-10-29T19:49:31.000-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-29T18:52:35.567-07:00",
+    "end_at": "2026-10-29T19:49:31.000-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at completion of the latest verified Food Line heartbeat; ends with this observation. Require direct source publication/update or official notice evidencing a new disruption in the interval; recent indexing or crawling does not establish event recency.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall only. Production nationwide Food Line collection remains authoritative; not queried or modified.",
+    "Completed 12 targeted web searches: 4 sole/last/full-service community grocery loss queries, 3 emergency distribution cancellation queries, 2 abrupt pantry/food-bank service closure queries, and 3 official SNAP/WIC/EBT immediate interruption queries. Web search results returned; no search transport failures.",
+    "No verified qualifying disruption first reported or newly evidenced in the window. Recency labels and crawl timestamps were not used to reclassify older incidents as new.",
+    "October 29 Kauaʻi Now Hurricane Lowell recovery coverage confirms the Hawaiʻi Foodbank Kauaʻi distribution is scheduled Friday October 30 at Hale Līhuʻe; not a cancellation. https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "August 2026 Eastport, Maine only-grocery-store loss report predates the current interval; excluded. https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+    "Prodisee Pantry's October 10 weather-related distribution cancellation was reported October 7–8; excluded as historical. https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+    "Search hits concerning October 2025 SNAP shutdown impacts and the October 23 2026 long-term SNAP impact tracker are historical/structural, not new immediate official interruptions in this hour. https://www.kqed.org/news/12060770/snap-calfresh-food-stamps-government-shutdown-november-payments-ebt ; https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+    "No approval, publication, social posting, production changes, schedule changes or task disabling occurred. Negative result is bounded by search indexing latency and targeted query scope.",
+    {
+      "previous_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-29/food-line-recall-20261029T185037-0700-r11-20261030T015037Z.json",
+      "previous_heartbeat_completed_at": "2026-10-29T18:52:35.567-07:00",
+      "bounded_query_context": [
+        "\"only grocery store\" \"closed\" OR \"fire\" October 29 2026",
+        "\"last grocery store\" \"fire\" OR \"closed\" October 29 2026",
+        "\"sole grocery store\" fire closure October 2026",
+        "\"full-service grocery store\" closed October 29 2026 rural",
+        "\"food distribution\" canceled storm October 29 2026",
+        "\"food pantry\" distribution cancelled flooding hurricane October 29 2026",
+        "food bank food distribution suspended outage facility damage October 29 2026",
+        "food pantry emergency closure access suspended October 29 2026",
+        "food bank abruptly closed service interruption October 29 2026",
+        "site:gov \"October 29, 2026\" SNAP EBT interruption outage",
+        "site:gov \"October 29, 2026\" WIC office closed benefits suspended",
+        "SNAP EBT WIC \"outage\" \"October 29, 2026\" emergency benefits"
+      ]
+    }
+  ]
+}

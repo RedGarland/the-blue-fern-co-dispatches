@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T104132-0700-r11-20261030T174132Z",
+  "scheduled_for": "2026-10-30T09:45:54-07:00",
+  "started_at": "2026-10-30T10:41:32-07:00",
+  "completed_at": "2026-10-30T17:43:43.841Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T14:51:30.076Z",
+    "end_at": "2026-10-30T17:43:43.841Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative coverage from the last heartbeat independently accessible in this execution, completed 2026-10-30 07:51:30 PDT. An intervening newer run could not be independently enumerated using the available GitHub operations; do not infer that there was none. Only newly reported, substantiated developments qualify, not fresh crawl dates or historical incidents.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1,
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; primary nationwide Food Line production collector remains authoritative.",
+    "12 targeted web searches completed, addressing the four audit-exposed miss classes: loss of sole/last/full-service community grocery, emergency food distribution cancellation due to disaster, abrupt pantry/food-bank service loss, and new official SNAP/WIC/EBT interruption with immediate access consequences. No search-tool errors observed.",
+    "No new qualifying U.S. food-access disruption was verified within the observation window. The returned material was predominantly stale 2025 SNAP shutdown reporting, older 2026 grocery closures, unrelated results, or non-disruption items. Search-engine recency filtering is not reliable evidence of publication date.",
+    "Excluded Eastport, ME sole grocery store: closure reported 2026-09-03, predating this window (https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food). Excluded Butler, IN sole full-service store closure: 2026-05-06 (https://www.21alivenews.com/2026/05/06/butler-loses-only-full-service-grocery-store-after-more-than-six-decades/).",
+    "Excluded Yellow Pine, Idaho General Store seasonal closing on October 30: announced in the October 25 newsletter as annual winter closure, not a new or abrupt access disruption (https://yellowpinetimes.wordpress.com/category/news-2026/).",
+    "Milton, FL city October 28 notice confirmed continuing hurricane recovery and older free-meal distributions but did not document a new emergency food distribution cancellation (https://www.miltonfl.org/m/newsflash?cat=1). No date-qualified official SNAP/WIC interruption surfaced.",
+    "Local provider social updates, unindexed pages and late-published reports may be missed. No findings should not be interpreted as a comprehensive national no-disruption claim.",
+    "Prior independently verified ledger file: data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T075009-0700-r11-20261030T145009Z.json. Exact newer prior-run boundary was not independently established in this execution.",
+    "scheduled_for uses the latest hourly scheduled slot at :45:54 before execution start because an explicit per-run scheduler trigger timestamp was not supplied.",
+    "No content approval, edition publication, public site mutation, social posting, schedule alteration or task disabling.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire \"October 30, 2026\"",
+        "\"last grocery store\" \"October 30, 2026\" closure",
+        "\"only full-service grocery store\" closed October 2026",
+        "\"food distribution\" canceled storm flood \"October 30, 2026\"",
+        "\"food pantry\" closed today fire flood damage October 30 2026",
+        "\"food bank\" suspended services October 30 2026 outage",
+        "SNAP benefits interruption delayed suspended October 30 2026 official state notice",
+        "WIC benefits outage interruption October 30 2026 state notice",
+        "site:gov \"October 30, 2026\" \"SNAP\" \"outage\" OR \"delay\" OR \"interruption\"",
+        "site:gov \"October 30, 2026\" \"WIC\" \"service interruption\" OR \"closed\"",
+        "\"Oct. 30, 2026\" \"food pantry\" \"temporarily closed\" OR \"suspended\"",
+        "\"Oct 30, 2026\" \"food distribution\" \"cancelled\" OR \"canceled\" hurricane OR flood OR fire"
+      ]
+    }
+  ]
+}

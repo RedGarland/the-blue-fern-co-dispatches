@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T074910-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T07:45:22-07:00",
+  "started_at": "2026-10-30T07:49:10-07:00",
+  "completed_at": "2026-10-30T07:49:53-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T06:50:38.597-07:00",
+    "end": "2026-10-30T07:49:53-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through this observation. Bounded retrospective search can recover earlier unrecorded high-value events; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territories high-value healthcare-access recall; this watch does not replace the authoritative national production collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T064837-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T06:50:38.597-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Current official listing returned 2026-10-23 notices as newest; no subsequent provider termination, rescission, CLIA limitation/revocation or access-risk notice was visible. Initial direct-open attempt used an invalid CMS legacy path, then live CMS Public Notices was found and inspected first, before the additional searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department permanently closing October 30 2026 local news",
+      "maternity labor delivery obstetrics unit closes October 30 2026 hospital",
+      "rural hospital suspended emergency services October 29 30 2026",
+      "ambulance service air medical base shutting down October 30 2026 county",
+      "dialysis oncology clinic shutdown October 30 2026 patients",
+      "behavioral health psychiatric inpatient closure October 30 2026 local",
+      "October 30 2026 hospital \"closing\" \"emergency\" patient transfer",
+      "October 29 2026 \"clinic\" \"closed\" patients medical county",
+      "October 30 2026 \"ambulance service\" \"closed\" OR \"suspended\"",
+      "October 30 2026 \"labor and delivery\" \"reopened\" OR \"resumed\"",
+      "October 29 2026 \"dialysis\" \"closing\" \"patients\"",
+      "October 29 2026 Puerto Rico Guam Virgin Islands hospital emergency clinic closure suspended"
+    ],
+    "search_execution": "Twelve keyword searches after CMS discovery; search recency filters 1 or 2 days, supplemented by result content inspection. Search indexing returned several historic/irrelevant results despite requested recency.",
+    "coverage_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care service loss",
+      "rural/emergency care loss",
+      "ambulance/air-medical/EMS base loss",
+      "CMS provider terminations, rescissions and CLIA restrictions",
+      "effective essential-service reopening or restoration",
+      "U.S. territories, with indexing limitations"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "VHC Health National Landing urgent care and West Springfield primary-care closure, Virginia",
+        "source_url": "https://www.bizjournals.com/washington/news/2026/10/29/vhc-health-national-landing-west-springfield.html",
+        "reason": "October 29 report returned again; explicitly documented as previously recorded in the 05:45 PDT heartbeat. No newly confirmed distinct change."
+      },
+      {
+        "name": "Carle Health Rantoul outpatient clinic suspension, Illinois",
+        "source_url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/",
+        "reason": "Already recorded in October 29 20:44 PDT heartbeat. No newly confirmed reopening."
+      },
+      {
+        "name": "Roseland Community Hospital maternity closure, Chicago Illinois",
+        "source_url": "https://www.nbcchicago.com/news/local/exclusive-roseland-hospital-to-eliminate-pregnancy-care-this-fall/3996078/",
+        "reason": "September 30 report of prospective October 31 service closure, already flagged/reviewed on the prior heartbeat. No verified effective loss this hour."
+      },
+      {
+        "name": "Prime Healthcare Chicago-area maternity closures",
+        "source_url": "https://www.cbsnews.com/chicago/news/prime-healthcare-ending-obstetrics-services-chicago-area-hospitals/",
+        "reason": "Older reported service change, not a new distinct event."
+      },
+      {
+        "name": "Comprehensive Life Resources Pearl Youth Residence and Clarvida Project RENEW closures",
+        "source_url": "https://bhbusiness.com/2026/10/02/layoffs-closures-planned-at-newport-healthcare-clarvida-comprehensive-life-resources/",
+        "reason": "October 2 reporting of November closures; not a new announcement or effective closure this window."
+      },
+      {
+        "name": "Fitzgibbon Hospital Marshall Missouri maternity loss",
+        "source_url": "https://thebeaconnews.org/stories/2026/10/08/fitzgibbon-ama-bankruptcy-labor-and-delivery-marshall-mo-2026/",
+        "reason": "Reported October 8 and effective earlier; not newly reported or changed this hour."
+      },
+      {
+        "name": "Mobile Infirmary maternal-fetal telemedicine expansion",
+        "source_url": "https://www.wowt.com/video/2026/10/30/mobile-infirmary-cuts-ribbon-maternal-fetal-telemedicine-clinic-2/?outputType=amp",
+        "reason": "New telemedicine service, not restoration of previously lost essential access. Does not meet restoration class."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "error": "Direct open Internal Error; incorrect CMS path. Current canonical CMS notice listing subsequently retrieved successfully. Degraded by single-source-failure rule."
+      }
+    ],
+    "limitations": "One misdirected legacy CMS URL failed; canonical official notices page was verified successfully. Targeted search results were often historical or unrelated despite date filters; additional local and territorial low-index coverage is inherently incomplete. No credible novel qualifying event observed. Status DEGRADED under the explicit source-failure rule; useful coverage completed.",
+    "controls": "One private ops/watch-ledger heartbeat only. No editorial approval, public publishing, production collector mutation, task schedule change or disabling."
+  }
+}

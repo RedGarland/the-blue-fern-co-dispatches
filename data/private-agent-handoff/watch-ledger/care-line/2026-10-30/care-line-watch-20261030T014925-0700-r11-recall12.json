@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T014925-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T01:45:22-07:00",
+  "started_at": "2026-10-30T01:49:25-07:00",
+  "completed_at": "2026-10-30T01:54:07.669-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T00:52:18-07:00",
+    "end": "2026-10-30T01:54:07.669-07:00",
+    "basis": "Previous verified Care Line heartbeat completed_at through the current run. Retrospective candidates are considered for newly recovered high-value missed events; actual source dates are preserved and prior recorded/reviewed items excluded."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261030-ne-omaha-waybridge-behavioral-health-clinic-closure",
+      "canonical_source_url": "https://www.waybridgeclinics.com/closing",
+      "title": "Waybridge Clinics to end behavioral-health patient care at Omaha site October 30",
+      "publisher": "Waybridge Clinics",
+      "exact_supporting_passage": "Our last day of patient care is Friday, October 30, 2026.",
+      "source_published_date": null,
+      "state": "Nebraska",
+      "city": "Omaha",
+      "county": "Douglas",
+      "territory": null,
+      "event_type": "confirmed_behavioral_health_outpatient_clinic_closure",
+      "service_line": "Outpatient mental health care; provider notice additionally references TMS, Spravato and IV ketamine treatment series",
+      "access_consequences": "The Omaha behavioral-health clinic is no longer accepting new patients and says October 30, 2026 is its final day of patient care. Existing patients must arrange care elsewhere; provider offers medical-record transfers, referral options and medication bridging where appropriate. Completion of last-day operations has not yet been confirmed.",
+      "affected_population": "Current and prospective behavioral-health patients of the Omaha clinic; patient counts unknown.",
+      "effective_date": "2026-10-30",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "official_provider_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "evidence_notes": "Direct, accessible undated Waybridge Clinics closure notice identifies 17021 Lakeside Hills Plaza, Suite 203, Omaha, NE 68130 and final care date. Found in this run, not found in reviewed Care Line watch ledger for Oct 27-29 or immediate prior Oct 30 run. Announcement time is unknown, and this run precedes the stated last day's conclusion. Production duplicate checks remain authoritative."
+    },
+    {
+      "finding_id": "care-line-20261030-tn-nashville-waybridge-behavioral-health-clinic-closure",
+      "canonical_source_url": "https://www.waybridgeclinics.com/closing",
+      "title": "Waybridge Clinics to end behavioral-health patient care at Nashville site October 30",
+      "publisher": "Waybridge Clinics",
+      "exact_supporting_passage": "Waybridge Health has made the decision to close both clinic locations",
+      "source_published_date": null,
+      "state": "Tennessee",
+      "city": "Nashville",
+      "county": "Davidson",
+      "territory": null,
+      "event_type": "confirmed_behavioral_health_outpatient_clinic_closure",
+      "service_line": "Outpatient mental health care; provider notice additionally references TMS, Spravato and IV ketamine treatment series",
+      "access_consequences": "The Nashville behavioral-health clinic is no longer accepting new patients and says October 30, 2026 is its final day of patient care. Existing patients must arrange care elsewhere; provider offers medical-record transfers, referral options and medication bridging where appropriate. Completion of last-day operations has not yet been confirmed.",
+      "affected_population": "Current and prospective behavioral-health patients of the Nashville clinic; patient counts unknown.",
+      "effective_date": "2026-10-30",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "official_provider_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "evidence_notes": "Direct, accessible undated Waybridge Clinics closure notice identifies 2000 Richard Jones Rd, Suite 260, Nashville, TN 37215 and final care date. Found in this run, not found in reviewed Care Line watch ledger for Oct 27-29 or immediate prior Oct 30 run. Announcement time is unknown, and this run precedes the stated last day's conclusion. Production duplicate checks remain authoritative."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary healthcare-access recall; not primary national collection or authorization to publish.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T005053-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T00:52:18-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Official CMS Public Notices page opened first; latest listed notices dated October 23, 2026."
+    },
+    "additional_targeted_searches": 12,
+    "search_methods": "Eight targeted fast searches and four targeted slow searches, with two-day recency filters. Direct CMS and source opens, plus GitHub ledger reads, were not additional targeted web searches.",
+    "targeted_queries": [
+      "October 30 2026 hospital emergency department closes temporarily diverted patients overnight US",
+      "October 30 2026 labor delivery maternity hospital closure suspension service Ohio Michigan Pennsylvania",
+      "October 30 2026 psychiatric mental health inpatient treatment center closing patients October 29",
+      "October 30 2026 dialysis kidney center oncology infusion clinic closed suspended appointments",
+      "October 30 2026 ambulance EMS station air ambulance base shutting down service October 29",
+      "October 30 2026 primary care urgent care rural health clinic temporary closure moved appointments",
+      "October 29 30 2026 rural hospital emergency department service reopened restored temporarily closed",
+      "October 29 30 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital clinic emergency service closure",
+      "hospital closes emergency department maternity service October 29 2026 effective October 30 2026 US rural",
+      "clinic closure suspended services October 29 2026 announced patients transferred primary care behavioral health",
+      "EMS ambulance service closes station October 29 2026 county effective service suspension",
+      "site:gov 2026 October 29 hospital emergency department closure reopen service Guam Puerto Rico US Virgin Islands or Hawaii"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Bruceton Community Ambulance Service second suspension",
+        "source_url": "https://www.wvnews.com/prestoncountynews/bruceton-community-ambulance-service-halts-services-until-insurance-is-reinstated/article_8aac0518-da54-425f-bab6-2663d5344ad8.html",
+        "reason": "Concrete Oct 27 suspension, already reviewed in Oct 28 Care Line heartbeats and repeatedly excluded as outside observation window. No newly reported restoration."
+      },
+      {
+        "title": "Carle Health Rantoul clinic temporary closure",
+        "source_url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/",
+        "reason": "Already recorded Oct 29, 20:44 PDT; no new restoration."
+      },
+      {
+        "title": "Sanford Luverne Medical Center planned birth-unit closure",
+        "source_url": "https://bringmethenews.com/minnesota-news/sanford-health-plans-to-stop-birth-services-at-luverne-hospital",
+        "reason": "Already recorded in earlier Care Line recall; no new effective transition this hour."
+      },
+      {
+        "title": "Rochester Regional Newark-Wayne maternity suspension",
+        "source_url": "https://www.rochesterregional.org/locations/hospitals/newark/update",
+        "reason": "Effective September 3, 2026; historical access loss."
+      },
+      {
+        "title": "Guam Regional Medical City service resumption",
+        "source_url": "https://www.grmc.gu/2026/10/18/grmc-to-resume-critical-outpatient-services-monday-regular-hospital-operations-to-resume-tuesday/",
+        "reason": "October 18 announcement for October 19-20 service restoration; historical event."
+      },
+      {
+        "title": "Kula Hospital reopening funding and plans",
+        "source_url": "https://ebs.publicnow.com/view/93DA0C982666FA2DEFE7C055D7D8057EB09DA32F",
+        "reason": "September restoration financing announcement; no new concrete return to clinical operations."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "CMS official notices latest October 23; targeted search coverage is bounded and indexing can lag. The Waybridge primary-source webpage supplies no publication or announcement timestamp; the confirmed final care date is October 30, not proof that last-day appointments have finished. Both geographically distinct site closures arise from one provider notice. Geographic and production deduplication remain for review; no independent production collector changes.",
+    "ledger_crosscheck": "Read previous Oct 30 heartbeat and checked Oct 27 evening, Oct 28, and Oct 29 Care Line watch heartbeats for duplicate Waybridge and Bruceton items. Waybridge was not present; Bruceton was previously considered and excluded.",
+    "controls": "Create exactly one new private-agent-handoff heartbeat on ops/watch-ledger; no editorial approval, public publication, changes to schedule, or task disabling."
+  }
+}

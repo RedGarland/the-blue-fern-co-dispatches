@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T144304-0700-r11-20261030T214304Z",
+  "scheduled_for": "2026-10-30T14:45:54-07:00",
+  "started_at": "2026-10-30T14:43:04-07:00",
+  "completed_at": "2026-10-30T21:43:42.763Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T20:44:51.495Z",
+    "end_at": "2026-10-30T21:43:42.763Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently retrieved Food Line watch-ledger heartbeat completed_at, 2026-10-30 13:44:51.495 PDT, through this check; U.S. incidents must newly qualify during this interval.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall check only. Nationwide production Food Line collection remains authoritative. No approval, publishing, schedule changes, or task disabling.",
+    "Twelve targeted web searches completed without reported search errors: three sole/last/full-service grocery closures or disasters; three disaster-canceled emergency food distributions; three abrupt pantry/food-bank closures or access restrictions; three official SNAP/WIC/food-assistance interruptions.",
+    "No newly verified qualifying U.S. incident within the prior-heartbeat-to-current-check interval. Search index results predominantly surfaced older incidents, out-of-scope items, or generic agency pages, so very recent hyperlocal or provider-only notices may not yet be indexed.",
+    "Excluded September 3, 2026 Eastport, Maine sole-grocery closure report as preceding the window: https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food.",
+    "Kauaʻi Now October 29 Hurricane Lowell recovery briefing explicitly reports Friday October 30 Hawaiʻi Foodbank Kauaʻi mobile distribution at Hale Līhuʻe 4–5 p.m. still scheduled, not canceled: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "Discarded the Snohomish County federal-shutdown SNAP/WIC advisory because the source explicitly dates to October 31, 2025, not this watch window: https://snohomishcountywa.gov/CivicAlerts/?Mobile=ON.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 30 2026 town",
+        "\"sole grocery store\" \"October 30, 2026\" closed",
+        "\"last grocery store\" \"October 30\" 2026 fire closure",
+        "\"food distribution\" canceled storm October 30 2026 food bank",
+        "\"food distribution\" postponed canceled flooding Friday October 30 2026",
+        "\"emergency food distribution\" suspended power outage October 30 2026",
+        "\"food pantry\" closed suddenly \"October 30, 2026\"",
+        "\"food bank\" suspended services \"October 30\" 2026",
+        "\"food pantry\" fire flood closure October 30 2026",
+        "site:gov \"SNAP\" \"October 30, 2026\" interrupted delayed benefits",
+        "site:gov \"WIC\" \"October 30, 2026\" interruption closure benefits",
+        "site:gov \"food assistance\" \"October 30, 2026\" outage suspension"
+      ]
+    }
+  ]
+}

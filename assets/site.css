@@ -1266,7 +1266,7 @@ h3 {
 
 /* Keep the Gaza archive's records in view; do not reuse landing-page hero spacing. */
 .archive--gaza { padding: 1rem 0 2rem; }
-.archive--gaza .archive-intro { max-width: 900px; padding: 1rem 0 .5rem; }
+.archive--gaza .archive-intro { max-width: 900px; padding: 0 0 .5rem; }
 .archive--gaza .archive-intro h1 {
   margin: .15rem 0 .5rem;
   font-size: clamp(1.8rem, 3vw, 2.5rem);

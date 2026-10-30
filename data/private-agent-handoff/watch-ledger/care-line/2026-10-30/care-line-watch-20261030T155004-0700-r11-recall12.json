@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T155004-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T15:45:22-07:00",
+  "started_at": "2026-10-30T15:50:04-07:00",
+  "completed_at": "2026-10-30T15:50:48.868-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T14:47:39.498-07:00",
+    "end": "2026-10-30T15:50:48.868-07:00",
+    "basis": "From last independently verified Care Line Watch heartbeat completion to this supplementary bounded recall. Retrospective indexed results also reviewed for newly discoverable material changes. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; not the primary national/territorial collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T144639-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Current CMS Public Notices listing returned successfully and contained no notice later than 2026-10-23. A first attempt at an obsolete CMS URL returned an access error and was corrected using the live canonical listing."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 30, 2026\" hospital emergency department closed suspended service local news",
+      "\"October 30, 2026\" maternity labor delivery obstetrics unit closure suspension hospital",
+      "\"October 30, 2026\" behavioral health psychiatric unit inpatient closed suspended",
+      "\"October 30, 2026\" dialysis clinic closure patients transfer",
+      "\"October 30, 2026\" oncology cancer center closure suspended treatments",
+      "\"October 30, 2026\" primary care clinic closure patient access",
+      "\"October 30, 2026\" rural hospital emergency services temporary closure",
+      "\"October 30, 2026\" ambulance service closure suspension EMS county",
+      "\"October 30, 2026\" air ambulance helicopter base closing suspended",
+      "\"October 30, 2026\" hospital \"reopened\" \"emergency\" OR \"maternity\" service",
+      "Oct 30 2026 Puerto Rico Guam Virgin Islands American Samoa health center hospital service closure",
+      "\"October 30, 2026\" hospital inpatient suspension Sharon Regional OR healthcare access loss Medicaid"
+    ],
+    "targeted_search_recency_days": 2,
+    "coverage_classes": [
+      "hospital and ED service closures/suspensions",
+      "maternity, psychiatric, dialysis, oncology and primary-care loss",
+      "rural and emergency service loss",
+      "EMS/ambulance/air-medical base losses",
+      "CMS termination/rescission/CLIA risk notices",
+      "essential-service restoration/reopening",
+      "U.S. states and territories; search results not exhaustive"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Sharon Regional Medical Center, PA",
+        "reason": "Previously recovered October 30 inpatient suspension; duplicate."
+      },
+      {
+        "name": "Community Medical Center, Missoula, MT",
+        "reason": "Previously recovered pediatric ICU service loss; duplicate."
+      },
+      {
+        "name": "MaineHealth Lincoln Hospital, Damariscotta, ME",
+        "reason": "Maternity closure planned for December 18 and already publicly known; new October 30 election article does not constitute a new effective service change.",
+        "source_url": "https://mainebeacon.com/where-maines-senate-and-cd2-candidates-stand-on-rural-maternity-care/"
+      },
+      {
+        "name": "McLeod Health Carolina Forest Hospital, Myrtle Beach, SC",
+        "reason": "New hospital opened with emergency and inpatient capacity, not an abrupt restoration of a previously lost essential service.",
+        "source_url": "https://www.mcleodhealth.org/news-entry/mcleod-health-carolina-forest-hospital-now-open/"
+      },
+      {
+        "name": "Other results",
+        "reason": "Background reporting, political commentary/proposals, ordinary capacity expansion, out-of-U.S. events, old incidents, and insufficient evidence of a new concrete qualifying change."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "issue": "Obsolete CMS page URL not accessible; valid canonical CMS Public Notices page found and checked successfully.",
+        "coverage_effect": "No material loss of CMS listing coverage."
+      }
+    ],
+    "limitations": "Search indexing and rural/territorial coverage are non-exhaustive. Exact-hour publishing delays may surface on later runs. DEGRADED solely because the first CMS URL was inaccessible; current official CMS listing and all 12 subsequent queries were successfully checked. No qualifying new or newly-recovered access change identified.",
+    "controls": "One heartbeat created on ops/watch-ledger; no editorial approval, publishing, primary collection changes, scheduling changes or task disable."
+  }
+}

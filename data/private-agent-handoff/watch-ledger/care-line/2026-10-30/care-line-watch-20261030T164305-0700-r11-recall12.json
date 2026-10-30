@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T164305-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T16:45:22-07:00",
+  "started_at": "2026-10-30T16:43:05-07:00",
+  "completed_at": "2026-10-30T16:43:45.071-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T15:50:48.868-07:00",
+    "end": "2026-10-30T16:43:45.071-07:00",
+    "basis": "Previous independently verified Care Line Watch completion through this execution. Retrospective newly indexed relevant results evaluated. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss recall; not the primary U.S./territorial collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T155004-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Official CMS Public Notices listing accessed successfully before the 12 additional targeted searches. No notice dated after 2026-10-23; previously listed terminations, CLIA actions and rescissions are not new."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department inpatient services suspended closed reopened October 30 2026 patients transfer",
+      "hospital maternity labor delivery obstetrics service closed suspended October 30 2026",
+      "mental health psychiatric behavioral health inpatient unit closing suspended October 30 2026",
+      "dialysis clinic kidney center suddenly closed suspended October 30 2026",
+      "cancer oncology infusion center services closed suspended October 30 2026",
+      "rural hospital ER emergency service closure suspension October 30 2026",
+      "ambulance EMS station base air medical helicopter service closes suspends October 30 2026",
+      "primary care clinic health center closes immediately October 30 2026",
+      "emergency department hospital reopening restored service October 30 2026 after closure",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic medical services closed October 2026",
+      "state health department order hospital clinic closure suspension October 30 2026",
+      "Medicare terminate provider certified service notice nursing home hospice shutdown October 30 2026"
+    ],
+    "targeted_search_recency_days": "2 days for 11 targeted queries; 7 days for one U.S.-territories query",
+    "coverage_classes": [
+      "hospital/inpatient/emergency/maternity closures or suspensions",
+      "behavioral-health/dialysis/oncology/primary-care service loss",
+      "rural or emergency service loss",
+      "ambulance/air-medical/EMS base closure",
+      "CMS provider termination, rescission and CLIA access-risk notices",
+      "abrupt and concrete reopening of previously lost essential care",
+      "U.S. states and territories; indexing non-exhaustive"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Sharon Regional Medical Center (Sharon, PA)",
+        "reason": "Previously reported inpatient-services suspension; already recovered in an earlier October 30 watch, duplicate."
+      },
+      {
+        "name": "Community Medical Center (Missoula, MT)",
+        "reason": "Previously recovered pediatric intensive-care service loss, duplicate."
+      },
+      {
+        "name": "UNM Health (Albuquerque, NM)",
+        "reason": "October 26 diversion/outpatient cancellation with October 27-28 verified restoration; previously documented, not newly effective in this window.",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc"
+      },
+      {
+        "name": "Santa Clara Valley Healthcare Behavioral Health Pavilion (San José, CA)",
+        "reason": "October 27 report updated October 30 announces first new pediatric psychiatric service opening to patients November 3; capacity expansion not abrupt reopening of a previously lost service, and future-effective.",
+        "source_url": "https://www.kqed.org/news/12106470/santa-clara-countys-new-psychiatric-care-facility-will-serve-youth"
+      },
+      {
+        "name": "Insight Hospital (Coldwater, MI)",
+        "reason": "Behavioral-health suspension dated July 22, 2026; historical and not new.",
+        "source_url": "https://wwmt.com/news/local/insight-hospital-temporarily-suspending-inpatient-behavioral-health-services-planning-improvements-evaluation-patient-needs-health-care-coldwater-branch-county-western-michigan"
+      },
+      {
+        "name": "Other search results",
+        "reason": "Historical closures, service-expansion proposals, commentary, general access context, out-of-U.S. results, or no verified effective qualifying service change."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Bounded web-search recall can miss rural, hyperlocal, tribal, or territorial service changes not promptly indexed. Searches were completed and official CMS list was checked; no newly qualifying event identified.",
+    "controls": "Exactly one new heartbeat file on ops/watch-ledger; no approvals, publication, changes to production collection, schedule alterations or disabling."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T154823-0700-r11-20261030T224823Z",
+  "scheduled_for": "2026-10-30T15:45:54-07:00",
+  "started_at": "2026-10-30T15:48:23-07:00",
+  "completed_at": "2026-10-30T22:49:11.114Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T21:43:42.763Z",
+    "end_at": "2026-10-30T22:49:11.114Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last confirmed preceding Food Line watch-ledger heartbeat completed at 2026-10-30 14:43:42.763 PDT; scanned for newly surfaced qualifying incidents through the current observation. Index freshness is not comprehensive.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      null,
+      1
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only, not authoritative nationwide production Food Line collection. No editorial approval, publication, schedule change, or task disabling.",
+    "12 bounded targeted search queries across four miss classes: sole/last/full-service grocery loss; disaster-canceled emergency food distributions; abrupt pantry/food-bank cessation or severe reduction; immediate official SNAP/WIC/food assistance interruption. Search tools returned results; no individual search error was reported.",
+    "No new, source-verified, qualifying U.S. event established in the specified interval. Excluded events outside the time window, routine operating schedules, resource guides, and 2025 SNAP shutdown stories incorrectly matching the October 30 date.",
+    "October 30, 2026 Las Vegas Jewish Family Services listing indicates closed and reopening November 2 but provides neither abrupt disruption nor causal trigger; excluded: https://foodfinder.threesquare.org/locations/jewish-family-services-agency",
+    "October 30, 2026 published California disaster SNAP replacement-reporting waiver expires Oct 30 and was approved Oct 20; neither new nor a food-assistance interruption: https://fns-prod.azureedge.us/disaster/california",
+    "October 20, 2026 Wyandanch, NY fire shut Mercy Soup Kitchen serving roughly 150 per day; outside the recall window: https://abc7ny.com/post/wyandanch-church-fire-shuts-down-soup-kitchen-serving-150-people-day/19955442/",
+    "September 14, 2026 Spencer, NY only grocery-store fire report outside the recall window: https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+    "Kauaʻi Now October 29 Hurricane Lowell recovery reporting describes the October 30 food distribution as scheduled, not canceled: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Potential blind spot: very recent hyperlocal, unindexed and provider-only disruption notices. No inference of nationwide absence is made.",
+    {
+      "bounded_query_context": [
+        "\"October 30 2026\" \"only grocery store\" closed fire town",
+        "\"Oct 30, 2026\" \"sole grocery store\" closure disaster",
+        "\"October 30, 2026\" food distribution canceled storm flood outage",
+        "\"Oct. 30, 2026\" \"food distribution\" \"cancelled\" storm",
+        "\"Oct 30 2026\" food pantry abruptly closed no longer serving",
+        "\"October 30, 2026\" food bank closes temporarily outage fire",
+        "site:gov \"October 30, 2026\" SNAP benefits interruption delayed EBT access",
+        "site:gov \"October 30, 2026\" WIC services interrupted closed benefits",
+        "October 30 2026 town only full-service supermarket closed after fire flooding [recency 1d]",
+        "October 30 2026 food bank canceled mobile distribution hurricane Lowell storm [recency 1d]",
+        "Friday October 30 2026 food pantry closed unexpectedly fire damage access [recency 1d]",
+        "October 30 2026 state SNAP EBT WIC outage benefits unavailable service disruption notice [recency 1d]"
+      ]
+    }
+  ]
+}

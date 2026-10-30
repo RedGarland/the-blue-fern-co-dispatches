@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T075009-0700-r11-20261030T145009Z",
+  "scheduled_for": "2026-10-30T07:45:54-07:00",
+  "started_at": "2026-10-30T07:50:09-07:00",
+  "completed_at": "2026-10-30T14:51:30.076Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T13:49:36.042Z",
+    "end_at": "2026-10-30T14:51:30.076Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since previous verified supplementary Food Line heartbeat completed at 2026-10-30T13:49:36.042Z (2026-10-30 06:49:36.042 PDT); only incidents newly verified in this window qualify; indexing/crawl timestamps alone do not establish a new event.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall of audit-exposed high-value miss classes only; production nationwide Food Line collection remains authoritative.",
+    "Completed 12 targeted web searches spanning only/sole/last full-service community groceries, disaster-caused emergency distribution cancellations, abrupt pantry/food-bank service closure or major access reduction, and official SNAP/WIC/EBT interruptions with immediate food-access consequences. No search-tool failures observed.",
+    "No newly reported, source-supported qualifying food-access disruption could be verified in the stated Pacific observation window. Search results primarily surfaced older events, grocery openings, nonexclusive chain closures, standing informational articles and unrelated reports.",
+    "Excluded: Eastport Maine R&M IGA closure reported September 2026; Aurora North Carolina new Goodwill Community Cupboard opening (increased access); 2024 Canada grocery fire; January 2026 Santa Clarita food pantry closure; March 2026 Ruby's Pantry shutdown; June 2026 Illinois WIC EBT outage; old 2025 flooding and current nonexclusive Safeway/Raley's closures.",
+    "Kauaʻi Now October 29 Hurricane Lowell recovery update says the Hawaiʻi Foodbank Kauaʻi emergency distribution remains scheduled Friday October 30, 4–5 PM at Hale Līhuʻe—not canceled: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "A user-report-based EBT status page did not indicate a major national outage around October 30 07:18 PDT; not treated as an authoritative state/federal notice or proof that all state services are operating: https://www.downhunter.com/status/snap-ebt.",
+    "Recency filtering is imperfect: newly crawled pages may document old events; ephemeral local provider posts and indexing delays can cause misses. Absence of qualified findings is not proof of zero disruptions nationally.",
+    "Previous heartbeat independently read from branch ops/watch-ledger at data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T064845-0700-r11-20261030T134845Z.json.",
+    "No approvals, publication, social posting, schedule change, automation disable, or production mutation.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 30 2026 community",
+        "\"sole grocery store\" \"closed\" OR \"fire\" October 2026",
+        "\"last grocery store\" shutdown fire October 29 30 2026",
+        "\"food distribution\" canceled storm October 30 2026 pantry",
+        "\"emergency food distribution\" \"cancelled\" OR \"postponed\" October 30 2026",
+        "\"food bank\" \"closed\" \"power outage\" October 30 2026",
+        "\"food pantry\" \"closed\" suddenly October 30 2026",
+        "site:gov \"SNAP\" \"benefits\" \"interruption\" \"October 30, 2026\"",
+        "October 30 2026 \"food pantry\" \"temporarily closed\" flood storm",
+        "October 30 2026 \"food distribution\" \"canceled\" hurricane outage",
+        "October 30 2026 \"EBT\" \"outage\" benefits not working state",
+        "October 30 2026 \"only grocery store\" \"closing\" town US"
+      ]
+    }
+  ]
+}

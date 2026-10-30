@@ -1,0 +1,70 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-10-28",
+  "generated_at": "2026-10-29T00:16:55.478290+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-28/",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 1,
+  "story_count": 1,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 1,
+  "publishers": [
+    "WAFA"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 1 saved source record from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+    "All rendered public stories in this edition rely on sources from WAFA."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "gaza/editions/2026-10-28/sources_manifest.json",
+  "curation_manifest_path": "gaza/editions/2026-10-28/curation_manifest.json",
+  "free_public_artifacts": [
+    "gaza/editions/2026-10-28/index.html",
+    "gaza/editions/2026-10-28/edition_manifest.json",
+    "gaza/editions/2026-10-28/sources_manifest.json",
+    "gaza/editions/2026-10-28/curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This is a limited-source update generated from 1 saved source record from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+    "All rendered public stories in this edition rely on sources from WAFA.",
+    "manual supplement recommended: add source-backed records at data/dispatches/gaza/sources/2026-10-28/manual_sources.template.json",
+    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-10-28T06:00:00-07:00",
+  "actual_run_local_time": "2026-10-28T17:16:55-07:00",
+  "source_window_start_utc": null,
+  "source_window_end_utc": null,
+  "first_source_retrieved_at": "2026-10-28T17:03:22Z",
+  "last_source_retrieved_at": "2026-10-28T17:03:22Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-10-28T17:03:22Z",
+      "retrieved_at_local": "2026-10-28T10:03:22-07:00",
+      "retrieved_local_date": "2026-10-28",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-2026-10-28-wafa-english-176412"
+      ],
+      "source_count": 1
+    }
+  ]
+}

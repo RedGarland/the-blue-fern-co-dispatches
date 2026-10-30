@@ -1,0 +1,55 @@
+[
+  {
+    "source_record_id": "gaza-2026-10-28-wafa-english-176412",
+    "source_id": "gaza-2026-10-28-wafa-english-176412",
+    "title": "WAFA reports casualties in Rafah and Nuseirat strikes",
+    "url": "https://english.wafa.ps/Pages/Details/176412",
+    "canonical_url": "https://english.wafa.ps/Pages/Details/176412",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "WAFA",
+    "published_at": "2026-10-28",
+    "retrieved_at": "2026-10-28T17:03:22Z",
+    "retrieved_local_date": "2026-10-28",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "WAFA reported on 28 October that Israeli strikes in al-Mawasi, Rafah, killed three Palestinians and injured ten. Separately, three people were injured in Nuseirat, some seriously.",
+    "source_type": "news",
+    "region_scope": "Gaza",
+    "category_hint": "civilian_harm",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "wafa-ar-rafah-nuseirat-20261028",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "editorial_label": "Limited-source update based on one WAFA report, without independent corroboration.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-10-28",
+    "used_in_story_ids": [
+      "gaza-story-2026-10-28-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|wafa|wafa reports casualties in rafah and nuseirat strikes|civilian harm|2026-10-28",
+    "title_fingerprint": "wafa reports casualties in rafah and nuseirat strikes",
+    "claim_fingerprint": "gaza|wafa|wafa reports casualties in rafah and nuseirat strikes|civilian harm|2026-10-28"
+  }
+]

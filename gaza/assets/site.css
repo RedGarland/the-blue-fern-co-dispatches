@@ -1265,3 +1265,26 @@ h3 {
   .archive-context p + p { margin-top: 1rem; }
 }
 
+
+/* Keep the Gaza archive's records in view; do not reuse landing-page hero spacing. */
+.archive--gaza { padding: 1rem 0 2rem; }
+.archive--gaza .archive-intro { max-width: 900px; padding: 0 0 .5rem; }
+.archive--gaza .archive-intro h1 {
+  margin: .15rem 0 .5rem;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1.14;
+}
+.archive--gaza .archive-intro .lede {
+  max-width: 48rem;
+  margin: 0 0 .5rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+.archive--gaza .archive-latest { margin: .75rem 0; padding: .75rem 1rem; }
+.archive--gaza .archive-latest p { margin: .5rem 0; }
+.archive--gaza .archive-latest .eyebrow { margin: 0 0 .25rem; }
+.archive--gaza .archive-latest .archive-latest-date { margin: 0; }
+.archive--gaza .archive-controls { margin: .75rem 0 .5rem; padding: .5rem 0; }
+.archive--gaza .archive-result { margin-bottom: .5rem; }
+.archive--gaza .archive-context { margin-bottom: .75rem; }
+.archive--gaza .archive-month h2 { margin-top: 1rem; }

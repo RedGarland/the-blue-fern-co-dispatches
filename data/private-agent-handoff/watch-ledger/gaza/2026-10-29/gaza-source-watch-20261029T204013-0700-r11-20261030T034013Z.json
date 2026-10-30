@@ -1,0 +1,136 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T204013-0700-r11-20261030T034013Z",
+  "scheduled_for": "2026-10-29T20:44:51-07:00",
+  "started_at": "2026-10-29T20:40:13-07:00",
+  "completed_at": "2026-10-29T20:41:21-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T19:41:58-07:00",
+    "end": "2026-10-29T20:41:21-07:00",
+    "basis": "Previous verified heartbeat completion through this run's completed_at; qualified items require distinct first-traceable in-window publication or substantively verified new development, not merely matching an October 30 Gaza-local date."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production daily Gaza collection and publication remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T194059-0700-r11-20261030T024059Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T194059-0700-r11-20261030T024059Z.json",
+      "completed_at": "2026-10-29T19:41:58-07:00",
+      "verified": "Fetched directly from GitHub ops/watch-ledger before searching."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest front-page update October 27 (West Bank), October 26 humanitarian situation report covering October 22, October 23 Gaza impact snapshot covering October 21. No in-window Gaza item."
+      },
+      {
+        "publisher": "WHO global Gaza/occupied Palestinian territory emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, no in-window Gaza-specific clinical capacity, aid, evacuation, transport, fuel, healthcare attack or hospital update."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "result": "HTTP 502 Bad Gateway, recurrent previously documented restriction."
+      },
+      {
+        "publisher": "WHO EMRO situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway, recurrent previously documented restriction."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; no new in-window Gaza document."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 30 2026 latest killed wounded strikes civilians Friday morning",
+      "Gaza October 29 2026 late evening October 30 Rafah ceasefire detainees humanitarian access",
+      "site:english.wafa.ps/Pages/Details/ October 30 2026 Gaza killed injured displaced",
+      "site:reuters.com/world/middle-east/ Gaza October 30 2026 Israeli strikes ceasefire",
+      "site:apnews.com/article/ Gaza October 30 2026 casualties hostages ceasefire crossing",
+      "site:aljazeera.com/news/2026/10/30/ Gaza ceasefire Israeli attack deaths",
+      "site:un.org Gaza October 30 2026 humanitarian aid fuel crossings medical evacuations",
+      "site:who.int Gaza October 30 2026 hospital medical evacuation ambulances health",
+      "site:english.wafa.ps/Pages/Details/ \"October 30, 2026\" Gaza Rafah detain killed wounded",
+      "site:palestinercs.org October 30 2026 Gaza ambulance hospital casualties",
+      "site:unicef.org OR site:wfp.org \"30 October 2026\" Gaza children food water crossings",
+      "Gaza latest 30 October 2026 humanitarian ceasefire civilian injuries killings crossings early morning WAFA"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; top Gaza items were October 29 at 19:31 (Jabalia school-area drone casualty; previously tracked) and 23:33 (three Rafah returnee detentions; previously tracked). Displayed source timestamps are Palestine local, earlier than this watch window in America/Los_Angeles."
+      },
+      {
+        "publisher": "WAFA previously covered Jabalia casualty",
+        "url": "https://english.wafa.ps/Pages/Details/176437",
+        "result": "Verified source text; incident near Zainab al-Wazir School is previously identified in prior-window follow-up; excluded duplicate."
+      },
+      {
+        "publisher": "WAFA previously covered Rafah returnee detentions",
+        "url": "https://english.wafa.ps/Pages/Details/176439",
+        "result": "Verified same three named detainees from previous positive watch; excluded duplicate."
+      },
+      {
+        "publisher": "UNICEF Gaza emergency",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible; ongoing background only, no new in-window change."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible Arabic landing page; latest featured Gaza hospital news August 10, 2026, no in-window new event."
+      },
+      {
+        "publisher": "Al Jazeera news",
+        "url": "https://www.aljazeera.com/news/",
+        "result": "Accessible; no independently time-verified new Gaza qualifying item in window. October 29 casualty/medical evacuation article predates this watch."
+      },
+      {
+        "publisher": "WFP Palestine emergency",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; background emergency landing page, no newly dated in-window shift verified."
+      },
+      {
+        "publisher": "The Guardian Gaza topic",
+        "url": "https://www.theguardian.com/world/gaza",
+        "result": "Accessible; latest topical listings predate watch window."
+      },
+      {
+        "publisher": "UN News Gaza tag",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "Fetch restricted/inaccessible, recurring prior restriction."
+      }
+    ],
+    "exclusions": [
+      "No search result or direct publisher update established new, sufficiently corroborated and uniquely identifiable Gaza-related civilian harm, displacement, aid, food/water, healthcare, infrastructure, crossings, detention/hostages or ceasefire event after 19:41:58 PDT.",
+      "WAFA's previously covered Zainab al-Wazir School area fatality and three Rafah returnee detentions were checked and excluded as prior-window duplicates.",
+      "October 29 Al Jazeera strikes, casualties, Rafah-access figures and previously released OCHA, WHO, UNICEF, PRCS, Reuters, AP, Guardian and WFP material were older/background; no date-only result was treated as a fresh event.",
+      "Search snippets matching older 2025-26 dates and regional matters without an in-window Gaza-specific development were excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO OPT and WHO EMRO emergency reports",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Recurring source failure; WHO global page and OCHA OPT accessible."
+      },
+      {
+        "source": "UN News Gaza tag",
+        "issue": "Restricted URL",
+        "materiality": "Previously documented; other primary humanitarian sources and reporting accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO and UN News direct sources were inaccessible; all twelve targeted searches and the accessible OCHA, WHO global, WAFA, UNICEF, PRCS, Al Jazeera, WFP, Guardian sources provided substantive alternative coverage. No newly material watch-wide degradation was established.",
+    "safeguards": "Exactly one append-only heartbeat. No approvals, publication, production mutation, schedule changes or disable."
+  }
+}

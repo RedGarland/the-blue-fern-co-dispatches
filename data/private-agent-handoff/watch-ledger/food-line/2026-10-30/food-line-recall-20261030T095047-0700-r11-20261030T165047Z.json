@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T095047-0700-r11-20261030T165047Z",
+  "scheduled_for": "2026-10-30T09:45:54-07:00",
+  "started_at": "2026-10-30T09:50:47-07:00",
+  "completed_at": "2026-10-30T16:52:28.635Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T14:51:30.076Z",
+    "end_at": "2026-10-30T16:52:28.635Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since latest directly verified prior Food Line watch heartbeat completed 2026-10-30 07:51:30 PDT; captures any gap in available verified watch evidence. New search results lacking verifiable incident/publication times are not assumed to originate inside this window.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1,
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary audit-miss recall only; production U.S. nationwide Food Line collection remains authoritative.",
+    "Completed 12 bounded targeted web searches for sole/only/last/full-service grocery loss, emergency distribution cancellation from severe weather/fire/power/facility damage, abrupt pantry/food-bank access loss, and new official SNAP/WIC/EBT assistance disruptions. No search-tool failures.",
+    "No verified, new qualifying interruption was established within the stated Pacific window. News search returned primarily older 2025-26 items, planned events, grocery openings or chain closures without evidence they were the sole full-service provider.",
+    "Bountiful Food Pantry's own October 30 schedule marks 'CANCELLED : Bus Mobile Pantry: DWS Clearfield' (11 AM–1 PM), and November 5 Ridgewood bus stop canceled; cause and initial publication time were not provided, so cannot attribute to storm, flood, fire, outage or facility damage or establish a new qualifying signal. https://www.bountifulfoodpantry.org/",
+    "Mercy Deliverance Ministries' event page says Mobile Grocery Bus not running October 26–30; it presents a scheduled service pause without evidence of disaster damage or newly abrupt major closure; not treated as a fresh qualifying interruption. https://www.mercydm.org/event/",
+    "Connecticut Insider reported Stop & Shop's Clinton, CT supermarket closed October 29 but did not establish that this was the community's only or last full-service grocery store; excluded absent sole-store evidence. https://www.ctinsider.com/business/article/aldi-stop-shop-connecticut-open-close-retail-22500873.php",
+    "September 2026 Eastport, Maine R&M IGA and Basking Ridge, New Jersey last-supermarket stories were previously reported, outside the new observation window; excluded.",
+    "Kauaʻi's October 29 Hurricane Lowell recovery notice did not establish any canceled October 30 emergency food distribution; older recurring recovery coverage was not treated as a new cancellation. https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Index/crawl timestamps are not incident dates. Search indexing delays, ephemeral provider social posts, and unknown first-posted dates can cause misses; no_findings does not prove no national disruptions.",
+    "Previous verified heartbeat: data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T075009-0700-r11-20261030T145009Z.json on ops/watch-ledger.",
+    "No approval, publication, production change, schedule change, task disable, or social posting.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 30 2026 community",
+        "food pantry emergency distribution canceled today October 30 2026 storm flood power outage",
+        "food bank pantry abruptly closed today October 30 2026 access",
+        "SNAP WIC benefits outage interrupted official October 30 2026 state agency",
+        "\"October 30, 2026\" \"food pantry\" \"closed\" storm",
+        "\"October 30, 2026\" \"food distribution\" \"cancelled\" OR \"canceled\"",
+        "\"October 30, 2026\" \"grocery store\" \"only\" closed",
+        "\"October 30, 2026\" \"SNAP\" \"delay\" \"benefits\" official",
+        "October 30 2026 \"food pantry\" \"temporarily closed\" flood fire",
+        "October 30 2026 \"mobile pantry\" \"cancelled\" storms",
+        "October 30 2026 \"last grocery store\" \"closing\" town",
+        "October 30 2026 site:gov \"SNAP\" \"system outage\" OR \"benefits delayed\" OR \"WIC interruption\""
+      ]
+    }
+  ]
+}

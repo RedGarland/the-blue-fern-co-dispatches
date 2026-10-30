@@ -1,0 +1,127 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T054553-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T05:45:22-07:00",
+  "started_at": "2026-10-30T05:45:53-07:00",
+  "completed_at": "2026-10-30T05:48:16.503-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T04:46:28-07:00",
+    "end": "2026-10-30T05:48:16.503-07:00",
+    "basis": "Previous verified Care Line heartbeat completed_at through current observation. Wider lookback permitted only for newly recalled, previously unreported high-value access changes; production collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-mt-missoula-community-medical-center-picu-closure-202610",
+      "canonical_source_url": "https://flatheadbeacon.com/2026/10/29/hospital-beds-for-the-nations-sickest-kids-are-disappearing/",
+      "title": "Hospital Beds for the Nation’s Sickest Kids Are Disappearing",
+      "publisher": "KFF Health News (republished by Flathead Beacon)",
+      "exact_supporting_passage": "Community Medical Center in Missoula, Montana, ended pediatric intensive care services in October",
+      "source_published_date": "2026-10-29",
+      "state": "MT",
+      "city": "Missoula",
+      "county": "Missoula County",
+      "territory": null,
+      "event_type": "pediatric_intensive_care_service_closure",
+      "service_line": "Pediatric intensive care unit (PICU)",
+      "access_consequences": "Missoula Community Medical Center ended pediatric intensive care in October 2026. The sickest children needing ventilator support or continuous critical-care monitoring now require stabilization and transfer to another PICU; hospital CEO identified Kalispell, about 150 miles away, as the nearest in-state alternative. Other pediatric inpatient care, NICU, emergency care and stabilization services continue.",
+      "affected_population": "Critically ill pediatric patients in the Missoula region who need PICU-level care; hospital CEO estimated approximately 25 patients per year.",
+      "effective_date": null,
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "original_reporting_with_named_hospital_executive_and_spokesperson",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. states and territories high-value healthcare-access recall; not the production national collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T044456-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T04:46:28-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "evidence": "Canonical CMS listing led with 2026-10-23 home-health terminations; no later termination, rescission, CLIA restriction or access-risk notice visible.",
+      "legacy_url_failure": "The older CMS public-notices URL returned an Internal Error; the current canonical official notices page was retrieved and inspected successfully."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_method": "12 targeted fast web searches in two batches after checking CMS; only direct source opens/clicks afterwards.",
+    "targeted_queries": [
+      "hospital emergency department closed suspended services October 29 30 2026 US local news",
+      "maternity labor delivery unit closes October 29 30 2026 hospital",
+      "rural hospital closure emergency care October 30 2026 rural community",
+      "mental health behavioral health treatment clinic closes October 29 30 2026",
+      "ambulance service shutting down base closing October 29 30 2026 USA",
+      "medical helicopter air ambulance base closure service suspension October 2026 news",
+      "dialysis clinic closing patients transfer October 29 30 2026",
+      "cancer center oncology clinic closure suspends services October 29 30 2026",
+      "primary care clinic urgent care abruptly closes October 29 30 2026 patients",
+      "hospital emergency surgery maternity service reopened restored October 29 30 2026",
+      "Puerto Rico Guam US Virgin Islands hospital clinic ambulance service closure suspension October 2026",
+      "October 30 2026 hospital layoffs closing pediatric ICU inpatient unit local community"
+    ],
+    "coverage_classes": [
+      "hospital/ED/maternity/rural emergency and pediatric critical care loss",
+      "behavioral health/dialysis/oncology/primary care suspensions",
+      "ambulance, air-medical and EMS base loss",
+      "CMS provider terminations, rescissions and CLIA restrictions",
+      "effective restoration of previously lost essential care"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Ballad Health systemwide software disruption",
+        "source_url": "https://www.balladhealth.org/news/systemwide-software-disruption-4-pm",
+        "reason": "Disruption began and resolved October 29 before this window; all emergency departments stayed open, and no independently confirmed closure of an essential clinical service line."
+      },
+      {
+        "name": "Watsonville Community Hospital proposed maternity/NICU closure",
+        "source_url": "https://watsonvillehospital.org/news/watsonville-community-hospital-board-approves-strategy-to-preserve-services-and-secure-hospitals-future/",
+        "reason": "Official hospital statement says 120-day potential closure notice authorized but no closure vote; proposals without concrete effective loss excluded."
+      },
+      {
+        "name": "Carle Health Rantoul clinic closure",
+        "source_url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/",
+        "reason": "Previously recorded on October 29; no documented distinct reopening."
+      },
+      {
+        "name": "VHC Health urgent care and primary-care closures",
+        "source_url": "https://www.bizjournals.com/washington/news/2026/10/29/vhc-health-national-landing-west-springfield.html",
+        "reason": "Previously recorded on October 29."
+      },
+      {
+        "name": "St. Vincent Medical Center Oregon PICU closure",
+        "source_url": "https://flatheadbeacon.com/2026/10/29/hospital-beds-for-the-nations-sickest-kids-are-disappearing/",
+        "reason": "November 2025 historical service loss; not a new change in this review period."
+      },
+      {
+        "name": "Providence Santa Rosa pediatric unit",
+        "source_url": "https://www.sfgate.com/bayarea/article/sonoma-county-pediatric-care-22097228.php",
+        "reason": "Inpatient pediatric closure effective March 27, 2026, and reported months earlier; no new effective action."
+      },
+      {
+        "name": "Newark-Wayne Community Hospital maternity suspension",
+        "source_url": "https://www.rochesterregional.org/locations/hospitals/newark/update",
+        "reason": "Effective September 3, 2026, with older announced transition; not new this run."
+      },
+      {
+        "name": "Territorial hurricane / Culebra transitions",
+        "source_url": "https://covid19datos.salud.pr.gov/CMS/729",
+        "reason": "Prior August–September 2026 transition; separate earlier disaster response; no newly effective October 30 loss in the returned evidence."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/quality/safety-oversight-general-information/public-notices",
+        "error": "Legacy-path direct open Internal Error; canonical replacement successfully verified."
+      }
+    ],
+    "limitations": "DEGRADED because a legacy CMS URL failed to open, although its current canonical page was successfully verified. Territorial and local search indexing is incomplete. KFF Health News article published October 29 identifies the Missoula PICU ending service in October 2026; exact day and original announcement date unavailable. This is a newly recovered retrospective finding, not an event newly effective this hour. Await production-system deduplication.",
+    "controls": "One private ops/watch-ledger heartbeat only; all discoveries pending_review. No approval, publication, schedule changes, task disabling or public site mutation."
+  }
+}

@@ -370,7 +370,7 @@ def test_ci_selects_new_safety_suite_without_dropping_existing_guards():
     import yaml
 
     workflow = yaml.safe_load((Path(__file__).parents[1] / ".github/workflows/dispatch-validation.yml").read_text())
-    commands = [step["run"] for step in workflow["jobs"]["validate"]["steps"]
+    commands = [step["run"] for step in workflow["jobs"]["validate_core"]["steps"]
                 if step.get("name") == "Run focused validation tests"]
     assert len(commands) == 1
     selected = shlex.split(commands[0])

@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T115036-0700-r11-20261030T185150Z",
+  "scheduled_for": "2026-10-30T11:45:54-07:00",
+  "started_at": "2026-10-30T11:50:36-07:00",
+  "completed_at": "2026-10-30T18:51:50.509Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T17:43:43.841Z",
+    "end_at": "2026-10-30T18:51:50.509Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Begins at completed_at of the prior independently read-back verified Food Line heartbeat from 2026-10-30 10:43:43 PDT; ends when the present recall review completed. Scheduled slot is the most recent :45:54 PDT before this execution.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1,
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value miss recall only, not the nationwide production collector. No approval, publication, public-site mutation, social posting, schedule change, or automation disabling.",
+    "Completed 12 targeted web searches: four for sole/only/last/full-service grocery loss, four for disaster-canceled emergency distribution and food pantry/food-bank service loss, and four for new official SNAP/WIC/EBT interruption and abrupt food-pantry closure. All search requests returned; no tool failures.",
+    "No date-qualified, source-substantiated new U.S. disruption was verified in the bounded window. Fresh crawls, older publication dates, unrelated incidents, generic SNAP policy coverage, food resource calendars, and scheduled service/recovery notices are not findings.",
+    "Excluded 2026-09-11 Spencer, NY loss of sole grocer (https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/) and 2026-09-03 Eastport, ME reported sole grocery closure (https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food) as older than the search window.",
+    "2026-10-30 Connecticut grocery-opening/closing roundup describes a Stop & Shop closure in Clinton but does not establish a sole/last/full-service community grocery loss or an in-window notice (https://www.ctinsider.com/business/article/aldi-stop-shop-connecticut-open-close-retail-22500873.php). 2026-10-30 Gordon, GA story describes grocery access restored rather than a new disruption (https://www.diningandcooking.com/us/69902/).",
+    "2026-10-20 California CalFresh disaster-response waiver allowed replacement requests through 2026-10-30; this was not a newly announced interruption (https://www.cdss.ca.gov/inforesources/calfresh/disaster-calfresh). 2026-10-26 Florida Panhandle notice scheduled a non-distribution multi-agency resource center's final day for 2026-10-30, not an abrupt food distribution cancellation (https://panhandlestorm.com/updates).",
+    "Older October 2025 federal shutdown SNAP reporting surfaced in recency-limited results; publication date was checked instead of interpreting search rank or crawl date as new evidence. Provider updates may be unindexed or delayed; zero findings does not establish there were zero disruptions nationally.",
+    "Prior verified ledger: data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T104132-0700-r11-20261030T174132Z.json.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 30 2026 community",
+        "\"last grocery store\" closure burned October 30 2026",
+        "\"sole grocery\" \"shut down\" October 2026 town",
+        "\"full-service grocery store\" closed fire October 30 2026",
+        "\"food distribution\" canceled hurricane flooding \"October 30\" 2026",
+        "\"food pantry\" \"closed\" \"October 30, 2026\" storm flood fire",
+        "\"food bank\" \"suspended\" \"October 30, 2026\" services power outage",
+        "\"emergency food distribution\" \"cancelled\" \"Oct 30\" 2026",
+        "SNAP benefit EBT outage delay suspension October 30 2026 state notice",
+        "WIC service interruption EBT card system October 30 2026 state health official",
+        "site:gov \"October 30, 2026\" SNAP \"delayed\" \"benefits\"",
+        "\"food pantry\" \"temporarily closed\" \"October 30\" 2026 flood fire outage"
+      ]
+    }
+  ]
+}

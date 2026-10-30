@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T044456-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T04:45:22-07:00",
+  "started_at": "2026-10-30T04:44:56-07:00",
+  "completed_at": "2026-10-30T04:46:28-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T03:50:29-07:00",
+    "end": "2026-10-30T04:46:28-07:00",
+    "basis": "Verified prior Care Line heartbeat completed_at through this observation. Bounded supplementary search also reviewed older indexed items for newly recalled changes, but no previously unrecorded qualifying event was established. Production collection is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. states and territories high-value healthcare-access recall watch; not the primary national collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T034934-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T03:50:29-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "evidence": "CMS public notice list still begins with 2026-10-23 termination notices for three home health agencies; no new provider termination, rescission, CLIA restriction or other access-risk notice dated within this observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_method": "Twelve date-anchored fast web searches, followed only by direct page opens; no additional search queries.",
+    "targeted_queries": [
+      "\"October 30, 2026\" hospital emergency room closed suspended rural",
+      "\"October 29, 2026\" maternity labor delivery hospital closed service",
+      "\"October 30, 2026\" dialysis oncology clinic shut down patients",
+      "\"October 29, 2026\" ambulance service base closed suspended",
+      "\"October 30, 2026\" behavioral health outpatient clinic closure",
+      "\"October 29, 2026\" primary care clinic closed patients",
+      "Roseland Community Hospital October 29 2026 maternity closure October 31 confirmation Chicago",
+      "October 29 30 2026 air medical helicopter ambulance station closing shutdown rural USA",
+      "October 29 30 2026 \"emergency department\" \"closing\" hospital service",
+      "October 29 30 2026 \"dialysis\" \"closed\" center patients",
+      "October 29 30 2026 Puerto Rico Guam US Virgin Islands hospital clinic closure emergency service",
+      "October 29 30 2026 hospital emergency maternity oncology dialysis resumed reopened after shutdown"
+    ],
+    "coverage_classes": [
+      "hospital, emergency department, maternity and rural service loss",
+      "behavioral health, primary care, dialysis and oncology closure or suspension",
+      "ambulance, air-medical and EMS base closure",
+      "CMS provider terminations, rescissions and CLIA restrictions",
+      "concrete and effective restoration of previously unavailable essential care"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Waybridge Clinics Omaha and Nashville",
+        "source_url": "https://www.waybridgeclinics.com/closing",
+        "reason": "Both October 30 behavioral-health clinic closures already recorded in the October 30 01:49 Care Line heartbeat; no distinct change."
+      },
+      {
+        "name": "Munson Otsego Memorial Hospital birthing service resumption",
+        "source_url": "https://www.munsonhealthcare.org/maternity/otsego-memorial-hospital-birthing-center",
+        "reason": "October 29 restoration and Grayling birthing shift already recorded in October 29 Care Line recall."
+      },
+      {
+        "name": "Mercy Health St. Joseph Warren maternity closure",
+        "source_url": "https://ohnurses.org/another-ohio-maternity-unit-closes-as-healthcare-consolidation-puts-corporate-priorities-ahead-of-patients/",
+        "reason": "Firm December cessation already recorded; no newly effective development."
+      },
+      {
+        "name": "Roseland Community Hospital labor and delivery suspension",
+        "source_url": "https://www.nbcchicago.com/news/local/exclusive-roseland-hospital-to-eliminate-pregnancy-care-this-fall/3996078/",
+        "reason": "Previously publicized September 30 decision with planned October 31 effective date; no new October 30 operational confirmation or previously unreported development established. Not treated as a new hourly event."
+      },
+      {
+        "name": "Comprehensive Behavioral Health seven-office Ohio closure",
+        "source_url": "https://newsforce247.com/arc-psychiatry-takes-new-patients-in-youngstown-canton-after-practice-closure/",
+        "reason": "Secondary October 30 indexed report refers to October 2 clinic closure and October 29 alternate provider acceptance; neither newly effective closure nor reinstatement of a previously lost same-site essential service. Direct article could not be opened; not independently corroborated."
+      },
+      {
+        "name": "FAVOR Inc. Connecticut closure",
+        "source_url": "https://www.nbcconnecticut.com/news/local/longtime-dcf-partner-nonprofit-helping-kids-in-crisis-to-close-by-end-of-october/3785394/",
+        "reason": "October 15 announcement of October 30 shutdown of family behavioral-health system navigation/support nonprofit, not confirmed direct hospital or clinical-service-line closure; outside specified high-value miss classes."
+      },
+      {
+        "name": "Carle Health Rantoul temporary clinic closure",
+        "source_url": "https://www.wandtv.com/",
+        "reason": "Already recorded October 29 and no distinct new reopening report."
+      },
+      {
+        "name": "Watsonville Community Hospital possible maternity or hospital closure",
+        "source_url": "https://pajaronian.com/watsonville-hospital-considers-closing-mother-baby-services-as-possible-closure-within-one-year-looms/",
+        "reason": "Contemplated service reductions absent a firm, concrete effective access change."
+      },
+      {
+        "name": "Guam Regional Medical City temporary typhoon clinic closures",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "October 19 temporary closure and intended October 20 return, outside window; no new interruption."
+      },
+      {
+        "name": "Piedmont Lovejoy primary care clinic opening",
+        "source_url": "https://www.piedmont.org/news/piedmont-opens-first-primary-care-clinic-in-clayton-county",
+        "reason": "New clinic expansion, not restoration of previously lost essential service."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://newsforce247.com/arc-psychiatry-takes-new-patients-in-youngstown-canton-after-practice-closure/",
+        "error": "Direct open DisabledError; indexed text available."
+      },
+      {
+        "source_url": "https://www.nbcconnecticut.com/news/local/longtime-dcf-partner-nonprofit-helping-kids-in-crisis-to-close-by-end-of-october/3785394/",
+        "error": "Direct open HTTP 403; indexed text available."
+      }
+    ],
+    "limitations": "Two exclusion-check article pages could not be opened directly, so status is DEGRADED per source-failure rule. All 12 search queries and CMS listing loaded; neither failed article established a new in-scope event. This is not a material loss of high-value watch coverage. Limited territorial indexing and time-zone ambiguity of publication timestamps prevent proof of exhaustive absence.",
+    "controls": "One private ops/watch-ledger heartbeat only; no editorial approvals, publication, public Pages mutation, schedule changes or task disabling."
+  }
+}

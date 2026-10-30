@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T084756-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T08:45:22-07:00",
+  "started_at": "2026-10-30T08:47:56-07:00",
+  "completed_at": "2026-10-30T08:48:58-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T07:49:53-07:00",
+    "end": "2026-10-30T08:48:58-07:00",
+    "basis": "Previous verified watch heartbeat completed_at to current observation. Targeted retrospective searches may surface older, unrecorded developments; the authoritative production collector remains primary."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall of high-value healthcare-access losses, regulatory access risks, and verified essential-service restorations in U.S. states and territories.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T074910-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T07:49:53-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Official CMS Public Notices page checked and opened before additional targeted searches. Latest visible notices are dated 2026-10-23 (California and Ohio home health terminations); none newer than the previous watch."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 30 2026 hospital emergency department closed suspended patients local news",
+      "October 30 2026 labor delivery maternity hospital closing service Oct 29",
+      "October 30 2026 primary care urgent care clinic abruptly closed patients",
+      "October 30 2026 dialysis center closure patients relocated",
+      "October 30 2026 behavioral health psychiatric clinic hospital program closed",
+      "October 30 2026 oncology cancer treatment clinic shutdown patients",
+      "October 30 2026 rural hospital emergency department temporary suspension",
+      "October 30 2026 ambulance service stops operating county EMS closure",
+      "October 30 2026 air medical helicopter base closes ambulance services",
+      "October 30 2026 hospital emergency department maternity reopened resumed services",
+      "October 29 30 2026 Puerto Rico Guam U.S. Virgin Islands hospital services suspended closure",
+      "October 30 2026 Medicare termination provider nursing home hospital CLIA laboratory"
+    ],
+    "search_execution": "Twelve targeted web searches using 2-day recency filters; returned results were assessed against event novelty, concrete effective service change, and source quality. Search results had substantial historical/irrelevant noise; indexing freshness is not guaranteed.",
+    "coverage_classes": [
+      "Hospital, ED, maternity, behavioral-health, dialysis, oncology and primary-care closure or suspension",
+      "Rural and emergency-service loss",
+      "Ambulance, air-medical and EMS base/service closure",
+      "Official CMS provider termination, rescission and CLIA certification action",
+      "Effective reopening or restoration of previously lost essential services",
+      "U.S. territories, with known search-indexing limitations"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Sanford Luverne Medical Center maternity service change (Minnesota)",
+        "source_url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "reason": "October 28 report and future closure already documented by preceding watch; no newly effective change."
+      },
+      {
+        "name": "Prime Healthcare Chicago-area obstetric service closures",
+        "source_url": "https://www.cbsnews.com/chicago/news/prime-healthcare-ending-obstetrics-services-chicago-area-hospitals/",
+        "reason": "Historical service termination already documented; no new distinct development."
+      },
+      {
+        "name": "Baptist Health OB Hub launch (Arkansas)",
+        "source_url": "https://arkadelphian.com/2026/10/29/baptist-health-launches-central-ob-hub-for-delivery-hospitals/",
+        "reason": "New coordination/monitoring infrastructure, not a verified restoration of previously lost essential access."
+      },
+      {
+        "name": "West Suburban Medical Center (Illinois)",
+        "source_url": "https://abc7chicago.com/post/oak-park-west-suburban-medical-center-leaders-outline-plans-future-hospital-abruptly-closed-last-week/18820997/",
+        "reason": "April plan to resume operations; not a new effective reopening in this hourly window."
+      },
+      {
+        "name": "VHC Health Virginia and Carle Rantoul Illinois clinic closures",
+        "source_url": null,
+        "reason": "Both previously recovered in prior private watch heartbeats; no new reopening or discrete access change found."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "No new qualifying, nonduplicative development was established from the available results. Search indexing may miss low-profile local and territorial events; this supplemental watch is not a comprehensive production collector. No source/query execution error was observed.",
+    "controls": "One private ops/watch-ledger heartbeat only. No editorial approvals, public publishing, production edits, automation schedule changes or disabling."
+  }
+}

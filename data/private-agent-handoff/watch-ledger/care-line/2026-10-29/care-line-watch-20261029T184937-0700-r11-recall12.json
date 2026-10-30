@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T184937-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T18:45:22-07:00",
+  "started_at": "2026-10-29T18:49:37-07:00",
+  "completed_at": "2026-10-29T18:52:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T17:42:49.450-07:00",
+    "end": "2026-10-29T18:52:12-07:00",
+    "basis": "Starts at the last independently fetched Care Line watch heartbeat completed_at. Newly surfaced same-day and concrete-effective-date recall items are distinguished from reporting/announcement times preceding this window; production collection remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-2026-10-29-munson-grayling-to-otsego-birthing-transition",
+      "canonical_source_url": "https://www.munsonhealthcare.org/about-the-system/news-media-relations/news/munson-healthcare-transition-birthing-services-new",
+      "title": "Grayling Hospital labor and delivery transitions to reopened Otsego Memorial Hospital Birthing Center effective October 29",
+      "publisher": "Munson Healthcare",
+      "exact_supporting_passage": "will transition to the newly expanded and renovated Otsego Memorial Hospital beginning Thursday, Oct. 29, at 6:15 a.m.",
+      "source_published_date": "2026-10-23",
+      "state": "Michigan",
+      "city": "Grayling; Gaylord",
+      "county": "Crawford; Otsego",
+      "territory": null,
+      "event_type": "maternity_service_consolidation_grayling_delivery_loss_and_gaylord_restoration",
+      "service_line": "Hospital labor and delivery; inpatient maternity/birthing center",
+      "access_consequences": "Munson Healthcare's announced transition took effect October 29 at 6:15 a.m.: inpatient deliveries previously provided in Grayling are redirected to expanded Otsego Memorial Hospital in Gaylord, where the birthing center had been temporarily unavailable since August 1, 2025. Grayling and Prudenville retain outpatient OB/GYN visits and Grayling retains gynecologic surgery. Otsego birthing center capacity expands to seven labor/delivery/recovery/postpartum rooms. Exact real-world patient acceptance at the hour of this recall has not been independently observed; official provider announcement supplies the effective date.",
+      "affected_population": "Northern Michigan expectant families relying on Grayling Hospital labor and delivery, including Crawford County residents; families in Gaylord/Otsego County regain local delivery access; counts unknown.",
+      "effective_date": "2026-10-29",
+      "announcement_date": "2026-10-23",
+      "confidence": "high",
+      "source_role": "official_health_system_announcement",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    },
+    {
+      "finding_id": "care-2026-10-28-st-joseph-warren-labor-delivery-cessation-announced",
+      "canonical_source_url": "https://businessjournaldaily.com/mercy-health-to-consolidate-labor-delivery-services-in-boardman/",
+      "title": "Mercy Health to discontinue labor and delivery at St. Joseph Warren Hospital by early December",
+      "publisher": "The Business Journal (Youngstown Publishing Company)",
+      "exact_supporting_passage": "discontinuing deliveries at St. Joseph Warren Hospital by early December",
+      "source_published_date": "2026-10-29",
+      "state": "Ohio",
+      "city": "Warren; Boardman",
+      "county": "Trumbull; Mahoning",
+      "territory": null,
+      "event_type": "announced_maternity_labor_delivery_service_closure",
+      "service_line": "Hospital labor and delivery; inpatient obstetrics/newborn",
+      "access_consequences": "Mercy Health announced a decided consolidation, not merely a proposal: St. Joseph Warren Hospital deliveries are to end by early December 2026 and move to St. Elizabeth Boardman Hospital. Prenatal and postpartum care will continue through established providers; Warren's former birthing unit will be repurposed as a 25-bed inpatient ward. Receiving Boardman hospital plans 20 additional maternity beds. Closure not yet effective during observation; exact December date unspecified.",
+      "affected_population": "Warren and Trumbull County residents needing inpatient childbirth services; no patient count specified.",
+      "effective_date": null,
+      "announcement_date": "2026-10-28",
+      "confidence": "high",
+      "source_role": "strong_local_reporting_quoting_provider_press_release",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not primary nationwide or territory collection. Production reconciliation and editorial review outstanding; no approval or public publication.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T174105-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T17:42:49.450-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Official current CMS Public Notices listing opened before targeted searches. Three latest notices dated October 23 concern home-health agencies in California and Ohio; no newer notice shown."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" hospital emergency department closed services suspended patients",
+      "\"October 29, 2026\" maternity labor delivery unit closure hospital",
+      "\"October 29, 2026\" ambulance EMS air medical service base shutdown",
+      "\"October 29, 2026\" primary care urgent care dialysis oncology clinic closed",
+      "Otsego Memorial Hospital Birthing Center October 29 2026 resume labor delivery 6:15 reopening Gaylord",
+      "\"October 29, 2026\" \"reopened\" hospital emergency room maternity services",
+      "\"October 29, 2026\" hospital \"suspended\" chemotherapy dialysis psychiatric clinic",
+      "\"October 29, 2026\" Guam Saipan Puerto Rico USVI American Samoa hospital health clinic closed emergency",
+      "\"Oct 29, 2026\" psychiatric behavioral health addiction treatment center shut down patients",
+      "\"October 29, 2026\" rural emergency hospital ambulance service closing today",
+      "\"October 29, 2026\" dialysis center cancer treatment suspension closure local hospital",
+      "\"29 de octubre de 2026\" hospital sala emergencia servicios cerró Puerto Rico Islas Vírgenes"
+    ],
+    "publication_timing": "Both findings were discovered in this hourly recall but not first announced in the current one-hour window. Munson's Oct 23 release specified an Oct 29 06:15 Michigan-local implementation; Ohio Mercy change announced Oct 28 and reported Oct 29, effective by early December. They are not claimed as first occurring or being reported during 17:42–18:52 PDT.",
+    "reviewed_exclusions": [
+      {
+        "title": "Ballad Health system-wide software disruption and restoration",
+        "url": "https://www.balladhealth.org/news/systemwide-software-disruption-4-pm",
+        "reason": "Outage resolved by 4 p.m. Eastern Oct 29; EDs remained open and no verified essential clinical service closure/suspension as defined by this watch."
+      },
+      {
+        "title": "ARC Psychiatry competitor press release on October 2 Comprehensive Behavioral Health seven-office closure",
+        "url": "https://courierpr.com/release/arc-psychiatry-accepting-new-patients-after-closure-a152ca",
+        "reason": "Retrospective 27-day-old closure mentioned in promotional third-party press release; no independent official/local confirmation in bounded searches. Do not record unsupported patient counts as a verified finding."
+      },
+      {
+        "title": "Greene County ambulance contract negotiations in Illinois",
+        "url": "https://wlds.com/greene-co-board-tables-action-on-placing-county-ambulance-service-out-for-bid/",
+        "reason": "Agreement expires November 9; board tabled bids; no present closure or suspension."
+      },
+      {
+        "title": "Decatur Oasis day/resource center closure and proposed Salvation Army reopening",
+        "url": "https://www.wandtv.com/2026/10/29/decatur-makes-move-buy-former-oasis-center/",
+        "reason": "Loss is nonclinical showers/laundry/mail assistance; potential replacement remains an unaccepted real-estate proposal without operative reopening."
+      },
+      {
+        "title": "Roseland Community Hospital and Sanford Luverne maternity closures",
+        "url": null,
+        "reason": "Previously recorded by earlier same-day Care Line heartbeats; duplicate."
+      },
+      {
+        "title": "Sharon Regional cardiac catheterization and EMS diversions; Massillon addiction center; VHC Health site closures",
+        "url": null,
+        "reason": "Already logged in earlier Care Line watch heartbeats October 29; excluded as duplicates."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Searches capped at 12 and do not guarantee exhaustive state/territory coverage. The Munson patient-service page's direct crawler snapshot retained a pre-opening template, but a fresher indexed rendition and explicit October 23 official release both state October 29 06:15 transition. No direct after-opening patient intake observation. The Ohio change is announced for early December, not a closure already in force. Production dedupe pending.",
+    "controls": "One private heartbeat creation only on ops/watch-ledger; no production publishing, decisions, approvals, schedule edits, or task disabling."
+  }
+}

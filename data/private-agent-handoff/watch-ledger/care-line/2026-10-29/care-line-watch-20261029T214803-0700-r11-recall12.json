@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261029T214803-0700-r11-recall12",
+  "scheduled_for": "2026-10-29T21:45:22-07:00",
+  "started_at": "2026-10-29T21:48:03-07:00",
+  "completed_at": "2026-10-29T21:48:56.576-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T20:46:17.655-07:00",
+    "end": "2026-10-29T21:48:56.576-07:00",
+    "basis": "Previous independently verified Care Line Watch completed_at through current check; retrospective newly discovered events assessed with prior-watch deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall, not the authoritative national/territorial production collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-29/care-line-watch-20261029T204418-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-29T20:46:17.655-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_check": 0,
+      "summary": "Canonical CMS Public Notices page checked before all additional searches. Newest listed entries are October 23 notices for home health agencies in California and Ohio; no later dated notice visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 29, 2026\" \"hospital\" \"emergency department\" closure suspension ambulance diverted",
+      "\"October 29, 2026\" \"maternity\" \"labor and delivery\" hospital closed closing",
+      "\"October 29, 2026\" \"behavioral health\" \"treatment\" clinic closed suspended services",
+      "\"October 29, 2026\" dialysis center patients closed suspended access",
+      "\"October 29, 2026\" oncology cancer treatment clinic closing service suspended",
+      "\"October 29, 2026\" primary care family medicine clinic closed patients",
+      "\"October 29, 2026\" EMS ambulance station base closing service suspended",
+      "\"October 29, 2026\" air ambulance helicopter base closed suspended coverage",
+      "\"October 29, 2026\" hospital emergency department reopened resumed services closure",
+      "\"October 29, 2026\" rural hospital clinic shut down emergency loss care",
+      "October 29 2026 Puerto Rico Guam Saipan US Virgin Islands American Samoa hospital clinic closed emergency services suspended",
+      "October 29 2026 CMS provider termination CLIA limitation notice California Ohio home health hospital"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Watsonville Community Hospital maternity/NICU",
+        "url": "https://pajaronian.com/pvhcd-board-recommends-closure-of-labor-delivery-nicu/",
+        "reason": "October 28 board action starts notice process; prospective access effects not yet in force and already reviewed in earlier watch."
+      },
+      {
+        "title": "Sanford Luverne maternity",
+        "url": "https://minneapolimedia.town.news/g/coon-rapids-mn/n/394681/minneapolimedia-news-minnesota-launches-rural-maternity-care-project",
+        "reason": "Previously identified announced April 2027 inpatient delivery service loss; no new operational change in this window."
+      },
+      {
+        "title": "Pediatric intensive care unit closures, national retrospective coverage",
+        "url": "https://www.physiciansweekly.com/post/hospital-beds-for-the-nations-sickest-kids-are-disappearing",
+        "reason": "Retrospective broad reporting of already reported closures in Montana, Oregon, Missouri, Illinois and California; no newly verified distinct change in this window."
+      },
+      {
+        "title": "Massillon addiction center; Sharon Regional cardiac/EMS restriction; Munson Otsego maternity transfer; St. Joseph Warren labor/delivery; Carle Rantoul clinic",
+        "url": null,
+        "reason": "Already captured in prior October 29 Care Line watch heartbeats; avoid duplicate candidate findings."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Twelve targeted search queries provide selective recall, not exhaustive surveillance of every state, local market, or territory. Search results had substantial older and out-of-scope noise. No positive independently qualifying development established. Previous findings remain pending production deduplication and editorial review.",
+    "controls": "Created only one private handoff heartbeat on ops/watch-ledger; no approvals, publication, schedule changes or task disabling."
+  }
+}

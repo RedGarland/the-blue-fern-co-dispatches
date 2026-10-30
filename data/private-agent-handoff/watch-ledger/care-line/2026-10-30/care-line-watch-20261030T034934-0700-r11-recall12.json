@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T034934-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T03:45:22-07:00",
+  "started_at": "2026-10-30T03:49:34-07:00",
+  "completed_at": "2026-10-30T03:50:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T02:45:54-07:00",
+    "end": "2026-10-30T03:50:29-07:00",
+    "basis": "Immediately preceding verified private Care Line heartbeat completed_at through current observation, with bounded retrospective recall for delayed indexed reports. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary, bounded U.S. states and territories recall watch; not the national production collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T024420-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T02:45:54-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_prior_check": 0,
+      "evidence": "The CMS list, refreshed October 30, continued to show October 23 home-health termination notices at the top; no newly posted provider termination, rescission, CLIA restriction, or other action in the recall window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_method": "Twelve date-anchored targeted fast web searches, 2- or 3-day recency; subsequent review used search results and direct CMS page only.",
+    "targeted_queries": [
+      "\"October 30, 2026\" hospital emergency department closed suspended service",
+      "\"October 29, 2026\" rural hospital emergency service closure ambulance diversion",
+      "\"October 29, 2026\" maternity labor delivery unit closed suspended hospital",
+      "\"October 29, 2026\" ambulance EMS air medical base service closure suspension",
+      "\"October 29, 2026\" mental health addiction behavioral health treatment center closed",
+      "\"October 29, 2026\" dialysis center clinic closing patients",
+      "US oncology cancer treatment clinic closing suspended October 29 2026",
+      "US primary care clinic urgent care site closure announced October 29 2026",
+      "hospital labor delivery emergency department reopened service restored October 29 2026 USA",
+      "Puerto Rico Guam US Virgin Islands American Samoa hospital ambulance clinic services suspended closed October 2026",
+      "Alaska Hawaii rural hospital emergency medical services ceased October 29 2026",
+      "hospital cardiac catheterization stroke emergency ambulance diversion October 29 2026"
+    ],
+    "coverage_classes": [
+      "hospital, emergency department and maternity service interruption",
+      "behavioral health, addiction, dialysis, oncology and primary care closure",
+      "ambulance, air medical and rural emergency loss",
+      "CMS provider termination, rescission and CLIA sanction",
+      "actual restoration of previously lost essential service"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "VHC Health National Landing urgent care and West Springfield primary care",
+        "source_url": "https://www.bizjournals.com/washington/news/2026/10/29/vhc-health-national-landing-west-springfield.html",
+        "reason": "Already recorded in October 29 Care Line recall; no distinct new operational change."
+      },
+      {
+        "name": "Sharon Regional Medical Center catheterization suspension and ambulance diversion",
+        "source_url": "https://www.post-gazette.com/business/healthcare-business/2026/10/29/sharon-regional-medical-center-heart-catheterization-suspended/stories/202610290064",
+        "reason": "Already recorded in October 29 Care Line recall; no independent newer update."
+      },
+      {
+        "name": "Letty Owings Center Portland closure",
+        "source_url": "https://www.investigatewest.org/portland-drug-treatment-center-is-shuttering/",
+        "reason": "Known October closure previously reviewed; not new."
+      },
+      {
+        "name": "Sanford Luverne Medical Center planned maternity service withdrawal",
+        "source_url": "https://minneapolimedia.town.news/g/coon-rapids-mn/n/394681/minneapolimedia-news-minnesota-launches-rural-maternity-care-project",
+        "reason": "Previously assessed and not newly effective."
+      },
+      {
+        "name": "Cleveland Clinic Tradition Hospital STEMI protocol launched during October",
+        "source_url": "https://southfloridahospitalnews.com/2026/10/29/when-every-second-counts-cleveland-clinic-tradition-hospital-expands-emergency-heart-care-with-new-stemi-protocol/",
+        "reason": "New service capability/expansion, not a restoration of a previously lost essential service; no interruption."
+      },
+      {
+        "name": "CrossRidge Community Hospital proposed oncology infusion clinic in Wynne",
+        "source_url": "https://thewynneprogress.com/crossridge-to-bring-oncology-clinic-infusion-center-to-wynne/",
+        "reason": "Planned future expansion; opening aimed at spring 2027, not current service loss/restoration."
+      },
+      {
+        "name": "Guam Regional Medical City typhoon outpatient closure notice",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "October 17 notice of limited October 19 closures with planned resumption October 20, outside window; no new substantiated operational change."
+      },
+      {
+        "name": "Baptist Health Shelby County proposed freestanding emergency department",
+        "source_url": "https://www.lanereport.com/190309/2026/10/baptist-health-shelby-county-expansion-funding/",
+        "reason": "Proposed site and funding, no effective access change."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search indexes surfaced many unrelated or older items and relatively few territory-specific reports; absence of fresh indexed findings does not prove completeness. All twelve query responses and the CMS source loaded without a material error. Primary production deduplication and collection remain authoritative.",
+    "controls": "Exactly one private ops/watch-ledger heartbeat targeted; no editorial approval, publication, schedule modification or task disabling."
+  }
+}

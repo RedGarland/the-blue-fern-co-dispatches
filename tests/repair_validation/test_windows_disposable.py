@@ -27,7 +27,7 @@ class WindowsDisposable(unittest.TestCase):
             raise unittest.SkipTest('Real Windows required; no platform emulation')
         if os.environ.get('GITHUB_ACTIONS') != 'true':
             raise unittest.SkipTest('Independent hosted CI only, not the denied local host')
-        cls.base = Path(tempfile.mkdtemp(prefix='gaza-synthetic-adapter-'))
+        cls.base = Path(tempfile.mkdtemp(prefix='gaza-synthetic-adapter-')).resolve(strict=True)
         print('PRESERVE_ARTIFACT_DIRECTORY=' + str(cls.base), flush=True)
 
     def setUp(self):
@@ -84,14 +84,14 @@ class WindowsDisposable(unittest.TestCase):
 
     def test_drift_refuses_before_transaction_creation(self):
         (self.root / self.rows[0]['path']).write_bytes(b'unexpected')
-        with self.assertRaises(core.Refused):
+        with self.assertRaisesRegex(core.Refused, '^preimage mismatch: fixture-0[.]txt$'):
             self.run_repair()
         self.assertFalse(self.io.tx.exists())
 
     def test_collision_preserved_without_target_replacement(self):
         self.io.tx.mkdir()
         (self.io.tx / 'sentinel').write_bytes(b'preserve')
-        with self.assertRaises(core.Refused):
+        with self.assertRaisesRegex(core.Refused, '^transaction collision; never reuse/delete$'):
             self.run_repair()
         self.assertEqual((self.io.tx/'sentinel').read_bytes(), b'preserve')
         for r in self.rows:
@@ -99,7 +99,7 @@ class WindowsDisposable(unittest.TestCase):
 
     def test_ads_refused_before_transaction_creation(self):
         Path(str(self.root/self.rows[0]['path']) + ':synthetic').write_bytes(b'preserve')
-        with self.assertRaises(core.Refused):
+        with self.assertRaisesRegex(core.Refused, '^alternate stream refused$'):
             self.run_repair()
         self.assertFalse(self.io.tx.exists())
 
@@ -107,7 +107,7 @@ class WindowsDisposable(unittest.TestCase):
         # Native descriptor compared against deliberately unequal expected bytes.
         # No owner/DACL is changed and no claim of reproducing production ACLs.
         destination = self.case / 'mismatched-backup'
-        with self.assertRaises(core.Refused):
+        with self.assertRaisesRegex(core.Refused, '^new empty file security differs; no payload written$'):
             self.io.write_new(destination, b'must-not-be-written', b'not-a-matching-descriptor')
         self.assertTrue(destination.exists())
         self.assertEqual(destination.read_bytes(), b'')

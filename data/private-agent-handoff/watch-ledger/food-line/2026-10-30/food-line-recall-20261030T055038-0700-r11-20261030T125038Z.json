@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T055038-0700-r11-20261030T125038Z",
+  "scheduled_for": "2026-10-30T05:45:54-07:00",
+  "started_at": "2026-10-30T05:50:38-07:00",
+  "completed_at": "2026-10-30T12:51:43.484Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T11:49:54.206Z",
+    "end_at": "2026-10-30T12:51:43.484Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since the previous independently read-back verified watch heartbeat completion, 2026-10-30 04:49:54.206 PDT. Verify actual source/event dates and exclude older resurfaced material.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1,
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall search only; primary nationwide Food Line collection is authoritative. Searched priority classes: sole/last/full-service grocery losses; disaster/outage-related cancellation of emergency food distribution; abrupt pantry/food-bank closures or major service reductions; official immediate SNAP/WIC/EBT assistance interruptions.",
+    "All 12 targeted search queries completed without reported tool errors. No newly verified qualifying food-access disruption in the specified Pacific observation window. Search-index lag, incomplete local coverage and transient notices may cause missed events; no findings is not proof of absence.",
+    "Freshly surfaced Kauaʻi Now October 29 Hurricane Lowell recovery notice explicitly states Hawaiʻi Foodbank Kauaʻi emergency mobile distribution remains scheduled for Friday October 30, 4–5 p.m. Hale Līhuʻe, not canceled: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Other search returns excluded as historical (2022–2025 overseas grocery store fire reports and 2025 SNAP shutdown notices), out-of-scope (2026 grocery market opening and unrelated closures), or not verified as newly effective immediate food-assistance interruptions. Source publication date distinguished from crawl/index date.",
+    "Previous read-back verified heartbeat: data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T044848-0700-r11-20261030T114848Z.json",
+    "No review approval, publication, production changes, social posting, schedule change, or automation disabling occurred.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" closed fire October 30 2026 community",
+        "\"sole grocery store\" fire closure Oct 29 30 2026",
+        "\"last full-service grocery store\" closing fire October 2026",
+        "food bank emergency distribution canceled storm flooding October 30 2026",
+        "\"food distribution\" \"canceled\" power outage October 30 2026",
+        "\"food distribution\" suspended flood fire October 29 2026",
+        "food pantry abruptly closed doors October 30 2026",
+        "food bank \"closed\" \"until further notice\" October 2026",
+        "pantry services suspended storm damage October 29 30 2026",
+        "site:gov \"SNAP\" \"benefits\" \"interruption\" October 30 2026",
+        "site:gov \"WIC\" \"temporarily closed\" October 29 30 2026",
+        "site:gov \"EBT\" \"outage\" \"October 30, 2026\""
+      ]
+    }
+  ]
+}

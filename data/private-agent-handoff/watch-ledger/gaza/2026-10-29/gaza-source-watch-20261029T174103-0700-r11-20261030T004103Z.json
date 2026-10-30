@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261029T174103-0700-r11-20261030T004103Z",
+  "scheduled_for": "2026-10-29T17:44:51-07:00",
+  "started_at": "2026-10-29T17:41:03-07:00",
+  "completed_at": "2026-10-29T17:42:31-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-29T16:51:43.337-07:00",
+    "end": "2026-10-29T17:42:31-07:00",
+    "basis": "The start is the exact completed_at from the latest earlier Gaza Source Watch heartbeat in ops/watch-ledger; the end is the recorded completion of this watch. No date-only report was assumed to be new, and publication dates were not mistaken for event dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production Gaza collector and publisher remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261029T164949-0700-r11-20261029T234949Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-29/gaza-source-watch-20261029T164949-0700-r11-20261029T234949Z.json",
+      "completed_at": "2026-10-29T16:51:43.337-07:00",
+      "verification": "Fetched from ops/watch-ledger GitHub connector after listing current October 29 heartbeat files."
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest OCHA site updates date October 27 (West Bank) and October 26 (humanitarian report covering October 22); no in-window Gaza notice."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; pre-existing recurring restriction."
+      },
+      {
+        "publisher": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. No newly dated Gaza update within the October 29 16:51–17:42 PDT window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, with no fresh dated Gaza healthcare, medical evacuation, hospital, fuel, or access update visible in the window."
+      },
+      {
+        "publisher": "WHO EMRO news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502 Bad Gateway; pre-existing recurring restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"30 October 2026\" Gaza killed injured detained",
+      "site:english.wafa.ps/Pages/Details/ \"October 30, 2026\" Gaza crossing ambulance displacement",
+      "site:reuters.com/world/middle-east/ Gaza October 30 2026 strikes ceasefire casualties",
+      "site:apnews.com/article/ Gaza October 29 30 2026 civilians hostages crossing humanitarian",
+      "site:aljazeera.com/news/2026/10/30 Gaza killed hospital Rafah civilians",
+      "site:un.org Gaza \"30 October 2026\" aid briefing humanitarian",
+      "site:ochaopt.org Gaza \"30 October 2026\" access ceasefire",
+      "site:palestinercs.org Gaza October 30 2026 ambulance emergency",
+      "site:unicef.org Gaza \"30 October 2026\" water displaced children",
+      "site:wfp.org Gaza \"30 October 2026\" food aid access",
+      "site:middleeasteye.net Gaza October 30 2026 strikes crossing detention",
+      "Gaza October 30 2026 early morning Rafah crossing ceasefire hospital casualties aid water evacuation"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; latest listed Gaza item was October 29 23:33 Palestine local (14:33 PDT), detention of three returnees via Rafah, previously captured. No new October 30 Gaza report displayed."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible; most recent featured Gaza notice August 10, 2026. No qualifying in-window report displayed."
+      },
+      {
+        "publisher": "Al Jazeera Gaza landing",
+        "url": "https://www.aljazeera.com/where/gaza/",
+        "result": "HTTP 404 on this section URL; targeted search usable, no in-window article verified."
+      },
+      {
+        "publisher": "UN News Gaza tag",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "Restricted/inaccessible in this web retrieval; no new report established through alternative targeted searches."
+      }
+    ],
+    "exclusions": [
+      "WAFA's Rafah returnee detention report was already logged in the 14:50 PDT watch and predates this window.",
+      "Earlier Jabalia, al-Maghazi, and Al-Tuffah casualty incidents and previously cited medical evacuation figures were not duplicated.",
+      "Results dated 2023–2025 or earlier October 2026, out-of-scope West Bank events, undated background, opinion, and unsupported social claims excluded.",
+      "No source with an independently verified publication time after the previous heartbeat supported a distinct new Gaza development."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "issue": "Repeated HTTP 502 on regional URLs",
+        "materiality": "Previously documented; alternate WHO global/OCHA and targeted publisher coverage remained usable."
+      },
+      {
+        "source": "UN News Gaza tag",
+        "issue": "Restricted URL",
+        "materiality": "Previously documented; alternate source checks/searches remained usable."
+      },
+      {
+        "source": "Al Jazeera location landing",
+        "issue": "404",
+        "materiality": "Specific guessed location-page URL unavailable, not evidence of broader news-site outage."
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring WHO EMRO 502 and restricted UN News tag while useful OCHA, WHO global, WAFA, PRCS and twelve targeted searches remained accessible. No newly material watch-wide degradation or qualifying nonduplicate in-window finding established.",
+    "safeguards": "One append-only heartbeat only. No publication, approvals, production collection, scheduling, or task-state changes."
+  }
+}

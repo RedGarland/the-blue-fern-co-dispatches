@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T124652-0700-r11-20261030T194652Z",
+  "scheduled_for": "2026-10-30T12:45:54-07:00",
+  "started_at": "2026-10-30T12:46:52-07:00",
+  "completed_at": "2026-10-30T19:47:38.177Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T18:51:50.509Z",
+    "end_at": "2026-10-30T19:47:38.177Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior GitHub ops/watch-ledger heartbeat's independently fetched completed_at to completion of this supplementary run; the reviewed prior heartbeat is food-line-recall-20261030T115036-0700-r11-20261030T185150Z.json.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1,
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only. Nationwide production collection remains authoritative. No approvals, publications, public-site mutations, schedule changes, or watch disabling.",
+    "Executed 12 targeted web searches across the four specified high-value miss classes: 3 only/last/sole grocery losses; 3 storm/flood/fire/outage-canceled emergency food distributions; 3 abrupt pantry/food-bank closures or major access reductions; 3 new official SNAP/WIC/EBT service interruptions. All 12 returned results; no search failures.",
+    "No source-substantiated, newly announced qualifying U.S. food-access interruption was found within the bounded window. Search rank, last-crawled time, and older event dates were not mistaken for new disruptions. Unindexed hyperlocal provider notices remain a coverage limitation.",
+    "2026-10-29 Kauaʻi Now hurricane recovery update explicitly says Hawaiʻi Foodbank Kauaʻi emergency distribution remains scheduled for Friday Oct. 30, 4–5 p.m. in Līhuʻe, not canceled: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/.",
+    "Excluded older 2025 SNAP-shutdown and WIC notices that surfaced in fresh crawls (for example https://www.fox10phoenix.com/news/snap-benefits-arizona-will-not-be-issued-november-heres-what-know and https://snohomishcountywa.gov/CivicAlerts/?Mobile=ON), dated September 2026 grocery-opening/recovery news, and October 23, 2026 policy tracker (https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025) because they do not establish a new immediate access interruption during this window.",
+    {
+      "bounded_query_context": [
+        "\"only grocery store\" \"closed\" \"October 30\" 2026 town",
+        "\"last grocery store\" fire closing community October 2026",
+        "\"sole grocery store\" shut down fire Oct 30 2026",
+        "\"emergency food distribution\" canceled \"October 30\" 2026 storm",
+        "\"food distribution\" suspended flooding outage Friday October 30 2026",
+        "\"food distribution\" cancelled storm fire \"Oct. 30\" 2026",
+        "\"food pantry\" \"temporarily closed\" \"October 30\" 2026",
+        "\"food bank\" \"suspended\" services outage \"October 30\" 2026",
+        "\"pantry\" closed fire damage storm \"Oct 30 2026\" families",
+        "SNAP EBT outage benefit delay interruption October 30 2026 state agency official",
+        "WIC benefits interrupted card outage October 30 2026 official",
+        "site:gov \"October 30, 2026\" \"SNAP\" \"interruption\" OR \"delay\""
+      ]
+    }
+  ]
+}

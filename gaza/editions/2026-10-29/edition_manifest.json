@@ -1,0 +1,75 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-10-29",
+  "generated_at": "2026-10-30T18:02:01.589236+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-29/",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 3,
+  "story_count": 3,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source late edition",
+  "publisher_count": 1,
+  "publishers": [
+    "WAFA"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 3 saved source records from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+    "All rendered public stories in this edition rely on sources from WAFA."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "gaza/editions/2026-10-29/sources_manifest.json",
+  "curation_manifest_path": "gaza/editions/2026-10-29/curation_manifest.json",
+  "free_public_artifacts": [
+    "gaza/editions/2026-10-29/index.html",
+    "gaza/editions/2026-10-29/edition_manifest.json",
+    "gaza/editions/2026-10-29/sources_manifest.json",
+    "gaza/editions/2026-10-29/curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This is a limited-source update generated from 3 saved source records from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+    "All rendered public stories in this edition rely on sources from WAFA.",
+    "manual supplement recommended: add source-backed records at data/dispatches/gaza/sources/2026-10-29/manual_sources.template.json",
+    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+  ],
+  "errors": [],
+  "actual_run_local_time": "2026-10-30T11:02:01-07:00",
+  "source_window_start_utc": null,
+  "source_window_end_utc": null,
+  "first_source_retrieved_at": "2026-10-30T04:56:39Z",
+  "last_source_retrieved_at": "2026-10-30T04:56:39Z",
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-10-30T04:56:39Z",
+      "retrieved_at_local": "2026-10-29T21:56:39-07:00",
+      "retrieved_local_date": "2026-10-29",
+      "batch_classification": "manual_late_edition_review",
+      "source_record_ids": [
+        "gaza-2026-10-29-private-wafa-176424",
+        "gaza-2026-10-29-private-wafa-176437",
+        "gaza-2026-10-29-private-wafa-176439"
+      ],
+      "source_count": 3
+    }
+  ],
+  "edition_type": "limited_source_late_edition",
+  "public_archive_title": "October 29 late edition: three WAFA reports from Gaza",
+  "public_archive_subtitle": "Three reports from one publisher, WAFA, without independent corroboration. Partial coverage, not a full daily briefing.",
+  "public_summary": "Three reports from one publisher, WAFA, without independent corroboration. Partial coverage, not a full daily briefing.",
+  "generation_route": "approved_manual_late_edition",
+  "publication_scope": "site_only",
+  "audio_render_authorized": false,
+  "social_publication_authorized": false,
+  "scheduled_pipeline_execution": false,
+  "reviewed_input_sha256": "57c461d3095663d0f266e371d6b129ccfa895efb178c4533efd294b50a3c3b39",
+  "collection_scope": "Three WAFA reports only; automatic provider coverage not completed by this manual review.",
+  "source_evidence_note": "Approved paraphrases of previously inspected WAFA article bodies; not full-text snapshots. Reconstructed input metadata has separately recorded provenance. Publisher dates remain date-only; timezone unverified.",
+  "normal_morning_schedule_reference_local_time": "2026-10-29T06:00:00-07:00"
+}

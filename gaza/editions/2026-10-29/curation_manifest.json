@@ -1,0 +1,245 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-29-002",
+    "title": "One Palestinian killed in Israeli drone strike in northern Gaza",
+    "summary": "Citing local sources, WAFA reported one Palestinian killed in an Israeli drone strike near Zainab al-Wazir School, east of Jabalia.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 65,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-29-private-wafa-176437"
+    ],
+    "source_ids": [
+      "gaza-2026-10-29-private-wafa-176437"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176437"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-29-private-wafa-176437",
+        "title": "One Palestinian killed in Israeli drone strike in northern Gaza",
+        "url": "https://english.wafa.ps/Pages/Details/176437",
+        "publisher": "WAFA",
+        "summary_or_snippet": "Citing local sources, WAFA reported one Palestinian killed in an Israeli drone strike near Zainab al-Wazir School, east of Jabalia.",
+        "editorial_label": "Limited-source update based on three WAFA reports, without independent corroboration.",
+        "event_date": "2026-10-29",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-30T18:02:01.589236+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "jabalia",
+      "palestin"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Gaza",
+    "event_date": "2026-10-29",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-29-003",
+    "title": "Israeli forces detain three Palestinians returning to Gaza through Rafah crossing",
+    "summary": "Citing local sources, WAFA reported three Palestinians detained after returning to Gaza through Rafah crossing.",
+    "category": "detention",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-29-private-wafa-176439"
+    ],
+    "source_ids": [
+      "gaza-2026-10-29-private-wafa-176439"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176439"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-29-private-wafa-176439",
+        "title": "Israeli forces detain three Palestinians returning to Gaza through Rafah crossing",
+        "url": "https://english.wafa.ps/Pages/Details/176439",
+        "publisher": "WAFA",
+        "summary_or_snippet": "Citing local sources, WAFA reported three Palestinians detained after returning to Gaza through Rafah crossing.",
+        "editorial_label": "Limited-source update based on three WAFA reports, without independent corroboration.",
+        "event_date": "2026-10-29",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "detention",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-30T18:02:01.589236+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "rafah"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "detention",
+    "location": "Gaza",
+    "event_date": "2026-10-29",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-29-001",
+    "title": "Several Palestinians injured in Israeli airstrike on civilian vehicle in central Gaza",
+    "summary": "WAFA reported several Palestinians injured in an Israeli airstrike on a civilian vehicle near al-Maghazi camp’s entrance.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 57,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-29-private-wafa-176424"
+    ],
+    "source_ids": [
+      "gaza-2026-10-29-private-wafa-176424"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176424"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-29-private-wafa-176424",
+        "title": "Several Palestinians injured in Israeli airstrike on civilian vehicle in central Gaza",
+        "url": "https://english.wafa.ps/Pages/Details/176424",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reported several Palestinians injured in an Israeli airstrike on a civilian vehicle near al-Maghazi camp’s entrance.",
+        "editorial_label": "Limited-source update based on three WAFA reports, without independent corroboration.",
+        "event_date": "2026-10-29",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-30T18:02:01.589236+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 57,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Gaza",
+    "event_date": "2026-10-29",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

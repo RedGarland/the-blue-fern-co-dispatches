@@ -1,0 +1,242 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-30-001",
+    "title": "At least 12 Palestinians injured in Israeli drone strike west of Khan Younis",
+    "summary": "WAFA reported at least 12 Palestinians injured in an Israeli drone strike in al-Maslakh, Khan Younis, on Friday.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 65,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-30-wafa-176452-al-maslakh-strike"
+    ],
+    "source_ids": [
+      "gaza-2026-10-30-wafa-176452-al-maslakh-strike"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176452"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-30-wafa-176452-al-maslakh-strike",
+        "title": "At least 12 Palestinians injured in Israeli drone strike west of Khan Younis",
+        "url": "https://english.wafa.ps/Pages/Details/176452",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reported at least 12 Palestinians injured in an Israeli drone strike in al-Maslakh, Khan Younis, on Friday.",
+        "event_date": "2026-10-30",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-30T18:02:18.138583+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis",
+      "palestin"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Gaza",
+    "event_date": "2026-10-30",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-10-17-003",
+    "prior_edition_date": "2026-10-17",
+    "dedupe_classification": "continuing_development",
+    "dedupe_reasons": [],
+    "dedupe_relation_scope": "Broad-topic heuristic only; not a finding that this is the same incident, an increased casualty toll, or independent corroboration. Current story ID, claim and source URL remain distinct."
+  },
+  {
+    "story_id": "gaza-story-2026-10-30-003",
+    "title": "2 Palestinians wounded as Israeli attacks continue in Gaza despite ceasefire",
+    "summary": "Two Palestinians suffered minor injuries when an Israeli helicopter struck an apartment in Sheikh Radwan early Friday, medical and local sources told Anadolu.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-30-anadolu-4105670-sheikh-radwan-strike"
+    ],
+    "source_ids": [
+      "gaza-2026-10-30-anadolu-4105670-sheikh-radwan-strike"
+    ],
+    "source_urls": [
+      "https://h.aa.com.tr/en/middle-east/2-palestinians-wounded-as-israeli-attacks-continue-in-gaza-despite-ceasefire/4105670"
+    ],
+    "publisher_names": [
+      "Anadolu"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-30-anadolu-4105670-sheikh-radwan-strike",
+        "title": "2 Palestinians wounded as Israeli attacks continue in Gaza despite ceasefire",
+        "url": "https://h.aa.com.tr/en/middle-east/2-palestinians-wounded-as-israeli-attacks-continue-in-gaza-despite-ceasefire/4105670",
+        "publisher": "Anadolu",
+        "summary_or_snippet": "Two Palestinians suffered minor injuries when an Israeli helicopter struck an apartment in Sheikh Radwan early Friday, medical and local sources told Anadolu.",
+        "event_date": "2026-10-30",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "Anadolu",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-30T18:02:18.138583+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Gaza",
+    "event_date": "2026-10-30",
+    "attribution": "Anadolu",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-30-002",
+    "title": "Minor succumbs to wounds due to Israeli army gunfire south of Khan Younis",
+    "summary": "Eight-year-old Yamen Hisham Yahya Saqr died Friday from injuries sustained when Israeli forces shot him Wednesday in Qizan Rashwan, south of Khan Younis, WAFA reported.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-30-wafa-176450-yamen-saqr-death"
+    ],
+    "source_ids": [
+      "gaza-2026-10-30-wafa-176450-yamen-saqr-death"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176450"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-30-wafa-176450-yamen-saqr-death",
+        "title": "Minor succumbs to wounds due to Israeli army gunfire south of Khan Younis",
+        "url": "https://english.wafa.ps/Pages/Details/176450",
+        "publisher": "WAFA",
+        "summary_or_snippet": "Eight-year-old Yamen Hisham Yahya Saqr died Friday from injuries sustained when Israeli forces shot him Wednesday in Qizan Rashwan, south of Khan Younis, WAFA reported.",
+        "event_date": "2026-10-30",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-30T18:02:18.138583+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Gaza",
+    "event_date": "2026-10-30",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

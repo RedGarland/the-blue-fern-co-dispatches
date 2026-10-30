@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T114819-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T11:45:22-07:00",
+  "started_at": "2026-10-30T11:48:19-07:00",
+  "completed_at": "2026-10-30T11:49:44.724-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T10:47:27.557-07:00",
+    "end": "2026-10-30T11:49:44.724-07:00",
+    "basis": "Latest verified Care Line Watch heartbeat completed_at through this run. Limited retrospective recall for access-loss discoveries; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territory recall, not a replacement for the primary national production collector.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T104517-0700-r11-recall12.json",
+    "previous_heartbeat_completed_at": "2026-10-30T10:47:27.557-07:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "Canonical official CMS Public Notices checked first. Latest entry remains October 23, 2026; no new provider termination, rescission or CLIA action identified in this hourly interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency room closes suspends patients October 30 2026 US",
+      "hospital inpatient care suspends services October 30 2026 United States",
+      "maternity labor delivery unit closure October 30 2026 rural hospital",
+      "mental health psychiatric inpatient facility shuts closes October 30 2026",
+      "dialysis clinic closes patients service suspended October 30 2026",
+      "cancer oncology clinic closes treatment disrupted October 30 2026",
+      "rural health clinic primary care closing October 30 2026 patients",
+      "ambulance service ends response suspension October 30 2026 counties",
+      "air medical helicopter base closing suspending October 2026 US",
+      "hospital emergency department reopening services restored October 30 2026",
+      "Puerto Rico Guam Virgin Islands hospital medical service closure October 2026",
+      "hospital pediatric intensive care behavioral health closure October 30 2026"
+    ],
+    "targeted_search_recency_days": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      1,
+      3,
+      1
+    ],
+    "coverage_classes": [
+      "Hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "Emergency and rural service loss",
+      "Ambulance, air-medical and base service suspension/closure",
+      "CMS termination, rescission, CLIA limitation/suspension",
+      "Concrete restoration or reopening of lost essential services",
+      "U.S. states and territories where indexed, with limited territorial coverage"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Sharon Regional Medical Center, Sharon Pennsylvania",
+        "reason": "Reported inpatient suspension already recorded by previous verified heartbeat at 10:47 PDT; duplicate."
+      },
+      {
+        "name": "UNM Health, Albuquerque New Mexico",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Official statement dated October 28 reports full restored operations; restoration occurred October 27 and was previously documented, not newly effective this hour."
+      },
+      {
+        "name": "Desert Willow Treatment Center, Nevada",
+        "source_url": "https://www.fox5vegas.com/2026/09/30/advocates-state-workers-criticize-temporary-closure-nevada-youth-psychiatric-hospital/",
+        "reason": "September 29 story describes planned temporary closure and staffing changes; no new operational confirmation or distinct development in current window."
+      },
+      {
+        "name": "Hundreds of hospitals may close/cut services",
+        "source_url": "https://www.breastcancer.org/news/hospitals-at-risk-of-closing-medicaid",
+        "reason": "October 10 risk analysis of possible future closures; no concrete facility-specific service change."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Twelve targeted web searches yielded sparse distinct results, especially for smaller rural markets and U.S. territories. This bounded watch cannot establish exhaustive national absence. No source retrieval failure materially impaired the verified sources; no fresh qualifying finding met evidence and duplicate checks.",
+    "controls": "Exactly one heartbeat JSON on ops/watch-ledger. No editorial approval, publication, schedule modifications, task disabling, or changes to the primary collector."
+  }
+}

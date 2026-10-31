@@ -165,8 +165,6 @@ class WindowsDisposable(unittest.TestCase):
             wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p,
             wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE]
         kernel.CreateFileW.restype = wintypes.HANDLE
-        kernel.CreateDirectoryW.argtypes = [wintypes.LPCWSTR, ctypes.c_void_p]
-        kernel.CreateDirectoryW.restype = wintypes.BOOL
         kernel.CloseHandle.argtypes = [wintypes.HANDLE]
         kernel.CloseHandle.restype = wintypes.BOOL
         kernel.GetFileInformationByHandle.argtypes = [
@@ -186,8 +184,12 @@ class WindowsDisposable(unittest.TestCase):
         if case.exists():
             raise AssertionError('fixture creation requires an absent path')
         advapi, kernel = self._fixture_api()
-        if not kernel.CreateDirectoryW(str(case), None):
-            raise AssertionError(f'fixture exclusive directory creation failed; Win32 error {ctypes.get_last_error()}')
+        try:
+            os.mkdir(str(case), mode=0o700)
+        except FileExistsError as error:
+            raise AssertionError('fixture creation raced with an existing path') from error
+        except OSError as error:
+            raise AssertionError(f'fixture exclusive directory creation failed: {error}') from error
         flags = self._FILE_FLAG_BACKUP_SEMANTICS | self._FILE_FLAG_OPEN_REPARSE_POINT
         handle = kernel.CreateFileW(str(case), self._READ_CONTROL | self._FILE_READ_ATTRIBUTES,
                                     self._FILE_SHARE_READ | self._FILE_SHARE_WRITE, None,
@@ -248,6 +250,41 @@ class WindowsDisposable(unittest.TestCase):
         self._fixture_cleanup_errors.append(note)
         if primary is not None and hasattr(primary, 'add_note'):
             primary.add_note('fixture cleanup failure: ' + note)
+
+    def _fixture_security_projection(self, snapshot):
+        if snapshot is None:
+            return None
+        projected = dict(snapshot)
+        for key in ('dacl', 'owner', 'group'):
+            value = projected.get(key)
+            projected[key + '_length'] = None if value is None else len(value)
+            projected[key + '_sha256'] = None if value is None else digest(value)
+            if value is None:
+                projected[key + '_status'] = 'absent'
+            elif len(value) <= 65536:
+                projected[key + '_hex'] = value.hex()
+            else:
+                projected[key + '_status'] = 'oversized_bytes_omitted'
+            projected.pop(key, None)
+        return projected
+
+    def _fixture_emit_initializer_failure(self, case, error):
+        report = {
+            'event': 'fixture_initializer_failure',
+            'case': str(case),
+            'stage': getattr(self, '_fixture_initializer_stage', 'unknown'),
+            'core_exception_type': type(error).__name__,
+            'core_exception': str(error),
+            'security': {
+                key: self._fixture_security_projection(value)
+                for key, value in getattr(self, '_fixture_initializer_security', {}).items()
+            },
+            'setter_called': bool(getattr(self, '_fixture_initializer_setter_called', False)),
+        }
+        try:
+            print('DISPOSABLE_FIXTURE_INITIALIZER_FAILURE=' + json.dumps(report, sort_keys=True), flush=True)
+        except BaseException as diagnostic_error:
+            self._fixture_record_cleanup_error(diagnostic_error, error)
 
     def _fixture_security_snapshot(self, advapi, sd, require_three=True):
         self._fixture_require_win32(advapi.IsValidSecurityDescriptor(sd), 'invalid security descriptor')
@@ -371,11 +408,18 @@ class WindowsDisposable(unittest.TestCase):
                 creation_capability.token not in self._fixture_capability_tokens or
                 creation_capability.path != case):
             raise AssertionError('fixture case was not created by the exclusive fixture factory')
+        self._fixture_initializer_security = {}
+        self._fixture_initializer_stage = 'validation'
+        self._fixture_initializer_setter_called = False
         primary_error = None
         try:
             return self._initialize_empty_fixture_security_owned(case, creation_capability)
         except BaseException as error:
             primary_error = error
+            try:
+                self._fixture_emit_initializer_failure(case, error)
+            except BaseException as diagnostic_error:
+                self._fixture_record_cleanup_error(diagnostic_error, error)
             raise
         finally:
             cleanup_error = self._fixture_release_capability(creation_capability)
@@ -411,7 +455,9 @@ class WindowsDisposable(unittest.TestCase):
                 advapi.ConvertStringSecurityDescriptorToSecurityDescriptorW(
                     self._FIXTURE_SDDL, 1, ctypes.byref(expected_sd), ctypes.byref(expected_len)),
                 'ConvertStringSecurityDescriptorToSecurityDescriptorW failed')
+            self._fixture_initializer_stage = 'expected_security'
             expected = self._fixture_security_snapshot(advapi, expected_sd, require_three=True)
+            self._fixture_initializer_security['expected'] = expected
             if not expected['protected'] or expected['ace_count'] != 3:
                 raise AssertionError('fixture SDDL did not produce the required protected three-ACE DACL')
             access = self._READ_CONTROL | self._WRITE_DAC | self._FILE_READ_ATTRIBUTES
@@ -433,7 +479,9 @@ class WindowsDisposable(unittest.TestCase):
                 raise AssertionError('fixture case handle is a reparse point')
             if handle_identity != creation_identity:
                 raise AssertionError('fixture case identity differs from creation handle')
+            self._fixture_initializer_stage = 'observed_security_before_setter'
             before = self._fixture_read_security_handle(advapi, kernel, handle)
+            self._fixture_initializer_security['observed_before'] = before
             if before['ace_count'] != 3:
                 raise AssertionError(f'fixture case has unexpected ACE count {before["ace_count"]}')
             if before['dacl'] != expected['dacl']:
@@ -451,8 +499,12 @@ class WindowsDisposable(unittest.TestCase):
                     self._fixture_handle_identity(kernel, creation_handle) != creation_identity or
                     (base.lstat().st_dev, base.lstat().st_ino) != creation_capability.base_identity):
                 raise AssertionError('fixture case identity or emptiness changed before setter')
+            self._fixture_initializer_stage = 'set_security'
+            self._fixture_initializer_setter_called = True
             self._fixture_set_security(advapi, handle, expected_dacl)
+            self._fixture_initializer_stage = 'observed_security_after_setter'
             after = self._fixture_read_security_handle(advapi, kernel, handle)
+            self._fixture_initializer_security['observed_after'] = after
             if after['owner'] != before['owner'] or after['group'] != before['group']:
                 raise AssertionError('fixture initializer changed owner or group')
             if (after['dacl'] != expected['dacl'] or
@@ -513,6 +565,18 @@ class WindowsDisposable(unittest.TestCase):
         self.assertTrue(capability.consumed)
         self.assertIsNone(capability.handle)
 
+    def test_factory_uses_restricted_mkdir_and_never_reuses_existing_case(self):
+        case = self.base / 'mkdir-mode-fixture-case'
+        with patch('os.mkdir', wraps=os.mkdir) as mkdir:
+            capability = self._fixture_create_case(case)
+            self._fixture_cleanup_capability(capability)
+        matching = [call for call in mkdir.call_args_list
+                    if call.args and str(call.args[0]) == str(case)]
+        self.assertEqual(len(matching), 1)
+        self.assertEqual(matching[0].kwargs.get('mode'), 0o700)
+        with self.assertRaisesRegex(AssertionError, '^fixture creation requires an absent path$'):
+            self._fixture_create_case(case)
+
     def test_fixture_initializer_refuses_out_of_scope_case(self):
         with self.assertRaisesRegex(AssertionError, '^fixture case outside synthetic base'):
             self._initialize_empty_fixture_security(self.base.parent / 'outside-fixture-case')
@@ -552,6 +616,48 @@ class WindowsDisposable(unittest.TestCase):
                 with self.assertRaisesRegex(AssertionError, '^fixture case identity changed before security read'):
                     self._initialize_empty_fixture_security(case, capability)
                 setter.assert_not_called()
+
+    def test_early_initializer_failure_is_json_and_preserves_exception_identity(self):
+        case = self.base / 'early-diagnostic-fixture-case'
+        capability = self._fixture_create_case(case)
+        original = core.Refused('early initializer failure')
+        snapshot = {'dacl': b'\x01\x02', 'owner': b'owner', 'group': b'group',
+                    'ace_count': 3, 'control': self._SE_DACL_PROTECTED,
+                    'protected': True}
+
+        def fail_owned(*args):
+            self._fixture_initializer_security = {
+                'expected': snapshot, 'observed_before': snapshot}
+            self._fixture_initializer_stage = 'expected_security'
+            raise original
+
+        with patch.object(self, '_initialize_empty_fixture_security_owned', side_effect=fail_owned):
+            with patch('builtins.print') as printer:
+                with self.assertRaises(core.Refused) as raised:
+                    self._initialize_empty_fixture_security(case, capability)
+        self.assertIs(raised.exception, original)
+        payload = printer.call_args.args[0]
+        prefix = 'DISPOSABLE_FIXTURE_INITIALIZER_FAILURE='
+        self.assertTrue(payload.startswith(prefix))
+        report = json.loads(payload[len(prefix):])
+        self.assertEqual(report['core_exception'], str(original))
+        self.assertEqual(report['stage'], 'expected_security')
+        self.assertEqual(report['security']['expected']['dacl_hex'], '0102')
+        self.assertEqual(report['security']['observed_before']['owner_hex'], '6f776e6572')
+
+    def test_early_diagnostic_failure_preserves_original_exception_identity(self):
+        case = self.base / 'early-diagnostic-failure-case'
+        capability = self._fixture_create_case(case)
+        original = core.Refused('original early initializer failure')
+
+        def fail_owned(*args):
+            raise original
+
+        with patch.object(self, '_initialize_empty_fixture_security_owned', side_effect=fail_owned):
+            with patch.object(self, '_fixture_emit_initializer_failure', side_effect=RuntimeError('diagnostic failure')):
+                with self.assertRaises(core.Refused) as raised:
+                    self._initialize_empty_fixture_security(case, capability)
+        self.assertIs(raised.exception, original)
 
     def test_fixture_initializer_refuses_reparse_ancestor_before_setter(self):
         case = self.base / 'reparse-ancestor-fixture-case'

@@ -164,4 +164,3 @@ def test_candidate_checkout_fixture_is_clean_only_after_commit(tmp_path):
     source.write_text("candidate = False\n", encoding="utf-8")
     dirty = subprocess.run(["git", "status", "--porcelain"], cwd=repo, text=True, capture_output=True, check=True)
     assert dirty.stdout.startswith(" M ")
-

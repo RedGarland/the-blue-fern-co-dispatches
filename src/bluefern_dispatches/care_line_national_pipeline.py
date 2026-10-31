@@ -2860,7 +2860,7 @@ def _care_line_explicit_geography_mentions(text: str) -> set[tuple[str, str]]:
         return set()
     mentions: set[tuple[str, str]] = set()
     line_dateline_pattern = re.compile(
-        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[�?"�?"-]{1,2}|\u2014|\u2013)\s*",
+        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[â€”â€“-]{1,2}|\u2014|\u2013)\s*",
         re.I,
     )
     mention_patterns = (
@@ -2890,7 +2890,7 @@ def _geography_candidate_from_text(text: str) -> dict[str, str]:
         return {}
     line_dateline_candidates: list[tuple[str, str]] = []
     line_dateline_pattern = re.compile(
-        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[---]{1,2}|\u2014|\u2013)\s*",
+        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*",
         re.I,
     )
     for raw_line in text.splitlines():
@@ -2922,8 +2922,8 @@ def _geography_candidate_from_text(text: str) -> dict[str, str]:
     leading = _leading_dateline_text(text)
     if leading:
         direct_patterns = (
-            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2})\s*(?:\([^)]*\)\s*)?(?:[---]{1,2}|\u2014|\u2013)\s*", re.I),
-            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Za-z][A-Za-z .'-]{1,24})\s*(?:\([^)]*\)\s*)?(?:[---]{1,2}|\u2014|\u2013)\s*", re.I),
+            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
+            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Za-z][A-Za-z .'-]{1,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
         )
         for pattern in direct_patterns:
             match = pattern.match(leading)
@@ -2944,7 +2944,7 @@ def _geography_candidate_from_text(text: str) -> dict[str, str]:
                     candidates.append(candidate)
     dateline_mentions: list[tuple[str, str]] = []
     dateline_line_patterns = (
-        re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[---]{1,2}|\u2014|\u2013)\s*", re.I),
+        re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
     )
     for raw_line in text.splitlines():
         line = raw_line.strip()

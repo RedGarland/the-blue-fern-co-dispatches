@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T074755-0700-r11-20261031T144755Z",
+  "scheduled_for": "2026-10-31T07:45:54-07:00",
+  "started_at": "2026-10-31T07:47:55-07:00",
+  "completed_at": "2026-10-31T14:49:11.010Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T06:50:08.633-07:00",
+    "end_at": "2026-10-31T14:49:11.010Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Window starts at completed_at of prior independently read-back-verified Food Line watch heartbeat. Searches use a two-day retrospective discovery allowance for late-indexed reports; only newly qualifying signals are eligible for findings, and preexisting candidates are deduplicated.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall; production nationwide collection is authoritative. Four narrow classes checked: sole/last/full-service grocery loss; disaster-related canceled food distributions; abrupt pantry/food-bank closure or major service reduction; official immediate SNAP/WIC/EBT interruptions.",
+    "Twelve targeted web searches executed successfully using recency=2 days. Returned results did not establish a new qualifying U.S. incident since the prior hourly check. Search result freshness/relevance was uneven; no exhaustive nationwide completeness claim.",
+    "Prior Provo, Utah Community Action Services and Food Bank temporary closure candidate (finding_id food-line-us-ut-provo-casfb-temporary-closure-2026-11-01) was already recorded in the 06:50 Pacific heartbeat and is not duplicated; provider corroboration remains pending review in that earlier record.",
+    "Excluded historical Spencer, NY (September 2026), older grocery closure/reopening stories, international food-bank incidents, donation/resource content, and unrelated SNAP references; no new official immediate benefits interruption substantiated.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T064739-0700-r11-20261031T134739Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" fire closed October 31 2026 town",
+          "category": "only_or_sole_grocery_loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" shuts closes October 30 31 2026 community",
+          "category": "last_grocery_loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery\" store closed fire October 2026",
+          "category": "sole_grocery_disaster",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full-service grocery\" permanently closing October 31 2026 rural",
+          "category": "full_service_grocery_closure",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food distribution\" canceled storm flood power outage October 31 2026",
+          "category": "hazard_canceled_distribution",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" distribution suspended storm hurricane October 31 2026",
+          "category": "hazard_suspended_distribution",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" abruptly closed October 31 2026 local",
+          "category": "abrupt_pantry_closure",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" \"temporarily closed\" October 31 2026",
+          "category": "abrupt_food_bank_closure",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"SNAP\" \"October 31, 2026\" benefits delay interruption card",
+          "category": "official_snap_interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"October 31, 2026\" suspension benefits closure",
+          "category": "official_wic_interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "\"EBT\" \"outage\" \"October 31, 2026\" state",
+          "category": "official_ebt_outage",
+          "recency_days": 2
+        },
+        {
+          "query": "\"Community Action Services\" \"Food Bank\" Provo closure October 31 2026 official",
+          "category": "previous_candidate_corroboration_and_dedupe",
+          "recency_days": 2
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "https://www.aol.com/articles/not-gone-away-community-action-021730000.html"
+      ]
+    },
+    "No approvals, publications, production collector changes, schedule changes, or task disabling."
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T204913-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T20:45:22-07:00",
+  "started_at": "2026-10-30T20:49:13-07:00",
+  "completed_at": "2026-10-30T20:50:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T19:49:03.111-07:00",
+    "end": "2026-10-30T20:50:26-07:00",
+    "basis": "Newly discovered since prior verified hourly heartbeat, including retrospective recall; publication/update time is not the event-effective time."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-il-rantoul-carle-clinic-temporary-closure-20261030",
+      "canonical_source_url": "https://www.aol.com/articles/carle-rantoul-clinic-temporarily-closed-215306000.html",
+      "title": "Carle’s Rantoul clinic temporarily closed for ‘elevated levels of moisture’ inside building",
+      "publisher": "WCIA (Nexstar), syndicated by AOL",
+      "exact_supporting_passage": "Carle Health's clinic in Rantoul is temporarily closed amidst what was referred to as \"elevated levels of moisture\" inside.",
+      "source_published_date": "2026-10-30",
+      "state": "IL",
+      "city": "Rantoul",
+      "county": "Champaign",
+      "territory": null,
+      "event_type": "temporary_outpatient_clinic_closure",
+      "service_line": "outpatient clinic (specific specialties, including primary care, not independently verified)",
+      "access_consequences": "The clinic location is temporarily closed; Carle says appointments are being relocated and affected patients contacted. Reopening date and alternative appointment sites were not provided.",
+      "affected_population": "Patients whose visits at the Rantoul clinic are disrupted; count unknown.",
+      "effective_date": null,
+      "announcement_date": null,
+      "confidence": "medium",
+      "source_role": "local_reporting_with_named_health_system_spokesperson",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall watch for US, DC and territories; production national collector is authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T194820-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "newest_verified_notice_date": "2026-10-30",
+      "change_since_previous_heartbeat": "No newly posted rows compared with the prior heartbeat: the seven October 30 termination notices (CCNs B31564, A11721, 234047, 368355, 368395, 369294, 369309) already documented; excluded as duplicates. Notices themselves are not proof a facility has ceased services."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended October 30 2026 United States",
+      "hospital inpatient services stopped suspended October 30 2026 patients transfers",
+      "maternity labor delivery obstetrics unit closure suspended October 30 2026",
+      "rural hospital emergency services suspended closed October 30 2026",
+      "psychiatric behavioral health hospital unit closes suspends services October 30 2026",
+      "dialysis treatment center closed suspended October 30 2026 patients",
+      "oncology cancer infusion center services closed suspended October 30 2026",
+      "primary care clinic abruptly closes October 30 2026 local news",
+      "ambulance EMS service base permanently closed suspended October 30 2026 United States",
+      "air medical helicopter ambulance base shut down suspended October 30 2026",
+      "emergency department hospital maternity reopened services restored October 30 2026",
+      "Puerto Rico Guam US Virgin Islands American Samoa hospital clinic ambulance health services suspension closure October 30 2026"
+    ],
+    "search_recency_days": 1,
+    "coverage_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "emergency and rural service loss",
+      "ambulance/air-medical/base closure or suspension",
+      "CMS termination/rescission/CLIA notices",
+      "concrete abrupt restoration/reopening",
+      "US states, DC and territories (bounded recall, not exhaustive)"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Seven October 30 CMS Medicare termination notices",
+        "reason": "Exact notices already preserved in prior watch, not new."
+      },
+      {
+        "name": "The Pavilion at Bradford Regional Medical Center, PA",
+        "source_url": "https://www.bradfordera.com/2026/10/30/pavilion-permanently-closed-oct-31/",
+        "reason": "Long-term care facility outside this watch's specified high-value service classes; closure notice effective October 31, not an inpatient hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care loss."
+      },
+      {
+        "name": "Sanford Luverne maternity service, MN",
+        "reason": "Prospective cessation in 2027, no new current-window service loss."
+      },
+      {
+        "name": "Insight Hospital Coldwater inpatient behavioral health suspension, MI",
+        "reason": "July 22 cessation, old known event; not a new recall development."
+      },
+      {
+        "name": "Novi DaVita dialysis temporary closure/reopening, MI",
+        "reason": "June-July 2026 event, not a new development."
+      },
+      {
+        "name": "Potential rural hospital closures in broad October 30 reporting",
+        "reason": "Forecasts rather than a distinct confirmed service closure."
+      }
+    ],
+    "findings_time_note": "Rantoul WCIA story was updated October 30 at 21:53 UTC (14:53 PDT), earlier than the prior watch. Newly identified in this recall, not claimed to have begun in the current one-hour interval. Closure began at an undisclosed time. Carle spokesman confirmed appointment relocation; specialty scope was not verified. No assumption of ED closure.",
+    "source_failures": [],
+    "limitations": "Search engines can miss rural, tribal and territory local reporting; finding is based on syndication of WCIA reporting, not a directly opened Carle statement or first-party notice. Online clinic directory does not establish the closed site's service lines. Exact closure start/end and number of affected patients remain unknown.",
+    "controls": "Exactly one new watch-only heartbeat on ops/watch-ledger; no approval, public publication, production collector change, schedule update or task disabling."
+  }
+}

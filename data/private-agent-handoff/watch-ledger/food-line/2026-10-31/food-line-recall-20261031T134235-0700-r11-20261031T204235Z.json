@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T134235-0700-r11-20261031T204235Z",
+  "scheduled_for": "2026-10-31T13:45:54-07:00",
+  "started_at": "2026-10-31T13:42:35-07:00",
+  "completed_at": "2026-10-31T13:44:32.517-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T12:47:06.799-07:00",
+    "end_at": "2026-10-31T13:44:32.517-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of the latest independently fetched preceding Food Line watch heartbeat. Search-engine two-day recency is discovery only; actual publication/event timing and duplicate history govern inclusion. Execution began before nominal hourly schedule timestamp.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production nationwide Food Line collection remains authoritative. Checked four high-value classes: loss of a community's sole/last/full-service grocer, hazard-canceled emergency food distributions, abrupt pantry/food-bank closure/access reduction, and official immediate SNAP/WIC/EBT interruptions.",
+    "Twelve targeted web searches completed (fast, two-day recency) with no search failures. No new qualifying U.S. food-access disruption first evidenced within the verified bounded window. Search indexing surfaced older or preannounced events; absence of results is not evidence of comprehensive nationwide absence.",
+    "Excluded previously recorded Provo, Utah Community Action Services and Food Bank closure candidate, originally captured at 06:50 PDT and pending review. No new direct-provider confirmation in this watch.",
+    "Excluded older reports: Spencer, New York sole-grocery fire September 11; Stockton, Alabama distribution weather cancellation October 10; El Paso food-bank storm closure September 25; and San Jose food pantry zoning threat reported October 3 without newly documented service shutdown.",
+    "Townsend, Wisconsin Mike's Super Market was identified as the only local grocery with planned closure October 31, but the sourced report was dated October 19; no new announcement or actual closing time within the hourly window was established. Treated as an older preannounced event, not a fresh qualifying signal.",
+    "Excluded October 2025 federal SNAP shutdown stories, which do not establish a new October 2026 official interruption. Routine EBT rules, holiday closures, donation/promotional material, and non-U.S. reports were not candidates.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T124629-0700-r11-20261031T194629Z.json",
+      "bounded_query_context": [
+        {
+          "query": "October 31 2026 \"only grocery store\" closed fire town food access",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 \"last grocery store\" \"closed\" local",
+          "category": "last_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 \"only full-service grocery\" closure fire disaster",
+          "category": "full_service_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 \"grocery store\" \"only\" fire permanently closed rural",
+          "category": "sole_grocery_disaster",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 food bank emergency distribution canceled today storm flooding power outage",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 food pantry distribution cancelled suspended due to weather emergency",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 disaster \"food distribution\" \"canceled\" OR \"postponed\" hurricane flood",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 \"food pantry\" closed suddenly indefinitely services halted",
+          "category": "abrupt_pantry_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 food bank pantry \"closing\" \"effective November\" service suspended",
+          "category": "abrupt_food_bank_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 emergency food pantry shutdown access reduced local nonprofit",
+          "category": "pantry_access_reduction",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 SNAP EBT benefits delayed suspended outage official state department notice",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 WIC benefits unavailable suspended system outage official state agency",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": 2
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://storeclosurewatch.com/briefs/independent-grocery-store-closings-2026/",
+        "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "https://portal.ct.gov/dss/knowledge-base/articles/snap/using-your-ebt-card",
+        "https://www.stjosephnewton.org/events/food-pantry-closed"
+      ]
+    },
+    "No editorial approval, publication, production collector modification, task schedule modification, or watch disabling occurred."
+  ]
+}

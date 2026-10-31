@@ -190,7 +190,7 @@ BOILERPLATE_HINTS = (
 )
 MAX_EXTRACTED_TEXT_CHARS = 24000
 
-SOURCE_FAILURE_CLASSES = {"HTTPError", "ValueError", "ParseError", "TimeoutError", "URLError"}
+SOURCE_FAILURE_CLASSES = {"HTTPError", "ValueError", "ParseError", "TimeoutError", "URLError", "ConnectionResetError"}
 
 ONGOING_SERVICE_HOLD_RE = re.compile(
     r"\b(?:"
@@ -4769,7 +4769,7 @@ def _source_failure_transient(failure: str, failure_class: str, *, source: CareL
     if _is_revalidated_external_403(source, failure, failure_class):
         return True
     text = str(failure or "").casefold()
-    if failure_class in {"TimeoutError", "URLError"}:
+    if failure_class in {"TimeoutError", "URLError", "ConnectionResetError"}:
         return True
     if failure_class == "HTTPError":
         return any(code in text for code in (" 408", " 429", " 500", " 502", " 503", " 504"))
@@ -4800,7 +4800,7 @@ def _source_failure_status_class(failure: str, failure_class: str, *, source: Ca
         return "transient_http_failure"
     if http_status is not None and 400 <= http_status <= 499:
         return "http_client_error"
-    if failure_class in {"TimeoutError", "URLError"}:
+    if failure_class in {"TimeoutError", "URLError", "ConnectionResetError"}:
         return "transient_network_failure"
     if failure_class == "ParseError":
         return "parse_failure"
@@ -5361,3 +5361,4 @@ def run_national_pipeline(
         "manual_review": {"manual_review_count": len(manual_review), "items": manual_review},
         "follow_up_state": follow_up_state_result,
     }
+

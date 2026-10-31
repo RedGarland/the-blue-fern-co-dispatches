@@ -2141,3 +2141,20 @@ def test_care_line_recovered_geography_and_subject_do_not_imply_qualification(mo
     )
     assert status != "qualified"
     assert payload["exclusion_reason"] in {"missing_event_type", "needs_access_consequence", "missing_subject", "needs_full_article"}
+
+
+# Review-bundle additions: load the six portable connection-reset regressions
+# without replacing the repository's existing Care test suite.
+from importlib.util import module_from_spec as _module_from_spec
+from importlib.util import spec_from_file_location as _spec_from_file_location
+from pathlib import Path as _PortablePath
+
+_portable_source = _PortablePath(__file__).with_name("test_care_connection_reset.py")
+_portable_spec = _spec_from_file_location("portable_care_connection_reset_tests", _portable_source)
+assert _portable_spec and _portable_spec.loader
+_portable_module = _module_from_spec(_portable_spec)
+_portable_spec.loader.exec_module(_portable_module)
+for _portable_name, _portable_value in vars(_portable_module).items():
+    if _portable_name.startswith("test_") or _portable_name.startswith("reviewed"):
+        globals()[_portable_name] = _portable_value
+

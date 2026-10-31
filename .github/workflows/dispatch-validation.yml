@@ -24,6 +24,7 @@ jobs:
     needs: [validate_windows]
     if: ${{ always() }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       PYTHONPATH: src
     steps:
@@ -193,6 +194,7 @@ jobs:
     needs: [validate_core, visual_regression]
     if: ${{ always() }}
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     permissions:
       contents: read
       statuses: write
@@ -226,4 +228,3 @@ jobs:
               description: state === 'success' ? 'Dispatch validation passed' : 'Dispatch validation failed',
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             });
-

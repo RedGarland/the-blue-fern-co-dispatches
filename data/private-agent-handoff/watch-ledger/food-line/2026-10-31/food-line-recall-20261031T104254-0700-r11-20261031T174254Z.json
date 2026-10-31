@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T104254-0700-r11-20261031T174254Z",
+  "scheduled_for": "2026-10-31T10:45:54-07:00",
+  "started_at": "2026-10-31T10:42:54-07:00",
+  "completed_at": "2026-10-31T10:43:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T09:47:44-07:00",
+    "end_at": "2026-10-31T10:43:40-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of last independently verified Food Line heartbeat (09:47:44 PDT). Search retrieval permitted two-day recency to catch indexing delays; inclusion required newly evidenced qualified events or announcements in the bounded window and no duplication.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only, not the authoritative nationwide production collector. Checked sole/last/full-service grocery closure or fire/disaster; canceled emergency food distributions attributable to storm, flood, fire, outage or facility damage; abrupt pantry/food-bank access cuts; and new official SNAP/WIC/EBT access interruptions.",
+    "Twelve targeted web searches completed (eight fast and four slow, with two-day recency filters). Search results were predominantly older, non-U.S., non-qualifying or duplicate; no new qualifying, independently supported disruption was verified in the 09:47:44–10:43 PDT window. Search indexing is incomplete, and this is not a claim of nationwide absence.",
+    "Previously detected Provo, Utah Community Action Services and Food Bank closure effective November 1, 2026 was excluded as a duplicate of pending_review candidate in 06:50 PDT heartbeat; independently surfaced in a syndicated October 31 update but not new to this watch.",
+    "Northland Shepherd’s Center, Gladstone, Missouri scheduled cessation of operations October 31 includes a food pantry, but was announced approximately two months earlier, and is not newly reported in this watch window; no new abrupt disruption verified.",
+    "October 2025 SNAP government-shutdown notices were excluded after checking explicit publication years, rather than treating search recency or current-page related links as 2026 reports. Historical Spencer, New York sole-grocery fire (September 2026), San Jose zoning enforcement threat (October 9–10, 2026) and May 2026 Suisun City arson are outside the window.",
+    "Hurricane Lowell Kauaʻi recovery pages include scheduled emergency food distributions, not newly canceled distributions; October 23 county notice and October 29 community roundup are older.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T094651-0700-r11-20261031T164651Z.json",
+      "bounded_query_context": [
+        {
+          "query": "only grocery store fire closed October 31 2026 town",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "sole grocery store closure October 30 31 2026",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "last full-service grocery store closes October 2026",
+          "category": "full_service_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "food distribution canceled October 31 storm 2026",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "food pantry cancelled October 31 flood fire 2026",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "food bank temporarily closed October 31 2026",
+          "category": "abrupt_pantry_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "SNAP benefits delayed suspended November 2026 state agency notice",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "WIC outage benefits October 31 2026 agency notice",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 October 30 only supermarket last grocery store fire closure United States town",
+          "category": "sole_grocery_loss",
+          "method": "slow",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 food bank pantry cancelled distribution storm flood hurricane Lowell Hawaii",
+          "category": "hazard_distribution_cancellation",
+          "method": "slow",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 food pantry abrupt closure reduced hours service announcement local news",
+          "category": "abrupt_pantry_closure",
+          "method": "slow",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 state agency SNAP WIC EBT outage benefit disruption notice food stamps",
+          "category": "official_assistance_interruption",
+          "method": "slow",
+          "recency_days": 2
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "https://www.kshb.com/news/local-news/missouri/clay-county/northland-shepherds-center-to-close-ending-35-years-of-service-to-seniors",
+        "https://www.kauai.gov/County-Press-Releases/Oct.-23-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "https://localnewsmatters.org/2026/10/10/san-jose-food-pantry-faces-closure-zoning-violations/",
+        "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/"
+      ]
+    },
+    "No approvals, publication, changes to production collector, schedule changes, or task disabling occurred."
+  ]
+}

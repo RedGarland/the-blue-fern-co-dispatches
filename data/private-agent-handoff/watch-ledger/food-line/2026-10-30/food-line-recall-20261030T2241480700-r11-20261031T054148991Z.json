@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T2241480700-r11-20261031T054148991Z",
+  "scheduled_for": "2026-10-30T22:45:54-07:00",
+  "started_at": "2026-10-30T22:41:11-07:00",
+  "completed_at": "2026-10-31T05:41:48.991Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T04:50:51.982Z",
+    "end_at": "2026-10-31T05:41:48.991Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Most recent independently verified prior Food Line Source Watch heartbeat completed October 30, 2026 at 21:50:51.982 PDT; the recall watch ran on October 30 Pacific date. Search recency was extended two days for indexing lag; only newly qualifying developments during the bounded interval were eligible.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary, bounded watch only; production nationwide collector remains authoritative. No review approval, publication, schedule change, or task disablement performed.",
+    "Twelve targeted web searches completed in two batches (four sole/last/full-service grocery closures, three weather/disaster emergency food distribution cancellations, two abrupt food pantry/bank closures, three SNAP/WIC/EBT interruptions). No search tool failures observed.",
+    "No new U.S. loss of sole/full-service grocery, disaster-caused distribution cancellation, abrupt pantry/bank closure, or official SNAP/WIC access interruption was independently verified within the interval.",
+    "Filtered search hits with explicit 2024, 2025, September or earlier October 2026 event dates; e.g. Spencer NY September grocery fire, Eastport ME earlier-only-grocer loss, October 7-9 Alabama weather cancellations, and 2025 SNAP shutdown reports.",
+    "Excluded October 30, 2026 Hockley TX Kroger store groundbreaking and September 2026 Aurora NC pantry opening because these expanded rather than reduced food access.",
+    "Filtered Canada (Baker Lake food bank fire May 2026), India (Odisha relief October 30 2026), non-food service matches, and unrelated state administrative documents.",
+    "The October 29 Kauaʻi hurricane recovery report did not substantiate a newly canceled October 30 food distribution. No cancellation inferred.",
+    "No result is not proof of absence in unindexed municipal bulletins or provider social feeds; this watch is intentionally bounded.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T215051-0700-r11-20261031045051Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" fire closed October 30 2026 town",
+          "recency_days": 2,
+          "category": "sole/full-service grocery loss"
+        },
+        {
+          "query": "\"last grocery store\" shuts down \"October 30\" 2026",
+          "recency_days": 2,
+          "category": "sole/full-service grocery loss"
+        },
+        {
+          "query": "\"sole grocery store\" closure fire October 30 2026",
+          "recency_days": 2,
+          "category": "sole/full-service grocery loss"
+        },
+        {
+          "query": "\"full service grocery store\" closed rural town Oct 30 2026",
+          "recency_days": 2,
+          "category": "sole/full-service grocery loss"
+        },
+        {
+          "query": "\"food distribution\" canceled \"October 30, 2026\" storm",
+          "recency_days": 2,
+          "category": "canceled emergency food distributions"
+        },
+        {
+          "query": "\"food bank\" distribution suspended October 30 2026 hurricane flood outage",
+          "recency_days": 2,
+          "category": "canceled emergency food distributions"
+        },
+        {
+          "query": "\"food pantry\" suddenly closed fire October 30 2026",
+          "recency_days": 2,
+          "category": "abrupt pantry/bank access loss"
+        },
+        {
+          "query": "\"food bank\" operations suspended October 30 2026 damage",
+          "recency_days": 2,
+          "category": "abrupt pantry/bank access loss"
+        },
+        {
+          "query": "site:gov \"SNAP\" \"October 30, 2026\" \"outage\" \"benefits\"",
+          "recency_days": 2,
+          "category": "SNAP/WIC interruption"
+        },
+        {
+          "query": "site:gov \"WIC\" \"October 30, 2026\" \"suspended\" OR \"interrupted\" OR \"closed\"",
+          "recency_days": 2,
+          "category": "SNAP/WIC interruption"
+        },
+        {
+          "query": "\"October 30, 2026\" EBT cards not working SNAP benefits delayed state agency",
+          "recency_days": 2,
+          "category": "SNAP/WIC interruption"
+        },
+        {
+          "query": "food pantry distribution canceled Friday October 30 2026 storm facility closed United States",
+          "recency_days": 2,
+          "category": "canceled emergency food distributions"
+        }
+      ]
+    }
+  ]
+}

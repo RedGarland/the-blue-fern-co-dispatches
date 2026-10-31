@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T184710-0700-r11-20261031T014710Z",
+  "scheduled_for": "2026-10-30T18:45:54-07:00",
+  "started_at": "2026-10-30T18:47:10-07:00",
+  "completed_at": "2026-10-31T01:47:49.469Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T00:42:14.228Z",
+    "end_at": "2026-10-31T01:47:49.469Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start at most recent independently verified Food Line Source Watch heartbeat completion on Oct 30, 2026 at 17:42:14 PDT; observation through this execution. Supplementary recall only.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value miss-class recall only; nationwide production collector remains authoritative.",
+    "Completed 12 targeted web searches (recency filter 1 day) spanning sole/last/full-service grocery loss, disaster-related distribution cancellations, abrupt pantry/food bank access reductions, and official immediate SNAP/WIC/EBT interruptions; no tool-level search failures.",
+    "No newly sourced qualifying access disruption could be established within the bounded observation interval. Results primarily concerned historical grocery closures, 2025 SNAP interruption reports, general food-system coverage, and unrelated international storm response.",
+    "Kauaʻi: Oct 29 local hurricane recovery notice explicitly listed the Fri Oct 30 4–5 p.m. Hawaiʻi Foodbank Kauaʻi mobile distribution at Hale Līhuʻe as scheduled; no subsequent verified cancellation appeared in the bounded searches. Source: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "No new 2026-10-30 government SNAP/WIC suspension/outage was verified; search results surfaced 2025 federal shutdown and assistance notices, which were excluded for event-date mismatch.",
+    "Search indexing and local-provider notice coverage are nonexhaustive; zero findings is not a claim that no such U.S. events occurred.",
+    "No approval, publication, schedule alteration, or task disabling performed.",
+    {
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" OR \"sole grocery store\" closed fire October 30 2026",
+          "recency_days": 1
+        },
+        {
+          "query": "\"last grocery store\" OR \"only supermarket\" shut down town October 30 2026",
+          "recency_days": 1
+        },
+        {
+          "query": "\"full-service grocery\" closure food desert October 30 2026",
+          "recency_days": 1
+        },
+        {
+          "query": "\"food distribution\" canceled OR postponed storm flood October 30 2026",
+          "recency_days": 1
+        },
+        {
+          "query": "\"food bank\" distribution suspended \"October 30\" 2026 hurricane",
+          "recency_days": 1
+        },
+        {
+          "query": "\"emergency food\" distribution canceled power outage October 30 2026",
+          "recency_days": 1
+        },
+        {
+          "query": "\"food pantry\" \"closed\" \"October 30, 2026\" service",
+          "recency_days": 1
+        },
+        {
+          "query": "\"food bank\" shut down abruptly October 30 2026",
+          "recency_days": 1
+        },
+        {
+          "query": "\"pantry\" suspended services storm hurricane October 30 2026",
+          "recency_days": 1
+        },
+        {
+          "query": "site:gov SNAP EBT outages benefits October 30 2026 state",
+          "recency_days": 1
+        },
+        {
+          "query": "site:gov WIC benefits interruption October 30 2026 outage",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 state SNAP payments delayed suspended EBT benefits official",
+          "recency_days": 1
+        }
+      ]
+    }
+  ]
+}

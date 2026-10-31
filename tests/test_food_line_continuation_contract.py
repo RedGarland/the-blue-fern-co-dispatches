@@ -482,3 +482,12 @@ for _portable_name, _portable_value in vars(_portable_module).items():
     if _portable_name.startswith("test_") or _portable_name.startswith("_fixture") or _portable_name.startswith("_binding"):
         globals()[_portable_name] = _portable_value
 
+
+def test_entrypoint_chain_source_watch_resume_intake_uses_real_private_flow(tmp_path, monkeypatch):
+    """Keep the full lifecycle regression on the repository's explicit CI test list."""
+    from test_food_line_lifecycle_gap import (
+        test_entrypoint_chain_source_watch_resume_intake_uses_real_private_flow as lifecycle_test,
+    )
+
+    return lifecycle_test(tmp_path, monkeypatch)
+

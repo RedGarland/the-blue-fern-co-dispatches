@@ -192,6 +192,26 @@ def _validate_query_rows(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]
     return result
 
 
+def _candidate_payload_key(candidate: dict[str, Any]) -> str:
+    candidate_id = str(candidate.get("candidate_id") or "").strip()
+    if candidate_id:
+        return f"candidate:{candidate_id}"
+    return f"payload:{hashlib.sha256(_canonical(candidate)).hexdigest()}"
+
+
+def _merge_candidate_payloads(state: dict[str, Any], outcomes: dict[str, Any]) -> None:
+    payloads = state.setdefault("candidate_payloads", {})
+    if not isinstance(payloads, dict):
+        raise ContinuationLedgerError("candidate payload store is not an object")
+    for outcome in outcomes.values():
+        if not isinstance(outcome, dict):
+            continue
+        for candidate in outcome.get("candidates") or []:
+            if not isinstance(candidate, dict):
+                raise ContinuationLedgerError("candidate payload is not an object")
+            payloads[_candidate_payload_key(candidate)] = dict(candidate)
+
+
 def build_plan(
     *,
     edition_date: str,
@@ -246,7 +266,9 @@ def prepare_ledger(
         "in_flight_query_ids": [],
         "completed_query_ids": [],
         "unknown_query_ids": [],
+        "checkpointed_query_ids": [],
         "query_results": {},
+        "candidate_payloads": {},
         "publication_attempted": False,
         "intake_eligible": False,
         "release_ready": False,
@@ -262,6 +284,194 @@ def prepare_ledger(
         _write_json_atomic(directory / PLAN_NAME, plan)
         _write_json_atomic(directory / LEDGER_NAME, ledger)
     return ledger
+
+
+def record_source_watch_batch(
+    directory: Path,
+    *,
+    binding: dict[str, str],
+    child_payload: dict[str, Any],
+) -> dict[str, Any]:
+    """Bind the bounded source-watch result to the pre-created ledger.
+
+    Source-watch still owns the provider process, but its durable ledger is
+    created before that process starts.  This function records only the
+    explicitly returned query rows and candidate payloads; unobserved rows
+    remain pending and therefore cannot be mistaken for successful coverage.
+    """
+    observed_rows = child_payload.get("query_rows")
+    if not isinstance(observed_rows, list):
+        raise ContinuationLedgerError("source-watch result lacks durable query rows")
+    with _exclusive_lock(directory):
+        state = load_ledger(directory, binding=binding)
+        if state.get("unknown_query_ids"):
+            raise ContinuationLedgerError("source-watch ledger already contains uncertain IDs")
+        plan = _read_json(directory / PLAN_NAME)
+        planned_rows = list(plan.get("query_rows") or [])
+        planned_ids = list(plan.get("query_ids") or [])
+        if len(planned_rows) != len(planned_ids):
+            raise ContinuationLedgerError("source-watch plan has mismatched rows and IDs")
+        planned_id_set = set(planned_ids)
+        claim = state.get("source_watch_claim")
+        claimed = list(claim.get("query_ids") or []) if isinstance(claim, dict) else []
+        in_flight = list(state.get("in_flight_query_ids") or [])
+        if (
+            not claimed
+            or len(set(claimed)) != len(claimed)
+            or set(claimed) != set(in_flight)
+            or not set(claimed) <= planned_id_set
+        ):
+            raise ContinuationLedgerError("source-watch claim and in-flight IDs are not an exact match")
+        pending = list(state.get("pending_query_ids") or [])
+        if set(claimed) & set(pending):
+            raise ContinuationLedgerError("source-watch claim overlaps pending IDs")
+        planned_by_id = dict(zip(planned_ids, planned_rows, strict=True))
+        results = state.get("query_results")
+        if not isinstance(results, dict):
+            raise ContinuationLedgerError("source-watch ledger query results are not an object")
+        result_ids = set(results)
+        if not result_ids <= planned_id_set:
+            raise ContinuationLedgerError("source-watch ledger contains foreign query result IDs")
+        if result_ids & set(pending):
+            raise ContinuationLedgerError("source-watch ledger contains results for pending IDs")
+        checkpointed = state.get("checkpointed_query_ids")
+        if not isinstance(checkpointed, list):
+            raise ContinuationLedgerError("source-watch ledger checkpoint IDs are not a list")
+        checkpointed_ids = set(checkpointed)
+        if not checkpointed_ids <= planned_id_set:
+            raise ContinuationLedgerError("source-watch ledger contains foreign checkpoint IDs")
+        if checkpointed_ids & set(pending):
+            raise ContinuationLedgerError("source-watch ledger contains checkpoints for pending IDs")
+        observed_by_id: dict[str, dict[str, Any]] = {}
+        for observed in observed_rows:
+            if not isinstance(observed, dict):
+                raise ContinuationLedgerError("source-watch query row is not an object")
+            matches = [
+                query_id
+                for query_id in claimed
+                if isinstance(planned_by_id.get(query_id), dict)
+                and all(observed.get(key) == value for key, value in planned_by_id[query_id].items())
+            ]
+            if len(matches) != 1:
+                raise ContinuationLedgerError("source-watch query row did not bind to exactly one claimed query ID")
+            query_id = matches[0]
+            if query_id in observed_by_id:
+                raise ContinuationLedgerError(f"source-watch returned duplicate query row: {query_id}")
+            checkpoint = results.get(query_id)
+            if not isinstance(checkpoint, dict):
+                raise ContinuationLedgerError(f"source-watch query lacks a durable checkpoint: {query_id}")
+            checkpoint_rows = checkpoint.get("query_rows")
+            if not isinstance(checkpoint_rows, list) or checkpoint_rows != [observed]:
+                raise ContinuationLedgerError(f"source-watch row contradicts durable checkpoint: {query_id}")
+            observed_by_id[query_id] = dict(observed)
+
+        child_status = str(child_payload.get("status") or "")
+        terminal_child_statuses = HANDOFF_ALLOWED_STATUSES | {"incomplete_capped"}
+        if child_status in terminal_child_statuses:
+            for query_id in claimed:
+                checkpoint = results.get(query_id)
+                if not isinstance(checkpoint, dict):
+                    raise ContinuationLedgerError(f"source-watch terminal result lacks durable checkpoint: {query_id}")
+                checkpoint_rows = checkpoint.get("query_rows")
+                if not isinstance(checkpoint_rows, list):
+                    raise ContinuationLedgerError(f"source-watch checkpoint rows are invalid: {query_id}")
+                if checkpoint_rows and query_id not in observed_by_id:
+                    raise ContinuationLedgerError(f"source-watch durable checkpoint row is missing from child result: {query_id}")
+
+        finalized: list[str] = []
+        for query_id in claimed:
+            checkpoint = results.get(query_id)
+            if not isinstance(checkpoint, dict):
+                continue
+            if not isinstance(checkpoint.get("terminal"), bool) or not isinstance(checkpoint.get("uncertain"), bool):
+                raise ContinuationLedgerError(f"source-watch checkpoint state flags are invalid: {query_id}")
+            if checkpoint.get("terminal") and checkpoint.get("uncertain"):
+                raise ContinuationLedgerError(f"source-watch checkpoint is contradictory: {query_id}")
+            if checkpoint.get("terminal") is True and checkpoint.get("uncertain") is False:
+                finalized.append(query_id)
+
+        state["in_flight_query_ids"] = [query_id for query_id in in_flight if query_id not in set(finalized)]
+        completed = list(state.get("completed_query_ids") or [])
+        for query_id in finalized:
+            if query_id not in completed:
+                completed.append(query_id)
+        state["completed_query_ids"] = completed
+        remaining = list(state["in_flight_query_ids"])
+        state["source_watch_capture"] = {
+            "status": "captured" if not remaining else "quarantined",
+            "observed_query_count": len(observed_by_id),
+            "finalized_query_count": len(finalized),
+            "remaining_in_flight_query_ids": remaining,
+            "source_status": child_status,
+            "source_run_id": str(child_payload.get("run_id") or ""),
+        }
+        state["updated_at"] = _utc_now()
+        _write_json_atomic(directory / LEDGER_NAME, state)
+        return state
+
+
+def claim_source_watch_batch(
+    directory: Path,
+    *,
+    binding: dict[str, str],
+    batch_size: int,
+) -> dict[str, Any]:
+    """Durably claim the first source-watch batch before any provider call.
+
+    The legacy source-watch child still returns one aggregate payload, but the
+    ledger must not remain all-pending while that child is executing.  A crash
+    therefore leaves an in-flight quarantine that continuation cannot replay
+    until an explicit verified reconciliation.
+    """
+    if batch_size <= 0:
+        raise ValueError("batch_size must be positive")
+    with _exclusive_lock(directory):
+        state = load_ledger(directory, binding=binding)
+        if state.get("unknown_query_ids") or state.get("in_flight_query_ids"):
+            raise ContinuationLedgerError("source-watch ledger already contains uncertain or in-flight IDs")
+        claimed = list(state.get("pending_query_ids") or [])[:batch_size]
+        if not claimed:
+            return state
+        state["pending_query_ids"] = [query_id for query_id in state["pending_query_ids"] if query_id not in set(claimed)]
+        state["in_flight_query_ids"] = claimed
+        state["source_watch_claim"] = {
+            "status": "claimed",
+            "query_ids": list(claimed),
+            "claimed_at": _utc_now(),
+        }
+        state["updated_at"] = _utc_now()
+        _write_json_atomic(directory / LEDGER_NAME, state)
+        return state
+
+
+def checkpoint_in_flight_outcome(
+    directory: Path,
+    *,
+    binding: dict[str, str],
+    query_id: str,
+    outcome: dict[str, Any],
+) -> dict[str, Any]:
+    """Persist one outcome/payload while its query remains in-flight.
+
+    This is the durable hook for a per-query source executor.  The ID is not
+    marked completed until the executor's final capture succeeds, so an
+    interrupted process cannot turn a partial result into false completion.
+    """
+    if not isinstance(outcome, dict):
+        raise ContinuationLedgerError("checkpoint outcome must be an object")
+    with _exclusive_lock(directory):
+        state = load_ledger(directory, binding=binding)
+        if query_id not in set(state.get("in_flight_query_ids") or []):
+            raise ContinuationLedgerError(f"query is not in-flight: {query_id}")
+        state["query_results"][query_id] = dict(outcome)
+        _merge_candidate_payloads(state, {query_id: outcome})
+        checkpointed = list(state.get("checkpointed_query_ids") or [])
+        if query_id not in checkpointed:
+            checkpointed.append(query_id)
+        state["checkpointed_query_ids"] = checkpointed
+        state["updated_at"] = _utc_now()
+        _write_json_atomic(directory / LEDGER_NAME, state)
+        return state
 
 
 def load_ledger(directory: Path, *, binding: dict[str, str]) -> dict[str, Any]:
@@ -288,6 +498,7 @@ def continue_ledger(
     binding: dict[str, str],
     batch_size: int,
     batch_executor: Any,
+    checkpoint_outcomes: bool = False,
 ) -> dict[str, Any]:
     if batch_size <= 0:
         raise ValueError("batch_size must be positive")
@@ -307,8 +518,23 @@ def continue_ledger(
         state["updated_at"] = _utc_now()
         _write_json_atomic(directory / LEDGER_NAME, state)
         rows = [by_id[item] for item in claimed]
+
+        def checkpoint(query_id: str, outcome: dict[str, Any]) -> None:
+            if query_id not in claimed:
+                raise ContinuationLedgerError(f"checkpoint contains a foreign query ID: {query_id}")
+            if not isinstance(outcome, dict):
+                raise ContinuationLedgerError(f"checkpoint outcome is not an object: {query_id}")
+            state["query_results"][query_id] = dict(outcome)
+            _merge_candidate_payloads(state, {query_id: outcome})
+            checkpointed = list(state.get("checkpointed_query_ids") or [])
+            if query_id not in checkpointed:
+                checkpointed.append(query_id)
+            state["checkpointed_query_ids"] = checkpointed
+            state["updated_at"] = _utc_now()
+            _write_json_atomic(directory / LEDGER_NAME, state)
+
         try:
-            outcomes = batch_executor(rows)
+            outcomes = batch_executor(rows, checkpoint) if checkpoint_outcomes else batch_executor(rows)
             if not isinstance(outcomes, dict) or set(outcomes) != set(claimed):
                 raise ContinuationLedgerError("batch executor returned an incomplete or foreign ID set")
         except BaseException as exc:
@@ -318,8 +544,24 @@ def continue_ledger(
             state["last_error"] = {"type": type(exc).__name__, "message": str(exc)}
             _write_json_atomic(directory / LEDGER_NAME, state)
             raise
-        state["completed_query_ids"].extend(claimed)
+        completed: list[str] = []
+        uncertain: list[str] = []
+        for query_id in claimed:
+            outcome = outcomes[query_id]
+            if not isinstance(outcome, dict):
+                raise ContinuationLedgerError(f"batch executor outcome is not an object: {query_id}")
+            terminal = outcome.get("terminal")
+            is_uncertain = outcome.get("uncertain")
+            if terminal is True and is_uncertain is False:
+                completed.append(query_id)
+            elif terminal is False and is_uncertain is True:
+                uncertain.append(query_id)
+            else:
+                raise ContinuationLedgerError(f"batch executor outcome has invalid terminal state: {query_id}")
         state["query_results"].update({key: outcomes[key] for key in claimed})
+        _merge_candidate_payloads(state, {key: outcomes[key] for key in claimed})
+        state["completed_query_ids"].extend(query_id for query_id in completed if query_id not in state["completed_query_ids"])
+        state["unknown_query_ids"].extend(query_id for query_id in uncertain if query_id not in state["unknown_query_ids"])
         state["in_flight_query_ids"] = []
         state["updated_at"] = _utc_now()
         _write_json_atomic(directory / LEDGER_NAME, state)
@@ -329,9 +571,9 @@ def continue_ledger(
 def reconcile_unknown(directory: Path, *, binding: dict[str, str], verified_results: dict[str, Any]) -> dict[str, Any]:
     with _exclusive_lock(directory):
         state = load_ledger(directory, binding=binding)
-        unknown = set(state["unknown_query_ids"])
-        if set(verified_results) != unknown:
-            raise ContinuationLedgerError("reconciliation must cover exactly all unknown query IDs")
+        uncertain = set(state.get("unknown_query_ids") or []) | set(state.get("in_flight_query_ids") or [])
+        if set(verified_results) != uncertain:
+            raise ContinuationLedgerError("reconciliation must cover exactly all unknown or in-flight query IDs")
         for query_id, result in verified_results.items():
             if not isinstance(result, dict):
                 raise ContinuationLedgerError(f"reconciliation result is not an object: {query_id}")
@@ -345,8 +587,15 @@ def reconcile_unknown(directory: Path, *, binding: dict[str, str], verified_resu
             ):
                 raise ContinuationLedgerError(f"reconciliation result is not an allowed verified terminal outcome: {query_id}")
         state["query_results"].update(verified_results)
-        state["completed_query_ids"].extend(sorted(unknown))
+        # Reconciliation is a terminal batch just like an ordinary continuation
+        # batch.  Merge its candidate payloads while the same exclusive lock is
+        # held, before clearing unknown IDs or writing the new ledger snapshot.
+        # Otherwise the coverage gate can become eligible while the intake
+        # export silently loses candidates recovered from an unknown outcome.
+        _merge_candidate_payloads(state, verified_results)
+        state["completed_query_ids"].extend(sorted(uncertain))
         state["unknown_query_ids"] = []
+        state["in_flight_query_ids"] = []
         state["updated_at"] = _utc_now()
         _write_json_atomic(directory / LEDGER_NAME, state)
         return state

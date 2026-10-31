@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T204240-0700-r11-20261031T034240Z",
+  "scheduled_for": "2026-10-30T20:45:54-07:00",
+  "started_at": "2026-10-30T20:42:40-07:00",
+  "completed_at": "2026-10-31T03:43:42.237Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T02:51:55.741Z",
+    "end_at": "2026-10-31T03:43:42.237Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Most recent verified preceding Food Line watch heartbeat, completed 2026-10-30 19:51:55.741 PDT, through this run; 2026-10-30 Pacific observation date. Search recency exceeds window to allow for indexing lag, but only new qualifying developments count.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2,
+      3
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary source recall; Food Line production nationwide collector is authoritative. No editorial review, approvals, publication, or schedule/task alterations.",
+    "Twelve targeted fast web searches completed in two batches (6+6), without tool-level search failures; coverage: sole/last/full-service grocer closure/disaster (4); canceled storm/disaster emergency distributions and abrupt food-bank/pantry loss (5); official SNAP/WIC/EBT interruptions with immediate impact (3).",
+    "No newly published, verified, qualifying U.S. food-access disruption was identified in the bounded interval. Search results were dominated by older grocery closures, prior hurricanes, generic pages, or unrelated assistance-policy notices; this is not proof of absence of local unindexed events.",
+    "September 15, 2026 Aurora, North Carolina Goodwill Community Cupboard reopening excluded: improved grocery access, not a new loss. https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+    "August 13, 2026 North Charleston Save A Lot closure excluded: historical outside interval. https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/",
+    "October 2026 independent-grocery retrospective excluded as non-current incident; retrospective lists closures but no verified event in the immediate hour. https://storeclosurewatch.com/briefs/independent-grocery-store-closings-2026/",
+    "October 20, 2026 USDA waiver for California SNAP food loss reporting is access-supporting disaster relief, not an interruption. https://fns-prod.azureedge.us/disaster/california",
+    "October 7-9 Mobile-area Hurricane Isaias closure/cancellation notice excluded: older storm and not a new October 30 qualifying service cancellation. https://mynbc15.com/news/local/isaias-weather-closures-and-cancellations",
+    "Search did not verify any new suspension of Kauaʻi's October 30 emergency mobile food distribution; do not treat planned distributions as canceled. https://kauainownews.com/2026/10/28/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Fresh hyperlocal notices, especially direct provider social updates, may not yet be web indexed.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T195041-0700-r11-20261031T025041Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" \"closed\" \"October 30, 2026\" USA",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" OR \"last grocery store\" fire closure October 30 2026",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full-service grocery store\" closed fire October 2026 community",
+          "recency_days": 3
+        },
+        {
+          "query": "\"only supermarket\" destroyed fire flood October 30 2026 town",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food distribution\" canceled cancelled hurricane storm Friday October 30 2026",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" \"distribution canceled\" October 30 2026 storm",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" \"closed\" \"October 30, 2026\" fire flood power outage",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" \"suspended\" operations \"October 30\" 2026",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" forced to close \"October 30, 2026\" services",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"SNAP\" \"October 30, 2026\" \"interruption\" OR \"outage\" OR \"delayed\"",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"October 30, 2026\" closed benefits suspended outage",
+          "recency_days": 2
+        },
+        {
+          "query": "\"EBT\" \"October 30, 2026\" unavailable outage state SNAP benefits",
+          "recency_days": 2
+        }
+      ]
+    }
+  ]
+}

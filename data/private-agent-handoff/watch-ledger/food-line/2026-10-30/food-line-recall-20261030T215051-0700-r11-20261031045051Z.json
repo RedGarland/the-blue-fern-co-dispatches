@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T215051-0700-r11-20261031045051Z",
+  "scheduled_for": "2026-10-30T21:45:54-07:00",
+  "started_at": "2026-10-30T21:50:16-07:00",
+  "completed_at": "2026-10-31T04:50:51.982Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T03:43:42.237Z",
+    "end_at": "2026-10-31T04:50:51.982Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Most recent verified preceding Food Line Source Watch heartbeat completed 2026-10-30 20:43:42.237 PDT, through this run; October 30 Pacific observation date. Search recency extended 2–3 days for indexing lag; only new developments within the bounded interval qualify.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2,
+      3
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall, not the authoritative production nationwide collector. No editorial approval, publication, schedule change, or disabling.",
+    "Twelve targeted fresh web searches completed in two batches of six, without tool failures: four sole/last/full-service grocer fire or closure, two storm/disaster distribution cancellation, three abrupt pantry/food bank reduction, three official SNAP/WIC/EBT interruption.",
+    "No verified new U.S. food-access disruption in the specified priority miss classes surfaced since the preceding verified watch. Search indexes contain older incidents and irrelevant results; no-results does not prove absence of unindexed hyperlocal notices.",
+    "September 2026 loss of Eastport, Maine's only grocery store excluded as historical (reported September 3): https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+    "September 2026 Spencer, New York Shur Fine supermarket fire excluded as historical (September 11–14): https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+    "October 30, 2026 Gordon, Georgia report describes restored access following a new grocery opening rather than new loss: https://www.diningandcooking.com/us/69902/",
+    "October 29 Kauaʻi Hurricane Lowell recovery information does not substantiate a newly canceled distribution; no qualifying cancellation inferred: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Search results for SNAP/WIC included 2025 government-shutdown stories, state homepages, and older notices. No newly issued Oct 30 interruption with immediate consequences was confirmed.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T204240-0700-r11-20261031T034240Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" closed OR closing October 30 2026 fire town",
+          "recency_days": 2,
+          "category": "sole/full-service grocery loss"
+        },
+        {
+          "query": "\"last grocery store\" \"October 30\" 2026 closure community",
+          "recency_days": 2,
+          "category": "sole/full-service grocery loss"
+        },
+        {
+          "query": "\"sole supermarket\" OR \"only supermarket\" fire closed October 2026",
+          "recency_days": 3,
+          "category": "sole/full-service grocery loss"
+        },
+        {
+          "query": "\"full service grocery\" closes fire October 30 2026 rural",
+          "recency_days": 2,
+          "category": "sole/full-service grocery loss"
+        },
+        {
+          "query": "\"food distribution\" canceled October 30 2026 storm hurricane",
+          "recency_days": 2,
+          "category": "canceled emergency food distributions"
+        },
+        {
+          "query": "\"food bank\" \"distribution canceled\" Oct 30 2026 power storm",
+          "recency_days": 2,
+          "category": "canceled emergency food distributions"
+        },
+        {
+          "query": "\"food pantry\" unexpectedly closed October 30 2026 flood fire",
+          "recency_days": 2,
+          "category": "abrupt pantry/bank access loss"
+        },
+        {
+          "query": "\"food bank\" suspension operations \"October 30, 2026\"",
+          "recency_days": 2,
+          "category": "abrupt pantry/bank access loss"
+        },
+        {
+          "query": "\"food pantry\" closed today October 30 2026 outage damage",
+          "recency_days": 2,
+          "category": "abrupt pantry/bank access loss"
+        },
+        {
+          "query": "site:gov SNAP EBT \"October 30, 2026\" outage suspended benefits",
+          "recency_days": 2,
+          "category": "SNAP/WIC interruption"
+        },
+        {
+          "query": "site:gov WIC \"October 30, 2026\" interruption closed clinics benefits",
+          "recency_days": 2,
+          "category": "SNAP/WIC interruption"
+        },
+        {
+          "query": "October 30 2026 food assistance SNAP WIC benefits interrupted unavailable state emergency",
+          "recency_days": 2,
+          "category": "SNAP/WIC interruption"
+        }
+      ]
+    }
+  ]
+}

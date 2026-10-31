@@ -29,6 +29,13 @@ from scripts.food_line_runtime_paths import (
     is_food_line_mutable_tracked_runtime_path,
 )
 from bluefern_dispatches.operational_health import build_food_line_operational_receipt, write_operational_receipt
+from bluefern_dispatches.food_line_discovery_expansion import build_food_line_discovery_query_plan
+from scripts.food_line_continuation_ledger import (
+    ContinuationLedgerError,
+    claim_source_watch_batch,
+    prepare_ledger,
+    record_source_watch_batch,
+)
 
 PRODUCTION_BRANCH = "add/pages-repo-default"
 PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
@@ -1146,6 +1153,67 @@ def _continuation_command(
     ]
 
 
+def _initialize_source_watch_ledger(
+    *,
+    root: Path,
+    edition_date: str,
+    run_id: str,
+    source_identity: str,
+) -> tuple[Path, dict[str, Any]]:
+    """Create the bound continuation ledger before the capped child starts."""
+    continuation_directory = _derive_continuation_directory(
+        root=root,
+        edition_date=edition_date,
+        run_id=run_id,
+        continuation_run_root=str((root / CONTINUATION_ROOT_RELATIVE).resolve()),
+    )
+    source_module = SRC / "bluefern_dispatches" / "food_line_discovery_expansion.py"
+    config = root / "data" / "dispatches" / "food-line" / "discovery_expansion_config.json"
+    source_module_sha256 = hashlib.sha256(source_module.read_bytes()).hexdigest()
+    config_sha256 = hashlib.sha256(config.read_bytes()).hexdigest()
+    query_rows = build_food_line_discovery_query_plan(root, edition_date)
+    try:
+        if continuation_directory.exists() and any(continuation_directory.iterdir()):
+            raise SchedulerError(
+                f"source-watch continuation directory is not fresh: {continuation_directory}"
+            )
+        state = prepare_ledger(
+            continuation_directory,
+            edition_date=edition_date,
+            run_id=run_id,
+            source_identity=source_identity,
+            source_module_sha256=source_module_sha256,
+            config_sha256=config_sha256,
+            query_rows=query_rows,
+        )
+    except ContinuationLedgerError as exc:
+        raise SchedulerError(f"cannot initialize bound source-watch ledger: {exc}") from exc
+    return continuation_directory, state
+
+
+def _capture_source_watch_ledger(
+    *,
+    continuation_directory: Path,
+    ledger_state: dict[str, Any],
+    result: subprocess.CompletedProcess[str],
+    edition_date: str,
+    run_id: str,
+) -> dict[str, Any]:
+    payload, parse_status = _parse_child_terminal_result(result.stdout)
+    if parse_status != "parsed" or not isinstance(payload, dict):
+        raise SchedulerError("source-watch child did not return a structured result for ledger capture")
+    if payload.get("edition_date") != edition_date or payload.get("run_id") != run_id:
+        raise SchedulerError("source-watch child result identity does not match the bound ledger")
+    try:
+        return record_source_watch_batch(
+            continuation_directory,
+            binding=dict(ledger_state.get("binding") or {}),
+            child_payload=payload,
+        )
+    except ContinuationLedgerError as exc:
+        raise SchedulerError(f"cannot capture source-watch result in bound ledger: {exc}") from exc
+
+
 def _safe_state_summary(state: dict[str, Any]) -> dict[str, Any]:
     coverage = state.get("coverage") if isinstance(state.get("coverage"), dict) else {}
     export = state.get("agent_export") if isinstance(state.get("agent_export"), dict) else {}
@@ -1264,20 +1332,42 @@ def run_source_watch(args: argparse.Namespace) -> int:
             run_preflight(root, python, test_mode=args.test_mode)
             run_dir = layout.run_dir(edition_date, run_id)
             state_path = run_dir / "run-state.json"
-            record.update({"source_commit": source_commit, "run_state_path": str(state_path)})
+            continuation_directory, ledger_state = _initialize_source_watch_ledger(
+                root=root,
+                edition_date=edition_date,
+                run_id=run_id,
+                source_identity=source_commit,
+            )
+            try:
+                ledger_state = claim_source_watch_batch(
+                    continuation_directory,
+                    binding=dict(ledger_state.get("binding") or {}),
+                    batch_size=FOOD_LINE_DISCOVERY_MAX_QUERIES,
+                )
+            except ContinuationLedgerError as exc:
+                raise SchedulerError(f"cannot claim source-watch batch before child execution: {exc}") from exc
+            record.update(
+                {
+                    "source_commit": source_commit,
+                    "run_state_path": str(state_path),
+                    "continuation_run_directory": str(continuation_directory),
+                    "continuation_ledger_path": str(continuation_directory / "continuation-ledger.json"),
+                }
+            )
             write_run_record(layout, edition_date, record)
             result = _invoke_python(
                 python,
                 root,
                 [
-                    "scripts/run_food_line_discovery_expansion.py",
+                    "scripts/food_line_stable_source_watch.py",
+                    "--repo-root", str(root),
                     "--date", edition_date,
-                    "--profile", "daily-current",
                     "--run-id", run_id,
-                    "--max-run-minutes", f"{FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES:g}",
+                    "--continuation-run-directory", str(continuation_directory),
+                    "--source-identity", source_commit,
                     "--max-queries", str(FOOD_LINE_DISCOVERY_MAX_QUERIES),
+                    "--max-run-minutes", f"{FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES:g}",
                     *([] if collection_only else [
-                        "--export-agent-inbox",
                         "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
                     ]),
                     *(["--collection-only"] if collection_only else []),
@@ -1288,6 +1378,13 @@ def run_source_watch(args: argparse.Namespace) -> int:
                 raise SchedulerError("source runner returned without durable run-state")
             state = read_json(state_path)
             validate_run_state(state, edition_date, run_id)
+            captured_ledger = _capture_source_watch_ledger(
+                continuation_directory=continuation_directory,
+                ledger_state=ledger_state,
+                result=result,
+                edition_date=edition_date,
+                run_id=run_id,
+            )
             survivors = surviving_worker_pids(run_dir)
             if survivors:
                 raise SchedulerError(f"source watch left surviving worker processes: {survivors}")
@@ -1307,6 +1404,14 @@ def run_source_watch(args: argparse.Namespace) -> int:
                 "execution_mode": "collection_only" if collection_only else "export_enabled",
                 "configuration_sha256": plan.get("configuration_sha256"),
                 **_safe_state_summary(state),
+                "continuation_run_directory": str(continuation_directory),
+                "continuation_ledger_path": str(continuation_directory / "continuation-ledger.json"),
+                "continuation_ledger_capture": {
+                    "planned_count": len(captured_ledger.get("planned_query_ids") or []),
+                    "completed_count": len(captured_ledger.get("completed_query_ids") or []),
+                    "pending_count": len(captured_ledger.get("pending_query_ids") or []),
+                    "candidate_payload_count": len(captured_ledger.get("candidate_payloads") or {}),
+                },
                 "resume_status": "not_attempted",
                 "command_exit_code": command_exit,
                 **child_audit,
@@ -1656,10 +1761,18 @@ def run_resume(args: argparse.Namespace) -> int:
             # an omitted argument must not be interpreted as an empty path.
             continuation_directory = ""
         if continuation_directory:
-            if state.get("status") != INCOMPLETE_CAPPED_STATUS or bool(state.get("resumable")):
+            # A recurring action may run again after a previous continuation
+            # completed (or after a small, uncapped source watch completed).
+            # That is a safe status-only no-op; it must not be treated as a
+            # request to replay the source plan.  Only incomplete capped state
+            # may enter the stable-ID continuation child.
+            if collection_qualifies(state):
+                continuation_directory = ""
+            elif state.get("status") != INCOMPLETE_CAPPED_STATUS or bool(state.get("resumable")):
                 raise SchedulerError(
                     "stable-ID continuation requires an incomplete_capped, non-resumable source-watch state"
                 )
+        if continuation_directory:
             expected_scheduled_start_at = str(record.get("scheduled_start_at") or "")
             with source_lock(
                 layout,

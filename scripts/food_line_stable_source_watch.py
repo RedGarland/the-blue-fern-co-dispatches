@@ -1,0 +1,149 @@
+"""Run the first bounded Food source-watch batch through the stable ledger."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from bluefern_dispatches.food_line_discovery_expansion import build_food_line_discovery_query_plan  # noqa: E402
+from scripts.food_line_continuation_ledger import (  # noqa: E402
+    ContinuationLedgerError,
+    checkpoint_in_flight_outcome,
+    load_ledger,
+    stable_query_id,
+)
+from scripts.run_food_line_continuation import execute_stable_claimed_batch  # noqa: E402
+from scripts.run_food_line_discovery_expansion import (  # noqa: E402
+    _export_agent_inbox,
+    _export_allowed,
+    _write_state_files,
+)
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def run(args: argparse.Namespace) -> dict[str, Any]:
+    root = Path(args.repo_root).resolve()
+    directory = Path(args.continuation_run_directory).resolve()
+    source = SRC / "bluefern_dispatches" / "food_line_discovery_expansion.py"
+    config = root / "data" / "dispatches" / "food-line" / "discovery_expansion_config.json"
+    plan = json.loads((directory / "continuation-query-plan.json").read_text(encoding="utf-8"))
+    binding = {
+        "edition_date": args.edition_date,
+        "run_id": args.run_id,
+        "source_identity": args.source_identity,
+        "source_module_sha256": _sha256(source),
+        "config_sha256": _sha256(config),
+        "plan_sha256": plan["plan_sha256"],
+    }
+    state = load_ledger(directory, binding=binding)
+    claimed = list(state.get("in_flight_query_ids") or [])
+    if not claimed:
+        raise ContinuationLedgerError("stable source-watch child requires a durable in-flight claim")
+    if len(claimed) > args.max_queries:
+        raise ContinuationLedgerError("stable source-watch claim exceeds the bounded batch size")
+    rows_by_id = dict(zip(plan["query_ids"], plan["query_rows"], strict=True))
+    rows = [rows_by_id[query_id] for query_id in claimed]
+
+    def checkpoint(query_id: str, outcome: dict[str, Any]) -> None:
+        checkpoint_in_flight_outcome(directory, binding=binding, query_id=query_id, outcome=outcome)
+
+    runtime_deadline = datetime.now(timezone.utc) + timedelta(minutes=max(1.0, float(args.max_run_minutes)))
+    aggregate = execute_stable_claimed_batch(
+        root,
+        args.edition_date,
+        rows,
+        checkpoint,
+        runtime_deadline=runtime_deadline,
+    )
+    full_plan = build_food_line_discovery_query_plan(root, args.edition_date)
+    result: dict[str, Any] = {
+        **aggregate,
+        "ok": True,
+        "status": "incomplete_capped" if len(full_plan) > len(rows) else "completed",
+        "edition_date": args.edition_date,
+        "run_id": args.run_id,
+        "query_plan_available_count": len(full_plan),
+        "query_plan_bounded_count": len(rows),
+        "queries_deferred": max(0, len(full_plan) - len(rows)),
+        "resumable": False,
+        "candidate_count": len(aggregate["candidates"]),
+        "public_claim_eligible_count": 0,
+        "publication_attempted": False,
+        "public_side_effects": {},
+        "execution_mode": "collection_only" if args.collection_only else "export_enabled",
+        "task_started_at": "",
+        "task_completed_at": "",
+    }
+    if not args.collection_only and _export_allowed(root, args.edition_date, args.run_id, result):
+        export = _export_agent_inbox(
+            root,
+            edition_date=args.edition_date,
+            run_id=args.run_id,
+            result=result,
+            agent_inbox_dir=args.agent_inbox_dir,
+        )
+        result.update(
+            {
+                "agent_export": export,
+                "agent_export_path": export["path"],
+                "agent_export_sha256": export["sha256"],
+            }
+        )
+    wrapped = _write_state_files(
+        root,
+        args.edition_date,
+        args.run_id,
+        result,
+        resume_count=0,
+        export_requested=not args.collection_only,
+    )
+    return {
+        **wrapped,
+        "schema": "food_line_stable_source_watch_receipt_v1",
+        "status": wrapped.get("status"),
+        "ok": bool(wrapped.get("ok")),
+        "edition_date": args.edition_date,
+        "run_id": args.run_id,
+        "query_rows": aggregate["query_rows"],
+        "candidates": aggregate["candidates"],
+        "execution_mode": result["execution_mode"],
+        "publication_attempted": False,
+        "public_side_effects": {},
+        "child_outcome_classification": "success" if wrapped.get("ok") else "incomplete_capped",
+    }
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo-root", required=True)
+    parser.add_argument("--date", dest="edition_date", required=True)
+    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--continuation-run-directory", required=True)
+    parser.add_argument("--source-identity", required=True)
+    parser.add_argument("--max-queries", type=int, required=True)
+    parser.add_argument("--max-run-minutes", type=float, default=30.0)
+    parser.add_argument("--agent-inbox-dir")
+    parser.add_argument("--collection-only", action="store_true")
+    return parser
+
+
+if __name__ == "__main__":
+    try:
+        print(json.dumps(run(build_parser().parse_args()), sort_keys=True))
+    except Exception as exc:  # noqa: BLE001
+        print(json.dumps({"ok": False, "status": "child_process_failure", "error": str(exc)}), file=sys.stdout)
+        raise SystemExit(1)

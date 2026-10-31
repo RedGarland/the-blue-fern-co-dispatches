@@ -4,7 +4,7 @@ import argparse
 import hashlib
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -43,6 +43,140 @@ def _run_state_path(root: Path, edition_date: str, run_id: str) -> Path:
     return root / "data" / "dispatches" / "food-line" / "discovery-runs" / edition_date / run_id / "run-state.json"
 
 
+_NONTERMINAL_STABLE_STATUSES = frozenset(
+    {"timed_out", "collection_failure", "child_process_failure", "malformed_child_output"}
+)
+
+
+class StableBatchDeadlineExceeded(ContinuationLedgerError):
+    """The claimed batch could not safely start another provider attempt."""
+
+
+def stable_outcome_for(row: dict[str, Any], result: dict[str, Any], *, candidate_owner: bool = True) -> dict[str, Any]:
+    observed_rows = list(result.get("query_rows") or [])
+    observed = observed_rows[0] if observed_rows else {}
+    query_error = str(observed.get("query_error") or "").strip()
+    direct_attempted = str(row.get("discovery_channel") or "google_news_rss") != "google_news_rss"
+    status = str(result.get("status") or "")
+    terminal = status not in _NONTERMINAL_STABLE_STATUSES
+    required_ok = bool(result.get("ok")) and terminal and not query_error
+    uncertain = not terminal
+    return {
+        "status": status,
+        "ok": bool(result.get("ok")),
+        "terminal": terminal,
+        "uncertain": uncertain,
+        "required_coverage_success": required_ok,
+        "direct_source_attempted": direct_attempted,
+        "direct_source_success": direct_attempted and observed.get("direct_fetch_status") == "ok",
+        "query_rows": [observed] if observed else [],
+        "candidate_count": len(result.get("candidates") or []) if candidate_owner else 0,
+        "exclusion_count": int(bool(query_error)),
+        "candidates": list(result.get("candidates") or []) if candidate_owner else [],
+        "collection_only": True,
+    }
+
+
+def _validate_stable_checkpoint(query_id: str, outcome: dict[str, Any]) -> dict[str, Any]:
+    if not isinstance(outcome, dict):
+        raise ContinuationLedgerError(f"checkpoint outcome is not an object: {query_id}")
+    status = str(outcome.get("status") or "")
+    if not status:
+        raise ContinuationLedgerError(f"checkpoint outcome has no status: {query_id}")
+    terminal = outcome.get("terminal")
+    uncertain = outcome.get("uncertain")
+    required_success = outcome.get("required_coverage_success")
+    if not isinstance(terminal, bool) or not isinstance(uncertain, bool) or not isinstance(required_success, bool):
+        raise ContinuationLedgerError(f"checkpoint outcome has invalid state flags: {query_id}")
+    if status in _NONTERMINAL_STABLE_STATUSES and terminal:
+        raise ContinuationLedgerError(f"nonterminal status was marked terminal: {query_id}")
+    if uncertain and (terminal or required_success):
+        raise ContinuationLedgerError(f"uncertain outcome was marked terminal/successful: {query_id}")
+    if required_success and (not terminal or uncertain or outcome.get("ok") is not True):
+        raise ContinuationLedgerError(f"checkpoint outcome claims coverage success without a verified terminal result: {query_id}")
+    if outcome.get("collection_only") is not True:
+        raise ContinuationLedgerError(f"checkpoint outcome is not collection-only: {query_id}")
+    return dict(outcome)
+
+
+def execute_stable_claimed_batch(
+    root: Path,
+    edition_date: str,
+    rows: list[dict[str, Any]],
+    checkpoint: Any,
+    *,
+    runner: Any = None,
+    runtime_deadline: datetime | None = None,
+) -> dict[str, Any]:
+    """Execute claimed IDs one at a time and checkpoint each provider result.
+
+    This is shared by ordinary continuation and the first source-watch batch;
+    the scheduler must not use a separate aggregate child path that can leave
+    the stable ledger all-pending while providers are running.
+    """
+    provider_runner = runner or run_food_line_discovery_expansion
+    outcomes: dict[str, Any] = {}
+    query_rows: list[dict[str, Any]] = []
+    candidates: list[dict[str, Any]] = []
+    queries_attempted = queries_processed = queries_completed = 0
+    queries_succeeded = queries_failed = queries_timed_out = 0
+    direct_attempts = direct_successes = 0
+    for row in rows:
+        if runtime_deadline is not None and datetime.now(timezone.utc) >= runtime_deadline:
+            raise StableBatchDeadlineExceeded(
+                f"runtime deadline reached before provider attempt for {stable_query_id(row)}"
+            )
+        runner_kwargs = {
+            "fetcher": None,
+            "query_plan_override": [row],
+            "resume_from_query_index": 0,
+            "edition_mode": "no_current_update",
+            "dry_run": True,
+        }
+        if runtime_deadline is not None:
+            runner_kwargs["runtime_deadline"] = runtime_deadline
+        result = provider_runner(root, edition_date, **runner_kwargs)
+        query_id = stable_query_id(row)
+        observed_rows = result.get("query_rows")
+        if not isinstance(observed_rows, list) or len(observed_rows) != 1 or not isinstance(observed_rows[0], dict):
+            status = str(result.get("status") or "")
+            if status == "timed_out" and not observed_rows and not int(result.get("queries_attempted") or 0):
+                raise StableBatchDeadlineExceeded(
+                    f"collector reached its deadline before provider attempt for {query_id}"
+                )
+            raise ContinuationLedgerError(f"provider returned no unique per-query disposition: {query_id}")
+        queries_attempted += 1
+        queries_processed += 1
+        outcome = _validate_stable_checkpoint(query_id, stable_outcome_for(row, result, candidate_owner=True))
+        checkpoint(query_id, outcome)
+        outcomes[query_id] = outcome
+        query_rows.extend(dict(item) for item in result.get("query_rows") or [] if isinstance(item, dict))
+        candidates.extend(dict(item) for item in result.get("candidates") or [] if isinstance(item, dict))
+        if outcome["terminal"]:
+            queries_completed += 1
+        if outcome["required_coverage_success"]:
+            queries_succeeded += int(result.get("queries_succeeded") or 0)
+        elif outcome["status"] == "timed_out":
+            queries_timed_out += max(1, int(result.get("queries_timed_out") or 0))
+        else:
+            queries_failed += max(1, int(result.get("queries_failed") or 0))
+        direct_attempts += int(result.get("direct_source_fetch_attempt_count") or 0)
+        direct_successes += int(result.get("direct_source_fetch_success_count") or 0)
+    return {
+        "outcomes": outcomes,
+        "query_rows": query_rows,
+        "candidates": candidates,
+        "queries_attempted": queries_attempted,
+        "queries_processed_this_invocation": queries_processed,
+        "queries_completed": queries_completed,
+        "queries_succeeded": queries_succeeded,
+        "queries_failed": queries_failed,
+        "queries_timed_out": queries_timed_out,
+        "direct_source_fetch_attempt_count": direct_attempts,
+        "direct_source_fetch_success_count": direct_successes,
+    }
+
+
 def _canonical(value: Any) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
@@ -54,6 +188,9 @@ def _write_json_atomic(path: Path, value: dict[str, Any]) -> None:
 
 
 def _aggregate_candidates(state: dict[str, Any]) -> list[dict[str, Any]]:
+    payload_store = state.get("candidate_payloads")
+    if isinstance(payload_store, dict):
+        return [dict(payload_store[key]) for key in sorted(payload_store) if isinstance(payload_store[key], dict)]
     seen: set[str] = set()
     candidates: list[dict[str, Any]] = []
     for query_id in state.get("planned_query_ids") or []:
@@ -110,6 +247,7 @@ def commit_source_stage_handoff(
 
     candidates = _aggregate_candidates(ledger_state)
     run_dir = state_path.parent
+    run_dir.mkdir(parents=True, exist_ok=True)
     export_path = run_dir / "continuation-agent-export.json"
     export_payload = {
         "schema_version": "food_line_source_watch_agent_export_v1",
@@ -196,29 +334,12 @@ def _load_or_prepare(
     ledger_path = directory / "continuation-ledger.json"
     if plan_path.exists() != ledger_path.exists():
         raise ContinuationLedgerError("continuation plan and ledger must exist together")
-    if plan_path.exists() or ledger_path.exists():
-        plan = json.loads(plan_path.read_text(encoding="utf-8"))
-        expected_plan = build_plan(
-            edition_date=args.edition_date,
-            run_id=args.run_id,
-            source_identity=source_identity,
-            source_module_sha256=source_module_sha256,
-            config_sha256=config_sha256,
-            query_rows=rows,
+    if not plan_path.exists() or not ledger_path.exists():
+        raise ContinuationLedgerError(
+            "bound continuation ledger is required; refusing to create a new ledger from legacy source-watch state"
         )
-        if plan.get("plan_sha256") != expected_plan["plan_sha256"]:
-            raise ContinuationLedgerError("current query plan drifted from the receipt-bound continuation plan")
-        binding = {
-            "edition_date": args.edition_date,
-            "run_id": args.run_id,
-            "source_identity": source_identity,
-            "source_module_sha256": source_module_sha256,
-            "config_sha256": config_sha256,
-            "plan_sha256": plan["plan_sha256"],
-        }
-        return load_ledger(directory, binding=binding)
-    return prepare_ledger(
-        directory,
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    expected_plan = build_plan(
         edition_date=args.edition_date,
         run_id=args.run_id,
         source_identity=source_identity,
@@ -226,6 +347,17 @@ def _load_or_prepare(
         config_sha256=config_sha256,
         query_rows=rows,
     )
+    if plan.get("plan_sha256") != expected_plan["plan_sha256"]:
+        raise ContinuationLedgerError("current query plan drifted from the receipt-bound continuation plan")
+    binding = {
+        "edition_date": args.edition_date,
+        "run_id": args.run_id,
+        "source_identity": source_identity,
+        "source_module_sha256": source_module_sha256,
+        "config_sha256": config_sha256,
+        "plan_sha256": plan["plan_sha256"],
+    }
+    return load_ledger(directory, binding=binding)
 
 
 def run(args: argparse.Namespace) -> int:
@@ -249,47 +381,40 @@ def run(args: argparse.Namespace) -> int:
         "config_sha256": config_sha256,
         "plan_sha256": plan["plan_sha256"],
     }
+    runtime_deadline = datetime.now(timezone.utc) + timedelta(minutes=max(1.0, float(getattr(args, "max_run_minutes", 30.0))))
 
-    def execute(rows: list[dict[str, Any]]) -> dict[str, Any]:
-        result = run_food_line_discovery_expansion(
+    def execute(rows: list[dict[str, Any]], checkpoint: Any | None = None) -> dict[str, Any]:
+        outcomes: dict[str, Any] = {}
+        if checkpoint is None:
+            result = run_food_line_discovery_expansion(
+                root,
+                args.edition_date,
+                fetcher=None,
+                query_plan_override=rows,
+                resume_from_query_index=0,
+                edition_mode="no_current_update",
+                dry_run=True,
+                runtime_deadline=runtime_deadline,
+            )
+            for index, row in enumerate(rows):
+                outcome = stable_outcome_for(row, result, candidate_owner=index == 0)
+                outcomes[stable_query_id(row)] = outcome
+            return outcomes
+
+        return execute_stable_claimed_batch(
             root,
             args.edition_date,
-            fetcher=None,
-            query_plan_override=rows,
-            resume_from_query_index=0,
-            edition_mode="no_current_update",
-            dry_run=True,
-        )
-        observed_rows = list(result.get("query_rows") or [])
-        outcomes: dict[str, Any] = {}
-        for index, row in enumerate(rows):
-            observed = observed_rows[index] if index < len(observed_rows) else {}
-            query_error = str(observed.get("query_error") or "").strip()
-            direct_attempted = str(row.get("discovery_channel") or "google_news_rss") != "google_news_rss"
-            status = str(result.get("status") or "")
-            terminal = status not in {"timed_out", "collection_failure", "child_process_failure", "malformed_child_output"}
-            required_ok = bool(result.get("ok")) and terminal and not query_error
-            outcomes[stable_query_id(row)] = {
-                "status": status,
-                "ok": bool(result.get("ok")),
-                "terminal": terminal,
-                "uncertain": False,
-                "required_coverage_success": required_ok,
-                "direct_source_attempted": direct_attempted,
-                "direct_source_success": direct_attempted and observed.get("direct_fetch_status") == "ok",
-                "query_rows": [observed] if observed else [],
-                "candidate_count": len(result.get("candidates") or []) if index == 0 else 0,
-                "exclusion_count": int(bool(query_error)),
-                "candidates": list(result.get("candidates") or []) if index == 0 else [],
-                "collection_only": True,
-            }
-        return outcomes
+            rows,
+            checkpoint,
+            runtime_deadline=runtime_deadline,
+        )["outcomes"]
 
     state = continue_ledger(
         Path(args.continuation_run_directory).resolve(),
         binding=binding,
         batch_size=args.max_queries,
         batch_executor=execute,
+        checkpoint_outcomes=True,
     )
     handoff = source_stage_handoff_assessment(state)
     handoff_state: dict[str, Any] | None = None
@@ -324,6 +449,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--continuation-run-directory", required=True)
     parser.add_argument("--source-identity", required=True)
     parser.add_argument("--max-queries", type=int, default=200)
+    parser.add_argument("--max-run-minutes", type=float, default=30.0)
     parser.add_argument("--collection-only", action="store_true")
     return parser
 

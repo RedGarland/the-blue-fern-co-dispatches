@@ -1,0 +1,132 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T064739-0700-r11-20261031T134739Z",
+  "scheduled_for": "2026-10-31T06:45:54-07:00",
+  "started_at": "2026-10-31T06:47:39-07:00",
+  "completed_at": "2026-10-31T06:50:08.633-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-10-31T05:43:11.601-07:00",
+    "end_at": "2026-10-31T06:50:08.633-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of latest independently inspected prior Food Line heartbeat. Searches used a two-day discovery allowance to catch late-indexed high-value misses; positive candidate identified in this run although first reported before the boundary, so no claim is made that its announcement was published during the one-hour window.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-us-ut-provo-casfb-temporary-closure-2026-11-01",
+      "canonical_source_url": null,
+      "source_url": "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+      "publisher": "ABC4 Utah / Nexstar (syndicated on AOL)",
+      "source_published_at": null,
+      "source_updated_at": "2026-10-31T02:17:00Z",
+      "title": "‘The need has not gone away’: Community Action Services and Food Bank temporarily closes due to lack of funding",
+      "exact_supporting_passage": "the closure will be effective November 1 and will be in place for an undetermined amount of time.",
+      "summary": "Community Action Services and Food Bank in Provo reportedly announced an indefinite temporary service closure effective November 1, 2026, citing diminished grants/donations and increased demand. This is an imminent access disruption for clients. Its ABC4-syndicated report was updated 2026-10-30 19:17 PDT, prior to the prior heartbeat: a late-discovered high-value recall candidate, NOT a newly dated report within this run's strict hourly window. Provider statement is quoted in search-index excerpt; page opening failed, so direct provider confirmation remains outstanding.",
+      "location": "Provo",
+      "state": "UT",
+      "scope": "Local: Provo / Utah County, Utah; geographic service footprint not independently confirmed",
+      "affected_groups": [
+        "Existing Community Action Services and Food Bank clients",
+        "Food-insecure households relying on the provider"
+      ],
+      "pressure_type": "abrupt_food_bank_service_closure",
+      "confidence": "medium",
+      "source_role": "local_news_secondary_provider_statement",
+      "evidence_level": "reported_provider_statement_in_search_excerpt_not_full_article",
+      "bounded_query_context": {
+        "query": "\"food bank\" canceled distribution storm flood \"October 31\" 2026",
+        "followup_query": "\"food bank\" \"temporarily closing\" \"October 31, 2026\" Provo funding",
+        "recency_days": 2,
+        "first_detected_at": "2026-10-31T06:47:39-07:00",
+        "timing_note": "Article update predates prior heartbeat; newly discovered by this watch, upcoming closure effective 2026-11-01. Publication timestamp unverified."
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": [
+    "Supplementary recall only; production nationwide collection remains authoritative. Narrow focus: sole/last/full-service grocery loss, hazard-canceled emergency distribution, abrupt pantry/food bank closure, official immediate SNAP/WIC/EBT interruption.",
+    "Twelve targeted web searches completed without search-tool failures, with recency=2 days. No qualifying newly dated report was established inside the strict 05:43–06:50 Pacific one-hour window. Candidate is included as late-discovered recall because the imminent Nov. 1 closure is high impact and was not present in the preceding watch heartbeat; editorial must assess temporal inclusion and dedupe against production.",
+    "Web opening of the ABC4-syndicated AOL article returned DisabledError; usable search-result excerpt and attributed provider statements remained. This source-access degradation, absence of direct provider notice, and ambiguity between updated_at and published_at prevent SUCCESS/high confidence.",
+    "Excluded unrelated/historical grocery stories (Eastport Sept 3, older South Tucson, Basking Ridge Sept 24), Georgia Gordon grocery reopening (restored access), and routine scheduled Kauaʻi emergency food distribution; no corroborated new official SNAP/WIC/EBT interruption detected.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T054147-0700-r11-20261031T124147Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" fire closed \"October 30\" \"2026\"",
+          "category": "sole grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" closed fire town \"October 31\" 2026",
+          "category": "sole grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" shuts down community \"October\" \"2026\"",
+          "category": "last grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full-service grocery store\" fire closes rural October 2026",
+          "category": "full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" canceled distribution storm flood \"October 31\" 2026",
+          "category": "hazard-related canceled emergency distribution",
+          "recency_days": 2
+        },
+        {
+          "query": "\"emergency food distribution\" cancelled storm power outage October 30 2026",
+          "category": "hazard-related canceled emergency distribution",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" \"temporarily closing\" \"October 31, 2026\" Provo funding",
+          "category": "abrupt food bank closure",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" \"closed\" \"October 31, 2026\" emergency",
+          "category": "abrupt pantry closure",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" \"suspend services\" \"October 30, 2026\" communities",
+          "category": "service reduction",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"SNAP\" \"October 31, 2026\" delay interruption EBT benefits",
+          "category": "official SNAP disruption",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"October 31, 2026\" clinic closed benefits interruption",
+          "category": "official WIC disruption",
+          "recency_days": 2
+        },
+        {
+          "query": "\"EBT outage\" \"October 31\" \"2026\" state benefits",
+          "category": "official EBT outage",
+          "recency_days": 2
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "https://www.diningandcooking.com/us/69902/",
+        "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ]
+    },
+    "No approvals, public publications, modifications to production collector, schedule changes, or task disabling."
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T114935-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T11:45:22-07:00",
+  "started_at": "2026-10-31T11:49:35-07:00",
+  "completed_at": "2026-10-31T11:50:44-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T10:47:18-07:00",
+    "end": "2026-10-31T11:50:44-07:00",
+    "basis": "Prior independently verified Care Line watch completion through this observation. Earlier concrete service changes encountered by recall searches are checked for prior ledger capture and not repeated as new findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall of specific U.S./territory healthcare-access loss or concrete restoration; authoritative national production Care Line collection is unchanged.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "observed_latest_notice_date": "2026-10-30",
+      "result": "No October 31, 2026 notice shown. Seven October 30 notices (two CA hospices, Michigan psychiatric residential treatment facility, and four home health agencies including the state-unlisted Crystal Heritage Care LLC) were already recorded in the prior watch ledger. No new CMS CLIA action or rescission in the latest portion of the list."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "hospital emergency department closed suspended services October 31 2026 United States",
+      "hospital labor delivery maternity unit closure effective October 31 2026 United States",
+      "rural hospital emergency department closure shutdown October 30 31 2026",
+      "hospital inpatient behavioral health psychiatric unit closing services October 30 31 2026",
+      "dialysis center clinic closing suspended services October 30 31 2026",
+      "oncology cancer treatment center clinic closing service interruption October 30 31 2026",
+      "primary care medical clinic abruptly closed patients October 30 31 2026",
+      "ambulance service ceases operations base closing October 30 31 2026",
+      "air ambulance medical helicopter base shut down October 30 31 2026",
+      "hospital emergency department reopening restored services October 30 31 2026",
+      "Puerto Rico Guam US Virgin Islands hospital health clinic service closure October 30 31 2026",
+      "Alaska Hawaii tribal rural health clinic emergency services suspension reopening October 30 31 2026"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center inpatient-care suspension, Sharon, Mercer County, Pennsylvania",
+        "reason": "Strongly supported October 29 hospital statement and October 30 Becker's report, but this exact service suspension was already captured as pending_review by the October 30 10:45 PDT Care Line watch, finding_id care-us-pa-sharon-regional-inpatient-suspension-20261029; excluded as a duplicate. ED remains open and inpatients are stabilized/transferred.",
+        "newly_confirmed_source": "https://www.beckershospitalreview.com/finance/pennsylvania-hospital-pauses-inpatient-care-after-payroll-struggles/",
+        "prior_watch_path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T104517-0700-r11-recall12.json"
+      },
+      {
+        "item": "Mann-Grandstaff VA Medical Center proposed Spokane inpatient/psychiatric restructuring",
+        "reason": "Local article updated October 31, 7:41 a.m. PDT reports internal proposals, but VA spokesperson said services are not changing; no verified current operational loss.",
+        "url": "https://www.spokesman.com/stories/2026/oct/30/spokane-va-hospital-director-reassigned-after-inte/"
+      },
+      {
+        "item": "Roseland Community Hospital obstetrics cessation announced for October 31, Chicago IL",
+        "reason": "Definite planned nighttime cessation already recorded in October 31 00:48 PDT Care Line watch; current physical closure not independently verified; no incremental change.",
+        "url": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/"
+      },
+      {
+        "item": "Carle Health Rantoul IL clinic suspension and UNM Health service disruption",
+        "reason": "Previously captured in earlier watches; no newly verified restoration or distinct closure."
+      },
+      {
+        "item": "Other targeted results",
+        "reason": "Old, prospective, policy/funding analysis, unrelated non-U.S. incidents and general healthcare articles without concrete new U.S. or territory healthcare access change."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.wfmj.com/story/52219325/a-glimpse-into-the-final-days-of-sharon-regional-medical-center",
+        "operation": "Supplementary click-through to background WFMJ article linked from Medical Daily",
+        "result": "Fetch restricted/failed",
+        "impact": "Nonessential historical background only; current Sharon inpatient suspension independently verified from Becker's reporting and already present in prior ledger. No impact on no-findings determination."
+      }
+    ],
+    "status_rationale": "DEGRADED per the instruction to record any source fetch failure, although all twelve targeted searches ran and the single background-link failure did not materially impair current-access coverage.",
+    "limitations": "News search recency and indexing are not exhaustive; local rural, tribal and U.S.-territory coverage is bounded, and absence of new findings is not proof that no service change occurred. Production collector remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T104646-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T10:47:18-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Exactly one new private ledger heartbeat. No approval, publication, schedule change, automation disabling, or primary collector modification."
+  }
+}

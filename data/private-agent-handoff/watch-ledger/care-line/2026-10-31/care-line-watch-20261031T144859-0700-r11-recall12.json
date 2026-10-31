@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T144859-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T14:45:22-07:00",
+  "started_at": "2026-10-31T14:48:59-07:00",
+  "completed_at": "2026-10-31T14:49:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T13:47:11-07:00",
+    "end": "2026-10-31T14:49:30-07:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed_at through current observation completion. Bounded supplementary recall; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplemental U.S. and territory high-value healthcare access changes: hospital/ED/maternity/behavioral/dialysis/oncology/primary care closures, rural emergency loss, ambulance/air medical suspensions, CMS provider terminations/rescissions/CLIA actions and effective essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "observed_latest_notice_date": "2026-10-30",
+      "result": "Official CMS current notices page accessible and checked before additional searches; no October 31 notices listed. Seven October 30 terminations, including California hospice, Michigan PRTF, and Ohio home-health providers, already reported in prior heartbeats. No new termination/rescission/CLIA notice in this window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended operations October 31 2026 United States",
+      "maternity labor delivery unit closure service suspended October 30 31 2026 hospital",
+      "rural hospital emergency services abruptly closed October 31 2026",
+      "ambulance service air medical helicopter base shutdown closure October 31 2026",
+      "behavioral health psychiatric hospital residential crisis service closure October 31 2026",
+      "dialysis clinic kidney care center closing services October 31 2026",
+      "oncology cancer center infusion services closing October 31 2026",
+      "primary care clinic shutting down patients October 31 2026",
+      "site:cms.gov 2026-10-31 \"Termination Notice\" \"CLIA\" Medicare",
+      "hospital ED clinic service resumed reopened after closure October 31 2026",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital ambulance clinic closure October 2026",
+      "hospital healthcare services suspended emergency medical October 31 2026 local news"
+    ],
+    "search_recency_days": "Mostly 2; territory search 3",
+    "reviewed_exclusions": [
+      {
+        "item": "Spokane VA hospital restructuring",
+        "reason": "October 30 reporting describes potential future inpatient service cut; no new effective access change.",
+        "url": "https://www.spokesman.com/stories/2026/oct/30/spokane-va-hospital-director-reassigned-after-inte/"
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital birthing unit",
+        "reason": "October 30 reporting concerns reassessment of a potential closure; no newly effective service loss or restoration.",
+        "url": "https://www.bangordailynews.com/2026/10/30/midcoast/midcoast-health/mainehealth-lincoln-hospital-birthing-unit-closure-independent-review/"
+      },
+      {
+        "item": "St. Joseph Warren Hospital maternity services",
+        "reason": "October 29 report describes December future service end; not a new effective change during the hourly window.",
+        "url": "https://hoodline.com/2026/10/warren-mothers-face-30-mile-drive-to-boardman-as-st-joseph-ends-deliveries/"
+      },
+      {
+        "item": "Roseland, Sharon Regional, Carle Health Rantoul, and UNM Health",
+        "reason": "Already recorded in prior watches; no distinct new action identified."
+      },
+      {
+        "item": "Other retrieved results",
+        "reason": "Non-U.S. events, policy/business stories, dated reports, new construction/ownership, unrelated or prospective activity lacking concrete access consequences."
+      }
+    ],
+    "source_failures": [],
+    "status_rationale": "SUCCESS: CMS Public Notices accessed first and all 12 bounded targeted searches returned. No independently supported nonduplicate qualifying change identified.",
+    "limitations": "Search/index coverage is non-exhaustive, particularly for rural, tribal and territorial notices, and source indexing can lag. Zero supplementary findings does not imply zero service disruptions. Production collection remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T134639-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T13:47:11-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Single private ledger heartbeat on ops/watch-ledger; no public publishing, findings approval, scheduler modifications or task disabling."
+  }
+}

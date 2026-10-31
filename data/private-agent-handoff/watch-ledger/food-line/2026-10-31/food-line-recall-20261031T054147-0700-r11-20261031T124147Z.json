@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T054147-0700-r11-20261031T124147Z",
+  "scheduled_for": "2026-10-31T05:45:54-07:00",
+  "started_at": "2026-10-31T05:41:47-07:00",
+  "completed_at": "2026-10-31T05:43:11.601-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T04:50:38.990-07:00",
+    "end_at": "2026-10-31T05:43:11.601-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start boundary: completed_at of prior independently read-back-verified Food Line heartbeat. Targeted web searches used a 2-day indexing allowance; only fresh qualifying events newly established since that boundary eligible.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only, not authoritative nationwide production collector; four targeted miss classes: sole/last/full-service grocery loss, hazard-canceled emergency food distribution, abrupt pantry/food-bank closure or major access reduction, official immediate SNAP/WIC/EBT interruption.",
+    "Twelve targeted web searches ran without a search-tool error. No independently verified new qualifying U.S. food-access disruption had event/publication timing in the observation window. Search results contained historical incidents and unrelated/routine notices; index recency filters did not ensure result publication within two days.",
+    "Excluded Sept. 11/14 Spencer, NY sole grocery fire; Sept. 25 El Paso food-bank storm closure; Oct. 7 Alabama pantry weather cancellation; Oct. 29 Kauaʻi recovery distribution still scheduled for Oct. 30. Excluded 2025 federal-shutdown/SNAP notices, routine food-distribution schedules and holiday promotions.",
+    "No approvals, public publications, schedule changes, task disabling, or production workflow mutations.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T044923-0700-r11-20261031T114923Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" fire closed October 31 2026 small town United States",
+          "category": "only/sole grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" burned closed October 30 2026 rural",
+          "category": "sole grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" closing fire October 31 2026 community",
+          "category": "last grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full service grocery\" shutdown fire October 30 2026 town",
+          "category": "full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "food bank distribution canceled hurricane flood outage October 31 2026",
+          "category": "disaster-related emergency distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "food pantry emergency food distribution canceled storm October 30 2026",
+          "category": "storm-related emergency distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" \"closed\" \"October 31, 2026\" \"emergency\"",
+          "category": "abrupt pantry closure",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" \"suspended\" \"October 30, 2026\" distribution",
+          "category": "abrupt food bank service suspension",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" \"shut down\" \"October 30, 2026\" local service",
+          "category": "abrupt pantry shutdown",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"SNAP\" \"October 31, 2026\" \"delayed\" \"benefits\"",
+          "category": "official SNAP interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"October 30, 2026\" \"interruption\" benefits",
+          "category": "official WIC interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "\"EBT\" \"outage\" \"October 31, 2026\" benefits official",
+          "category": "official EBT outage",
+          "recency_days": 2
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ],
+      "nominal_scheduled_time_note": "Recurrence indicates a 05:45:54 PDT nominal slot; this invocation began before that nominal minute."
+    }
+  ]
+}

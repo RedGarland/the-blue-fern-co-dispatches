@@ -1,0 +1,143 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T074005-0700-r11-20261031T144119Z",
+  "scheduled_for": "2026-10-31T07:44:51-07:00",
+  "started_at": "2026-10-31T07:40:05-07:00",
+  "completed_at": "2026-10-31T07:41:19.801-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T06:45:35.755-07:00",
+    "end": "2026-10-31T07:41:19.801-07:00",
+    "basis": "Incremental window starts at the preceding verified Gaza Source Watch heartbeat completion. October 31, 2026 Asia/Gaza is UTC+02:00 and America/Los_Angeles is UTC-07:00; 15:45:35 Gaza-local corresponds to 06:45:35 PDT. Used timezone-aware source time interpretation, not an assumed Gaza UTC+03:00 offset.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary Gaza collector/publisher remains authoritative. No approval, publication, production modification, schedule change, or disabling.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T064451-0700-r11-20261031T134317Z.json",
+      "completed_at": "2026-10-31T06:45:35.755-07:00",
+      "status": "DEGRADED",
+      "outcome": "findings",
+      "last_finding_id": "gaza-20261031-khan-younis-taiba-towers-drone-fatality-injuries"
+    },
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest indexed update was 27 Oct West Bank snapshot, and latest Gaza-relevant humanitarian situation report was listed 26 Oct (covering 22 Oct). No new increment-specific item."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. WHO oPt emergency page and its latest-news and regional-news sections showed no health-service, hospital, ambulance, fuel, or evacuation development published in the interval."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway. Repeated previously documented source restriction, not a newly material failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" Gaza \"04:\" PM",
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" Gaza \"05:\" PM",
+      "site:reuters.com/world/middle-east/ Gaza October 31 2026 humanitarian civilian deaths ceasefire",
+      "site:apnews.com/article/ Gaza October 31 2026 October 31 strikes aid hospitals",
+      "site:aa.com.tr/en \"October 31, 2026\" Gaza killed wounded airstrike",
+      "site:aljazeera.com/news/2026/10/31/ Gaza strikes civilians humanitarian",
+      "site:unicef.org/sop October 31 2026 Gaza water shelter children health",
+      "site:wfp.org October 31 2026 Gaza food aid trucks crossing hunger",
+      "site:news.un.org Gaza October 31 2026 health aid displacement access",
+      "site:palestinercs.org Gaza October 31 2026 ambulance hospitals emergency",
+      "Gaza Rafah Kerem Shalom October 31 2026 medical evacuation fuel aid trucks crossing latest",
+      "Gaza October 31 2026 16:00 Gaza local Khan Younis Nuseirat Shati new strike casualty displaced"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA latest-news index",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible. Latest 16:11 (07:11 PDT) entry concerned Israeli settlers' theft of olive harvest south of Bethlehem, not Gaza. Latest Gaza casualty report 15:35 (06:35 PDT), before current interval; already recorded in prior heartbeat."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; homepage latest posts old, no qualifying in-window ambulance, hospital, health or medical-evacuation item."
+      },
+      {
+        "publisher": "Al Jazeera Palestine index",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible. October 31 education-related feature discusses earlier casualties, not a distinct newly documented event; opinion excluded."
+      },
+      {
+        "publisher": "Palestinian Centre for Human Rights",
+        "url": "https://pchrgaza.org/israel-kills-10-palestinians-including-a-girl-in-strikes-across-gaza/",
+        "result": "Accessible. Dated October 30; retrospective documenting October 26–28 attacks and aid-entry-coordination work-site casualties, all outside the observation window."
+      },
+      {
+        "publisher": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; indexed older WFP materials available via search; no new verified interval-specific update."
+      },
+      {
+        "publisher": "UNICEF State of Palestine press index",
+        "url": "https://www.unicef.org/sop/press-releases",
+        "result": "Retrieval inaccessible. Indexed UNICEF materials available but dated prior to the observation window."
+      }
+    ],
+    "excluded": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176470",
+        "reason": "Khan Younis Taiba Towers 15:35 Gaza-local Oct 31 casualty report already in preceding heartbeat; duplicate, not new."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176466",
+        "reason": "Shati refugee camp 13:36 Gaza-local Oct 31 injury incident belongs to earlier watch/reconciliation; not new."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176463",
+        "reason": "Al-Maghazi injury report belongs to earlier watch/reconciliation; not new."
+      },
+      {
+        "url": "https://pchrgaza.org/israel-kills-10-palestinians-including-a-girl-in-strikes-across-gaza/",
+        "reason": "Dated Oct 30, reports Oct 26–28 incidents; older-window retrospective, not incremental."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/2-palestinians-killed-in-israels-ongoing-violations-of-gaza-ceasefire/4107086",
+        "reason": "Oct 31 report corroborates already recorded earlier Nuseirat and Gaza City fatalities, no distinct new event."
+      },
+      {
+        "url": null,
+        "reason": "Opinion, West Bank-only events, old articles, unsourced or non-independent reprints, and items without a verified new in-window development excluded."
+      }
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Previously documented recurring failure; WHO Global and OCHA OPT remained available."
+      },
+      {
+        "source": "WFP newsroom",
+        "error": "HTTP 403 Forbidden",
+        "materiality": "Previously documented; older individual WFP articles and search evidence were available."
+      },
+      {
+        "source": "UNICEF State of Palestine press index",
+        "error": "Retrieval inaccessible",
+        "materiality": "Previously documented; indexed source-specific older articles remained available."
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt denied",
+        "materiality": "Previously documented; other UN and international humanitarian sources remained searchable."
+      }
+    ],
+    "status_rationale": "No new distinct in-window qualifying development was verified; useful OCHA/WHO Global, WAFA, PRCS, PCHR and established reporting coverage remained. Source-access restrictions prevent full nominal coverage, so status DEGRADED, while there was no newly material degradation relative to prior run.",
+    "safeguards": "Exactly one append-only heartbeat JSON on ops/watch-ledger; no publication, approval, scheduling, disabling, or production changes."
+  }
+}

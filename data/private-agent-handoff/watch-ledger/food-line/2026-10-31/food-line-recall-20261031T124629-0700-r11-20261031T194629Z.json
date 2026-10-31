@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T124629-0700-r11-20261031T194629Z",
+  "scheduled_for": "2026-10-31T12:45:54-07:00",
+  "started_at": "2026-10-31T12:46:29-07:00",
+  "completed_at": "2026-10-31T12:47:06.799-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T11:44:58.374-07:00",
+    "end_at": "2026-10-31T12:47:06.799-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Window begins at completed_at of independently fetched previous Food Line ledger heartbeat. Two-day web recency used for discovery; actual dated evidence and duplicate history govern inclusion. Search-index recency does not establish event date.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Food Line recall watch only; national production collector remains authoritative. Searched four audit-priority miss classes: community sole/last/full-service grocery loss; storm/flood/fire/outage-canceled emergency distribution; abrupt pantry or food-bank closure/access reduction; and new official SNAP/WIC/EBT immediate-access interruptions.",
+    "Completed 12 targeted fast web searches (two-day recency). No newly evidenced qualifying U.S. disruption could be established in the 11:44:58–12:46 Pacific bounded interval. Search results included unrelated, historical, non-U.S., and access-restoration reports. This does not prove no nationwide events occurred.",
+    "Excluded September 2026 Spencer, New York grocery-store fire and Aurora, North Carolina market reopening; older Canadian fire/reopening, preexisting 2026 grocery closures, historical 2025 canceled food deliveries, routine pantry activity, and stale SNAP/WIC materials. One result labeled 'last week' discussed earlier 2026 store closures without evidence of a newly occurring loss.",
+    "Excluded as duplicate the October 31 earlier-recorded Provo, Utah Community Action Services and Food Bank closure candidate effective November 1, which remains pending_review in the 06:50 PDT heartbeat. No fresh evidence in this window warrants a second finding.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T114325-0700-r11-20261031T184325Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" fire closed October 31 2026 town",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" burned closed October 2026 community",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last full-service grocery\" closing October 31 2026",
+          "category": "last_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full service supermarket\" fire forced closure October 31 2026",
+          "category": "full_service_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"emergency food distribution\" cancelled storm flood October 31 2026",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank distribution\" canceled due to power outage storm October 31 2026",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" closed unexpectedly suspended services October 31 2026",
+          "category": "abrupt_pantry_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" \"temporarily closed\" October 31 2026 clients",
+          "category": "abrupt_food_bank_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" reduced hours closed flood fire October 30 31 2026",
+          "category": "hazard_pantry_access_reduction",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"SNAP\" \"benefits\" \"interruption\" \"October 31, 2026\"",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"outage\" \"October 31, 2026\" benefits",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"EBT\" \"outage\" \"October 31 2026\" SNAP state agency",
+          "category": "ebt_outage",
+          "method": "fast",
+          "recency_days": 2
+        }
+      ],
+      "reviewed_source_examples": [
+        "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "https://storeclosurewatch.com/briefs/independent-grocery-store-closings-2026/",
+        "https://www.cbsnews.com/pittsburgh/video/now-more-than-ever-food-pantrys-mission-is-about-love/"
+      ]
+    },
+    "No publication, review authorization, production change, schedule change, or watch disabling occurred."
+  ]
+}

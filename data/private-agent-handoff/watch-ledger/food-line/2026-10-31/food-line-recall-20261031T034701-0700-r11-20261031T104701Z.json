@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T034701-0700-r11-20261031T104701Z",
+  "scheduled_for": "2026-10-31T03:45:54-07:00",
+  "started_at": "2026-10-31T03:47:01-07:00",
+  "completed_at": "2026-10-31T03:47:31-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T02:49:30.473-07:00",
+    "end_at": "2026-10-31T03:47:31-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Latest independently read-back confirmed Food Line Source Watch heartbeat ending 2026-10-31T02:49:30.473-07:00. Two-day search recency for indexing latency; older events not eligible.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value miss-class recall sweep only. Production nationwide Food Line collection remains authoritative. No content approval, publication, schedule change, or task disabling.",
+    "Twelve targeted web searches returned without search errors: 4 sole/last/full-service grocery loss, 3 canceled disaster-related food distributions, 2 abrupt pantry/bank service losses, 3 official SNAP/WIC/EBT interruptions.",
+    "No locally reported or official new qualifying access interruption was verified with event/publication timing inside the bounded window. Not proof of nationwide absence; recently issued/unindexed local notices may be missed.",
+    "Older 2025 SNAP shutdown articles surfaced despite recency filters; these do not evidence any October 2026 interruption and were excluded. Historical 2017 grocery context and general government pages were likewise excluded.",
+    "Excluded generic EBT troubleshooting from February 2026 and future-looking program information without confirmed current benefit outage. No verified storm-related distribution cancellation or new pantry shutdown was found.",
+    "No donation drives, resource guides, routine program promotion, generic inflation articles, stale incidents, or duplicate signals admitted.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T024841-0700-r11-20261031T094930474Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" \"October 31, 2026\" closed fire town",
+          "category": "sole/last/full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery\" closure fire October 30 31 2026 USA",
+          "category": "sole/last/full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" closes October 2026 community rural",
+          "category": "sole/last/full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full-service grocery\" suddenly closed fire October 31 2026",
+          "category": "sole/last/full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food distribution\" canceled weather flooding October 31 2026",
+          "category": "disaster emergency food distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "\"emergency food distribution\" cancelled postponed storm Saturday October 31 2026",
+          "category": "disaster emergency food distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "food bank distribution canceled storm outage October 30 31 2026",
+          "category": "disaster emergency food distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" closed unexpectedly fire flood October 31 2026",
+          "category": "abrupt food pantry/food bank access loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" temporarily closed service suspended October 30 31 2026",
+          "category": "abrupt food pantry/food bank access loss",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov SNAP benefits delayed October 31 2026 interruption suspension",
+          "category": "official SNAP/WIC/EBT interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov WIC services closed outage October 30 31 2026",
+          "category": "official SNAP/WIC/EBT interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "EBT card payment outage October 31 2026 SNAP state official",
+          "category": "official SNAP/WIC/EBT interruption",
+          "recency_days": 2
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "https://www.propel.app/snap/why-is-my-ebt-card-not-working-today/",
+        "https://dss.virginia.gov/alerts/",
+        "https://www.kunc.org/2017-12-11/how-dollar-general-is-transforming-rural-america"
+      ]
+    }
+  ]
+}

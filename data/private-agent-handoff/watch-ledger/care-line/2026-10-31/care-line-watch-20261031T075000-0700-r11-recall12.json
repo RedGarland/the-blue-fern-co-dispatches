@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T075000-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T07:45:22-07:00",
+  "started_at": "2026-10-31T07:50:00-07:00",
+  "completed_at": "2026-10-31T07:51:34.703-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T06:42:11-07:00",
+    "end": "2026-10-31T07:51:34.703-07:00",
+    "basis": "Last verified prior Care Line watch ledger heartbeat completion through this execution. Retrospective recall considered only when a previously unrecorded, concrete access change is substantiated."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall watch only; production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Canonical CMS public notices listing shows no October 31 notices. Its seven October 30 termination notices, CCNs B31564, A11721, 234047, 368355, 368395, 369294 and 369309, were present in earlier watch runs and are excluded as duplicates. Regulatory termination notice is not proof of a facility's physical closure."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 31, 2026\" hospital emergency department closed temporarily access United States",
+      "\"October 30, 2026\" hospital emergency room closed suspended rural",
+      "\"October 31, 2026\" maternity labor delivery services closure hospital",
+      "\"October 30, 2026\" behavioral health inpatient psychiatric unit closes patients",
+      "\"October 31, 2026\" dialysis oncology cancer clinic closure suspension",
+      "\"October 30, 2026\" primary care clinic closes temporarily patients services",
+      "October 30 2026 ambulance service EMS stops operating coverage community station closure",
+      "October 30 2026 air medical helicopter base closes suspended air ambulance",
+      "October 30 2026 hospital emergency department reopening service restored after shutdown",
+      "October 30 2026 dialysis center chemotherapy clinic reopened restored services",
+      "October 30 31 2026 Puerto Rico Guam US Virgin Islands CNMI American Samoa hospital emergency closure clinic suspended",
+      "October 31 2026 health department rural clinic closure urgent care suspension official announcement"
+    ],
+    "query_recency_days": [
+      1,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "CMS October 30 seven provider termination notices",
+        "reason": "Previously recorded; no newer notice listed",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Roseland Community Hospital labor-and-delivery October 31 announced shutdown",
+        "reason": "Previously captured in October 31 00:48 heartbeat; implementation not newly verified",
+        "url": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/"
+      },
+      {
+        "item": "Carle Health Rantoul temporarily closed clinic",
+        "reason": "Previously captured October 30; no newly demonstrated distinct change",
+        "url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/"
+      },
+      {
+        "item": "UNM Health emergency diversions and clinic cancellations",
+        "reason": "Already captured in previous Care Line watches; October 26 event and gradual recovery not new",
+        "url": "https://apnews.com/article/7a3593f8a3cee4ca895774ab1574919f"
+      },
+      {
+        "item": "Mercy Health St Joseph Warren Hospital maternity service closure announcement",
+        "reason": "Prospective early December 2026 closure; no demonstrated current service loss",
+        "url": "https://businessjournaldaily.com/mercy-health-faces-blowback-over-maternity-care-plan/"
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital Damariscotta birthing-unit closure",
+        "reason": "Prospective December 18 shutdown; campaign analysis, not present-day change",
+        "url": "https://mainebeacon.com/where-maines-senate-and-cd2-candidates-stand-on-rural-maternity-care/"
+      },
+      {
+        "item": "Oregon Kairos NW Interval House youth behavioral-health respite closure",
+        "reason": "Published October 30 but facility closed in 2025, not a newly developing disruption",
+        "url": "https://oregoncapitalchronicle.com/2026/10/30/oregon-needs-more-youth-respite-homes-but-funding-problems-stand-in-the-way/"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, IL air medical base closure",
+        "reason": "Reported September 16, 2026 effective date; outside short recall and not shown as newly uncovered",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Older, non-U.S., funding-only, unimplemented proposals, and unrelated results",
+        "reason": "Excluded by freshness and concrete healthcare-service-access effect criteria"
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Searches returned a mixture of recent and stale/off-scope results despite recency filters. Broad web indexing has incomplete recall for local, rural, tribal and territorial service changes. No findings does not establish exhaustive absence.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T064051-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T06:42:11-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Exactly one private ops/watch-ledger heartbeat for this run; no approval, publication, production-runner modification, schedule change or disablement."
+  }
+}

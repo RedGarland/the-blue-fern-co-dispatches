@@ -1,0 +1,26 @@
+{
+  "schema_version": "food_line_source_based_retrospective_items_v1",
+  "package_type": "source_based_retrospective",
+  "title": "Food Line source-based retrospective: documented food-access pressure in Raleigh and Bismarck",
+  "coverage_notice": "This source-based retrospective contains two independently reviewed reports. It is not a complete daily edition, an exhaustive October catch-up, or proof that other October dates had no news.",
+  "items": [
+    {
+      "date": "2026-10-24",
+      "headline": "Raleigh SNAP review delay depleted household savings, resident says",
+      "summary": "ABC11 reported that Raleigh resident Sky Hayden said a month-long SNAP review delay depleted household savings despite early paperwork. The benefits later arrived. Wake County acknowledged that some review delays occur but did not comment on the individual case.",
+      "source_publisher": "ABC11 News",
+      "source_date": "2026-10-24",
+      "source_url": "https://abc11.com/post/raleigh-mother-says-snap-benefits-delay-forced-family-use-savings-food-insecurity-rises/19973253/",
+      "limitations": "This is an individual reported case, not proof that the interruption is ongoing or systemwide. Monthly application and review figures are workload counts, not delayed-case counts."
+    },
+    {
+      "date": "2026-10-21",
+      "headline": "Bismarck pantry sees fall/winter pressure as utility costs rise, KFYR reports",
+      "summary": "KFYR-TV reported that Dream Center Bismarck staff described fall/winter food-assistance pressure as utility bills rise. Founder Jim Barnhardt said some households share rides and occasional visitors run out of fuel while seeking help.",
+      "source_publisher": "KFYR-TV",
+      "source_date": "2026-10-21",
+      "source_url": "https://www.kfyrtv.com/2026/10/21/food-pantry-needs-increase-temperatures-decrease/",
+      "limitations": "The source does not establish a measured increase, shortage count, service reduction, or new meal expansion."
+    }
+  ]
+}

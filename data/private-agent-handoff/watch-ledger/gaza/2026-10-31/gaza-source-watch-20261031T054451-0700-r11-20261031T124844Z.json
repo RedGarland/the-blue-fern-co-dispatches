@@ -1,0 +1,146 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T054451-0700-r11-20261031T124844Z",
+  "scheduled_for": "2026-10-31T05:44:51-07:00",
+  "started_at": "2026-10-31T05:48:44-07:00",
+  "completed_at": "2026-10-31T05:51:34.815-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T04:43:51.089-07:00",
+    "end": "2026-10-31T05:51:34.815-07:00",
+    "basis": "Incremental from the previous verified watch heartbeat; Gaza-local WAFA time converted using IANA Asia/Gaza UTC+02:00 on 2026-10-31 (not UTC+03:00). US Pacific daylight offset is UTC-07:00 on 2026-10-31.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall only; production collector and publisher remain authoritative; no production, publishing, approval, task schedule or automation changes.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T044451-0700-r11-20261031T114351089Z.json",
+      "completed_at": "2026-10-31T04:43:51.089-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "GitHub exact-file read on ops/watch-ledger"
+    },
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed 27 Oct 2026 West Bank snapshot and 26 Oct Gaza-relevant situation report (for 22 Oct). No in-window Gaza update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; standing health-crisis overview, no new interval-specific Gaza hospital, transport, medical-evacuation or health capacity change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, previously documented recurrent access restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" \"Gaza\" \"02:\" \"PM\" injured killed",
+      "site:ochaopt.org/updates Gaza October 31 2026 aid displacement crossings",
+      "site:who.int Gaza October 31 2026 hospital medical evacuation fuel capacity",
+      "site:unicef.org Gaza October 31 2026 water children displacement",
+      "site:wfp.org Gaza October 31 2026 food delivery crossing aid",
+      "site:palestinercs.org Gaza October 31 2026 ambulance paramedics hospital",
+      "site:reuters.com/world/middle-east/ Gaza October 31 2026 Israeli strike civilians ceasefire aid",
+      "site:apnews.com/article/ Gaza October 31 2026 civilian casualties aid hospital ceasefire",
+      "site:aljazeera.com/news/2026/10/31/ Gaza civilians killed injured displaced bombing",
+      "site:aa.com.tr/en/middle-east/ \"Oct 31, 2026\" Gaza strike casualties humanitarian",
+      "Gaza October 31 2026 14:00 15:00 Palestine time hospital medical evacuations Rafah crossing water ceasefire",
+      "Gaza Saturday October 31 2026 afternoon new deaths injuries displacement humanitarian operations aid entry crossing"
+    ],
+    "targeted_search_recency_days": 2,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza 14:23 Gaza-local (05:23 PDT) report repeats the same al-Shati house drone-strike and several injuries, including one seriously/critically injured, reported by WAFA at 13:36 Gaza-local (04:36 PDT); duplicate, not a second event."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "October 31 education feature references earlier incidents; no newly verified in-window Gaza development."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new dated in-window Gaza ambulance/hospital operational change on checked homepage."
+      }
+    ],
+    "excluded": [
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176468",
+        "title": "Several Palestinians injured in Israeli drone strike on Gaza City’s al-Shati camp",
+        "publication_date": "2026-10-31",
+        "publication_time_gaza": "14:23 +02:00",
+        "publication_time_pdt": "05:23 -07:00",
+        "reason": "Newly published but same location, injury details, seriousness, affected house and prior-day fatalities as earlier WAFA article 176466; no verified distinct incident or material update. Classified duplicate/rewrite."
+      },
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176466",
+        "title": "Several Palestinians injured in Israeli drone strike on home in Gaza’s Shati refugee camp",
+        "publication_date": "2026-10-31",
+        "publication_time_gaza": "13:36 +02:00",
+        "publication_time_pdt": "04:36 -07:00",
+        "reason": "Earlier-window casualty item; should have been in 03:46–04:43 PDT watch, but prior heartbeat wrongly applied Gaza UTC+03 and excluded it."
+      },
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176463",
+        "title": "Four Palestinians injured by Israeli gunfire in central Gaza",
+        "publication_date": "2026-10-31",
+        "publication_time_gaza": "11:54 +02:00",
+        "publication_time_pdt": "02:54 -07:00",
+        "reason": "Earlier-window casualty item; should have been in 02:48–03:46 PDT watch, but that heartbeat wrongly applied Gaza UTC+03 and excluded it."
+      },
+      {
+        "canonical_source_url": null,
+        "reason": "Older background, prior already-ledgered fatalities and tent-fire deaths, West Bank-only events, undated claims, and non-incremental reporting excluded."
+      }
+    ],
+    "material_prior_watch_reconciliation": {
+      "severity": "material_accuracy_degradation_identified_this_run",
+      "cause": "Two earlier heartbeat analyses converted WAFA October 31 Gaza-local timestamps using UTC+03:00, although Gaza had ended daylight saving time on October 24, 2026 and was UTC+02:00. This shifted publication timestamps one hour early and incorrectly excluded qualifying source reports from their proper hourly intervals.",
+      "supporting_timezone_reference": "https://www.timeanddate.com/time/change/palestine/gaza?year=2026",
+      "independent_iana_check": "Python zoneinfo Asia/Gaza reports +02:00 for October 31, 2026; America/Los_Angeles reports -07:00.",
+      "affected_prior_runs": [
+        {
+          "heartbeat": "gaza-source-watch-20261031T034451-0700-r11-20261031T104457Z.json",
+          "corrected_report": "https://english.wafa.ps/Pages/Details/176463",
+          "event": "Four Palestinians injured by Israeli gunfire in al-Maghazi refugee camp",
+          "source_published_local": "2026-10-31T11:54:00+02:00",
+          "correct_pdt": "2026-10-31T02:54:00-07:00",
+          "correct_window": "2026-10-31 02:48:50–03:46:47 PDT",
+          "prior_classification": "incorrectly_excluded_as_earlier"
+        },
+        {
+          "heartbeat": "gaza-source-watch-20261031T044451-0700-r11-20261031T114351089Z.json",
+          "corrected_report": "https://english.wafa.ps/Pages/Details/176466",
+          "event": "Several people injured, one critically, in an Israeli drone strike on a home in al-Shati refugee camp",
+          "source_published_local": "2026-10-31T13:36:00+02:00",
+          "correct_pdt": "2026-10-31T04:36:00-07:00",
+          "correct_window": "2026-10-31 03:46:47–04:43:51 PDT",
+          "prior_classification": "incorrectly_excluded_as_earlier"
+        }
+      ],
+      "scope": "The correction identifies source-watch classification defects; no evidence the production collector or publisher was affected. The two prior reports were not reclassified as new in this current interval and previous heartbeat files were not rewritten.",
+      "recommended_next_action": "Reconcile the two omitted prior-window reports with production and normalize all source-local dates using IANA Asia/Gaza, not a fixed UTC+03 offset; dedupe repeated reporting by incident identity instead of article URL."
+    },
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Previously documented recurring restriction. WHO Global, OCHA and other authoritative sources accessible; does not by itself represent newly material degradation."
+      }
+    ],
+    "status_rationale": "Useful coverage completed with 12 targeted searches; WHO EMRO was unavailable. No new, distinct qualifying development verified in the current increment, but newly verified material timestamp-conversion false negatives in the prior two source-watch runs justify surfacing a degradation alert.",
+    "safeguards": "Exactly one append-only heartbeat on ops/watch-ledger. No approval, publication, scheduling, disabling, or production mutation."
+  }
+}

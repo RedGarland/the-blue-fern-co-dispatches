@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T234403-0700-r11-20261031T064403339Z",
+  "scheduled_for": "2026-10-30T23:45:54-07:00",
+  "started_at": "2026-10-30T23:43:24-07:00",
+  "completed_at": "2026-10-31T06:44:03.339Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T05:41:48.991Z",
+    "end_at": "2026-10-31T06:44:03.339Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified Food Line Source Watch heartbeat completed October 30, 2026 at 22:41:48.991 PDT. Two-day retrieval recency allowed for search indexing; only independently verifiable newly qualifying events in the bounded interval were eligible.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall watch only; production nationwide collector remains authoritative. No review approval, publication, schedule modification, or disabling performed.",
+    "Twelve targeted web searches completed: four sole/last/full-service grocery loss; three storm/disaster emergency distribution cancellation; two sudden pantry/food-bank closure; three official SNAP/WIC/EBT interruptions. No web search errors observed.",
+    "No new qualifying U.S. events since the previously verified heartbeat could be confirmed from available results. An empty findings array reflects bounded source coverage, not proof of nationwide absence.",
+    "Excluded Eastport, Maine sole-grocer closure (September 2026), earlier 2025 SNAP government-shutdown reports, early-October severe-weather notices, and routine food program changes as outside the event window.",
+    "October 29 Kauaʻi hurricane recovery information did not document a newly canceled distribution; no cancellation inferred.",
+    "October 30 report about Missoula AniMeals moving toward a permanent location did not demonstrate abrupt human food-pantry access loss. New Aurora, North Carolina food retailer opening expands rather than reduces access.",
+    "Relevant result references: https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food ; https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/ ; https://www.kpax.com/news/missoula-county/animeals-preparing-for-permanent-missoula-home-asks-community-for-help-with-rising-costs",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T2241480700-r11-20261031T054148991Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" closed fire October 30 2026 town",
+          "category": "sole/full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" closure October 30 2026 small town",
+          "category": "sole/full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" fire OR shut down October 2026",
+          "category": "sole/full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full service grocery store\" closes October 30 2026 rural community",
+          "category": "sole/full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food distribution\" canceled October 30 2026 storm flood hurricane",
+          "category": "emergency distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" distribution suspended October 30 2026 flood outage",
+          "category": "emergency distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "emergency food distribution canceled October 30 2026 weather shelter",
+          "category": "emergency distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" abruptly closes October 30 2026 fire damage",
+          "category": "abrupt pantry/bank closure",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" temporarily closed operations October 30 2026",
+          "category": "abrupt pantry/bank closure",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"SNAP\" \"October 30, 2026\" outage interrupted benefits",
+          "category": "SNAP/WIC interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"October 30, 2026\" closure suspension",
+          "category": "SNAP/WIC interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "\"EBT\" \"October 30, 2026\" not working delayed benefits state",
+          "category": "SNAP/WIC interruption",
+          "recency_days": 2
+        }
+      ]
+    }
+  ]
+}

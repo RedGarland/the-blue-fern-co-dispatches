@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T114325-0700-r11-20261031T184325Z",
+  "scheduled_for": "2026-10-31T11:45:54-07:00",
+  "started_at": "2026-10-31T11:43:25-07:00",
+  "completed_at": "2026-10-31T11:44:58.374-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T10:43:40-07:00",
+    "end_at": "2026-10-31T11:44:58.374-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of independently fetched prior Food Line ledger heartbeat (2026-10-31 10:43:40 PDT); two-day search recency aids delayed-index discovery, but newness is judged by actual source date and prior recall records, not index recency.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary Food Line recall only; authoritative national production collection unchanged. Targeted four high-value miss categories: sole/last/full-service grocery loss; hazard-canceled or suspended emergency food distribution; abrupt food pantry/bank closure or access reduction; official SNAP/WIC immediate benefit/service interruptions.",
+    "Completed 12 fast targeted web searches with a two-day recency filter. No source substantiated a new qualifying U.S. event or announcement within the preceding verified check (10:43:40 PDT) through this run. Search recency is imperfect; lack of findings does not establish nationwide absence.",
+    "Excluded previously recorded Provo, Utah Community Action Services and Food Bank indefinite closure effective November 1; existing 06:50 PDT signal remains pending_review and was not duplicated. Earlier Northland Shepherd's Center Missouri service cessation was announced well before this check.",
+    "Excluded year-mismatched October 2025 SNAP federal shutdown materials and resource guides; the Texas WIC vendor communications index showed recent October 5, 2026 recall-related updates but no new October 31 immediate-access disruption. Historical Canadian Whale Cove sole-grocery fire, long-standing Aurora food desert relief, and older U.S. store changes are not new U.S. qualifying disruptions.",
+    "A public web view of the GitHub ledger directory was blocked and direct directory fetch returned an expected directory-path error. GitHub connector compare_commits and fetch_file successfully located and verified the exact prior 10:43:40 PDT Food Line heartbeat; no ledger-history gap remained.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T104254-0700-r11-20261031T174254Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" closed fire community October 31 2026",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" closed burned 2026 October 31",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" closure \"October\" 2026 community",
+          "category": "last_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full-service grocery store\" destroyed fire closed October 31 2026",
+          "category": "full_service_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food distribution\" canceled storm flooding October 31 2026 food bank",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food distribution\" suspended \"October 31\" 2026 outage flood fire",
+          "category": "hazard_distribution_suspension",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"emergency food distribution\" canceled weather \"October 31\" 2026",
+          "category": "hazard_emergency_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" temporarily closed indefinitely October 31 2026",
+          "category": "abrupt_pantry_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" services suspended closed \"October 31\" 2026",
+          "category": "abrupt_food_bank_reduction",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" \"closed\" flood fire October 2026",
+          "category": "hazard_pantry_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"SNAP\" \"interruption\" \"October 31\" 2026 benefits",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"suspended\" \"October 31\" 2026 food assistance",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": 2
+        }
+      ],
+      "reviewed_source_examples": [
+        "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "https://www.hhs.texas.gov/providers/wic-providers/vendor-management-operations-unit/wic-vendor-communications",
+        "https://scanlon.house.gov/services/government-shutdown-resources.htm",
+        "https://www.nysenate.gov/newsroom/press-releases/2025/andrew-gounardes/brooklyn-elected-officials-service-providers-demand"
+      ]
+    },
+    "No approval, publication, production-collector changes, schedule changes or disabling of the watch."
+  ]
+}

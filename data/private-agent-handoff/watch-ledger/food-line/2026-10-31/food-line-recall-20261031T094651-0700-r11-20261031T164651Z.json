@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T094651-0700-r11-20261031T164651Z",
+  "scheduled_for": "2026-10-31T09:45:54-07:00",
+  "started_at": "2026-10-31T09:46:51-07:00",
+  "completed_at": "2026-10-31T09:47:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T08:48:07.277-07:00",
+    "end_at": "2026-10-31T09:47:44-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of the preceding verified Food Line watch heartbeat (2026-10-31 08:48:07.277 PDT). Targeted searches allowed two-day recency for delayed indexing, but event timing and duplicate checks govern inclusion.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall only; production nationwide collector remains authoritative. Four high-value classes checked: sole/last/full-service grocery closures or fire/disaster, hazard-canceled emergency distributions, abrupt pantry/food-bank service closure/reduction, and new official SNAP/WIC/EBT interruptions with immediate access consequences.",
+    "Twelve targeted searches completed successfully (8 fast and 4 slow, each with a two-day recency filter). No qualifying new event inside the verified hourly window was substantiated; this limited watch does not establish comprehensive nationwide absence.",
+    "Excluded as previously detected: Provo, Utah Community Action Services and Food Bank closure candidate effective November 1, 2026, recorded at 06:50 PDT in heartbeat food-line-recall-20261031T064739-0700-r11-20261031T134739Z.json (pending review). Do not create a duplicate.",
+    "Excluded historical incidents: Prodisee Pantry Stockton, Alabama distribution canceled October 10 due to weather (reported October 7); El Pasoans Fighting Hunger weather closure September 25; Spencer, New York only-grocery fire September 2026; Salem Public Market fire October 22-23. Prior-year October 2025 SNAP shutdown coverage does not document a new 2026 SNAP interruption.",
+    "Hawaii Hurricane Lowell recovery and October 29 information were considered, but no newly canceled food distribution during the checked hour was verified. USDA California tropical-storm SNAP food-loss replacement reporting waiver (announced October 20) is an assistance accommodation, not an immediate new disruption.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T084659-0700-r11-20261031T154659Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" closed fire October 31 2026 food desert",
+          "category": "sole_grocery_loss",
+          "recency_days": 2,
+          "method": "fast"
+        },
+        {
+          "query": "\"sole grocery store\" closing \"October 30\" \"2026\"",
+          "category": "sole_grocery_loss",
+          "recency_days": 2,
+          "method": "fast"
+        },
+        {
+          "query": "\"last full-service grocery store\" closes October 2026",
+          "category": "full_service_grocery_loss",
+          "recency_days": 2,
+          "method": "fast"
+        },
+        {
+          "query": "food pantry distribution canceled storm October 31 2026 site:org",
+          "category": "weather_distribution_cancellation",
+          "recency_days": 2,
+          "method": "fast"
+        },
+        {
+          "query": "food bank distribution cancelled weather October 31 2026",
+          "category": "weather_distribution_cancellation",
+          "recency_days": 2,
+          "method": "fast"
+        },
+        {
+          "query": "food pantry abruptly closed indefinite October 30 31 2026",
+          "category": "abrupt_pantry_closure",
+          "recency_days": 2,
+          "method": "fast"
+        },
+        {
+          "query": "SNAP benefits suspended delayed October 31 2026 state agency notice",
+          "category": "official_snap_interruption",
+          "recency_days": 2,
+          "method": "fast"
+        },
+        {
+          "query": "WIC benefits interrupted outage October 31 2026 state agency",
+          "category": "official_wic_interruption",
+          "recency_days": 2,
+          "method": "fast"
+        },
+        {
+          "query": "October 31 2026 food pantry food bank sudden closure distribution cancelled weather United States",
+          "category": "pantry_closure_and_distribution",
+          "recency_days": 2,
+          "method": "slow"
+        },
+        {
+          "query": "October 31 2026 October 30 last only grocery store fire closed rural community",
+          "category": "sole_grocery_loss",
+          "recency_days": 2,
+          "method": "slow"
+        },
+        {
+          "query": "October 31 2026 emergency food distribution canceled storm hurricane Lowell Hawaii",
+          "category": "hurricane_distribution_cancellation",
+          "recency_days": 2,
+          "method": "slow"
+        },
+        {
+          "query": "October 31 2026 state SNAP EBT WIC benefits outage suspended emergency notice",
+          "category": "official_benefit_interruption",
+          "recency_days": 2,
+          "method": "slow"
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://fns-prod.azureedge.us/disaster/california"
+      ]
+    },
+    "No approvals, publication, collector changes, schedule changes, or task disabling occurred."
+  ]
+}

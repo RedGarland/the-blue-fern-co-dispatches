@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T094820-0700-r11-20261031T165142Z",
+  "scheduled_for": "2026-10-31T09:44:51-07:00",
+  "started_at": "2026-10-31T09:48:20-07:00",
+  "completed_at": "2026-10-31T09:51:42.447-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T08:46:20.743-07:00",
+    "end": "2026-10-31T09:51:42.447-07:00",
+    "basis": "The exact previous verified Gaza watch heartbeat completion is used, rather than assuming an hourly boundary. At observation time, Asia/Gaza UTC+02:00, America/Los_Angeles UTC-07:00 (nine-hour difference).",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza production collector and publisher remain authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T084432-0700-r11-20261031T154620Z.json",
+      "completed_at": "2026-10-31T08:46:20.743-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_by": "GitHub fetch_file from ops/watch-ledger"
+    },
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest index item October 27 West Bank. Most recent Gaza-relevant humanitarian report listed October 26 covering October 22; no new interval event."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring prior documented restriction."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible WHO situational portal and health overview; no new October 31 interval-specific Gaza healthcare disruption, fuel, ambulance, evacuation or functioning-capacity item on index."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"October 31, 2026\" killed wounded Israeli drone afternoon",
+      "Gaza October 31 2026 latest Saturday Israeli fire strikes injuries Reuters AP ceasefire",
+      "site:ochaopt.org Gaza 31 October 2026 latest humanitarian update aid crossings",
+      "site:who.int Gaza October 31 2026 hospital medical evacuation health announcement",
+      "site:un.org OR site:news.un.org Gaza October 31 2026 humanitarian aid displaced",
+      "site:icrc.org Gaza October 31 2026 hostages detainees prisoner release",
+      "site:wfp.org OR site:unicef.org Gaza October 31 2026 food water supply",
+      "site:msf.org Gaza October 31 2026 hospitals fuel ambulances medical evacuation",
+      "Gaza October 31 2026 civilian casualties al-Mawasi Khan Younis Nuseirat Gaza City developments last hours",
+      "site:aljazeera.com OR site:middleeasteye.net Gaza October 31 2026 attack injuries aid",
+      "\"Palestinian succumbs to wounds sustained in Israeli drone strike west of Gaza City\" October 31 2026",
+      "Gaza October 31 2026 17:45 Palestinian dies wounds drone strike west Gaza City details WAFA"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA latest news",
+        "url": "https://english.wafa.ps/",
+        "result": "Index accessible. Latest Gaza headline shown at 17:45 Asia/Gaza (08:45 PDT): death from earlier drone-strike wounds west of Gaza City. Timestamp before the previous heartbeat completion at 08:46:20 PDT, hence not a new in-window finding. The directly linked article timed out repeatedly."
+      },
+      {
+        "publisher": "WAFA al-Shati",
+        "url": "https://english.wafa.ps/Pages/Details/176468",
+        "result": "October 31 at 14:23 Gaza local (05:23 PDT) repeats earlier al-Shati drone-strike injuries; excluded as duplicate."
+      },
+      {
+        "publisher": "WAFA Khan Younis",
+        "url": "https://english.wafa.ps/Pages/Details/176470",
+        "result": "October 31 at 15:35 Gaza local (06:35 PDT) reports one killed, several wounded near Taiba Towers; previously recorded in 06:45 watch, excluded as duplicate."
+      },
+      {
+        "publisher": "Palestine Red Crescent",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible. Latest homepage news June 10; no new October 31 current-window ambulance or healthcare disruption item."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-in-israels-ongoing-violations-of-gaza-ceasefire/4107086",
+        "result": "Direct article retrieval inaccessible during this check; prior watch had reviewed and excluded aggregation of previously recorded incidents."
+      }
+    ],
+    "excluded_or_reconciliation": [
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176472",
+        "title": "Palestinian succumbs to wounds sustained in Israeli drone strike west of Gaza City",
+        "publisher": "WAFA",
+        "published_gaza_local": "2026-10-31T17:45:00+02:00",
+        "published_los_angeles": "2026-10-31T08:45:00-07:00",
+        "disposition": "Not a new current-window finding; posted ~81 seconds before previous watch ended. Previous heartbeat indexed WAFA only through 16:11 Gaza local, so this is a possible earlier-window recall miss for production reconciliation. Article body not retrievable; distinctness from earlier Tel al-Hawa death cannot be verified. Do not double-count or publish from this headline alone."
+      },
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176468",
+        "disposition": "Earlier al-Shati attack repeated; duplicate."
+      },
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176470",
+        "disposition": "Earlier Taiba Towers Khan Younis casualty incident; duplicate."
+      },
+      {
+        "canonical_source_url": null,
+        "disposition": "Older Reuters/AP/UN reports, West Bank-only stories, opinion, recycled claims, unsourced reports and unsupported social-media claims excluded."
+      }
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Previously documented recurring restriction; WHO Global and OCHA alternatives accessible."
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt denied",
+        "materiality": "Previously documented recurring restriction; UN and other outlets searched."
+      },
+      {
+        "source": "WAFA article 176472",
+        "error": "Direct article retrieval timeout on repeated attempts",
+        "materiality": "Single-source detail limitation on pre-window candidate; WAFA index headline/date accessible. No material new loss of broad source coverage."
+      },
+      {
+        "source": "Anadolu article",
+        "error": "Direct article inaccessible this run",
+        "materiality": "Previously reviewed prior-hour article; its aggregate not counted as distinct current event."
+      }
+    ],
+    "status_rationale": "Useful authoritative and established-source coverage completed, but recurring WHO EMRO and UN News access restrictions plus direct article retrieval limitations make status DEGRADED. No distinct verified new qualifying development since the previous exact heartbeat completion; no newly material watch degradation.",
+    "safeguards": "Exactly one append-only GitHub heartbeat; no production changes, approvals, publication, scheduling changes or task disabling."
+  }
+}

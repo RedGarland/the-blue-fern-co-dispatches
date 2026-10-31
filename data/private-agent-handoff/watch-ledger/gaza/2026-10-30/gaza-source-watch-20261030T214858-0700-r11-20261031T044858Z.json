@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T214858-0700-r11-20261031T044858Z",
+  "scheduled_for": "2026-10-30T21:44:51-07:00",
+  "started_at": "2026-10-30T21:48:58-07:00",
+  "completed_at": "2026-10-31T04:50:02.031Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T03:49:49.214Z",
+    "end": "2026-10-31T04:50:02.031Z",
+    "basis": "Incremental recall since immediately preceding verified 2026-10-30 20:49:49.214 PDT Gaza watch heartbeat, through the end of this check; excludes duplicated incidents and prior-period reporting.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall, not an authoritative collector/publisher; no production action.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T204843-0700-r11-20261031T034843Z.json",
+      "completed_at": "2026-10-31T03:49:49.214Z",
+      "outcome": "no_findings",
+      "prior_known_positive_finding_ids": [
+        "gaza-20261030-khan-younis-al-maslakh-12-injured-wafa-176452",
+        "gaza-20261030-khan-younis-child-wounds-wafa-176450",
+        "gaza-20261030-ohchr-yellow-line-expansion-displacement"
+      ]
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listing dated 27 Oct 2026, latest Gaza humanitarian situation report listed on 26 Oct (report period 12-18 Oct). No in-window report."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Overview and linked regional dashboards; no in-window dated health-capacity or medical evacuation report confirmed."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Direct fetch returned HTTP 502 Bad Gateway; repeatedly documented restriction. WHO global accessible as partial alternative."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza October 31 2026 killed injured Khan Younis strike",
+      "site:english.wafa.ps Gaza October 30 2026 31 overnight strike displacement",
+      "site:reuters.com Gaza October 31 2026 Israel ceasefire killed talks",
+      "site:apnews.com/article Gaza October 31 2026 hospitals airstrike ceasefire",
+      "site:aljazeera.com/news/2026/10/31 Gaza killed wounded latest",
+      "site:unicef.org Gaza 30 October 2026 children deaths water",
+      "site:wfp.org Gaza 30 October 2026 food aid crossings",
+      "site:palestinercs.org Gaza 30 October 2026 ambulance medical aid",
+      "site:un.org Gaza 30 October 2026 humanitarian crossings displacement",
+      "site:anadoluagency.com Gaza October 31 2026 Israeli strike killed wounded",
+      "site:middleeasteye.net Gaza October 31 2026 civilians killed hospital",
+      "Gaza October 31 2026 early morning civilian casualties Rafah crossing hospital evacuation negotiations"
+    ],
+    "search_recency_days": 2,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest visible article timestamp 30 October 22:23 Palestine time (12:23 PDT), before this incremental window; no verified 31 October Gaza casualty item displayed."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible. Latest visible Gaza item dated 30 October is Yellow Line/displacement report overlapping prior known OHCHR finding; other lead items concerned the West Bank."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible standing emergency page; no verifiable in-window changed food-access event."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible standing emergency page; no verifiable in-window newly dated incident."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible. Prominent latest updates were older; no new in-window ambulance/medical transport or hospital change."
+      }
+    ],
+    "examined_exclusions": [
+      "WAFA 30 October 18:02 Palestine time report of 12 injured in drone strike near Khan Younis already recorded by earlier watch.",
+      "WAFA 30 October report of minor dying from wounds was already known to preceding watches.",
+      "Al Jazeera 30 October OHCHR Yellow Line/displacement coverage repeats already recorded underlying report.",
+      "Other returned materials dated prior days/months (including OCHA 22 October report, Reuters 26 October UN inquiry, and 23 October WAFA casualty report) fail incremental novelty.",
+      "No trustworthy source verified a distinct late-evening 30 October PDT or 31 October Gaza-time development within this watch window."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 on emergency situation reports",
+        "materiality": "Persistent from prior watch; WHO global, OCHA, WFP, UNICEF, WAFA and PRCS remained accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring WHO EMRO source-specific fetch failure. Useful alternate official coverage remained. No new material degradation; no qualifying nonduplicate findings.",
+    "safeguards": "Exactly one append-only heartbeat on ops/watch-ledger; no publication, approval, social posting, schedule, automation, primary collector, or production changes."
+  }
+}

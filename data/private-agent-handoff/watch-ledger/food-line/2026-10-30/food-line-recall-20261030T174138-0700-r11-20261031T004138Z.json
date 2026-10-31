@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T174138-0700-r11-20261031T004138Z",
+  "scheduled_for": "2026-10-30T17:45:54-07:00",
+  "started_at": "2026-10-30T17:41:38-07:00",
+  "completed_at": "2026-10-31T00:42:14.228Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-30T23:47:52.873Z",
+    "end_at": "2026-10-31T00:42:14.228Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified ledger heartbeat completed Oct 30 2026 at 16:47:52.873 PDT; this bounded supplementary recall observes new high-value misses through the present run. Older reported events excluded.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      1
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall only; the nationwide production Food Line collector remains authoritative. No editorial approval, publication, schedule change, or task disabling.",
+    "Twelve targeted searches, limited to (1) sole/last/full-service grocery losses, (2) disaster-related emergency distribution cancellations, (3) abrupt pantry/food-bank closure or major cut, (4) official SNAP/WIC/EBT interruptions with immediate access consequences. All queries returned without tool-level errors.",
+    "No new source-verified qualifying incident was identified within the observation interval; results mainly consisted of older cases, unrelated food stories, generic benefit material, and hurricane recovery logistics. Search-index coverage is not exhaustive.",
+    "Explicit historical exclusion: Eastport, Maine sole-store closure first reported Sep 3 2026, not newly occurring in this interval: https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+    "Hawaiʻi/Kauaʻi Hurricane Lowell recovery results described already scheduled mobile foodbank distributions, not a verified Oct 30 afternoon cancellation: https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Potential local late-breaking provider notices may be unindexed; no negative nationwide assertion is made.",
+    {
+      "bounded_query_context": [
+        {
+          "query": "October 30 2026 \"only grocery store\" fire closed town",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 \"last grocery store\" closure community",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 \"sole grocery store\" shut down disaster",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 full service grocery store closure small town food access",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 food bank distribution canceled storm hurricane flood",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 emergency food distribution canceled closed power outage",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 food pantry closed suddenly services suspended",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 food pantry food bank closure flood fire power",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 SNAP EBT system outage unable to use benefits official notice",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 WIC benefits interruptions agency notice",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 food assistance SNAP benefits delayed suspension state announcement",
+          "recency_days": 1
+        },
+        {
+          "query": "October 30 2026 disaster food assistance distribution postponed local news",
+          "recency_days": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T164829-0700-r11-20261031T234829Z",
+  "scheduled_for": "2026-10-31T16:45:54-07:00",
+  "started_at": "2026-10-31T16:48:29-07:00",
+  "completed_at": "2026-10-31T16:49:07.907-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T15:44:05.792-07:00",
+    "end_at": "2026-10-31T16:49:07.907-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the completed_at of the immediately preceding, directly retrieved watch-ledger heartbeat. Targeted searches used up to seven-day discovery recency for late-indexed reports but only distinct new, verified qualifying disruptions within the bounded interval were eligible.",
+    "targeted_search_count": 12,
+    "web_search_recency_days_range": [
+      2,
+      7
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary four-class recall watch only; primary nationwide Food Line production collection remains authoritative.",
+    "All 12 bounded fast web searches returned without an error. No newly verifiable U.S. sole/full-service grocery loss, weather-related emergency distribution cancellation, abrupt food-bank/pantry loss, or official current SNAP/WIC benefit interruption was found in the prior-hour interval. Search non-detection is not proof of national absence.",
+    "Excluded October 2026 Aurora, NC new grocery-market opening; January 2026 Ovid, NY anniversary stories about a January 2025 fire; earlier disaster response/recovery pages; October 2025 SNAP funding/shutdown notices; generic food assistance calendars and resource guides.",
+    "The previously recorded Provo, Utah Community Action Services and Food Bank closure candidate from the 2026-10-31 06:47 PT watch is a prior finding; no new confirmed development warranted a second finding.",
+    "A generic third-party EBT status dashboard reporting no broad national outage at 05:07 PT was not used to infer official nationwide SNAP/WIC availability. Preannounced November 2026 SNAP retailer/rule changes were not treated as new interruptions.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T154328-0700-r11-20261031T224328Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" closed fire October 31 2026 town",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" closing October 31 2026 community",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" \"fire\" October 2026",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 7
+        },
+        {
+          "query": "October 31 2026 food bank distribution canceled storm outage flooding Saturday",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "Oct 31 2026 food pantry closed abruptly temporary closed emergency",
+          "category": "abrupt_food_bank_pantry_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "food bank pantry service suspended October 31 2026 damage fire",
+          "category": "abrupt_food_bank_pantry_closure",
+          "method": "fast",
+          "recency_days": 3
+        },
+        {
+          "query": "site:gov \"SNAP\" \"October 31, 2026\" benefits delayed suspended outage",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"October 31, 2026\" suspended benefits outage",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 emergency food distribution canceled severe weather",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "October 31 2026 grocery store only grocery community closing food desert",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"October 31, 2026\" \"food pantry\" \"closed\" -donation -2025",
+          "category": "abrupt_food_bank_pantry_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"October 31, 2026\" \"SNAP\" \"EBT\" \"outage\" \"benefits\" -2025",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 2
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "https://13wham.com/news/local/1-year-later-ovid-community-tries-to-move-forward-after-devastating-main-street-fire-big-m-grocery-store-apartment-block-building-seneca-county-finger-lakes",
+        "https://www.livingstoncountyny.gov/m/newsflash",
+        "https://www.winnebagocountywi.gov/990/Winnebago-County-Tornado-Event-Informati",
+        "https://ebtcheckup.com/ebt-news/"
+      ]
+    },
+    "No content approval, publication, schedule modification, national collector modification, or automation disabling was performed."
+  ]
+}

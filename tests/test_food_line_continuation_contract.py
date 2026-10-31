@@ -465,3 +465,20 @@ def test_actual_valid_state_keeps_success_and_export_control(tmp_path, monkeypat
 
 
 
+
+
+# Review-bundle additions: load the five portable continuation regressions
+# without replacing the repository's existing Food continuation contract suite.
+from importlib.util import module_from_spec as _module_from_spec
+from importlib.util import spec_from_file_location as _spec_from_file_location
+from pathlib import Path as _PortablePath
+
+_portable_source = _PortablePath(__file__).with_name("test_food_line_continuation.py")
+_portable_spec = _spec_from_file_location("portable_food_continuation_tests", _portable_source)
+assert _portable_spec and _portable_spec.loader
+_portable_module = _module_from_spec(_portable_spec)
+_portable_spec.loader.exec_module(_portable_module)
+for _portable_name, _portable_value in vars(_portable_module).items():
+    if _portable_name.startswith("test_") or _portable_name.startswith("_fixture") or _portable_name.startswith("_binding"):
+        globals()[_portable_name] = _portable_value
+

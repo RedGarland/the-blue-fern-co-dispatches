@@ -32,6 +32,8 @@ from bluefern_dispatches.operational_health import build_food_line_operational_r
 
 PRODUCTION_BRANCH = "add/pages-repo-default"
 PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
+CONTINUATION_ROOT_RELATIVE = Path("data") / "dispatches" / "food-line" / "continuation"
+DIRECT_CONTINUATION_RELATIVE = Path("data") / "dispatches" / "food-line" / "discovery-runs"
 FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES = 30.0
 FOOD_LINE_DISCOVERY_MAX_QUERIES = 200
 QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
@@ -648,6 +650,38 @@ def write_run_record(layout: Layout, edition_date: str, record: dict[str, Any], 
     atomic_write_json(layout.run_record(edition_date), payload)
 
 
+def _write_run_record_if_owner(
+    layout: Layout,
+    edition_date: str,
+    record: dict[str, Any],
+    *,
+    run_id: str,
+    stale_minutes: float,
+) -> bool:
+    """CAS-like post-lock update that cannot clobber a newer same-day run."""
+    try:
+        with source_lock(
+            layout,
+            edition_date,
+            "record-update",
+            stale_minutes=stale_minutes,
+            run_id=run_id,
+        ):
+            current = read_optional_json(layout.run_record(edition_date))
+            if current is None:
+                return False
+            if (
+                str(current.get("run_id") or "") != run_id
+                or str(current.get("scheduled_start_at") or "") != str(record.get("scheduled_start_at") or "")
+                or str(current.get("edition_date") or "") != edition_date
+            ):
+                return False
+            write_run_record(layout, edition_date, record, preserve_success=False)
+            return True
+    except SourceLockUnavailable:
+        return False
+
+
 def _source_receipt_matches_terminal_state(
     receipt: dict[str, Any],
     state: dict[str, Any],
@@ -738,6 +772,7 @@ def _reconcile_terminal_source_watch_record(layout: Layout, edition_date: str, r
                 "source_branch": source_branch,
                 "source_commit": source_commit,
                 "run_state_path": str(state_path),
+                "scheduled_start_at": (record or {}).get("scheduled_start_at") or receipt.get("task_started_at"),
                 "source_watch_status": state.get("status"),
                 "last_status": state.get("status"),
                 "source_receipt_path": str(receipt_path),
@@ -749,8 +784,11 @@ def _reconcile_terminal_source_watch_record(layout: Layout, edition_date: str, r
         )
     if len(candidates) != 1:
         return None
+    # Reconciliation is intentionally read-only here.  Callers must persist a
+    # reconstructed record only while holding the source lock and after an
+    # owner-identity recheck; this loader must never clobber a newer run.
     reconciled = candidates[0]
-    write_run_record(layout, edition_date, reconciled, preserve_success=False)
+    reconciled["run_record_update_applied"] = False
     return reconciled
 
 
@@ -787,6 +825,16 @@ def write_blocked_source_watch_record(
     started_at: str,
     lock_error: SourceLockUnavailable,
 ) -> dict[str, Any]:
+    existing = read_optional_json(layout.run_record(edition_date))
+    if existing is not None and (
+        str(existing.get("run_id") or "") != run_id
+        or str(existing.get("scheduled_start_at") or "") != started_at
+    ):
+        # A losing same-day source-watch invocation must never replace the
+        # active owner's run record.  Its blocked receipt is still emitted by
+        # the caller, but the authoritative date-level record remains bound to
+        # the owner that held the source lock.
+        return existing
     record = initial_run_record(layout, edition_date, run_id, source_branch=source_branch, started_at=started_at)
     record.update(
         {
@@ -799,7 +847,10 @@ def write_blocked_source_watch_record(
             "lock_owner": lock_error.owner_metadata,
         }
     )
-    write_run_record(layout, edition_date, record)
+    # The source lock is unavailable, so this in-memory blocked record is not
+    # authoritative and must not be written outside the lock.  The caller
+    # still emits a receipt describing the blocked attempt.
+    record["run_record_update_applied"] = False
     return record
 
 
@@ -1027,6 +1078,74 @@ def _invoke_python(python: Path, root: Path, arguments: Iterable[str]) -> subpro
     return _run([str(python), *map(str, arguments)], cwd=root)
 
 
+def _derive_continuation_directory(
+    *,
+    root: Path,
+    edition_date: str,
+    run_id: str,
+    continuation_run_root: str,
+) -> Path:
+    """Bind recurring continuation state to the exact source-watch run.
+
+    The task action supplies only the fixed continuation root.  The scheduler
+    derives the date/run child after loading the current source-watch record,
+    so a day rollover cannot reuse yesterday's ledger and a stale task action
+    cannot point outside the runner's intended private state tree.
+    """
+    if not continuation_run_root.strip():
+        raise SchedulerError("continuation run root is empty")
+    if not run_id or any(ch not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-" for ch in run_id):
+        raise SchedulerError("continuation run id is not a safe exact directory name")
+    expected_root = (root / CONTINUATION_ROOT_RELATIVE).resolve()
+    supplied_root = Path(continuation_run_root).expanduser().resolve()
+    if supplied_root != expected_root:
+        raise SchedulerError(
+            f"continuation run root must be the runner-owned path {expected_root}, found {supplied_root}"
+        )
+    derived = supplied_root / edition_date / run_id
+    if derived.parent != supplied_root / edition_date or derived.name != run_id:
+        raise SchedulerError("derived continuation directory escaped its run binding")
+    return derived
+
+
+def _validate_explicit_continuation_directory(
+    *,
+    root: Path,
+    edition_date: str,
+    run_id: str,
+    continuation_run_directory: str,
+) -> Path:
+    """Permit only a one-run directory bound to the loaded source-watch run."""
+    expected = (root / DIRECT_CONTINUATION_RELATIVE / edition_date / run_id / "continuation").resolve()
+    supplied = Path(continuation_run_directory).expanduser().resolve()
+    if supplied != expected:
+        raise SchedulerError(
+            f"explicit continuation directory must be the exact run-bound path {expected}, found {supplied}"
+        )
+    return supplied
+
+
+def _continuation_command(
+    *,
+    root: Path,
+    edition_date: str,
+    run_id: str,
+    continuation_directory: str,
+    source_identity: str,
+) -> list[str]:
+    """Build the exact child command used by the scheduled resume path."""
+    return [
+        "scripts/run_food_line_continuation.py",
+        "--repo-root", str(root),
+        "--edition-date", edition_date,
+        "--run-id", run_id,
+        "--continuation-run-directory", continuation_directory,
+        "--source-identity", source_identity,
+        "--max-queries", str(FOOD_LINE_DISCOVERY_MAX_QUERIES),
+        "--collection-only",
+    ]
+
+
 def _safe_state_summary(state: dict[str, Any]) -> dict[str, Any]:
     coverage = state.get("coverage") if isinstance(state.get("coverage"), dict) else {}
     export = state.get("agent_export") if isinstance(state.get("agent_export"), dict) else {}
@@ -1046,6 +1165,9 @@ def _safe_state_summary(state: dict[str, Any]) -> dict[str, Any]:
         "execution_mode": state.get("execution_mode"),
         "release_ready": state.get("release_ready"),
         "intake_eligible": state.get("intake_eligible"),
+        "publication_attempted": state.get("publication_attempted"),
+        "publication_side_effects": state.get("publication_side_effects"),
+        "continuation_handoff": state.get("continuation_handoff"),
     }
 
 
@@ -1132,7 +1254,6 @@ def run_source_watch(args: argparse.Namespace) -> int:
     command_exit = 10
     started_at = utc_now()
     record = initial_run_record(layout, edition_date, run_id, source_branch=args.branch, started_at=started_at)
-    write_run_record(layout, edition_date, record)
     try:
         with source_lock(layout, edition_date, "source-watch", stale_minutes=args.stale_lock_minutes, run_id=run_id):
             record["source_watch_status"] = RUNNING_STATUS
@@ -1267,14 +1388,18 @@ def run_source_watch(args: argparse.Namespace) -> int:
         )
         receipt["operational_health_receipt_path"] = str(operational_receipt_path)
         atomic_write_json(receipt_path, receipt)
-        blocked["source_receipt_path"] = str(receipt_path)
-        write_run_record(layout, edition_date, blocked, preserve_success=False)
         print(terminal_json({"ok": False, "receipt_path": str(receipt_path), **receipt}))
         return 10
     except SchedulerError as exc:
         attention = write_attention(layout, edition_date, "source_watch_failed", str(exc), run_id=run_id)
         record.update({"last_status": "failed", "source_watch_status": "failed", "error": str(exc), "attention_path": str(attention)})
-        write_run_record(layout, edition_date, record, preserve_success=False)
+        record_update_applied = _write_run_record_if_owner(
+            layout,
+            edition_date,
+            record,
+            run_id=run_id,
+            stale_minutes=args.stale_lock_minutes,
+        )
         failure_receipt = {
             "schema_version": SOURCE_RECEIPT_SCHEMA,
             "action": "source_watch",
@@ -1289,6 +1414,7 @@ def run_source_watch(args: argparse.Namespace) -> int:
             "final_status": "failed",
             "reason": str(exc),
             "attention_path": str(attention),
+            "run_record_update_applied": record_update_applied,
             "command_exit_code": command_exit if command_exit not in {0, 10} else 10,
             "exit_code": command_exit if command_exit not in {0, 10} else 10,
         }
@@ -1405,7 +1531,14 @@ def run_resume(args: argparse.Namespace) -> int:
             receipt["operational_health_receipt_path"] = str(operational_receipt_path)
             atomic_write_json(receipt_path, receipt)
             record.update({"resume_status": receipt["resume_status"], "resume_receipt_path": str(receipt_path)})
-            write_run_record(layout, edition_date, record, preserve_success=False)
+            receipt["run_record_update_applied"] = _write_run_record_if_owner(
+                layout,
+                edition_date,
+                record,
+                run_id=str(record.get("run_id") or ""),
+                stale_minutes=args.stale_lock_minutes,
+            )
+            atomic_write_json(receipt_path, receipt)
             print(terminal_json({"ok": True, "receipt_path": str(receipt_path), **receipt}))
             return 0
         state_path = _expected_state_path(layout, edition_date, record)
@@ -1470,7 +1603,14 @@ def run_resume(args: argparse.Namespace) -> int:
                     "resume_receipt_path": str(blocked_receipt_path),
                 }
             )
-            write_run_record(layout, edition_date, current_record, preserve_success=False)
+            blocked_receipt["run_record_update_applied"] = _write_run_record_if_owner(
+                layout,
+                edition_date,
+                current_record,
+                run_id=str(current_record.get("run_id") or ""),
+                stale_minutes=args.stale_lock_minutes,
+            )
+            atomic_write_json(blocked_receipt_path, blocked_receipt)
             print(
                 terminal_json(
                     {
@@ -1486,13 +1626,146 @@ def run_resume(args: argparse.Namespace) -> int:
         if state.get("execution_mode") == "collection_only":
             return block_collection_only_resume(record, state, state_path)
 
+        continuation_directory_arg = str(getattr(args, "continuation_run_directory", "") or "").strip()
+        continuation_run_root_arg = str(getattr(args, "continuation_run_root", "") or "").strip()
+        if continuation_directory_arg and continuation_run_root_arg:
+            raise SchedulerError("continuation directory and continuation root are mutually exclusive")
+        continuation_run_root = ""
+        if continuation_run_root_arg:
+            continuation_directory = str(
+                _derive_continuation_directory(
+                    root=root,
+                    edition_date=edition_date,
+                    run_id=str(record.get("run_id") or ""),
+                    continuation_run_root=continuation_run_root_arg,
+                )
+            )
+            continuation_run_root = str((root / CONTINUATION_ROOT_RELATIVE).resolve())
+        elif continuation_directory_arg:
+            continuation_directory = str(
+                _validate_explicit_continuation_directory(
+                    root=root,
+                    edition_date=edition_date,
+                    run_id=str(record.get("run_id") or ""),
+                    continuation_run_directory=continuation_directory_arg,
+                )
+            )
+        else:
+            # No continuation argument is the existing status-only resume
+            # path.  Recurring operation passes the fixed root explicitly;
+            # an omitted argument must not be interpreted as an empty path.
+            continuation_directory = ""
+        if continuation_directory:
+            if state.get("status") != INCOMPLETE_CAPPED_STATUS or bool(state.get("resumable")):
+                raise SchedulerError(
+                    "stable-ID continuation requires an incomplete_capped, non-resumable source-watch state"
+                )
+            expected_scheduled_start_at = str(record.get("scheduled_start_at") or "")
+            with source_lock(
+                layout,
+                edition_date,
+                "status-resume-continuation",
+                stale_minutes=args.stale_lock_minutes,
+                run_id=str(record.get("run_id") or ""),
+            ):
+                fresh_record, fresh_state, fresh_state_path = _load_record_and_state(layout, edition_date)
+                if (
+                    str(fresh_record.get("run_id") or "") != str(record.get("run_id") or "")
+                    or str(fresh_record.get("source_commit") or "") != str(record.get("source_commit") or "")
+                    or str(fresh_record.get("scheduled_start_at") or "") != expected_scheduled_start_at
+                    or fresh_state_path != state_path
+                ):
+                    raise SchedulerError("source-watch record or state changed before continuation lock revalidation")
+                if fresh_state.get("execution_mode") == "collection_only":
+                    raise SchedulerError("source-watch changed to collection-only mode before continuation")
+                if fresh_state.get("status") != INCOMPLETE_CAPPED_STATUS or bool(fresh_state.get("resumable")):
+                    raise SchedulerError("source-watch state changed before continuation lock revalidation")
+                record = fresh_record
+                state = fresh_state
+                state_path = fresh_state_path
+                run_id = str(record["run_id"])
+                record["resume_attempted"] = True
+                record["resume_started_at"] = utc_now()
+                write_run_record(layout, edition_date, record, preserve_success=False)
+                resumed = _invoke_python(
+                    python,
+                    root,
+                    _continuation_command(
+                        root=root,
+                        edition_date=edition_date,
+                        run_id=str(record["run_id"]),
+                        continuation_directory=continuation_directory,
+                        source_identity=str(record.get("source_commit") or ""),
+                    ),
+                )
+                command_exit = int(resumed.returncode)
+                handoff_error = ""
+                if command_exit == 0:
+                    state = read_json(state_path)
+                    validate_run_state(state, edition_date, str(record.get("run_id") or ""))
+                    if not collection_qualifies(state):
+                        command_exit = 10
+                        handoff_error = "continuation exited successfully but legacy state is not intake-qualifying"
+                resume_status = "continuation_complete" if command_exit == 0 else "continuation_incomplete"
+            receipt = {
+                "schema_version": SOURCE_RECEIPT_SCHEMA,
+                "action": "status_resume",
+                "task_started_at": record.get("resume_started_at") or started_at,
+                "task_completed_at": utc_now(),
+                "edition_date": edition_date,
+                "source_commit": record.get("source_commit"),
+                "source_branch": args.branch,
+                "run_id": run_id,
+                **_safe_state_summary(state),
+                "continuation_run_directory": continuation_directory,
+                "continuation_run_root": continuation_run_root or None,
+                "resume_status": resume_status,
+                "command_exit_code": command_exit,
+                "exit_code": command_exit if command_exit else 0,
+                "publication_attempted": False,
+                "publication_side_effects": {},
+            }
+            if handoff_error:
+                receipt["reason"] = handoff_error
+            receipt_path = _source_receipt_path(layout, edition_date, "status-resume")
+            atomic_write_json(receipt_path, receipt)
+            operational_receipt_path = _write_food_line_operational_health_receipt(
+                layout,
+                edition_date,
+                action="status_resume",
+                task_receipt=receipt,
+                task_receipt_path=receipt_path,
+                task_status=resume_status,
+            )
+            receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+            atomic_write_json(receipt_path, receipt)
+            record.update({"resume_status": resume_status, "resume_receipt_path": str(receipt_path)})
+            receipt["run_record_update_applied"] = _write_run_record_if_owner(
+                layout,
+                edition_date,
+                record,
+                run_id=run_id,
+                stale_minutes=args.stale_lock_minutes,
+            )
+            atomic_write_json(receipt_path, receipt)
+            print(terminal_json({"ok": command_exit == 0, "receipt_path": str(receipt_path), **receipt}))
+            return command_exit
+
         if state.get("status") == INCOMPLETE_CAPPED_STATUS and not bool(state.get("resumable")):
             resume_status = "continuation_required"
         elif not collection_qualifies(state):
             if state.get("status") not in RESUMABLE_COLLECTION_STATUSES or not bool(state.get("resumable")):
                 raise SchedulerError(f"source-watch state is not qualifying or resumable: {state.get('status')}")
+            expected_scheduled_start_at = str(record.get("scheduled_start_at") or "")
             with source_lock(layout, edition_date, "status-resume", stale_minutes=args.stale_lock_minutes, run_id=str(record.get("run_id") or "")):
-                record, state, state_path = _load_record_and_state(layout, edition_date)
+                fresh_record, state, state_path = _load_record_and_state(layout, edition_date)
+                if (
+                    str(fresh_record.get("run_id") or "") != str(record.get("run_id") or "")
+                    or str(fresh_record.get("source_commit") or "") != str(record.get("source_commit") or "")
+                    or str(fresh_record.get("scheduled_start_at") or "") != expected_scheduled_start_at
+                ):
+                    raise SchedulerError("source-watch record changed before resume lock revalidation")
+                record = fresh_record
                 if state.get("execution_mode") == "collection_only":
                     return block_collection_only_resume(record, state, state_path)
                 if collection_qualifies(state) or state.get("status") not in RESUMABLE_COLLECTION_STATUSES or not bool(state.get("resumable")):
@@ -1560,7 +1833,14 @@ def run_resume(args: argparse.Namespace) -> int:
         receipt["operational_health_receipt_path"] = str(operational_receipt_path)
         atomic_write_json(receipt_path, receipt)
         record.update({"last_status": state.get("status"), "source_watch_status": state.get("status"), "resume_status": resume_status, "resume_receipt_path": str(receipt_path)})
-        write_run_record(layout, edition_date, record, preserve_success=False)
+        receipt["run_record_update_applied"] = _write_run_record_if_owner(
+            layout,
+            edition_date,
+            record,
+            run_id=run_id,
+            stale_minutes=args.stale_lock_minutes,
+        )
+        atomic_write_json(receipt_path, receipt)
         print(terminal_json({"ok": collection_qualifies(state), "receipt_path": str(receipt_path), **receipt}))
         if collection_qualifies(state):
             return 0
@@ -1658,10 +1938,38 @@ def run_intake(args: argparse.Namespace) -> int:
             receipt["operational_health_receipt_path"] = str(operational_receipt_path)
             atomic_write_json(receipt_path, receipt)
             record.update({"intake_status": skip_status, "intake_receipt_path": str(receipt_path)})
-            write_run_record(layout, edition_date, record, preserve_success=False)
+            receipt["run_record_update_applied"] = _write_run_record_if_owner(
+                layout,
+                edition_date,
+                record,
+                run_id=str(record.get("run_id") or ""),
+                stale_minutes=args.stale_lock_minutes,
+            )
+            atomic_write_json(receipt_path, receipt)
             print(terminal_json({"ok": True, "receipt_path": str(receipt_path), "status": skip_status, "exit_code": 0}))
             return 0
-        record, state, _ = _load_record_and_state(layout, edition_date)
+        record, state, state_path = _load_record_and_state(layout, edition_date)
+        # Recheck the owner and state under the shared source lock immediately
+        # before intake starts.  A source-watch that began after the initial
+        # wait must not feed intake a stale run snapshot.
+        with source_lock(
+            layout,
+            edition_date,
+            "current-intake-snapshot",
+            stale_minutes=args.stale_lock_minutes,
+            run_id=str(record.get("run_id") or ""),
+        ):
+            fresh_record, fresh_state, fresh_state_path = _load_record_and_state(layout, edition_date)
+            if (
+                str(fresh_record.get("run_id") or "") != str(record.get("run_id") or "")
+                or str(fresh_record.get("source_commit") or "") != str(record.get("source_commit") or "")
+                or str(fresh_record.get("scheduled_start_at") or "") != str(record.get("scheduled_start_at") or "")
+                or fresh_state_path != state_path
+                or str(fresh_state.get("query_plan_sha256") or "") != str(state.get("query_plan_sha256") or "")
+                or fresh_state.get("status") != state.get("status")
+            ):
+                raise SchedulerError("source-watch record or state changed before intake snapshot")
+            record, state, state_path = fresh_record, fresh_state, fresh_state_path
         _verify_same_source_commit(root, args.branch, str(record.get("source_commit")), test_mode=args.test_mode)
         run_preflight(root, python, test_mode=args.test_mode)
         survivors = surviving_worker_pids(layout.run_dir(edition_date, str(record["run_id"])))
@@ -1728,8 +2036,27 @@ def run_intake(args: argparse.Namespace) -> int:
         )
         receipt["operational_health_receipt_path"] = str(operational_receipt_path)
         atomic_write_json(receipt_path, receipt)
-        record.update({"intake_receipt_path": str(receipt_path), "intake_completed_at": utc_now()})
-        atomic_write_json(layout.run_record(edition_date), record)
+        with source_lock(
+            layout,
+            edition_date,
+            "current-intake-record-update",
+            stale_minutes=args.stale_lock_minutes,
+            run_id=str(record.get("run_id") or ""),
+        ):
+            fresh_record, fresh_state, fresh_state_path = _load_record_and_state(layout, edition_date)
+            if (
+                str(fresh_record.get("run_id") or "") != str(record.get("run_id") or "")
+                or str(fresh_record.get("source_commit") or "") != str(record.get("source_commit") or "")
+                or str(fresh_record.get("scheduled_start_at") or "") != str(record.get("scheduled_start_at") or "")
+                or fresh_state_path != state_path
+                or str(fresh_state.get("query_plan_sha256") or "") != str(state.get("query_plan_sha256") or "")
+                or not collection_qualifies(fresh_state)
+            ):
+                raise SchedulerError("source-watch record or state changed before intake record update")
+            fresh_record.update({"intake_receipt_path": str(receipt_path), "intake_completed_at": utc_now()})
+            write_run_record(layout, edition_date, fresh_record, preserve_success=False)
+        receipt["run_record_update_applied"] = True
+        atomic_write_json(receipt_path, receipt)
         print(terminal_json({"ok": True, "receipt_path": str(receipt_path), **receipt}))
         return 0
     except SchedulerError as exc:
@@ -1790,6 +2117,16 @@ def build_parser() -> argparse.ArgumentParser:
         "--collection-only",
         action="store_true",
         help="Collect and receipt source coverage without exporting inbox findings or enabling intake/publication.",
+    )
+    subparsers.choices["resume"].add_argument(
+        "--continuation-run-directory",
+        default="",
+        help="Use the stable-ID collection-only continuation ledger for an incomplete capped run.",
+    )
+    subparsers.choices["resume"].add_argument(
+        "--continuation-run-root",
+        default="",
+        help="Derive a date/run-bound stable-ID continuation directory under the runner-owned root.",
     )
     subparsers.choices["intake"].add_argument("--lock-wait-seconds", type=int, default=300)
     subparsers.choices["intake"].add_argument("--lock-poll-seconds", type=float, default=2.0, help=argparse.SUPPRESS)

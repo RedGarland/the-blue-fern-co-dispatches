@@ -4,6 +4,8 @@ param(
     [string]$PythonExecutable = "",
     [string]$SourceBranch = "add/pages-repo-default",
     [string]$EditionDate = "",
+    [string]$ContinuationRunDirectory = "",
+    [string]$ContinuationRunRoot = "",
     [switch]$TestMode
 )
 
@@ -22,8 +24,11 @@ if (-not $EditionDate) {
 $helper = Join-Path $RepositoryRoot "scripts\food_line_daily_scheduler.py"
 if (-not (Test-Path -LiteralPath $helper -PathType Leaf)) { throw "Food Line scheduler helper not found: $helper" }
 if (-not (Test-Path -LiteralPath $PythonExecutable -PathType Leaf)) { throw "Python executable not found: $PythonExecutable" }
+if ($ContinuationRunDirectory -and $ContinuationRunRoot) { throw "Choose one continuation directory mode" }
 
 $arguments = @($helper, "resume", "--repo-root", $RepositoryRoot, "--python", $PythonExecutable, "--edition-date", $EditionDate, "--branch", $SourceBranch)
+if ($ContinuationRunDirectory) { $arguments += @("--continuation-run-directory", $ContinuationRunDirectory) }
+if ($ContinuationRunRoot) { $arguments += @("--continuation-run-root", $ContinuationRunRoot) }
 if ($TestMode) { $arguments += "--test-mode" }
 & $PythonExecutable @arguments
 exit $LASTEXITCODE

@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T094337-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T09:45:22-07:00",
+  "started_at": "2026-10-31T09:43:37-07:00",
+  "completed_at": "2026-10-31T09:44:42-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T08:42:57-07:00",
+    "end": "2026-10-31T09:44:42-07:00",
+    "basis": "Prior independently verified Care Line heartbeat completion through this watch observation; allow retrospective recall only for previously unrecorded concrete developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall only. Primary production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "CMS listing contains no October 31, 2026 notices. Its seven October 30 termination notices were previously recorded: Loving Touch Hospice (B31564), Newport Hospice (A11721), Kalamazoo Behavioral Health Hospital (234047), Affinity Healthcare Solutions (368355), Aspen Home Healthcare (368395), Crystal Heritage Care (369294), Progressive Home Care (369309). These are duplicates; a CMS Medicare participation termination notice alone is not confirmation of physical facility closure.",
+      "last_page_modified_reported": "2026-10-30 16:16 (CMS display timezone unspecified)"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 31 2026\" hospital emergency room closed diverted patients",
+      "\"October 31 2026\" maternity labor delivery unit shut down hospital",
+      "\"October 31 2026\" rural hospital emergency department service suspension",
+      "\"October 31 2026\" mental health psychiatric hospital closure services",
+      "\"October 30 2026\" dialysis center clinic closed patients relocated",
+      "\"October 31 2026\" oncology cancer clinic services suspended closed",
+      "\"October 31 2026\" primary care clinic temporarily closed appointments",
+      "\"October 31 2026\" ambulance service stopped operations county EMS",
+      "\"October 30 2026\" air ambulance base closure service suspended",
+      "\"October 31 2026\" hospital emergency department reopened services restored",
+      "\"October 30 2026\" hospital services shut down maternity behavioral emergency local news",
+      "Puerto Rico Guam Virgin Islands Northern Mariana American Samoa hospital clinic emergency closed reopened October 31 2026"
+    ],
+    "query_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      3,
+      2,
+      3,
+      3
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Seven October 30 CMS provider terminations",
+        "reason": "Previously recorded, no new official listing since prior hourly check",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Roseland Community Hospital obstetrics unit, Chicago IL",
+        "reason": "October 31 nighttime shutdown previously recorded as announced; actual completed shutdown not yet independently verified during morning observation",
+        "url": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/"
+      },
+      {
+        "item": "Carle Health Rantoul clinic, Illinois",
+        "reason": "Existing previously recorded October 30 temporary closure; no verified distinct reopening, escalation or new service loss",
+        "url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/"
+      },
+      {
+        "item": "New York City Rikers Island maternal and mental healthcare oversight reporting",
+        "reason": "October 31 story concerns longstanding concerns from October 27 oversight hearing; no newly demonstrated service suspension or reopening",
+        "url": "https://davisvanguard.org/2026/10/rikers-maternal-mental-health/"
+      },
+      {
+        "item": "Other retrieved older, overseas, unrelated, prospective, marketing, funding, and ownership reporting",
+        "reason": "No independently verified new U.S. or territory concrete essential-care disruption or restoration matching criteria"
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search results frequently contain older/off-topic and non-U.S. items despite recency constraints. Rural, tribal and territory reporting/indexing is non-exhaustive; zero findings do not establish absence of all real-world service changes. Nominal scheduled_for reflects the configured :45:22 clock although this run began at 09:43:37 PDT.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T084159-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T08:42:57-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "One heartbeat only, private operations ledger branch. No production collection change, approvals, publication, scheduling adjustment or task disabling."
+  }
+}

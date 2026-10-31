@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T044451-0700-r11-20261031T114351089Z",
+  "scheduled_for": "2026-10-31T04:44:51-07:00",
+  "started_at": "2026-10-31T04:41:30-07:00",
+  "completed_at": "2026-10-31T04:43:51.089-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T03:46:47.518-07:00",
+    "end": "2026-10-31T04:43:51.089-07:00",
+    "basis": "Incremental from the previous verified Gaza Source Watch heartbeat completion at 2026-10-31T10:46:47.518Z. Gaza/WAFA site timestamps were interpreted as Gaza local time (UTC+03:00), not PDT.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative production collector/publisher was not accessed or modified.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T034451-0700-r11-20261031T104457Z.json",
+      "completed_at": "2026-10-31T10:46:47.518Z",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified": true
+    },
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest updates shown 27 October (West Bank) and 26 October (Gaza-relevant situation report for 22 October). No new update during this interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; standing conflict overview and regional link listings have no new interval-specific health, hospital, transport or medical evacuation update."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway on direct request, recurring from previous watch."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" \"Gaza\" \"PM\"",
+      "site:english.wafa.ps Gaza 31 October 2026 14:00 15:00 Palestinian killed injured",
+      "site:ochaopt.org Gaza \"31 October 2026\" humanitarian crossings aid ceasefire",
+      "site:who.int Gaza \"31 October 2026\" hospital medical evacuation health",
+      "site:unicef.org Gaza \"31 October 2026\" children water displacement",
+      "site:wfp.org Gaza \"31 October 2026\" food access aid",
+      "site:reuters.com/world/middle-east/ Gaza October 31 2026 ceasefire injured strike aid",
+      "site:aljazeera.com/news/2026/10/31 Gaza civilians wounded strikes ceasefire aid",
+      "site:aa.com.tr/en/middle-east/ \"Oct 31, 2026\" Gaza children killed wounded ceasefire",
+      "site:middleeasteye.net \"31 October 2026\" Gaza displaced hospital strikes aid",
+      "Gaza October 31 2026 14:00 Palestine time medical evacuation crossings health hospitals aid",
+      "Gaza October 31 2026 \"2:00 PM\" \"injured\" \"Gaza\" Shati ceasefire"
+    ],
+    "search_recency_days": 2,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Homepage showed older current-day material (latest 12:41 PM Gaza-local). A targeted search located a later 1:36 PM Gaza-local Shati camp drone strike item, but its stated publication time converts to 03:36 AM PDT, ten minutes before the prior heartbeat ended; this is a potential previous-window omission, not an interval finding."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "New October 31 feature on risks to schoolchildren documents particular incidents from October 17-24; no source time establishing a new development during this incremental interval."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no dated newly qualifying ambulance/health incident found in the checked material."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; continuing food risk and assistance context, no verified newly changed interval-specific access."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible; standing child protection and humanitarian information, no newly dated incident."
+      }
+    ],
+    "excluded": [
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176466",
+        "title": "Several Palestinians injured in Israeli drone strike on home in Gaza’s Shati refugee camp",
+        "publication_date": "2026-10-31",
+        "publication_time_local": "13:36 Gaza (03:36 PDT)",
+        "reason": "Medically attributed several casualties, including one seriously wounded, are high-value and newly discovered during this scan, but the article carries a publication time preceding the prior watch's 03:46:47 PDT completion. Flagged as earlier-watch coverage omission for reconciliation; excluded from strict interval findings. Civilian status and independent confirmation not established."
+      },
+      {
+        "canonical_source_url": "https://www.aljazeera.com/features/2026/10/31/education-under-fire-gazas-children-face-death-on-their-way-to-school",
+        "title": "Education under fire: Gaza’s children face death on their way to school",
+        "publication_date": "2026-10-31",
+        "reason": "Original October 31 feature with reported eyewitness testimony about October 17-24 casualty incidents. No verified interval-specific change or publication time; treated as follow-up context, not a newly occurring event."
+      },
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176463",
+        "reason": "Four al-Maghazi injuries reported at 11:54 AM Gaza-local (01:54 PDT) already flagged by immediately previous watch as a possible missed earlier-window item."
+      },
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176462",
+        "reason": "Two girls' tent-fire fatalities already recorded in earlier Gaza Source Watch."
+      },
+      {
+        "canonical_source_url": "https://english.wafa.ps/Pages/Details/176459",
+        "reason": "Gaza City and Nuseirat fatalities already recorded in earlier Gaza Source Watch."
+      },
+      {
+        "canonical_source_url": null,
+        "reason": "Older and undated reports, commentary, non-Gaza results, and unsupported items were excluded."
+      }
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Persistent previously documented regional portal failure; WHO Global, OCHA OPT, and other humanitarian/news sources remained accessible. No newly material coverage degradation."
+      }
+    ],
+    "status_rationale": "Useful OCHA, WHO Global, Palestinian humanitarian, WAFA and established journalism coverage obtained, but WHO EMRO was inaccessible; mark DEGRADED, not FAILED. No verified interval-new, nonduplicate qualifying change.",
+    "safeguards": "One append-only ledger write only; no approval, publishing, production changes, task schedule change or disablement."
+  }
+}

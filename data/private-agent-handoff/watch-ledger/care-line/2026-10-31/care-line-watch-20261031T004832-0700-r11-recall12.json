@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T004832-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T00:45:22-07:00",
+  "started_at": "2026-10-31T00:48:32-07:00",
+  "completed_at": "2026-10-31T00:49:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T23:50:19-07:00",
+    "end": "2026-10-31T00:49:37-07:00",
+    "basis": "Previous independently verified Care Line watch heartbeat to current observation; bounded recall also considers earlier, newly recovered definite service changes, marking them retrospective rather than falsely claiming new announcement within this hour."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-il-chicago-roseland-hospital-obstetrics-20261031",
+      "canonical_source_url": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/",
+      "title": "Roseland Community Hospital prepares to close labor and delivery unit on Saturday",
+      "publisher": "CBS News Chicago",
+      "exact_supporting_passage": "Saturday night, the labor and delivery unit will close.",
+      "source_published_date": "2026-10-30",
+      "state": "IL",
+      "city": "Chicago",
+      "county": "Cook",
+      "territory": null,
+      "event_type": "confirmed_imminent_service_closure",
+      "service_line": "Hospital labor and delivery / inpatient obstetrics",
+      "access_consequences": "Hospital's labor and delivery unit set to stop providing services on Saturday night, October 31, 2026; pregnant patients with complications presenting at Roseland's emergency room will be transferred to other hospitals. CBS identifies Advocate Trinity Hospital about 4 miles / 20 minutes away as the closest labor-and-delivery service.",
+      "affected_population": "Pregnant patients and families in Roseland and Chicago's South Side, especially those requiring emergency obstetric or delivery services.",
+      "effective_date": "2026-10-31",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "strong_local_reporting",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "temporal_note": "Retrospective recall of previously announced but definite and imminently effective service cessation. October 30 report was published 10:14 p.m. CDT (8:14 p.m. PDT), before this observation window. Actual completion of shutdown remains unverified as of 00:49 PDT October 31.",
+      "corroborating_source_url": "https://www.cbsnews.com/chicago/news/rally-roseland-community-hospital-end-labor-and-delivery-services/"
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Care Line national collector remains authoritative. Candidate is for review only.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "check_result": "Official live CMS listing still begins with the seven October 30 terminations (CCNs B31564, A11721, 234047, 368355, 368395, 369294, 369309) already recorded in a prior watch; no new CMS action. Notice does not itself prove facility closure."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed suspended service October 30 2026 United States",
+      "hospital labor delivery maternity unit closed suspended October 30 2026 local news",
+      "dialysis oncology cancer clinic primary care closure appointments October 30 2026",
+      "rural hospital emergency department service closure October 30 2026",
+      "ambulance service air medical helicopter base closing suspending October 30 2026",
+      "behavioral health psychiatric inpatient clinic closed October 30 2026",
+      "hospital emergency obstetric services reopened restored resumed October 30 2026 United States",
+      "Puerto Rico Guam hospital emergency room dialysis clinic October 30 2026 suspended services",
+      "US Virgin Islands American Samoa Northern Mariana Islands healthcare services clinic closed reopened October 30 2026",
+      "site:gov October 30 2026 hospital clinic emergency services suspension closure ambulance",
+      "October 30 2026 emergency medical services EMS station ambulance base closure local news United States",
+      "October 30 2026 clinic closed temporarily patient appointments diverted storm cyberattack hospital"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Seven CMS October 30 provider termination notices",
+        "reason": "Previously recorded; duplicate."
+      },
+      {
+        "item": "Carle Health Rantoul clinic temporary closure",
+        "reason": "Previously recorded in October 30 watch; duplicate."
+      },
+      {
+        "item": "UNM Health cybersecurity clinic and emergency diversions/restoration",
+        "reason": "October 26-28 disruption and restoration already documented; older than window."
+      },
+      {
+        "item": "Dennys River Ambulance Service in Dennysville, Maine",
+        "reason": "Firmly reported November 30 future shutdown and staffing mitigation; not an already-effective loss. Flagged for review when effective; not counted as current closure."
+      },
+      {
+        "item": "Watsonville Community Hospital obstetrics/NICU",
+        "reason": "120-day proposed closure with possibility of reversal; not concrete effective loss."
+      },
+      {
+        "item": "Sanford Luverne Medical Center inpatient labor/delivery",
+        "reason": "April 2027 future change, no current new interruption."
+      },
+      {
+        "item": "Gateway Regional Medical Center Medicare",
+        "reason": "November 17 Medicare termination is proposed, not executed; uncorroborated employee report on a closed floor is inadequate for confident access-effect claim."
+      },
+      {
+        "item": "Santa Clara youth psychiatric facility",
+        "reason": "New facility scheduled to open November 3, not restoration of previously lost essential service."
+      },
+      {
+        "item": "Older Guam and U.S. Virgin Islands temporary closure notices",
+        "reason": "Old access disruptions, not incremental new changes."
+      },
+      {
+        "item": "Candidate policies, real estate station proposal, EMS funding analysis, ownership investigations, non-U.S. events",
+        "reason": "No newly verified concrete operational access loss or restoration."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "No exhaustive rural, tribal, USVI, PR, Guam, CNMI or American Samoa search coverage possible within bounded index queries. Roseland source published before hourly window; newly recovered imminent definite closure is not represented as a new announcement or already completed closure.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T234950-0700-r11-recall12.json",
+      "completed_at": "2026-10-30T23:50:19-07:00",
+      "result": "SUCCESS/no_findings"
+    },
+    "controls": "Committed exactly one heartbeat-only JSON on ops/watch-ledger. No approval, public publication, primary collector modification, schedule modification or task disabling."
+  }
+}

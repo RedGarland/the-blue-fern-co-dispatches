@@ -6,6 +6,8 @@ import contextlib
 import io
 import os
 import shutil
+import tempfile
+import pytest
 from types import SimpleNamespace
 from pathlib import Path
 
@@ -16,6 +18,7 @@ sys.path.insert(0, str(SRC))
 
 wrapper = importlib.import_module("scripts.run_food_line_discovery_expansion")
 scheduler = importlib.import_module("scripts.food_line_daily_scheduler")
+ledger = importlib.import_module("scripts.food_line_continuation_ledger")
 
 
 def test_actual_state_builder_preserves_capped_status(tmp_path):
@@ -490,4 +493,142 @@ def test_entrypoint_chain_source_watch_resume_intake_uses_real_private_flow(tmp_
     )
 
     return lifecycle_test(tmp_path, monkeypatch)
+
+
+def test_real_verify_checkout_allows_only_managed_continuation_artifacts(tmp_path):
+    """Exercise the actual Git guard against the real emitted ledger names."""
+    root = tmp_path / "git-runner"
+    root.mkdir()
+    branch = "add/pages-repo-default"
+
+    def git(*args):
+        return subprocess.run(
+            ["git", *args],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    # These are the relevant pinned-root rules: status and cache state are
+    # ignored, while the continuation root has no ignore rule.
+    (root / ".gitignore").write_text(
+        "status/\n"
+        "data/dispatches/*/cache/\n"
+        "__pycache__/\n"
+        "*.py[cod]\n",
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text("synthetic runner\n", encoding="utf-8")
+    (root / "src").mkdir()
+    (root / "src" / "tracked.py").write_text("VALUE = 1\n", encoding="utf-8")
+    (root / "data" / "dispatches" / "food-line").mkdir(parents=True)
+    (root / "data" / "dispatches" / "food-line" / "discovery_expansion_config.json").write_text(
+        "{}\n", encoding="utf-8"
+    )
+
+    assert git("init").returncode == 0
+    assert git("switch", "-c", branch).returncode == 0
+    assert git("add", ".").returncode == 0
+    assert git(
+        "-c", "user.name=Food synthetic test", "-c", "user.email=food-test@example.invalid",
+        "commit", "-m", "synthetic clean runner",
+    ).returncode == 0
+    clean_head = scheduler.verify_checkout(root, branch, update=False, test_mode=False)
+
+    edition = "2026-10-31"
+    run_id = "source-watch.synthetic-01"
+    continuation_dir = root / "data" / "dispatches" / "food-line" / "continuation" / edition / run_id
+    query_rows = [{"query_text": "synthetic query", "query_family": "synthetic"}]
+    durable = ledger.prepare_ledger(
+        continuation_dir,
+        edition_date=edition,
+        run_id=run_id,
+        source_identity="a" * 40,
+        source_module_sha256="b" * 64,
+        config_sha256="c" * 64,
+        query_rows=query_rows,
+    )
+    assert durable["pending_query_ids"]
+    ledger_rel = (continuation_dir / ledger.LEDGER_NAME).relative_to(root).as_posix()
+    plan_rel = (continuation_dir / ledger.PLAN_NAME).relative_to(root).as_posix()
+    assert git("check-ignore", "-q", "--no-index", "--", ledger_rel).returncode != 0
+    assert scheduler.classify_food_line_runtime_path(ledger_rel) == "local_run_state"
+    assert scheduler.classify_food_line_runtime_path(plan_rel) == "local_run_state"
+    assert scheduler.classify_food_line_runtime_path(
+        f"data/dispatches/food-line/continuation/{edition}/{run_id}/unexpected.json"
+    ) is None
+
+    status = git("status", "--porcelain=v1", "--untracked-files=all")
+    assert status.returncode == 0, status.stderr
+    assert ledger_rel in status.stdout
+    assert plan_rel in status.stdout
+    assert scheduler.verify_checkout(root, branch, update=False, test_mode=False) == clean_head
+
+    # The live lock name and the atomic temp names are emitted by the ledger
+    # implementation itself; keep them present while the real guard runs.
+    temp_paths = []
+    for name in (ledger.LEDGER_NAME, ledger.PLAN_NAME):
+        fd, temp_name = tempfile.mkstemp(
+            prefix=f".{name}.", suffix=".tmp", dir=continuation_dir
+        )
+        os.close(fd)
+        temp_paths.append(Path(temp_name))
+    try:
+        for temp_path in temp_paths:
+            assert scheduler.classify_food_line_runtime_path(
+                temp_path.relative_to(root).as_posix()
+            ) == "local_run_state"
+        with ledger._exclusive_lock(continuation_dir):
+            lock_rel = (continuation_dir / ledger.LOCK_NAME).relative_to(root).as_posix()
+            assert scheduler.classify_food_line_runtime_path(lock_rel) == "local_run_state"
+            assert scheduler.verify_checkout(root, branch, update=False, test_mode=False) == clean_head
+    finally:
+        for temp_path in temp_paths:
+            temp_path.unlink(missing_ok=True)
+
+    def assert_rejected(relative_path):
+        with pytest.raises(scheduler.SchedulerError, match="dirty|rename|copy"):
+            scheduler.verify_checkout(root, branch, update=False, test_mode=False)
+        target = root / relative_path
+        if target.is_file():
+            target.unlink()
+
+    unexpected = continuation_dir / "unexpected.json"
+    unexpected.write_text("{}\n", encoding="utf-8")
+    assert_rejected(unexpected.relative_to(root))
+
+    nested = continuation_dir / "nested" / ledger.LEDGER_NAME
+    nested.parent.mkdir()
+    nested.write_text("{}\n", encoding="utf-8")
+    assert_rejected(nested.relative_to(root))
+    nested.parent.rmdir()
+
+    sibling = root / "data" / "dispatches" / "food-line" / "continuation" / edition / "foreign" / "nested" / ledger.LEDGER_NAME
+    sibling.parent.mkdir(parents=True)
+    sibling.write_text("{}\n", encoding="utf-8")
+    assert_rejected(sibling.relative_to(root))
+    sibling.parent.rmdir()
+    sibling.parent.parent.rmdir()
+
+    source = root / "src" / "tracked.py"
+    source.write_text("VALUE = 2\n", encoding="utf-8")
+    assert_rejected(source.relative_to(root))
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+
+    source.write_text("VALUE = 3\n", encoding="utf-8")
+    assert git("add", "src/tracked.py").returncode == 0
+    assert_rejected(source.relative_to(root))
+    assert git("restore", "--staged", "--", "src/tracked.py").returncode == 0
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+
+    source.unlink()
+    assert_rejected(source.relative_to(root))
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+
+    assert git("mv", "src/tracked.py", "src/renamed.py").returncode == 0
+    assert_rejected("src/tracked.py")
+    assert git("mv", "src/renamed.py", "src/tracked.py").returncode == 0
+
+    assert scheduler.verify_checkout(root, branch, update=False, test_mode=False) == clean_head
 

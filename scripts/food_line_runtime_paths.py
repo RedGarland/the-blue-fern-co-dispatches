@@ -27,6 +27,14 @@ FOOD_LINE_OUTPUT_DISPATCH_EDITIONS_RE = re.compile(
     r"^output/dispatches/food-line/editions(?:/.*)?$"
 )
 FOOD_LINE_DISCOVERY_RUNS_RE = re.compile(r"^data/dispatches/food-line/discovery-runs(?:/.*)?$")
+FOOD_LINE_CONTINUATION_ARTIFACT_RE = re.compile(
+    r"^data/dispatches/food-line/continuation/"
+    r"\d{4}-\d{2}-\d{2}/"
+    r"[A-Za-z0-9._-]+/"
+    r"(?:continuation-ledger\.json|continuation-query-plan\.json|"
+    r"continuation-ledger\.lock|continuation-ledger\.lock\.stale-\d+-\d+|"
+    r"\.continuation-(?:ledger|query-plan)\.json\.[A-Za-z0-9_-]+\.tmp)$"
+)
 FOOD_LINE_DATE_RECONCILIATION_RE = re.compile(
     r"^data/dispatches/food-line/date-reconciliation/\d{4}-\d{2}-\d{2}\.json$"
 )
@@ -126,6 +134,8 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
         return "local_run_state"
     if FOOD_LINE_DISCOVERY_RUNS_RE.match(lower):
         return "local_run_state"
+    if FOOD_LINE_CONTINUATION_ARTIFACT_RE.match(lower):
+        return "local_run_state"
     if FOOD_LINE_DATE_RECONCILIATION_RE.match(lower):
         return "local_run_state"
     if FOOD_LINE_COVERAGE_GAP_RE.match(lower):
@@ -192,6 +202,7 @@ def food_line_runtime_paths() -> list[str]:
         "data/dispatches/food-line/review/",
         "data/dispatches/food-line/discovery/",
         "data/dispatches/food-line/discovery-runs/",
+        "data/dispatches/food-line/continuation/",
         "data/dispatches/food-line/date-reconciliation/",
         "data/dispatches/food-line/coverage-gaps/",
         "data/dispatches/food-line/historical-reconstruction/",
@@ -210,3 +221,4 @@ def food_line_runtime_paths() -> list[str]:
         "output/dispatches/food-line/editions/",
         "data/agent-history-staging/food-line/",
     ]
+

@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T224828-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T22:45:22-07:00",
+  "started_at": "2026-10-30T22:48:28-07:00",
+  "completed_at": "2026-10-30T22:49:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T20:50:26-07:00",
+    "end": "2026-10-30T22:49:43-07:00",
+    "basis": "Incremental recall since the most recent independently fetched Care Line heartbeat available to this execution; if an intermediate watch ran, the overlapping interval is intentional and previously recorded events are excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S., DC and territory high-value healthcare service-access recall. Production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "check_result": "Live CMS listing still led with the same seven 2026-10-30 Medicare termination notices (CCNs B31564, A11721, 234047, 368355, 368395, 369294, 369309); previously recorded in prior Care Line watch; no distinct new notice identified.",
+      "qualification_note": "A termination notice is a regulatory action and not proof an actual facility closure has occurred."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended October 30 2026 rural hospital service",
+      "maternity obstetrics labor delivery stopped services October 30 2026 hospital",
+      "ambulance service air medical base shutdown Friday October 30 2026 United States",
+      "dialysis oncology cancer center clinic suddenly closed October 30 2026",
+      "October 30 2026 temporarily closed clinic family medicine primary care appointments hospital patients",
+      "October 30 2026 behavioral health psychiatric hospital unit closed suspended beds",
+      "October 30 2026 hospital reopened emergency department reopened after closure disruption",
+      "October 30 2026 emergency ambulance flight air ambulance program suspended ceased operations",
+      "October 30 2026 Puerto Rico hospital sala emergencia sala de parto suspenden servicios cierre",
+      "October 30 2026 Guam American Samoa US Virgin Islands hospital ambulance clinic services suspended closed",
+      "October 30 2026 hospital dialysis unit closure radiation oncology service discontinued USA",
+      "October 30 2026 \"closed\" \"patients\" \"clinic\" \"hospital\" \"services\" local news"
+    ],
+    "search_recency_days": 2,
+    "class_coverage": [
+      "hospital, ED, maternity, behavioral health, dialysis, oncology, and primary-care suspension/closure",
+      "emergency/rural essential-service losses",
+      "ambulance, air-medical, and base closure/suspension",
+      "official CMS provider terminations, rescissions, CLIA risks",
+      "concrete effective restoration/reopening",
+      "US states and territories"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Seven October 30 CMS Medicare termination notices",
+        "reason": "Exact previously recorded notices; duplicates."
+      },
+      {
+        "item": "Sharon Regional inpatient service pause, Pennsylvania",
+        "reason": "Already documented in prior October 30 Care Line watch."
+      },
+      {
+        "item": "Carle Health Rantoul outpatient clinic closure, Illinois",
+        "reason": "Already documented in the previous independently verified Care Line heartbeat ending 20:50 PDT."
+      },
+      {
+        "item": "Roseland Community Hospital labor and delivery, Chicago",
+        "reason": "Previously announced prospective cessation effective October 31; no newly verified concrete in-window cessation."
+      },
+      {
+        "item": "Sanford Luverne planned obstetrics cessation, Minnesota",
+        "reason": "Future April 2027 service change without new current-window loss."
+      },
+      {
+        "item": "Santa Clara Valley Healthcare new Behavioral Health Pavilion",
+        "reason": "Prospective new facility opening November 3, not restored previously lost service."
+      },
+      {
+        "item": "Mission Memorial and Hudson's Hope ED interruptions, British Columbia",
+        "reason": "Canada, outside U.S. and territory scope."
+      },
+      {
+        "item": "Guam Regional Medical City October 17-20 weather clinic suspensions",
+        "reason": "Old known interruption, outside incremental window."
+      },
+      {
+        "item": "Sutter Emeryville hospital project cancellation",
+        "reason": "Unbuilt project cancellation, not operational healthcare service loss."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T204913-0700-r11-recall12.json",
+      "completed_at": "2026-10-30T20:50:26-07:00",
+      "result": "SUCCESS/findings; Rantoul clinic recorded"
+    },
+    "source_failures": [],
+    "limitations": "The GitHub connector can fetch known ledger files but does not enumerate directories; therefore an intermediate 21:xx heartbeat could not be ruled out. Search-engine indexing is non-exhaustive for rural, tribal and territorial providers. Search results include unrelated, old, prospective, and out-of-country matches; no fresh in-scope event independently established.",
+    "controls": "Heartbeat-only write to ops/watch-ledger. No approval, public publishing, production collector mutation, schedule change, or task disabling."
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T174452-0700-r11-20261031T004452Z",
+  "scheduled_for": "2026-10-30T17:44:51-07:00",
+  "started_at": "2026-10-30T17:44:52-07:00",
+  "completed_at": "2026-10-31T00:46:22.742Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T16:45:05.752-07:00",
+    "end": "2026-10-31T00:46:22.742Z",
+    "basis": "Previous Gaza watch heartbeat verified from ops/watch-ledger, to this run's observation cutoff; surfaced items checked for new source/publication/event chronology and duplicates.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary production Gaza publisher/collector remains authoritative.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T164451-0700-r11-20261030T234341Z.json",
+      "completed_at": "2026-10-30T16:45:05.752-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "known_positive_finding_ids": [
+        "gaza-20261030-khan-younis-al-maslakh-12-injured-wafa-176452",
+        "gaza-20261030-khan-younis-child-wounds-wafa-176450",
+        "gaza-20261030-ohchr-yellow-line-expansion-displacement"
+      ]
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent index entry October 27 (West Bank); Gaza report posted October 26 describing October 22. No new in-window Gaza entry."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated in-window Gaza hospital, ambulance, fuel, medical-evacuation or health capacity change in listed content."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "HTTP 502, recurring previously documented restriction; WHO global accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza \"Friday, October 30, 2026\" 23:00 casualties killed injured",
+      "site:english.wafa.ps Gaza \"Saturday, October 31, 2026\" dawn killed wounded",
+      "Gaza October 30 2026 evening new civilians killed injured Khan Younis Rafah Nuseirat Bureij",
+      "site:reuters.com/world/middle-east/ Gaza October 30 2026 October 31 2026 civilians ceasefire strike",
+      "site:apnews.com/article/ Gaza October 30 2026 October 31 strike casualties humanitarian",
+      "site:aljazeera.com/news/2026/10/30/ Gaza late Friday hospital casualties displacement yellow line",
+      "site:un.org \"30 October 2026\" Gaza humanitarian civilians ceasefire displacement aid",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"30 Oct 2026\" health access displacement",
+      "Gaza October 30 2026 evening WHO PRCS ambulance hospital fuel medical evacuation healthcare disruption",
+      "Gaza October 30 2026 evening Rafah Kerem Shalom crossing aid trucks food water blockade interruption",
+      "Gaza October 30 2026 31 ceasefire negotiations hostages detainees releases civilian impact",
+      "Gaza October 30 2026 evening new tents homes sewage water infrastructure strike displacement Israeli operations"
+    ],
+    "search_recency_days": 1,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "At observation, newest listed relevant Gaza casualty stories were the October 30 Khan Younis 18:02 and child-fatality 16:47 Palestinian-local-time items, already logged in prior watches. Newer 22:23 item concerns West Bank Jenin/Tulkarm."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "October 30 OHCHR Yellow Line report already captured as follow-up. Bureij damage photo caption lacked verified new in-window event chronology. Other recent leads focus on the West Bank."
+      },
+      {
+        "publisher": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible; no qualifying new Gaza-specific story in inspected index."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; no verified new in-window food access/crossing change."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible general emergency page; no new dated in-window event."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; newest prominent homepage release June 10, 2026. No new Gaza ambulance/EMS item in index."
+      },
+      {
+        "publisher": "UN News Gaza",
+        "url": "https://news.un.org/en/focus/gaza",
+        "result": "Inaccessible in browser tool; recurring previously documented restriction."
+      }
+    ],
+    "examined_exclusions": [
+      "Previously captured October 30 WAFA al-Maslakh drone strike report of at least 12 injured, no newly verified impact increment.",
+      "Previously captured October 30 WAFA account of eight-year-old Yamen Hisham Yahya Saqr succumbing to prior wounds.",
+      "Previously captured October 30 UN/OHCHR Yellow Line displacement follow-up; no newly verified changed population or geographic impact.",
+      "Bureij destruction photo caption lacks independently supported new incident date and incremental effect; not elevated to finding.",
+      "Newer Reuters/Al Jazeera/WAFA West Bank reports are outside Gaza geographic scope.",
+      "Targeted search returns included old Gaza reports, standing conditions, election-related political reporting, or unattributed summaries; all excluded.",
+      "No verified newly published or newly occurring, nonduplicate in-window casualty, displacement, aid/food/water, health/ambulance/medical evacuation/transport/fuel/capacity, infrastructure, crossing, detention/hostage, ceasefire or civilian-impact military development."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Recurring source-specific failure; OCHA OPT and WHO global were available."
+      },
+      {
+        "source": "UN News Gaza focus",
+        "issue": "Not accessible via browser tool",
+        "materiality": "Recurring restriction; alternative official humanitarian pages and established publishers available."
+      }
+    ],
+    "status_rationale": "DEGRADED due to previously documented WHO EMRO and UN News access restrictions; meaningful alternative coverage remained accessible. No newly material watch-wide coverage regression observed; no qualifying findings verified.",
+    "safeguards": "Exactly one append-only heartbeat JSON on ops/watch-ledger; no approval, publication, production runner, social post, schedule or task enablement change."
+  }
+}

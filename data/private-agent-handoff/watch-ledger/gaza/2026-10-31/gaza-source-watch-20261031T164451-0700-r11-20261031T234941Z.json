@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T164451-0700-r11-20261031T234941Z",
+  "scheduled_for": "2026-10-31T16:44:51-07:00",
+  "started_at": "2026-10-31T16:48:22-07:00",
+  "completed_at": "2026-10-31T16:49:41-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T15:42:20-07:00",
+    "end": "2026-10-31T16:49:41-07:00",
+    "basis": "From the verified completed_at in the preceding 15:44 scheduled watch heartbeat through the current source review; WAFA Gaza-local times interpreted using Asia/Gaza UTC+02:00, nine hours ahead of PDT.",
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Production daily collector and publisher remain authoritative.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest entry remains 31 October report covering 29 October; six Gaza humanitarian signals previously recorded, no new in-window report.",
+        "support": "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026"
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502 Bad Gateway, recurring restriction."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new 31 October/1 November Gaza medical evacuation, hospital, ambulance, fuel, transport or functioning-capacity update in visible index."
+      }
+    ],
+    "additional_targeted_searches": [
+      "Gaza October 31 2026 latest Saturday evening killings wounded Khan Younis Gaza City 31 October 2026",
+      "site:english.wafa.ps October 31 2026 Gaza Saturday evening 31 October drone shelling",
+      "Gaza October 31 2026 Rafah crossing humanitarian aid restrictions food water shelters 31 October",
+      "site:unicef.org Gaza October 31 2026 displacement water humanitarian children latest",
+      "site:wfp.org Gaza October 31 2026 food deliveries access prices",
+      "Gaza October 31 2026 hospital ambulances fuel medical evacuation WHO health ministry latest",
+      "site:aljazeera.com/news/2026/10/31 Gaza Israeli air strike late Saturday October 31 evening November 1 2026",
+      "site:reuters.com/world/middle-east/ Gaza October 31 2026 night November 1 aid ceasefire strikes",
+      "site:apnews.com/article/ Gaza October 31 2026 November 1 ceasefire casualties aid",
+      "site:unrwa.org Gaza November 1 2026 shelter displacement support incidents October 31",
+      "site:icrc.org Gaza October 31 November 1 2026 detainees medical evacuations crossing",
+      "Gaza latest Oct 31 Nov 1 2026 23:00 00:00 01:00 Israeli strikes wounded civilians ceasefire hospital displaced"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible. Visible latest Gaza report remains 31 October 17:45 Gaza local (08:45 PDT), Wael Musallam death previously recorded; newer listed items through 20:50 Gaza local concern the West Bank. No verified new Gaza item from 15:42 to 16:49 PDT."
+      },
+      {
+        "source": "WAFA displaced tent-fire fatalities",
+        "url": "https://english.wafa.ps/Pages/Details/176462",
+        "result": "Two girls died from the al-Mawasi tent fire, report published 31 October 10:04 Gaza local (01:04 PDT). Prior 14:44/13:44 watch dedupe notes already record tent-fire fatalities, so not a new finding."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest English listed items are older than current window."
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring official food-source restriction, search index yielded no newly verified Gaza development."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; direct news index unavailable, targeted search yielded no new verified in-window report."
+      }
+    ],
+    "dedupe": "Prior watch evidence confirmed al-Maghazi, al-Shati, Nuseirat, Khan Younis, Tel al-Hawa/Wael Musallam casualty incidents, al-Mawasi tent-fire deaths, and six October 31 OCHA humanitarian updates were already recorded; recycled and stale Reuters/AP/Anadolu items were not counted. No qualifying newly sourced incident or operational change during 15:42–16:49 PDT. Absence of new indexed reporting does not establish absence of events.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously documented; WHO Global and OCHA OPT usable."
+      },
+      {
+        "source": "WFP news",
+        "error": "HTTP 403",
+        "materiality": "Previously documented; OCHA OPT alternative food-access coverage usable."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "error": "HTTP 403",
+        "materiality": "Direct index restricted; targeted search and OCHA OPT alternatives usable."
+      }
+    ],
+    "status_rationale": "DEGRADED for partial source-access failures; these restrictions are previously documented, no newly material deterioration. outcome no_findings.",
+    "safeguards": "Single append-only heartbeat on ops/watch-ledger only. No approval, production release, publication, social posting, schedule alteration or task disable."
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T104400-0700-r11-20261031T174502Z",
+  "scheduled_for": "2026-10-31T10:44:51-07:00",
+  "started_at": "2026-10-31T10:44:00-07:00",
+  "completed_at": "2026-10-31T10:45:02-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T09:51:42.447-07:00",
+    "end": "2026-10-31T10:45:02-07:00",
+    "basis": "Previous exact heartbeat completed_at from GitHub; dates converted using Asia/Gaza UTC+02:00 and America/Los_Angeles UTC-07:00 on 2026-10-31. Findings include one bounded, previously flagged pre-window omission whose distinctness was newly verified this run; not misrepresented as an event published within this interval.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261031-wafa-176472-wael-musallam-reconciled",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176472",
+      "title": "Palestinian succumbs to wounds sustained in Israeli drone strike west of Gaza City",
+      "publisher": "WAFA — Palestinian News & Information Agency",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31T17:45:00+02:00",
+      "publication_date_los_angeles": "2026-10-31T08:45:00-07:00",
+      "event_date": "2026-10-31",
+      "event_time": null,
+      "underlying_strike_date": null,
+      "location": "Near al-Wehda Tower, west of Gaza City, Gaza Strip",
+      "affected_population_or_system": "One Palestinian man, Wael Musallam, reported dead from wounds sustained in an earlier Israeli drone strike; civilian/combatant status not established.",
+      "exact_supporting_passage": "A Palestinian man, Wael Musallam, died on Saturday evening from wounds sustained in a recent Israeli drone strike",
+      "source_type": "Palestinian news agency reporting medical-source confirmation; single-source, not independently corroborated",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_this_run": "Direct article body was successfully retrieved; previous two hourly heartbeats noted this article's headline but its inaccessible body left the death unverified as distinct.",
+        "publication_window_relation": "Published at 08:45 PDT, approximately 66 minutes before the immediately previous heartbeat ended at 09:51:42 PDT. Not an in-window publication. Included only as a newly verified, previously unresolved recall/reconciliation finding, not as a newly occurring incident.",
+        "distinctness_evidence": "WAFA names Wael Musallam and a strike near al-Wehda Tower. Earlier same-day separately reported Tel al-Hawa death named Arafat al-Arair by Anadolu; different named victim and location. Do not double-count this with the earlier Nuseirat or Khan Younis strikes.",
+        "original_prior_flag": "Previous 09:51 heartbeat recorded WAFA article 176472 as possible pre-window omission without direct text; earlier 08:46 heartbeat also had no qualifying in-window finding.",
+        "verification_limits": "WAFA attributes the death to medical sources. Independent corroboration of this individual death and his civilian status was not established. No production reconciliation performed."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; primary daily Gaza production collector and publisher remain authoritative.",
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent update listed Oct 27 West Bank snapshot, and latest Gaza-relevant humanitarian report listed Oct 26 covering Oct 22. No new in-window Gaza update."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, recurring and previously documented."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new in-window Gaza health/evacuation/hospital status item on index."
+      }
+    ],
+    "primary_source_preface_searches": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza October 31 2026 19:00 20:00 Palestine latest civilian killed injured news WAFA",
+      "site:english.wafa.ps/Pages/Details/ October 31 2026 Gaza Saturday evening 19:00",
+      "Gaza ceasefire aid crossing food water hospital October 31 2026 evening latest",
+      "site:un.org Gaza October 31 2026 humanitarian OCHA relief aid developments",
+      "site:who.int Gaza October 31 2026 hospital medical evacuation WHO",
+      "Gaza October 31 2026 Reuters AP latest ceasefire killed wounded displacement",
+      "\"October 31, 2026\" \"tent\" \"Khan Younis\" killed drone displaced 2026",
+      "\"October 31, 2026\" \"Taiba Towers\" \"tent\" killed Gaza",
+      "site:aa.com.tr \"October 31 2026\" \"tent\" \"Khan Younis\" killed 3 Palestinians",
+      "site:aljazeera.com/news/2026/10/31 Gaza tent Khan Younis killed afternoon",
+      "site:middleeasteye.net Gaza October 31 2026 tent displaced casualties evening",
+      "site:icrc.org OR site:msf.org OR site:unicef.org Gaza \"31 October 2026\" medical aid displacement crossing"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest article on accessible index is 18:51 Asia/Gaza (09:51 PDT) West Bank-only; latest Gaza-specific headline 17:45 Asia/Gaza (08:45 PDT) prior-window article, finally readable and distinctly identified during this run."
+      },
+      {
+        "publisher": "WAFA detailed article",
+        "url": "https://english.wafa.ps/Pages/Details/176472",
+        "result": "Article body verified: Wael Musallam died from earlier drone strike near al-Wehda Tower; differs from prior named Tel al-Hawa victim. Prior-window follow-up, not new in-window publication."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-in-israels-ongoing-violations-of-gaza-ceasefire/4107086",
+        "result": "Accessible October 31 updated aggregation of previously documented Nuseirat, al-Maghazi, and Khan Younis events; the Khan Younis tent is consistent with previously reported Taiba Towers incident; no separate additional strike established. Earlier Tel al-Hawa death names Arafat al-Arair."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; Oct 31 headline about school risks not demonstrated as distinct in-window incident. No corroborated new immediate humanitarian change."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest homepage news June 10, 2026. No new interval-specific medical service or ambulance development."
+      }
+    ],
+    "exclusions_and_uncertainty": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176470",
+        "disposition": "Earlier Khan Younis Taiba Towers incident from prior 06:45 watch; not newly counted."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-in-israels-ongoing-violations-of-gaza-ceasefire/4107086",
+        "disposition": "Aggregate of existing casualties; tent description may refer to already recorded Taiba Towers strike, no separate event established."
+      },
+      {
+        "url": "https://50kft.com/dynazine",
+        "disposition": "Uncorroborated secondary aggregation alleges 14 injuries at phone-charging location al-Maslakh; original primary/established report unavailable with search cap. Excluded; no publication/event timestamp established."
+      },
+      {
+        "url": null,
+        "disposition": "Older 2025 OCHA report, October 5 and October 26 strikes, West Bank-only items, opinion, social media and stale articles excluded."
+      }
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Recurring previously documented restriction; OCHA OPT and WHO Global accessible."
+      },
+      {
+        "source": "Middle East Eye homepage",
+        "error": "HTTP 404 from retrieval service",
+        "materiality": "Supplemental publisher unavailable; alternative established source/index and direct WAFA available."
+      },
+      {
+        "source": "Secondary aggregation for al-Maslakh",
+        "error": "Direct content timeout",
+        "materiality": "Cannot verify a purported distinct strike; excluded rather than fabricating a finding."
+      }
+    ],
+    "status_rationale": "DEGRADED because recurring WHO EMRO and one established publisher access failure. No additional nonduplicate publication within exact 09:51–10:45 PDT interval verified. Positive finding is explicitly a newly substantiated prior-window recall omission: WAFA body became available and identifies a distinct named casualty previously not confirmed; no claim of a new in-window occurrence.",
+    "safeguards": "Exactly one append-only GitHub heartbeat; no primary production run, publication, approval, task disabling or scheduling mutation."
+  }
+}

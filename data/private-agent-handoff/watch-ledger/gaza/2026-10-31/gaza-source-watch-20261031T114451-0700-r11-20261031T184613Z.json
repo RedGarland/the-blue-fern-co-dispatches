@@ -1,0 +1,242 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T114451-0700-r11-20261031T184613Z",
+  "scheduled_for": "2026-10-31T11:44:51-07:00",
+  "started_at": "2026-10-31T11:44:41-07:00",
+  "completed_at": "2026-10-31T11:46:13.705-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T10:45:02-07:00",
+    "end": "2026-10-31T11:46:13.705-07:00",
+    "basis": "Previous verified GitHub heartbeat completed_at; report dated 31 October and newly present on OCHA OPT updates after prior watch saw latest Gaza report 26 October. Original underlying incident dates are older; none represented as same-hour occurrence.",
+    "first_party_preface_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261031-ocha-oct29-yellow-line-shujaiyya-arson-displacement",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026",
+      "title": "Families displaced after tent fires and shootings near Gaza's Yellow Line",
+      "publisher": "United Nations OCHA — Occupied Palestinian Territory",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time": null,
+      "event_date": "2026-10-25",
+      "event_time": null,
+      "location": "Ash Shuja'iyyeh, Gaza City, and eastern Deir al Balah",
+      "affected_population_or_system": "Nine families at October 25 burned-tent site received emergency support and were willing to relocate; an earlier reported arson incident displaced 137 households; approximately 130 households remain at the affected site.",
+      "exact_supporting_passage": "9 families affected",
+      "source_type": "Primary UN humanitarian situation report citing operational assessments and partner reports",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "first_seen": "2026-10-31, during this watch, after preceding heartbeat's OCHA index check showed latest Gaza report dated 26 October",
+        "publication_window_relation": "OCHA dates publication 31 October but provides no time-of-day; report was not listed by immediately preceding watch. Newly surfaced source, NOT claimed to describe same-hour events.",
+        "reporting_period": "2026-10-19 through 2026-10-25 unless specified",
+        "details": "OCHA and partners assessed October 25 tent fires on October 26. An earlier separate suspected deliberate fire reportedly instigated by armed Palestinians linked to Israeli forces displaced 137 households; attribution remains alleged, not independently adjudicated.",
+        "production_status": "Supplementary recall only; no confirmation of production collector dedupe or publication"
+      }
+    },
+    {
+      "finding_id": "gaza-20261031-ocha-oct29-food-flour-price-distribution",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026",
+      "title": "Flour and fresh food prices climb and free food distribution is reduced",
+      "publisher": "United Nations OCHA — Occupied Palestinian Territory",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time": null,
+      "event_date": "2026-10-25",
+      "event_time": null,
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Households relying on flour, fresh produce, free bread and donated food; food-security partners cut back or paused distributions.",
+      "exact_supporting_passage": "over 70 per cent",
+      "source_type": "Primary UN humanitarian situation report citing operational assessments and partner reports",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "first_seen": "2026-10-31, during this watch, after preceding heartbeat's OCHA index check showed latest Gaza report dated 26 October",
+        "publication_window_relation": "OCHA dates publication 31 October but provides no time-of-day; report was not listed by immediately preceding watch. Newly surfaced source, NOT claimed to describe same-hour events.",
+        "reporting_period": "2026-10-19 through 2026-10-25 unless specified",
+        "details": "OCHA reports prices of flour and fresh products over 70% higher than the preceding week, with partners scaling down or pausing free bread and fresh produce distribution; prior October 26 report already described food inflation, but the fresh week-over-week quantified increase and service changes are distinct.",
+        "production_status": "Supplementary recall only; no confirmation of production collector dedupe or publication"
+      }
+    },
+    {
+      "finding_id": "gaza-20261031-ocha-oct29-rafah-medical-evac-69",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026",
+      "title": "69 Gaza patients medically evacuated via Rafah in October 21–27 reporting period",
+      "publisher": "United Nations OCHA — Occupied Palestinian Territory",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Rafah crossing, southern Gaza Strip",
+      "affected_population_or_system": "69 patients including 12 children evacuated alongside 93 caregivers; changes access to specialized medical care.",
+      "exact_supporting_passage": "69 patients",
+      "source_type": "Primary UN humanitarian situation report citing operational assessments and partner reports",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "first_seen": "2026-10-31, during this watch, after preceding heartbeat's OCHA index check showed latest Gaza report dated 26 October",
+        "publication_window_relation": "OCHA dates publication 31 October but provides no time-of-day; report was not listed by immediately preceding watch. Newly surfaced source, NOT claimed to describe same-hour events.",
+        "reporting_period": "2026-10-19 through 2026-10-25 unless specified",
+        "details": "OCHA reports 69 patients and 93 caregivers evacuated between 21 and 27 October, including 12 children; WHO supported cumulative 3,547 patient evacuations since October 2025 ceasefire. Event date is a period, not a single known day.",
+        "production_status": "Supplementary recall only; no confirmation of production collector dedupe or publication"
+      }
+    },
+    {
+      "finding_id": "gaza-20261031-ocha-oct29-abu-rashid-water-infrastructure",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026",
+      "title": "Abu Rashid stormwater basin and pumping station incapacitated, threatening nearby displacement sites",
+      "publisher": "United Nations OCHA — Occupied Palestinian Territory",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Abu Rashid stormwater basin and pumping station, Jabalya, North Gaza",
+      "affected_population_or_system": "Stormwater infrastructure lacks power and remains inaccessible due to insecurity, increasing flood risk for nearby displaced households.",
+      "exact_supporting_passage": "basin is incapacitated",
+      "source_type": "Primary UN humanitarian situation report citing operational assessments and partner reports",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "first_seen": "2026-10-31, during this watch, after preceding heartbeat's OCHA index check showed latest Gaza report dated 26 October",
+        "publication_window_relation": "OCHA dates publication 31 October but provides no time-of-day; report was not listed by immediately preceding watch. Newly surfaced source, NOT claimed to describe same-hour events.",
+        "reporting_period": "2026-10-19 through 2026-10-25 unless specified",
+        "details": "WASH Cluster rapid assessment in October 19–25 reporting period found basin incapacitated due to lack of power and unsafe access; winter flood mitigation uncertain. No precise inspection date given.",
+        "production_status": "Supplementary recall only; no confirmation of production collector dedupe or publication"
+      }
+    },
+    {
+      "finding_id": "gaza-20261031-ocha-oct29-unops-humanitarian-safety",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026",
+      "title": "Three UNOPS security incidents affect humanitarian transport and facilities",
+      "publisher": "United Nations OCHA — Occupied Palestinian Territory",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip; precise convoy and guesthouse locations unspecified",
+      "affected_population_or_system": "UNOPS humanitarian convoys, drivers and guesthouse staff; incidents include nearby explosions, checkpoint detention of drivers, and small-arms rounds striking a guesthouse.",
+      "exact_supporting_passage": "drivers detained at checkpoints",
+      "source_type": "Primary UN humanitarian situation report citing operational assessments and partner reports",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "first_seen": "2026-10-31, during this watch, after preceding heartbeat's OCHA index check showed latest Gaza report dated 26 October",
+        "publication_window_relation": "OCHA dates publication 31 October but provides no time-of-day; report was not listed by immediately preceding watch. Newly surfaced source, NOT claimed to describe same-hour events.",
+        "reporting_period": "2026-10-19 through 2026-10-25 unless specified",
+        "details": "OCHA says UNOPS reported on 26 October three incidents over three consecutive days affecting convoys and premises. It does not give a confirmed injury count, exact locations, or exact incident dates.",
+        "production_status": "Supplementary recall only; no confirmation of production collector dedupe or publication"
+      }
+    },
+    {
+      "finding_id": "gaza-20261031-ocha-oct29-humanitarian-manifest-trucks-drop",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026",
+      "title": "Humanitarian supply trucks manifested for Gaza entry fall 16% week over week",
+      "publisher": "United Nations OCHA — Occupied Palestinian Territory",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Kerem Shalom crossing, Gaza Strip",
+      "affected_population_or_system": "Aid delivery chain: 651 UN and partner trucks manifested 19–25 October, 586 offloaded on Israeli side; manifested volume down 16% from prior week.",
+      "exact_supporting_passage": "decreased by 16 per cent",
+      "source_type": "Primary UN humanitarian situation report citing operational assessments and partner reports",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "first_seen": "2026-10-31, during this watch, after preceding heartbeat's OCHA index check showed latest Gaza report dated 26 October",
+        "publication_window_relation": "OCHA dates publication 31 October but provides no time-of-day; report was not listed by immediately preceding watch. Newly surfaced source, NOT claimed to describe same-hour events.",
+        "reporting_period": "2026-10-19 through 2026-10-25 unless specified",
+        "details": "OCHA Logistics Cluster reports 651 manifested and 586 offloaded between October 19–25; prior week's manifest count was 779 and offloaded count 702; offloading percentage remained stable, so decline in volume should not be conflated with a lower acceptance ratio.",
+        "production_status": "Supplementary recall only; no confirmation of production collector dedupe or publication"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, production authoritative; no publication or approval",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newly listed 31 October Humanitarian Situation Report | 29 October 2026, absent in prior heartbeat's index check. Direct text examined, compared with prior Oct 26 report."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, recurring and previously documented."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, no 31 Oct event-specific update visible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza October 31 2026 evening 20:00 21:00 casualties injuries",
+      "Gaza October 31 2026 evening latest casualties drone airstrikes Khan Younis Gaza City Nuseirat ceasefire",
+      "Gaza October 31 2026 Reuters AP latest humanitarian developments ceasefire casualties",
+      "site:un.org OR site:ochaopt.org Gaza October 31 2026 humanitarian situation report arson displacement aid health",
+      "site:who.int OR site:emro.who.int Gaza October 31 2026 medical evacuation hospital functioning health",
+      "site:palestinercs.org October 31 2026 Gaza ambulance medical emergency",
+      "Gaza October 31 2026 evening food bread shortages flour prices 70 percent OCHA humanitarian aid",
+      "Gaza October 31 2026 crossing Rafah Kerem Shalom medical evacuation patients 69 October 27 WHO",
+      "site:unicef.org Gaza October 31 2026 children water disease displacement humanitarian",
+      "site:wfp.org Gaza October 31 2026 aid deliveries markets wheat flour kitchens",
+      "site:icrc.org OR site:msf.org Gaza October 31 2026 detention hostage hospital medical humanitarian",
+      "Gaza October 31 2026 UNOPS convoys incidents yellow line displaced families arson tents October 25 OCHA"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza-specific article 17:45 Asia/Gaza (08:45 PDT), already recorded in prior heartbeat; no fresh in-window distinct casualty item found."
+      },
+      {
+        "source": "Al Jazeera Oct 31",
+        "url": "https://www.aljazeera.com/news/2026/10/31/at-least-four-palestinians-killed-in-gaza-as-israeli-attacks-continue",
+        "result": "Aggregation of already-recorded fatalities, with no distinct same-hour incident demonstrated."
+      },
+      {
+        "source": "Anadolu Oct 31",
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-in-israels-ongoing-violations-of-gaza-ceasefire/4107086",
+        "result": "Aggregate of previously recorded Nuseirat, Khan Younis, Maghazi and Tel al-Hawa incidents. No new distinct event established."
+      },
+      {
+        "source": "OCHA previous report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-22-october-2026",
+        "result": "Compared Oct 26-published prior report for recurrences; food inflation and Yellow Line restrictions predated current OCHA report, but latest specific figures and assessments are separately captured."
+      },
+      {
+        "source": "WFP Palestine",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Food ration cuts described in undated evergreen page and already reflected in Oct 26 OCHA report; not separately recorded."
+      }
+    ],
+    "uncertainty": [
+      "OCHA publication date 31 Oct but hour unknown; no claim source posted after exactly 10:45 PDT, although its newly present index entry differs from previous verified heartbeat.",
+      "All six OCHA-derived developments concern Oct19–27; classified as follow-up/newly surfaced structured updates rather than fresh incidents in last hour.",
+      "No independent verification of reported actors in alleged arson, and no source-specific causation inferred beyond OCHA attribution.",
+      "Do not deduplicate against production collector by assumption; separate canonical source and finding IDs provided for review."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Recurring; WHO Global and OCHA OPT accessible. Status DEGRADED not FAILED."
+      }
+    ],
+    "status_rationale": "DEGRADED due WHO EMRO 502, not a new material failure; findings positive because OCHA OPT published 31 Oct newly surfaced situation report with traceable, nonduplicate humanitarian changes. No independently new same-hour casualty report.",
+    "safeguards": "Exactly one append-only watch heartbeat, no approvals/publication/production runner/schedule/task changes."
+  }
+}

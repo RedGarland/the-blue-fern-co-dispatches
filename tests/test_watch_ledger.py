@@ -90,6 +90,51 @@ def test_reconciliation_flags_unaccounted_then_accounts_matching_production(tmp_
     assert report["unreconciled_count"] == 0
 
 
+def test_reconciliation_reads_preserved_legacy_heartbeat(tmp_path: Path) -> None:
+    payload = _run()
+    path = tmp_path / watch_ledger.LEGACY_LEDGER_ROOT / "care-line" / "2026-09-25" / "legacy.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = reconcile_day(tmp_path, "care-line", "2026-09-25", write=False)
+    assert report["run_count"] == 1
+    assert report["unreconciled_count"] == 1
+
+
+def test_reconciliation_deduplicates_identical_legacy_and_canonical_runs(tmp_path: Path) -> None:
+    payload = _run()
+    persist_watch_run(tmp_path, payload)
+    path = tmp_path / watch_ledger.LEGACY_LEDGER_ROOT / "care-line" / "2026-09-25" / "copy.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = reconcile_day(tmp_path, "care-line", "2026-09-25", write=False)
+    assert report["run_count"] == 1
+    assert report["finding_count"] == 1
+
+
+def test_reconciliation_rejects_conflicting_canonical_and_legacy_runs(tmp_path: Path) -> None:
+    payload = _run()
+    persist_watch_run(tmp_path, payload)
+    other = dict(payload, coverage_notes="different evidence")
+    path = tmp_path / watch_ledger.LEGACY_LEDGER_ROOT / "care-line" / "2026-09-25" / "conflict.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(other), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="conflicting canonical/legacy"):
+        reconcile_day(tmp_path, "care-line", "2026-09-25", write=False)
+
+
+def test_reconciliation_rejects_misfiled_legacy_dispatch(tmp_path: Path) -> None:
+    payload = _run(dispatch="gaza")
+    path = tmp_path / watch_ledger.LEGACY_LEDGER_ROOT / "care-line" / "2026-09-25" / "wrong.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="path/payload mismatch"):
+        reconcile_day(tmp_path, "care-line", "2026-09-25", write=False)
+
+
 def test_reconciliation_records_zero_finding_heartbeat(tmp_path: Path) -> None:
     persist_watch_run(tmp_path, _run(dispatch="gaza", outcome="no_findings"))
     report = reconcile_day(tmp_path, "gaza", "2026-09-25", write=False)

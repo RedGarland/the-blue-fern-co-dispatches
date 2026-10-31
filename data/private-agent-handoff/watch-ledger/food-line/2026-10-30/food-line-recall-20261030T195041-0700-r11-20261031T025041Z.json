@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261030T195041-0700-r11-20261031T025041Z",
+  "scheduled_for": "2026-10-30T19:45:54-07:00",
+  "started_at": "2026-10-30T19:50:41-07:00",
+  "completed_at": "2026-10-31T02:51:55.741Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T01:47:49.469Z",
+    "end_at": "2026-10-31T02:51:55.741Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Latest verified prior Food Line watch-ledger heartbeat completed 2026-10-30 18:47:49.469 PDT, through this execution, with newly qualifying U.S. incidents during interval.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2,
+      3
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary Food Line high-value recall only. Nationwide production collection remains authoritative.",
+    "Twelve targeted web searches succeeded with no reported tool-level errors. Coverage: four only/sole/last/full-service grocery-store closures or disasters; four disaster-affected canceled emergency distributions or abrupt food-bank/pantry closures; four official SNAP/WIC/food-assistance immediate interruption searches. Some searches overlap categories.",
+    "No qualifying new U.S. food-access disruption verified for the prior-heartbeat-to-this-check window. The retrieved items were predominantly older closure/fire incidents, 2025 benefit disruptions, unrelated government notices, general food-program updates, or non-U.S. storm response. Do not infer that no incidents occurred.",
+    "Checked direct October 29 Kauaʻi Now Hurricane Lowell recovery report: the Hawaiʻi Foodbank Kauaʻi Oct 30 mobile distribution in Līhuʻe was listed as scheduled for 4–5 p.m.; no new cancellation verified. https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Excluded Baker Lake Abluqta Society food-bank fire: Canadian geography and May 2026 event, outside geographic and temporal scope. https://nunatsiaq.com/stories/article/fire-damages-baker-lake-food-bank-halts-services/",
+    "Excluded Alabama/Kansas November SNAP suspension notices from the October 2025 federal shutdown, not new October 2026 events. https://dhr.alabama.gov/november-snap-benefits-suspended-10272025/ ; https://www.dcf.ks.gov/Newsroom/Pages/SNAPBenefits.aspx",
+    "Very recent hyperlocal provider-only announcements may not yet be indexed by search. No editorial approvals, publishing, scheduling, or task-disabling actions were taken.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-30/food-line-recall-20261030T184710-0700-r11-20261031T014710Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" closed fire October 30 2026 United States",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" \"October 30, 2026\" closure fire",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" \"October 2026\" closing rural community",
+          "recency_days": 3
+        },
+        {
+          "query": "\"full-service grocery\" fire closed October 30 2026",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food distribution\" canceled storm flood October 30 2026",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food pantry\" \"closed\" \"October 30, 2026\" emergency",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food bank\" suspended services flood fire October 30 2026",
+          "recency_days": 2
+        },
+        {
+          "query": "\"mobile pantry\" \"cancelled\" \"October 30\" 2026 storm",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov SNAP EBT benefits interruption October 30 2026 outage notice",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov WIC interruption October 30 2026 benefits services",
+          "recency_days": 2
+        },
+        {
+          "query": "\"SNAP\" \"delayed\" \"October 30, 2026\" state agency",
+          "recency_days": 2
+        },
+        {
+          "query": "\"food assistance\" \"suspended\" \"October 30, 2026\" outage",
+          "recency_days": 2
+        }
+      ]
+    }
+  ]
+}

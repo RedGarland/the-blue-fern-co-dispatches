@@ -1,0 +1,157 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T004451-0700-r11-20261031T074250Z",
+  "scheduled_for": "2026-10-31T00:44:51-07:00",
+  "started_at": "2026-10-31T00:42:50-07:00",
+  "completed_at": "2026-10-31T07:44:17.128Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T23:47:55.395-07:00",
+    "end": "2026-10-31T00:44:17-07:00",
+    "basis": "Incremental period since immediately prior verified ledger heartbeat; Palestine-local publication date separately verified.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176459",
+      "title": "Two Palestinians killed in Israeli drone strikes on Gaza Strip",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time_local": "09:27",
+      "event_date": "2026-10-31",
+      "event_time": null,
+      "source_type": "established_news_agency_citing_medical_sources",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery_method": "Direct WAFA publisher front page and article click after OCHA OPT and WHO checks and 12 bounded targeted searches",
+        "first_verified_in_run": "2026-10-31T07:43:00Z",
+        "previously_absent_at": "2026-10-31T06:47:55.395Z",
+        "first_appeared_on_wafa_home": "2026-10-31 09:27 local WAFA news listing",
+        "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T234451-0700-r11-20261031T064659Z.json",
+        "production_publication_status": "not_checked_or_modified",
+        "corroboration": "WAFA report attributes details to medical sources; no independent confirmation located in bounded searches"
+      },
+      "finding_id": "gaza-20261031-tel-al-hawa-prior-wounds-death-wafa-176459",
+      "location": "Tel al-Hawa neighborhood, southwest Gaza City, Gaza Strip",
+      "affected_population_system": "One Palestinian reported dead after injuries sustained in an earlier Israeli attack; civilian/combatant status not independently established",
+      "exact_supporting_passage": "a Palestinian died of wounds sustained in an earlier Israeli attack",
+      "classification": "follow-up",
+      "synopsis": "WAFA cites medical sources reporting a Palestinian died on Saturday morning from wounds sustained in an earlier attack in Tel al-Hawa; date of initial injury not specified."
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176459",
+      "title": "Two Palestinians killed in Israeli drone strikes on Gaza Strip",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time_local": "09:27",
+      "event_date": "2026-10-31",
+      "event_time": null,
+      "source_type": "established_news_agency_citing_medical_sources",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery_method": "Direct WAFA publisher front page and article click after OCHA OPT and WHO checks and 12 bounded targeted searches",
+        "first_verified_in_run": "2026-10-31T07:43:00Z",
+        "previously_absent_at": "2026-10-31T06:47:55.395Z",
+        "first_appeared_on_wafa_home": "2026-10-31 09:27 local WAFA news listing",
+        "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T234451-0700-r11-20261031T064659Z.json",
+        "production_publication_status": "not_checked_or_modified",
+        "corroboration": "WAFA report attributes details to medical sources; no independent confirmation located in bounded searches"
+      },
+      "finding_id": "gaza-20261031-nuseirat-drone-fatality-wafa-176459",
+      "location": "Near electricity company, northwest of Nuseirat refugee camp, central Gaza Strip",
+      "affected_population_system": "One Palestinian reported killed in Israeli drone strike; civilian/combatant status not independently established",
+      "exact_supporting_passage": "another Palestinian was killed in an Israeli drone strike",
+      "classification": "new",
+      "synopsis": "WAFA cites medical sources reporting a Palestinian killed by an Israeli drone strike northwest of Nuseirat on Saturday morning."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; primary daily collector and publication process remain authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T234451-0700-r11-20261031T064659Z.json",
+      "completed_at": "2026-10-31T06:47:55.395Z",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "checked": true
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Newest posted update listed 27 Oct 2026 West Bank; latest Gaza humanitarian situation report posted 26 Oct 2026, regarding 22 Oct. No new in-window Gaza item."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; previously documented recurring source-specific failure."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Emergency overview and references, no verifiable new in-window Gaza-specific hospital, medevac, medical fuel or health-functioning change."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" Gaza civilians injured killed",
+      "site:english.wafa.ps Gaza October 31 2026 Khan Younis Rafah Jabalia humanitarian",
+      "site:aljazeera.com/news/2026/10/31/ Gaza Israel civilian attacks truce",
+      "site:reuters.com/world/middle-east/ Gaza Oct 31 2026 ceasefire killed aid",
+      "site:apnews.com/article/ gaza october 31 2026 civilians hospital aid crossing",
+      "site:unicef.org Gaza \"31 October 2026\" water food children displacement",
+      "site:wfp.org \"Gaza\" \"31 October 2026\" crossing food deliveries",
+      "site:palestinercs.org \"Gaza\" \"31 October 2026\" ambulances injury hospital",
+      "site:who.int \"Gaza\" \"31 October 2026\" medical evacuation hospitals fuel",
+      "site:ochaopt.org \"Gaza\" \"31 October 2026\" humanitarian displacement water access",
+      "Gaza October 31 2026 morning airstrike ceasefire Khan Younis Rafah civilians killed injured",
+      "Gaza 31 October 2026 aid crossings humanitarian food water hospital fuel evacuation Red Cross"
+    ],
+    "search_recency_days": 2,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Newly posted 31 October 2026 09:27 local Gaza-casualty item, detailed medical-source attribution; two distinct reported deaths qualified."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest 31 Oct item about archival footage of Hamas commander; no new in-window civilian/humanitarian Gaza event identified there. 30 Oct Yellow Line report already known."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible standing Palestine emergency overview; no verified in-window aid/food operations change."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest homepage news listed 10 June 2026, no new ambulance or hospital response update."
+      }
+    ],
+    "checked_exclusions": [
+      "WAFA 31 Oct 09:30 item from Bethlehem concerns West Bank olive pickers, out of scope.",
+      "WAFA 31 Oct 08:12 re-detention concerns Nablus in West Bank, out of scope.",
+      "WAFA 30 Oct Khan Younis minor wound death and 12 injured are prior-run items, not new.",
+      "Al Jazeera 30 Oct Gaza Yellow Line displacement report already represented by earlier ledger finding.",
+      "MSF Canada overview updated 30 Oct but explicitly says substantive content accurate to September 2026; not new in-window change.",
+      "Search engine surfaced many January 31 2026 Gaza strikes and older materials; discarded as date false positives.",
+      "WAFA additionally reports firing toward tents sheltering displaced people in al-Mawasi/al-Qarara/Bir 19; no independently verified casualties, displacement, or operational damage, retained as context rather than separate finding."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway from both opt homepage and situation-report endpoint",
+        "materiality": "Existing recurring, source-specific restriction; WHO Global, OCHA and additional direct publishers accessible. Not new watch-wide material degradation."
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO remained inaccessible, despite viable authoritative coverage. Two newly reported, geographically distinct Palestinian fatalities qualified based on fresh WAFA medical-source reporting; not independently corroborated during bounded watch.",
+    "safeguards": "Append-only single heartbeat on ops/watch-ledger, never approved/published, modified production, changed schedule, or disabled watch."
+  }
+}

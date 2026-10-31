@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T124451-0700-r11-20261031T194807Z",
+  "scheduled_for": "2026-10-31T12:44:51-07:00",
+  "started_at": "2026-10-31T12:47:06-07:00",
+  "completed_at": "2026-10-31T12:48:07.332-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T11:46:13.705-07:00",
+    "end": "2026-10-31T12:48:07.332-07:00",
+    "basis": "Last verified GitHub watch-ledger heartbeat completed_at to this run completion. Previous heartbeat contained six OCHA humanitarian updates (Oct 19–27 events published Oct 31), already recorded.",
+    "first_party_preface_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch; daily production collector/publisher remains authoritative. No approval, publication, or scheduling change.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Index currently lists 31 October Humanitarian Situation Report | 29 October 2026 and 30 October impact snapshot; no newer bulletin. Direct report succeeded via index click after initial canonical URL open failed. All six updates from report already stored in prior heartbeat."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/",
+        "result": "Direct request timed out (known recurring EMRO access restriction)."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no recent 31 October Gaza health event announcement on main page."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" Gaza injured killed evening 21:00 22:00",
+      "Reuters October 31 2026 Gaza evening ceasefire civilians killed injuries humanitarian",
+      "AP News October 31 2026 Gaza casualties aid crossing medical evacuations",
+      "site:aljazeera.com/news/2026/10/31 Gaza evening killed injured attacks latest",
+      "site:aa.com.tr/en/middle-east/ 31 October 2026 Gaza evening civilians killed wounded",
+      "site:ochaopt.org/content/ 31 October 2026 Gaza emergency bulletin humanitarian update",
+      "site:who.int/news 31 October 2026 Gaza hospitals evacuations health system",
+      "site:palestinercs.org October 31 2026 Gaza emergency ambulance casualty",
+      "site:wfp.org 31 October 2026 Gaza flour aid kitchens deliveries",
+      "site:unicef.org 31 October 2026 Gaza water children displacement health",
+      "site:icrc.org 31 October 2026 Gaza detainees hostages ambulance access",
+      "Gaza Israel ceasefire 31 October 2026 20:00 21:00 GMT+2 new incident civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza story indexed at 17:45 Asia/Gaza (08:45 PDT), the already recorded Wael Musallam fatality. WAFA's 20:50 Gaza-local item concerns the West Bank (Salfit), excluded; no new Gaza incident published after prior 11:46 PDT heartbeat visible."
+      },
+      {
+        "source": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/10/31/at-least-four-palestinians-killed-in-gaza-as-israeli-attacks-continue",
+        "result": "Dated Oct 31; aggregates already recorded Nuseirat, Gaza City, Khan Younis and al-Mawasi events, not a distinct new event."
+      },
+      {
+        "source": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/2-palestinians-killed-in-israels-ongoing-violations-of-gaza-ceasefire/4107086",
+        "result": "Dated Oct 31; existing Nuseirat and older-injury death recapped; no independently new in-window event."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/",
+        "result": "Accessible Arabic news index; latest visible release dates months earlier, no October 31 operational change established."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "Access restricted; no source-specific finding inferred."
+      }
+    ],
+    "time_handling": "Asia/Gaza UTC+02:00 on 31 October 2026; America/Los_Angeles UTC-07:00. Avoid earlier hourly watch conversion error. Last indexed Gaza WAFA report 17:45 Asia/Gaza equals 08:45 PDT; no invented time for undated OCHA report.",
+    "dedupe": "Excluded six OCHA Oct 31 source-derived updates from prior heartbeat; WAFA Wael Musallam, Nuseirat, al-Shati, al-Maghazi, al-Mawasi and Khan Younis stories already recorded in earlier watch; no confirmed distinct additional event.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout accessing opt/news",
+        "materiality": "Persistent prior issue; alternative WHO global and OCHA OPT indexes accessible."
+      },
+      {
+        "source": "OCHA canonical direct URL",
+        "error": "Transient initial open failure",
+        "materiality": "Recovered via OCHA update index click; document reachable."
+      },
+      {
+        "source": "UN News",
+        "error": "Restricted source URL",
+        "materiality": "Previously documented; supplemental evidence from other sources accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due WHO EMRO timeout and UN News restriction; useful source coverage remains. No newly material degradation since prior watch. Outcome no_findings; this heartbeat does not certify absence of unindexed future reporting.",
+    "safeguards": "Exactly one append-only JSON under ops/watch-ledger. No production, public-site, social, schedule, task or approval mutation."
+  }
+}

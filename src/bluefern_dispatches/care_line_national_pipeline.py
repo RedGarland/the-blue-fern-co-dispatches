@@ -190,7 +190,7 @@ BOILERPLATE_HINTS = (
 )
 MAX_EXTRACTED_TEXT_CHARS = 24000
 
-SOURCE_FAILURE_CLASSES = {"HTTPError", "ValueError", "ParseError", "TimeoutError", "URLError"}
+SOURCE_FAILURE_CLASSES = {"HTTPError", "ValueError", "ParseError", "TimeoutError", "URLError", "ConnectionResetError"}
 
 ONGOING_SERVICE_HOLD_RE = re.compile(
     r"\b(?:"
@@ -2860,7 +2860,7 @@ def _care_line_explicit_geography_mentions(text: str) -> set[tuple[str, str]]:
         return set()
     mentions: set[tuple[str, str]] = set()
     line_dateline_pattern = re.compile(
-        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[â€”â€“-]{1,2}|\u2014|\u2013)\s*",
+        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[�?"�?"-]{1,2}|\u2014|\u2013)\s*",
         re.I,
     )
     mention_patterns = (
@@ -2890,7 +2890,7 @@ def _geography_candidate_from_text(text: str) -> dict[str, str]:
         return {}
     line_dateline_candidates: list[tuple[str, str]] = []
     line_dateline_pattern = re.compile(
-        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*",
+        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[---]{1,2}|\u2014|\u2013)\s*",
         re.I,
     )
     for raw_line in text.splitlines():
@@ -2922,8 +2922,8 @@ def _geography_candidate_from_text(text: str) -> dict[str, str]:
     leading = _leading_dateline_text(text)
     if leading:
         direct_patterns = (
-            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
-            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Za-z][A-Za-z .'-]{1,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
+            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2})\s*(?:\([^)]*\)\s*)?(?:[---]{1,2}|\u2014|\u2013)\s*", re.I),
+            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Za-z][A-Za-z .'-]{1,24})\s*(?:\([^)]*\)\s*)?(?:[---]{1,2}|\u2014|\u2013)\s*", re.I),
         )
         for pattern in direct_patterns:
             match = pattern.match(leading)
@@ -2944,7 +2944,7 @@ def _geography_candidate_from_text(text: str) -> dict[str, str]:
                     candidates.append(candidate)
     dateline_mentions: list[tuple[str, str]] = []
     dateline_line_patterns = (
-        re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
+        re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[---]{1,2}|\u2014|\u2013)\s*", re.I),
     )
     for raw_line in text.splitlines():
         line = raw_line.strip()
@@ -4769,7 +4769,7 @@ def _source_failure_transient(failure: str, failure_class: str, *, source: CareL
     if _is_revalidated_external_403(source, failure, failure_class):
         return True
     text = str(failure or "").casefold()
-    if failure_class in {"TimeoutError", "URLError"}:
+    if failure_class in {"TimeoutError", "URLError", "ConnectionResetError"}:
         return True
     if failure_class == "HTTPError":
         return any(code in text for code in (" 408", " 429", " 500", " 502", " 503", " 504"))
@@ -4800,7 +4800,7 @@ def _source_failure_status_class(failure: str, failure_class: str, *, source: Ca
         return "transient_http_failure"
     if http_status is not None and 400 <= http_status <= 499:
         return "http_client_error"
-    if failure_class in {"TimeoutError", "URLError"}:
+    if failure_class in {"TimeoutError", "URLError", "ConnectionResetError"}:
         return "transient_network_failure"
     if failure_class == "ParseError":
         return "parse_failure"
@@ -5361,3 +5361,4 @@ def run_national_pipeline(
         "manual_review": {"manual_review_count": len(manual_review), "items": manual_review},
         "follow_up_state": follow_up_state_result,
     }
+

@@ -1956,8 +1956,8 @@ def test_care_line_geography_recovers_from_structured_input_and_dateline() -> No
 
     dateline_geo, dateline_provenance = pipeline._extract_geography(
         {"title": "Mount Carmel update"},
-        "COLUMBUS, Ohio (AP) — Mount Carmel Franklinton Emergency Department will close on August 22.",
-        article_content={"text": "COLUMBUS, Ohio (AP) — Mount Carmel Franklinton Emergency Department will close on August 22."},
+        "COLUMBUS, Ohio (AP) - Mount Carmel Franklinton Emergency Department will close on August 22.",
+        article_content={"text": "COLUMBUS, Ohio (AP) - Mount Carmel Franklinton Emergency Department will close on August 22."},
     )
     assert dateline_geo["state"] == "OH"
     assert dateline_geo["city"] == "Columbus"
@@ -1976,9 +1976,9 @@ def test_care_line_geography_rejects_unrelated_or_ambiguous_locations() -> None:
 
     ambiguous_geo, ambiguous_provenance = pipeline._extract_geography(
         {"title": "Care line update"},
-        "COLUMBUS, Ohio — Mount Carmel Franklinton Emergency Department will close.\n\nDAYTON, Ohio — Another hospital will close.",
+        "COLUMBUS, Ohio - Mount Carmel Franklinton Emergency Department will close.\n\nDAYTON, Ohio - Another hospital will close.",
         article_content={
-            "text": "COLUMBUS, Ohio — Mount Carmel Franklinton Emergency Department will close.\n\nDAYTON, Ohio — Another hospital will close."
+            "text": "COLUMBUS, Ohio - Mount Carmel Franklinton Emergency Department will close.\n\nDAYTON, Ohio - Another hospital will close."
         },
     )
     assert ambiguous_geo["state"] == ""
@@ -2084,7 +2084,7 @@ def test_care_line_subject_history_recovery_fills_missing_geography(monkeypatch)
             "source_id": "care-line-recovery-source",
             "source_name": "Care Line Recovery Source",
             "item_url": "https://example.org/story",
-            "title": "Columbus, Ohio — Emergency department update",
+            "title": "Columbus, Ohio - Emergency department update",
             "description": "The emergency department will close on August 22.",
             "content_text": "The emergency department will close on August 22.",
             "source_publication_date": "2026-08-23",
@@ -2126,7 +2126,7 @@ def test_care_line_recovered_geography_and_subject_do_not_imply_qualification(mo
             "source_id": "care-line-recovery-source",
             "source_name": "Care Line Recovery Source",
             "item_url": "https://example.org/story",
-            "title": "Columbus, Ohio — Mount Carmel Franklinton Emergency Department update",
+            "title": "Columbus, Ohio - Mount Carmel Franklinton Emergency Department update",
             "description": "A routine update on the department.",
             "content_text": "A routine update on the department.",
             "source_publication_date": "2026-08-23",
@@ -2141,3 +2141,21 @@ def test_care_line_recovered_geography_and_subject_do_not_imply_qualification(mo
     )
     assert status != "qualified"
     assert payload["exclusion_reason"] in {"missing_event_type", "needs_access_consequence", "missing_subject", "needs_full_article"}
+
+
+# Review-bundle additions: load the six portable connection-reset regressions
+# without replacing the repository's existing Care test suite.
+from importlib.util import module_from_spec as _module_from_spec
+from importlib.util import spec_from_file_location as _spec_from_file_location
+from pathlib import Path as _PortablePath
+
+_portable_source = _PortablePath(__file__).with_name("test_care_connection_reset.py")
+_portable_spec = _spec_from_file_location("portable_care_connection_reset_tests", _portable_source)
+assert _portable_spec and _portable_spec.loader
+_portable_module = _module_from_spec(_portable_spec)
+_portable_spec.loader.exec_module(_portable_module)
+for _portable_name, _portable_value in vars(_portable_module).items():
+    if _portable_name.startswith("test_") or _portable_name.startswith("reviewed"):
+        globals()[_portable_name] = _portable_value
+
+

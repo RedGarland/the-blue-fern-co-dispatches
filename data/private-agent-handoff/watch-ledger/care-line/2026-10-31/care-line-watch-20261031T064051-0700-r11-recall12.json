@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T064051-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T06:45:22-07:00",
+  "started_at": "2026-10-31T06:40:51-07:00",
+  "completed_at": "2026-10-31T06:42:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T05:42:28-07:00",
+    "end": "2026-10-31T06:42:11-07:00",
+    "basis": "Most recent individually verified prior Care Line heartbeat completion through this watch; retrospective recall results assessed for novel concrete service changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded high-value U.S. and territories healthcare-access recall watch only; the production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "CMS current listing remains topped by seven October 30 provider termination notices (CCNs B31564, A11721, 234047, 368355, 368395, 369294, 369309), all recorded in earlier watch runs. No October 31 notice or new rescission, termination, CLIA limitation/suspension shown. Termination notices are regulatory actions and do not themselves prove physical closure."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes suspended October 31 2026 October 30 2026 United States",
+      "maternity labor delivery unit shutdown October 31 2026 hospital October 30 2026",
+      "rural hospital emergency room suspension shutdown October 30 2026",
+      "behavioral health psychiatric inpatient facility closing suspending October 30 2026",
+      "dialysis clinic oncology infusion cancer center closes October 30 2026",
+      "primary care family medicine clinic temporarily closed October 30 2026 October 31",
+      "ambulance service shuts down October 30 2026 EMS paramedic coverage closure United States",
+      "air ambulance medical helicopter base closing October 30 2026 October 31 2026",
+      "hospital clinic reopening services restored October 30 2026 following closure",
+      "emergency department reopened October 30 2026 hospital ambulance diversion ended",
+      "Puerto Rico Guam Virgin Islands American Samoa CNMI hospital clinic emergency medical service closure October 2026",
+      "site:gov October 30 2026 hospital clinic dialysis service suspension closure public health notice"
+    ],
+    "query_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      4,
+      2
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Seven October 30 CMS provider termination notices",
+        "reason": "Already logged; no newer public notices visible",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Roseland Community Hospital labor-and-delivery closure announced for October 31",
+        "reason": "Already recorded in October 31 00:48 heartbeat; physical implementation not newly confirmed",
+        "url": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/"
+      },
+      {
+        "item": "Sanford Luverne Medical Center childbirth services",
+        "reason": "October 28 announcement of a prospective shutdown after births scheduled through April 2027; no current loss",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872"
+      },
+      {
+        "item": "Santa Clara Valley Healthcare Behavioral Health Pavilion",
+        "reason": "New psychiatric inpatient facility not yet open (November 3 target), and not restoration of a recently lost service",
+        "url": "https://www.kqed.org/news/12106470/santa-clara-countys-new-psychiatric-care-facility-will-serve-youth"
+      },
+      {
+        "item": "Gateway Regional Medical Center",
+        "reason": "November 17 CMS termination is contingent/proposed. Anonymous employee reported fourth-floor closure, but service line, precise implementation date, and patient-access consequence are unspecified; insufficient for a new qualified alert",
+        "url": "https://www.stl.news/gateway-regional-faces-121m-debt-medicare-deadline/"
+      },
+      {
+        "item": "Carle Health Rantoul temporary clinic closure and UNM Health diversion",
+        "reason": "Previously captured in earlier Care Line watches; no fresh distinct restoration or additional confirmed access change",
+        "url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/"
+      },
+      {
+        "item": "Older, non-U.S., financial-only, proposed or otherwise unrelated results",
+        "reason": "Excluded by high-value concrete access-effect and freshness criteria"
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Broad/local search indexes have incomplete short-window recall, particularly in rural, tribal, and territorial communities. Search freshness dates and result snippets may be imperfect. No finding is not proof of exhaustive national absence.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T054134-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T05:42:28-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "One private watch-ledger heartbeat file only; no editorial approval, publication, production-runner modification, schedule change, or disablement."
+  }
+}

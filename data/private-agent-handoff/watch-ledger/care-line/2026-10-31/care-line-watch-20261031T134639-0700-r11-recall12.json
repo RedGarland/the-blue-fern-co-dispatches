@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T134639-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T13:45:22-07:00",
+  "started_at": "2026-10-31T13:46:39-07:00",
+  "completed_at": "2026-10-31T13:47:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T12:45:35-07:00",
+    "end": "2026-10-31T13:47:11-07:00",
+    "basis": "From prior independently verified Care Line recall heartbeat completion to end of current observation; supplementary bounded recall, not authoritative production collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall of concrete U.S. and territorial healthcare service loss/restoration, ambulance and air-medical suspension, and CMS access-risk notices. Primary Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "observed_latest_notice_date": "2026-10-30",
+      "result": "Official CMS Public Notices listing accessible; no October 31 notices listed. Seven October 30 termination notices already captured in previous watches (California hospices, Michigan PRTF, Ohio home health agencies). No newer termination, rescission or CLIA notice established."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed suspended services October 31 2026 United States",
+      "hospital maternity labor delivery birth unit closure services October 30 31 2026",
+      "rural hospital emergency service closure suspension October 31 2026",
+      "behavioral health psychiatric hospital clinic closed stopped accepting patients October 31 2026",
+      "dialysis center closure suspension patients October 30 31 2026",
+      "oncology cancer treatment center closure interruption October 31 2026",
+      "primary care medical clinic immediate closure October 31 2026 patients",
+      "ambulance EMS station base closure suspension service October 31 2026",
+      "air ambulance medical helicopter base closure grounding October 31 2026",
+      "hospital emergency department reopened restored service October 31 2026",
+      "Puerto Rico Guam Virgin Islands CNMI American Samoa hospital clinic health services closed suspended October 31 2026",
+      "site:cms.gov \"2026-10-31\" \"termination\" \"provider\" OR \"CLIA\""
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "MaineHealth Lincoln Hospital birthing unit (Maine)",
+        "reason": "October 30 report concerns third-party review of an already proposed closure, with no independently evidenced new service cessation or restoration in this window.",
+        "url": "https://www.bangordailynews.com/2026/10/30/midcoast/midcoast-health/mainehealth-lincoln-hospital-birthing-unit-closure-independent-review/"
+      },
+      {
+        "item": "Sutter Health proposed Emeryville hospital (California)",
+        "reason": "October 31 report covers cancellation of a planned future build, not loss of an operating facility or patient service.",
+        "url": "https://contracosta.news/2026/10/31/red-tape-sutter-health-pulls-plug-on-1-bill-hospital-in-emeryville/"
+      },
+      {
+        "item": "Martin General hospital reopening effort (North Carolina)",
+        "reason": "October 31 story describes ongoing reopening effort, not completed restoration or operational emergency care.",
+        "url": "https://albemarleobserver.news/2026/10/31/martin-county-faces-75000-monthly-jail-costs-as-hospital-reopening-efforts-continue/"
+      },
+      {
+        "item": "Fitzgibbon Hospital labor and delivery cut (Missouri)",
+        "reason": "Service reduction reported October 8; outside current observation window.",
+        "url": "https://thebeaconnews.org/stories/2026/10/08/fitzgibbon-ama-bankruptcy-labor-and-delivery-marshall-mo-2026/"
+      },
+      {
+        "item": "Roseland, Sharon Regional, Carle Health Rantoul and UNM Health",
+        "reason": "These disruptions are documented in preceding watches; no qualifying distinct new event was established in this search."
+      },
+      {
+        "item": "Other retrieved matches",
+        "reason": "Older or overseas events, policy projections, opinion, unrelated business stories or prospective changes without immediate service consequence."
+      }
+    ],
+    "source_failures": [],
+    "status_rationale": "SUCCESS: the official CMS Public Notices page was checked first and all 12 supplementary targeted search requests returned; no new independently supported nonduplicate qualifying healthcare access change found.",
+    "limitations": "Web search coverage is non-exhaustive, especially for rural, tribal and territorial local news and delayed notice indexing. Zero supplemental findings does not establish no disruptions. Production collection remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T124433-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T12:45:35-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "One private ops/watch-ledger heartbeat only; no approvals, production publication, primary collector edits, schedule changes or disabling."
+  }
+}

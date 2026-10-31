@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261030T224102-0700-r11-20261031T054102Z",
+  "scheduled_for": "2026-10-30T22:44:51-07:00",
+  "started_at": "2026-10-30T22:41:02-07:00",
+  "completed_at": "2026-10-31T05:42:04.803Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T04:50:02.031Z",
+    "end": "2026-10-31T05:42:04.803Z",
+    "basis": "Incremental supplementary recall since the immediately preceding verified 30 Oct 2026 21:50:02 PDT heartbeat; exclude earlier reports and incidents already registered.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary discovery only; daily Gaza production collector and publisher remain authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-30/gaza-source-watch-20261030T214858-0700-r11-20261031T044858Z.json",
+      "completed_at": "2026-10-31T04:50:02.031Z",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "known_prior_finding_ids": [
+        "gaza-20261030-khan-younis-al-maslakh-12-injured-wafa-176452",
+        "gaza-20261030-khan-younis-child-wounds-wafa-176450",
+        "gaza-20261030-ohchr-yellow-line-expansion-displacement"
+      ]
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; top listing 27 Oct (West Bank), latest Gaza situation report posted 26 Oct for week 12–18 Oct; no in-window Gaza update."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Situation overview and health dashboards, but no source-dated in-window health disruption, evacuation, functioning-capacity or fuel update."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 on direct fetch, recurring from prior watch; WHO global and OCHA accessible as partial substitutes."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza \"31/October/2026\" injured killed",
+      "site:english.wafa.ps Gaza \"30/October/2026\" night strike civilian",
+      "site:reuters.com/world/middle-east/ Gaza \"October 31, 2026\" ceasefire casualties negotiations",
+      "site:apnews.com/article/ Gaza \"October 31, 2026\" strikes crossing civilians",
+      "site:aljazeera.com/news/2026/10/31/ Gaza killed airstrikes displacement",
+      "site:news.un.org Gaza October 31 2026 humanitarian ceasefire",
+      "site:unicef.org Gaza \"30 October 2026\" water children aid",
+      "site:wfp.org Gaza \"30 October 2026\" food access crossings",
+      "site:palestinercs.org Gaza October 31 2026 ambulance hospital attack",
+      "Gaza health ministry October 31 2026 new casualties wounded hospital capacity",
+      "site:middleeasteye.net Gaza \"31 October 2026\" casualties military civilian",
+      "Gaza October 31 2026 early morning Rafah crossing medical evacuation fuel water pipeline displacement"
+    ],
+    "search_recency_days": 2,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; top news item dated 30 Oct 22:23 Palestine local (12:23 PDT). No visible 31 Oct Gaza story. Search hit about a Jabalia drone death explicitly dated 29 Oct and excluded."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; latest 30 Oct Gaza Yellow Line report overlaps previously known OHCHR displacement finding; other recent lead stories are West Bank or unrelated."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible emergency overview. No substantiated, newly dated in-window food-aid or crossing change."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible standing emergency overview. No verified in-window child, water or nutrition development."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; prominent news items older than window. No verified new in-window ambulance/hospital/transport incident."
+      }
+    ],
+    "examined_exclusions": [
+      "WAFA 29 Oct Jabalia drone death (https://english.wafa.ps/Pages/Details/176437) predates window.",
+      "WAFA 30 Oct 18:02 Palestine time Khan Younis 12 injured story already recorded in prior watches.",
+      "WAFA 30 Oct Khan Younis child succumbing to wounds already recorded in prior watches.",
+      "Al Jazeera 30 Oct OHCHR Yellow Line displacement report repeats previous watch finding.",
+      "Search results concerning 2025, early 2026 or other Palestinian territories do not meet incremental Gaza novelty requirements."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway on emergency situation reports",
+        "materiality": "Previously known source-specific failure; did not preclude useful OCHA/WHO global and other source coverage."
+      },
+      {
+        "source": "UN News",
+        "issue": "Targeted search returned non-retryable robots.txt block for news.un.org",
+        "materiality": "Earlier watches already documented UN News inaccessibility; alternate sources available."
+      }
+    ],
+    "status_rationale": "DEGRADED from repeat WHO EMRO 502 and UN News access restriction, not newly material system-wide failure. No independently traceable, nonduplicate in-window development found.",
+    "safeguards": "Exactly one append-only heartbeat on ops/watch-ledger; no approval, publishing, posting, editing production, changing schedules or disabling automations."
+  }
+}

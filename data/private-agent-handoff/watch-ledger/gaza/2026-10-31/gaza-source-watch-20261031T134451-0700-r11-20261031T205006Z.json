@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T134451-0700-r11-20261031T205006Z",
+  "scheduled_for": "2026-10-31T13:44:51-07:00",
+  "started_at": "2026-10-31T13:48:57-07:00",
+  "completed_at": "2026-10-31T13:50:06.294-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T12:48:07.332-07:00",
+    "end": "2026-10-31T13:50:06.294-07:00",
+    "basis": "Previous verified watch heartbeat completed_at through current observation completion; 2026-10-31 21:48–22:50 Asia/Gaza local. Earlier-discovered event reporting excluded unless a newly verified, distinct qualifying development.",
+    "first_party_preface_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary source recall; production Gaza daily collector/publisher authoritative. No publication, approval, schedule, or public site mutation.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed publication remains 31 Oct 2026 Humanitarian Situation Report | 29 October 2026. Six Gaza developments from this release recorded in earlier 11:46–12:48 PDT lookback and not duplicated. No newer Gaza situation report listed."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Latest featured updates are earlier; no new 31 Oct Gaza hospital, medical evacuation, transport, fuel, capacity or ambulance event verified."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway, continuing earlier known access restriction. Alternative global WHO and OCHA coverage remained accessible."
+      }
+    ],
+    "first_party_preface_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report October 31 2026 update",
+      "site:who.int Gaza occupied Palestinian territory October 31 2026 health situation update"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" Gaza \"09:00 PM\" \"10:00 PM\" \"11:00 PM\"",
+      "Reuters Gaza October 31 2026 late evening 31 October 2026 Palestinian civilians aid ceasefire",
+      "AP News Gaza October 31 2026 latest evening casualties food crossings hospital",
+      "site:aljazeera.com/news/2026/10/31 Gaza latest evening killing displacement aid ceasefire",
+      "site:aa.com.tr/en/middle-east/ \"31.10.2026\" Gaza late Saturday injured killed",
+      "site:ochaopt.org/content/ \"31 Oct 2026\" \"Gaza\" new humanitarian report",
+      "site:who.int/news \"31 October 2026\" Gaza evacuations hospitals ambulances",
+      "site:palestinercs.org Gaza 31 October 2026 ambulance emergency services",
+      "site:wfp.org Gaza 31 October 2026 flour access convoys bread",
+      "site:unicef.org Gaza October 31 2026 water children displacement medical",
+      "site:icrc.org Gaza October 31 2026 hostages detainees transfers humanitarian",
+      "Gaza Israel October 31 2026 21:00 22:00 local ceasefire humanitarian crossings strikes civilians"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest visible Gaza article dated 31 October 17:45 Asia/Gaza (08:45 PDT): Wael Musallam earlier-wound fatality already recorded. Subsequent 18:02, 18:51 and 20:50 local articles relate to West Bank, not Gaza. No in-window Gaza reporting found."
+      },
+      {
+        "source": "Al Jazeera / Anadolu",
+        "url": "https://www.aljazeera.com/news/2026/10/31/at-least-four-palestinians-killed-in-gaza-as-israeli-attacks-continue",
+        "result": "31 Oct aggregation of already seen Nuseirat Diaa Abu al-Rous, earlier injury death Arafat al-Arair, and two girls killed after al-Mawasi tent fire, not demonstrably an additional post-12:48 PDT incident. Publication time not verified; excluded as previously indexed/earlier events."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; most recent English homepage news indexed June 2026, no new Oct 31 operational notice."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; targeted indexed search returned no qualifying current Oct 31 event."
+      },
+      {
+        "source": "UNICEF",
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Press release index accessible; targeted Oct 31 Gaza search returned no qualifying new development."
+      },
+      {
+        "source": "ICRC",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated Gaza October 31 hostage, detainee, transport, or access change found."
+      }
+    ],
+    "time_handling": "31 Oct 2026 Asia/Gaza UTC+02:00 and America/Los_Angeles UTC-07:00. Correct local conversions used; 17:45 Gaza = 08:45 PDT. Avoid prior earlier-watch error assuming Gaza UTC+03:00.",
+    "dedupe": "Previously recorded six 31 Oct OCHA source-derived updates, Wael Musallam death, al-Maghazi, al-Shati, Nuseirat, al-Mawasi, Khan Younis and Tel al-Hawa cases; Al Jazeera Oct 31 is a compilation not a separately distinct incident. Excluded old Reuters results and generic/undated background sources.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Known recurring restriction; WHO global accessible."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Known restricted source; OCHA humanitarian report accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO and WFP direct access failed. Alternate authoritative coverage remained usable. No newly material deterioration or new qualifying development verified this interval; absence of evidence does not certify none occurred.",
+    "safeguards": "Exactly one append-only JSON committed on ops/watch-ledger; no publication, social posting, approval, schedule or other repository changes."
+  }
+}

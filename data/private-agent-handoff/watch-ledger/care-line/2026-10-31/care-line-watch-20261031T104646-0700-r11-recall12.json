@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T104646-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T10:45:22-07:00",
+  "started_at": "2026-10-31T10:46:46-07:00",
+  "completed_at": "2026-10-31T10:47:18-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T09:44:42-07:00",
+    "end": "2026-10-31T10:47:18-07:00",
+    "basis": "Prior verified Care Line watch completion to this watch observation; retrospective recall permitted only for new, previously unrecorded concrete changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value U.S. and U.S.-territory healthcare-access disruptions and concrete restorations. Production Care Line collector is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "observed_latest_notice_date": "2026-10-30",
+      "result": "No October 31 notice listed during this check; seven October 30 termination notices were already recorded and are duplicates. These are Medicare provider termination notices, not evidence by themselves of facility closure.",
+      "previously_recorded": [
+        "Loving Touch Hospice and Palliative Care Inc (CA, B31564)",
+        "Newport Hospice (CA, A11721)",
+        "Kalamazoo Behavioral Health Hospital (MI, 234047)",
+        "Affinity Healthcare Solutions LLC (OH, 368355)",
+        "Aspen Home Healthcare (OH, 368395)",
+        "Crystal Heritage Care LLC (369294, state blank on CMS list)",
+        "Progressive Home Care LLC (OH, 369309)"
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "search_type": "Twelve web queries with 2-3-day recency targets; direct opening CMS listing before searches; no additional web searches after budget.",
+    "targeted_queries": [
+      "\"October 31, 2026\" \"hospital\" \"emergency department\" closed OR suspended",
+      "\"October 31, 2026\" \"labor and delivery\" \"closed\" hospital",
+      "\"October 31, 2026\" rural hospital ER emergency room closure services",
+      "\"October 31, 2026\" psychiatric behavioral health hospital closed suspended patients",
+      "\"October 30, 2026\" \"dialysis\" \"closed\" center patients",
+      "\"October 30, 2026\" \"cancer center\" \"closed\" patients oncology",
+      "\"October 31, 2026\" \"primary care\" \"clinic\" temporarily closed",
+      "\"October 31, 2026\" ambulance service closed ceased operation county",
+      "\"October 30, 2026\" \"air ambulance\" \"base\" closed suspended",
+      "\"October 31, 2026\" hospital emergency services reopened restored",
+      "\"October 31, 2026\" hospital service shut down urgent care maternity transfers",
+      "Puerto Rico Guam Virgin Islands Mariana Samoa October 30 31 2026 hospital clinic EMS shutdown reopened"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "CMS seven October 30 termination notices",
+        "reason": "Previously documented; no new official listing since the prior check",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Roseland Community Hospital labor and delivery, Chicago IL",
+        "reason": "Previously reported announced October 31 nighttime shutdown; no distinct current confirmation of physical shutdown in this run",
+        "url": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/"
+      },
+      {
+        "item": "Carle Health Rantoul clinic, IL",
+        "reason": "Previously recorded temporary closure; no verified material change or reopening",
+        "url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/"
+      },
+      {
+        "item": "UNM Health cyber incident, New Mexico",
+        "reason": "Previously recorded disruption; retrieved Oct 27 article is not a new qualifying change",
+        "url": "https://abqraw.com/post/cyber-attack-cripples-university-of-new-mexico-hospital-system-forces-closures/"
+      },
+      {
+        "item": "Other results",
+        "reason": "Older reports, overseas incidents, speculative proposals, unrelated stories, and new oncology service line announcements without qualifying loss/restoration"
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search indexing and recency filters are imperfect. Local, rural, tribal, and U.S.-territory sources are not exhaustive; no findings does not prove no access changes. This is supplementary and not production-wide coverage.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T094337-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T09:44:42-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Exactly one newly created private watch-ledger heartbeat; no approvals, public publication, collection changes, schedule changes or task disabling."
+  }
+}

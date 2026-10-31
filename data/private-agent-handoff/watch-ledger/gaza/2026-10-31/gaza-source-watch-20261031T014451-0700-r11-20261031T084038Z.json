@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T014451-0700-r11-20261031T084038Z",
+  "scheduled_for": "2026-10-31T01:44:51-07:00",
+  "started_at": "2026-10-31T01:40:38-07:00",
+  "completed_at": "2026-10-31T08:41:46.421Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T00:44:17-07:00",
+    "end": "2026-10-31T01:41:46.421-07:00",
+    "basis": "Incremental since the previous verified heartbeat's completed_at, not the article's source-local publication date. Reported WAFA time is Palestine-local, without assuming its UTC offset.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261031-al-mawasi-displacement-tent-fire-two-girls-died-wafa-176462",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176462",
+      "title": "Two girls die from injuries sustained in fire at displacement tent in Khan Younis",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "publication_time_local": "10:04 AM (WAFA site local)",
+      "event_date": "2026-10-31",
+      "prior_incident_date": "2026-10-30",
+      "event_time": null,
+      "location": "Al-Mawasi, west of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Two displaced girls, identified by cited medical sources as Habiba Zannoun and Aysal Abu Shaiban, died after injuries from a fire in a displacement tent.",
+      "exact_supporting_passage": "Medical sources identified the girls as Habiba Zannoun and Aysal Abu Shaiban, saying they succumbed to injuries sustained in the fire.",
+      "source_type": "established_news_agency_citing_medical_sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery_method": "Direct WAFA homepage and exact article click after OCHA OPT and WHO checks plus 12 bounded additional targeted searches",
+        "first_verified_in_run": "2026-10-31T08:41:46.421Z",
+        "newly_listed_at_wafa": "2026-10-31 10:04 AM (source local)",
+        "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T004451-0700-r11-20261031T074250Z.json",
+        "prior_heartbeat_latest_wafa_item": "2026-10-31 09:27 AM (source local), separate fatalities in Tel al-Hawa and Nuseirat",
+        "corroboration": "Single WAFA report attributing identification and deaths to medical sources; no independent confirmation in bounded checks",
+        "relevance": "Fatal safety incident affecting displaced children in an unsafe shelter; no allegation that the tent fire was caused by an Israeli military attack",
+        "production_publication_status": "not_checked_or_modified"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily Gaza collector and publisher remain authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T004451-0700-r11-20261031T074250Z.json",
+      "completed_at": "2026-10-31T07:44:17.128Z",
+      "status": "DEGRADED",
+      "outcome": "findings",
+      "checked": true
+    },
+    "sources_checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed 27 October West Bank update; most recent Gaza humanitarian situation report posted 26 October for 22 October report. No new in-window Gaza item."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway, recurring source-specific restriction documented in prior runs."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; standing overview, no new in-window Gaza health-system/medical evacuation operational change."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"31/October/2026\" killed injured hospital",
+      "site:english.wafa.ps Gaza Saturday 31 October 2026 10:00 11:00 civilians Israeli strikes",
+      "site:aljazeera.com/news/2026/10/31/ Gaza Israeli strikes casualties ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza October 31 2026  civilians killed ceasefire",
+      "site:apnews.com/article/ Gaza October 31 2026 aid hospital civilians",
+      "site:unicef.org Gaza \"31 October 2026\" children water shelter",
+      "site:wfp.org Gaza \"31 October 2026\" food aid crossing",
+      "site:palestinercs.org Gaza October 31 2026 ambulance hospital",
+      "site:who.int Gaza October 31 2026 patients medical evacuation hospital",
+      "site:ochaopt.org Gaza October 31 2026 aid displacement water",
+      "Gaza 31 October 2026 latest Saturday morning drone Khan Younis Nuseirat civilian injuries",
+      "Gaza 31 October 2026 Rafah crossing medical evacuation aid shipments water ceasefire"
+    ],
+    "additional_search_recency_days": 2,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "New 31 October 10:04 AM article describes two displaced girls dying after prior-evening tent fire; article read directly."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "31 October listing concerned archival footage; 30 October Gaza reporting not new for interval."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible overview, no new verified time-window Gaza food-delivery change."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible overview, no new dated in-window Gaza child protection or water-system event."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; dated homepage news older than window; no new in-window ambulance or hospital update."
+      }
+    ],
+    "exclusions": [
+      "31 October 09:27 AM WAFA report of Nuseirat drone fatality and Tel al-Hawa death from earlier wounds already recorded as two separate findings in immediately prior heartbeat.",
+      "31 October 10:00 AM WAFA item describes settler attack south of Nablus, West Bank, out of Gaza scope.",
+      "Older 30 October Gaza Yellow Line, Khan Younis injuries and prior displacement reports predate the window.",
+      "Broad search results included historical reports, off-scope West Bank stories and undated background; excluded.",
+      "Article about displaced girls' tent fire contains no supported attribution to military attack; recorded as displacement-related child safety/fatality, not military causation."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502 Bad Gateway",
+        "materiality": "Previously documented recurrent single-source restriction; OCHA OPT, WHO Global and other direct publishers accessible. Status DEGRADED, not FAILED."
+      }
+    ],
+    "status_rationale": "DEGRADED due to WHO EMRO source error, though useful authoritative alternative coverage remained. A newly published medical-source-attributed report of two displaced children's deaths in a shelter fire qualified as a nonduplicate displacement-related civilian harm event.",
+    "safeguards": "Exactly one append-only heartbeat file on ops/watch-ledger; no production code, publication, approvals, schedule or automation controls changed."
+  }
+}

@@ -5284,20 +5284,28 @@ def run_national_pipeline(
             write=False,
             dry_run=True,
         )
+    follow_up_query_rows = list(follow_up_discovery_report.get("query_rows", []))
     follow_up_state_result = update_follow_up_state(
         root,
         run_date=run_date,
         follow_up_queries=follow_up_queries,
-        discovery_query_rows=follow_up_discovery_report.get("query_rows", []),
+        discovery_query_rows=follow_up_query_rows,
         state_root=review_root,
     )
+    follow_up_query_failure_count = sum(1 for row in follow_up_query_rows if str(row.get("error") or "").strip())
+    follow_up_query_not_run_count = int(follow_up_state_result.get("not_run_count") or 0)
+    follow_up_query_problem_count = follow_up_query_failure_count + follow_up_query_not_run_count
     collection_status_counts = Counter(str(attempt.get("collection_status") or "unknown") for attempt in attempts)
     successful_attempt_count = sum(collection_status_counts.get(key, 0) for key in ("ok", "partial"))
     failed_source_count = collection_status_counts.get("failed", 0)
     skipped_source_count = collection_status_counts.get("skipped", 0)
     if attempts and successful_attempt_count == 0 and failed_source_count > 0:
         run_status = RUN_STATUS_FAILURE
+    elif follow_up_query_problem_count and not attempts:
+        run_status = RUN_STATUS_FAILURE
     elif failed_source_count > 0:
+        run_status = RUN_STATUS_PARTIAL_SUCCESS
+    elif follow_up_query_problem_count > 0:
         run_status = RUN_STATUS_PARTIAL_SUCCESS
     else:
         run_status = RUN_STATUS_SUCCESS
@@ -5315,7 +5323,7 @@ def run_national_pipeline(
         "successful_attempt_count": successful_attempt_count,
         "failed_source_count": failed_source_count,
         "source_failure_diagnostics": source_failure_diagnostics,
-        "zero_findings_distinct_from_source_failures": bool(failed_source_count or candidates or raw_items),
+        "zero_findings_distinct_from_source_failures": bool(failed_source_count or follow_up_query_problem_count or candidates or raw_items),
         "skipped_source_count": skipped_source_count,
         "collection_status_counts": dict(sorted(collection_status_counts.items())),
         "smoke_test": smoke_test,
@@ -5329,7 +5337,9 @@ def run_national_pipeline(
         "raw_items_retrieved_this_run": len(raw_items),
         "event_leads_created_this_run": sum(1 for lead in event_leads if _text(lead, "qualification_status") == "event_lead"),
         "follow_up_query_count": len(follow_up_queries),
-        "follow_up_query_row_count": len(follow_up_discovery_report.get("query_rows", [])),
+        "follow_up_query_row_count": len(follow_up_query_rows),
+        "follow_up_query_failure_count": follow_up_query_failure_count,
+        "follow_up_query_not_run_count": follow_up_query_not_run_count,
         "follow_up_material_update_count": sum(1 for item in follow_up_state_result["items"] if item.get("status") == "MATERIAL_UPDATE_FOUND"),
         "follow_up_state_path": str(follow_up_state_result.get("state_path") or ""),
         "qualified_candidates_created_this_run": candidate_registry["created_this_run"],

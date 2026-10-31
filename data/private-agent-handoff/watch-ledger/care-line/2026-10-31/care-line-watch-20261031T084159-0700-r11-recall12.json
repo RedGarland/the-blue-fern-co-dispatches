@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T084159-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T08:45:22-07:00",
+  "started_at": "2026-10-31T08:41:59-07:00",
+  "completed_at": "2026-10-31T08:42:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T07:51:34.703-07:00",
+    "end": "2026-10-31T08:42:57-07:00",
+    "basis": "Prior verified Care Line heartbeat completion through this observation; previously unseen earlier concrete developments eligible for retrospective recall."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall only. Production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "No 2026-10-31 notices listed. Seven 2026-10-30 terminations already recorded in earlier watch ledger: Loving Touch Hospice (B31564), Newport Hospice (A11721), Kalamazoo Behavioral Health Hospital (234047), Affinity Healthcare Solutions (368355), Aspen Home Healthcare (368395), Crystal Heritage Care (369294), Progressive Home Care (369309). All excluded as duplicates. CMS regulatory notice is not automatically proof of physical closure."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 31, 2026\" hospital emergency department closed temporarily diverted patients",
+      "\"October 31, 2026\" hospital maternity labor delivery shutdown effective Saturday",
+      "\"October 30, 2026\" hospital rural emergency services suspended closed ambulance transfers",
+      "\"October 31, 2026\" behavioral health psychiatric treatment center closed emergency patients",
+      "\"October 30, 2026\" dialysis oncology clinic temporarily closed services patients",
+      "\"October 31, 2026\" primary care medical clinic closure appointments moved",
+      "ambulance service suspended \"October 30, 2026\" county EMS closure",
+      "air ambulance helicopter base closed October 2026 Oct 30 31 EMS",
+      "emergency department reopened after closure \"October 30, 2026\" hospital",
+      "hospital dialysis labor delivery services reopened restored \"October 31, 2026\"",
+      "site:gov \"October 30, 2026\" health care facility \"closure\" or \"suspension\" notice",
+      "Puerto Rico Guam Virgin Islands Northern Mariana American Samoa hospital emergency services clinic closure October 30 31 2026"
+    ],
+    "query_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "October 30 CMS provider termination notices",
+        "reason": "Previously recorded seven official notices; no newer October 31 notice",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Roseland Community Hospital labor and delivery unit",
+        "reason": "October 31 announced closure recorded in prior 00:48 watch; no distinct newly verified completion",
+        "url": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/"
+      },
+      {
+        "item": "Carle Health Rantoul temporary clinic closure",
+        "reason": "Already recorded October 30; no new operational change demonstrated",
+        "url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/"
+      },
+      {
+        "item": "Guam Regional Medical City Oct 17 typhoon clinic restriction",
+        "reason": "Older October 17 notice for October 19 outpatient closure, not new Oct 31 change",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/"
+      },
+      {
+        "item": "LifeNet/Air Methods Texarkana medical helicopter partnership",
+        "reason": "October 2 reported operator/base transition; no new October 31 loss of essential air medical access substantiated",
+        "url": "https://txktoday.com/arkansas-news/lifenet-leaves-air-methods-after-43-years-as-pafford-launches-texarkana-helicopter-base-with-the-same-company/"
+      },
+      {
+        "item": "Campbell County Rescue Squad suspension",
+        "reason": "February 2026 temporary pause; outside recall window",
+        "url": "https://wset.com/news/local/questions-raised-after-campbell-county-rescue-squad-pauses-operations-volunteers-suspended-paperwork-issues-february-2026"
+      },
+      {
+        "item": "Unrelated, stale, prospective, overseas, marketing, funding-only and generic service pressure reports",
+        "reason": "No new verifiable concrete healthcare-access change within bounded watch scope"
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search engine recency filters returned older and overseas material; local, tribal, rural and U.S. territory source indexing is non-exhaustive. This no-findings outcome does not prove absence of all qualifying events. Nominal scheduled_for reflects configured :45:22 clock although this invocation started at 08:41:59 PDT.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T075000-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T07:51:34.703-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Exactly one private watch ledger heartbeat committed; no production collection mutation, review approval, publication, scheduling change or task disabling."
+  }
+}

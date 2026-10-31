@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T054134-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T05:45:22-07:00",
+  "started_at": "2026-10-31T05:41:34-07:00",
+  "completed_at": "2026-10-31T05:42:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T04:49:36-07:00",
+    "end": "2026-10-31T05:42:28-07:00",
+    "basis": "Previous independently verified Care Line heartbeat completion to current observation; retrospective recall candidates assessed only if previously unrecorded concrete changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territories high-value healthcare-access recall; production national collector is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "observed_at": "2026-10-31T05:41:34-07:00",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Official live CMS listing remains topped by seven October 30 provider termination notices: CCNs B31564, A11721, 234047, 368355, 368395, 369294, 369309. All seven already recorded in earlier Care Line watch. No new later-dated termination, rescission, CLIA limitation or suspension visible. These regulatory notices do not independently establish physical facility closures."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended services October 30 31 2026 US local news",
+      "labor delivery maternity obstetrics stopped services October 30 October 31 2026 hospital US",
+      "rural hospital emergency department closed October 30 31 2026 United States",
+      "mental health inpatient psychiatric hospital closure suspension October 30 31 2026",
+      "ambulance EMS service ceased operations suspended October 30 31 2026 county city",
+      "medical helicopter air ambulance base closed stopped service October 30 31 2026 US",
+      "dialysis kidney treatment clinic closes patients relocated October 30 2026 United States",
+      "oncology cancer infusion center closed or suspended treatments October 30 2026 United States",
+      "primary care urgent care medical clinic unexpectedly closed October 30 2026 patients",
+      "Guam Puerto Rico US Virgin Islands American Samoa Northern Mariana hospital emergency ambulance clinic service closed October 30 2026",
+      "emergency department hospital maternity reopened resumed services October 30 31 2026 US",
+      "healthcare clinic hospital emergency medical services temporary suspension closed October 31 2026 local news"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Seven CMS provider terminations dated October 30",
+        "reason": "Previously recorded duplicates",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Roseland Community Hospital labor-and-delivery planned closure on October 31",
+        "reason": "Already recorded in prior heartbeat; no independent confirmation of executed shutdown during the observation interval",
+        "url": "https://www.medicaldaily.com/roseland-hospital-labor-delivery-closure-chicago-south-side-479408"
+      },
+      {
+        "item": "Carle Health Rantoul temporary clinic closure",
+        "reason": "Previously recorded; no independently confirmed new restoration",
+        "url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/"
+      },
+      {
+        "item": "West Suburban Medical Center closure and Fitzgibbon Hospital maternity loss",
+        "reason": "Older 2026 events, outside recall interval; no new completed service change",
+        "url": "https://www.wbez.org/health-medicine/2026/04/01/west-suburban-medical-center-struggled-treat-patients-closed-vows-to-reopen-weiss-memorial-inspection-reports-oak-park"
+      },
+      {
+        "item": "New Florissant primary care clinic MEDA Spa",
+        "reason": "Opened in September, not abrupt restoration of previously lost essential service",
+        "url": "https://www.stlamerican.com/your-health-matters/florissant-clinic-combines-health-care-aesthetics/"
+      },
+      {
+        "item": "Rural hospital financial-risk report",
+        "reason": "Risk analysis, not concrete access reduction or restoration",
+        "url": "https://www.chiefhealthcareexecutive.com/view/hundreds-of-small-rural-hospitals-could-close-many-are-in-big-states-"
+      },
+      {
+        "item": "Foreign-location, commercial, general-health and unrelated incident results",
+        "reason": "Not qualified U.S. or territorial service-access events"
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search results mainly re-surfaced older, prospective, non-US, or unrelated material. Search recency filters are imperfect, and local, rural, tribal, and territorial reporting may not be indexed promptly. Zero findings does not imply exhaustive national coverage.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T044840-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T04:49:36-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Heartbeat-only commit on ops/watch-ledger; no approval, public publication, schedule or production modification, or task disabling."
+  }
+}

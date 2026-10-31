@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T034818-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T03:45:22-07:00",
+  "started_at": "2026-10-31T03:48:18-07:00",
+  "completed_at": "2026-10-31T03:49:25-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T02:47:10-07:00",
+    "end": "2026-10-31T03:49:25-07:00",
+    "basis": "Last directly verified Care Line watch heartbeat completion through current observation; bounded retrospective recall candidates considered only if previously unrecorded and showing concrete access change."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary healthcare-access recall; primary production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Live official listing checked before the 12 additional searches. The seven October 30 termination notices (CCNs B31564, A11721, 234047, 368355, 368395, 369294, 369309) remain newest and had been recorded in earlier watch runs. No newly listed rescission, termination, or CLIA limitation/suspension identified. A Medicare termination notice does not itself establish physical closure."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspension October 30 2026 US patients",
+      "hospital maternity labor delivery obstetrics closing October 30 31 2026 US",
+      "psychiatric behavioral health hospital inpatient unit closed October 30 2026",
+      "dialysis center closure patients October 30 2026 United States",
+      "cancer oncology treatment clinic closed October 30 2026 US",
+      "primary care clinic temporarily closed appointments relocated October 30 2026",
+      "rural hospital emergency room suspended closing October 30 2026 patients United States",
+      "ambulance EMS service stopped operations October 30 2026 county",
+      "air medical helicopter ambulance base closure grounded October 30 2026",
+      "hospital urgent care clinic reopens resumes service October 30 2026 after closure",
+      "site:gov \"October 30, 2026\" hospital services suspended closure emergency",
+      "Puerto Rico Guam USVI American Samoa Northern Mariana hospital clinic ambulance closed suspended October 30 2026"
+    ],
+    "search_recency_days": 3,
+    "reviewed_exclusions": [
+      {
+        "item": "Seven CMS notices dated October 30",
+        "reason": "Previously recorded; duplicates.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Carle Health Rantoul clinic temporary closure",
+        "reason": "Already documented in October 30 recall watch; no new restoration confirmed.",
+        "url": "https://www.wandtv.com/2026/10/30/carle-health-temporarily-closes-rantoul-clinic-over-high-moisture-levels/"
+      },
+      {
+        "item": "Roseland Community Hospital Chicago labor-and-delivery closure",
+        "reason": "Previously recorded; October 31 effective date not independently verified as completed in observation window.",
+        "url": "https://www.nbcchicago.com/news/local/exclusive-roseland-hospital-to-eliminate-pregnancy-care-this-fall/3996078/"
+      },
+      {
+        "item": "UNM Health cyber disruption and service restoration",
+        "reason": "October 26–28 disruption and restoration already documented; official October 28 update reported full clinical functionality, not new in this interval.",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc"
+      },
+      {
+        "item": "Sanford Luverne Medical Center maternity unit, Minnesota",
+        "reason": "October 28 announcement schedules cessation of births after April 2027; current delivery services continue, so no new immediate access effect in this watch window.",
+        "url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872"
+      },
+      {
+        "item": "Mann-Grandstaff VA Medical Center Spokane restructuring",
+        "reason": "Leaked potential plan, not confirmed service loss; VA spokesman explicitly said services are not changing.",
+        "url": "https://www.spokesman.com/stories/2026/oct/30/spokane-va-hospital-director-reassigned-after-inte/"
+      },
+      {
+        "item": "Gateway Regional Medical Center potential Medicare termination November 17",
+        "reason": "Future conditional regulatory action reported in secondary coverage; no new official CMS public notice or present confirmed service change.",
+        "url": "https://www.stl.news/gateway-regional-faces-121m-debt-medicare-deadline/"
+      },
+      {
+        "item": "Other pediatric intensive-care closure background, general rural hospital financial distress, Canadian and other non-US news",
+        "reason": "Older background, risk analysis, prospective changes, or outside geographic scope."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "All searches completed, but recent local, rural, tribal and U.S. territorial indexing is incomplete; search results predominantly covered older announcements and previous disruptions. Absence of a qualifying finding is not proof of exhaustive coverage. No conclusion about primary collector completeness.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T024600-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T02:47:10-07:00",
+      "result": "SUCCESS/no_findings"
+    },
+    "controls": "Exactly one heartbeat-only JSON created on ops/watch-ledger; no review approval, public publication, production collector mutation, schedule change or task disabling."
+  }
+}

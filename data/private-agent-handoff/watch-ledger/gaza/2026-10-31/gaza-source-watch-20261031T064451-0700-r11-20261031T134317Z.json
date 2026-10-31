@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T064451-0700-r11-20261031T134317Z",
+  "scheduled_for": "2026-10-31T06:44:51-07:00",
+  "started_at": "2026-10-31T06:43:17-07:00",
+  "completed_at": "2026-10-31T06:45:35.755-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T05:51:34.815-07:00",
+    "end": "2026-10-31T06:45:35.755-07:00",
+    "basis": "Incremental from prior verified Gaza Source Watch heartbeat; article timestamp 15:35 on 31 Oct 2026 Asia/Gaza UTC+02:00 corresponds to 06:35 PDT UTC-07:00. Uses timezone-aware conversion, not fixed UTC+03:00.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261031-khan-younis-taiba-towers-drone-fatality-injuries",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176470",
+      "title": "One Palestinian killed in Israeli drone strike on Khan Younis",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-10-31",
+      "publication_date": "2026-10-31",
+      "source_publication_at": "2026-10-31T15:35:00+02:00",
+      "publication_time_pdt": "2026-10-31T06:35:00-07:00",
+      "event_date": "2026-10-31",
+      "event_time": null,
+      "location": "Near Taiba Towers, west of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One Palestinian reported killed, several others injured (some critically); casualties reportedly taken to hospital. Civilian/combatant status unverified.",
+      "exact_supporting_passage": "One Palestinian was killed and several others were injured, some critically",
+      "source_type": "Palestinian official news agency reporting accounts from medical sources; no independent confirmation identified",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "first_detected_via": "Direct WAFA latest-news homepage and exact article read",
+        "report_publication_within_watch_window": true,
+        "prior_heartbeat_completed_at": "2026-10-31T05:51:34.815-07:00",
+        "note": "Distinct from early-October report near Taiba Towers and Oct 31 previously ledgered Nuseirat, Tel al-Hawa, al-Maghazi, al-Shati and displacement-tent reports. Source describes event as Saturday evening although article time is 15:35 local; precise event clock unverified. No separate medical authority, wire corroboration or civilian-status verification located.",
+        "prior_related_nonduplicate": "https://english.wafa.ps/Pages/Details/175476",
+        "evidence_checked_at": "2026-10-31T06:45:35.755-07:00"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Production Gaza collector/publisher remains authoritative; no approval, publication, schedule, disabling or production changes.",
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T054451-0700-r11-20261031T124844Z.json",
+      "completed_at": "2026-10-31T05:51:34.815-07:00",
+      "result": "DEGRADED/no_findings; prior timestamp conversion errors in earlier watches were documented for production reconciliation, not counted again."
+    },
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest 27 Oct West Bank and 26 Oct report for 22 Oct; no new Gaza update inside increment."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no interval-specific fresh health or medical evacuation item."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, same known recurring restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" \"Gaza\" \"03:\" \"PM\" killed injured",
+      "\"Taiba Towers\" \"Khan Younis\" drone strike October 31 2026 killed injured",
+      "site:palestinercs.org Gaza ambulance October 31 2026 injuries medical response",
+      "site:unicef.org Gaza October 31 2026 displacement water children casualties",
+      "site:wfp.org Gaza October 31 2026 food delivery aid crossings",
+      "site:reuters.com Gaza October 31 2026 civilians killed strikes truce aid",
+      "site:apnews.com/article/ Gaza October 31 2026 drone Khan Younis deaths civilians hospital",
+      "site:aljazeera.com/news/2026/10/31 Gaza Khan Younis 31 October strike killed Taiba",
+      "site:aa.com.tr/en \"31 October 2026\" Gaza drone strike Khan Younis",
+      "site:un.org/unispal/ OR site:news.un.org Gaza October 31 2026 ceasefire crossings displacement",
+      "Gaza Rafah Kerem Shalom crossings October 31 2026 latest aid access fuel medical evacuations",
+      "Gaza October 31 2026 hospital medical transport WHO PRCS Red Crescent functional capacity strike"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "15:35 Gaza-local Oct 31 article 176470 new; 14:23 and 13:36 Gaza-local al-Shati pieces already known/duplicate; no later Gaza publication visible."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no dated interval-specific Gaza hospital or ambulance update on homepage."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; Oct 31 child education feature refers to earlier incidents, not a distinct increment."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "403 Forbidden on newsroom; individual older WFP pages and independent WFP funding-reduction reporting were search-accessible, but not new this increment."
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/press-releases",
+        "result": "News index inaccessible; indexed UNICEF material had no verified in-window Gaza development."
+      }
+    ],
+    "excluded": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176468",
+        "reason": "Earlier reporting of al-Shati drone injury incident; duplicate of 176466, not new."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176463",
+        "reason": "Earlier al-Maghazi injury report; prior-watch timestamp conversion error documented already."
+      },
+      {
+        "url": "https://www.unicef.org/sop/stories/hope-amid-pain-palestinian-children-gaza-strip-one-year-after-ceasefire",
+        "reason": "Earlier October background, not interval-specific."
+      },
+      {
+        "url": "https://friends.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "Substantive recent funding reduction, but public before prior hourly watch; not new in this increment."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/175476",
+        "reason": "October 5 separate Taiba Towers incident; different date, not Oct 31 finding duplicate."
+      },
+      {
+        "url": null,
+        "reason": "Older casualty summaries, West Bank-only events, opinion, unsupported social claims and unverified article rewrites excluded."
+      }
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously observed; alternative WHO Global and OCHA accessible."
+      },
+      {
+        "source": "WFP newsroom",
+        "error": "HTTP 403",
+        "materiality": "Individual WFP items and alternative search available; no source-specific positive finding missed established."
+      },
+      {
+        "source": "UNICEF press releases index",
+        "error": "Inaccessible via retrieval",
+        "materiality": "Indexed UNICEF articles accessible; impact limited."
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt disallowed",
+        "materiality": "Other UN and humanitarian sources accessible."
+      }
+    ],
+    "status_rationale": "One new source-traceable casualty incident found and persisted. Coverage remained useful but four source-level restrictions or retrieval failures make watch DEGRADED; only WHO EMRO was previously known and its recurrence is not separately material.",
+    "safeguards": "Exactly one append-only heartbeat intended for ops/watch-ledger; never approve, publish, alter schedule, or disable task."
+  }
+}

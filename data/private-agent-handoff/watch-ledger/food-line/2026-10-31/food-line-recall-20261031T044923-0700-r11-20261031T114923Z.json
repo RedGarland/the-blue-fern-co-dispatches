@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T044923-0700-r11-20261031T114923Z",
+  "scheduled_for": "2026-10-31T04:45:54-07:00",
+  "started_at": "2026-10-31T04:49:23-07:00",
+  "completed_at": "2026-10-31T04:50:38.990-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T03:47:31-07:00",
+    "end_at": "2026-10-31T04:50:38.990-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified Food Line watch heartbeat at 03:47:31 PDT, 2026-10-31; web recency extended 2 days for indexing lag; only new incidents/publications within the watch window eligible.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": [
+      2
+    ]
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary Food Line recall only; authoritative production collection unaffected. Four miss classes: only/last/full-service grocery loss; disaster-canceled distributions; abrupt pantry/food-bank closure or major access reduction; official immediate SNAP/WIC/EBT interruption.",
+    "Twelve targeted web searches executed with no reported search-tool errors. No newly verifiable qualifying U.S. event was identified with source/event timing within this observation window. Absence of indexed evidence does not establish nationwide absence.",
+    "Reviewed Kauaʻi Hurricane Lowell recovery notice dated Oct 29: Oct 30 Hale Līhuʻe Hawaiʻi Foodbank emergency distribution was explicitly scheduled, not canceled. https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+    "Excluded Prodisee Pantry's weather cancellation for Oct 10, reported Oct 7, as older than window. https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+    "Excluded earlier rural grocery losses (e.g., Eastport Maine August 2026), Canadian news, 2025 federal shutdown/SNAP guidance, general resource listings, routine promotion, and stories without proven immediate new access impacts.",
+    "No approval, publication, task schedule modification, task disabling, or production workflow mutation performed.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T034701-0700-r11-20261031T104701Z.json",
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" closed fire October 30 2026 October 31 2026 United States",
+          "category": "only/sole grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"sole grocery store\" \"closed\" October 30 2026",
+          "category": "only/sole grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"last grocery store\" fire closure October 2026 town",
+          "category": "last grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "\"full service grocery store\" \"closed\" October 30 2026",
+          "category": "full-service grocery loss",
+          "recency_days": 2
+        },
+        {
+          "query": "food distribution canceled storm October 30 2026 food bank",
+          "category": "weather-related distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "food pantry distribution suspended canceled flood outage Oct 30 31 2026",
+          "category": "storm/outage-related distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "food bank emergency food distribution canceled hurricane storm Oct 31 2026",
+          "category": "disaster-related distribution cancellation",
+          "recency_days": 2
+        },
+        {
+          "query": "food pantry closed unexpectedly October 30 2026 local",
+          "category": "abrupt pantry closure",
+          "recency_days": 2
+        },
+        {
+          "query": "food bank suspended services October 31 2026 power outage fire",
+          "category": "abrupt food bank service interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"SNAP\" \"October 31, 2026\" \"benefits\" delayed",
+          "category": "official SNAP interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "site:gov \"WIC\" \"October 30, 2026\" \"closed\" \"benefits\"",
+          "category": "official WIC interruption",
+          "recency_days": 2
+        },
+        {
+          "query": "SNAP EBT outage October 31 2026 official state benefits interrupted",
+          "category": "official SNAP/EBT interruption",
+          "recency_days": 2
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+        "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "https://www.livingstoncountyny.gov/m/newsflash"
+      ]
+    }
+  ]
+}

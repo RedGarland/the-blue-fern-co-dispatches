@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T034451-0700-r11-20261031T104457Z",
+  "scheduled_for": "2026-10-31T03:44:51-07:00",
+  "started_at": "2026-10-31T03:44:57-07:00",
+  "completed_at": "2026-10-31T10:46:47.518Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T02:48:50.434-07:00",
+    "end": "2026-10-31T03:46:47.518-07:00",
+    "basis": "Incremental from the prior verified Gaza Source Watch heartbeat completion on 2026-10-31T09:48:50.434Z (02:48:50.434 PDT). Gaza/WAFA publication clock is UTC+3 on October 31; records are not misclassified by comparing publication local time directly to PDT.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Gaza collector/publisher is authoritative. No approval, publication, automation scheduling, or production content changes.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T024451-0700-r11-20261031T094821Z.json",
+      "completed_at": "2026-10-31T09:48:50.434Z",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified": true
+    },
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent listed update 27 October (West Bank); latest listed Gaza-relevant humanitarian situation report published 26 October, for 22 October. No update dated within the current incremental observation window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, standing crisis overview; latest listed regional Gaza-relevant news older than October 31. No verified interval-specific hospital, medical evacuation, health service or ambulance change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring access failure confirmed directly. Another Palestine news URL also inaccessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" Gaza 13:00 14:00 killed injured displacement",
+      "site:english.wafa.ps/Pages/Details/ October 31 2026 Gaza Saturday afternoon medical sources killed",
+      "site:ochaopt.org Gaza October 31 2026 humanitarian aid access humanitarian situation",
+      "site:who.int Gaza \"31 October 2026\" health hospital medical evacuation",
+      "site:unicef.org Gaza \"31 October 2026\" children water shelter",
+      "site:reuters.com/world/middle-east Gaza October 31 2026 casualties ceasefire aid",
+      "site:aljazeera.com/news/2026/10/31 Gaza October 31 2026 ceasefire casualties aid",
+      "site:aa.com.tr/en/middle-east/ \"Oct 31, 2026\" Gaza civilians killed injured displacement",
+      "site:wfp.org Gaza \"31 October 2026\" food crossings trucks",
+      "site:middleeasteye.net/news/gaza 31 October 2026 hospital civilian casualties ceasefire",
+      "Gaza October 31 2026 13:00 14:00 local time Rafah crossing medical evacuation hospitals aid",
+      "Gaza October 31 2026 afternoon strike casualties ceasefire latest Gaza Saturday"
+    ],
+    "search_recency_days": 2,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "As of check, latest items 31 October 12:41 and 12:39 PM Gaza-local were West Bank; latest Gaza item published 11:54 AM Gaza-local (01:54 PDT), BEFORE the prior watch ended at 02:48 PDT. No later qualifying Gaza reporting found."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "31 October lead items opinion or archival video; latest substantive Gaza humanitarian news on listing dated 30 October or earlier, outside current window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; English homepage latest news older than interval."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; ongoing food-assistance reductions and hunger risks discussed but page not dated to this observation window; excluded as standing context."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible; most recent dated Gaza child-related listed item is 16 October. No new interval development."
+      }
+    ],
+    "excluded": [
+      {
+        "source": "https://english.wafa.ps/Pages/Details/176463",
+        "reason": "Four Palestinians wounded by Israeli gunfire at al-Maghazi refugee camp. Published 31 October 11:54 AM Gaza-local (01:54 AM PDT), before the prior 02:48 AM PDT heartbeat completion. Not a new current-window development. Possible previous-watch omission flagged for reconciliation, not counted as new finding."
+      },
+      {
+        "source": "https://english.wafa.ps/Pages/Details/176462",
+        "reason": "Two displaced girls' deaths already captured in earlier watch."
+      },
+      {
+        "source": "https://english.wafa.ps/Pages/Details/176459",
+        "reason": "Nuseirat/Tel al-Hawa fatalities already captured in earlier watch."
+      },
+      {
+        "source": null,
+        "reason": "Other retrieved results were old, undated/background, West Bank, unrelated regional events, opinion or insufficiently verified as current new Gaza changes."
+      }
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "materiality": "Recurrence of documented failure in immediately prior run; alternative WHO Global, OCHA OPT, WAFA and humanitarian/news sources accessible. Does not represent newly material degradation."
+      }
+    ],
+    "status_rationale": "Some useful coverage, but WHO EMRO inaccessible; DEGRADED rather than FAILED. No verified new nonduplicate development in the incremental interval.",
+    "safeguards": "Exactly one append-only heartbeat JSON committed to ops/watch-ledger; no production write, public publishing, approval, schedule change or task disablement."
+  }
+}

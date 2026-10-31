@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T144407-0700-r11-20261031T214407Z",
+  "scheduled_for": "2026-10-31T14:45:54-07:00",
+  "started_at": "2026-10-31T14:44:07-07:00",
+  "completed_at": "2026-10-31T14:44:53.581-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T13:44:32.517-07:00",
+    "end_at": "2026-10-31T14:44:53.581-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is the completed_at value independently read from the immediately preceding verified watch heartbeat. Discovery queries specified October 31, 2026; historical search results were screened by actual source date/event date, and prior findings excluded as duplicates.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": null
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary high-value recall only; the Food Line production nationwide collector remains authoritative. All four requested miss classes searched: sole/last/full-service grocery loss, storm/damage-canceled emergency distribution, abrupt pantry/food-bank service loss, and official immediate SNAP/WIC assistance interruptions.",
+    "Twelve targeted fast web searches returned results without tool errors. No new verified qualifying source was found in the bounded interval; search returns were mostly stale or unrelated, so this is not a comprehensive nationwide absence claim.",
+    "Previously captured Community Action Services and Food Bank closure in Provo, Utah, effective November 1, 2026, remains a duplicate from the 06:50 PDT watch; no new distinct documented interruption was identified.",
+    "Excluded older sole-grocery loss in Spencer, New York (September 2026); El Paso, Texas storm-damaged food-bank temporary closure (September 2026); Stockton, Alabama distribution cancellation (October 10, 2026); Wyandanch, New York soup kitchen fire (October 20, 2026); and Hayward, California food-pantry closure (August 2026).",
+    "Excluded October 2025 SNAP government-shutdown notices incorrectly retrieved for October 2026 queries, non-official EBT status pages, donation drives, event cancellations unrelated to emergency food access, and routine program information.",
+    {
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T134235-0700-r11-20261031T204235Z.json",
+      "bounded_query_context": [
+        {
+          "query": "October 31 2026 only grocery store closed fire town community last grocery",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "October 31 2026 sole grocery store closes community food desert",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "October 31 2026 food bank pantry closed abruptly services suspended",
+          "category": "abrupt_food_bank_pantry_closure",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "October 31 2026 emergency food distribution canceled storm power outage",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "October 31 2026 SNAP benefits interruption November 1 official state agency",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "October 31 2026 WIC benefits suspension outage official notice",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "\"Oct 31, 2026\" \"food pantry\" \"closed\" OR \"closure\"",
+          "category": "abrupt_pantry_closure",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "\"October 31, 2026\" \"food bank\" \"suspend\" OR \"temporarily closed\"",
+          "category": "abrupt_food_bank_closure",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "\"Oct. 31, 2026\" \"grocery store\" \"only\" \"closed\" OR fire",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "\"October 31, 2026\" \"food distribution\" \"canceled\" OR \"postponed\"",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "\"October 31, 2026\" SNAP WIC \"outage\" \"benefits\" official",
+          "category": "official_benefit_interruption",
+          "method": "fast",
+          "recency_days": null
+        },
+        {
+          "query": "2026 October 31 food pantry distribution cancelled flood storm closure local news",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": null
+        }
+      ],
+      "inspected_reference_examples": [
+        "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+        "https://abc7ny.com/post/wyandanch-church-fire-shuts-down-soup-kitchen-serving-150-people-day/19955442/",
+        "https://www.nbcbayarea.com/news/local/hayward-food-pantry-closure/4127106/"
+      ]
+    },
+    "No editorial review action, approval, publication, collector modification, task schedule change, or disabling occurred."
+  ]
+}

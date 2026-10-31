@@ -3586,6 +3586,7 @@ def run_food_line_discovery_expansion(
     public_claim_lookback_days: int = 0,
     public_claim_lookahead_days: int = 0,
     dry_run: bool = False,
+    query_plan_override: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     date_text = validate_date(edition_date)
     fetch = resolve_food_line_fetcher(fetcher)
@@ -3593,15 +3594,25 @@ def run_food_line_discovery_expansion(
     timed_out = False
     config = load_food_line_discovery_expansion_config(root)
     configured_direct_sources = [row for row in config.get("direct_sources") or [] if isinstance(row, dict)]
-    full_query_plan = build_food_line_discovery_query_plan(
-        root,
-        date_text,
-        lookback_days=query_lookback_days,
-        lookahead_days=query_lookahead_days,
+    full_query_plan = (
+        list(query_plan_override)
+        if query_plan_override is not None
+        else build_food_line_discovery_query_plan(
+            root,
+            date_text,
+            lookback_days=query_lookback_days,
+            lookahead_days=query_lookahead_days,
+        )
     )
     query_plan_available_count = len(full_query_plan)
-    query_plan = _sample_query_plan_across_families(full_query_plan, max_queries)
+    query_plan = (
+        list(full_query_plan)
+        if query_plan_override is not None
+        else _sample_query_plan_across_families(full_query_plan, max_queries)
+    )
     query_plan_bounded_count = len(query_plan)
+    if query_plan_override is not None and resume_from_query_index:
+        raise ValueError("query_plan_override cannot be combined with positional resume")
     resume_from_query_index = max(0, min(int(resume_from_query_index or 0), query_plan_bounded_count))
     queries_deferred = max(0, query_plan_available_count - query_plan_bounded_count)
     queries_already_completed = resume_from_query_index

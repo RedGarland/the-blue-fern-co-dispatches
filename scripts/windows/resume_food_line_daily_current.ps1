@@ -32,4 +32,3 @@ if ($ContinuationRunRoot) { $arguments += @("--continuation-run-root", $Continua
 if ($TestMode) { $arguments += "--test-mode" }
 & $PythonExecutable @arguments
 exit $LASTEXITCODE
-

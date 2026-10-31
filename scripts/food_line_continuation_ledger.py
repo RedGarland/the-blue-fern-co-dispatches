@@ -462,4 +462,3 @@ def gate_summary(state: dict[str, Any]) -> dict[str, Any]:
         "unknown_count": len(state.get("unknown_query_ids") or []),
         "completed_count": len(state.get("completed_query_ids") or []),
     }
-

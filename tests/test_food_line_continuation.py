@@ -328,4 +328,3 @@ def test_only_complete_terminal_coverage_qualifies_intake(tmp_path):
     failed = ledger.source_stage_handoff_assessment(failed_state)
     assert failed["intake_eligible"] is False
     assert failed["no_news"] is False
-

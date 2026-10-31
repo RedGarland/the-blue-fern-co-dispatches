@@ -507,7 +507,7 @@ def _normalized_title_key(value: str) -> str:
 def _clean_title_text(value: str) -> str:
     text = _nonempty(html.unescape(value))
     text = re.sub(r"<[^>]+>", " ", text)
-    return re.sub(r"\s+", " ", text).strip(" \t\r\n---|:;,.")
+    return re.sub(r"\s+", " ", text).strip(" \t\r\n-–—|:;,.")
 
 
 def _dedupe_texts(values: list[str], *, limit: int = 6) -> list[str]:
@@ -2026,7 +2026,7 @@ def _strip_site_suffix(title: str) -> str:
     cleaned = _clean_title_text(title)
     if not cleaned:
         return ""
-    for separator in (" | ", " - ", " - ", " :: ", " / "):
+    for separator in (" | ", " - ", " — ", " :: ", " / "):
         if separator not in cleaned:
             continue
         parts = [part.strip() for part in cleaned.split(separator) if part.strip()]
@@ -5097,5 +5097,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
 

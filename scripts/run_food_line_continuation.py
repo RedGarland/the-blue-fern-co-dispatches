@@ -334,4 +334,3 @@ if __name__ == "__main__":
     except ContinuationLedgerError as exc:
         print(str(exc), file=sys.stderr)
         raise SystemExit(10)
-

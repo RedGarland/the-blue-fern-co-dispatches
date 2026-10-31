@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T024451-0700-r11-20261031T094821Z",
+  "scheduled_for": "2026-10-31T02:44:51-07:00",
+  "started_at": "2026-10-31T02:46:56-07:00",
+  "completed_at": "2026-10-31T09:48:50.434Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T01:41:46.421-07:00",
+    "end": "2026-10-31T02:48:50.434-07:00",
+    "basis": "Incremental since the prior verified heartbeat completed 2026-10-31T08:41:46.421Z; sources checked through this run's completion. Source-local dates are kept distinct from the PT observation interval.",
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Production Gaza collector and publisher remain authoritative.",
+    "prior_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-10-31/gaza-source-watch-20261031T014451-0700-r11-20261031T084038Z.json",
+      "completed_at": "2026-10-31T08:41:46.421Z",
+      "status": "DEGRADED",
+      "outcome": "findings",
+      "verified": true
+    },
+    "checked_first": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest listed update 27 October (West Bank), latest Gaza-relevant humanitarian situation report published 26 October. No new interval Gaza publication."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, recurring documented source access restriction."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible standing overview; no verified in-window operational Gaza health-system or medical evacuation change."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" Gaza 11:00 12:00 killed injured",
+      "site:who.int Gaza \"31 October 2026\" hospital patients evacuation health",
+      "site:ochaopt.org Gaza \"31 October 2026\" humanitarian aid access displacement",
+      "site:aljazeera.com/news/2026/10/31 Gaza Israeli attacks ceasefire civilian casualties",
+      "site:reuters.com/world/middle-east/ Gaza Oct 31 2026 killings civilians aid ceasefire",
+      "site:unicef.org Gaza October 31 2026 child water shelter",
+      "site:wfp.org Gaza October 31 2026 food crossing aid",
+      "Gaza 31 October 2026 latest Saturday morning civilian casualties Rafah Khan Younis Nuseirat",
+      "site:english.wafa.ps/Pages/Details/ \"31/October/2026\" Gaza \"11:\" \"Saturday\"",
+      "site:aa.com.tr/en/middle-east/ Gaza 31.10.2026 killed injured ceasefire crossing",
+      "site:middleeasteye.net/news Gaza October 31 2026 strikes hospital humanitarian",
+      "Gaza October 31 2026 Rafah crossing medical evacuation ambulances ceasefire humanitarian access"
+    ],
+    "search_recency_days": 2,
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest item 31 October 10:04 AM source local, already included in immediately preceding heartbeat; no subsequent in-window Gaza item listed."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/2-palestinians-killed-in-israels-ongoing-violations-of-gaza-ceasefire/4107086",
+        "result": "31 October reporting corroborates Nuseirat and Tel al-Hawa fatalities recorded in earlier heartbeat and mentions continuing fire toward displaced tents. No distinct new casualty event verified; tent-directed fire already described in 09:27 WAFA item."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "31 October Palestine listing led with archival footage; Gaza impact reporting dated 30 October predates interval."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest homepage news older than incremental window."
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible undated/evergreen emergency overview; no new in-window operational aid change."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible overview; no new dated in-window Gaza water or child-health event."
+      }
+    ],
+    "excluded": [
+      {
+        "source": "https://english.wafa.ps/Pages/Details/176462",
+        "reason": "Displaced girls' tent-fire fatalities already committed as a finding in the immediately preceding heartbeat."
+      },
+      {
+        "source": "https://english.wafa.ps/Pages/Details/176459",
+        "reason": "Nuseirat fatality and Tel al-Hawa death already committed in the preceding-to-previous heartbeat; also includes fire toward displaced tents. Not a new event."
+      },
+      {
+        "source": "https://www.aa.com.tr/en/middle-east/2-palestinians-killed-in-israels-ongoing-violations-of-gaza-ceasefire/4107086",
+        "reason": "Same two previously reported deaths; further description of tent-targeted gunfire, including reports of several tents struck without injuries, not verified as a distinct later occurrence. Treated as follow-up context, not a separate new incident."
+      },
+      {
+        "source": "https://english.wafa.ps/Pages/Details/176452",
+        "reason": "30 October Khan Younis injury report predates the incremental window."
+      },
+      {
+        "source": null,
+        "reason": "Other results were historical, off-scope West Bank/Lebanon, background overviews or insufficiently dated to establish a new in-window development."
+      }
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Recurring single-source restriction, as in previous heartbeat. Other WHO, OCHA OPT and humanitarian/news publishers accessible; status DEGRADED, no newly material failure."
+      }
+    ],
+    "status_rationale": "No qualifying, verified, nonduplicate new development in interval. WHO EMRO inaccessible (recurring error), so status remains DEGRADED rather than FAILED.",
+    "safeguards": "Exactly one append-only heartbeat file on ops/watch-ledger; no approval, publication, production content, schedule, or automation change."
+  }
+}

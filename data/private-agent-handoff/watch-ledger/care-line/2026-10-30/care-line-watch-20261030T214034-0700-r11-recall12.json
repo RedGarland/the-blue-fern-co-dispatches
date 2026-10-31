@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T214034-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T21:45:22-07:00",
+  "started_at": "2026-10-30T21:40:34-07:00",
+  "completed_at": "2026-10-30T21:41:16.079-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T20:50:26-07:00",
+    "end": "2026-10-30T21:41:16.079-07:00",
+    "basis": "New qualifying reports/notices since the previous verified heartbeat, while allowing retrospective recall of newly discovered actual service changes; search visibility does not establish exact event effective time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; authoritative national production collector remains unchanged.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T204913-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "newest_verified_notice_date": "2026-10-30",
+      "change_since_previous_heartbeat": "None. Seven termination notices dated October 30 (provider CCNs B31564, A11721, 234047, 368355, 368395, 369294 and 369309) remain on the live listing and were already captured in an earlier watch; no new CMS entries observed. A termination notice does not alone prove physical closure."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed patients diverted October 30 2026",
+      "maternity labor delivery unit closure suspension October 30 2026 hospital",
+      "behavioral health psychiatric hospital inpatient service closed October 30 2026",
+      "dialysis clinic closed suspended patients October 30 2026",
+      "oncology cancer treatment clinic closed suspended October 30 2026",
+      "rural hospital emergency services suspension closure October 30 2026",
+      "ambulance service permanently closed suspended operations October 30 2026",
+      "air medical helicopter ambulance base closed grounded October 30 2026",
+      "primary care clinic closed abruptly appointments relocated October 30 2026",
+      "hospital emergency department reopens restored services October 30 2026",
+      "Puerto Rico Guam Virgin Islands healthcare clinic hospital service closed October 30 2026",
+      "Alaska American Samoa Northern Mariana Islands hospital ambulance service suspension October 30 2026"
+    ],
+    "search_recency_days": 2,
+    "search_execution": "One batch of 12 distinct targeted web searches after the official CMS listing, with no further targeted searches.",
+    "reviewed_exclusions": [
+      {
+        "name": "Seven October 30 CMS termination notices",
+        "reason": "Previously recorded; no new rows in the official listing."
+      },
+      {
+        "name": "UNM Health ambulance diversion / clinical service interruption, Albuquerque NM",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "October 28 reported and previously documented; no newly verified change in current interval."
+      },
+      {
+        "name": "REACH air-medical helicopter fatal accident, Catalina Island CA",
+        "source_url": "https://migflug.com/afterburner/catalina-helicopter-crash-reach-ec135-air-ambulance-2026/",
+        "reason": "September 30 accident, not evidence of a newly closed or suspended air-ambulance base during the search interval."
+      },
+      {
+        "name": "Carle Rantoul clinic, IL",
+        "reason": "Previously recorded in the immediately preceding heartbeat."
+      }
+    ],
+    "search_result_quality": "Indexed hits were sparse and heavily retrospective; no source established another new in-scope operational service loss, restoration, or CMS regulatory event.",
+    "source_failures": [],
+    "limitations": "Bounded search cannot guarantee detection across rural/tribal communities, US territories and local sources; late posts or unindexed official updates may appear later.",
+    "schedule_note": "Execution began before the nominal 21:45:22 local schedule occurrence according to the supplied run clock. The assigned occurrence is recorded as scheduled_for without representing a change to the schedule.",
+    "controls": "Single append-only private watch heartbeat; no review approval, public release, production collector mutation, schedule change or task disabling."
+  }
+}

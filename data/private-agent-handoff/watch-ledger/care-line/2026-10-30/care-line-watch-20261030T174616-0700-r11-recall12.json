@@ -1,0 +1,71 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T174616-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T17:45:22-07:00",
+  "started_at": "2026-10-30T17:46:16-07:00",
+  "completed_at": "2026-10-30T17:46:59.574-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T16:43:45.071-07:00",
+    "end": "2026-10-30T17:46:59.574-07:00",
+    "basis": "Prior independently verified Care Line Watch completion through this recall. Retrospective newly indexed developments also screened. The primary national production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line high-value miss recall for United States, District of Columbia and territories; not primary collection.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T164305-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-23",
+      "new_notices_since_previous_watch": 0,
+      "result": "CMS Public Notices official listing checked before supplementary search queries; no new dated notices after October 23, 2026. Older provider terminations, rescissions and CLIA actions excluded as previously known."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing suspended October 30 2026 inpatient services local news",
+      "hospital maternity labor delivery suspended closed October 30 2026",
+      "rural hospital closure emergency service halted Friday October 30 2026",
+      "psychiatric behavioral health inpatient unit services closing October 30 2026",
+      "dialysis center closure patients October 30 2026",
+      "oncology cancer clinic closing patients October 30 2026",
+      "primary care clinic abruptly closing Friday October 30 2026 patients",
+      "ambulance service suspended ceased operations October 30 2026 rural",
+      "air ambulance helicopter medical base closed suspended October 30 2026",
+      "hospital emergency department reopened services restored October 30 2026",
+      "site:gov Medicare termination rescission CLIA suspension October 30 2026 hospital lab",
+      "Puerto Rico Guam USVI American Samoa Northern Mariana Islands hospital clinic ambulance suspension October 30 2026"
+    ],
+    "targeted_search_recency_days": 2,
+    "coverage_classes": [
+      "Hospital, emergency department, maternity, behavioral health, dialysis, oncology and primary care closure or suspension",
+      "Emergency and rural essential service loss",
+      "Ambulance, air-medical and EMS base service loss",
+      "CMS Medicare provider termination or rescission, CLIA limitation, suspension or similar access-risk notices",
+      "Abrupt, confirmed reopening of previously lost essential service",
+      "All U.S. states, District of Columbia and territories (bounded search, non-exhaustive)"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Roseland Hospital (Chicago, Illinois)",
+        "reason": "Labor and delivery closure reported September 30 with planned October 31 effective date; known prospectively, no new confirmation of actually effective service loss in this window.",
+        "source_url": "https://www.nbcchicago.com/news/local/exclusive-roseland-hospital-to-eliminate-pregnancy-care-this-fall/3996078/"
+      },
+      {
+        "name": "Sharon Regional Medical Center (Sharon, Pennsylvania)",
+        "reason": "Inpatient services suspension recovered earlier on October 30; prior finding, duplicate."
+      },
+      {
+        "name": "Previously documented hospital service losses, restorations and CMS notices",
+        "reason": "No distinct newly effective healthcare-access change verified in this window."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search engine results are not exhaustive for hyperlocal, tribal, rural or territorial service interruptions, and publication/indexing lag may delay discovery. All 12 targeted searches completed; no new qualifying development could be substantiated.",
+    "controls": "One heartbeat written to ops/watch-ledger. No approvals, public-content publication, production collection changes, task schedule change, or disabling."
+  }
+}

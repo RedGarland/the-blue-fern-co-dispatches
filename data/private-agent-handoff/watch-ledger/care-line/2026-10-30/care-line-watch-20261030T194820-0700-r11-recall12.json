@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261030T194820-0700-r11-recall12",
+  "scheduled_for": "2026-10-30T19:45:22-07:00",
+  "started_at": "2026-10-30T19:48:20-07:00",
+  "completed_at": "2026-10-30T19:49:03.111-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-30T18:44:13.606-07:00",
+    "end": "2026-10-30T19:49:03.111-07:00",
+    "basis": "Since the previous verified Care Line Watch completion; screened newly indexed retrospective coverage for materially new qualified events. This supplementary watch does not replace the production national collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary healthcare-access recall across the United States, DC and US territories; production collector authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-10-30/care-line-watch-20261030T184249-0700-r11-recall12.json",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "newest_verified_notice_date": "2026-10-30",
+      "change_since_previous_heartbeat": "No new CMS rows beyond the seven October 30 termination notices already preserved in the prior heartbeat (CCNs B31564, A11721, 234047, 368355, 368395, 369294 and 369309). All seven excluded as duplicates; a prospective Medicare termination notice alone does not establish a facility closure.",
+      "check_result": "Directly opened official CMS page. Search-index snapshot elsewhere was stale (October 23), so live CMS listing controls."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 30 2026 hospital emergency department inpatient services closed suspended Friday evening United States",
+      "October 30 2026 maternity labor delivery hospital closure suspension services patients",
+      "October 30 2026 rural hospital emergency room ER service shutdown temporary closure",
+      "October 30 2026 psychiatric behavioral health hospital inpatient program shut down suspended",
+      "October 30 2026 dialysis center patients displaced services closed Friday",
+      "October 30 2026 oncology infusion cancer center treatments cancelled closure",
+      "October 30 2026 urgent primary care family medical clinic closure abruptly access",
+      "October 30 2026 ambulance EMS rural service discontinued base closing",
+      "October 30 2026 air ambulance medevac helicopter base shutdown service suspension",
+      "October 30 2026 hospital emergency department dialysis ambulance service restored reopened after closure",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices October 30 2026 rescission CLIA termination provider",
+      "October 30 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital emergency clinic ambulance services suspended closure"
+    ],
+    "search_recency_days": 2,
+    "coverage_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care loss",
+      "emergency and rural service loss",
+      "ambulance/air-medical/base closure or suspension",
+      "official CMS Medicare termination/rescission or CLIA restriction",
+      "abrupt confirmed reopening/restoration",
+      "US states, DC and territories (bounded and non-exhaustive)"
+    ],
+    "reviewed_exclusions": [
+      {
+        "name": "Seven CMS October 30 Medicare termination notices",
+        "reason": "Exact records already captured in prior verified watch heartbeat; no further distinct notice."
+      },
+      {
+        "name": "Sanford Luverne Medical Center maternity services, MN",
+        "source_url": "https://www.startribune.com/minnesota-loses-another-birth-center-this-time-in-luverne/601905872",
+        "reason": "October 28 announcement for cessation of scheduled births next year after April; no new current-window operational loss."
+      },
+      {
+        "name": "Roseland Community Hospital labor/delivery, Chicago IL",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Prior October 28 report described an end-of-month suspension; no fresh confirmation that service ceased during this window; already discussed in prior watch."
+      },
+      {
+        "name": "Mission Memorial Hospital emergency department, British Columbia Canada",
+        "source_url": "https://fraservalleytoday.ca/2026/10/30/fraser-health-to-close-mission-memorial-hospital-er-for-over-28-hours-this-weekend/",
+        "reason": "Outside US and territory geographic scope."
+      },
+      {
+        "name": "Sharon Regional Medical Center inpatient suspension, PA",
+        "reason": "Previously captured October 30; no new distinct current-window change."
+      },
+      {
+        "name": "Reports warning hundreds of rural hospitals at risk",
+        "source_url": "https://www.chiefhealthcareexecutive.com/view/hundreds-of-small-rural-hospitals-could-close-many-are-in-big-states-",
+        "reason": "Risk forecasts rather than a discrete newly effective closure or suspension."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "All 12 targeted queries returned search results, but indexing is incomplete for rural, tribal and island-territory services. Absence of a new qualifying finding does not establish that no change occurred. Search-result date may reflect indexing rather than event occurrence. CMS listing does not prove service ceased.",
+    "controls": "Exactly one newly created heartbeat on ops/watch-ledger; no event approval, publication, production collection mutation, schedule change or disabling."
+  }
+}

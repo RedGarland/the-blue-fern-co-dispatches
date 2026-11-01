@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T204814-0700-recall12",
+  "scheduled_for": "2026-10-31T20:45:22-07:00",
+  "started_at": "2026-10-31T20:48:14-07:00",
+  "completed_at": "2026-10-31T20:49:03.815-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T19:46:38.891-07:00",
+    "end": "2026-10-31T20:49:03.815-07:00",
+    "basis": "Prior verified hourly Care Line Watch completion through current observation. Supplemental recall only; production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S. states, DC, and territories; hospital/ED/obstetrics/behavioral health/dialysis/oncology/primary care closures or suspensions, emergency and rural care loss, ambulance/air-medical/base loss, CMS terminations/CLIA limits/rescissions, and concrete essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "page_last_modified": "2026-10-30 04:16 PM",
+      "latest_notice_date": "2026-10-30",
+      "result": "Official CMS listing had no October 31 dated notices; its seven October 30 provider terminations were recorded by previous watches. No newly dated CMS termination, rescission, CLIA suspension or limitation was shown."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"October 31, 2026\" hospital emergency department closed temporarily suspended patients",
+      "\"October 31, 2026\" maternity labor delivery obstetrics NICU unit closure hospital",
+      "\"October 31, 2026\" behavioral health psychiatric inpatient service closure suspension",
+      "\"October 31, 2026\" dialysis center oncology clinic services closure suspension",
+      "\"October 31, 2026\" primary care rural health clinic closed patients",
+      "\"October 31, 2026\" rural hospital emergency room shut down overnight service",
+      "October 31 2026 ambulance EMS service suspension closure station emergency transport rural county",
+      "October 31 2026 air medical helicopter base shut down closed emergency air ambulance",
+      "October 31 2026 emergency department hospital reopened resumed services after closure United States",
+      "October 31 2026 Puerto Rico Guam USVI Northern Mariana American Samoa hospital clinic dialysis closure emergency suspension",
+      "October 31 2026 state department of health hospital clinic closure emergency medical services notice site:gov",
+      "October 31 2026 hospital care services patients closing emergency maternal psychiatric dialysis late breaking news"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "The Clinic on Bainbridge, Bainbridge Island WA; primary/urgent outpatient care",
+        "source": "https://theclinicbainbridge.com/",
+        "reason": "Official site announces permanent closure effective October 31, but notice was available before this hourly window and no fresh announcement or independently confirmed within-window access change was found; out of window."
+      },
+      {
+        "item": "Letty Owings Center residential behavioral-health/SUD treatment, Oregon",
+        "source": "https://centralcityconcern.org/recovery-location/letty-owings-center/",
+        "reason": "Provider's September 1 notice already specified October 31 closure; not newly announced or independently confirmed during this hourly window."
+      },
+      {
+        "item": "Axis Health System Norwood clinic location, Colorado",
+        "source": "https://www.axishealthsystem.org/news/norwood-clinic-closure/",
+        "reason": "Provider announced October 16 that physical clinic site would close effective October 31 with telehealth and other facilities available; no new within-window development."
+      },
+      {
+        "item": "Delta Health Home Health, Colorado",
+        "source": "https://deltahealthco.org/news/delta-health-home-health-closure-update/",
+        "reason": "September 17 official release stated agency would close no later than October 31; no fresh closure confirmation during this check, also previously evaluated."
+      },
+      {
+        "item": "Roseland Community Hospital maternity, Chicago IL",
+        "source": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/",
+        "reason": "Already reported and excluded as duplicate by previous hourly watch."
+      },
+      {
+        "item": "Kula Hospital, Maui HI",
+        "source": "https://www.mauihealth.org/news/releases/state-of-hawai%CA%BBi-maui-health-and-kaiser-permanente-announce-restoration-and-reopening-of-kula-hospital/",
+        "reason": "September 22 restoration funding and plan, no operational reopening date or concrete restored service."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, Preston County WV",
+        "source": "https://www.wdtv.com/2026/10/28/preston-county-ambulance-service-pauses-operations-amid-insurance-switch/",
+        "reason": "October 27 suspension predates this observation window; no fresh status change located."
+      }
+    ],
+    "result_summary": "CMS check and all 12 additional targeted searches completed. No new verified, nonduplicate qualifying healthcare-access change or effective essential-service reopening identified in current interval.",
+    "source_failures": [],
+    "limitations": "The hourly recall search is not exhaustive; indexing delays, very small rural services, and territories may be missed. Existing older official closure announcements are candidates for production reconciliation but are not falsely classified as new hourly developments. Production collector remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T194534-0700-recall12.json",
+      "completed_at": "2026-10-31T19:46:38.891-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "One private watch-ledger heartbeat only. No public publication, approvals, scheduled-task modification, or disabling."
+  }
+}

@@ -16,6 +16,8 @@ from bluefern_dispatches.care_line_record import (
 FOLLOW_UP_STATE_SCHEMA_VERSION = "bluefern.care_line.effective_date_follow_up_state.v1"
 FOLLOW_UP_STATE_PATH = Path("status/care-line/effective-date-follow-up-state.json")
 FOLLOW_UP_TERMINAL_STATUSES = {"CHECKED_NO_CHANGE", "MATERIAL_UPDATE_FOUND", "COMPLETED"}
+FOLLOW_UP_QUERY_FAILURE_STATUS = "QUERY_FAILED"
+FOLLOW_UP_QUERY_NOT_RUN_STATUS = "QUERY_NOT_RUN"
 FOLLOW_UP_LOOKBACK_DAYS = 14
 FOLLOW_UP_LOOKAHEAD_DAYS = 7
 
@@ -398,10 +400,16 @@ def update_follow_up_state(
         if not event_identity:
             continue
         query_text = str(query.get("query") or "").strip()
+        query_was_run = query_text in results_by_query
         query_row = results_by_query.get(query_text, {})
         result_count = int(query_row.get("results") or 0)
         error = str(query_row.get("error") or "").strip()
-        if result_count > 0:
+        if not query_was_run:
+            status = FOLLOW_UP_QUERY_NOT_RUN_STATUS
+            error = "follow-up query has no discovery result"
+        elif error:
+            status = FOLLOW_UP_QUERY_FAILURE_STATUS
+        elif result_count > 0:
             status = "MATERIAL_UPDATE_FOUND"
         else:
             status = "CHECKED_NO_CHANGE"
@@ -432,5 +440,7 @@ def update_follow_up_state(
         "updated_at": updated_at,
         "run_date": run_date,
         "items": items,
+        "failure_count": sum(1 for item in items if item.get("status") == FOLLOW_UP_QUERY_FAILURE_STATUS),
+        "not_run_count": sum(1 for item in items if item.get("status") == FOLLOW_UP_QUERY_NOT_RUN_STATUS),
         "state_path": str(_follow_up_state_path(repo_root, state_root=state_root).as_posix()),
     }

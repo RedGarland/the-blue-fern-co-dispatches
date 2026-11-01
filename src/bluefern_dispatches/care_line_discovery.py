@@ -4,8 +4,10 @@ import hashlib
 import html
 import json
 import re
+import ssl
 import urllib.error
 import urllib.parse
+import urllib.request
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -22,16 +24,24 @@ from bluefern_dispatches.incident_discovery import build_incident_follow_up_quer
 from bluefern_dispatches.food_line_sources import (
     _extract_page_evidence,
     _extract_page_metadata_date,
-    _fetch,
     _normalize_source_text,
     _parse_rss_items,
     canonical_url,
+    food_line_network_guard,
+    food_line_test_mode_enabled,
     validate_date,
 )
 
 DISPATCH_SLUG = "care-line"
 DISCOVERY_OUTPUT_FILE = "discovered_sources.json"
 DISCOVERY_REPORT_FILE = "discovery_report.json"
+CARE_FETCH_TIMEOUT_SECONDS = 15
+CARE_FETCH_MAX_BYTES = 2_000_000
+CARE_FETCH_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/rss+xml;q=0.8,*/*;q=0.7",
+    "Accept-Language": "en-US,en;q=0.9",
+}
 
 DEFAULT_EXCLUDE_DOMAINS = (
     "facebook.com",
@@ -608,6 +618,15 @@ def classify_care_line_discovery_candidate(
     }
 
 
+def _care_fetch(url: str, timeout: int = CARE_FETCH_TIMEOUT_SECONDS) -> bytes:
+    if food_line_test_mode_enabled():
+        return food_line_network_guard(url, timeout=timeout)
+    request = urllib.request.Request(url, headers=dict(CARE_FETCH_HEADERS))
+    context = ssl.create_default_context()
+    with urllib.request.urlopen(request, timeout=timeout, context=context) as response:  # noqa: S310
+        return response.read(CARE_FETCH_MAX_BYTES)
+
+
 def _fetch_url(fetcher: Any, url: str) -> tuple[bytes, str]:
     try:
         return fetcher(url, timeout=15), ""
@@ -618,6 +637,7 @@ def _fetch_url(fetcher: Any, url: str) -> tuple[bytes, str]:
 def _inspect_article(fetcher: Any, url: str) -> dict[str, str]:
     payload, error = _fetch_url(fetcher, url)
     if error or not payload:
+        page_fetch_error = error or "empty article response"
         return {
             "retrieved_at": _utc_now(),
             "published_at": "",
@@ -626,7 +646,7 @@ def _inspect_article(fetcher: Any, url: str) -> dict[str, str]:
             "page_summary_or_snippet": "",
             "page_evidence_text": "",
             "page_evidence_text_basis": "",
-            "page_fetch_error": error,
+            "page_fetch_error": page_fetch_error,
         }
     evidence = _extract_page_evidence(payload)
     page_metadata_date = _extract_page_metadata_date(payload)
@@ -694,7 +714,7 @@ def discover_care_line_sources(
     queries.extend(_search_queries(edition_date, config))
     exclude_domains = {str(item).strip().lower() for item in config.get("exclude_domains") or [] if str(item).strip()}
     known = _known_source_sets(root, edition_date)
-    fetch = fetcher or _fetch
+    fetch = fetcher if fetcher is not None else _care_fetch
     discovered_at = _utc_now()
     query_rows: list[dict[str, Any]] = []
     raw_rows: list[dict[str, Any]] = []
@@ -727,7 +747,17 @@ def discover_care_line_sources(
         except Exception as exc:  # noqa: BLE001
             query_rows.append({"query": query, "url": query_url, "error": f"{type(exc).__name__}: {exc}", "results": 0})
             continue
-        query_rows.append({"query": query, "url": query_url, "error": "", "results": len(rss_items)})
+        query_result_row: dict[str, Any] = {
+            "query": query,
+            "url": query_url,
+            "error": "",
+            "error_kind": "",
+            "results": len(rss_items),
+            "verified_results": 0,
+            "article_fetch_failure_count": 0,
+            "article_fetch_errors": [],
+        }
+        query_rows.append(query_result_row)
         for item in rss_items[:max_results_per_query]:
             if max_candidates is not None and len(raw_rows) >= max_candidates:
                 break
@@ -742,6 +772,17 @@ def discover_care_line_sources(
             publisher = _nonempty(item.get("publisher") or domain)
             published_at = _parse_pub_date(_nonempty(item.get("published_at")))
             article = _inspect_article(fetch, candidate_url)
+            article_fetch_error = _nonempty(article.get("page_fetch_error"))
+            if article_fetch_error:
+                query_result_row["article_fetch_failure_count"] += 1
+                query_result_row["article_fetch_errors"].append(article_fetch_error)
+                query_result_row["error"] = (
+                    f"article fetch failures: {query_result_row['article_fetch_failure_count']}; "
+                    f"{query_result_row['article_fetch_errors'][0]}"
+                )
+                query_result_row["error_kind"] = "article_fetch_failure"
+            else:
+                query_result_row["verified_results"] += 1
             page_title = _nonempty(article.get("page_title"))
             page_summary = _nonempty(article.get("page_summary_or_snippet"))
             page_evidence = _nonempty(article.get("page_evidence_text"))
@@ -778,6 +819,30 @@ def discover_care_line_sources(
                 known_status=known_status,
                 known_local_domain=known_local_domain,
             )
+            article_verified = not article_fetch_error
+            public_eligible = bool(classification["public_eligible"]) and article_verified
+            if article_fetch_error:
+                exclusion_reason = "article_fetch_failed"
+                evidence_level = "unverified_article"
+                confidence = "low"
+                limitations = f"Article fetch failed: {article_fetch_error}"
+            else:
+                exclusion_reason = "" if public_eligible else (
+                    "stale_current_signal"
+                    if source_freshness_status == "stale"
+                    else "wrapper_candidate"
+                    if classification["wrapper_candidate"]
+                    else "resource_only_baseline"
+                )
+                evidence_level = "reported_story" if public_eligible else "background context"
+                confidence = (
+                    "high"
+                    if classification["classification"] == "likely_qualifying"
+                    else "medium"
+                    if classification["classification"] == "needs_review"
+                    else "low"
+                )
+                limitations = "Traceable article URL reviewed from live discovery."
             row = {
                 "source_record_id": _candidate_id(candidate_url, publisher, str(query_row.get("source_family") or "local_news")),
                 "title": page_title or title,
@@ -802,21 +867,23 @@ def discover_care_line_sources(
                 "location_name": "United States",
                 "location_scope": "national",
                 "affected_groups": _pressure_groups(classification["pressure_type"], {"title": title, "summary_or_snippet": summary, "evidence_text": evidence_text, "publisher": publisher}),
-                "evidence_level": "reported_story" if classification["classification"] == "likely_qualifying" else "background context",
+                "evidence_level": evidence_level,
                 "freshness_status": source_freshness_status,
                 "freshness_role": "current_signal" if source_freshness_status == "current" and classification["classification"] == "likely_qualifying" else "stale_current_signal" if source_freshness_status == "stale" else "background_context",
                 "source_published_date": source_published_date,
                 "date_basis": date_basis,
                 "source_freshness_date_basis": date_basis,
-                "source_public_story_eligible": classification["public_eligible"],
-                "primary_eligible": classification["public_eligible"],
-                "primary_disqualification_reason": "" if classification["public_eligible"] else classification["reason"],
+                "source_public_story_eligible": public_eligible,
+                "primary_eligible": public_eligible,
+                "primary_disqualification_reason": "" if public_eligible else (
+                    exclusion_reason or classification["reason"]
+                ),
                 "claim_supported": page_title or title,
-                "limitations": "Traceable article URL reviewed from live discovery.",
-                "included": classification["public_eligible"],
-                "excluded": not classification["public_eligible"],
-                "exclusion_reason": "" if classification["public_eligible"] else ("stale_current_signal" if source_freshness_status == "stale" else "wrapper_candidate" if classification["wrapper_candidate"] else "resource_only_baseline"),
-                "qualifies_for_public_inclusion": classification["public_eligible"],
+                "limitations": limitations,
+                "included": public_eligible,
+                "excluded": not public_eligible,
+                "exclusion_reason": exclusion_reason,
+                "qualifies_for_public_inclusion": public_eligible,
                 "public_inclusion_bucket": classification["public_inclusion_bucket"],
                 "included_as_lead": False,
                 "included_as_hospital_operations_signal": classification["source_role"] == "hospital_operations_signal",
@@ -828,7 +895,9 @@ def discover_care_line_sources(
                 "included_as_public_health_signal": classification["source_role"] == "public_health_signal",
                 "included_as_additional_signal": classification["source_role"] not in {"hospital_operations_signal", "insurance_affordability_signal", "rural_access_signal", "maternity_family_signal", "emergency_ems_signal", "public_health_signal"},
                 "context_only": not classification["public_eligible"],
-                "confidence": "high" if classification["classification"] == "likely_qualifying" else "medium" if classification["classification"] == "needs_review" else "low",
+                "confidence": confidence,
+                "article_fetch_error": article_fetch_error,
+                "article_verified": article_verified,
                 "wrapper_candidate": classification["wrapper_candidate"],
                 "secondary_queries_generated": secondary_queries,
             }
@@ -838,9 +907,9 @@ def discover_care_line_sources(
             source_family_counts[row["source_family"]] += 1
             if wrapper_kind:
                 wrapper_candidate_count += 1
-            if source_freshness_status == "current" and classification["classification"] == "likely_qualifying":
+            if article_verified and source_freshness_status == "current" and classification["classification"] == "likely_qualifying":
                 current_signal_count += 1
-            if classification["public_eligible"]:
+            if public_eligible:
                 public_signal_count += 1
                 public_rows.append(row)
             else:
@@ -866,6 +935,9 @@ def discover_care_line_sources(
         "discovery_report_path": str(root / "data" / "dispatches" / "care-line" / "sources" / edition_date / DISCOVERY_REPORT_FILE),
         "query_count": len(executed_queries),
         "query_rows": query_rows,
+        "query_failure_count": sum(1 for row in query_rows if str(row.get("error") or "").strip()),
+        "article_fetch_failure_count": sum(int(row.get("article_fetch_failure_count") or 0) for row in query_rows),
+        "article_verified_result_count": sum(int(row.get("verified_results") or 0) for row in query_rows),
         "incident_seed_count": len(incident_seed_reports),
         "incident_seed_query_count": len(incident_seed_rows),
         "incident_seed_diagnostics": incident_seed_reports,

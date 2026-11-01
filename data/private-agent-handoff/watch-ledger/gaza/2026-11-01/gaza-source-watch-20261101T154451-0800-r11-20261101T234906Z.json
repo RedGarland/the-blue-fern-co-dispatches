@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T154451-0800-r11-20261101T234906Z",
+  "scheduled_for": "2026-11-01T15:44:51-08:00",
+  "started_at": "2026-11-01T15:49:06-08:00",
+  "completed_at": "2026-11-01T15:50:51.249-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T14:46:48.791-08:00",
+    "end": "2026-11-01T15:50:51.249-08:00",
+    "basis": "Previous verified ops/watch-ledger Gaza heartbeat completed_at through this run. PST (-08:00) after Nov 1 daylight-saving change.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO global and WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; authoritative daily Gaza production collection and publication unchanged.",
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-01/gaza-source-watch-20261101T144451-0800-r11-20261101T224621Z.json",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed product dated 31 Oct 2026 (Humanitarian Situation Report | 29 October 2026); no new in-window Gaza update found."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No in-window newly dated change to Gaza hospitals, ambulances, fuel, transport or medical evacuations on overview."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502 Bad Gateway; recurring source-specific restriction; WHO global alternative available."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza 1 November 2026 humanitarian situation report latest aid movement crossings casualties",
+      "site:who.int Gaza 1 November 2026 WHO health medical evacuation hospitals"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza November 1 2026 Sunday afternoon latest casualties wounded airstrike ceasefire Reuters AP",
+      "site:english.wafa.ps November 1 2026 Gaza injuries strikes 2026",
+      "site:ochaopt.org 30 October 2026 Gaza humanitarian report 1 November 2026",
+      "Gaza November 1 2026 hospitals ambulances medical evacuation WHO PRCS emergency",
+      "Gaza November 1 2026 18:00 GMT aid crossing food water displacement latest November 1",
+      "site:un.org/unispal 1 November 2026 Gaza 2026 aid",
+      "site:unicef.org \"November\" \"2026\" \"Gaza\" water children",
+      "site:palestinercs.org November 1 2026 Gaza ambulances emergency",
+      "Gaza Israel Sunday Nov 1 2026 22:00 GMT Reuters latest ceasefire hostage aid",
+      "Gaza November 1 2026 Al Jazeera 23:00 GMT killed wounded crossing hospital",
+      "site:english.wafa.ps/Pages/Details \"November 1, 2026\" Gaza",
+      "site:apnews.com/article Gaza November 1 2026 Israeli strikes latest killed Sunday"
+    ],
+    "direct_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; no new November 1 report."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; overview and news did not identify new incident/change."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502; ongoing."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; ongoing."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; ongoing."
+      },
+      {
+        "source": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; latest posts in Palestinian local timezone are West Bank incidents, old Gaza reports, political statements and undated-in-window claims."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+        "result": "Accessible; Nov 1 story published 12:26 UTC, before window, duplicates prior Gaza City and Khan Younis incidents."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties and injuries",
+      "displacement",
+      "aid access and food supply",
+      "water and sanitation",
+      "healthcare access, hospitals, ambulances, fuel, transport and medical evacuation",
+      "civilian infrastructure",
+      "border crossings",
+      "detainees and hostages",
+      "ceasefire and negotiations",
+      "military operations with documented civilian effects"
+    ],
+    "excluded_duplicates": [
+      "Gaza City strike Nov 1: three reported killed including four-year-old boy, woman seriously wounded.",
+      "Western Khan Younis Nov 1 strike: five reported killed, later police-affiliation reporting.",
+      "Previously recorded Jabalia injuries and earlier victim identification/follow-up reports.",
+      "Reuters/AP 1 Nov summaries of same eight deaths; no separate attack."
+    ],
+    "excluded_old_or_unverified": [
+      "WAFA Nov 1 08:47 local Palestinian time report of Ibrahim Adel Saeed dying of earlier tank-fire wounds is outside this hourly observation window; not represented as new.",
+      "WAFA Arab League prison-treatment condemnation lacks a newly time-bounded, independently evidenced injury/detention incident in observation window.",
+      "General OCHA/WHO shortages are historical background rather than newly occurring service-level changes.",
+      "Unrelated West Bank events excluded from Gaza-only watch."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously recurrent; global WHO alternative and OCHA accessible."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Previously recurrent; search/other humanitarian channels available."
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Previously recurrent; search/other humanitarian channels available."
+      }
+    ],
+    "status_rationale": "DEGRADED for recurring direct-source access restrictions, without newly material deterioration of overall coverage; no newly verified distinct Gaza development in the bounded hourly window.",
+    "safeguards": "One append-only ops/watch-ledger heartbeat only. No approval, publication, Pages change, schedule modification or automation disablement."
+  }
+}

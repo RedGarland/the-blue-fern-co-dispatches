@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T224309-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T22:45:22-07:00",
+  "started_at": "2026-10-31T22:43:09-07:00",
+  "completed_at": "2026-10-31T22:44:02.779-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T21:46:39.723-07:00",
+    "end": "2026-10-31T22:44:02.779-07:00",
+    "basis": "Previous verified Care Line Watch completion through this execution; supplementary recall only; production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S., DC, and territories. Focused on concrete hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, and rural emergency service suspensions/closures; ambulance and air-medical bases; CMS terminations/rescissions/CLIA actions; and real essential-service reopenings.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "result": "Directly inspected official notice listing before all targeted searches. No 2026-10-31 notice appeared; seven 2026-10-30 provider termination notices previously recorded in Care Line Watch."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 31 2026 hospital emergency department closed suspended service today United States rural",
+      "October 31 2026 maternity labor delivery unit closure hospital obstetric service paused",
+      "October 31 2026 behavioral health psychiatric inpatient hospital closing admissions suspended",
+      "October 31 2026 dialysis center closing dialysis patients relocated",
+      "October 31 2026 oncology chemotherapy cancer clinic closing treatment suspended",
+      "October 31 2026 primary care rural health clinic closure shuts patients",
+      "October 31 2026 ambulance EMS response station closing rescue service shut down air medical base United States",
+      "October 31 2026 emergency department hospital rural inpatient closure emergency diversion suspended",
+      "October 31 2026 hospital clinic emergency reopen resume restored operation service local",
+      "October 31 2026 site:cms.gov \"termination notice\" \"2026-10-31\" OR \"November 1\"",
+      "October 31 2026 Puerto Rico Guam American Samoa US Virgin Islands Northern Mariana hospital clinic emergency care closure",
+      "October 31 2026 hospital maternity dialysis ambulance service closures site:beckershospitalreview.com OR site:fiercehealthcare.com"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital labor and delivery, Chicago, Illinois",
+        "source": "https://www.medicaldaily.com/roseland-hospital-labor-delivery-closure-chicago-south-side-479408",
+        "reason": "October 31 effective closure known and recorded by earlier watch; no new development announced since previous check."
+      },
+      {
+        "item": "Sharon Regional Medical Center inpatient services, Sharon, Pennsylvania",
+        "source": "https://www.medicaldaily.com/sharon-regional-pauses-inpatient-services-missed-payrolls-480628",
+        "reason": "Suspension publicly established October 29; previously recorded; emergency department remained operational as of earlier reporting."
+      },
+      {
+        "item": "UNM Health cybersecurity disruption and recovery, Albuquerque, New Mexico",
+        "source": "https://www.beckershospitalreview.com/healthcare-information-technology/cybersecurity/unm-health-restores-systems-reopens-clinics-after-cyber-incident/",
+        "reason": "October 26 disruption and October 27 restoration were previously reported; not a new hourly change."
+      },
+      {
+        "item": "Guam Regional Medical City typhoon related outpatient suspension, Guam",
+        "source": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "October 17 notice with October 19 temporary outpatient closure; well outside observation window."
+      },
+      {
+        "item": "Non-U.S. dialysis/birthing service loss",
+        "reason": "Excluded out-of-scope Australian results; search hits often stale or geographically irrelevant."
+      }
+    ],
+    "source_failures": [],
+    "result_summary": "CMS Public Notices directly checked first, then twelve targeted web searches. No new, substantiated, nonduplicate qualifying access change, CMS action, or concrete restoration identified between previous verified completion and this check.",
+    "limitations": "Bounded search—not an exhaustive national/territorial sweep. Search results often surfaced older or out-of-country stories; indexing and publication delays particularly affect rural providers, ambulance services and territories. No unsupported claim of absence of events across all providers.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T214607-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T21:46:39.723-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "One append-only private heartbeat on ops/watch-ledger. No approvals, public release, production collector changes, schedule alteration, or task disabling."
+  }
+}

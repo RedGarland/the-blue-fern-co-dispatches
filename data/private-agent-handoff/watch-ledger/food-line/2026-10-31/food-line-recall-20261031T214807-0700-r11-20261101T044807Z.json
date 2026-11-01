@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T214807-0700-r11-20261101T044807Z",
+  "scheduled_for": "2026-10-31T21:45:54-07:00",
+  "started_at": "2026-10-31T21:48:07-07:00",
+  "completed_at": "2026-10-31T21:48:31-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T20:50:00-07:00",
+    "end": "2026-10-31T21:48:31-07:00",
+    "prior_check_note": "Start approximated from preceding confirmed completed check reported at 8:50 PM Pacific on October 31, 2026; exact prior completion seconds unavailable."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not the authoritative nationwide production collector.",
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 10,
+      "slow": 2
+    },
+    "classes_checked": [
+      "Only/sole/last/full-service community grocery closure, fire or disaster",
+      "Emergency food distribution cancellations from storms, flooding, fire, power outage or facility damage",
+      "Abrupt pantry or food-bank shutdown or major service reduction",
+      "New official SNAP/WIC/food-assistance interruptions with immediate access consequences"
+    ],
+    "query_context": [
+      "\"only grocery store\" closed fire October 31 2026 community",
+      "\"sole grocery store\" fire closure October 31 2026",
+      "\"last grocery store\" closing October 31 2026",
+      "\"food distribution\" canceled storm October 31 2026 food bank",
+      "\"food pantry\" closed indefinitely October 31 2026",
+      "\"food bank\" operations suspended October 31 2026",
+      "site:gov \"SNAP\" \"October 31, 2026\" benefits interruption",
+      "site:gov WIC benefits system outage October 31 2026",
+      "SNAP EBT outage benefits October 31 2026 food assistance state official",
+      "food pantry suspended emergency distribution floods power outage October 31 2026",
+      "\"October 31, 2026\" \"food pantry\" \"closed\" OR \"suspended\" OR \"canceled\"",
+      "\"October 31, 2026\" \"grocery store\" \"closed\" \"only\" OR \"last\""
+    ],
+    "excluded_examples": [
+      {
+        "title": "El Paso food bank to close Friday due to storm damage",
+        "url": "https://kvia.com/news/el-paso/2026/09/23/el-paso-food-bank-asks-for-help-with-rain-damaged-canopies-sign/",
+        "reason": "September 23-24, 2026 event; outside observation window"
+      },
+      {
+        "title": "Fire destroys Spencer’s only full-service grocery store",
+        "url": "https://www.fingerlakes1.com/2026/09/13/fire-destroys-spencers-only-full-service-grocery-store/",
+        "reason": "September 13, 2026; previously occurring event"
+      },
+      {
+        "title": "Prodisee Pantry cancels Oct. 10 food distribution due to weather",
+        "url": "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+        "reason": "October 7 announcement/October 10 event; outside observation window"
+      },
+      {
+        "title": "Provo, Utah Community Action Services and Food Bank closure",
+        "url": null,
+        "reason": "Previously recorded recall candidate; duplicate"
+      },
+      {
+        "title": "Palmdale CalFresh emergency services",
+        "url": "https://www.cityofpalmdaleca.gov/m/newsflash/home/detail/2064",
+        "reason": "October 31, 2025, not 2026"
+      },
+      {
+        "title": "Holland Food Shelf closure",
+        "url": "https://vtdigger.org/2026/09/02/holland-food-shelf-announces-closure-after-months-of-financial-uncertainty/",
+        "reason": "September 2, 2026; outside observation window"
+      }
+    ],
+    "retrieval_limitations": "Search indexes returned predominantly old, overseas, or unrelated matches. A negative bounded web recall cannot exclude unindexed official, local, or social-only updates. No request/page failure encountered in available searches.",
+    "production_authority": "Production collection remains authoritative; no editorial approval, publication, schedule mutation, or task disabling performed."
+  }
+}

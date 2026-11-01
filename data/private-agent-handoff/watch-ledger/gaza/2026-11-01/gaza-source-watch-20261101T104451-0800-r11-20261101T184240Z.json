@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T104451-0800-r11-20261101T184240Z",
+  "scheduled_for": "2026-11-01T10:44:51-08:00",
+  "started_at": "2026-11-01T10:42:40-08:00",
+  "completed_at": "2026-11-01T10:44:36.530-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T09:51:29.112-08:00",
+    "end": "2026-11-01T10:44:36.530-08:00",
+    "basis": "From exact completed_at of verified previous watch heartbeat through this execution; daylight saving ended November 1 and local time is PST (UTC-08:00).",
+    "official_first_sources": [
+      "OCHA OPT direct homepage/updates",
+      "WHO EMRO oPt direct URL",
+      "WHO global situation page"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only. Production Gaza publisher/collector remains authoritative and was not accessed or modified.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Homepage latest update dated October 31, 2026 for October 29 humanitarian report; no newly dated update in window."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurrent access failure."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; situation overview and older updates, no newly dated Gaza healthcare or medical-evacuation update during window."
+      },
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed item October 31, 2026, no new item in observation window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:who.int Gaza November 1 2026 hospital ambulance evacuation 1 November 2026",
+      "site:ochaopt.org Gaza November 1 2026 update humanitarian access",
+      "Gaza November 1 2026 latest 18:00 UTC civilians wounded killed Reuters AP",
+      "Gaza November 1 2026 medical evacuation hospital WHO health fuel crossings",
+      "Gaza November 1 2026 aid food water crossings OCHA WFP UNRWA",
+      "Gaza November 1 2026 Palestinian news agency WAFA Gaza 1 November deaths strikes afternoon",
+      "site:reuters.com/world/middle-east/ Gaza \"November 1, 2026\" ceasefire food aid hostages",
+      "site:apnews.com Gaza \"November 1, 2026\" Sunday attacks medical",
+      "site:un.org Gaza November 1 2026 humanitarian aid medical report",
+      "site:aljazeera.com/news/2026/11/1 Gaza Sunday afternoon killed aid crossings",
+      "site:english.wafa.ps/Pages/Details/ \"01/November/2026\" Gaza injured killed hospital",
+      "Gaza November 1 2026 19:00 UTC military civilian casualties ceasefire ceasefire talks crossings healthcare"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Current Gaza casualty headline describes previously recorded eight deaths (five Khan Younis, three Gaza City, including child). No new distinct Gaza impact event within window found on latest listing."
+      },
+      {
+        "source": "WAFA incident detail",
+        "url": "https://english.wafa.ps/Pages/Details/176486",
+        "result": "Published November 1 at 12:07 PM Palestine time (approximately 02:07 PST), before prior check; same two events already recorded."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+        "result": "Published 12:26 UTC, before prior heartbeat; same two strikes, previously recorded police affiliation and victim identifications."
+      },
+      {
+        "source": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-november-1-2026-b918f44d8f212d7daf7f2f9a98c91a0b",
+        "result": "Live round-up reiterates the same eight deaths and Shifa Hospital injury. Different name transliterations for boy do not establish distinct victims; no demonstrable new incident."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring direct-access restriction."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; recurring direct-access restriction."
+      }
+    ],
+    "exclusions": "Excluded already recorded November 1 Khan Younis five deaths, Gaza City three deaths including child, Gaza City severely injured woman, police-affiliation claim, Jabalia wounded, central Gaza previous-wounds death, aggregate Gaza death-toll statements, and historical/retrospective humanitarian items. No independent event after 09:51 PST established.",
+    "source_quality": "Search-engine today/crawl labels do not establish publication after prior check. Exact source timestamps used where available; unresolved publication times not assumed to lie within window.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously documented; WHO global and OCHA remained available."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Previously documented; OCHA and established reporting remained available."
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Previously documented; alternative humanitarian coverage remained available."
+      }
+    ],
+    "status_rationale": "DEGRADED for recurring WHO EMRO, WFP and UNRWA direct-source restrictions. No newly material deterioration detected; coverage otherwise sufficient for bounded no_findings.",
+    "safeguards": "One append-only private handoff heartbeat on ops/watch-ledger only; no publishing, public Pages changes, approvals, scheduling changes, or disabling."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T214607-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T21:45:22-07:00",
+  "started_at": "2026-10-31T21:46:07-07:00",
+  "completed_at": "2026-10-31T21:46:39.723-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T20:49:03.815-07:00",
+    "end": "2026-10-31T21:46:39.723-07:00",
+    "basis": "Previous verified Care Line Watch completion through this observation. Supplemental recall only; production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S. states, District of Columbia and territories: hospital, ED, maternity, behavioral-health, dialysis, oncology and primary-care service losses; rural emergency losses; EMS/air-medical/base closure; official Medicare termination/rescission/CLIA access notices; concrete essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "result": "Official listing directly reviewed before targeted searches. No October 31, 2026 notices listed; the seven October 30 notices were documented in earlier watches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 31 2026 hospital emergency department closure suspension patients rural US",
+      "October 31 2026 hospital maternity labor delivery obstetrics services closing halted",
+      "October 31 2026 behavioral health psychiatric hospital residential inpatient closure suspend admissions",
+      "October 31 2026 dialysis clinic kidney treatment location closure patients",
+      "October 31 2026 oncology cancer treatment center closing appointments patients",
+      "October 31 2026 primary care clinic closing rural health medical services",
+      "October 31 2026 rural hospital emergency services closure temporary suspension ambulance patients",
+      "October 31 2026 ambulance EMS station air medical helicopter base closing service suspended",
+      "October 31 2026 hospital emergency room reopening resumed services after closure",
+      "October 31 2026 CMS medicare provider termination rescission CLIA suspension notice",
+      "October 31 2026 Guam Puerto Rico US Virgin Islands American Samoa Northern Mariana health clinic hospital emergency closure",
+      "hospital emergency maternity dialysis EMS closes reopens October 31 2026 news site:gov OR site:org"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "St. Joseph Warren Hospital obstetrics, Warren, Ohio",
+        "source": "https://businessjournaldaily.com/mercy-health-faces-blowback-over-maternity-care-plan/",
+        "reason": "October 31 local report discusses Wednesday's already announced closure scheduled for early December, and objections filed Friday. No newly effective service loss or newly announced service change in this watch window."
+      },
+      {
+        "item": "Partnership Health Center Seeley Lake Clinic, Seeley Lake, Montana",
+        "source": "https://nbcmontana.com/news/local/partnership-health-center-announces-seeley-lake-clinic-will-close-this-october",
+        "reason": "September 2 reporting and provider notice indicate October 31 lease expiry and closure plan; no new report or independently confirmed operational change since previous hourly check. Historical item for possible production reconciliation, not a new hourly finding."
+      },
+      {
+        "item": "Roseland Community Hospital maternity, Chicago, Illinois",
+        "reason": "Closure already recorded in earlier Care Line hourly watches; excluded as duplicate."
+      },
+      {
+        "item": "Sharon Regional Medical Center inpatient suspension, Sharon, Pennsylvania",
+        "reason": "Suspension already recorded in earlier Care Line hourly watches; excluded as duplicate."
+      }
+    ],
+    "source_failures": [],
+    "result_summary": "CMS Public Notices directly checked first; 12 targeted web searches completed. No new qualifying and nonduplicate healthcare access loss, official CMS action, or concrete restoration verified within the hourly observation interval.",
+    "limitations": "Search results contained many older, out-of-country, and unrelated items; non-exhaustive coverage, with possible indexing delays especially for small rural providers and U.S. territories. Older closure announcements were not misrepresented as newly discovered hourly events.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T204814-0700-recall12.json",
+      "completed_at": "2026-10-31T20:49:03.815-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "One private watch-ledger heartbeat only. No approvals, public publication, schedule modification, task disabling, or production collector changes."
+  }
+}

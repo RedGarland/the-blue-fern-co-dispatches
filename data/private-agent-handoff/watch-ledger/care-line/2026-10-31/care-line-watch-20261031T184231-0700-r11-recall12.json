@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T184231-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T18:45:22-07:00",
+  "started_at": "2026-10-31T18:42:31-07:00",
+  "completed_at": "2026-10-31T18:43:40.071-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T17:47:44-07:00",
+    "end": "2026-10-31T18:43:40.071-07:00",
+    "basis": "From prior verified Care Line Watch completion to current observation. Recall-only; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplemental recall for U.S./territorial essential healthcare closure, service suspension, emergency/rural loss, ambulance/air-medical loss, CMS enforcement and concrete service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "last_page_modified": "2026-10-30 04:16 PM",
+      "latest_notice_date": "2026-10-30",
+      "result": "No 2026-10-31 notices listed. Seven 2026-10-30 terminations already recorded and excluded as duplicates. No newer rescission or CLIA restriction visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 31 2026 hospital closed emergency department suspended services United States",
+      "October 31 2026 maternity labor delivery unit closure service suspension hospital",
+      "October 31 2026 psychiatric behavioral health inpatient closure admissions suspension",
+      "October 31 2026 dialysis center oncology clinic closed suspended patients",
+      "October 31 2026 rural hospital emergency room closed ambulance service access",
+      "October 31 2026 ambulance base shuts down coverage emergency medical services",
+      "October 31 2026 air ambulance helicopter base closing medical transport",
+      "October 31 2026 primary care clinic abruptly closed patients",
+      "October 31 2026 hospital emergency department reopens resumes service after shutdown",
+      "October 31 2026 site:gov healthcare provider services suspended terminated CLIA",
+      "October 31 2026 Puerto Rico Virgin Islands Guam hospital clinic closure healthcare service suspension",
+      "October 31 2026 American Samoa Northern Mariana Islands hospital emergency medical service closure disruption"
+    ],
+    "search_recency_days": 2,
+    "direct_source_pages_checked": [
+      "https://www.beckershospitalreview.com/finance/",
+      "https://www.ruralhealthinfo.org/news",
+      "https://www.ruralhealthinfo.org/news/top-stories",
+      "https://www.aha.org/news",
+      "https://www.fiercehealthcare.com/providers"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Watsonville Community Hospital (California) labor/delivery and NICU closure process",
+        "reason": "Oct 28 board voted to begin a 120-day public notice concerning a potential closure; did not vote to close services. No new effective suspension or closure in the window.",
+        "source": "https://www.beckershospitalreview.com/finance/"
+      },
+      {
+        "item": "Sharon Regional Medical Center inpatient services suspension (Pennsylvania)",
+        "reason": "Reported Oct 29 and previously recorded in prior watches; not a new event in this observation window.",
+        "source": "https://www.beckershospitalreview.com/finance/"
+      },
+      {
+        "item": "Sutter Health Emeryville proposed hospital construction canceled",
+        "reason": "Unbuilt facility, with no reported change in existing healthcare access; out of scope.",
+        "source": "https://www.fiercehealthcare.com/providers"
+      },
+      {
+        "item": "RHIhub recent rural health top stories and Fierce provider headlines",
+        "reason": "No new concrete qualifying service change visible in listed dated items; RHIhub listing lagged several days.",
+        "source": "https://www.ruralhealthinfo.org/news/top-stories"
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "Broad targeted web discovery",
+        "issue": "Twelve targeted search queries produced an anomalously narrow visible response, dominated by a CMS notices page; independent local reporting recall could not be confidently assessed from that index response.",
+        "impact": "Reduced confidence in independent national and territory candidate discovery. Some coverage recovered by direct publisher index checks."
+      }
+    ],
+    "status_rationale": "DEGRADED: CMS successfully verified first and five supplemental publisher pages accessed; 12 targeted discovery queries submitted but the search response surfaced essentially only the CMS listing, limiting independent recall. No newly supported qualifying event verified.",
+    "limitations": "No findings does not prove no healthcare access disruptions occurred. Indexing delay, non-exhaustive rural/territorial coverage and atypically narrow search-result presentation materially limit this run. Production collection remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T174709-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T17:47:44-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Created only a private watch-ledger heartbeat; no editorial approval, publication, schedule alteration, or task disabling."
+  }
+}

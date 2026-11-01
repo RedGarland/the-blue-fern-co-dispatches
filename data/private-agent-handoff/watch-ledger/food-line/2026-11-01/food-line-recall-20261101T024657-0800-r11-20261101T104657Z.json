@@ -1,0 +1,73 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T024657-0800-r11-20261101T104657Z",
+  "scheduled_for": "2026-11-01T02:45:54-08:00",
+  "started_at": "2026-11-01T02:46:57-08:00",
+  "completed_at": "2026-11-01T02:48:09.004-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T01:48:37-07:00",
+    "end_at": "2026-11-01T02:48:09.004-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous read-back-verified Food Line heartbeat completion through current observation; first Sunday in November clocks reverted from PDT (UTC-07) to PST (UTC-08), so this interval crosses the DST fallback and is approximately two real hours. Results screened against incident and original-publication/announcement times, not merely search-index recency.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; national production collector remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "classes_checked": [
+      "Loss, closure, fire or disaster affecting the sole, last, only or full-service grocery store in a community",
+      "Emergency food distributions canceled or suspended because of storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate food-access consequences"
+    ],
+    "bounded_query_context": [
+      "\"November 1 2026\" \"only grocery store\" closed fire",
+      "\"October 31 2026\" \"only grocery store\" closure fire",
+      "\"Nov. 1, 2026\" \"last supermarket\" closed town",
+      "\"November 1 2026\" food pantry suddenly closed emergency",
+      "\"November 1 2026\" food bank distribution canceled storm outage",
+      "\"Oct. 31, 2026\" \"food distribution\" canceled storm",
+      "\"November 1 2026\" \"SNAP\" \"benefits\" delayed state notice",
+      "\"November 1 2026\" \"WIC\" \"outage\" benefits",
+      "site:gov \"November 1, 2026\" \"SNAP\" interruption system delayed",
+      "site:org \"November 1, 2026\" pantry closed distribution postponed",
+      "\"Nov 1 2026\" grocery store fire only store town",
+      "\"November 1, 2026\" food bank closure suspended food assistance"
+    ],
+    "observation": "All 12 bounded searches yielded usable results. No independently verified new qualifying disruption was identified within this run's observation window. Search hits were dominated by duplicates, previously announced benefits purchasing restrictions, older events, routine food assistance listings, donation drives, and new grocery/pantry openings.",
+    "excluded_examples": [
+      {
+        "title": "Provo, Utah: Community Action Services and Food Bank closes amid funding shortfall",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Already recorded in prior watch checks before this observation window; November 1 reposts do not make it a new incident."
+      },
+      {
+        "title": "South Carolina November 1 SNAP product eligibility restrictions",
+        "url": "https://endcap.news/posts/usda-snap-waiver-delay-nov-2026",
+        "reason": "Previously announced policy/go-live date, not a newly issued emergency interruption reported within the observation window."
+      },
+      {
+        "title": "Lee's Marketplace new Richmond, Utah store",
+        "url": "https://www.diningandcooking.com/us/71858/",
+        "reason": "New store opening; referenced loss of prior town grocery more than 15 years ago, not a fresh closure."
+      },
+      {
+        "title": "Shiloh food vault adds grocery pickup capacity",
+        "url": "https://www.ucook.org/1085327/new-shiloh-food-vault-adds-convenience-for-hungry-families-north-news/",
+        "reason": "Service expansion, not loss of food access."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T014708-0700-r11-20261101T084708Z.json",
+    "prior_verified_completed_at": "2026-11-01T01:48:37-07:00",
+    "limitations": "Local notices may appear in search indices after the run; no negative guarantee for unindexed or late-posted provider/agency notices. DST fall-back made this actual-time observation window longer than a nominal hour.",
+    "production_authority": "Production collection authoritative; no content approval, publishing, schedule changes or task disabling."
+  }
+}

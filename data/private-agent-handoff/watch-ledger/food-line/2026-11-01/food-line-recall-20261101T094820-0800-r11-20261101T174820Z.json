@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T094820-0800-r11-20261101T174820Z",
+  "scheduled_for": "2026-11-01T09:45:54-08:00",
+  "started_at": "2026-11-01T09:48:20-08:00",
+  "completed_at": "2026-11-01T09:50:11.294-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T08:49:18.670-08:00",
+    "end_at": "2026-11-01T09:50:11.294-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last verified prior Food Line watch heartbeat completed at 08:49:18.670 PST. Search screened for newly announced or newly occurring disruptions; indexing or crawl timestamps alone do not establish novelty.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire, or disaster",
+      "Emergency food distribution canceled or suspended due to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry or food-bank closure or major service reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"November 1, 2026\" \"only grocery store\" closure fire community",
+      "\"November 1, 2026\" \"last grocery store\" closed",
+      "grocery store fire \"Oct 31, 2026\" \"only\" town",
+      "food pantry closed suddenly \"November 1 2026\" food bank",
+      "food distribution cancelled weather \"November 1, 2026\"",
+      "food bank distribution canceled storm outage October 31 2026",
+      "SNAP benefits interrupted November 1 2026 state agency outage official",
+      "WIC benefits service suspended November 1 2026 official notification",
+      "2026 November 1 sole grocery store shuts down town food desert 2026",
+      "October 31 2026 food pantry \"closed\" residents emergency services",
+      "site:gov \"November 1, 2026\" SNAP WIC EBT outage benefits interruption",
+      "October 31 November 1 2026 \"food distribution\" \"cancelled\" OR \"postponed\" storm United States"
+    ],
+    "observation": "Twelve targeted fresh searches returned usable responses, with no verified newly reported qualifying food-access interruption since the preceding Food Line heartbeat at 08:49 PST. Search results were largely older 2025 SNAP shutdown reports, older 2026 grocery fires or pantry closures, routine November 2026 pantry scheduling, and unrelated weather stories.",
+    "excluded_examples": [
+      {
+        "title": "Second Harvest November mobile pantry schedule, Ohio",
+        "url": "https://www.peakofohio.com/local-news/food-for-the-holidays-november-mobile-pantry-schedule-released/",
+        "reason": "Published November 1, 2026, but is routine promotion/scheduling, not access loss or a canceled distribution."
+      },
+      {
+        "title": "Kauai Hanalei refuge flood warning",
+        "url": "https://m.economictimes.com/news/international/world-news/kauai-flood-warning-hanalei-refuge-area-offers-a-safe-place-to-shelter-but-no-food-water-or-medical-care-what-residents-need-to-know-to-take/articleshow/135429223.cms",
+        "reason": "Fresh November 1, 2026 flood warning mentions shelter without food but does not document an actual qualifying grocery closure, canceled food distribution, pantry shutdown, or official aid interruption."
+      },
+      {
+        "title": "Berkeley Food Pantry closure",
+        "url": "https://berkeleyhighjacket.com/2026/news/berkeley-food-pantry-shutting-down",
+        "reason": "Published February 27, 2026; not new within the observation window."
+      },
+      {
+        "title": "North Carolina November SNAP shutdown reporting",
+        "url": "https://abc11.com/post/snap-benefits-nc-food-uncertain-november-north-carolina-federal-government-shutdown-drags/18006802/",
+        "reason": "Coverage of October/November 2025 shutdown, not a new November 2026 agency interruption."
+      },
+      {
+        "title": "Previously documented Provo Utah closure",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Previously identified in prior Food Line watch history; do not duplicate."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T084731-0800-r11-20261101T164731Z.json",
+      "prior_verified_completed_at": "2026-11-01T08:49:18.670-08:00",
+      "method": "Compared known 05:49 heartbeat commit with current ops/watch-ledger to discover latest 08:47 run, then read exact prior JSON."
+    },
+    "source_failures": [],
+    "limitations": "Fresh local provider notices may not yet be indexed. This is a bounded recall screen, not an exhaustive nationwide absence claim. Search engine occasionally surfaced stale 2025 results despite 2026 date constraints.",
+    "production_authority": "Production collection remains authoritative. No review approval, publication, schedule change, or task disablement."
+  }
+}

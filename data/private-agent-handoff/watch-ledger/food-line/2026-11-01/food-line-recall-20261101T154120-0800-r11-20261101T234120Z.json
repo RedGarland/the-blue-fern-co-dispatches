@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T154120-0800-r11-20261101T234120Z",
+  "scheduled_for": "2026-11-01T15:45:54-08:00",
+  "started_at": "2026-11-01T15:41:20-08:00",
+  "completed_at": "2026-11-01T15:42:06-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T14:44:46.833-08:00",
+    "end_at": "2026-11-01T15:42:06-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Latest previously verified completed_at from ops/watch-ledger. Screened source publication and event dates, not only crawler dates.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded high-value recall watch only; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Closure, fire or disaster loss of a community's only, last, sole or full-service grocery",
+      "Storm, flood, fire, outage or building damage cancellation/suspension of emergency food distributions",
+      "Abrupt food pantry or food-bank service closure or major access reduction",
+      "Official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" fire OR closure town November 1 2026",
+      "\"sole grocery store\" burned OR shuttered November 2026",
+      "\"last full-service grocery store\" closure Nov 2026",
+      "\"food distribution\" canceled due to storm OR flooding OR power outage November 1 2026",
+      "\"food bank\" \"distribution canceled\" November 1 2026",
+      "\"emergency food\" distribution suspended storm fire power Sunday November 1 2026",
+      "\"food pantry\" \"temporarily closed\" fire OR flood OR power November 2026",
+      "\"food bank\" \"abruptly closed\" November 1 2026",
+      "\"pantry\" \"closing immediately\" November 1 2026",
+      "site:gov \"SNAP\" \"November 1, 2026\" interruption delay outage",
+      "site:gov \"WIC\" \"November 1, 2026\" outage closed interruption",
+      "\"EBT\" \"November 1, 2026\" outage benefits delayed agency notice"
+    ],
+    "observation": "No source dated within the observation interval independently established a qualifying new U.S. food-access disruption. Results surfaced historical grocery-store closures, earlier storm recovery notices and unrelated documents, but no verified same-hour change in grocery, emergency distribution, pantry, SNAP, WIC or EBT access.",
+    "excluded_examples": [
+      {
+        "title": "Town of Spencer recovering after losing only grocery store in fire",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14",
+        "reason": "Qualifying incident class, but September 14 report predates current hour by weeks."
+      },
+      {
+        "title": "What Kauaʻi County residents, visitors need to know Oct. 29 about Hurricane Lowell recovery",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "source_published_at": "2026-10-29",
+        "reason": "Older broad disaster-resource update, not a newly announced emergency food-distribution cancellation in this window."
+      },
+      {
+        "title": "Avondale's only grocery store announces closing after just over 1 year",
+        "url": "https://www.wcpo.com/news/local-news/hamilton-county/cincinnati/avondale/avondales-only-grocery-store-announces-closing-after-just-over-1-year",
+        "source_published_at": null,
+        "reason": "Prior announcement, not verified as new in this hour."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T144314-0800-r11-20261101T224314Z.json",
+      "prior_verified_completed_at": "2026-11-01T14:44:46.833-08:00",
+      "method": "Fetched the latest two committed watch-ledger files and screened results against prior historical/duplicate candidates, including the already-known Provo, Utah closure."
+    },
+    "source_failures": [],
+    "limitations": "Twelve time-limited targeted web searches are non-exhaustive. Same-hour local agency notices may not yet be indexed. No finding does not establish that no incident exists nationwide.",
+    "production_authority": "No approval, public publication, production collector alteration, schedule change or disabling."
+  }
+}

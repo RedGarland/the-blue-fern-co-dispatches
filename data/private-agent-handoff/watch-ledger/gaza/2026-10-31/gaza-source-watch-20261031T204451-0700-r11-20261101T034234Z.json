@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T204451-0700-r11-20261101T034234Z",
+  "scheduled_for": "2026-10-31T20:44:51-07:00",
+  "started_at": "2026-10-31T20:42:34-07:00",
+  "completed_at": "2026-10-31T20:44:12.593-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T19:49:40.763-07:00",
+    "end": "2026-10-31T20:44:12.593-07:00",
+    "basis": "Start is verified completed_at of latest prior Gaza Source Watch heartbeat on ops/watch-ledger. Gaza-local early morning 1 November corresponds to Saturday evening 31 October PDT.",
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for high-value missed Gaza developments only; primary Gaza collection and publication remain authoritative.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent Gaza-relevant index entry dated 31 October 2026 is Humanitarian Situation Report | 29 October 2026, already recalled with six updates earlier. No new Gaza-indexed update."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; pre-existing repeated access restriction."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest-news and regional-news listings showed no new Gaza-specific hospital, medical evacuation, ambulance, medical transport, fuel, or functioning-capacity update in this window."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza \"31 October 2026\" humanitarian situation update OCHA OPT",
+      "site:who.int Gaza \"31 October 2026\" WHO health medical evacuation emergency"
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"November 1, 2026\" Gaza killed wounded",
+      "site:english.wafa.ps/Pages/Details/ \"November 1, 2026\" Gaza hospital aid displacement",
+      "site:reuters.com/world/middle-east/ Gaza November 1 2026 airstrikes civilian ceasefire",
+      "site:apnews.com/article/ Gaza November 1 2026 attacks casualties aid",
+      "site:aljazeera.com/news/2026/11/1/ Gaza killed injured ceasefire",
+      "site:aa.com.tr/en/middle-east/ Gaza November 1 2026 strikes killed aid",
+      "site:unicef.org Gaza November 1 2026 water children displacement",
+      "site:wfp.org Gaza October 31 November 1 2026 food trucks crossings",
+      "site:msf.org Gaza October 31 November 1 2026 hospital medical patients",
+      "site:palestinercs.org Gaza November 1 2026 ambulance injured health",
+      "Gaza October 31 November 1 2026 Rafah Kerem Shalom crossing closure aid trucks",
+      "Gaza November 1 2026 hostages detainees ceasefire talks military civilians"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; site header displays Sunday 1 November Gaza-local, but latest listed news remained 31 October 20:50 Gaza-local (Salfit, outside Gaza). Most recent Gaza item 31 October 17:45 Gaza-local Wael Musallam fatality, already captured."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; newest indexed newsroom content predates window; no new Gaza medical/ambulance incident."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible. Latest October 31 report on at least four Gaza fatalities aggregates previously recorded al-Arair, al-Mawasi tent fire deaths and Nuseirat reports; article contains no verified in-window distinct development. No November 1 Gaza report indexed."
+      },
+      {
+        "source": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible; latest visible articles did not identify a new Gaza-specific event in observation window."
+      },
+      {
+        "source": "AP Israel-Hamas hub",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible; no newly verified in-window qualifying Gaza development surfaced on direct index."
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, previously documented; alternate OCHA food/aid coverage available."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, previously documented; alternate OCHA coverage available."
+      }
+    ],
+    "dedupe": "Excluded prior Gaza Watch reports of Wael Musallam, Khan Younis/Taiba Towers, al-Arair, Nuseirat, al-Shati, al-Mawasi tent fires and six OCHA October 31 humanitarian updates. Reuters/AP/Al Jazeera and humanitarian indices produced no verified new in-window event. UNICEF's older September appeal and older WFP coverage are background, not new. Absence of reporting does not establish absence of events.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Recurring; no newly material failure because OCHA OPT and WHO Global remain available."
+      },
+      {
+        "source": "WFP newsroom",
+        "error": "HTTP 403",
+        "materiality": "Recurring; OCHA food/aid fallback available."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "error": "HTTP 403",
+        "materiality": "Recurring; OCHA fallback available."
+      }
+    ],
+    "status_rationale": "DEGRADED due to pre-existing partial source access failures; coverage via primary accessible humanitarian sources and established reporting remains usable. No newly material degradation or new qualifying development verified.",
+    "safeguards": "Single append-only heartbeat on ops/watch-ledger; no changes to production, approval, publication, social posting, schedule, or task state."
+  }
+}

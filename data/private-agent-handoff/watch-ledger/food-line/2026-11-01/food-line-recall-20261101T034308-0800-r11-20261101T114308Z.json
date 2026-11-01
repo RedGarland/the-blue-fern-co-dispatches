@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T034308-0800-r11-20261101T114308Z",
+  "scheduled_for": "2026-11-01T03:45:54-08:00",
+  "started_at": "2026-11-01T03:43:08-08:00",
+  "completed_at": "2026-11-01T03:44:19.017-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T02:48:09.004-08:00",
+    "end_at": "2026-11-01T03:44:19.017-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior read-back-verified heartbeat completed at 02:48:09 PST; target newly reported/discovered disruptions through this observation, screening actual incident and publication dates rather than index date.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss-class recall only; production nationwide collection remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "query_recency_days": 2,
+    "classes_checked": [
+      "Loss, closure, fire, or disaster affecting only, sole, last, or full-service community grocery",
+      "Cancellation or suspension of emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" \"November 1\" 2026",
+      "\"only grocery store\" fire \"October 31\" 2026",
+      "\"last supermarket\" closed fire November 2026 community",
+      "\"sole grocery store\" burned down OR closed 2026 October 31",
+      "\"food distribution\" canceled storm flood outage \"November 1\" 2026",
+      "\"food pantry\" distribution canceled \"October 31\" 2026",
+      "\"food bank\" closed suddenly \"November 1\" 2026",
+      "\"food pantry\" emergency closure power outage October 31 November 1 2026",
+      "site:gov SNAP EBT benefits outage delayed November 1 2026 statewide notice",
+      "site:gov WIC benefits interruption outage November 1 2026",
+      "\"SNAP\" \"benefits delayed\" \"November 1, 2026\" state",
+      "\"food assistance\" \"suspended\" \"November 1\" 2026 agency"
+    ],
+    "observation": "All 12 targeted searches completed and produced usable results; no new qualifying U.S. disruption with support placing the development after the prior observation was verified. Searches were dominated by 2025 SNAP shutdown stories, older grocery closures, out-of-scope service expansions, and existing preannounced changes.",
+    "excluded_examples": [
+      {
+        "title": "Virginia EBT notice of November 1, 2026 sweetened-beverage eligibility change",
+        "url": "https://dss.virginia.gov/relief/food-assistance/ebt/",
+        "reason": "Previously announced change in eligible products, explicitly no effect on benefit amount; not a newly issued emergency interruption."
+      },
+      {
+        "title": "Pennsylvania 2025 federal-shutdown SNAP interruption notice",
+        "url": "https://www.pa.gov/agencies/dhs/newsroom/due-to-federal-shutdown--november-snap-payments-will-not-be-made",
+        "reason": "Notice dated October 20, 2025; not a new November 2026 incident."
+      },
+      {
+        "title": "Provo Utah food-bank closure previously reported in prior recall watch",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Already recorded as an earlier candidate; avoid duplicates."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T024657-0800-r11-20261101T104657Z.json",
+    "prior_verified_completed_at": "2026-11-01T02:48:09.004-08:00",
+    "limitations": "Index latency and nonindexed official/provider updates can conceal very recent local incidents; absence of search evidence does not prove absence of incidents. Search results provided little genuinely current local coverage.",
+    "production_authority": "Production collection remains authoritative. No approvals, publication, schedule changes, or disabling were performed."
+  }
+}

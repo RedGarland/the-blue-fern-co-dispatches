@@ -1,0 +1,74 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T234305-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T23:45:22-07:00",
+  "started_at": "2026-10-31T23:43:05-07:00",
+  "completed_at": "2026-10-31T23:43:35-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T22:44:02.779-07:00",
+    "end": "2026-10-31T23:43:35-07:00",
+    "basis": "Previous verified hourly Care Line Watch heartbeat to this run; supplementary recall only, production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, DC and territories. High-value service closure/suspension in hospital/ED, maternity, behavioral health, dialysis, oncology, primary care; rural emergency service, EMS, air medical; CMS termination/rescission/CLIA action; actual abrupt restoration of previously lost essential service.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "result": "Opened official CMS notices first; no notice dated October 31, 2026. Seven notices dated October 30 were documented by previous watches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended service October 31 2026 United States rural",
+      "hospital labor delivery maternity neonatal services closed October 31 2026",
+      "behavioral health psychiatric hospital admissions suspended closure October 31 2026",
+      "dialysis center closing October 31 2026 patients clinic United States",
+      "oncology chemotherapy cancer clinic shutdown patient care October 31 2026",
+      "rural health clinic primary care closure October 31 2026",
+      "ambulance EMS air medical base closing suspension October 31 2026",
+      "rural emergency department closed diversion reopening October 31 2026 hospital",
+      "hospital emergency department maternity clinic reopened resumed services October 31 2026",
+      "CMS termination rescission CLIA certificate suspension October 31 2026 provider notice",
+      "Puerto Rico Guam Virgin Islands American Samoa CNMI hospital clinic closure emergency service October 31 2026",
+      "hospital service unit closure announced October 31 2026 site:beckershospitalreview.com OR site:fiercehealthcare.com OR site:aha.org"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Penn State Health Lancaster Medical Center new Level II NICU, Lancaster, PA",
+        "source": "https://pennstatehealthnews.org/2026/10/penn-state-health-lancaster-medical-center-to-open-level-ii-nicu-on-oct-31/",
+        "reason": "New three-bed NICU opening October 31 is expansion, not restoration/reopening of a previously lost essential service."
+      },
+      {
+        "item": "Henderson Hospital maternity/NICU suspension, Nevada",
+        "source": "https://knpr.org/health/2026-08-13/henderson-hospital-announces-closure-of-maternity-nicu-units",
+        "reason": "Announced August, effective about September 30; outside observation window."
+      },
+      {
+        "item": "Martin General emergency service reopening plan, North Carolina",
+        "source": "https://www.northcarolinahealthnews.org/2026/07/13/martin-general-funds-budget/",
+        "reason": "Prior plan with financing needs, not verified newly effective reopening."
+      },
+      {
+        "item": "Primary Health Solutions Ohio investment strategy",
+        "source": "https://www.bizjournals.com/dayton/news/2026/10/31/primary-health-solutions-dayton-expansion-strategy.html",
+        "reason": "Business investment/expansion strategy without a qualifying service loss or restoration."
+      }
+    ],
+    "source_failures": [],
+    "result_summary": "Official CMS Public Notices checked first, followed by 12 targeted searches. No new, sufficiently substantiated, nonduplicate qualifying U.S./territorial healthcare access development verified since the prior heartbeat.",
+    "limitations": "Bounded recall is not a full national or territorial sweep. Recent searches yielded older/out-of-scope stories and future proposals; reporting and indexing delays may hide real events. No claim that no events occurred.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T224309-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T22:44:02.779-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Only one private, append-only heartbeat. No approval, publishing, production scheduling or task disabling."
+  }
+}

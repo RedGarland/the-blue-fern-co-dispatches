@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261031T194451-0700-r11-20261101T024906Z",
+  "scheduled_for": "2026-10-31T19:44:51-07:00",
+  "started_at": "2026-10-31T19:49:06-07:00",
+  "completed_at": "2026-10-31T19:49:40.763-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T18:44:37.467-07:00",
+    "end": "2026-10-31T19:49:40.763-07:00",
+    "basis": "Start is the verified prior Gaza Source Watch heartbeat completed_at on the same branch. Gaza-local November 1 early morning corresponds to October 31 PDT evening.",
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Gaza recall only; primary daily collector/publisher remains authoritative.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest update October 31: Humanitarian Situation Report | 29 October 2026, with previously recorded six humanitarian updates; no newer Gaza publication on index."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring previously documented access restriction."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; page and latest-news indexes did not show a newer Gaza hospital, medical evacuation, health-service, ambulance or fuel change."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza \"November 1, 2026\" killed wounded raid hospital",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"October 31, 2026\" \"evening\" killed",
+      "site:reuters.com/world/middle-east/ Gaza November 1 2026 strikes ceasefire casualties",
+      "site:apnews.com/article/ Gaza November 1 2026 Israeli airstrike aid killed",
+      "site:aljazeera.com/news/2026/11/1 Gaza civilians killed injured latest",
+      "site:aa.com.tr/en/middle-east/ Gaza November 1 2026 civilians strikes ceasefire",
+      "site:unicef.org Gaza November 1 2026 water children healthcare displacement",
+      "site:wfp.org Gaza October 31 November 1 2026 trucks food crossings",
+      "Gaza November 1 2026 Rafah crossing medical evacuations aid trucks \"November 1\"",
+      "Gaza November 1 2026 hostage detainee release ceasefire negotiations humanitarian impact",
+      "site:palestinercs.org Gaza November 1 2026 ambulance hospital raid medical",
+      "site:unrwa.org OR site:icrc.org Gaza November 1 2026 humanitarian displaced food fuel"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Newest listed Gaza story remains October 31 at 17:45 Gaza-local (Wael Musallam died from prior strike), previously recorded. Later list entries to 20:50 Gaza-local concern West Bank; no new Gaza story seen."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; displayed latest newsroom items older than the search window; no newly documented ambulance/hospital change."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; existing restriction, search results not current."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; existing restriction."
+      }
+    ],
+    "dedupe": "Excluded already-recorded October 31 WAFA incidents including the distinct Wael Musallam fatality and Khan Younis/Taiba Towers casualty, al-Shati and other Gaza casualty reports, and six updates from OCHA's October 31 posting. UNICEF September appeal and older cross-border or ceasefire background do not qualify as new. No verified qualifying development was found after prior 18:44:37 PDT completion. Absence of a report is not proof of no incident.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Pre-existing; WHO Global/OCHA OPT accessible"
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Pre-existing; alternative OCHA food/aid reporting accessible"
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Pre-existing; alternative OCHA and targeted news search accessible"
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring partial source failures, not a newly material outage; usable primary-source and established-news coverage completed.",
+    "safeguards": "Only this single append-only heartbeat on ops/watch-ledger; no approval, publication, social post, schedule or task state change."
+  }
+}

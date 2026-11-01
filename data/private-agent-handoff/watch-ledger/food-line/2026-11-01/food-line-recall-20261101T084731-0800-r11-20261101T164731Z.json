@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T084731-0800-r11-20261101T164731Z",
+  "scheduled_for": "2026-11-01T08:45:54-08:00",
+  "started_at": "2026-11-01T08:47:31-08:00",
+  "completed_at": "2026-11-01T08:49:18.670-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T07:46:10.614-08:00",
+    "end_at": "2026-11-01T08:49:18.670-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified Food Line ledger heartbeat completed at 07:46:10.614 PST. Only fresh incidents or fresh official notices since that instant qualify; search-index/crawl dates and scheduled future service changes alone do not prove new events.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster involving the only, sole, last, or full-service grocery store in a community",
+      "Emergency food distribution cancelled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank closure or material food-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      {
+        "query": "November 1 2026 \"only grocery store\" closed fire town",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 \"last grocery store\" closing community",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 \"sole grocery\" fire closed town",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 food distribution canceled storm flooding power outage",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 food bank distribution cancelled weather damage",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 emergency food distribution suspended facility fire",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 food pantry closed abruptly local access",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 food bank service suspended unexpectedly closure",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 food pantry fire closure serving families",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 SNAP EBT benefits delayed interrupted official state notice",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 WIC interrupted services outage state agency",
+        "recency_days": 2
+      },
+      {
+        "query": "November 1 2026 SNAP food assistance payment outage issuance disruption state",
+        "recency_days": 2
+      }
+    ],
+    "observation": "All 12 targeted searches returned usable results. No independently verifiable newly announced or newly occurring qualifying disruption within the verified hourly window was identified. Recency-ranked results predominantly concerned 2025 SNAP shutdown articles and September 2026 grocery/fire/weather incidents. The October 31 Provo closure appears in searches but was documented in earlier watches.",
+    "excluded_examples": [
+      {
+        "title": "Community Action Services and Food Bank closure, Provo, UT",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Posted October 31 at 10:24 p.m. local Utah time, and explicitly identified as a preexisting recorded candidate in earlier verified Food Line watch heartbeats; duplicate, not newly discovered."
+      },
+      {
+        "title": "Spencer, NY only grocery store fire",
+        "url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Incident September 11, 2026, outside the hourly window."
+      },
+      {
+        "title": "El Pasoans Fighting Hunger storm-damage distribution closure",
+        "url": "https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+        "reason": "Report dated September 24, 2026, outside the hourly window."
+      },
+      {
+        "title": "Federal SNAP disruption stories",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "November funding issues described relate to 2025, not a fresh November 2026 interruption."
+      },
+      {
+        "title": "Virginia SNAP beverage restrictions",
+        "url": "https://dss.virginia.gov/relief/food-assistance/ebt/",
+        "reason": "Previously announced November 1 policy change, not a newly discovered immediate food-assistance interruption during the hourly window."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T074432-0800-r11-20261101T154432Z.json",
+      "prior_verified_completed_at": "2026-11-01T07:46:10.614-08:00",
+      "method": "Compared prior known 05:49 heartbeat commit to current ops/watch-ledger and fetched the newest verified Food Line watch heartbeat; compared candidates with its exclusions."
+    },
+    "source_failures": [],
+    "limitations": "Bounded keyword search is not exhaustive. Newly posted local provider notices may not yet be indexed. No search or source failure was identified; a nonessential GitHub HTML page fetch was unavailable, but GitHub connector reads and compare succeeded.",
+    "production_authority": "No approvals, publication, schedule modifications or task disablement; production collection remains authoritative."
+  }
+}

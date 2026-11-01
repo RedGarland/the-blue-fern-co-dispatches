@@ -1,0 +1,73 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T044732-0800-r11-20261101T124732Z",
+  "scheduled_for": "2026-11-01T04:45:54-08:00",
+  "started_at": "2026-11-01T04:47:32-08:00",
+  "completed_at": "2026-11-01T12:49:21.900Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T02:48:09.004-08:00",
+    "end_at": "2026-11-01T12:49:21.900Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Overlapping conservative window beginning at latest independently retrieved prior verified heartbeat completion (02:48:09 PST); a later 03:xx heartbeat could not be listed using the available GitHub file connector. This wider-than-hourly start ensures the preceding hour is not missed. Target only newly occurring/reported disruptions, not older results merely recrawled.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production nationwide collector remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "classes_checked": [
+      "Loss/closure/fire/disaster affecting sole, only, last, or full-service community grocery",
+      "Emergency food distributions canceled/suspended due to storm/flood/fire/outage/facility damage",
+      "Abrupt food pantry or food bank service closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "bounded_query_context": [
+      "November 1 2026 \"only grocery store\" closed fire town",
+      "\"Nov 1, 2026\" \"sole grocery\" closure fire",
+      "October 31 November 1 2026 \"last full service grocery\" closed",
+      "November 1 2026 \"food distribution\" canceled storm flood outage",
+      "November 1 2026 food bank distribution suspended severe weather",
+      "Oct 31 2026 pantry food distribution canceled power outage fire",
+      "\"November 1, 2026\" \"food pantry\" \"closed\" unexpectedly",
+      "\"Nov 1 2026\" \"food bank\" \"temporarily closed\" families",
+      "\"October 31, 2026\" pantry services suspended abruptly",
+      "site:gov \"November 1, 2026\" \"SNAP\" \"interruption\" benefits",
+      "site:gov \"November 1 2026\" WIC outage unable redeem benefits",
+      "\"November 1, 2026\" SNAP benefits delayed suspended EBT state notice"
+    ],
+    "observation": "All 12 targeted web searches returned usable search results, but none verified a new, in-window high-value food-access disruption. Results largely concerned previously reported incidents, general storm recovery information, routine distribution schedules, irrelevant power outages, and older benefits-shutdown notices.",
+    "excluded_examples": [
+      {
+        "title": "Spencer, New York: town's only grocery store destroyed by fire",
+        "url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "September 11 incident; not new to this watch window."
+      },
+      {
+        "title": "El Pasoans Fighting Hunger distribution suspended because of storm damage",
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "September 25 incident; not a new interruption."
+      },
+      {
+        "title": "Provo, Utah: food bank closure",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Already flagged in preceding Food Line watch runs; excluded as duplicate."
+      },
+      {
+        "title": "New York counties' SNAP federal-shutdown informational page",
+        "url": "https://www.nysac.org/issues/federal-affairs/federal-government-shutdown/",
+        "reason": "Historical 2025 shutdown guidance, not a newly issued 2026 interruption."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T024657-0800-r11-20261101T104657Z.json",
+    "prior_verified_completed_at": "2026-11-01T02:48:09.004-08:00",
+    "limitations": "GitHub connector did not provide directory listing of newer heartbeats, so latest prior run could not be positively established; conservative overlap from last verified prior completion used. Search indexing may lag first-party local notices, and negative findings are not exhaustive.",
+    "production_authority": "Production collection remains authoritative; no approval, publishing, schedule changes, or task disabling."
+  }
+}

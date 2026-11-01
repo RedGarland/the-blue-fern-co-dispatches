@@ -1,0 +1,74 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T104914-0800-recall12",
+  "scheduled_for": "2026-11-01T10:45:22-08:00",
+  "started_at": "2026-11-01T10:49:14-08:00",
+  "completed_at": "2026-11-01T10:50:24.270-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T09:44:08.249-08:00",
+    "end": "2026-11-01T10:50:24.270-08:00",
+    "basis": "Since the previous verified hourly Care Line supplementary watch heartbeat; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "US states, District of Columbia and US territories: concrete hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension, rural/emergency service loss, ambulance/air-medical/base closure or suspension, official CMS termination/rescission/CLIA action, and effective restoration of a lost essential service.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "CMS official Public Notices inspected before all targeted searches; newest visible rows remain seven notices dated 2026-10-30. No newer provider termination, rescission, or CLIA action listed."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "\"November 1, 2026\" \"hospital\" \"closed\" emergency department United States",
+      "\"October 31, 2026\" hospital emergency room shut down suspended patients",
+      "\"November 1, 2026\" labor delivery maternity unit closure hospital",
+      "\"November 1, 2026\" behavioral health psychiatric hospital closed suspended services",
+      "\"November 1, 2026\" dialysis clinic oncology service closed patients",
+      "\"October 31, 2026\" primary care clinic closed patients healthcare",
+      "\"November 1, 2026\" \"rural hospital\" emergency service closure suspended US",
+      "\"October 31, 2026\" \"ambulance\" \"service\" closed suspended county",
+      "\"November 1, 2026\" air medical helicopter base closed operations",
+      "\"November 1, 2026\" hospital emergency department reopened services after closure",
+      "\"November 1, 2026\" \"Guam\" \"Puerto Rico\" \"Saipan\" hospital clinic emergency closure",
+      "\"October 31, 2026\" state health department hospital clinic closure suspension dialysis"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity and labor-delivery unit closure, Chicago, IL; closed Oct 31 at 11:59 p.m. CDT",
+        "url": "https://www.cbsnews.com/chicago/news/community-worried-closure-labor-and-delivery-roseland-community-hospital/",
+        "reason": "Previously announced and explicitly assessed in the 07:50 PST heartbeat as already recorded; CBS Chicago report updated Nov 1 at 10:10 a.m. CST (08:10 PST), before this search window. Not a new distinct change."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service repeated suspension, Preston County, WV",
+        "url": "https://www.wvnews.com/prestoncountynews/preston-county-ems-crisis-deepens-as-bruceton-ambulance-service-suspends-operations-again/article_9c1166d2-8bb8-42f5-8e66-39f9c31e0351.html",
+        "reason": "Announced October 27 and reported October 28, outside the observation interval; no new November 1 suspension or restoration verified."
+      },
+      {
+        "item": "Isla Community Health Kagman clinic suspension in Saipan, CNMI",
+        "url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+        "prior_finding_id": "care-line-cnmi-saipan-kagman-primary-care-clinic-closure-20261030",
+        "reason": "Previously recorded candidate still pending review; no new restoration or separate development verified."
+      },
+      {
+        "item": "Other results: overseas hospitals, older US service announcements, proposed Welsh clinic reductions, general policy and unrelated results",
+        "reason": "Outside US jurisdiction, stale, proposed without effective local access loss, or not a service-line change."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T094310-0800-r11-recall12.json",
+      "previous_completed_at": "2026-11-01T09:44:08.249-08:00",
+      "reviewed_earlier_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T074859-0800-recall12.json"
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: 12 queries executed and CMS was accessible, but search responses were predominantly old, international, or otherwise nonresponsive; independent fresh local and territorial recall cannot be established reliably. Relevant Roseland and Bruceton reports concern previously known or earlier events.",
+    "limitations": "Bounded supplementary recall, not exhaustive; no qualifying development verified as new within the window. Sunday indexing and poor topical search ranking limit confidence, particularly for rural communities and territories. No-findings does not imply no access change occurred.",
+    "controls": "One append-only private heartbeat on ops/watch-ledger. No review approval, public publication, production collector mutation, schedule alteration, or automation disabling."
+  }
+}

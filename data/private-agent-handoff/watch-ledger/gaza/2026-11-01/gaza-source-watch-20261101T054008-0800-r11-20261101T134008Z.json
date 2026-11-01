@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T054008-0800-r11-20261101T134008Z",
+  "scheduled_for": "2026-11-01T05:44:51-08:00",
+  "started_at": "2026-11-01T05:40:08-08:00",
+  "completed_at": "2026-11-01T05:42:49.895-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T04:47:15.034-08:00",
+    "end": "2026-11-01T05:42:49.895-08:00",
+    "basis": "Starts at the prior verified watch heartbeat completion. The trigger supplied local 05:40:08 PST, a few minutes before the nominal :44:51 recurrence slot; scheduled_for records the recurrence slot, started_at records actual trigger time. All local times PST (-08:00) after November 1 daylight-saving transition.",
+    "official_first_sources": [
+      "OCHA OPT updates",
+      "WHO Global conflict-in-Israel-and-oPt",
+      "WHO EMRO opt"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-2026-11-01-gaza-city-nov1-strike-ap-child-age-serious-injury-identity-followup",
+      "canonical_source_url": "https://apnews.com/article/mideast-news-november-1-2026-b918f44d8f212d7daf7f2f9a98c91a0b",
+      "title": "Israeli strike kills boy in Gaza as Qataris say vessel struck in Gulf, and other Mideast news",
+      "publisher": "The Associated Press",
+      "source_date": "2026-11-01",
+      "publication_date": "2026-11-01",
+      "published_at": null,
+      "event_date": "2026-11-01",
+      "location": "Gaza City, Gaza Strip",
+      "affected_population_system": "AP attributes to Shifa Hospital that one of the previously recorded three killed in the Gaza City strike was a 4-year-old boy and that a woman was seriously wounded. Reuters' photo caption independently identifies a boy, Zain Owais, and his father Mohammed as killed in an Israeli strike in Gaza City on November 1; the caption does not establish the boy's age. These are additional casualty and identification details about the already counted strike, not additional fatalities or a new attack.",
+      "exact_supporting_passage": "Another strike in Gaza City killed three people, including the boy, and seriously wounded a woman, according to Shifa Hospital",
+      "source_type": "Established news agency article directly accessible and citing Shifa Hospital; Reuters contemporaneous photo caption provides victim-identification context",
+      "classification": "follow-up",
+      "new_in_watch": true,
+      "confidence": "High for traceability of attributed hospital account and Reuters photo caption; the exact AP revision time is unknown, victim details not independently verified, and no additional death is counted.",
+      "bounded_discovery_context": {
+        "previous_heartbeat": "gaza-source-watch-20261101T044451-0800-r11-20261101T124715Z",
+        "discovery_date": "2026-11-01",
+        "newly_verified": "Prior watch could not directly open the AP article and excluded an unverified age detail. This watch successfully opened AP and verified age four and a seriously wounded woman attributed to Shifa Hospital; Reuters directly accessible image caption names Zain Owais and father Mohammed in Gaza City.",
+        "secondary_source_url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+        "secondary_source_passage": "Funeral of Palestinian boy Zain Owais and his father Mohammed, who were killed in an Israeli strike",
+        "first_verified_publication_timestamp": null,
+        "last_watch_coverage": "Prior watch already recorded three killed near Taj Mall, Gaza City, and five killed in western Khan Younis, identifying the five as police officers based on Gaza interior ministry. Do not double count.",
+        "new_within_hour_unproven": "AP article is dated November 1 but exact initial publication and revision times are not shown. This qualifies as newly verified follow-up evidence, not a newly timed strike.",
+        "corroboration_limits": "Reuters photo caption establishes names and father-son relationship; the AP report establishes boy's age without naming the boy. Association between the two reports is plausible but not formally proven by both articles.",
+        "production_status": "Supplementary discovery only; no editorial approval or public publication."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for civilian casualties, displacement, food/water/aid, functioning health capacity, ambulance/transport/fuel/medical evacuation, damage, crossings, detention/hostages, ceasefire talks, and operations with civilian impact; primary production collector is authoritative.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest listed update dated October 31, reporting October 29; no new November 1 report."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated Gaza operational update in the observation interval."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, consistent with previous watches."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ November 1 2026 Gaza 15:00 killed injured Israeli shelling",
+      "site:wafa.ps/news/2026/11/1 غزة الأحد 1 نوفمبر 2026 الساعة 15 استشهاد إصابة قصف",
+      "site:reuters.com/world/middle-east/ 2026-11-01 Gaza strikes Khan Younis ceasefire Nov 1 update",
+      "site:apnews.com/article/ Nov 1 2026 Gaza Israeli strikes killed latest ceasefire",
+      "site:aljazeera.com/news/2026/11/1/ Gaza killed wounded Nov 1 2026",
+      "site:aa.com.tr/en/middle-east/ 1 Nov 2026 Gaza killed injured new strikes ceasefire",
+      "site:unicef.org Gaza November 1 2026 children food clean water aid emergency update",
+      "site:msf.org November 1 2026 Gaza hospitals ambulances medical evacuation healthcare access",
+      "site:icrc.org/en 1 November 2026 Gaza hostages detainees families health aid",
+      "site:wfp.org/news Gaza November 1 2026 trucks aid food shortages",
+      "Gaza Rafah Kerem Shalom crossing November 1 2026 medical evacuations ambulance fuel WHO UNRWA",
+      "Gaza 1 November 2026 Reuters AP Israeli ceasefire talks humanitarian civilian fatalities afternoon update"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_checks": [
+      {
+        "source": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; November 1 Gaza headline about eight deaths repeats prior incidents. Linked prior detailed article was not accessible by direct URL."
+      },
+      {
+        "source": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible; Gaza headlines matched previously recorded eight deaths; latest additional headlines relate predominantly to the West Bank."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+        "result": "Accessible; story timestamp Nov 1 12:26 UTC, previously captured five police-officer affiliation; photo caption adds Gaza City victim names, no new deaths."
+      },
+      {
+        "source": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-november-1-2026-b918f44d8f212d7daf7f2f9a98c91a0b",
+        "result": "Direct article now accessible after previous watch's DisabledError. Shifa Hospital attributed four-year-old boy among already reported three dead and seriously injured woman; unknown exact revision time."
+      },
+      {
+        "source": "ICRC",
+        "url": "https://www.icrc.org/en/news",
+        "result": "Accessible; no new directly traceable Gaza event during interval."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403, pre-existing access restriction."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403, pre-existing access restriction."
+      }
+    ],
+    "dedupe": "Previously captured Gaza City three deaths, Khan Younis five deaths/police affiliation, Jabalia Halawa camp injuries and earlier OCHA situation reports excluded. AP and Reuters add corroborated descriptive detail only; zero additional fatalities or separate attacks entered.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Pre-existing; OCHA OPT and WHO Global accessible"
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Pre-existing; WFP search index and OCHA available"
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Pre-existing; OCHA available"
+      },
+      {
+        "source": "WAFA detailed prior URL",
+        "error": "Direct URL inaccessible",
+        "materiality": "Homepage and Arabic front page accessible; Reuters and AP accessible"
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring access failures, despite adequate alternative official and established reporting. AP direct access recovered compared with prior watch, enabling meaningful follow-up verification. No newly material access deterioration.",
+    "safeguards": "One append-only heartbeat created only on ops/watch-ledger; no changes to production, approval, review, publication, social posting, tasks, schedule, or enabled status."
+  }
+}

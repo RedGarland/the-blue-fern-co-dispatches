@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T144314-0800-r11-20261101T224314Z",
+  "scheduled_for": "2026-11-01T14:45:54-08:00",
+  "started_at": "2026-11-01T14:43:14-08:00",
+  "completed_at": "2026-11-01T14:44:46.833-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T13:47:40-08:00",
+    "end_at": "2026-11-01T14:44:46.833-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From completed_at in latest prior verified Food Line Source Watch heartbeat on ops/watch-ledger; same-hour report dates must be verified, not inferred from crawl time.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last or full-service community grocery store closed or damaged",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" \"November 1\" 2026 town",
+      "\"sole grocery store\" fire closure November 2026 community",
+      "\"last grocery store\" closes 2026 November 1",
+      "\"full service grocery\" fire closed November 1 2026",
+      "\"food distribution\" canceled storm November 1 2026 pantry",
+      "\"food bank\" \"distribution canceled\" November 2026 outage storm",
+      "site:gov \"SNAP\" \"November 1, 2026\" \"delayed\" benefits",
+      "site:gov \"WIC\" \"November 2026\" \"interruption\" \"closed\"",
+      "\"SNAP benefits\" \"November 2026\" \"not issued\" OR \"suspended\"",
+      "\"food pantry\" \"permanently closed\" \"October 31, 2026\" OR \"November 1, 2026\"",
+      "\"food pantry\" \"temporarily closed\" \"November 1, 2026\" flood OR fire OR power",
+      "\"food distribution\" \"cancelled\" \"Nov 1, 2026\" OR \"Nov 2, 2026\""
+    ],
+    "observation": "No independently verified newly announced U.S. access disruption within the hourly observation window. Search hits included older isolated-store losses, April/September 2026 pantry and storm disruptions, and historical November 2025 SNAP shutdown material. November 2026 search results relating to routine distribution schedules, preannounced eligibility restrictions and benefits explainer pages did not demonstrate new interruptions.",
+    "excluded_examples": [
+      {
+        "title": "Safeway plans to close its only Arvada store November 14",
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "source_published_at": "2026-10-14",
+        "reason": "Already preannounced weeks earlier; other grocers in Arvada; not a new sole community grocer loss."
+      },
+      {
+        "title": "El Pasoans Fighting Hunger on-site distribution closed after storm damage",
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "source_published_at": "2026-09-25",
+        "reason": "High-value disruption but September report outside current hourly window."
+      },
+      {
+        "title": "Ruby's Pantry abruptly closes its Upper Midwest locations",
+        "url": "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+        "source_published_at": "2026-04-01",
+        "reason": "Older previously reported network closure outside window."
+      },
+      {
+        "title": "Livingston County SNAP freeze notice",
+        "url": "https://www.livingstoncountyny.gov/m/newsflash",
+        "source_published_at": "2025-10-28",
+        "reason": "Historical November 2025 federal funding interruption, not new November 2026 outage."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T134713-0800-r11-20261101T214713Z.json",
+      "prior_verified_completed_at": "2026-11-01T13:47:40-08:00",
+      "method": "Read latest preceding heartbeat from GitHub watch-ledger; checked incident and source dates; excluded historical and duplicate closures including Provo, Utah."
+    },
+    "source_failures": [],
+    "limitations": "Search is bounded, not exhaustive; local same-hour agency notices may not yet be indexed. The lack of a surfaced qualifying report does not establish absence of a nationwide incident.",
+    "production_authority": "No editorial approval, public publication, changes to primary collector, schedule modification, or disabling."
+  }
+}

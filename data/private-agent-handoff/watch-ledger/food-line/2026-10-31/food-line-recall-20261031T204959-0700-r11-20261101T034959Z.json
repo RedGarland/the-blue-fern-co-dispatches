@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T204959-0700-r11-20261101T034959Z",
+  "scheduled_for": "2026-10-31T20:45:54-07:00",
+  "started_at": "2026-10-31T20:49:59-07:00",
+  "completed_at": "2026-10-31T20:50:50.534-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T19:43:11.446-07:00",
+    "end_at": "2026-10-31T20:50:50.534-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently verified 19:43 PT heartbeat completion; bounded supplementary recall uses 1–3 day source discovery recency to capture late-indexing, but qualifies only new verified developments since preceding hourly check.",
+    "targeted_search_count": 12,
+    "web_search_recency_days_min": 1,
+    "web_search_recency_days_max": 3
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary targeted recall only across four authorized miss classes: last/sole/full-service grocery loss; hazard-cancelled food distribution; abrupt pantry/food-bank closure or major access reduction; and new official SNAP/WIC/food-assistance interruption. Production nationwide collector remains authoritative.",
+    "All 12 targeted web searches returned without tool error; no verifiable new U.S. qualifying disruption after prior hourly check. Search indexing can lag, so absence of findings is not proof of absence.",
+    "Search results largely included older 2025 SNAP shutdown reporting, old pantry closures, unrelated local news and donation/resource content. No contemporary official agency/provider notice substantiated a new qualifying interruption.",
+    "Previously flagged Provo, Utah Community Action Services and Food Bank indefinite-closure candidate, first identified in the October 31 06:50 PT watch, excluded as previously recorded; no verified new development.",
+    {
+      "bounded_query_context": [
+        {
+          "query": "\"only grocery store\" closed fire \"October 31\" 2026",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "\"sole grocery store\" closing fire \"October\" 2026 town",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 3
+        },
+        {
+          "query": "\"last grocery store\" closure \"October 31\" 2026",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "food pantry closed unexpectedly suspended service October 31 2026",
+          "category": "abrupt_pantry_closure",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "food bank pantry closure \"October 31\" 2026",
+          "category": "abrupt_food_bank_closure",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "food distribution canceled storm flood outage October 31 2026",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "SNAP benefits interruption state agency alert October 31 2026",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "WIC benefits suspended interruption October 31 2026 state agency",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "\"October 31, 2026\" \"food bank\" \"closed\" services",
+          "category": "abrupt_food_bank_closure",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"Oct 31, 2026\" \"food distribution\" \"cancelled\" weather",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"October 31, 2026\" \"EBT\" \"outage\" SNAP",
+          "category": "official_benefit_interruption",
+          "method": "fast",
+          "recency_days": 2
+        },
+        {
+          "query": "\"October 31, 2026\" \"grocery store\" \"fire\" \"only\"",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 2
+        }
+      ],
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T194200-0700-r11-20261101T024200Z.json",
+      "previous_verified_completed_at": "2026-10-31T19:43:11.446-07:00",
+      "representative_exclusions": [
+        {
+          "url": "https://wwmt.com/news/local/allegan-county-food-pantry-to-close-permanently-next-week-211-assistance-board-directors",
+          "reason": "Published September 22, 2026 for October 2 closure; older than prior hourly window."
+        },
+        {
+          "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+          "reason": "2025 SNAP shutdown event, not a new 2026 interruption."
+        },
+        {
+          "url": "https://statusgator.com/services/forage",
+          "reason": "Reports last acknowledged payment service outage October 29, 2026; not a newly documented official SNAP/WIC interruption in the watch window."
+        }
+      ]
+    },
+    "No editorial approval, publication, alteration of production collection, schedule change, or disabling of the watch."
+  ]
+}

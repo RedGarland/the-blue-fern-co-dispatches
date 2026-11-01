@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T194534-0700-recall12",
+  "scheduled_for": "2026-10-31T19:45:22-07:00",
+  "started_at": "2026-10-31T19:45:34-07:00",
+  "completed_at": "2026-10-31T19:46:38.891-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T18:43:40.071-07:00",
+    "end": "2026-10-31T19:46:38.891-07:00",
+    "basis": "Previous verified Care Line Watch completion through this run's observation; supplemental recall only, with production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded recall for U.S. states and territories: essential hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures or suspensions; rural/emergency loss; ambulance/air-medical/base closure; CMS terminations/rescissions/CLIA restrictions; concrete essential-service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "page_last_modified": "2026-10-30 04:16 PM",
+      "latest_notice_date": "2026-10-30",
+      "result": "No notices dated October 31 were listed. Seven October 30 termination notices already recorded in prior watches; no newly dated rescission/CLIA restriction appeared."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "October 31 2026 hospital emergency department shut down suspended service closure United States",
+      "October 31 2026 hospital labor delivery maternity obstetrics suspended or closing effective",
+      "October 31 2026 ambulance service air medical base closure shutdown emergency response",
+      "October 31 2026 mental health psychiatric hospital admissions shut closed behavioral health",
+      "October 31 2026 dialysis center shut down treatment clinic closes patients United States",
+      "October 31 2026 oncology cancer center clinic suspends services closes",
+      "October 31 2026 rural hospital emergency services cease operations suspended today",
+      "October 31 2026 clinic primary care closures notices patients no access",
+      "October 31 2026 hospital emergency department reopens resumes patient care after closure shutdown United States",
+      "October 31 2026 Puerto Rico US Virgin Islands Guam Northern Mariana Islands American Samoa hospital emergency clinic service closure ambulance",
+      "October 31 2026 site:gov hospital CLIA certification suspended revoked termination rescission provider October 31",
+      "October 31 2026 \"ambulance\" \"base\" \"closed\" OR \"shutting down\" OR \"service suspended\" United States"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital labor/delivery unit closure, Chicago IL",
+        "source": "https://www.cbsnews.com/chicago/news/roseland-community-hospital-closing-labor-delivery-unit/",
+        "reason": "October 31 CBS Chicago update (10:29 AM CDT) concerns previously announced/recorded October 31 closure; same access-loss event already excluded as duplicate in prior hourly watches, not a new finding in this interval."
+      },
+      {
+        "item": "Delta Health Home Health agency, Colorado",
+        "source": "https://deltahealthco.org/news/delta-health-home-health-closure-update/",
+        "reason": "September 17 notice stated agency would close no later than October 31; no fresh confirmation of a new effective change discovered in current observation window."
+      },
+      {
+        "item": "UNM Health emergency/clinic disruption, New Mexico",
+        "source": "https://apnews.com/article/7a3593f8a3cee4ca895774ab1574919f",
+        "reason": "October 26 disruption and partial recovery already reported; outside window and prior watches."
+      },
+      {
+        "item": "Emeryville Sutter hospital construction cancellation, California",
+        "source": "https://evilleeye.com/news-commentary/state-sen-arreguin-blasts-sutter-over-abandoned-emeryville-hospital-plans/",
+        "reason": "October 30 report about abandoned unbuilt facility; no established loss of currently delivered care."
+      }
+    ],
+    "result_summary": "All 12 targeted searches returned results. No newly verified qualifying U.S. or territorial access-change announcement or concrete service restoration within the window after exclusion of duplicates, historic reporting, proposals, and unrelated material.",
+    "source_failures": [],
+    "limitations": "Recall is not exhaustive, particularly for small rural systems and territories. Search indexing can lag; absence of qualifying results is not evidence no disruptions occurred. Production national collector remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T184231-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T18:43:40.071-07:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "controls": "Exactly one private watch-ledger heartbeat created; no approval, publication, schedule change, or task disabling."
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T004451-0700-r11-20261101T074507Z",
+  "scheduled_for": "2026-11-01T00:44:51-07:00",
+  "started_at": "2026-11-01T00:45:07-07:00",
+  "completed_at": "2026-11-01T00:47:28.077-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-10-31T21:43:35.525-07:00",
+    "end": "2026-11-01T00:47:28.077-07:00",
+    "basis": "Last directly verified Gaza Source Watch ledger heartbeat completed 31 Oct 21:43:35.525 PDT. Catch-up interval includes intervening unverified hourly slots; no claim of exhaustive comparison to any later unseen heartbeat. Gaza local publication is UTC+02:00, nine hours ahead of PDT.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO Global and WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-2026-11-01-al-musaddar-ibrahim-adel-saeed-died-of-earlier-gunfire",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176478",
+      "title": "Palestinian succumbs to wounds sustained by Israeli gunfire in central Gaza",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-01",
+      "publication_date": "2026-11-01",
+      "published_at": "2026-11-01T08:47:00+02:00",
+      "event_date": "2026-11-01",
+      "incident_date": null,
+      "location": "al-Musaddar village, central Gaza Strip",
+      "affected_population_system": "One Palestinian man, Ibrahim Adel Saeed, reportedly died from earlier gunfire wounds; civilian/combatant status unverified.",
+      "exact_supporting_passage": "A Palestinian man died on Sunday morning from wounds sustained when Israeli occupation forces shot him in al-Musaddar village",
+      "source_type": "Established reporting; Palestinian official news agency citing Gaza medical sources",
+      "classification": "follow-up",
+      "new_in_watch": true,
+      "confidence": "medium-high for the reported death and identification; no independent medical or second-outlet confirmation",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA English latest-news check after OCHA and WHO checks, plus 12 targeted searches.",
+        "english_wafa_report": "2026-11-01 08:47 Gaza local (2026-10-31 23:47 PDT)",
+        "arabic_same_agency_confirmation_url": "https://www.wafa.ps/news/2026/11/1/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-%D9%85%D9%88%D8%A7%D8%B7%D9%86-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%88%D8%B3%D8%B7-%D9%82%D8%B7%D8%A7%D8%B9-%D8%BA%D8%B2%D8%A9",
+        "arabic_report": "2026-11-01 08:42 Gaza local (2026-10-31 23:42 PDT), same publisher; not independent corroboration.",
+        "original_wounding": "WAFA attributes the injuries to Israeli tank fire during an incursion several days earlier; exact original incident date unavailable.",
+        "dedupe": "Distinct named person and al-Musaddar location from 31 Oct reports of al-Maghazi injuries, Wael Musallam west of Gaza City and other recorded casualties. Do not assume whether he was counted in previous cumulative Ministry of Health figures.",
+        "provenance": "WAFA attributes victim identity to Gaza medical sources; circumstances and civilian status not independently verified.",
+        "production_status": "Recall candidate only; no publication or approval."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall, not primary Gaza collector/publisher; production remains authoritative. No public or production mutation.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest listed Gaza-relevant update remains 31 Oct 2026 Humanitarian Situation Report (29 October reporting period). Previously captured six updates were not re-added."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated update relevant to this observation window on emergency landing page."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring previously documented regional access restriction."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"November 1, 2026\" Gaza killed injured airstrike",
+      "site:wafa.ps \"2026/11/01\" غزة شهداء إصابات قصف",
+      "site:reuters.com/world/middle-east/ Gaza November 1 2026 civilian casualties ceasefire military",
+      "site:apnews.com/article/ Gaza November 1 2026 killed injured humanitarian ceasefire",
+      "site:aljazeera.com/news/2026/11/1/ Gaza killed injured Israeli attacks",
+      "site:aa.com.tr/en/middle-east/ Gaza November 1 2026 civilians airstrike",
+      "site:unicef.org Gaza November 1 2026 water displacement children aid",
+      "site:wfp.org Gaza November 1 2026 food assistance access Kerem Shalom",
+      "site:msf.org Gaza November 1 2026 hospital ambulance patients fuel",
+      "site:icrc.org Gaza November 1 2026 detainees hostages ambulance medical",
+      "Gaza November 1 2026 Rafah crossing Kerem Shalom medical evacuations humanitarian trucks",
+      "Gaza November 1 2026 ceasefire violations civilian casualties displacement overnight military strikes"
+    ],
+    "additional_targeted_search_count": 12,
+    "search_result": "All 12 recency-limited targeted searches completed, but returned no distinct qualifying new item beyond direct WAFA discovery. Search indexing appears less current than publisher live feed.",
+    "direct_checks": [
+      {
+        "source": "WAFA English latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "New November 1, 08:47 Gaza-local central Gaza fatality; canonical article body accessible."
+      },
+      {
+        "source": "WAFA Arabic latest",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "result": "Same central Gaza fatality listed 08:42 Gaza local. Does not count as a second finding."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza casualty entry seen dated Oct 31, previously recorded."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; English latest news older than watch window."
+      },
+      {
+        "source": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible; no distinct newly verified relevant item surfaced."
+      },
+      {
+        "source": "AP Israel-Hamas hub",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible; no distinct newly verified relevant item surfaced."
+      },
+      {
+        "source": "ICRC newsroom",
+        "url": "https://www.icrc.org/en/news",
+        "result": "Accessible; newest featured statements/articles dated October 29 or earlier."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, recurring restriction."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, recurring restriction."
+      }
+    ],
+    "dedupe": "Previously recorded Oct 31 casualties and OCHA's six Oct 31 humanitarian updates excluded. WAFA's November 1 Arabic and English accounts refer to one named death, not two. Death is a follow-up outcome of an earlier shooting, not a new attack on Nov 1.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously observed; WHO Global and OCHA remain accessible."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Previously observed; OCHA food-access fallback accessible."
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Previously observed; OCHA response fallback accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring partial official-source access failures, with meaningful alternate coverage. Outcome findings because WAFA documents a previously unrecorded named fatality reported on 1 Nov; no newly material source deterioration.",
+    "safeguards": "Single append-only heartbeat on ops/watch-ledger, no approval, publication, production change, schedule change or disabling."
+  }
+}

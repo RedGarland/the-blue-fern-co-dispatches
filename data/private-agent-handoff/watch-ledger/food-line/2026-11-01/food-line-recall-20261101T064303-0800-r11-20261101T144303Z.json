@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T064303-0800-r11-20261101T144303Z",
+  "scheduled_for": "2026-11-01T06:45:54-08:00",
+  "started_at": "2026-11-01T06:43:03-08:00",
+  "completed_at": "2026-11-01T06:44:12.786-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T05:49:10.867-08:00",
+    "end_at": "2026-11-01T06:44:12.786-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last available verified Food Line heartbeat on ops/watch-ledger completed at 05:49:10.867 PST. Reported event or official notice time must establish novelty inside this window; indexing and crawl timestamps do not suffice.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Food Line recall; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster of only, sole, last or full-service community grocery",
+      "Cancellation or suspension of emergency food distributions because of storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"November 1 2026\" \"only grocery store\" fire closure town",
+      "\"November 1 2026\" \"last grocery store\" closed community",
+      "\"October 31 2026\" \"sole grocery\" fire destroyed shutdown",
+      "\"November 1 2026\" food distribution canceled storm outage emergency",
+      "\"November 1 2026\" food pantry distribution cancelled flood fire",
+      "\"October 31 2026\" \"food bank\" distribution suspended weather",
+      "\"November 1 2026\" \"food pantry\" \"closed\" unexpectedly",
+      "\"November 1 2026\" \"food bank\" service suspended closure",
+      "\"October 31 2026\" pantry closed indefinitely emergency",
+      "site:gov \"November 1, 2026\" \"SNAP\" \"interruption\" OR \"delay\" OR \"outage\"",
+      "site:gov \"November 1, 2026\" \"WIC\" \"system\" \"outage\" OR \"interruption\"",
+      "\"November 1 2026\" \"EBT\" \"benefits\" \"not available\" state agency"
+    ],
+    "observation": "All 12 targeted web searches returned usable results. No verified new qualifying incident or official interruption within the hourly observation window was identified. Search results included dated older incidents, calendar listings, preannounced benefit restrictions, and reposted coverage of previously tracked closures.",
+    "excluded_examples": [
+      {
+        "title": "Community Action Services and Food Bank closure, Provo, Utah",
+        "url": "https://communityactionprovo.org/",
+        "reason": "Provider confirms November 1 temporary closure, but incident was previously recorded in Food Line watch; duplicate, not newly identified."
+      },
+      {
+        "title": "Point Breeze South Philadelphia Community Fridge pantry fire",
+        "url": "https://washingtonavewatch.com/2026/10/fire-destroys-food-pantry-at-point-breeze-community-fridge-donations-cover-replacement/",
+        "reason": "Fire occurred Monday, October 26; story published October 31 and replacement funded; outside the observation window."
+      },
+      {
+        "title": "Bountiful Food Pantry bus mobile pantry Ridgewood November 5 canceled",
+        "url": "https://www.bountifulfoodpantry.org/component/dpcalendar/location/6",
+        "reason": "Calendar lists a future canceled mobile pantry stop but provides no verified qualifying disaster/facility cause or new announcement timestamp."
+      },
+      {
+        "title": "South Carolina SNAP item restrictions effective November 1",
+        "url": "https://benefitsusa.org/en/blog/south-carolina-snap-benefits-and-coverage-2026",
+        "reason": "Previously announced policy, not a new operational interruption reported within this hour; nonofficial secondary summary."
+      },
+      {
+        "title": "Mason Food Pantry October 31 closure",
+        "url": "https://masonfoodpantry.org/",
+        "reason": "Routine preannounced one-day closure before observation window."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T054702-0800-r11-20261101T134702Z.json",
+      "prior_verified_completed_at": "2026-11-01T05:49:10.867-08:00",
+      "method": "Read current dated directory on ops/watch-ledger, selected latest prior hourly heartbeat and reviewed its exclusions."
+    },
+    "source_failures": [],
+    "limitations": "Searches cover priority miss classes, not every food-access incident nationwide. Provider updates may be unindexed and indexing times do not prove event novelty.",
+    "production_authority": "Production collection remains authoritative; no approvals, publications, schedule changes or task disablement."
+  }
+}

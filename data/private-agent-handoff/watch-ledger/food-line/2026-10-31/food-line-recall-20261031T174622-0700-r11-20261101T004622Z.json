@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T174622-0700-r11-20261101T004622Z",
+  "scheduled_for": "2026-10-31T17:45:54-07:00",
+  "started_at": "2026-10-31T17:46:22-07:00",
+  "completed_at": "2026-10-31T17:47:19-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T16:49:13.804-07:00",
+    "end_at": "2026-10-31T17:47:19-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly execution timestamp in run state (the previous exact completed_at ledger file was not discoverable by file listing). Scanned one-day freshness to provide overlapping coverage and avoid missing late-indexed reports. Previous verified heartbeat at 15:44:05.792 PT was also checked.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": 1
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary recall limited to the four user-authorized high-value miss classes. Production nationwide Food Line collector remains authoritative.",
+    "Completed 12 targeted fast web searches. Search results were heavily dominated by older incidents, irrelevant matches, and non-U.S. reports; no independently supported newly reported U.S. food-access interruption was found in the target interval. This is bounded recall, not proof that no incident occurred.",
+    "Known Provo, Utah Community Action Services and Food Bank temporary-closure candidate (first flagged in an earlier October 31 watch) treated as a duplicate, with no newly verified change surfaced.",
+    "Excluded older Eastport, Maine grocery closure; January 2026 Jefferson County, Kansas store closure; August 2026 San Antonio food-bank storm response; 2025 SNAP shutdown reporting; May 2026 non-U.S. Baker Lake food bank fire; overseas unrelated closures; recovery and food-market reopening notices.",
+    "No confirmed qualifying emergency food-distribution cancellations or official new SNAP/WIC benefit interruptions were evidenced by retrieved results.",
+    {
+      "bounded_query_context": [
+        {
+          "query": "October 31 2026 \"only grocery store\" closed fire town",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 \"last grocery store\" closure community",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 \"sole grocery store\" fire power outage",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 \"full-service grocery store\" closing town",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food pantry \"closed\" \"until further notice\" services",
+          "category": "abrupt_pantry_closure",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food bank suspends operations temporarily closed",
+          "category": "abrupt_food_bank_closure",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food distribution canceled storm weather",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food pantry canceled distribution flooding fire",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food bank distribution suspended power outage",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 SNAP benefits delayed outage notice state agency",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 WIC benefits system unavailable interruption state",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 SNAP EBT interruption emergency state agency site:gov",
+          "category": "official_benefit_interruption",
+          "method": "fast",
+          "recency_days": 1
+        }
+      ],
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T154328-0700-r11-20261031T224328Z.json",
+      "source_examples": [
+        "https://www.wibw.com/2026/01/10/two-jefferson-county-towns-face-grocery-desert-after-country-harvest-closures/",
+        "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "https://news4sanantonio.com/news/local/san-antonio-food-bank-ramps-up-local-response-after-severe-weather-leads-to-power-outages"
+      ]
+    },
+    "No human editorial approval, publication, primary collector change, schedule edit, or disabling performed."
+  ]
+}

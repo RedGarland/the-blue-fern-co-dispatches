@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T014438-0700-r11-recall12",
+  "scheduled_for": "2026-11-01T01:45:22-07:00",
+  "started_at": "2026-11-01T01:44:38-07:00",
+  "completed_at": "2026-11-01T01:46:02-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T00:43:30-07:00",
+    "end": "2026-11-01T01:46:02-07:00",
+    "basis": "Previous verified Care Line Watch heartbeat completion to current observation. Supplementary recall only; production collection remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-cnmi-saipan-kagman-primary-care-clinic-closure-20261030",
+      "canonical_source_url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+      "title": "Isla Community Health Announces Temporary Pause of Kagman Clinic Services While Planning to Strengthen and Expand Community Healthcare Access",
+      "publisher": "Marianas Press (Isla Community Health provider press release)",
+      "exact_supporting_passage": "announces the temporary closure of its Kagman clinic location, effective October 30, 2026",
+      "source_published_date": "2026-11-01",
+      "state": null,
+      "city": "Kagman, Saipan",
+      "county": null,
+      "territory": "Commonwealth of the Northern Mariana Islands",
+      "event_type": "primary_care_clinic_temporary_closure",
+      "service_line": [
+        "primary care",
+        "preventive care"
+      ],
+      "access_consequences": "Kagman clinic site temporarily closed because typhoon-damaged building is unsuitable for safe occupancy. Patients must obtain continued primary/preventive care from Southern Isla Community Health in San Antonio, Saipan. Relocation creates potential transportation/access barriers; provider is exploring assistance. No confirmed date to reopen Kagman site.",
+      "affected_population": "Kagman clinic patients and residents of Kagman and surrounding northern/eastern Saipan communities; patient count not reported.",
+      "effective_date": "2026-10-30",
+      "announcement_date": "2026-11-01",
+      "confidence": "high",
+      "source_role": "primary_provider_press_release_carried_by_local_news",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "scope": "United States, District of Columbia, and U.S. territories; high-value healthcare access loss, CMS actions, EMS/air-medical changes, and concrete restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "page_last_modified": "2026-10-30 04:16 PM",
+      "result": "Official CMS listing directly inspected first. No entries for October 31 or November 1; seven October 30 terminations already documented by earlier watches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended services November 1 October 31 2026 United States",
+      "maternity labor and delivery hospital closing closed October 31 November 1 2026 America",
+      "rural critical access hospital emergency room service suspended closed November 1 2026",
+      "behavioral psychiatric inpatient hospital beds unit shutdown October 31 November 1 2026 US",
+      "dialysis kidney center closing abruptly services patients October 31 November 1 2026 US",
+      "oncology cancer infusion center closure suspension October 31 November 1 2026",
+      "primary care clinic closure patients relocated November 1 2026 October 31 2026",
+      "ambulance EMS response service shut down closed October 31 November 1 2026",
+      "air ambulance helicopter medical base closed grounded October 31 November 1 2026",
+      "hospital emergency department maternity reopened restored resumed services October 31 November 1 2026",
+      "CMS CLIA certificate limitation suspension revocation provider Medicare termination rescission November 1 2026",
+      "Puerto Rico Guam US Virgin Islands American Samoa CNMI hospital emergency closure ambulance November 1 2026"
+    ],
+    "new_source_review": {
+      "url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+      "publisher": "Marianas Press",
+      "source_type": "Provider press release disseminated by independent local publication",
+      "reported_date": "2026-11-01",
+      "event_effective_date": "2026-10-30",
+      "direct_evidence": "Provider explicitly confirms physical closure of Kagman clinic, relocation of patients to San Antonio, and transport challenges. Future Kagman resumption is unconfirmed, not claimed as a reopening.",
+      "timing_qualification": "Source dated November 1 and discovered in this run, but its exact publication time is not shown; cannot prove it first appeared after prior hourly completion. Included for supplementary recall with pending human review."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "CMS October 30 terminations",
+        "reason": "Seven notices already recorded in previous watches; no new notice."
+      },
+      {
+        "item": "Denny's River Volunteer Ambulance Service closure (Maine)",
+        "reason": "October 13 report; not newly announced within observation window."
+      },
+      {
+        "item": "Broader U.S. maternity/rural hospital closure policy reports",
+        "reason": "Background, proposals or older changes without a new specific concrete service change."
+      },
+      {
+        "item": "Out-of-scope non-U.S. results",
+        "reason": "Geographically excluded."
+      }
+    ],
+    "duplicate_screen": "Previous November 1 00:43:30 PDT heartbeat inspected (no findings). Repository default-branch code search returned no matching Kagman/Isla text; this is not proof of absence from authoritative production collector or all private records.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T004252-0700-r11-recall12.json",
+      "completed_at": "2026-11-01T00:43:30-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "source_failures": [],
+    "limitations": "Bounded targeted search, not exhaustive national or territory coverage. Search results included numerous older/out-of-scope items and may have discovery lag. Publication time for positive finding is unavailable. Primary production collection remains authoritative.",
+    "controls": "One append-only private heartbeat to ops/watch-ledger. No story approval, public publication, schedule change, or disabling."
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261031T174709-0700-r11-recall12",
+  "scheduled_for": "2026-10-31T17:45:22-07:00",
+  "started_at": "2026-10-31T17:47:09-07:00",
+  "completed_at": "2026-10-31T17:47:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-31T16:47:39.491-07:00",
+    "end": "2026-10-31T17:47:44-07:00",
+    "basis": "From prior verified hourly watch completion through this observation. Recall-only supplementary search; production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of U.S. and territory hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care suspensions or closures; rural/emergency/ambulance/air-medical access loss; CMS terminations, rescissions, CLIA limitations/suspensions; and effective reopening/restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "result": "Official CMS listing accessed before other searches. Seven 2026-10-30 provider terminations listed but already recorded in earlier watch heartbeats. No new 2026-10-31 notice, CLIA limitation/suspension, or rescission found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended services October 31 2026 United States",
+      "maternity labor and delivery unit closed suspended hospital October 31 2026",
+      "psychiatric behavioral health crisis hospital closure suspension October 31 2026",
+      "dialysis cancer oncology clinic services closed suspended October 31 2026",
+      "primary care clinic closure effective October 31 2026 rural October 30",
+      "rural hospital emergency room temporarily closed staffing October 31 2026",
+      "ambulance EMS service shut down suspended base closed October 31 2026",
+      "air ambulance helicopter medical base closure grounded October 31 2026",
+      "CMS CLIA laboratory suspension revocation provider termination rescission October 31 2026",
+      "hospital emergency department maternity reopening restored services October 31 2026",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital ambulance emergency clinic closure October 31 2026",
+      "\"October 31, 2026\" \"hospital\" \"services\" \"closed\" OR \"suspended\" OR \"reopened\""
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "California freestanding psychiatric hospitals have lost nearly 70 inpatient beds since June 1",
+        "reason": "Published 2026-10-31 at 19:30 EDT (16:30 PDT), before prior watch completion, and reports previously occurring June-August closures derived from Oct. 14 letter; no new facility-specific service change in the observation window.",
+        "url": "https://www.medicaldaily.com/california-psychiatric-staffing-rules-lost-beds-480654"
+      },
+      {
+        "item": "Sutter Health cancels proposed Emeryville hospital",
+        "reason": "2026-10-30 announcement concerns unbuilt facility; Sutter expressly states no immediate change to patient care or existing Alta Bates services.",
+        "url": "https://contracosta.news/2026/10/31/red-tape-sutter-health-pulls-plug-on-1-bill-hospital-in-emeryville/"
+      },
+      {
+        "item": "UNM Health cyber disruptions, Roseland maternity services, Sharon Regional inpatient suspension",
+        "reason": "All previously recorded in earlier supplemental watches; no distinct new closure/restoration verified.",
+        "url": null
+      },
+      {
+        "item": "Newman Memorial (OK) maternity reopening plans",
+        "reason": "2026-10-08 reporting describes planned restoration rather than a confirmed new effective reopening during the observation window.",
+        "url": "https://www.kosu.org/show/stateimpact-oklahoma/2026-10-08/a-rural-northwest-oklahoma-hospital-is-bringing-back-maternity-care-can-it-survive-healthcare-cuts"
+      },
+      {
+        "item": "Martin General (NC) emergency hospital reopening plan",
+        "reason": "July 2026 funding/planning; no current effective restoration.",
+        "url": "https://www.northcarolinahealthnews.org/2026/07/13/martin-general-funds-budget/"
+      }
+    ],
+    "source_failures": [],
+    "status_rationale": "SUCCESS: official CMS Public Notices checked first and all 12 additional searches completed; no new, distinct, supported, concrete service change matched the observation window.",
+    "limitations": "Bounded recall is non-exhaustive, especially for small rural, tribal and territorial outlets and delayed indexing. No finding does not establish the absence of disruptions. Production Care Line collection remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/care-line/2026-10-31/care-line-watch-20261031T164658-0700-r11-recall12.json",
+      "completed_at": "2026-10-31T16:47:39.491-07:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "controls": "Created one private watch-ledger heartbeat only; did not approve, publish, alter schedule or disable the task."
+  }
+}

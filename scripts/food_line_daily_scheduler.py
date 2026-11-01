@@ -47,6 +47,35 @@ QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
 QUALIFYING_EXPORT_STATUSES = {"success", "success_with_exclusions", "no_exportable_findings"}
 RESUMABLE_COLLECTION_STATUSES = {"partial", "timed_out", "cancelled", "failed"}
 ALLOWED_NONFATAL_CHILD_OUTCOMES = {"completed_with_exclusions"}
+NONQUALIFYING_CHILD_OUTCOMES = {
+    "incomplete_capped",
+    "timeout",
+    "collection_failure",
+    "child_process_failure",
+    "malformed_child_output",
+    "collection_only_publication_evidence_conflict",
+}
+KNOWN_CHILD_FAILURE_CLASSES = frozenset(
+    {
+        "blocked_401",
+        "blocked_403",
+        "not_found_404",
+        "timeout",
+        "paywall",
+        "script_blocked",
+        "parse_failure",
+        "empty_response",
+        "blocked_domain_mismatch",
+        "blocked_listing_url",
+        "service_unavailable_503",
+        "tls_error",
+        "connection_error",
+        "fetch_failed",
+        "unknown",
+    }
+)
+MAX_CHILD_DIAGNOSTIC_ROWS = 2048
+MAX_CHILD_DIAGNOSTIC_COUNT = 1_000_000
 CHILD_OUTPUT_AUDIT_CHAR_LIMIT = 4096
 RUN_STATE_SCHEMA = "food_line_bounded_run_state_v1"
 RUN_RECORD_SCHEMA = "food_line_scheduled_run_record_v1"
@@ -289,6 +318,132 @@ def _parse_child_terminal_result(stdout: str | None) -> tuple[dict[str, Any] | N
     return payload, "parsed"
 
 
+def _child_diagnostic_summary(payload: dict[str, Any] | None) -> dict[str, Any]:
+    """Keep bounded failure classes and child timing without copying secrets."""
+    if not isinstance(payload, dict):
+        return {}
+
+    raw_counts = payload.get("fetch_failure_count_by_type")
+    source_kind = "failure_count_by_type"
+    redacted_count = False
+    truncated_input = False
+    rejected_count = 0
+    saturated_count = False
+    failure_class_counts: dict[str, int] = {}
+
+    def add_count(label: Any, raw_count: Any) -> None:
+        nonlocal redacted_count, rejected_count, saturated_count
+        safe_label = label if type(label) is str and label in KNOWN_CHILD_FAILURE_CLASSES else "unknown"
+        if safe_label != label:
+            redacted_count = True
+            rejected_count += 1
+            return
+        if type(raw_count) is not int or isinstance(raw_count, bool) or not 0 <= raw_count <= MAX_CHILD_DIAGNOSTIC_COUNT:
+            redacted_count = True
+            rejected_count += 1
+            return
+        previous = failure_class_counts.get(safe_label, 0)
+        if previous + raw_count > MAX_CHILD_DIAGNOSTIC_COUNT:
+            saturated_count = True
+            failure_class_counts[safe_label] = MAX_CHILD_DIAGNOSTIC_COUNT
+        else:
+            failure_class_counts[safe_label] = previous + raw_count
+
+    if isinstance(raw_counts, dict):
+        for index, (raw_label, raw_count) in enumerate(raw_counts.items()):
+            if index >= MAX_CHILD_DIAGNOSTIC_ROWS:
+                redacted_count = True
+                truncated_input = True
+                break
+            add_count(raw_label, raw_count)
+    else:
+        raw_types = payload.get("fetch_failure_type_by_source_id")
+        if isinstance(raw_types, dict):
+            source_kind = "failure_type_by_source_id"
+            for index, raw_label in enumerate(raw_types.values()):
+                if index >= MAX_CHILD_DIAGNOSTIC_ROWS:
+                    redacted_count = True
+                    truncated_input = True
+                    break
+                add_count(raw_label, 1)
+
+    summary: dict[str, Any] = {}
+    if failure_class_counts:
+        summary["failure_class_counts"] = failure_class_counts
+        summary["failure_class_source"] = source_kind
+    if redacted_count:
+        summary["failure_class_counts_redacted"] = True
+    if truncated_input:
+        summary["failure_class_counts_truncated"] = True
+    if rejected_count:
+        summary["failure_class_rejected_count"] = rejected_count
+    if saturated_count:
+        summary["failure_class_counts_saturated"] = True
+
+    for key in ("failure_class_counts_truncated", "failure_class_counts_saturated"):
+        value = payload.get(key)
+        if type(value) is bool and value:
+            summary[key] = True
+        elif value not in (None, False):
+            redacted_count = True
+    raw_rejected = payload.get("failure_class_rejected_count")
+    if raw_rejected is not None:
+        if type(raw_rejected) is int and not isinstance(raw_rejected, bool) and 0 <= raw_rejected <= MAX_CHILD_DIAGNOSTIC_COUNT:
+            summary["failure_class_producer_rejected_count"] = raw_rejected
+        else:
+            redacted_count = True
+    raw_input_rejected = payload.get("failure_class_input_rejected")
+    if raw_input_rejected is not None:
+        if type(raw_input_rejected) is bool:
+            if raw_input_rejected:
+                summary["failure_class_input_rejected"] = True
+        else:
+            redacted_count = True
+    if redacted_count:
+        summary["failure_class_counts_redacted"] = True
+
+    parsed_timestamps: dict[str, datetime] = {}
+    invalid_timestamp = False
+    for output_name, payload_names in (
+        ("child_started_at", ("task_started_at", "started_at")),
+        ("child_completed_at", ("task_completed_at", "completed_at")),
+    ):
+        for payload_name in payload_names:
+            value = payload.get(payload_name)
+            if value in (None, ""):
+                continue
+            if type(value) is not str or len(value) > 64:
+                invalid_timestamp = True
+                continue
+            value = value.strip()
+            if not value:
+                invalid_timestamp = True
+                continue
+            try:
+                parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            except ValueError:
+                invalid_timestamp = True
+                continue
+            if parsed.tzinfo is None or parsed.utcoffset() is None or not 2000 <= parsed.year <= 2100:
+                invalid_timestamp = True
+                continue
+            parsed_timestamps[output_name] = parsed.astimezone(timezone.utc)
+            summary[output_name] = parsed_timestamps[output_name].isoformat(timespec="microseconds").replace("+00:00", "Z")
+            break
+    if parsed_timestamps.get("child_started_at") and parsed_timestamps.get("child_completed_at"):
+        if parsed_timestamps["child_completed_at"] < parsed_timestamps["child_started_at"]:
+            summary.pop("child_started_at", None)
+            summary.pop("child_completed_at", None)
+            invalid_timestamp = True
+    if "child_started_at" in summary or "child_completed_at" in summary:
+        summary["timing_source"] = "child_terminal_payload"
+    if invalid_timestamp:
+        summary["timing_redacted"] = True
+    if summary:
+        summary["source"] = "child_terminal_payload"
+    return summary
+
+
 def _accept_status_inspection_result(
     result: subprocess.CompletedProcess[str],
     *,
@@ -385,6 +540,7 @@ def _child_state_contradiction(payload: dict[str, Any], state: dict[str, Any]) -
 
 def child_result_audit(result: subprocess.CompletedProcess[str], state: dict[str, Any]) -> dict[str, Any]:
     payload, parse_status = _parse_child_terminal_result(result.stdout)
+    diagnostic_summary = _child_diagnostic_summary(payload)
     stdout = _bounded_output_tail(result.stdout)
     stderr = _bounded_output_tail(result.stderr)
     terminal_found = parse_status != "missing"
@@ -434,6 +590,12 @@ def child_result_audit(result: subprocess.CompletedProcess[str], state: dict[str
         elif child_status in ALLOWED_NONFATAL_CHILD_OUTCOMES:
             classification = "unknown"
             validation_error = "nonfatal child status lacks an allowed outcome classification"
+        elif child_declared_outcome in NONQUALIFYING_CHILD_OUTCOMES:
+            classification = f"nonqualifying_{child_declared_outcome}"
+            validation_error = f"child terminal result is nonqualifying: {child_declared_outcome}"
+        elif child_status in NONQUALIFYING_CHILD_OUTCOMES:
+            classification = f"nonqualifying_{child_status}"
+            validation_error = f"child terminal result is nonqualifying: {child_status}"
         elif result.returncode == 0 and child_ok:
             classification = "success"
             validation_error = ""
@@ -463,6 +625,7 @@ def child_result_audit(result: subprocess.CompletedProcess[str], state: dict[str
         "child_stderr_truncated": stderr["truncated"],
         "child_stderr_char_count": stderr["char_count"],
         "child_output_char_limit": CHILD_OUTPUT_AUDIT_CHAR_LIMIT,
+        "child_diagnostics": diagnostic_summary,
         "required_export_present": _required_export_exists(state),
         "required_export_required": _state_requires_export(state),
     }

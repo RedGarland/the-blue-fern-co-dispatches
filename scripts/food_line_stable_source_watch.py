@@ -31,6 +31,117 @@ from scripts.run_food_line_discovery_expansion import (  # noqa: E402
 )
 
 
+DIAGNOSTIC_FAILURE_CLASSES = frozenset(
+    {
+        "blocked_401",
+        "blocked_403",
+        "not_found_404",
+        "timeout",
+        "paywall",
+        "script_blocked",
+        "parse_failure",
+        "empty_response",
+        "blocked_domain_mismatch",
+        "blocked_listing_url",
+        "service_unavailable_503",
+        "tls_error",
+        "connection_error",
+        "fetch_failed",
+        "unknown",
+    }
+)
+MAX_DIAGNOSTIC_ROWS = 2048
+MAX_DIAGNOSTIC_TEXT = 512
+MAX_DIAGNOSTIC_COUNT = 1_000_000
+
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _bounded_text(value: Any, *, limit: int) -> tuple[str, bool]:
+    if value in (None, ""):
+        return "", True
+    if type(value) is not str or len(value) > limit:
+        return "", False
+    return value.strip().lower(), True
+
+
+def _diagnostic_failure_class(row: dict[str, Any]) -> tuple[str, bool]:
+    status, status_valid = _bounded_text(row.get("direct_fetch_status"), limit=64)
+    if not status_valid:
+        return "unknown", False
+    if status:
+        return (status, True) if status in DIAGNOSTIC_FAILURE_CLASSES else ("unknown", False)
+    error, error_valid = _bounded_text(
+        row.get("query_error") or row.get("direct_fetch_error"),
+        limit=MAX_DIAGNOSTIC_TEXT,
+    )
+    if not error_valid:
+        return "unknown", False
+    if not error:
+        return "unknown", True
+    anchored_prefixes = (
+        ("httperror: http error 401", "blocked_401"),
+        ("httperror: http error 403", "blocked_403"),
+        ("httperror: http error 404", "not_found_404"),
+        ("httperror: http error 503", "service_unavailable_503"),
+        ("sslerror:", "tls_error"),
+        ("ssl:", "tls_error"),
+        ("certificate_verify_failed:", "tls_error"),
+        ("connectionerror:", "connection_error"),
+        ("connectionreseterror:", "connection_error"),
+        ("timeouterror:", "timeout"),
+        ("timeout:", "timeout"),
+        ("parseerror:", "parse_failure"),
+        ("emptyresponseerror:", "empty_response"),
+    )
+    for prefix, label in anchored_prefixes:
+        if prefix.startswith("httperror: http error "):
+            if error == prefix or error.startswith((prefix + ":", prefix + " ")):
+                return label, True
+        elif error.startswith(prefix):
+            return label, True
+    return "unknown", False
+
+
+def _diagnostic_failure_counts(rows: Any) -> tuple[dict[str, int], dict[str, Any]]:
+    counts: dict[str, int] = {}
+    rejected_count = 0
+    truncated = False
+    saturated = False
+    if not isinstance(rows, list):
+        return {}, {"failure_class_input_rejected": True}
+    for index, row in enumerate(rows):
+        if index >= MAX_DIAGNOSTIC_ROWS:
+            truncated = True
+            break
+        if not isinstance(row, dict):
+            rejected_count += 1
+            continue
+        raw_status = row.get("direct_fetch_status")
+        raw_error = row.get("query_error") or row.get("direct_fetch_error")
+        if raw_status in (None, "") and raw_error in (None, ""):
+            continue
+        status, status_valid = _bounded_text(raw_status, limit=64)
+        if status_valid and status in {"", "ok", "manual_fallback"} and raw_error in (None, ""):
+            continue
+        label, valid = _diagnostic_failure_class(row)
+        if not valid:
+            rejected_count += 1
+            continue
+        previous = counts.get(label, 0)
+        if previous >= MAX_DIAGNOSTIC_COUNT:
+            saturated = True
+        else:
+            counts[label] = previous + 1
+    return dict(sorted(counts.items())), {
+        "failure_class_rejected_count": rejected_count,
+        "failure_class_counts_truncated": truncated,
+        "failure_class_counts_saturated": saturated,
+    }
+
+
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -62,6 +173,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         checkpoint_in_flight_outcome(directory, binding=binding, query_id=query_id, outcome=outcome)
 
     runtime_deadline = datetime.now(timezone.utc) + timedelta(minutes=max(1.0, float(args.max_run_minutes)))
+    task_started_at = _utc_now()
     aggregate = execute_stable_claimed_batch(
         root,
         args.edition_date,
@@ -69,6 +181,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         checkpoint,
         runtime_deadline=runtime_deadline,
     )
+    task_completed_at = _utc_now()
+    failure_counts, failure_metadata = _diagnostic_failure_counts(aggregate.get("query_rows"))
     full_plan = build_food_line_discovery_query_plan(root, args.edition_date)
     result: dict[str, Any] = {
         **aggregate,
@@ -85,8 +199,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "publication_attempted": False,
         "public_side_effects": {},
         "execution_mode": "collection_only" if args.collection_only else "export_enabled",
-        "task_started_at": "",
-        "task_completed_at": "",
+        "task_started_at": task_started_at,
+        "task_completed_at": task_completed_at,
+        "fetch_failure_count_by_type": failure_counts,
+        **failure_metadata,
     }
     if not args.collection_only and _export_allowed(root, args.edition_date, args.run_id, result):
         export = _export_agent_inbox(
@@ -123,7 +239,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "execution_mode": result["execution_mode"],
         "publication_attempted": False,
         "public_side_effects": {},
-        "child_outcome_classification": "success" if wrapped.get("ok") else "incomplete_capped",
+        "child_outcome_classification": (
+            str(wrapped.get("status") or "collection_failure")
+            if not wrapped.get("ok")
+            else "success"
+        ),
+        "task_started_at": task_started_at,
+        "task_completed_at": task_completed_at,
+        "fetch_failure_count_by_type": failure_counts,
+        **failure_metadata,
     }
 
 

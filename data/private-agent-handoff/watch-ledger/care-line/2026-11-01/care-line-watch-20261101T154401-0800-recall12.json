@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T154401-0800-recall12",
+  "scheduled_for": "2026-11-01T15:45:22-08:00",
+  "started_at": "2026-11-01T15:44:01-08:00",
+  "completed_at": "2026-11-01T15:44:33-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T14:46:14-08:00",
+    "end": "2026-11-01T15:44:33-08:00",
+    "basis": "Since prior verified supplementary Care Line heartbeat; production national collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, DC, territories. Priority: closure/suspension of hospital, ED, maternity, behavioral-health, dialysis, oncology, primary-care, rural/emergency, ground/air ambulance; official CMS provider terminations, rescissions, CLIA actions; concrete restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Direct CMS page inspection showed seven notices dated October 30 at the top of the list, with no newer listed notices, rescissions, terminations, or CLIA actions during this interval.",
+      "source_ref": "turn795909view0"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 1 2026 hospital emergency department closed suspended reopened today United States",
+      "November 1 2026 maternity labor delivery unit closure suspended hospital rural",
+      "November 1 2026 behavioral health psychiatric hospital service closure admissions halted",
+      "November 1 2026 dialysis center closure treatment interruption clinic",
+      "November 1 2026 oncology cancer treatment center service closure suspension",
+      "November 1 2026 primary care clinic closure urgent care closed patients",
+      "November 1 2026 ambulance EMS service base closed suspended rural county",
+      "November 1 2026 air ambulance helicopter medical base closure service suspended",
+      "November 1 2026 rural hospital emergency service loss reopen restoration",
+      "November 1 2026 Puerto Rico Guam Virgin Islands Northern Mariana Islands American Samoa hospital clinic service closure",
+      "November 1 2026 state department of health closure emergency hospital notice care access",
+      "November 1 2026 hospital emergency obstetrics dialysis clinic service restored reopened"
+    ],
+    "search_method": "Twelve targeted web searches, recency=1 day; inspected displayed publication dates, locations, service status, and relevance. No additional discovery searches.",
+    "reviewed_exclusions": [
+      {
+        "item": "MaineHealth Midcoast labor and delivery opposition",
+        "url": "https://mainebeacon.com/midcoast-mothers-family-physicians-fight-mainehealths-birthing-unit-closure/",
+        "reason": "October 28 reporting about existing announced closure; no new effective change during search window."
+      },
+      {
+        "item": "Weiss Memorial Hospital, Chicago",
+        "url": "https://abc7chicago.com/post/shuttered-weiss-memorial-hospital-uptown-chicago-granted-6-month-extension-fix-long-list-compliance-issues/19552743/",
+        "reason": "July 21 pre-existing development, not a current-hour service change."
+      },
+      {
+        "item": "West Suburban Medical Center",
+        "url": "https://abc7chicago.com/post/west-suburban-medical-center-resumes-hospital-based-clinic-services-er-remain-suspended/18891103/",
+        "reason": "April 15 older partial restoration and ED suspension; not new."
+      },
+      {
+        "item": "Wales urgent primary care closure discussion",
+        "url": "https://www.theguardian.com/uk-news/2026/nov/01/welsh-health-board-urgent-primary-care-centres-upcc-holyhead-tremadog-bangor-betsi-cadwaladr",
+        "reason": "Current report but outside U.S. jurisdiction and only a proposal."
+      },
+      {
+        "item": "Roseland maternity; Bruceton ambulance; Kagman clinic, Saipan",
+        "url": null,
+        "reason": "Previously recorded events; no newly verified change this hour."
+      },
+      {
+        "item": "HCA Florida Capital Hospital Level II NICU",
+        "url": "https://www.wctv.tv/2026/08/28/hca-florida-capital-hospital-discontinue-its-level-ii-nicu-services-effective-nov-1/",
+        "reason": "Previously announced November 1 transition; no freshly reported confirmation surfaced in this search window."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T144528-0800-r11-recall12.json",
+      "previous_completed_at": "2026-11-01T14:46:14-08:00"
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED. Search results skewed substantially toward stale events, irrelevant subjects, non-U.S. jurisdictions, and proposals despite 1-day recency; no timely reliable US/territorial access event verified. Non-exhaustive rural and territorial recall.",
+    "limitations": "No confirmed finding does not establish absence of service changes. Search discovery and local/territorial indexing coverage are limited; production collector is authoritative.",
+    "controls": "Single append-only heartbeat on ops/watch-ledger. No approval, publication, schedule mutation or task disabling."
+  }
+}

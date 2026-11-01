@@ -1402,3 +1402,376 @@ def test_resume_refuses_legacy_sibling_without_bound_ledger(tmp_path, monkeypatc
     with pytest.raises(ledger.ContinuationLedgerError, match="bound continuation ledger is required"):
         continuation._load_or_prepare(args, "b" * 40, "c" * 64, "d" * 64)
     assert not Path(args.continuation_run_directory).exists()
+
+
+def test_child_audit_records_bounded_failure_classes_and_timing_without_urls():
+    state = {
+        "status": "incomplete_capped",
+        "run_id": "run-1",
+        "edition_date": "2026-11-01",
+        "final_error": "",
+        "agent_export": {"status": "blocked_incomplete_collection"},
+    }
+    payload = {
+        "status": "incomplete_capped",
+        "ok": False,
+        "run_id": "run-1",
+        "edition_date": "2026-11-01",
+        "fetch_failure_count_by_type": {
+            "service_unavailable_503": 194,
+            "tls_error": 2,
+            "https://secret.example/token": 9,
+            "negative": -1,
+        },
+        "task_started_at": "2026-11-01T12:30:02.791508Z",
+        "task_completed_at": "2026-11-01T12:56:34.326578Z",
+        "failure_class_rejected_count": 7,
+        "failure_class_input_rejected": True,
+        "error_message": "provider detail must not enter the receipt",
+    }
+    result = subprocess.CompletedProcess(["child"], 0, json.dumps(payload), "")
+
+    audit = scheduler.child_result_audit(result, state)
+
+    assert audit["child_outcome_classification"] == "nonqualifying_incomplete_capped"
+    assert audit["child_validation_error"] == "child terminal result is nonqualifying: incomplete_capped"
+    assert audit["child_diagnostics"] == {
+        "failure_class_counts": {"service_unavailable_503": 194, "tls_error": 2},
+        "failure_class_source": "failure_count_by_type",
+        "failure_class_counts_redacted": True,
+        "failure_class_rejected_count": 2,
+        "failure_class_producer_rejected_count": 7,
+        "failure_class_input_rejected": True,
+        "child_started_at": "2026-11-01T12:30:02.791508Z",
+        "child_completed_at": "2026-11-01T12:56:34.326578Z",
+        "timing_source": "child_terminal_payload",
+        "source": "child_terminal_payload",
+    }
+    encoded = json.dumps(audit["child_diagnostics"], sort_keys=True)
+    assert "secret.example" not in encoded
+    assert "provider detail" in audit["child_error_message"]
+
+
+def test_child_audit_fallback_counts_source_types_and_keeps_failure_nonqualifying():
+    state = {
+        "status": "collection_failure",
+        "run_id": "run-2",
+        "edition_date": "2026-11-01",
+        "final_error": "",
+        "agent_export": {"status": "blocked_incomplete_collection"},
+    }
+    payload = {
+        "status": "collection_failure",
+        "ok": False,
+        "run_id": "run-2",
+        "edition_date": "2026-11-01",
+        "fetch_failure_type_by_source_id": {
+            "source-id-1": "unknown",
+            "source-id-2": "unknown",
+            "source-id-3": "connection_error",
+            "source-id-4": "https://secret.example/source",
+        },
+    }
+    result = subprocess.CompletedProcess(["child"], 0, json.dumps(payload), "")
+
+    audit = scheduler.child_result_audit(result, state)
+
+    assert audit["child_outcome_classification"] == "nonqualifying_collection_failure"
+    assert audit["child_diagnostics"]["failure_class_counts"] == {
+        "connection_error": 1,
+        "unknown": 2,
+    }
+    assert audit["child_diagnostics"]["failure_class_source"] == "failure_type_by_source_id"
+    assert audit["child_diagnostics"]["failure_class_counts_redacted"] is True
+    diagnostics = json.dumps(audit["child_diagnostics"], sort_keys=True)
+    assert "source-id-1" not in diagnostics
+    assert "secret.example" not in diagnostics
+
+
+def test_incomplete_capped_wrapper_is_nonzero_and_not_intake_or_release_eligible(tmp_path, monkeypatch, capsys):
+    query_plan = _rows(2)
+    result = {
+        "ok": True,
+        "status": "incomplete_capped",
+        "edition_date": "2026-11-01",
+        "run_id": "capped-wrapper",
+        "queries_attempted": 1,
+        "queries_succeeded": 1,
+        "queries_failed": 0,
+        "queries_timed_out": 0,
+        "queries_completed": 1,
+        "queries_deferred": 1,
+        "query_plan_available_count": 2,
+        "query_plan_bounded_count": 1,
+        "direct_source_fetch_attempt_count": 0,
+        "direct_source_fetch_success_count": 0,
+    }
+    monkeypatch.setattr(discovery_wrapper, "run_food_line_discovery_expansion", lambda *_args, **_kwargs: result)
+    monkeypatch.setattr(discovery_wrapper, "build_food_line_discovery_query_plan", lambda *_args: query_plan)
+
+    exit_code = discovery_wrapper.main(["--date", "2026-11-01", "--run-id", "capped-wrapper"])
+
+    output = json.loads(capsys.readouterr().out)
+    assert exit_code == 1
+    assert output["ok"] is False
+    assert output["status"] == "incomplete_capped"
+    state, _ = discovery_wrapper._bounded_state_from_result(
+        root=tmp_path,
+        edition_date="2026-11-01",
+        run_id="capped-wrapper",
+        query_plan=query_plan,
+        result=result,
+        export_requested=True,
+    )
+    assert state["status"] == "incomplete_capped"
+    assert state["agent_export"]["status"] == "blocked_incomplete_collection"
+    assert state["release_ready"] is None
+    assert state["intake_eligible"] is None
+
+
+def test_child_audit_rejects_untrusted_types_timestamps_and_large_maps():
+    state = {
+        "status": "collection_failure",
+        "run_id": "run-adversarial",
+        "edition_date": "2026-11-01",
+        "final_error": "",
+        "agent_export": {"status": "blocked_incomplete_collection"},
+    }
+    payload = {
+        "status": "collection_failure",
+        "ok": False,
+        "fetch_failure_count_by_type": {
+            "connection_error": True,
+            "timeout": 1.5,
+            "tls_error": 10**100,
+            "PAYLOAD_SECRET_123": 7,
+            **{f"unknown-{index}": 1 for index in range(2050)},
+        },
+        "task_started_at": " " * 100_000,
+        "started_at": "2026-11-01T13:00:00Z",
+        "task_completed_at": "not-a-timestamp",
+        "completed_at": "2026-11-01T12:59:00Z",
+        "failure_class_rejected_count": "7",
+        "failure_class_input_rejected": "true",
+    }
+    result = subprocess.CompletedProcess(["child"], 0, json.dumps(payload), "")
+
+    diagnostics = scheduler.child_result_audit(result, state)["child_diagnostics"]
+
+    assert diagnostics.get("failure_class_counts", {}) == {}
+    assert diagnostics["failure_class_counts_redacted"] is True
+    assert diagnostics["failure_class_counts_truncated"] is True
+    assert diagnostics["failure_class_rejected_count"] == 2048
+    assert "failure_class_producer_rejected_count" not in diagnostics
+    assert "failure_class_input_rejected" not in diagnostics
+    assert "child_started_at" not in diagnostics
+    assert "child_completed_at" not in diagnostics
+    assert diagnostics["timing_redacted"] is True
+    assert "PAYLOAD_SECRET" not in json.dumps(diagnostics, sort_keys=True)
+
+
+def test_stable_diagnostics_uses_anchored_error_classes_and_bounded_rows():
+    rows = [
+        {"query_error": "HTTPError: HTTP Error 404: https://token503.example/item"},
+        {"query_error": "provider token=503 secret=not-a-class"},
+        {"query_error": "x" * 513},
+        ["not", "a", "row"],
+        {"direct_fetch_status": True},
+        {"direct_fetch_status": "service_unavailable_503"},
+        {"query_error": "SSLError:certificate_verify_failed"},
+        {"query_error": "HTTPError: HTTP Error 5030: not a 503 status"},
+        {"query_error": "HTTPError: HTTP Error 503token"},
+    ] + [
+        {"query_error": "HTTPError: HTTP Error 503: Service Unavailable"}
+        for _ in range(2050)
+    ]
+
+    counts, metadata = stable_watch._diagnostic_failure_counts(rows)
+
+    assert counts["not_found_404"] == 1
+    assert counts["service_unavailable_503"] >= 1
+    assert counts["tls_error"] == 1
+    assert "unknown" not in counts
+    assert metadata["failure_class_rejected_count"] >= 6
+    assert metadata["failure_class_counts_truncated"] is True
+
+
+def test_stable_child_populates_real_diagnostics_consumed_by_scheduler(tmp_path, monkeypatch):
+    root = tmp_path / "runner"
+    source = root / "src" / "bluefern_dispatches" / "food_line_discovery_expansion.py"
+    config = root / "data" / "dispatches" / "food-line" / "discovery_expansion_config.json"
+    source.parent.mkdir(parents=True)
+    config.parent.mkdir(parents=True)
+    source.write_bytes(b"synthetic source binding\n")
+    config.write_bytes(b"{}\n")
+    directory = root / "continuation" / "2026-11-01" / "stable-watch"
+    directory.mkdir(parents=True)
+    rows = _rows(1)
+    initial = ledger.prepare_ledger(
+        directory,
+        edition_date="2026-11-01",
+        run_id="stable-watch",
+        source_identity="source",
+        source_module_sha256=stable_watch._sha256(
+            stable_watch.SRC / "bluefern_dispatches" / "food_line_discovery_expansion.py"
+        ),
+        config_sha256=stable_watch._sha256(config),
+        query_rows=rows,
+    )
+    ledger.claim_source_watch_batch(
+        directory,
+        binding=initial["binding"],
+        batch_size=1,
+    )
+    monkeypatch.setattr(stable_watch, "build_food_line_discovery_query_plan", lambda *_args: rows)
+
+    def fake_provider_runner(_root, _edition_date, **kwargs):
+        row = kwargs["query_plan_override"][0]
+        return {
+            "status": "completed",
+            "ok": True,
+            "query_rows": [{**row, "query_error": "HTTPError: HTTP Error 503: Service Unavailable"}],
+            "candidates": [],
+            "queries_attempted": 1,
+            "queries_succeeded": 0,
+            "queries_failed": 1,
+            "queries_timed_out": 0,
+            "direct_source_fetch_attempt_count": 0,
+            "direct_source_fetch_success_count": 0,
+        }
+
+    def real_batch(root_arg, date_arg, rows_arg, checkpoint_arg, **kwargs):
+        return continuation.execute_stable_claimed_batch(
+            root_arg,
+            date_arg,
+            rows_arg,
+            checkpoint_arg,
+            runner=fake_provider_runner,
+            **kwargs,
+        )
+
+    monkeypatch.setattr(stable_watch, "execute_stable_claimed_batch", real_batch)
+    monkeypatch.setattr(stable_watch, "_write_state_files", lambda *_args, **_kwargs: {
+        "ok": False,
+        "status": "incomplete_capped",
+        "agent_export": {"status": "blocked_incomplete_collection"},
+    })
+    monkeypatch.setattr(stable_watch, "_export_allowed", lambda *_args: False)
+    args = SimpleNamespace(
+        repo_root=str(root),
+        continuation_run_directory=str(directory),
+        edition_date="2026-11-01",
+        run_id="stable-watch",
+        source_identity="source",
+        max_queries=1,
+        max_run_minutes=30.0,
+        collection_only=False,
+        agent_inbox_dir=str(root / "inbox"),
+    )
+
+    child_payload = stable_watch.run(args)
+    audit = scheduler.child_result_audit(
+        subprocess.CompletedProcess(["stable-child"], 0, json.dumps(child_payload), ""),
+        {"status": "incomplete_capped", "agent_export": {"status": "blocked_incomplete_collection"}},
+    )
+
+    assert child_payload["child_outcome_classification"] == "incomplete_capped"
+    assert child_payload["fetch_failure_count_by_type"] == {"service_unavailable_503": 1}
+    assert child_payload["task_started_at"].endswith("Z")
+    assert child_payload["task_completed_at"].endswith("Z")
+    assert audit["child_outcome_classification"] == "nonqualifying_incomplete_capped"
+    assert audit["child_diagnostics"]["failure_class_counts"] == {"service_unavailable_503": 1}
+    assert audit["child_diagnostics"].get("failure_class_rejected_count", 0) == 0
+    assert audit["child_diagnostics"]["timing_source"] == "child_terminal_payload"
+
+
+@pytest.mark.parametrize("collection_only", [True, False])
+def test_stable_child_real_state_writer_blocks_incomplete_handoff(tmp_path, monkeypatch, collection_only):
+    root = tmp_path / "runner"
+    source = root / "src" / "bluefern_dispatches" / "food_line_discovery_expansion.py"
+    config = root / "data" / "dispatches" / "food-line" / "discovery_expansion_config.json"
+    source.parent.mkdir(parents=True)
+    config.parent.mkdir(parents=True)
+    source.write_bytes(b"synthetic source binding\n")
+    config.write_bytes(b"{}\n")
+    directory = root / "continuation" / "2026-11-01" / "stable-watch"
+    directory.mkdir(parents=True)
+    rows = _rows(2)
+    initial = ledger.prepare_ledger(
+        directory,
+        edition_date="2026-11-01",
+        run_id="stable-gated",
+        source_identity="source",
+        source_module_sha256=stable_watch._sha256(
+            stable_watch.SRC / "bluefern_dispatches" / "food_line_discovery_expansion.py"
+        ),
+        config_sha256=stable_watch._sha256(config),
+        query_rows=rows,
+    )
+    ledger.claim_source_watch_batch(
+        directory,
+        binding=initial["binding"],
+        batch_size=1,
+    )
+    monkeypatch.setattr(stable_watch, "build_food_line_discovery_query_plan", lambda *_args: rows)
+
+    def fake_provider_runner(_root, _edition_date, **kwargs):
+        row = kwargs["query_plan_override"][0]
+        return {
+            "status": "completed",
+            "ok": True,
+            "query_rows": [{**row, "query_error": "HTTPError: HTTP Error 503: Service Unavailable"}],
+            "candidates": [],
+            "queries_attempted": 1,
+            "queries_succeeded": 0,
+            "queries_failed": 1,
+            "queries_timed_out": 0,
+            "direct_source_fetch_attempt_count": 0,
+            "direct_source_fetch_success_count": 0,
+        }
+
+    def real_batch(root_arg, date_arg, rows_arg, checkpoint_arg, **kwargs):
+        return continuation.execute_stable_claimed_batch(
+            root_arg,
+            date_arg,
+            rows_arg,
+            checkpoint_arg,
+            runner=fake_provider_runner,
+            **kwargs,
+        )
+
+    monkeypatch.setattr(stable_watch, "execute_stable_claimed_batch", real_batch)
+    args = SimpleNamespace(
+        repo_root=str(root),
+        continuation_run_directory=str(directory),
+        edition_date="2026-11-01",
+        run_id="stable-gated",
+        source_identity="source",
+        max_queries=1,
+        max_run_minutes=30.0,
+        collection_only=collection_only,
+        agent_inbox_dir=str(root / "inbox"),
+    )
+
+    child_payload = stable_watch.run(args)
+    result = subprocess.CompletedProcess(["stable-child"], 0, json.dumps(child_payload), "")
+    audit = scheduler.child_result_audit(result, child_payload)
+
+    assert child_payload["ok"] is False
+    assert child_payload["status"] == "incomplete_capped"
+    if collection_only:
+        assert child_payload["agent_export"]["status"] == "not_requested"
+        assert child_payload["release_ready"] is False
+        assert child_payload["intake_eligible"] is False
+    else:
+        assert child_payload["agent_export"]["status"] == "blocked_incomplete_collection"
+        assert child_payload.get("agent_export_path") is None
+        assert child_payload["release_ready"] is None
+        assert child_payload["intake_eligible"] is None
+    assert audit["child_outcome_classification"] == "nonqualifying_incomplete_capped"
+    assert scheduler.child_result_allows_scheduler_success(
+        result,
+        child_payload,
+        audit,
+        collection_only=True,
+    ) is False

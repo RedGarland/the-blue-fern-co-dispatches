@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T134036-0800-recall12",
+  "scheduled_for": "2026-11-01T13:45:22-08:00",
+  "started_at": "2026-11-01T13:40:36-08:00",
+  "completed_at": "2026-11-01T13:41:31-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T12:43:23-08:00",
+    "end": "2026-11-01T13:41:31-08:00",
+    "basis": "Since prior verified supplementary Care Line heartbeat; production national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, District of Columbia, and US territories: hospital, ED, maternity/NICU, behavioral health, dialysis, oncology, primary care, emergency/rural services, ambulance/air-medical loss or restoration; official CMS provider/CLIA actions.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "last_modified": "2026-10-30 04:16 PM (as displayed by CMS)",
+      "observation": "Direct inspection was the first source operation; newest seven rows remain October 30 hospice, psychiatric residential treatment and home health termination notices. No newly dated November 1 termination, rescission, or CLIA action."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed temporarily November 1 2026 United States patients diverted",
+      "maternity labor delivery unit closure November 1 2026 hospital US",
+      "behavioral mental health psychiatric unit closed suspended October 31 November 1 2026 America",
+      "ambulance service air medical base shut down operations October 31 November 1 2026 US",
+      "dialysis cancer oncology clinic suddenly closed patients November 1 2026 US",
+      "rural hospital emergency care suspension reopening November 1 2026 United States",
+      "2026 November 1 hospital NICU closes HCA Florida Capital Hospital Tallahassee confirms",
+      "site:guampdn.com OR site:saipantribune.com OR site:postguam.com clinic hospital closes reopens November 2026",
+      "site:elnuevodia.com OR site:metro.pr OR site:diariodepuertorico.com hospital emergency sala cierre reapertura noviembre 2026",
+      "Alaska rural community clinic health center closes emergency medical November 1 2026",
+      "2026 October 31 November 1 \"ambulance\" \"suspended service\" USA",
+      "2026 October 31 November 1 \"reopened\" \"emergency department\" OR \"maternity\" hospital US"
+    ],
+    "search_method": "12 targeted fast web searches across two batches with 2- or 3-day recency requests; source-result publication dates inspected independently.",
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital labor and delivery, Chicago, IL",
+        "url": "https://www.cbsnews.com/chicago/news/community-worried-closure-labor-and-delivery-roseland-community-hospital/",
+        "reason": "CBS Chicago report updated November 1 at 10:10 AM CST, equivalent to 8:10 AM PST, before this run's observation window; maternity closure was already recorded in preceding watches."
+      },
+      {
+        "item": "HCA Florida Capital Hospital Level II NICU, Tallahassee, FL",
+        "url": "https://www.wctv.tv/2026/08/28/hca-florida-capital-hospital-discontinue-its-level-ii-nicu-services-effective-nov-1/",
+        "reason": "August 28 announcement specifies November 1 effective date, but no newly published confirmation of actual closure during this observation window. Labor/delivery services reported to remain open."
+      },
+      {
+        "item": "Isla Community Health Kagman clinic, Saipan, CNMI",
+        "url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+        "reason": "Already identified and pending review in previous watch; no new announcement or change detected."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, West Virginia",
+        "url": null,
+        "reason": "October 27 suspension identified in earlier watch; outside interval and already recorded."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T124249-0800-r11-recall12.json",
+      "previous_completed_at": "2026-11-01T12:43:23-08:00",
+      "previously_known_entities": [
+        "Roseland maternity (IL)",
+        "Kagman clinic (CNMI)",
+        "Bruceton Community Ambulance (WV)"
+      ]
+    },
+    "source_failures": [
+      {
+        "type": "robots_txt_denial",
+        "domains": [
+          "guampdn.com",
+          "postguam.com"
+        ],
+        "description": "One territory-focused query triggered a non-retryable robots.txt access block; no bypass attempted."
+      }
+    ],
+    "search_quality": "DEGRADED: response sets were dominated by stale, generic or non-US results despite recency filters; territory-focused results had robots.txt source access denials. These limitations materially constrain supplementary recall confidence.",
+    "limitations": "Zero findings are not proof that no events occurred; rural/territorial reporting and timing remain non-exhaustive. Older announcements of a November 1 effective date do not, by themselves, establish a newly verified transition during the current window.",
+    "controls": "Only one append-only private heartbeat on ops/watch-ledger; no approvals, publishing, schedule change or disablement."
+  }
+}

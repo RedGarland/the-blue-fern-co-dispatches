@@ -38,6 +38,11 @@ local files under `data/private-agent-handoff/watch-ledger/` may remain as
 preserved evidence, but new success accounting must come from
 `ops/watch-ledger`.
 
+For backfill/reconciliation only, the reader also scans preserved legacy
+heartbeats as read-only evidence. Identical run IDs are counted once across
+both roots; conflicting copies or mismatched payload paths fail closed.
+Legacy data never substitutes for successful canonical new-run ingestion.
+
 Temporary `automation/...` branch commits are diagnostic evidence only. They do
 not prove heartbeat persistence and must not be treated as successful scheduled
 watch accounting.

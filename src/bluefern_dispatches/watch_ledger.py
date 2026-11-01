@@ -255,15 +255,26 @@ def reconcile_day(root: Path, dispatch: str, observation_day: str, *, write: boo
     day = _day(observation_day)
     if not day:
         raise ValueError("observation_day must be ISO YYYY-MM-DD")
-    run_root = root / LEDGER_ROOT / dispatch / day
-    runs: list[dict[str, Any]] = []
-    if run_root.exists():
+    # Reconcile preserved legacy records as read-only evidence while all new
+    # heartbeats continue to require the canonical ingestion workflow.
+    runs_by_id: dict[str, dict[str, Any]] = {}
+    for ledger_root in (LEDGER_ROOT, LEGACY_LEDGER_ROOT):
+        run_root = root / ledger_root / dispatch / day
+        if not run_root.exists():
+            continue
         for path in sorted(run_root.glob("*.json")):
             payload = json.loads(path.read_text(encoding="utf-8"))
             errors = validate_watch_run(payload)
             if errors:
                 raise ValueError(f"invalid watch ledger entry {path}: {'; '.join(errors)}")
-            runs.append(payload)
+            if payload["dispatch"] != dispatch or observation_date(payload) != day:
+                raise ValueError(f"watch ledger path/payload mismatch: {path}")
+            run_id = str(payload["run_id"])
+            existing = runs_by_id.get(run_id)
+            if existing is not None and existing != payload:
+                raise ValueError(f"conflicting canonical/legacy watch run: {run_id}")
+            runs_by_id[run_id] = payload
+    runs = list(runs_by_id.values())
 
     rows: list[dict[str, Any]] = []
     for run in runs:

@@ -1,0 +1,179 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T014451-0800-r11-20261101T104025Z",
+  "scheduled_for": "2026-11-01T01:44:51-08:00",
+  "started_at": "2026-11-01T02:40:25-08:00",
+  "completed_at": "2026-11-01T02:42:02-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T01:48:34.197-07:00",
+    "end": "2026-11-01T02:42:02-08:00",
+    "basis": "Prior directly verified Gaza Source Watch GitHub heartbeat completed at 2026-11-01 01:48:34.197 PDT (08:48:34.197 UTC). US Pacific clocks subsequently repeated the 01:00 hour and switched to PST. Explicit -07:00/-08:00 offsets represent the continuous 08:48–10:42 UTC interval without ambiguity; new 12:00/12:07 Gaza-local reports are 02:00/02:07 PST.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO EMRO",
+      "WHO Global"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-2026-11-01-al-mawasi-khan-younis-drone-strike-five-reported-killed",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176486",
+      "title": "Five Palestinians killed in Israeli drone strike on Khan Younis",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-01",
+      "publication_date": "2026-11-01",
+      "published_at": "2026-11-01T12:07:00+02:00",
+      "event_date": "2026-11-01",
+      "incident_date": "2026-11-01",
+      "location": "al-Mawasi area, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Five Palestinians reportedly killed and several injured by Israeli drone strike, per medical sources cited by WAFA; civilian/combatant status and exact injury count not independently established.",
+      "exact_supporting_passage": "Five Palestinians were killed and several others injured",
+      "source_type": "Established reporting; Palestinian official news agency citing medical sources",
+      "classification": "new",
+      "new_in_watch": true,
+      "confidence": "medium: attributed medical-source casualty report, no independent confirmation verified during bounded watch",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA English latest-news review following OCHA and WHO official-first checks and twelve targeted searches; corroborated only at same-publisher Arabic report, not independent.",
+        "first_verified_report_time": "2026-11-01T12:07:00+02:00",
+        "same_publisher_parallel_report_url": "https://www.wafa.ps/news/2026/11/1/%D9%85%D8%AD%D8%AF%D8%AB-7-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%85%D8%AF%D9%8A%D9%86%D8%A9",
+        "relation_to_other_finding": "One of two geographically distinct attacks described in the same WAFA Arabic bulletin; five deaths at al-Mawasi, not additional to the seven deaths reported across the two strike sites.",
+        "chronological_note": "Source published during Pacific watch window; exact strike time was not stated beyond Sunday morning.",
+        "limitations": "Casualty figures provisional; two WAFA language versions differ on wider Gaza-wide cumulative daily deaths. Do not use or add the inconsistent aggregate.",
+        "production_status": "Supplementary recall candidate only; no approval or publication."
+      }
+    },
+    {
+      "finding_id": "gaza-2026-11-01-west-gaza-city-taj-mall-gathering-two-reported-killed",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/1/%D9%85%D8%AD%D8%AF%D8%AB-7-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%85%D8%AF%D9%8A%D9%86%D8%A9",
+      "title": "(Updated) Seven killed and others injured in strikes on Gaza City and Khan Younis",
+      "publisher": "Palestine News and Information Agency (WAFA), Arabic",
+      "source_date": "2026-11-01",
+      "publication_date": "2026-11-01",
+      "published_at": "2026-11-01T12:00:00+02:00",
+      "event_date": "2026-11-01",
+      "incident_date": "2026-11-01",
+      "location": "Near Taj Mall, al-Thawra Street, western Gaza City, Gaza Strip",
+      "affected_population_system": "Two Palestinians reportedly killed and several wounded, some critically, by an Israeli strike on a gathering of people; exact number of injuries and civilian/combatant status unverified.",
+      "exact_supporting_passage": "استشهد مواطنان، وأ صيب عدد آخر بجروح، بينهم حالات وصفت بالحرجة",
+      "source_type": "Established reporting; Palestinian official news agency citing medical sources and local reports",
+      "classification": "new",
+      "new_in_watch": true,
+      "confidence": "medium: direct WAFA report; no independent corroboration verified during bounded watch",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA Arabic latest-news review; not separately indexed in the initial twelve targeted searches.",
+        "publication_time": "2026-11-01T12:00:00+02:00",
+        "translation": "Two people were killed and others wounded, including critical cases; the article locates the strike behind Taj Mall on al-Thawra Street in western Gaza City.",
+        "relation_to_other_finding": "Distinct western Gaza City gathering strike from the al-Mawasi/Khan Younis drone strike in same report; count the site-specific two separately from al-Mawasi five, never double-count the seven-site subtotal.",
+        "chronological_note": "Article was published within the Pacific observation window; exact attack time not verified.",
+        "limitations": "WAFA's same article contains an inconsistent broader cumulative daily tally; not treated as a separate casualty event. No independent verification of victim identity or status.",
+        "production_status": "Supplementary recall candidate only; no approval or publication."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall check; primary daily Gaza publisher/collector remains authoritative. Excludes unsupported claims, opinion, recycled reports, duplicates and West Bank-only items.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent Gaza situation report remains the 31 Oct publication about 29 Oct humanitarian developments; six OCHA findings already recalled on 31 Oct, not duplicated."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, recurring previously documented source restriction."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new Gaza-specific medical operational update in the current window visible on the WHO Global crisis page."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"November 1, 2026\" Gaza killed wounded hospital humanitarian",
+      "site:wafa.ps/news/2026/11/1 غزة شهيد قصف الاحتلال إصابات منذ الصباح",
+      "site:reuters.com/world/middle-east/ Gaza November 1 2026 killed ceasefire humanitarian",
+      "site:apnews.com/article Gaza November 1 2026 killed civilians ceasefire aid",
+      "site:aljazeera.com/news/2026/11/1 Gaza strikes deaths injuries ceasefire",
+      "site:aa.com.tr/en/middle-east Gaza Nov 1 2026 Palestinians killed wounded",
+      "Gaza Khan Younis al Mawasi drone strike five killed November 1 2026 Gaza City Taj Mall two killed",
+      "site:unicef.org Gaza November 1 2026 children shelter water displacement",
+      "site:msf.org Gaza November 1 2026 hospital ambulance fuel medical care",
+      "site:wfp.org Gaza November 1 2026 food rations aid shortage",
+      "Gaza Rafah medical evacuation crossing November 1 2026 WHO ICRC patients",
+      "Gaza November 1 2026 ceasefire violation hostages detainees humanitarian operations civilian impact"
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_result": "Exactly 12 additional topical web search requests, grouped in two batches of 6, returned primarily stale/out-of-window indexing; direct publisher pages revealed two new WAFA-documented strike sites. The six-source WHO/OCHA official-first stage precedes the twelve additional requests.",
+    "direct_checks": [
+      {
+        "source": "WAFA English latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "12:07 Gaza-local 01 Nov report on five killed at al-Mawasi; earlier 08:47 al-Musaddar casualty was already in the prior watch."
+      },
+      {
+        "source": "WAFA Arabic latest",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "result": "12:00 Gaza-local updated report documents five al-Mawasi deaths and two western Gaza City deaths with additional wounded; this is one same-agency source, not independent corroboration."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest visible Gaza casualty reporting dated 31 Oct, pre-window."
+      },
+      {
+        "source": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible; no new distinct Gaza-specific interval report visible."
+      },
+      {
+        "source": "AP Israel-Hamas hub",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible, no additional distinct current-window Gaza incident established."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible but English newsroom latest item dated 10 June; no interval bulletin."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; previously documented restriction."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; previously documented restriction."
+      }
+    ],
+    "dedupe": "Prior 01 Nov al-Musaddar death of Ibrahim Adel Saeed and six OCHA reports from 31 Oct excluded. Two new site-specific casualty incidents have separate finding IDs; no aggregate roll-up is counted as a third incident.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously documented, WHO Global and OCHA accessible."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Previously documented; OCHA food-access reporting accessible."
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Previously documented; OCHA aid/displacement reporting accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED for recurring WHO EMRO/WFP/UNRWA access restrictions and poor current-day indexing. Meaningful alternate official-source coverage remained accessible; new WAFA-reported civilian-impact strikes were verified as traceable reports, not independently established facts.",
+    "source_discrepancy": "WAFA English headline/listing says 'eight', English article body describes five from al-Mawasi and seven Gaza-wide since dawn; Arabic body specifies five al-Mawasi plus two Gaza City and then says nine Gaza-wide since dawn. To avoid unreliable roll-ups, this heartbeat records only the two individual strike sites with five and two deaths respectively.",
+    "safeguards": "One new append-only heartbeat in ops/watch-ledger only. No production publication, authorization, schedule alteration or task disabling."
+  }
+}

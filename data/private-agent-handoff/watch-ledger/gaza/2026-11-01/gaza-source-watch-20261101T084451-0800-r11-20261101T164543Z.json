@@ -1,0 +1,147 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T084451-0800-r11-20261101T164543Z",
+  "scheduled_for": "2026-11-01T08:44:51-08:00",
+  "started_at": "2026-11-01T08:44:56-08:00",
+  "completed_at": "2026-11-01T08:45:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T07:50:03.530-08:00",
+    "end": "2026-11-01T08:45:43-08:00",
+    "basis": "Starts at the completed_at of the preceding verified 07:44 PST heartbeat; local date is November 1 after the DST change to PST.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO Global",
+      "WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; authoritative daily Gaza production publisher/collector remains unchanged.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed update 31 October 2026 (29 October situation report). No newer operational Gaza update within this window."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest listed Gaza-relevant WHO news/speeches predate interval. No verified new medical, ambulance, evacuation, functioning-capacity, or fuel change."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, recurring source restriction; WHO Global alternative accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 1 2026 afternoon evening killed wounded 18:00",
+      "site:wafa.ps/news/2026/11/1 غزة مساء الأحد 1 نوفمبر 2026 استشهاد إصابة قصف",
+      "site:reuters.com/world/middle-east/ Gaza November 1 2026 Sunday 16:00 UTC ceasefire strikes civilians",
+      "site:apnews.com/article Gaza November 1 2026 evening hospital civilians strike aid",
+      "site:aljazeera.com/news/2026/11/1/ Gaza latest deaths strikes Khan Younis Jabalia Gaza City November 1",
+      "site:aa.com.tr/en/middle-east/ Gaza November 1 2026 late aid casualty ceasefire",
+      "site:unicef.org Gaza November 1 2026 water children medical aid update",
+      "site:msf.org Gaza 1 November 2026 hospital ambulances medical evacuations",
+      "site:icrc.org/en Gaza November 1 2026 detainees hostages humanitarian release",
+      "site:wfp.org Gaza November 1 2026 crossings food aid access",
+      "Gaza Rafah Kerem Shalom crossing fuel medical evacuation aid 1 November 2026 afternoon update",
+      "Gaza November 1 2026 15:50 UTC 16:45 UTC new casualties hospital displacement Reuters WAFA AFP"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest Gaza casualty headline was the previously recorded eight deaths in Gaza City and Khan Younis, timestamped 12:07 PM Palestine time. Later headlines concern West Bank events or reactions, not a new time-bounded Gaza incident."
+      },
+      {
+        "source": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible; 08:42 AM Palestine-time report of Ibrahim Adel Saeed's death from earlier al-Musaddar tank fire was already captured; noon casualty article repeated eight deaths already in ledger. No fresh distinct event in current interval."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+        "result": "Accessible; published 12:26 UTC, earlier than interval. Three Gaza City deaths and five in Khan Younis, with police-affiliation claims, already captured."
+      },
+      {
+        "source": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-november-1-2026-b918f44d8f212d7daf7f2f9a98c91a0b",
+        "result": "Direct article URL inaccessible this check; preceding verified heartbeat had already captured AP's child victim and seriously injured woman details; no new independently traceable AP development was verified."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; visible top dated news dated 31 October or earlier, no newly published Gaza-specific development in interval."
+      },
+      {
+        "source": "ICRC",
+        "url": "https://www.icrc.org/en/news",
+        "result": "Accessible; no newly dated Gaza-specific operational or detainee release event."
+      },
+      {
+        "source": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/press-releases",
+        "result": "Direct listing URL inaccessible; targeted indexed search returned older water-access information, no fresh dated new event."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; restriction documented in preceding heartbeat."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; restriction documented in preceding heartbeat."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "Direct page restricted; no fresh independent official update established."
+      }
+    ],
+    "dedupe": "Excluded previously recorded Gaza City three killed including a child and serious female injury, Khan Younis five killed with subsequent alleged police affiliation, Jabalia Halawa camp wounded civilians, and Ibrahim Adel Saeed's reported death after prior al-Musaddar wounds. No independent new casualty, displacement, aid/food/water, healthcare, infrastructure, crossing, detainee, ceasefire, or operational impact verified in this watch interval.",
+    "source_quality": "Excluded outdated items, older commentary, duplicate aggregate casualty figures, undated detainee allegations, and unrelated West Bank developments. Source publication/event times not presumed from search-result crawl dates.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Recurring, previously documented; WHO Global accessible"
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Recurring, previously documented; OCHA and indexed reporting accessible"
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Recurring, previously documented; OCHA and indexed reporting accessible"
+      },
+      {
+        "source": "AP/UN News/UNICEF direct",
+        "error": "Direct page inaccessible/restricted",
+        "materiality": "No newly material coverage failure; prior AP data and alternate direct agency/editorial sources available"
+      }
+    ],
+    "status_rationale": "DEGRADED because direct access to several sources remained restricted. The material coverage achieved through OCHA OPT, WHO Global, WAFA (English and Arabic), Reuters, ICRC, and bounded indexed searches was sufficient for a no_findings outcome. No newly material failure relative to the preceding watch.",
+    "evidence_urls": [
+      "https://www.ochaopt.org/updates",
+      "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "https://english.wafa.ps/",
+      "https://www.wafa.ps/",
+      "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+      "https://www.icrc.org/en/news",
+      "https://www.aljazeera.com/where/palestine/"
+    ],
+    "safeguards": "Exactly one append-only heartbeat on ops/watch-ledger. No editorial approval, publication, social posting, schedule or production change, and no task disablement."
+  }
+}

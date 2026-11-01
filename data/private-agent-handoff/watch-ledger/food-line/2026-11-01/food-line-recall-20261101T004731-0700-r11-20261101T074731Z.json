@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T004731-0700-r11-20261101T074731Z",
+  "scheduled_for": "2026-11-01T00:45:54-07:00",
+  "started_at": "2026-11-01T00:47:31-07:00",
+  "completed_at": "2026-11-01T00:48:33-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T23:47:12-07:00",
+    "end_at": "2026-11-01T00:48:33-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified hourly heartbeat completion through current observation; indexed stories were evaluated against actual publication, notice, and event dates, excluding earlier events and duplicates.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Food Line recall watch; primary nationwide collector remains authoritative.",
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "classes_checked": [
+      "Closure/fire/disaster affecting a community's sole, last or full-service grocery",
+      "Emergency food distribution canceled or suspended because of weather, outage, fire or facility damage",
+      "Abrupt pantry/food-bank shutdown or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" fire OR closed \"October 31\" 2026",
+      "\"sole grocery store\" destroyed OR burned OR closing \"November 1\" 2026",
+      "\"last grocery store\" closed OR fire October 2026 town",
+      "\"food distribution\" canceled OR suspended storm flood Saturday October 31 2026",
+      "\"food pantry\" closed unexpectedly \"October 31\" 2026",
+      "\"food bank\" shut down temporarily \"November 1\" 2026",
+      "site:gov SNAP benefits disruption \"November 1\" \"2026\"",
+      "site:gov WIC benefits interruption outage \"October 31\" 2026",
+      "\"October 31, 2026\" \"pantry\" \"closed\" food",
+      "\"October 31, 2026\" \"food distribution\" canceled storm",
+      "\"November 1, 2026\" SNAP interruption benefits state",
+      "\"October 31, 2026\" \"grocery store\" \"fire\" only"
+    ],
+    "observation": "All 12 targeted searches returned results. No newly verified qualifying disruption was found in the hourly window. Results were dominated by older 2025 federal SNAP notices, previously reported 2026 pantry closures, routine food access materials, and articles about new stores.",
+    "excluded_examples": [
+      {
+        "title": "Provo, Utah Community Action Services and Food Bank closure",
+        "url": "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "reason": "Already recorded in October 31 recall watch; duplicate, originally reported before this hourly search window."
+      },
+      {
+        "title": "Santa Clarita Valley Food Pantry unexpectedly closes",
+        "url": "https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102",
+        "reason": "January 27, 2026, outside search window."
+      },
+      {
+        "title": "St. Sabina Social Center pantry seeks support",
+        "url": "https://chicagocrusader.com/pfleger-seeks-donations-to-keep-food-pantry-open/",
+        "reason": "October 20 fundraising appeal, not actual closure or service reduction; donation drive excluded."
+      },
+      {
+        "title": "State SNAP food-purchase restrictions starting November 1",
+        "url": "https://benefitguardian.org/programs/snap-soda-candy-restrictions-by-state",
+        "reason": "Changes announced before observation period; food-category restrictions rather than a newly announced abrupt benefits/payment interruption. No new disruption verified in window."
+      },
+      {
+        "title": "Pennsylvania SNAP shutdown notice",
+        "url": "https://www.pa.gov/agencies/dhs/newsroom/due-to-federal-shutdown--november-snap-payments-will-not-be-made",
+        "reason": "October 2025 notice, not October/November 2026."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T234644-0700-r11-20261101T064644Z.json",
+    "prior_verified_completed_at": "2026-10-31T23:47:12-07:00",
+    "limitations": "Web search index freshness and nonindexed local provider alerts prevent guaranteeing that no incidents occurred.",
+    "production_authority": "Production collection remains authoritative; no approval, publishing, schedule mutation or disabling."
+  }
+}

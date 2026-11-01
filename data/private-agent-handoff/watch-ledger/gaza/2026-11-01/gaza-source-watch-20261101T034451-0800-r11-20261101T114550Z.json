@@ -1,0 +1,166 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T034451-0800-r11-20261101T114550Z",
+  "scheduled_for": "2026-11-01T03:44:51-08:00",
+  "started_at": "2026-11-01T03:45:50-08:00",
+  "completed_at": "2026-11-01T03:48:01-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T02:42:02-08:00",
+    "end": "2026-11-01T03:48:01-08:00",
+    "basis": "Continues from the prior verified Gaza Source Watch GitHub heartbeat, completed 02:42:02 PST (2026-11-01T10:42:02Z). This is the second 01 Nov watch entirely after the DST fall-back: PST offset -08:00 throughout. The 12:00 Gaza-local WAFA article was revised in place; revision timestamp unavailable.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO EMRO",
+      "WHO Global"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-2026-11-01-west-gaza-city-taj-mall-third-reported-death-child-followup",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/1/%D9%85%D8%AD%D8%AF%D8%AB-%D8%AB%D8%A7%D9%86%D9%8D-8-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D8%B7%D9%81%D9%84-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81",
+      "title": "(Second update) Eight killed including child in Gaza strikes",
+      "publisher": "Palestine News and Information Agency (WAFA), Arabic",
+      "source_date": "2026-11-01",
+      "publication_date": "2026-11-01",
+      "published_at": "2026-11-01T12:00:00+02:00",
+      "event_date": "2026-11-01",
+      "incident_date": "2026-11-01",
+      "location": "Near Taj Mall, al-Thawra Street, western Gaza City, Gaza Strip",
+      "affected_population_system": "WAFA revised its earlier report of two deaths at this strike site to three, including one child, with several others injured, some critically. This is an incremental third reported death, NOT a new three-death incident; victim identity and independent confirmation unavailable.",
+      "exact_supporting_passage": "استشهد 3 مواطنين، بينهم طفل، وأصيب عدد آخر بجروح",
+      "source_type": "Palestinian official news agency citing medical/local sources; same-agency English article also updated",
+      "classification": "follow-up",
+      "new_in_watch": true,
+      "confidence": "medium: explicit site-specific revision, no independent corroboration during bounded watch",
+      "bounded_discovery_context": {
+        "previous_heartbeat": "gaza-source-watch-20261101T014451-0800-r11-20261101T104025Z",
+        "previous_count": "2 reported deaths at western Gaza City strike",
+        "current_count": "3 reported deaths, including one child",
+        "increment": "1 additional reported death, not 3 newly occurring deaths",
+        "english_source_url": "https://english.wafa.ps/Pages/Details/176486",
+        "first_publication_time": "2026-11-01T12:00:00+02:00",
+        "revision_time": null,
+        "first_seen_in_current_watch": "2026-11-01T03:48:01-08:00",
+        "limitations": "Article retains original publication timestamp despite second revision; exact revision time unknown, so this is newly observed since prior snapshot, not proven to have occurred in the last hour. No confirmed victim identification or civilian-status determination beyond WAFA's description of a gathering of civilians. WAFA English and Arabic have inconsistent Gaza-wide daily totals (10 versus 9); do not use aggregate figures.",
+        "production_status": "Supplementary recall candidate only, not approved or published."
+      }
+    },
+    {
+      "finding_id": "gaza-2026-11-01-jabalia-halawa-camp-armored-vehicle-fire-injuries",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/1/%D9%85%D8%AD%D8%AF%D8%AB-%D8%AB%D8%A7%D9%86%D9%8D-8-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D8%B7%D9%81%D9%84-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81",
+      "title": "(Second update) Eight killed including child in Gaza strikes",
+      "publisher": "Palestine News and Information Agency (WAFA), Arabic",
+      "source_date": "2026-11-01",
+      "publication_date": "2026-11-01",
+      "published_at": "2026-11-01T12:00:00+02:00",
+      "event_date": "2026-11-01",
+      "incident_date": "2026-11-01",
+      "location": "Halawa camp, Jabalia al-Balad, northern Gaza Strip",
+      "affected_population_system": "An unspecified number of Palestinians reportedly wounded by Israeli armored-vehicle fire, including a woman seriously injured. No deaths asserted for this location and exact number of casualties unavailable.",
+      "exact_supporting_passage": "أصيب عدد من المواطنين، بينهم سيدة بجروح خطيرة، بنيران آليات الاحتلال في مخيم حلاوة بجباليا البلد",
+      "source_type": "Palestinian official news agency reporting local civilian-impact incident",
+      "classification": "new",
+      "new_in_watch": true,
+      "confidence": "medium-low: traceable same-agency report only; timing and injury count unconfirmed",
+      "bounded_discovery_context": {
+        "previous_heartbeat": "gaza-source-watch-20261101T014451-0800-r11-20261101T104025Z",
+        "previous_status": "Not present in earlier WAFA report cited by previous verified watch",
+        "first_seen_in_current_watch": "2026-11-01T03:48:01-08:00",
+        "revision_time": null,
+        "limitations": "WAFA inserted incident into its in-place revised article; cannot determine when injuries occurred or when the revision became visible. Site-specific injured persons only. Separate from al-Mawasi and Taj Mall strikes. No independent confirmation.",
+        "production_status": "Supplementary recall candidate only, not approved or published."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; production collector/publisher authoritative. Qualifies a previously recorded incident's newly surfaced extra death and a different injury location; excludes opinion, unsourced assertions, old reports, and duplicates.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest Gaza situation report remains publication of 31 Oct covering 29 Oct, previously recalled. No new report since prior heartbeat."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, recurring restriction."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated Gaza operational update in watch interval."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"November 1, 2026\" afternoon killed injured strike",
+      "site:wafa.ps/news/2026/11/1 غزة قصف الاحتلال شهداء إصابات بعد الساعة 12",
+      "site:reuters.com/world/middle-east/ \"November 1, 2026\" Gaza civilians killed aid ceasefire",
+      "site:apnews.com Gaza November 1 2026 civilian casualties aid ceasefire",
+      "site:aljazeera.com/news/2026/11/1 Gaza casualties civilians ceasefire",
+      "site:aa.com.tr/en/middle-east Gaza November 1 2026 strike injured dead",
+      "site:unicef.org Gaza November 1 2026 children water displacement emergency news",
+      "site:msf.org Gaza November 1 2026 hospital ambulance patients attack health",
+      "site:who.int Gaza November 1 2026 medical evacuation hospital health latest",
+      "site:wfp.org Gaza November 1 2026 food aid supplies trucks crossings",
+      "site:icrc.org Gaza November 1 2026 hostages detainees humanitarian crossing",
+      "Gaza November 1 2026 Rafah Kerem Shalom medical evacuation aid trucks ceasefire latest civilian"
+    ],
+    "additional_targeted_search_count": 12,
+    "targeted_search_result": "Exactly twelve additional searches in two batches of six; most results were stale or out of interval. Direct WAFA publisher comparison supplied the two qualifying incremental updates.",
+    "direct_checks": [
+      {
+        "source": "WAFA English latest and article",
+        "url": "https://english.wafa.ps/Pages/Details/176486",
+        "result": "In-place text updated from the prior five-plus-two site casualty tally to five-plus-three, including a child, at Gaza City; English daily total says 10."
+      },
+      {
+        "source": "WAFA Arabic latest and revised article",
+        "url": "https://www.wafa.ps/news/2026/11/1/%D9%85%D8%AD%D8%AF%D8%AB-%D8%AB%D8%A7%D9%86%D9%8D-8-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D8%B7%D9%81%D9%84-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81",
+        "result": "Second-revision version confirms three killed at western Gaza City site, including a child, and newly describes Halawa camp injuries including seriously injured woman; Arabic daily total says 9."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible English news feed but newest headline dates June 10; not useful for interval."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring restriction."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; recurring restriction."
+      }
+    ],
+    "dedupe": "Exclude previously recorded al-Mawasi five deaths, initial western Gaza City two deaths, earlier al-Musaddar death, and six 31 Oct OCHA developments. Only the Gaza City death increment (+1) and separately located Jabalia wounded case are counted as newly surfaced; do not sum Gaza daily totals.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Pre-existing restriction; WHO Global and OCHA accessible"
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Pre-existing restriction; OCHA food reporting accessible"
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Pre-existing restriction; OCHA displacement and access reporting accessible"
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO, WFP and UNRWA direct access remained restricted, despite meaningful alternate coverage. No new material access regression detected.",
+    "source_discrepancy": "Updated English WAFA article claims 10 Gaza-wide deaths since dawn, updated Arabic 9; not verified or counted. Original headline/article timestamps are retained through revisions; infer no exact revision time.",
+    "safeguards": "Exactly one append-only heartbeat targeted to ops/watch-ledger. No production files, approval, publication, schedule or task settings changed."
+  }
+}

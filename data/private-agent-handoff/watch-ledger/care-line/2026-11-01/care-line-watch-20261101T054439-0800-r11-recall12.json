@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T054439-0800-r11-recall12",
+  "scheduled_for": "2026-11-01T05:45:22-08:00",
+  "started_at": "2026-11-01T05:44:39-08:00",
+  "completed_at": "2026-11-01T05:45:25-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T04:49:03-08:00",
+    "end": "2026-11-01T05:45:25-08:00",
+    "basis": "Since the latest verified prior Care Line Watch heartbeat completion at 04:49:03 PST; this is bounded supplementary recall, not the authoritative national production collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "50 U.S. states, District of Columbia and U.S. territories; hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures or suspensions, rural/emergency service loss, EMS/air-medical/base closures, CMS provider terminations/rescissions/CLIA restrictions, and concrete restoration of essential services.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "result": "Direct CMS Public Notices listing check: the seven most recent notices remain dated 2026-10-30 (two CA hospice, one MI psychiatric residential treatment facility, four OH home health), previously recorded; no notice dated 2026-10-31 or 2026-11-01 on displayed listing."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 1 2026 hospital emergency department closed suspended services overnight United States",
+      "November 1 2026 hospital maternity labor delivery unit closure suspension effective",
+      "November 1 2026 psychiatric behavioral health inpatient facility closure service suspended",
+      "November 1 2026 dialysis center closure patients moved oncology treatment halted",
+      "November 1 2026 rural hospital emergency medical services shut down access",
+      "November 1 2026 ambulance service stops responding base closure EMS",
+      "November 1 2026 air ambulance medical helicopter base grounded service suspended",
+      "November 1 2026 primary care clinic abruptly closed patients diverted",
+      "November 1 2026 hospital emergency department resumes reopened after closure",
+      "November 1 2026 Puerto Rico US Virgin Islands Guam healthcare facility services suspended closed",
+      "November 1 2026 Northern Mariana Islands American Samoa health clinic suspended reopened typhoon",
+      "November 1 2026 state department of health hospital closure license suspension CMS provider termination CLIA"
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Isla Community Health Kagman clinic temporary closure, Saipan, Northern Mariana Islands (announced Nov 1; effective Oct 30)",
+        "reason": "Previously identified and recorded; remains pending review, duplicate for this recall.",
+        "prior_finding_id": "care-line-cnmi-saipan-kagman-primary-care-clinic-closure-20261030"
+      },
+      {
+        "item": "November 1 rural healthcare overview at South Florida Hospital News",
+        "url": "https://southfloridahospitalnews.com/2026/11/01/strong-rural-communities-depend-on-the-seeds-we-plant-today/",
+        "reason": "General rural health advocacy, not a concrete newly effective closure or restoration."
+      },
+      {
+        "item": "Older hospital and maternity unit reports from 2025 and earlier 2026",
+        "reason": "Not new since prior hourly watch."
+      },
+      {
+        "item": "Niagara Health urgent-care schedule notice",
+        "url": "https://www.niagarahealth.on.ca/site/news/2026/08/20/niagara-health-announces-ucc-summer-schedule",
+        "reason": "Canadian facility, outside U.S./territory scope; historical schedule data."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T044752-0800-r11-recall12.json",
+      "previous_completed_at": "2026-11-01T04:49:03-08:00",
+      "prior_pending_review_finding_id": "care-line-cnmi-saipan-kagman-primary-care-clinic-closure-20261030"
+    },
+    "source_failures": [],
+    "limitations": "Twelve targeted queries returned mostly stale, broad, or non-U.S. search results. A zero-finding result is not proof no new events occurred; this small early-Sunday recall is non-exhaustive, especially in rural and territorial local reporting. Production collector remains authoritative.",
+    "controls": "Only one append-only private watch heartbeat on ops/watch-ledger; no approval, publication, schedule modification or task disable."
+  }
+}

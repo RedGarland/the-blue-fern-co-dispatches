@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T124249-0800-r11-recall12",
+  "scheduled_for": "2026-11-01T12:45:22-08:00",
+  "started_at": "2026-11-01T12:42:49-08:00",
+  "completed_at": "2026-11-01T12:43:23-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T11:50:44-08:00",
+    "end": "2026-11-01T12:43:23-08:00",
+    "basis": "Since last independently verified supplementary Care Line heartbeat; new, verifiable developments only; primary national production collector is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, DC, and territories. Concrete healthcare-access losses/restorations: hospitals, emergency departments, maternity, inpatient behavioral health, dialysis, oncology, primary care, rural emergency services, EMS/ambulance/air-medical and official CMS provider/CLIA notices.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Inspected CMS Public Notices before searching. The seven newest rows are dated October 30, 2026 (hospice, PRTF, and home health terminations). No November 1 or subsequent notice or newly dated rescission, CLIA limitation, or suspension appeared."
+    },
+    "additional_targeted_searches": 12,
+    "search_recency_days": 2,
+    "targeted_queries": [
+      "site:gov hospital emergency department closure suspension November 2026 United States",
+      "hospital emergency department closed reopened today November 1 2026 rural US",
+      "birthing center labor and delivery temporarily suspended maternity hospital October 31 November 1 2026",
+      "ambulance EMS service suspends operations closes base October 31 November 1 2026 US",
+      "dialysis cancer oncology treatment center closing patients November 2026 United States",
+      "site:gov \"November 1, 2026\" hospital closure clinic services emergency",
+      "November 1 2026 US local news \"hospital\" \"closing\" emergency department",
+      "\"October 31, 2026\" \"ambulance\" \"suspended\" service county",
+      "\"November 1, 2026\" \"clinic\" \"closed\" \"patients\" US",
+      "November 1 2026 Puerto Rico Guam Virgin Islands Northern Mariana Islands American Samoa clinic hospital service closure",
+      "November 2026 Alaska rural hospital air ambulance medical transport suspension closure",
+      "November 1 2026 inpatient psychiatric behavioral health hospital reopened closed dialysis unit"
+    ],
+    "search_methods": "Six targeted fast searches and six targeted slow searches after direct CMS inspection; searched results assessed against observation window and clinical-service effect.",
+    "reviewed_exclusions": [
+      {
+        "item": "Isla Community Health Kagman clinic, Saipan, CNMI",
+        "url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+        "reason": "Previously recorded 2026-11-01 press release for 2026-10-30 closure; existing pending-review finding, no new change."
+      },
+      {
+        "item": "HCA Florida Capital Hospital Level 2 NICU, Tallahassee, Florida",
+        "url": "https://www.wtxl.com/northeast-tallahassee/hca-florida-capital-hospital-to-close-its-level-2-nicu-in-november-after-4-years-of-operation",
+        "reason": "Older announcement of a planned November 1 closure, not a newly released or independently verified service transition within this observation window. Recheck only upon new official confirmation."
+      },
+      {
+        "item": "Watsonville Community Hospital labor/delivery and NICU, California",
+        "url": "https://santacruzlocal.org/2026/10/28/watsonville-community-hospital-moves-to-shutter-labor-and-delivery/",
+        "reason": "October 28 decision and proposed March 2027 maternity closure; existing NICU closure occurred in July. No new clinical access change within observation interval."
+      },
+      {
+        "item": "Guam Memorial Hospital Authority storm suspensions",
+        "url": "https://ghs.guam.gov/node/4352",
+        "reason": "Official release October 16, 2026; no new suspension/reopening verified within current interval."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T114927-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T11:50:44-08:00",
+      "previously_known_entities": [
+        "Kagman clinic (CNMI)",
+        "Roseland Community Hospital maternity (IL)",
+        "Bruceton Community Ambulance (WV)"
+      ]
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: Both search engines returned responses, but indexed hits were predominantly older, generic, international or otherwise irrelevant despite two-day recency constraints, reducing confidence in recall of fresh rural/territorial developments.",
+    "limitations": "Supplementary recall, not exhaustive coverage or evidence of no events. Publication time not reliably disclosed for some sources; old announcements with an effective date today cannot be treated as newly confirmed effects without evidence.",
+    "controls": "Append-only heartbeat on ops/watch-ledger only; no primary collector, public site, editorial approval, social publication, schedule, or enablement changes."
+  }
+}

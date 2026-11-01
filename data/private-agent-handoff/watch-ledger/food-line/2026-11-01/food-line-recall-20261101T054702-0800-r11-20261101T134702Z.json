@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T054702-0800-r11-20261101T134702Z",
+  "scheduled_for": "2026-11-01T05:45:54-08:00",
+  "started_at": "2026-11-01T05:47:02-08:00",
+  "completed_at": "2026-11-01T05:49:10.867-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T04:49:21.900-08:00",
+    "end_at": "2026-11-01T05:49:10.867-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last verified prior Food Line heartbeat completed at 04:49:21.900 PST, recovered by comparing ops/watch-ledger against prior known commit and reading its JSON. Screening requires new incident or official notice within this hour; indexed/crawled dates alone do not establish novelty.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster of the only, sole, last or full-service community grocery",
+      "Canceled or suspended emergency food distributions caused by storm, flood, fire, power outage or facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "November 1 2026 \"only grocery store\" closed fire town",
+      "October 31 November 1 2026 \"last grocery store\" shutdown community",
+      "2026 November 1 \"sole grocery store\" fire destroyed",
+      "November 1 2026 \"food distribution\" canceled storm flooding",
+      "October 31 2026 \"food pantry\" \"closed\" emergency",
+      "November 1 2026 food bank distribution suspended storm outage",
+      "November 1 2026 SNAP EBT benefits interrupted official state agency notice",
+      "November 1 2026 WIC benefits system outage interruption agency",
+      "site:gov \"November 1, 2026\" \"SNAP\" \"delay\" benefits",
+      "site:gov \"October 31, 2026\" \"WIC\" outage benefits",
+      "\"November 1, 2026\" \"food pantry\" \"temporarily closed\" OR \"suspended\"",
+      "\"October 31, 2026\" \"food distribution\" \"cancelled\" OR \"canceled\" OR \"suspended\""
+    ],
+    "observation": "All 12 targeted searches produced usable results. No independently verifiable, newly announced or occurring qualifying disruption since 04:49 PST was identified. Results prominently included old 2025 SNAP shutdown coverage, September 2026 grocery incidents, advance seasonal program expirations, routine closures and assistance listings.",
+    "excluded_examples": [
+      {
+        "title": "Spencer, New York only grocery destroyed by fire",
+        "url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Confirmed September 11, 2026 incident, well before this hourly window."
+      },
+      {
+        "title": "Provo, Utah food-bank closure",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Previously recorded in Food Line watch; duplicate, not new."
+      },
+      {
+        "title": "Mason Food Pantry announces October 31 closure",
+        "url": "https://masonfoodpantry.org/",
+        "reason": "Preannounced one-day closure before observation window; no evidence of abrupt or major service loss."
+      },
+      {
+        "title": "Alaska WIC Farmers Market Nutrition Program seasonal benefits expire October 31",
+        "url": "https://health.alaska.gov/en/services/farmers-market/",
+        "reason": "Normal published seasonal expiration, not a newly issued SNAP/WIC service interruption."
+      },
+      {
+        "title": "Federal shutdown SNAP benefits coverage",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "Dated October 2025, not a fresh November 2026 official interruption."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T044732-0800-r11-20261101T124732Z.json",
+      "prior_verified_completed_at": "2026-11-01T04:49:21.900-08:00",
+      "method": "Compared known 02:48 Food Line commit 3ac5b5d63e1791ca7e4fff442e7a1cd7a5aec3fc with ops/watch-ledger (9 newer commits) and read the newest Food Line heartbeat."
+    },
+    "source_failures": [],
+    "limitations": "Freshly posted local provider notices may not yet be indexed; zero results do not establish a nationwide absence of incidents. Searches prioritized the high-value miss classes rather than exhaustive nationwide coverage.",
+    "production_authority": "Production collection remains authoritative. No approvals, publication, changes to schedules or task disablement."
+  }
+}

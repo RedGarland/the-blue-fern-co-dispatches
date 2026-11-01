@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T144528-0800-r11-recall12",
+  "scheduled_for": "2026-11-01T14:45:22-08:00",
+  "started_at": "2026-11-01T14:45:28-08:00",
+  "completed_at": "2026-11-01T14:46:14-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T13:41:31-08:00",
+    "end": "2026-11-01T14:46:14-08:00",
+    "basis": "Since previous verified supplementary Care Line heartbeat; national production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S., DC and territories: hospital, ED, maternity, behavioral health, dialysis, oncology, primary-care, rural/emergency, EMS or air-medical closure/suspension or effective restoration, and CMS provider/CLIA actions.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Direct CMS Public Notices inspection completed before targeted search. Latest seven notices are dated October 30 (two California hospice, one Michigan PRTF, four Ohio home health entries, one with state blank on table). No newer notice, rescission, termination, or CLIA action in page listing."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 1 2026 hospital emergency department closes suspends services United States",
+      "November 1 2026 maternity labor delivery unit closes suspension hospital",
+      "November 1 2026 rural hospital emergency room closing service outage",
+      "November 1 2026 behavioral health psychiatric hospital clinic closing patients",
+      "November 1 2026 dialysis cancer oncology clinic closure suspension",
+      "November 1 2026 ambulance service suspended air medical base shutdown",
+      "November 1 2026 primary care clinic permanently closed patients medical access US",
+      "November 1 2026 hospital emergency department services reopened restored rural community",
+      "October 31 November 1 2026 ambulance service closure suspension county EMS US",
+      "November 2026 Guam Saipan CNMI clinic hospital closure reopening services",
+      "November 2026 Puerto Rico US Virgin Islands hospital emergency clinic services suspended",
+      "November 1 2026 Alaska American Samoa hospital dialysis maternity air ambulance shutdown"
+    ],
+    "search_method": "Two batches of six targeted fast searches, each with recency=2 days; independently assessed dates and geography from returned source snippets, including indexed news results.",
+    "reviewed_exclusions": [
+      {
+        "item": "MaineHealth Lincoln Hospital labor/delivery unit, Maine",
+        "url": "https://apnews.com/article/labor-delivery-mainehealth-lincoln-hospital-close-december-5f27dae0086adc0ff56aff5e6b409b96",
+        "reason": "Announced about two months prior with December effective date; not a newly occurring or newly announced event in this interval."
+      },
+      {
+        "item": "Midcoast maternity unit closure opposition, Maine",
+        "url": "https://mainebeacon.com/midcoast-mothers-family-physicians-fight-mainehealths-birthing-unit-closure/",
+        "reason": "October 28 report on known planned closure; no new effective access transition."
+      },
+      {
+        "item": "North Campbell Community Hospital, Tennessee",
+        "url": "https://1450wlaf.com/10/north-campbell-community-hospital-to-break-ground-on-friday/",
+        "reason": "October 1 groundbreaking; future planned reopening only, not an operative return of services."
+      },
+      {
+        "item": "Saint Francis Health System Bristow hospital, Oklahoma",
+        "url": "https://www.kjrh.com/news/local-news/saint-francis-health-system-takes-over-bristow-hospital-to-restore-care",
+        "reason": "Months-old coverage; no newly verified restoration during observation period."
+      },
+      {
+        "item": "Roseland maternity, Chicago; Kagman clinic, Saipan; Bruceton ambulance, West Virginia",
+        "url": null,
+        "reason": "Already recorded in earlier watch; no evidence of a new change or update."
+      },
+      {
+        "item": "HCA Florida Capital Hospital Level II NICU, Tallahassee",
+        "url": "https://www.wctv.tv/2026/08/28/hca-florida-capital-hospital-discontinue-its-level-ii-nicu-services-effective-nov-1/",
+        "reason": "Previously announced November 1 effective date; targeted current searches did not confirm a newly published transition or restoration this hour."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T134036-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T13:41:31-08:00"
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: Twelve searches returned largely stale background articles, future/proposed events, Canadian/international results, and unrelated stories despite two-day recency filtering. No reliable new local/official event evidence surfaced, with particularly weak territorial and rural recall.",
+    "limitations": "No findings is not evidence that no access changes occurred. Search result relevance and rural/territorial reporting are non-exhaustive; production collection is authoritative. No current-hour confirmations found for older announced transitions.",
+    "controls": "Exactly one append-only private heartbeat on ops/watch-ledger; no editorial review approvals, public publication, schedule change or disabling."
+  }
+}

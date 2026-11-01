@@ -1,0 +1,73 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T234644-0700-r11-20261101T064644Z",
+  "scheduled_for": "2026-10-31T23:45:54-07:00",
+  "started_at": "2026-10-31T23:46:44-07:00",
+  "completed_at": "2026-10-31T23:47:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T22:49:12-07:00",
+    "end_at": "2026-10-31T23:47:12-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified heartbeat completion through current observation. Search results were checked for actual publication/event timing; older stories and duplicate signals were excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value Food Line missed classes, not primary nationwide collection.",
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "classes_checked": [
+      "Only/sole/last/full-service local grocery lost or closed due to fire, disaster or shutdown",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry/food bank shutdown or major service access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "bounded_query_context": [
+      "October 31 2026 \"only grocery store\" closed fire town",
+      "October 31 2026 \"sole grocery store\" \"closed\" rural",
+      "Oct 31 2026 \"last grocery store\" closure community",
+      "Oct 31 2026 \"full-service grocery\" \"closed\" fire",
+      "October 31 2026 \"food distribution\" \"cancelled\" storm",
+      "October 31 2026 \"food distribution\" \"canceled\" power outage",
+      "October 31 2026 food bank distribution canceled flooding weather",
+      "October 31 2026 pantry distribution suspended building damage",
+      "October 31 2026 \"food pantry\" \"closed\" \"until further notice\"",
+      "October 31 2026 food bank suspended operations emergency closure",
+      "October 31 2026 SNAP benefits EBT outage interruption state agency notice",
+      "October 31 2026 WIC benefits suspended delayed state agency official"
+    ],
+    "observation": "All twelve web searches returned results, but none provided a verified new qualifying U.S. food-access interruption during the hourly window. Search responses disproportionately surfaced stale 2025 SNAP shutdown stories, earlier 2026 closures and routine pantry/news coverage.",
+    "excluded_examples": [
+      {
+        "title": "Provo, Utah Community Action Services and Food Bank service closure",
+        "url": "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "reason": "Previously captured October 31 recall candidate; duplicate and originally reported before the current hourly window."
+      },
+      {
+        "title": "Prodisee Pantry canceled Saturday food distribution due to weather",
+        "url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+        "reason": "Published October 7, 2026, before current search window."
+      },
+      {
+        "title": "Texas SNAP benefit pause",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-lone-star-card-how-to-help/",
+        "reason": "October 2025 story, not a new 2026 interruption."
+      },
+      {
+        "title": "Walmart Yaphank fire-suppression closure",
+        "url": "https://greaterlongisland.com/yaphank-walmart-reopens-fire-suppression-repairs/",
+        "reason": "March 2026 reopening, outside search window and not a new access disruption."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T224823-0700-r11-20261101T054823Z.json",
+    "prior_verified_completed_at": "2026-10-31T22:49:12-07:00",
+    "limitations": "Targeted web-search coverage cannot establish absence of incidents in all communities; provider notices and local news may be delayed or unindexed.",
+    "production_authority": "Primary nationwide collection remains authoritative. No editorial review/approval, publishing, schedule changes or task disabling."
+  }
+}

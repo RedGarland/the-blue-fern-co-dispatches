@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T114228-0800-r11-20261101T194228Z",
+  "scheduled_for": "2026-11-01T11:45:54-08:00",
+  "started_at": "2026-11-01T11:42:28-08:00",
+  "completed_at": "2026-11-01T11:43:39.035-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T10:46:35.725-08:00",
+    "end_at": "2026-11-01T11:43:39.035-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From the completed_at of the latest verified Food Line Source Watch heartbeat on ops/watch-ledger. Screened for newly announced/occurring disruptions, not indexed or crawled timestamps.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary national production collection is authoritative.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting only/sole/last/full-service community grocery",
+      "Cancellation or suspension of emergency food distribution caused by storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food bank service closure or material reduction in access",
+      "New official SNAP/WIC/food-assistance interruption causing immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "November 1 2026 SNAP benefits interrupted state agency today November food assistance",
+      "November 1 2026 WIC benefits card outage disruption state agency",
+      "\"only grocery store\" closed fire November 1 2026 town",
+      "\"last grocery store\" closing November 2026 rural community",
+      "food pantry closed unexpectedly November 1 2026 fire water damage",
+      "food bank distribution canceled today November 1 2026 weather storm",
+      "SNAP EBT outage November 1 2026 service interruption official state",
+      "emergency food distribution canceled October 31 November 1 2026 flood power outage",
+      "\"food distribution\" \"canceled\" \"November 1\" \"2026\" storm",
+      "\"food pantry\" \"closed\" \"November 1, 2026\" suddenly",
+      "\"grocery store\" \"only\" \"Oct 31, 2026\" closed",
+      "site:*.gov \"SNAP\" \"November 1, 2026\" outage delay benefits notice"
+    ],
+    "observation": "Twelve targeted searches produced usable source results, but no newly reported qualifying U.S. food-access disruptions were verified within the bounded 10:46–11:43 PST window. Search results predominantly surfaced earlier 2026 grocery/fire notices, 2025 SNAP shutdown stories, routine weekend closures and food distribution scheduling; no credible current event meeting the inclusion conditions.",
+    "excluded_examples": [
+      {
+        "title": "Community Action Services and Food Bank temporary closure, Provo, Utah County",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "source_published_at": "2026-10-31",
+        "reason": "Prior-watch known closure; duplicate, not new since the previous check."
+      },
+      {
+        "title": "Why a struggling family-owned Beaver County grocery store refuses to give up",
+        "url": "https://www.post-gazette.com/business/career-workplace/2026/10/31/beaver-supermarket-giant-eagle-family-grocery/stories/202610250009",
+        "source_published_at": "2026-10-31",
+        "reason": "Reported inventory/staff strain and rejected closure rumors, not a verified shutdown of the sole/full-service grocery this hour."
+      },
+      {
+        "title": "Town of Spencer recovering after losing only grocery store in fire",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14",
+        "reason": "Qualifying event class but occurred well before this hourly window."
+      },
+      {
+        "title": "SNAP November benefits delayed due to government shutdown",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "source_published_at": "2025-10-28",
+        "reason": "Historical October 2025 notice returned by search in spite of 2026 query dates."
+      },
+      {
+        "title": "Coastside Hope weekend closure on November 1",
+        "url": "https://coastsidehope.org/calendar/month/2026-11/",
+        "source_published_at": null,
+        "reason": "Routine published Saturday/Sunday closure rather than abrupt disruption."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T104521-0800-r11-20261101T184521Z.json",
+      "prior_verified_completed_at": "2026-11-01T10:46:35.725-08:00",
+      "method": "Read the most recent watch ledger entry on ops/watch-ledger and compared candidate dates and known exclusions."
+    },
+    "source_failures": [],
+    "limitations": "Search returned stale and unrelated high-ranked material despite exact November 2026 qualifiers. Newly posted local/provider or agency advisories might not yet be indexed. Zero findings does not establish absence of disruption nationwide.",
+    "production_authority": "No approval, publication, production-collector change, schedule change, or task disabling."
+  }
+}

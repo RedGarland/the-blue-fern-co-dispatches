@@ -1,0 +1,146 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T044451-0800-r11-20261101T124715Z",
+  "scheduled_for": "2026-11-01T04:44:51-08:00",
+  "started_at": "2026-11-01T04:45:14-08:00",
+  "completed_at": "2026-11-01T04:47:15.034-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T03:48:01-08:00",
+    "end": "2026-11-01T04:47:15.034-08:00",
+    "basis": "From the verified previous Gaza Source Watch heartbeat completion; after the November 1 DST fall-back, all times in this window are PST (-08:00). The Reuters update at 12:26 UTC is 04:26 PST.",
+    "official_first_sources": [
+      "OCHA OPT publications and updates",
+      "WHO Global occupied Palestinian territory situation page",
+      "WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-2026-11-01-al-mawasi-khan-younis-five-killed-police-officer-identity-followup-reuters",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+      "title": "Israeli strikes kill eight people in Gaza - medics say",
+      "publisher": "Reuters",
+      "source_date": "2026-11-01",
+      "publication_date": "2026-11-01",
+      "published_at": "2026-11-01T12:26:00Z",
+      "event_date": "2026-11-01",
+      "location": "Western Khan Younis, southern Gaza Strip; likely corresponds to the previously reported al-Mawasi strike",
+      "affected_population_system": "Five Palestinians previously reported killed in a Khan Younis strike are newly described by Gaza's Hamas-run interior ministry as police officers. Reuters also reports that the Israeli military acknowledged striking several people it described as militants in Khan Younis, without further information. Police affiliation is attributed to the interior ministry; it does not establish combatant/civilian status. No additional deaths, injuries, or separate strike are asserted.",
+      "exact_supporting_passage": "the five police officers were killed in another strike in western Khan Younis",
+      "source_type": "Established international news agency citing medics, Gaza interior ministry, and Israeli military",
+      "classification": "follow-up",
+      "new_in_watch": true,
+      "confidence": "medium-high for traceable new victim-affiliation claim and Israeli military acknowledgment; unresolved identification and civilian/combatant status",
+      "bounded_discovery_context": {
+        "previous_heartbeat": "gaza-source-watch-20261101T034451-0800-r11-20261101T114550Z",
+        "prior_recorded_deaths": "Five killed at al-Mawasi/Khan Younis and three near Taj Mall/Gaza City already recorded; no new death count",
+        "newly_surfaced_detail": "Interior ministry says the five Khan Younis dead were police officers; Israeli military says it struck militants in Khan Younis",
+        "first_verified_publication": "2026-11-01T12:26:00Z",
+        "elapsed_since_prior_heartbeat": "Previous heartbeat completed 2026-11-01T11:48:01Z; Reuters item published subsequently",
+        "source_quotation": "Reuters: the five police officers were killed in another strike in western Khan Younis",
+        "contradictory_or_uncertain_points": "WAFA's previous accounts did not specify police affiliation; official statements are attributed, not independently verified. Police employment does not itself determine direct participation in hostilities. No independent identities supplied.",
+        "categorization": "Material newly documented follow-up detail to existing casualty incident, not a new incident; improves editorial accuracy and prevents treating all five as confirmed civilians.",
+        "production_status": "Supplementary recall finding only; no approval, publication, or schedule change."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, production publisher authoritative; searched for new casualty, aid, food/water, health, evacuation, crossings, displacement, detention, negotiation and documented military civilian impact.",
+    "checked_first": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest entry still published 31 October 2026 covering 29 October, already observed in prior runs."
+      },
+      {
+        "source": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated operational report during interval."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, pre-existing restriction."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 1 2026 14:00 killed wounded injured",
+      "site:wafa.ps/news/2026/11/1 غزة 1 نوفمبر 2026 الساعة 14 شهداء جرحى قصف",
+      "site:reuters.com/world/middle-east/ November 1 2026 Gaza civilians killed strikes ceasefire aid",
+      "site:apnews.com/article/ Gaza November 1 2026 Israel airstrikes civilian casualties ceasefire",
+      "site:aljazeera.com/news/2026/11/1 Gaza casualties wounded ceasefire hospital aid",
+      "site:aa.com.tr/en/middle-east Gaza November 1 2026 strikes killed civilians hospital",
+      "site:unicef.org/press-releases Gaza November 1 2026 children water humanitarian displacement",
+      "site:msf.org Gaza 1 November 2026 hospitals wounded evacuation health workers",
+      "site:icrc.org Gaza November 1 2026 hostages detainees medical transfers",
+      "site:wfp.org Gaza November 1 2026 food aid entry crossings trucks",
+      "Gaza November 1 2026 Rafah Kerem Shalom crossing medical evacuation fuel ambulances UNRWA",
+      "site:english.wafa.ps/Pages/Details/ November 1 2026 Gaza killed injured after afternoon Sunday"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_checks": [
+      {
+        "source": "WAFA English current article",
+        "url": "https://english.wafa.ps/Pages/Details/176486",
+        "result": "Article still says five killed Khan Younis, three killed including child Gaza City, both already captured. English WAFA 10 Gaza-wide total conflicts with Arabic total; aggregate excluded."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+        "result": "New 12:26 UTC dispatch attributes police-officer identities to Gaza interior ministry and Israeli military militant-target claim. No increased casualty count."
+      },
+      {
+        "source": "AP",
+        "url": "https://apnews.com/article/b918f44d8f212d7daf7f2f9a98c91a0b",
+        "result": "Search summary surfaced a Nov 1 report but direct article fetch returned DisabledError; unverified age detail excluded."
+      },
+      {
+        "source": "ICRC",
+        "url": "https://www.icrc.org/en/news",
+        "result": "Accessible; newest direct news items predate this watch."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, pre-existing restriction."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, pre-existing restriction."
+      }
+    ],
+    "dedupe": "No new Gaza City or Khan Younis deaths counted: the previous watches already recorded five al-Mawasi and the increased count of three Gaza City, plus Halawa camp injuries. Reuters' five-police-officer detail is a bounded substantive follow-up, not a new strike or additional deaths. Older OCHA developments and other search results excluded.",
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously documented; OCHA OPT and WHO Global available"
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Previously documented; OCHA coverage available"
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Previously documented; OCHA coverage available"
+      },
+      {
+        "source": "AP",
+        "error": "DisabledError on direct fetch",
+        "materiality": "Reuters and WAFA accessible; AP search metadata not used as verified detail"
+      }
+    ],
+    "status_rationale": "DEGRADED due recurring direct source access failures, but official first sources and other established outlets supplied useful coverage. No newly material deterioration.",
+    "safeguards": "Exactly one append-only heartbeat is created on ops/watch-ledger. No changes to production, publication, review/approval, schedule or task state."
+  }
+}

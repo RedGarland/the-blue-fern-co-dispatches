@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T224823-0700-r11-20261101T054823Z",
+  "scheduled_for": "2026-10-31T22:45:54-07:00",
+  "started_at": "2026-10-31T22:48:23-07:00",
+  "completed_at": "2026-10-31T22:49:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T21:48:31-07:00",
+    "end_at": "2026-10-31T22:49:12-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified hourly heartbeat completion to the current observation; search can capture older indexed results but only genuinely new and verified developments within this interval qualify.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall targeting prior audit miss classes; not the primary nationwide collector.",
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "classes_checked": [
+      "Loss or closure of only/sole/last/full-service local grocery due to fire, disaster or shutdown",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food-bank closure or major reduction of access",
+      "New official SNAP/WIC/food-assistance service interruption with immediate access consequences"
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire October 31 2026 community",
+      "\"sole grocery store\" \"October\" 2026 closed fire town",
+      "\"last grocery store\" closure October 31 2026 food desert",
+      "food pantry abruptly closed services October 31 2026 local news",
+      "food bank temporarily closed indefinitely October 31 2026",
+      "food distribution canceled storm flooding Saturday October 31 2026",
+      "SNAP benefits suspended interrupted October 31 2026 state agency notice",
+      "WIC benefits outage halted October 31 2026 state agency notice",
+      "site:*.gov \"October 31, 2026\" \"SNAP\" \"interruption\" benefits",
+      "site:*.gov \"October 31, 2026\" \"WIC\" \"outage\" benefits",
+      "\"October 31, 2026\" \"food distribution\" \"canceled\" storm",
+      "\"October 31, 2026\" food pantry closed unexpectedly emergency"
+    ],
+    "observation": "All 12 targeted searches returned results without tool failures; no newly verified qualifying disruption since previous hourly check. Search results skewed to older stories, routine pantry schedules and stale 2025 government-shutdown notices.",
+    "excluded_examples": [
+      {
+        "title": "Provo, Utah Community Action Services and Food Bank closure effective November 1",
+        "url": "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "reason": "Previously recorded October 31 recall candidate; duplicate, originally reported before the watch window."
+      },
+      {
+        "title": "Spencer, New York only grocery store burned",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 2026 incident, not a new development since last hourly check."
+      },
+      {
+        "title": "Wyandanch, New York church fire disrupts soup kitchen",
+        "url": "https://abc7ny.com/post/wyandanch-church-fire-shuts-down-soup-kitchen-serving-150-people-day/19955442/",
+        "reason": "October 20, 2026 event, outside this hourly search window."
+      },
+      {
+        "title": "New Jersey SNAP and WIC 2025 interruption notices",
+        "url": "https://www.nj.gov/humanservices/news/pressreleases/2025/approved/20251017.shtml",
+        "reason": "October 2025, not 2026."
+      },
+      {
+        "title": "Tukwila Pantry Food Bank October 31 calendar",
+        "url": "https://www.tukwilawa.gov/event/tukwila-pantry-food-bank-tuesdays-thursdays-and-saturdays-2/2026-10-31/",
+        "reason": "Routine schedule and weather contingency policy, not an actual cancellation."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T214807-0700-r11-20261101T044807Z.json",
+    "prior_verified_completed_at": "2026-10-31T21:48:31-07:00",
+    "limitations": "Search index freshness and incomplete local/provider/social indexing mean zero findings does not prove no event occurred.",
+    "production_authority": "Production collection remains authoritative. No approval, public publication, production changes, schedule changes, or disabling."
+  }
+}

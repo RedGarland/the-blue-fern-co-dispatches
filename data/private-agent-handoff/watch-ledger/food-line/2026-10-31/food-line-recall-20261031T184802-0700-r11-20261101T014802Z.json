@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261031T184802-0700-r11-20261101T014802Z",
+  "scheduled_for": "2026-10-31T18:45:54-07:00",
+  "started_at": "2026-10-31T18:48:02-07:00",
+  "completed_at": "2026-10-31T18:48:44.257-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-31T17:47:19-07:00",
+    "end_at": "2026-10-31T18:48:44.257-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last confirmed previous heartbeat completed_at; 1-day search freshness used for late indexing, with strict novelty assessment against preceding watch.",
+    "targeted_search_count": 12,
+    "web_search_recency_days": 1
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Supplementary bounded recall of four authorized high-value classes only; primary nationwide Food Line production collector remains authoritative.",
+    "Twelve targeted web searches completed with one-day recency filter. No newly dated and source-supported U.S. sole/full-service grocery loss, disaster-driven food distribution cancellation, abrupt pantry/food-bank service closure, or official SNAP/WIC assistance interruption could be verified for this hourly window. No findings is a bounded observation, not proof of absence.",
+    "Search hits included older 2025 SNAP shutdown coverage, prior-month food-access reporting, grocery expansions, and unrelated store closures or food safety recalls, all excluded as stale/out of scope.",
+    "Previously logged Provo, Utah Community Action Services and Food Bank closure candidate is a known duplicate from an earlier October 31 watch, not a newly discovered signal.",
+    {
+      "bounded_query_context": [
+        {
+          "query": "October 31 2026 only grocery store closes fire town community",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 last grocery store shutdown town local news",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 sole supermarket destroyed fire rural America",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 full-service grocery store closure food desert local",
+          "category": "sole_grocery_loss",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food pantry closed immediately due to funding service stopped",
+          "category": "abrupt_pantry_closure",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food bank suspends distribution abrupt closure local",
+          "category": "abrupt_food_bank_closure",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food distribution cancelled due to storm flooding",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 emergency food pantry canceled power outage fire",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 food bank distribution suspended damage severe weather",
+          "category": "hazard_distribution_cancellation",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 SNAP state agency November benefits delayed suspended official",
+          "category": "official_snap_interruption",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 WIC EBT outage benefits interruption state department notice",
+          "category": "official_wic_interruption",
+          "method": "fast",
+          "recency_days": 1
+        },
+        {
+          "query": "October 31 2026 SNAP EBT system outage benefits unavailable official state agency",
+          "category": "official_benefit_interruption",
+          "method": "fast",
+          "recency_days": 1
+        }
+      ],
+      "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-10-31/food-line-recall-20261031T174622-0700-r11-20261101T004622Z.json",
+      "prior_verified_completed_at": "2026-10-31T17:47:19-07:00",
+      "representative_exclusions": [
+        "https://www.opb.org/article/2025/10/31/judge-orders-federal-funding-snap-oregon-washington-recipients-delays/",
+        "https://www.gov.ca.gov/2025/10/31/governor-newsom-applauds-major-win-for-all-americans-as-judges-find-trump-administration-illegally-withheld-snap-benefits/",
+        "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert"
+      ]
+    },
+    "No approvals, publication, primary collector mutation, schedule changes, or task disabling."
+  ]
+}

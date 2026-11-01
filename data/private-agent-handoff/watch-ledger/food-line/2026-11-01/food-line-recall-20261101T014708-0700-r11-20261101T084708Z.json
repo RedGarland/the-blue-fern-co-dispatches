@@ -1,0 +1,73 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T014708-0700-r11-20261101T084708Z",
+  "scheduled_for": "2026-11-01T01:45:54-07:00",
+  "started_at": "2026-11-01T01:47:08-07:00",
+  "completed_at": "2026-11-01T01:48:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T00:48:33-07:00",
+    "end_at": "2026-11-01T01:48:37-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified Food Line hourly heartbeat completion to current observation. Results screened by original publication/notice and incident dates, not search index recency.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative nationwide production collection unchanged.",
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "classes_checked": [
+      "Sole, last or only full-service community grocery store closure, fire, disaster or other loss",
+      "Emergency food distributions canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food-bank closure or major service/access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "bounded_query_context": [
+      "October 31 2026 November 1 2026 sole grocery store closes fire small town last grocery",
+      "October 31 2026 grocery store fire town only supermarket food desert",
+      "October 31 2026 November 1 food pantry suddenly closed services suspended",
+      "October 31 2026 food bank distribution canceled storm flooding power outage",
+      "November 1 2026 SNAP benefits delayed interrupted official state notice EBT",
+      "October 31 2026 WIC benefits interrupted system outage official alert",
+      "\"Oct. 31, 2026\" \"food pantry\" \"closed\"",
+      "\"October 31, 2026\" \"SNAP\" \"delay\" benefits",
+      "\"November 1, 2026\" \"SNAP\" \"benefits\" outage",
+      "Oct 31 2026 emergency food distribution cancellation flood storm pantry",
+      "site:gov \"October 31, 2026\" \"SNAP\" interruption outage delay",
+      "site:org \"October 31, 2026\" food distribution canceled closed storm"
+    ],
+    "observation": "All 12 targeted searches returned results; none established a new qualifying U.S. food-access disruption announced since the prior verified hourly completion. Results chiefly referenced older 2025 SNAP shutdown notices, 2026 preannounced purchasing restrictions, food resource guides, routine donation events, new store openings and older closures.",
+    "excluded_examples": [
+      {
+        "title": "Provo: Community Action Services and Food Bank temporary closure affects more than 20,000",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Published October 31, 2026 at 10:24 p.m. Mountain time, before prior heartbeat; previously identified and duplicate of known Provo closure."
+      },
+      {
+        "title": "Texas SNAP benefit pause explained",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "October 2025, not a new November 2026 interruption."
+      },
+      {
+        "title": "South Carolina Healthy Food SNAP demonstration postponed",
+        "url": "https://abcnews4.com/news/state/healthy-food-sc-snap-demonstration-project-postponed-to-nov-1-2026-in-south-carolina",
+        "reason": "Announced August 27, 2026, outside hourly window; not a newly detected interruption."
+      },
+      {
+        "title": "Fresno/Reedley Halloween events canceled due to rain",
+        "url": "https://www.ucook.org/1084719/rainy-halloween-forecast-forces-cancellations-and-changes-to-valley-events/",
+        "reason": "Farmers-market-associated recreational Halloween event, not confirmed emergency food distribution."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T004731-0700-r11-20261101T074731Z.json",
+    "prior_verified_completed_at": "2026-11-01T00:48:33-07:00",
+    "limitations": "Search index freshness, indirect reposts, and unindexed local provider notices limit negative assurance. No newly verified source-level incident was found in this bounded period.",
+    "production_authority": "Production collector remains authoritative. No content approval, publication, schedule change or task disabling performed."
+  }
+}

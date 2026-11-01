@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T104521-0800-r11-20261101T184521Z",
+  "scheduled_for": "2026-11-01T10:45:54-08:00",
+  "started_at": "2026-11-01T10:45:21-08:00",
+  "completed_at": "2026-11-01T10:46:35.725-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T09:50:11.294-08:00",
+    "end_at": "2026-11-01T10:46:35.725-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at completed_at of the preceding verified Food Line Source Watch heartbeat. Search screened for newly announced or newly occurring disruptions, not indexing/crawl timestamps alone.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service grocery store loss/closure/fire/disaster",
+      "Storm, flood, fire, outage, or facility-damage cancellation/suspension of emergency food distribution",
+      "Abrupt food pantry/food bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "November 1 2026 SNAP benefits interrupted November EBT state agency urgent notice",
+      "November 1 2026 WIC benefits suspended interruption state agency notice",
+      "Nov 1 2026 only grocery store closed fire town rural",
+      "Oct 31 Nov 1 2026 last grocery store shuts down community fire",
+      "November 1 2026 food bank pantry closed abruptly stopped services",
+      "November 1 2026 storm canceled food distribution food bank",
+      "October 31 2026 emergency food distribution canceled flooding power outage",
+      "Nov 1 2026 SNAP EBT outage card system benefits outage state official",
+      "site:gov November 1 2026 SNAP delay benefits EBT outage",
+      "November 1 2026 food pantry closed until further notice",
+      "October 31 2026 food distribution cancelled OR canceled storm",
+      "November 1 2026 only grocery store OR sole grocery store closure fire"
+    ],
+    "observation": "All 12 targeted searches returned usable results. No newly reported qualifying U.S. food-access disruption was verified in the 09:50–10:46 PST observation window. Results included repeated previously identified Provo food-bank closure coverage, stale 2025 SNAP shutdown stories, earlier 2026 grocery fire coverage, and routine opening/expansion notices.",
+    "excluded_examples": [
+      {
+        "title": "Community Action Services and Food Bank closure affecting Provo/Utah County",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "source_published_at": "2026-10-31",
+        "reason": "High-impact abrupt closure already observed in earlier Food Line watches; duplicate, not a new signal this hour."
+      },
+      {
+        "title": "North Dakota HHS healthier SNAP purchase eligibility changes effective November 1",
+        "url": "https://www.hhs.nd.gov/home",
+        "source_published_at": "2026-10-30",
+        "reason": "Preannounced purchase-category restriction, not an unanticipated benefit interruption newly reported this hour."
+      },
+      {
+        "title": "Flathead Food Bank new Hungry Horse location",
+        "url": "https://flatheadbeacon.com/2026/11/01/flathead-food-bank-to-launch-hungry-horse-location/",
+        "source_published_at": "2026-11-01",
+        "reason": "Opening of additional services; does not document a food-access reduction."
+      },
+      {
+        "title": "Prodisee Pantry cancellation ahead of storm Isaias",
+        "url": "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-saturday-food-distribution-stockton-ahead-isaias/",
+        "source_published_at": "2026-10-07",
+        "reason": "Qualifying class but weeks before the bounded observation window."
+      },
+      {
+        "title": "Various government-shutdown SNAP benefit-delay stories",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "source_published_at": "2025-10-28",
+        "reason": "October/November 2025 reporting, not a new November 2026 official interruption."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T094820-0800-r11-20261101T174820Z.json",
+      "prior_verified_completed_at": "2026-11-01T09:50:11.294-08:00",
+      "method": "Fetched preceding watch heartbeat from the authoritative ops/watch-ledger branch and compared identified candidate with prior-watch exclusions and timing."
+    },
+    "source_failures": [],
+    "limitations": "Search engine returned many stale 2025 stories despite November 2026 date qualifiers. Recently posted local/provider notices may not yet be indexed; this supplementary bounded search does not establish nationwide absence.",
+    "production_authority": "Primary production collection remains authoritative. No review approval, publication, schedule change, or task disabling."
+  }
+}

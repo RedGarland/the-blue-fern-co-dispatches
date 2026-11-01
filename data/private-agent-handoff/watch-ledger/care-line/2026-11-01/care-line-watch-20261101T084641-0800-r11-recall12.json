@@ -1,0 +1,64 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T084641-0800-r11-recall12",
+  "scheduled_for": "2026-11-01T08:45:22-08:00",
+  "started_at": "2026-11-01T08:46:41-08:00",
+  "completed_at": "2026-11-01T08:47:44.543-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T07:50:06.848-08:00",
+    "end": "2026-11-01T08:47:44.543-08:00",
+    "basis": "Since previous verified supplementary heartbeat; production national collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "United States, DC, and U.S. territories; newly concrete hospital/ED/maternity/behavioral health/dialysis/oncology/primary-care loss, rural emergency service loss, EMS/air-medical closure, CMS termination/rescission/CLIA notice, or newly effective essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "CMS live Public Notices table checked before targeted searches; newest visible notices are seven entries dated 2026-10-30 already identified in previous watch heartbeats. No new 2026-11-01 notices observed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 1, 2026\" hospital emergency department closed suspended services United States",
+      "\"Nov 1, 2026\" maternity labor delivery unit closure immediate hospital",
+      "\"November 1, 2026\" rural hospital emergency service shut down temporarily",
+      "\"November 1 2026\" behavioral health psychiatric hospital closure suspension patients",
+      "\"November 1 2026\" dialysis clinic closure treatment patients",
+      "\"November 1 2026\" cancer oncology clinic closed care interruption",
+      "\"November 1 2026\" primary care clinic closed temporarily patients",
+      "\"November 1 2026\" ambulance service suspension base closing EMS",
+      "\"November 1 2026\" air medical helicopter base shut down service",
+      "\"November 1 2026\" hospital department service reopened resumed emergency care",
+      "site:cms.gov \"2026-11-01\" termination CLIA hospital Medicare notice",
+      "\"November 1, 2026\" Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands clinic closure hospital access"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Kagman clinic temporary closure, Saipan, Northern Mariana Islands, effective 2026-10-30; press release dated 2026-11-01",
+        "url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+        "reason": "Duplicate of previously recorded pending-review finding; no separately new closure/restoration in current interval.",
+        "prior_finding_id": "care-line-cnmi-saipan-kagman-primary-care-clinic-closure-20261030"
+      },
+      {
+        "item": "Search results concerning foreign hospitals, older US health system projects or services, CMS form expiration, and unrelated airport operations",
+        "reason": "Outside U.S./territories, stale, or no new effective care-access loss or restoration."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T074859-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T07:50:06.848-08:00",
+      "previously_pending_review_finding_id": "care-line-cnmi-saipan-kagman-primary-care-clinic-closure-20261030"
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: the search backend responded to all 12 queries but returned a disproportionately irrelevant and stale result set, notably international hospitals, so this run cannot claim reliable independent U.S. local/territorial recall.",
+    "limitations": "Bounded supplementary watch; Sunday morning local reporting may not yet be indexed. Search quality materially limits recall, especially rural communities and territories. Absence of new verified findings is not proof of absence.",
+    "controls": "Append-only heartbeat on ops/watch-ledger. No editorial approval, public publication, production collector mutation, schedule change, or task disabling."
+  }
+}

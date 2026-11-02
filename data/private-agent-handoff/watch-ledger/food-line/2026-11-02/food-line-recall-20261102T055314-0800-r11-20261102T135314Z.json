@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T055314-0800-r11-20261102T135314Z",
+  "scheduled_for": "2026-11-02T05:45:54-08:00",
+  "started_at": "2026-11-02T05:53:14-08:00",
+  "completed_at": "2026-11-02T05:54:10.646-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T04:48:13.746-08:00",
+    "end_at": "2026-11-02T05:54:10.646-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous hourly watch completion recorded at 2026-11-02T12:48:13.746Z. Indexed local and agency reporting searched with a 3-day retrieval filter to catch publication lag; qualifying events were assessed against the hourly window.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for high-value missed U.S. food-access disruptions only. The production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery closure, fire, disaster or loss",
+      "Emergency food-distribution cancellation or suspension caused by storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      3
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 2026 town",
+      "\"sole grocery store\" \"November 2026\" closing fire",
+      "\"last grocery store\" closure \"Nov\" \"2026\"",
+      "\"full service grocery store\" \"closed\" fire \"November\" 2026 rural",
+      "food distribution canceled storm flooding November 2 2026 food bank",
+      "\"food pantry\" \"distribution canceled\" outage fire November 2026",
+      "food bank emergency distribution postponed severe weather November 1 2 2026",
+      "\"food pantry\" \"closed indefinitely\" November 2026",
+      "\"food bank\" \"suspend services\" \"November 2026\"",
+      "SNAP benefits payment interruption November 2 2026 official state agency",
+      "WIC benefit outage EBT not working November 2 2026 state",
+      "SNAP EBT statewide outage November 1 2 2026 official notice"
+    ],
+    "observation": "All 12 targeted queries returned results sufficient for bounded screening. No newly published and independently corroborated qualifying disruption in the hourly window was found. Many ostensibly recent indexed hits were older events or articles with newly updated sidebar/crawl metadata, not new events.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer sole grocery store fire occurred September 2026; not a new hourly signal."
+      },
+      {
+        "publisher": "KFOX",
+        "source_published_at": "2026-09-24",
+        "url": "https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+        "reason": "Past storm-related closure; outside this observation window."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Older recovery and resources update; no new food-distribution suspension established."
+      },
+      {
+        "publisher": "Center on Budget and Policy Priorities",
+        "source_published_at": "2026-10-23",
+        "url": "https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+        "reason": "Program trend analysis; no new official immediate benefit interruption within window."
+      },
+      {
+        "publisher": "KQED",
+        "source_published_at": "2025-10-23",
+        "url": "https://www.kqed.org/news/12060770/snap-calfresh-food-stamps-government-shutdown-november-payments-ebt",
+        "reason": "Historical 2025 SNAP shutdown article, not 2026."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_known_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T024743-0800-r11-20261102T104743Z.json",
+      "prior_known_verified_completed_at": "2026-11-02T02:49:07.473-08:00",
+      "most_recent_prior_watch_completed_at": "2026-11-02T04:48:13.746-08:00",
+      "method": "Read existing committed November 2 heartbeat on ops/watch-ledger; used the separately available latest prior run completion to bound the hourly search. Screened older recurring incidents by source and event dates."
+    },
+    "source_failures": [],
+    "limitations": "Search engine freshness limits are not reliable event timestamps; local notices may be unindexed or posted late. No assertion of complete nationwide coverage. No new finding inferred from crawl dates alone.",
+    "production_authority": "No approvals, publication, changes to the production collector, task schedule or task enabled status."
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T074509-0800-recall12",
+  "scheduled_for": "2026-11-02T07:45:22-08:00",
+  "started_at": "2026-11-02T07:45:09-08:00",
+  "completed_at": "2026-11-02T07:46:19-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T06:54:40-08:00",
+    "end": "2026-11-02T07:46:19-08:00",
+    "basis": "Start is previous verified Care Line Watch heartbeat completed_at. Screened for first verified announcements and concrete effective service changes during interval. Production collection is authoritative; no production deduplication claim."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "page_last_modified": "2026-10-30 04:16 PM",
+      "observation": "Official CMS Public Notices page accessed directly before targeted searches. No newer provider termination, rescission, or CLIA restriction identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 2 2026 hospital emergency department closure suspended services United States",
+      "November 2 2026 maternity labor delivery unit closed patients hospital",
+      "November 1 2 2026 rural hospital emergency department service closure notice",
+      "November 2 2026 behavioral health inpatient psychiatric center closing suspending services",
+      "November 2 2026 dialysis oncology cancer treatment center clinic closed suspended care",
+      "November 2 2026 ambulance service county station base shutting down suspended response",
+      "November 2 2026 air medical medevac helicopter base closure suspension United States",
+      "November 2 2026 hospital emergency clinic maternity reopened service restored",
+      "November 2 2026 Puerto Rico US Virgin Islands clinic ambulance hospital service closure reopening Cruz Bay",
+      "November 2 2026 Guam CNMI Saipan American Samoa hospital clinic ambulance service closure suspension",
+      "November 2 2026 primary care urgent care clinic suddenly closed patients notice United States",
+      "November 2 2026 state health department emergency department hospital maternity closure suspension announcement"
+    ],
+    "search_method": "12 targeted web searches constrained to recent results after direct CMS inspection; opened material-looking sources for source-level verification. Official notices and local evidence prioritized.",
+    "reviewed_exclusions": [
+      {
+        "item": "Morris F. deCastro Clinic closure / ambulance-station temporary relocation, Cruz Bay, USVI",
+        "url": "https://stjohnsource.com/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "reason": "Report dated 2026-11-01 and closure effective 2026-10-29; previously screened in earlier watch runs. Search excerpt describes continued EMS response from nearby Government House, not new cessation of ambulance service this interval. Direct article returned 403; exclude as previously screened/out-of-window, not as disproof."
+      },
+      {
+        "item": "UNM Health System ambulance diversion and clinics disruption, New Mexico",
+        "url": "https://apnews.com/article/7a3593f8a3cee4ca895774ab1574919f",
+        "reason": "Event occurred 2026-10-26, before interval; earlier service-resumption reporting, not a new restoration."
+      },
+      {
+        "item": "Guam Regional Medical City typhoon-related clinic suspension and restoration",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/",
+        "reason": "Effective October 19, not new in current watch window."
+      },
+      {
+        "item": "Hawaiʻi Kula Hospital reopening announcement",
+        "url": "https://governor.hawaii.gov/newsroom/office-of-the-governor-news-release-state-of-hawai%CA%BBi-maui-health-and-kaiser-permanente-announce-restoration-and-reopening-of-kula-hospital/",
+        "reason": "September 22 future restoration funding announcement; no newly effective reopening shown."
+      },
+      {
+        "item": "Older rural/maternity/behavioral-health reports, provider financial and ownership stories, out-of-U.S. cyclone/cancer items",
+        "reason": "Older, projected, nonconcrete access effect, or wrong geography."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://stjohnsource.com/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "error": "HTTP 403 on full-text open; search excerpt accessible; known recurring territorial-access restriction."
+      }
+    ],
+    "search_quality": "DEGRADED: all twelve searches executed but most hits were stale, generic, geographically unsuitable, or unrelated to new service changes. U.S. rural and territory recall cannot be considered comprehensive, and direct access to the St. John source remained restricted. This limitation was also documented in preceding runs and is not newly material. Zero findings does not establish zero events.",
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T065400-0800-recall12.json",
+      "previous_completed_at": "2026-11-02T06:54:40-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only. No review approval, publication, schedule modification, or automation disabling."
+  }
+}

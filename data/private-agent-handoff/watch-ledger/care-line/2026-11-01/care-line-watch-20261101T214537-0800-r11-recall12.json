@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T214537-0800-r11-recall12",
+  "scheduled_for": "2026-11-01T21:45:22-08:00",
+  "started_at": "2026-11-01T21:45:37-08:00",
+  "completed_at": "2026-11-01T21:46:24-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T20:50:08.977-08:00",
+    "end": "2026-11-01T21:46:24-08:00",
+    "basis": "Since the immediately preceding verified supplementary Care Line watch heartbeat; same-day older results were evaluated for unrecorded disruptions. Production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded US, DC, and territories healthcare-access recall for concrete closures, ED/obstetric/behavioral/dialysis/oncology/primary-care interruptions, emergency/rural service loss, EMS/air-medical suspension, CMS terminations/rescissions/CLIA actions, and effective essential-service restoration.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Official CMS Public Notices page inspected before the 12 additional targeted searches. No notices newly dated after October 30, 2026. An outdated CMS URL initially failed; the active official URL loaded successfully.",
+      "source_ref": "turn310402view0"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 1 2026 hospital emergency department temporarily closed ambulance diverted today United States",
+      "November 1 2026 hospital maternity labor delivery services suspended closed effective November 1",
+      "November 1 2026 rural hospital emergency service closure suspension local news Sunday",
+      "November 1 2026 ambulance EMS service ceased operations closed base emergency response county",
+      "November 1 2026 \"dialysis\" \"closed\" patients clinic United States",
+      "November 1 2026 \"oncology\" \"closure\" patients service hospital",
+      "November 1 2026 \"behavioral health\" \"closed\" \"patients\" clinic hospital",
+      "November 1 2026 \"air ambulance\" \"base\" closed response",
+      "site:elnuevodia.com OR site:metro.pr hospital sala emergencia cierre noviembre 1 2026 servicios",
+      "site:postguam.com OR site:guampdn.com OR site:saipantribune.com hospital clinic service closure November 1 2026",
+      "site:stthomassource.com OR site:vi.gov OR site:americansamoa.gov OR site:samoanews.com health clinic emergency closure November 2026",
+      "November 1 2026 \"reopened\" \"emergency department\" hospital clinic ambulance service United States"
+    ],
+    "search_method": "CMS Public Notices first; 12 additional targeted web searches, initially with 2-day recency then date/site constrained. Results screened against explicit source dates, local jurisdiction and prior-watch duplication.",
+    "reviewed_exclusions": [
+      {
+        "item": "Valley Children's Hospital, Madera CA",
+        "reason": "Already captured in November 1 earlier watch; no new suspension or restoration event in current window.",
+        "url": "https://gvwire.com/2026/11/01/valley-childrens-hospital-locked-down-after-threatening-phone-call/"
+      },
+      {
+        "item": "Benefis Health oncology pause, Helena MT",
+        "reason": "Reported October 22, 2026; older than interval, not a fresh announcement.",
+        "url": "https://wisevoter.com/world/us/mt/helena/2026/10/22/benefis-health-pauses-oncology-helena"
+      },
+      {
+        "item": "Physicians Choice Dialysis two Montgomery AL clinics",
+        "reason": "Reported September 30, 2026, without new November 1 access change.",
+        "url": "https://montgomeryup.com/physicians-choice-dialysis-shuts-down-both-montgomery-clinics/"
+      },
+      {
+        "item": "Kula Hospital and Emergency Department, Maui HI",
+        "reason": "September 22 restoration plan without effective reopening date or confirmed active restoration.",
+        "url": "https://www.mauihealth.org/news/releases/state-of-hawai%CA%BBi-maui-health-and-kaiser-permanente-announce-restoration-and-reopening-of-kula-hospital/"
+      },
+      {
+        "item": "USA Health freestanding ED, Mobile AL",
+        "reason": "October 9 storm-related ED closure/reopening, older than watch window.",
+        "url": "https://www.usahealthsystem.com/weather"
+      },
+      {
+        "item": "Stuart Community Hospital, Virginia",
+        "reason": "Emergency/inpatient services reopened January 5, 2026, not new in this interval.",
+        "url": "https://cardinalnews.org/2026/01/06/stuart-community-hospital-opens-for-emergency-and-inpatient-care/"
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T204841-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T20:50:08.977-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "source_failures": [
+      {
+        "domains": [
+          "guampdn.com",
+          "postguam.com"
+        ],
+        "failure": "robots.txt restrictions encountered in Guam targeted search.",
+        "severity": "nonfatal"
+      }
+    ],
+    "search_quality": "DEGRADED: broad searches and search-engine recency return predominantly stale, non-US, routine-hours, or irrelevant results; Guam news retrieval restrictions limit territorial confidence. No new source-verified qualifying event found.",
+    "limitations": "Not a comprehensive county/rural/territory sweep; source indexing may lag. No production-collector ingestion visibility. Coverage quality limitations persist from prior runs, without a newly established material regression.",
+    "controls": "One append-only private heartbeat committed to ops/watch-ledger; no approval, publication, scheduling change or task disabling."
+  }
+}

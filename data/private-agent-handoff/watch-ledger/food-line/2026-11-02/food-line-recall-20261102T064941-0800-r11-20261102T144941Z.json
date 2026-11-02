@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T064941-0800-r11-20261102T144941Z",
+  "scheduled_for": "2026-11-02T06:45:54-08:00",
+  "started_at": "2026-11-02T06:49:41-08:00",
+  "completed_at": "2026-11-02T06:50:59.984-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T05:54:10.646-08:00",
+    "end_at": "2026-11-02T06:50:59.984-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified completed watch heartbeat in ops/watch-ledger at 05:54:10.646 PST; a 3-day search retrieval filter was used to catch indexing lag, while event/new-report eligibility was assessed against the hourly window.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; nationwide production collection is authoritative.",
+    "target_classes": [
+      "Loss, disaster, fire or closure of only/sole/last/full-service community grocery",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or damaged facility",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New officially reported SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      3
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 2 2026 community",
+      "\"sole grocery store\" damaged destroyed Nov 2026 town",
+      "\"last grocery store\" closing November 2026 rural",
+      "\"full service grocery\" closed fire November 2026 town",
+      "food bank cancelled distribution flood storm November 2 2026",
+      "\"food pantry\" \"distribution canceled\" outage fire November 2026",
+      "food bank emergency food distribution suspended storm power outage November 2026",
+      "\"food pantry\" \"closed indefinitely\" November 2026",
+      "\"food bank\" \"suspending services\" November 2026",
+      "site:gov SNAP benefits delayed inaccessible November 2 2026 payment outage",
+      "site:gov WIC EBT outage November 2 2026 benefits unavailable",
+      "SNAP EBT disruption outage November 2 2026 state agency announcement"
+    ],
+    "observation": "Search retrieval completed for 12 targeted queries. No newly reported and source-verifiable qualifying access disruption within the window was identified. The retrieved items skewed historical or background; search-result crawl/update timestamps were not treated as event dates. This negative result is bounded recall, not evidence of comprehensive absence.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Only-store fire from September; not a new hourly event."
+      },
+      {
+        "publisher": "21Alive",
+        "source_published_at": "2026-05-06",
+        "url": "https://www.21alivenews.com/2026/05/06/butler-loses-only-full-service-grocery-store-after-more-than-six-decades/",
+        "reason": "Full-service grocery loss reported in May; historical."
+      },
+      {
+        "publisher": "KFOX",
+        "source_published_at": "2026-09-24",
+        "url": "https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+        "reason": "Storm-related early food-bank closure predates this watch."
+      },
+      {
+        "publisher": "ABC News",
+        "source_published_at": "2025-11-01",
+        "url": "https://abcnews.com/Politics/snap-benefits-run-dry-government-shutdown-continues-states/story?id=127059480",
+        "reason": "2025 government-shutdown SNAP interruption, not November 2026."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Older recovery/resource report; no newly suspended food distribution established."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_known_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T055314-0800-r11-20261102T135314Z.json",
+      "prior_verified_completed_at": "2026-11-02T05:54:10.646-08:00",
+      "method": "Read and confirmed prior GitHub heartbeat, then screened indexed items by original event/publication dates."
+    },
+    "source_failures": [],
+    "limitations": "Search indexing and per-query relevance are imperfect; direct local-provider alerts may appear later. No claims of exhaustive nationwide coverage.",
+    "production_authority": "No review approval, public publication, schedule change or disabling action performed."
+  }
+}

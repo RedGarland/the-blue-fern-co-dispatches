@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T094343-0800-recall12-cms1",
+  "scheduled_for": "2026-11-02T09:45:22-08:00",
+  "started_at": "2026-11-02T09:43:43-08:00",
+  "completed_at": "2026-11-02T09:45:08-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T08:43:17.332-08:00",
+    "end": "2026-11-02T09:45:08-08:00",
+    "basis": "Start is completed_at of immediately previous verified Care Line Watch heartbeat; includes newly posted official notices and newly verified concrete access-risk changes since then. Supplementary recall, not the authoritative production national collector."
+  },
+  "findings": [
+    {
+      "finding_id": "cms-network-for-hope-18p001-revised-effective-2027-06-04-2026-11-02",
+      "canonical_source_url": "https://www.cms.gov/files/document/network-hope-pdf.pdf-0",
+      "title": "Revised notice to public of de-certification of Network for Hope (KYDA)",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "exact_supporting_passage": "CMS is extending the effective date of de-certification and termination of Network for Hope’s agreement to June 4, 2027",
+      "source_published_date": "2026-11-02",
+      "state": "KY",
+      "city": null,
+      "county": null,
+      "territory": null,
+      "event_type": "cms_opo_decertification_termination_effective_date_extended",
+      "service_line": "Organ procurement / organ donation service-area coverage",
+      "access_consequences": "CMS revised a previously announced termination, extending the de-certification and Medicare/Medicaid organ-procurement payment cutoff to 2027-06-04 so the donation service area can transfer to another OPO. This delays an access-risk transition; it is not a new closure or evidence that patient services stopped today.",
+      "affected_population": "Hospitals, donor families, organ-donation and transplant stakeholders in Network for Hope's KYDA donation service area; population and service-area extent not quantified in the notice.",
+      "effective_date": "2027-06-04",
+      "announcement_date": "2026-11-02",
+      "confidence": "high",
+      "source_role": "official_federal_primary_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "provider_ccn": "18P001",
+      "detail_page_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices/network-hope-0",
+      "qualification_note": "New CMS notice revises an August 5, 2026 existing de-certification, rather than announcing a first-time termination. Treat as material effective-date modification, subject to Care Line review and production deduplication."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-02",
+      "previous_verified_latest_notice_date": "2026-10-30",
+      "new_notice": "Network for Hope OPO (KY; CCN 18P001) revised de-certification notice dated 2026-11-02. CMS states effective termination delayed to 2027-06-04 and will work on donation service-area transfer; PDF read and page visually inspected.",
+      "preexisting_original_notice": "An earlier 2026-08-05 Network for Hope notice is separately listed by CMS; no new de-certification determination is asserted."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 2, 2026\" hospital closes emergency department maternity services United States",
+      "\"November 2, 2026\" rural hospital emergency room suspended closed",
+      "\"November 2, 2026\" ambulance service air ambulance base closed suspended US",
+      "\"November 2, 2026\" dialysis cancer treatment clinic closed suspended",
+      "site:gov \"November 2, 2026\" \"emergency department\" \"closed\" hospital",
+      "\"November 2, 2026\" \"behavioral health\" \"closed\" \"patients\" United States",
+      "site:vi.gov OR site:stjohnsource.com \"November 2, 2026\" clinic ambulance closed reopened",
+      "(\"Puerto Rico\" OR Guam OR \"Northern Mariana\" OR \"American Samoa\") clinic hospital closure November 2 2026",
+      "\"Network for Hope\" \"June 4, 2027\" CMS termination organ procurement November 2 2026",
+      "November 2 2026 hospital clinic emergency service \"reopens\" \"United States\"",
+      "November 2 2026 \"dialysis\" \"closure\" \"clinic\" US",
+      "November 2 2026 \"ambulance\" \"suspended\" \"service\" \"county\" US"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Valley Children's Hospital temporary ambulance/patient diversion following Sunday 2026-11-01 threat",
+        "reason": "Incident and restoration predate prior watch boundary and were previously screened; later 2026-11-02 syndication does not represent a new loss."
+      },
+      {
+        "item": "Fremont County, Wyoming, EMT threatened strike averted",
+        "reason": "Report published 2026-11-01; ambulance coverage remained intact, no new interruption."
+      },
+      {
+        "item": "University of New Mexico Health System cyber-attack service disruption",
+        "reason": "First reported 2026-10-26, outside this run's observation window."
+      },
+      {
+        "item": "Hudson's Hope and Alberta Health Services emergency reductions",
+        "reason": "Canadian healthcare services, not in U.S. or its territories."
+      },
+      {
+        "item": "Cruz Bay clinic/ambulance station relocation, USVI",
+        "reason": "2026-11-01 previously screened source; no new verifiable development within the current interval."
+      },
+      {
+        "item": "Other results",
+        "reason": "Older, non-U.S., proposed only, generic funding studies, business changes without a confirmed service disruption, or irrelevant."
+      }
+    ],
+    "search_quality": "DEGRADED: all 12 targeted searches executed but results skewed stale, non-U.S., or irrelevant. Rural/territorial recall remains limited. CMS primary source was accessible and the one newly listed federal notice was verified. Weak search precision is continuing from previous runs, not evidence of a new tool failure.",
+    "source_failures": [],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T084151-0800-r11-recall12.json",
+      "previous_completed_at": "2026-11-02T08:43:17.332-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false,
+      "note": "Production collector remains authoritative. New notice did not appear in prior verified heartbeat's CMS check; final production deduplication remains for editorial review."
+    },
+    "controls": "No approval, public publication, schedule alteration, or disabling; one heartbeat only in ops/watch-ledger."
+  }
+}

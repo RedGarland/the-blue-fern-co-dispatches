@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T024556-0800-recall12",
+  "scheduled_for": "2026-11-02T02:45:22-08:00",
+  "started_at": "2026-11-02T02:45:56-08:00",
+  "completed_at": "2026-11-02T02:48:08-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T01:44:48-08:00",
+    "end": "2026-11-02T02:48:08-08:00",
+    "basis": "Previous verified supplementary Care Line heartbeat completed at 01:44:48 PST. Searched for newly announced or newly effective concrete healthcare-access changes in U.S. states and territories; production national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "CMS public notices were checked before all other searches. Latest listed notices dated October 30, 2026; no newly listed termination, rescission, CLIA limitation/suspension or related action in the observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed November 1 2026 November 2 2026 rural",
+      "maternity labor delivery unit closed suspended November 2026 November 1",
+      "behavioral psychiatric hospital mental health facility halted admissions November 1 2026",
+      "dialysis clinic closure patient services November 2026",
+      "cancer oncology infusion clinic abrupt closure November 1 2026",
+      "primary care health center abruptly closed patients November 2026",
+      "ambulance service station closes suspends November 1 2026",
+      "air ambulance helicopter emergency medical base closure November 2026",
+      "rural hospital emergency care service loss November 1 2026",
+      "emergency room hospital reopened restored services November 1 2026",
+      "Puerto Rico Guam CNMI U.S. Virgin Islands hospital clinic ambulance closure November 2026",
+      "Alaska tribal health remote clinic hospital shutdown November 2026"
+    ],
+    "search_method": "Official CMS Public Notices first; then twelve bounded, category- and territory-targeted fresh web searches, with two-day recency filters. Publication and event dates screened separately because search snippets frequently return older or foreign articles.",
+    "reviewed_exclusions": [
+      {
+        "item": "Cruz Bay clinic and ambulance-station relocation, St. John, U.S. Virgin Islands",
+        "source_url": "https://stcroixsource.com/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "source_published_date": "2026-11-01",
+        "reason": "Locally reported headline identified in this run but published before prior 01:44 PST heartbeat; article body returned HTTP 403. Unable to substantiate exact effective date, separate new access consequence, or whether this overlaps the previously known Morris F. De Castro clinic closure. Held out of new qualifying findings rather than presenting an unsupported or duplicate event."
+      },
+      {
+        "item": "Morris F. De Castro clinic, St. John, U.S. Virgin Islands",
+        "source_url": "https://doh.vi.gov/morris-f-de-castro-clinic-on-st-john-temporarily-closed-due-to-staffing-challenges/",
+        "reason": "Previously identified January 13, 2026 closure. No evidence of an independent new change within the present interval."
+      },
+      {
+        "item": "MaineHealth Mid Coast birthing unit",
+        "source_url": "https://mainebeacon.com/midcoast-mothers-family-physicians-fight-mainehealths-birthing-unit-closure/",
+        "source_published_date": "2026-10-28",
+        "reason": "Older announcement and debate; no independently established change in the current hourly interval."
+      },
+      {
+        "item": "DaVita dialysis center, Novi, Michigan",
+        "source_url": "https://www.clickondetroit.com/news/local/2026/06/30/novi-davita-dialysis-center-to-reopen-following-investigation-into-patient-death-hospitalizations/",
+        "reason": "June 2026 reopening, outside current observation interval."
+      },
+      {
+        "item": "Tehama County air-medical base, California",
+        "source_url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times",
+        "reason": "Reported September 17, 2026; not newly announced or changed in this interval."
+      },
+      {
+        "item": "Valley Children's Hospital, Madera, California",
+        "reason": "November 1 access interruption and restoration already recorded in earlier supplementary watch; no new distinct change."
+      },
+      {
+        "item": "Kagman Clinic, Saipan, CNMI",
+        "reason": "Previous temporary closure already recorded; no newly evidenced development."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://stcroixsource.com/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "issue": "HTTP 403 Forbidden when opening article body; only publication date and title available from search metadata.",
+        "impact": "Unable to verify reported clinic/ambulance-station service change and timing; potential territorial recall gap."
+      },
+      {
+        "url": "https://doh.vi.gov/",
+        "issue": "Direct homepage retrieval timed out.",
+        "impact": "Official U.S. Virgin Islands health department could not corroborate source during this run."
+      }
+    ],
+    "search_quality": "DEGRADED: Search results still heavily favored stale, foreign, or tangential material despite short recency windows. A potentially relevant U.S. Virgin Islands local article could not be opened, and territory official homepage timed out. No concrete new in-window event was verified; absence is not nationwide assurance.",
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T014334-0800-r11-recall12.json",
+      "previous_completed_at": "2026-11-02T01:44:48-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Append exactly one heartbeat JSON to ops/watch-ledger only; no review approval, publication, schedule change, or task disabling."
+  }
+}

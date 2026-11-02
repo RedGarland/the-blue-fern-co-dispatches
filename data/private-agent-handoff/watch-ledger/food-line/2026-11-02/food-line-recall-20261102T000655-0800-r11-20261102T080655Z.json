@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T000655-0800-r11-20261102T080655Z",
+  "scheduled_for": "2026-11-01T23:45:54-08:00",
+  "started_at": "2026-11-02T00:06:55-08:00",
+  "completed_at": "2026-11-02T00:08:30-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T22:48:01.860-08:00",
+    "end_at": "2026-11-02T00:08:30-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified Food Line watch-ledger completion through this observation; source/event publication time required to be new, not search indexing time.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative Food Line production collector unchanged.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Emergency food distribution canceled or suspended owing to storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry or food-bank shutdown or major access reduction",
+      "New official SNAP, WIC or other food-assistance service/benefit interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": 2,
+    "bounded_query_context": [
+      "\"November 1\" \"2026\" \"only grocery store\" closes fire",
+      "\"November 2\" \"2026\" \"sole grocery store\" fire shut",
+      "grocery store town only supermarket closed fire Nov 1 2026",
+      "food bank emergency food distribution cancelled storm flood November 1 2026",
+      "food pantry distribution suspended power outage fire Nov 1 2026",
+      "food bank pantry abruptly closed until further notice November 1 2026",
+      "food bank forced to shut down services November 2 2026",
+      "site:gov November 1 2026 SNAP benefits delayed outage unavailable",
+      "site:gov November 2 2026 WIC benefits outage interruption",
+      "EBT system outage SNAP transactions November 1 2026 state notice",
+      "food distribution canceled hurricane storm November 1 2026 nonprofit",
+      "last full service grocery community shuts November 2026 local news"
+    ],
+    "observation": "No newly source-published, verifiable qualifying U.S. food-access disruption identified within the bounded window. Results included historical 2025 SNAP shutdown stories, older grocery disruptions, general benefits advice, routine/expanded pantry operations, and existing Provo pantry access concerns.",
+    "excluded_examples": [
+      {
+        "publisher": "Flathead Beacon",
+        "source_published_at": "2026-11-01",
+        "title": "Flathead Food Bank to Launch Hungry Horse Location",
+        "url": "https://flatheadbeacon.com/2026/11/01/flathead-food-bank-to-launch-hungry-horse-location/",
+        "reason": "Expansion with new location starting Nov 3, not service loss."
+      },
+      {
+        "publisher": "KUTV",
+        "source_published_at": "2026-10-26",
+        "title": "Provo food pantry cuts staff, pantry hours as funding shortfall threatens 2027 services",
+        "url": "https://kutv.com/news/local/utah-food-bank-cuts-staff-pantry-hours-as-funding-shortfall-threatens-2027-services",
+        "reason": "Earlier coverage of already-known access reduction, outside watch window, not a new finding."
+      },
+      {
+        "publisher": "Fortune/AP",
+        "source_published_at": "2025-11-01",
+        "title": "Long lines form at food pantries after SNAP payments were suddenly cut off due to the government shutdown",
+        "url": "https://fortune.com/2025/11/01/snap-payments-cutoff-food-pantries-usda-government-shutdown/",
+        "reason": "2025 event, not November 2026 official assistance interruption."
+      },
+      {
+        "publisher": "ABC Australia",
+        "source_published_at": "2020-07-13",
+        "title": "Fire destroys remote town's only supermarket",
+        "url": "https://www.abc.net.au/news/2020-07-13/fire-closes-tennant-creeks-only-grocery-store/12448670",
+        "reason": "Historical non-U.S. incident."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T224637-0800-r11-20261102T064637Z.json",
+      "prior_verified_completed_at": "2026-11-01T22:48:01.860-08:00",
+      "method": "Read prior persisted JSON on ops/watch-ledger and excluded previously screened Provo food-bank event; no new qualifying evidence found."
+    },
+    "source_failures": [],
+    "limitations": "Bounded web indexing does not cover all unindexed official/provider/local notices. Previous confirmed heartbeat was at 22:48 PST, so this search window extends beyond one hour; no independent later heartbeat was verified in this execution. Search indexing timestamps are not treated as report publication timestamps.",
+    "production_authority": "No approvals, publications, primary-collector or schedule changes, or task disabling."
+  }
+}

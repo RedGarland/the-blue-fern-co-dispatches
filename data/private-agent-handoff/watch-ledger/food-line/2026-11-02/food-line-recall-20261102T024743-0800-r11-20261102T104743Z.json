@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T024743-0800-r11-20261102T104743Z",
+  "scheduled_for": "2026-11-02T02:45:54-08:00",
+  "started_at": "2026-11-02T02:47:43-08:00",
+  "completed_at": "2026-11-02T02:49:07.473-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T01:49:22.162-08:00",
+    "end_at": "2026-11-02T02:49:07.473-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified Food Line watch-ledger heartbeat completion to this run; source dates checked independently of search result crawl/recency metadata.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall; the nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery store loss, closure, fire, or disaster",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry or food bank closure or material service-access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      1,
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 2 2026",
+      "\"sole grocery store\" destroyed closed community November 2026",
+      "\"last grocery store\" closing fire town November 2026",
+      "\"full-service grocery\" closed fire flood November 2026",
+      "\"food distribution\" cancelled storm November 2 2026",
+      "\"food pantry\" \"closed\" \"November 2, 2026\" flood OR fire OR power",
+      "\"food bank\" \"temporarily closed\" \"November 2\" 2026",
+      "\"food distribution\" \"canceled\" \"November 2\" 2026 storm outage",
+      "SNAP EBT benefits interrupted outage November 2 2026 official state",
+      "site:gov SNAP benefits suspended delayed November 2 2026 EBT outage",
+      "site:gov WIC service interrupted suspended outage November 2 2026",
+      "\"food pantry\" \"closed today\" \"November 2\" 2026"
+    ],
+    "observation": "All 12 targeted queries produced usable search coverage. No independently verified new qualifying U.S. food-access interruption was identified with evidence of an event or announcement after the prior verified completion. Retrieved results were chiefly historical, general resource/program updates, grocery reopenings, or prior-year SNAP shutdown reports.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September event; outside hourly window."
+      },
+      {
+        "publisher": "WCTI",
+        "source_published_at": "2026-09-15",
+        "url": "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "reason": "Historical grocery loss and newer opening, not a new disruption."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Earlier recovery/resources update, not a new cancellation in this window."
+      },
+      {
+        "publisher": "Pennsylvania Department of Human Services",
+        "source_published_at": "2025-10-20",
+        "url": "https://www.pa.gov/agencies/dhs/newsroom/due-to-federal-shutdown--november-snap-payments-will-not-be-made",
+        "reason": "2025 shutdown notice, not a 2026 benefit interruption."
+      },
+      {
+        "publisher": "Center on Budget and Policy Priorities",
+        "source_published_at": "2026-10-23",
+        "url": "https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+        "reason": "Old program-trend tracker without a new immediate interruption during the bounded window."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T014819-0800-r11-20261102T094819Z.json",
+      "prior_verified_completed_at": "2026-11-02T01:49:22.162-08:00",
+      "method": "Read previous committed heartbeat directly from ops/watch-ledger and compared source event dates and recurring reported incidents."
+    },
+    "source_failures": [],
+    "limitations": "A bounded indexed search cannot exclude unindexed or late-posted hyperlocal notices; 1-2 day recency filters may return older source articles. No inference of a fresh event was made from crawl dates.",
+    "production_authority": "No approvals, publication, scheduling changes, disabling, or production collector mutations."
+  }
+}

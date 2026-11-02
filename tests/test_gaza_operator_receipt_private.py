@@ -76,6 +76,13 @@ def _patch_operator_shell(monkeypatch, summary, *, publish_calls):
     )
 
 
+def test_legacy_namespace_defaults_contract_prepare_false(tmp_path):
+    args = _args(tmp_path)
+    assert not hasattr(args, "contract_prepare")
+    normalized = operator._normalize_operator_args(args)
+    assert normalized.contract_prepare is False
+
+
 def test_incomplete_threshold_block_fails_closed_without_no_update_publish(tmp_path, monkeypatch):
     summary = {
         "source_count": 1,

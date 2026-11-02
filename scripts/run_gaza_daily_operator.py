@@ -421,7 +421,9 @@ def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
     return errors
 
 
-def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True) -> dict[str, Any]:
+def validate_or_repair_manual_sources(
+    edition_date: str, *, allow_write: bool = True, contract_prepare: bool = False
+) -> dict[str, Any]:
     path = manual_source_path(edition_date)
     if not path.exists():
         return {"ok": True, "status": "not_present", "path": str(path), "changes": [], "errors": []}
@@ -441,7 +443,7 @@ def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True)
                 break
         if missing_only:
             errors = validate_manual_source_records(normalized)
-    if changes and not errors and not repair:
+    if changes and not errors and not allow_write and not contract_prepare:
         return {
             "ok": False,
             "status": "normalization_required_read_only",
@@ -453,11 +455,14 @@ def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True)
             ],
             "record_count": len(normalized),
         }
-    if changes and not errors:
+    if changes and not errors and allow_write:
         _write_manual_records(path, normalized)
     return {
         "ok": not errors,
-        "status": "normalized" if changes and not errors else ("valid" if not errors else "invalid"),
+        "status": "normalized" if changes and not errors and allow_write else (
+            "would_normalize" if changes and not errors and contract_prepare else
+            ("valid" if not errors else "invalid")
+        ),
         "path": str(path),
         "changes": changes,
         "errors": errors,
@@ -466,12 +471,22 @@ def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True)
 
 
 
-def _validate_manual_sources_for_operator(edition_date: str, *, post_only: bool) -> dict[str, Any]:
+def _validate_manual_sources_for_operator(
+    edition_date: str, *, post_only: bool, contract_prepare: bool = False
+) -> dict[str, Any]:
     validator = validate_or_repair_manual_sources
     # Keep existing test doubles and older in-process callers compatible while
-    # production post-only mode uses the read-only repair=False contract.
-    if post_only and "repair" in inspect.signature(validator).parameters:
-        return validator(edition_date, repair=False)
+    # post-only mode preserves its refusal and contract preparation remains a
+    # read-only planning mode that may report would_normalize.
+    if post_only or contract_prepare:
+        parameters = inspect.signature(validator).parameters
+        kwargs: dict[str, Any] = {}
+        if "allow_write" in parameters:
+            kwargs["allow_write"] = False
+        if "contract_prepare" in parameters:
+            kwargs["contract_prepare"] = contract_prepare
+        if kwargs:
+            return validator(edition_date, **kwargs)
     return validator(edition_date)
 
 def _capture_daily_run(args: list[str]) -> tuple[int, dict[str, Any], str]:
@@ -781,7 +796,15 @@ def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def _normalize_operator_args(args: argparse.Namespace) -> argparse.Namespace:
+    """Supply defaults for legacy in-process callers predating opt-in flags."""
+    if not hasattr(args, "contract_prepare"):
+        args.contract_prepare = False
+    return args
+
+
 def run_operator(args: argparse.Namespace) -> dict[str, Any]:
+    args = _normalize_operator_args(args)
     result = _operator_result_base(args)
     pages_repo = Path(args.pages_repo).resolve()
     source_status_before = _git_status_lines(ROOT)
@@ -859,7 +882,9 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
             result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
             return result
 
-    manual_validation = _validate_manual_sources_for_operator(args.date, post_only=args.post_bluesky_only)
+    manual_validation = _validate_manual_sources_for_operator(
+        args.date, post_only=args.post_bluesky_only, contract_prepare=args.contract_prepare
+    )
     result["manual_source_validation"] = manual_validation
     if not manual_validation["ok"]:
         result["operator_status"] = "MANUAL_SOURCE_INVALID"
@@ -932,15 +957,19 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         result["pages_repo_status_after"] = _git_status_branch(pages_repo)
         return result
 
-    sync = _sync_pages_repo(pages_repo, args.pages_branch)
-    result["commands_run"].extend(sync["commands"])
-    if not sync["ok"]:
-        result["operator_status"] = "REPO_DIRTY_BLOCKED"
-        result["next_action"] = str(sync.get("error") or "Pages repo sync failed.")
-        result["source_repo_status_after"] = _git_status_branch(ROOT)
-        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
-        return result
-    result["pages_synced_before_publish"] = True
+    if args.contract_prepare:
+        result["pages_sync_status"] = "skipped_contract_prepare"
+        result["next_action"] = "Safe contract preparation: no Pages fetch, merge, local commit, push, or publication."
+    else:
+        sync = _sync_pages_repo(pages_repo, args.pages_branch)
+        result["commands_run"].extend(sync["commands"])
+        if not sync["ok"]:
+            result["operator_status"] = "REPO_DIRTY_BLOCKED"
+            result["next_action"] = str(sync.get("error") or "Pages repo sync failed.")
+            result["source_repo_status_after"] = _git_status_branch(ROOT)
+            result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+            return result
+        result["pages_synced_before_publish"] = True
 
     audio_requested_for_run = bool(args.generate_audio and args.tts_provider != "none" and not args.skip_audio)
     generate_audio = audio_requested_for_run
@@ -953,7 +982,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         pages_repo=pages_repo,
         pages_branch=args.pages_branch,
         remote_url=args.remote_url,
-        dry_run=bool(args.dry_run),
+        dry_run=bool(args.dry_run or args.contract_prepare),
         generate_audio=generate_audio,
         allow_listing_shrink=bool(args.allow_listing_shrink),
         tts_provider=args.tts_provider,
@@ -963,6 +992,20 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
     )
     result["daily_pipeline_started"] = True
     code, summary, _stdout = _capture_daily_run(daily_args)
+    if args.contract_prepare:
+        post_test_root = _validate_scheduled_test_root()
+        result["test_root_status"] = post_test_root["status"]
+        result["test_root_path"] = post_test_root.get("path")
+        result["test_root_error"] = post_test_root.get("error")
+        if not post_test_root["ok"]:
+            result["operator_status"] = "TEST_ROOT_BUDGET_BLOCKED"
+            result["failure_stage"] = "test_root_budget"
+            result["generation_ok"] = False
+            result["validation_ok"] = False
+            result["next_action"] = str(post_test_root.get("error") or "Private acceptance output budget exceeded.")
+            result["source_repo_status_after"] = _git_status_branch(ROOT)
+            result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+            return result
     result["commands_run"].append("scripts/run_daily_gaza.py " + " ".join(daily_args))
     result["source_collection_started"] = bool(summary.get("collection_started"))
     result["source_count"] = int(summary.get("source_count") or 0)
@@ -1008,13 +1051,16 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
             result["generation_ok"] = True
             result["validation_ok"] = True
             result["next_action"] = "No dispatch was published because no new source-backed Gaza update qualified."
-            if summary.get("no_update_status_written") is True:
+            if args.contract_prepare:
+                result["operator_status"] = "SAFE_PREPARATION_READY"
+                result["next_action"] = "Safe preparation completed; editorial/publication authorization remains required."
+            elif summary.get("no_update_status_written") is True:
                 publish_args = _no_update_pages_publish_args(
                     edition_date=args.date,
                     pages_repo=pages_repo,
                     pages_branch=args.pages_branch,
                     remote_url=args.remote_url,
-                    dry_run=bool(args.dry_run),
+                    dry_run=bool(args.dry_run or args.contract_prepare),
                     allow_listing_shrink=bool(args.allow_listing_shrink),
                 )
                 publish = _run_command(publish_args)
@@ -1054,6 +1100,21 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         else:
             result["operator_status"] = "AUDIO_FAILED" if any("audio generation failed" in item for item in errors) else "FAILED"
             result["next_action"] = errors[0] if errors else "Daily Gaza run failed."
+        cleanup = _clean_source_generated_artifacts()
+        result["commands_run"].extend(cleanup["commands"])
+        result["cleanup_status"] = cleanup["status"]
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+        return result
+
+    if args.contract_prepare:
+        result["ok"] = bool(code == 0 and result.get("generation_ok") and result.get("validation_ok"))
+        result["operator_status"] = "SAFE_PREPARATION_READY" if result["ok"] else "FAILED"
+        result["next_action"] = (
+            "Safe preparation completed; editorial/publication authorization remains required."
+            if result["ok"]
+            else "Inspect safe preparation generation or validation failure."
+        )
         cleanup = _clean_source_generated_artifacts()
         result["commands_run"].extend(cleanup["commands"])
         result["cleanup_status"] = cleanup["status"]
@@ -1216,6 +1277,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run the safe Gaza daily operator.")
     parser.add_argument("--date", default=time.strftime("%Y-%m-%d"), help="Edition date in YYYY-MM-DD format.")
     parser.add_argument("--dry-run", action="store_true", help="Run generation and validation without pushing Pages or posting live.")
+    parser.add_argument("--contract-prepare", action="store_true", help="Run source-bound safe preparation without Pages sync, local commit, push, or publication.")
     parser.add_argument("--post-bluesky", action="store_true", help="Preview or post the Gaza Bluesky card as part of the operator run.")
     parser.add_argument("--generate-audio", action="store_true", help="Generate Gaza audio artifacts during the run.")
     parser.add_argument("--email-report", action="store_true", help="Send the operator summary email.")
@@ -1242,6 +1304,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--audio-voice", default="alloy", help="TTS voice used with --generate-audio.")
     parser.add_argument("--audio-format", choices=("mp3", "wav"), default="mp3", help="Audio format.")
     args = parser.parse_args(argv)
+    if args.contract_prepare and (
+        args.push
+        or args.post_bluesky
+        or args.post_bluesky_only
+        or args.force_bluesky_post
+        or args.generate_audio
+        or args.email_report
+        or args.bluesky_approved_text_file is not None
+        or bool(args.bluesky_approved_text_sha256)
+        or bool(args.bluesky_expected_handle)
+        or bool(args.bluesky_expected_did)
+    ):
+        parser.error("--contract-prepare cannot be combined with publication, post-only, audio, or email effects")
     args.date = validate_date(args.date)
     # The scheduled wrapper must not silently fall back to TEMP or another guessed path.
     args.enforce_test_root = True
@@ -1253,7 +1328,7 @@ def _utc_now() -> str:
 
 
 def _emit_operational_receipt(args: argparse.Namespace, result: dict[str, Any], *, started_at: str, completed_at: str) -> str | None:
-    if args.dry_run or args.manual_source_check_only or args.post_bluesky_only:
+    if (args.dry_run and not args.contract_prepare) or args.manual_source_check_only or args.post_bluesky_only:
         return None
     run_stamp = started_at.replace("-", "").replace(":", "").replace("+00:00", "Z").replace(".", "")
     run_id = f"gaza-daily-{args.date}-{run_stamp}"
@@ -1339,5 +1414,6 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 

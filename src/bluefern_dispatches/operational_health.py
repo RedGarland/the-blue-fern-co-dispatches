@@ -371,7 +371,7 @@ def map_gaza_status(operator_status: str, *, ok: bool, exit_code: int | None = N
         return OperationalStatus.SUCCESS
     if status in {"PAGES_PROPAGATION_PENDING"} and ok:
         return OperationalStatus.DEGRADED
-    if status in {"DRY_RUN_READY", "NO_UPDATE_DRY_RUN_READY", "LOCAL_PUBLISH_READY", "NO_UPDATE_LOCAL_PUBLISH_READY", "MANUAL_SOURCE_VALID", "BLUESKY_PREVIEW_READY"} and ok:
+    if status in {"DRY_RUN_READY", "NO_UPDATE_DRY_RUN_READY", "LOCAL_PUBLISH_READY", "NO_UPDATE_LOCAL_PUBLISH_READY", "MANUAL_SOURCE_VALID", "BLUESKY_PREVIEW_READY", "SAFE_PREPARATION_READY"} and ok:
         return OperationalStatus.SAFE_NO_OP
     if exit_code not in (None, 0) or not ok:
         return OperationalStatus.FAILED

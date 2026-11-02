@@ -6,6 +6,7 @@ param(
     [string]$RepoRoot = "",
     [string]$PagesRepo = "",
     [string]$TestRootBase = "",
+    [string]$PythonExecutable = "",
     [string]$SourceBranch = "add/pages-repo-default",
     [string]$PagesBranch = "gh-pages",
     [string]$CredentialTarget = "bluefern-smtp",
@@ -17,6 +18,9 @@ param(
     [switch]$GenerateAudio,
     [ValidateSet("openai", "none")]
     [string]$TtsProvider = "",
+    [switch]$UseGazaProductionContract,
+    [string]$ExpectedSourceHead = "",
+    [string]$ExpectedSourceManifestIdentity = "",
     [switch]$SmtpDebug,
     [int]$KeepLogs = 30
 )
@@ -511,7 +515,11 @@ try {
     }
     $PagesRepo = (Resolve-Path -LiteralPath $PagesRepo).Path
 
-    $python = Join-Path $RepoRoot ".venv\Scripts\python.exe"
+    if (-not [string]::IsNullOrWhiteSpace($PythonExecutable)) {
+        $python = (Resolve-Path -LiteralPath $PythonExecutable -ErrorAction Stop).Path
+    } else {
+        $python = Join-Path $RepoRoot ".venv\Scripts\python.exe"
+    }
     if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
         throw "Repository virtualenv Python not found: $python"
     }
@@ -527,6 +535,15 @@ try {
     if ($Dispatch -eq "gaza") {
         if (-not (Test-Path -LiteralPath $gazaOperatorScript -PathType Leaf)) {
             throw "Gaza operator script not found: $gazaOperatorScript"
+        }
+        if ($UseGazaProductionContract) {
+            $gazaContractScript = Join-Path (Join-Path $RepoRoot "scripts") "run_gaza_production_adapter.py"
+            if (-not (Test-Path -LiteralPath $gazaContractScript -PathType Leaf)) {
+                throw "Gaza production contract adapter not found: $gazaContractScript"
+            }
+            if ($ExpectedSourceHead -notmatch '^[0-9a-fA-F]{40}$' -or $ExpectedSourceManifestIdentity -notmatch '^gaza-production-source-manifest-v2:[0-9a-fA-F]{64}$') {
+                throw "The Gaza production contract requires exact source HEAD and manifest identity bindings."
+            }
         }
         if ($CheckOnly -and -not (Test-Path -LiteralPath $gazaSmokeScript -PathType Leaf)) {
             throw "Gaza smoke script not found: $gazaSmokeScript"
@@ -559,6 +576,9 @@ try {
         }
 
         if ($null -ne $rootAdmissionFailure) {
+            if ($UseGazaProductionContract) {
+                throw "Gaza task-root admission failed before Gaza production contract preparation: $rootAdmissionFailure"
+            }
             $failureArgs = @(
                 $gazaOperatorScript,
                 "--date", $Date,
@@ -632,7 +652,7 @@ try {
     if ($dryRunFullRequested -and ($checkOnlyRequested -or $pushRequested -or $postBlueskyRequested)) {
         throw "-DryRunFull cannot be combined with -CheckOnly, -Push, or -PostBluesky."
     }
-    if ($Dispatch -eq "gaza" -and -not $dryRunFullRequested) {
+    if ($Dispatch -eq "gaza" -and -not $dryRunFullRequested -and -not $UseGazaProductionContract) {
         Load-SmtpCredential -Target $CredentialTarget
     }
 
@@ -718,6 +738,21 @@ try {
         )
         }
     } elseif ($Dispatch -eq "gaza") {
+        if ($UseGazaProductionContract) {
+            $dispatchArgs = @(
+                $gazaContractScript,
+                "--source-root", $RepoRoot,
+                "--date", $Date,
+                "--pages-repo", $PagesRepo,
+                "--receipt-root", (Join-Path (Join-Path $RepoRoot "status") "operational-health"),
+                "--artifact-root", (Join-Path $taskTestRoot "gaza-contract-artifacts"),
+                "--python", $python,
+                "--pages-branch", $PagesBranch,
+                "--source-branch", $SourceBranch,
+                "--expected-source-head", $ExpectedSourceHead,
+                "--expected-source-manifest-identity", $ExpectedSourceManifestIdentity
+            )
+        } else {
         $dispatchArgs = @(
             $gazaOperatorScript,
             "--date", $Date,
@@ -740,6 +775,7 @@ try {
         if ($SmtpDebug) {
             $dispatchArgs += "--smtp-debug"
         }
+        }
     } else {
         $dispatchArgs = @(
             $foodLineScript,
@@ -757,7 +793,8 @@ try {
 
     $dispatchResult = Invoke-LoggedCommand -Python $python -Arguments $dispatchArgs -ParseJsonTail:$checkOnlyRequested
     $exitCode = $dispatchResult.ExitCode
-    if ($exitCode -ne 0) {
+    $safePreparationAwaitingApproval = $UseGazaProductionContract -and $exitCode -eq 2
+    if ($exitCode -ne 0 -and -not $safePreparationAwaitingApproval) {
         throw "Runner dispatch command failed with exit code $exitCode."
     }
     if ($checkOnlyRequested -and $Dispatch -eq "gaza") {
@@ -851,3 +888,4 @@ try {
     Write-Log ("Runner wrapper failed: {0}: {1}" -f $_.Exception.GetType().Name, $_.Exception.Message)
     exit 10
 }
+

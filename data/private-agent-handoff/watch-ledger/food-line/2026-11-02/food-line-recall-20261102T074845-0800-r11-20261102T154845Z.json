@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T074845-0800-r11-20261102T154845Z",
+  "scheduled_for": "2026-11-02T07:45:54-08:00",
+  "started_at": "2026-11-02T07:48:45-08:00",
+  "completed_at": "2026-11-02T07:49:31-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T06:50:59.984-08:00",
+    "end_at": "2026-11-02T07:49:31-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior latest read-back verified GitHub watch heartbeat completed at 06:50:59.984 PST. Twelve targeted web queries used a 3-day retrieval filter to catch indexing lag; only newly reported, qualifying access changes since that prior completion were eligible.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss recall only; nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Loss, disaster, fire, or closure of only/sole/last/full-service community grocery",
+      "Emergency food distributions canceled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food-bank closure or major service-access reduction",
+      "New officially reported SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      3
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" fire closure November 2 2026 town",
+      "\"sole grocery store\" closes burned 2026 November community",
+      "\"last grocery store\" closed November 2026 community",
+      "\"full-service grocery store\" closure fire November 2 2026",
+      "food pantry distribution canceled storm flood November 2 2026",
+      "food bank food distribution cancelled due to storm power outage November 2026",
+      "\"food distribution\" \"suspended\" November 2 2026 weather",
+      "food pantry abruptly closed services November 2 2026",
+      "\"food bank\" \"closed\" \"Nov. 2, 2026\" services",
+      "site:gov SNAP EBT benefits interruption November 2 2026 outage",
+      "site:gov WIC EBT benefits system outage Nov 2 2026",
+      "SNAP benefits delayed November 2 2026 official state agency"
+    ],
+    "observation": "No newly reported, source-verifiable qualifying food-access disruption was identified in the 06:50:59–07:49:31 PST hourly window. Retrieved results were older incidents, expansions, general program information, or prior-year SNAP interruption notices. Result crawl or update dates were not substituted for original event/publication dates.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Only-store fire dated September 14, not new this hour."
+      },
+      {
+        "publisher": "WCTI12",
+        "source_published_at": "2026-09-15",
+        "url": "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "reason": "Restored community food access, not a loss or disruption."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Older recovery/resource coverage; no new canceled distribution verified."
+      },
+      {
+        "publisher": "Pennsylvania Department of Human Services",
+        "source_published_at": "2025-10-20",
+        "url": "https://www.pa.gov/agencies/dhs/newsroom/due-to-federal-shutdown--november-snap-payments-will-not-be-made",
+        "reason": "Prior-year 2025 SNAP shutdown notice; not a 2026 interruption."
+      },
+      {
+        "publisher": "Delaware Governor's Office",
+        "source_published_at": "2025-10-29",
+        "url": "https://news.delaware.gov/2025/10/29/governor-matt-meyer-declares-state-of-emergency-due-to-interruption-of-federal-snap-benefits/",
+        "reason": "Prior-year SNAP interruption notice, not a new 2026 announcement."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_known_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T064941-0800-r11-20261102T144941Z.json",
+      "prior_verified_completed_at": "2026-11-02T06:50:59.984-08:00",
+      "method": "Read latest ledger directory and previous persisted heartbeat, then excluded dated historical incidents and duplicate classes."
+    },
+    "source_failures": [],
+    "limitations": "Batched search output is not an exhaustive count of local provider notices. Fresh original provider announcements can lag web indexing; a zero-result recall watch does not establish nationwide absence.",
+    "production_authority": "No review approval, content publication, schedule adjustment, or task disabling."
+  }
+}

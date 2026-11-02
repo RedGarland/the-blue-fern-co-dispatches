@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T034611-0800-recall12",
+  "scheduled_for": "2026-11-02T03:45:22-08:00",
+  "started_at": "2026-11-02T03:46:11-08:00",
+  "completed_at": "2026-11-02T03:47:21-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T02:48:08-08:00",
+    "end": "2026-11-02T03:47:21-08:00",
+    "basis": "Prior verified supplementary Care Line heartbeat completed 02:48:08 PST. Targeted newly reported or newly effective concrete access changes; national production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Direct CMS Public Notices page checked before additional targeted category searches. Latest listed notices dated Oct 30, 2026; no November 2 newly dated provider termination, rescission, CLIA limitation/suspension, or related action found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency room services closed suspended November 2 2026 United States",
+      "rural hospital emergency department closes temporarily November 1 2 2026",
+      "maternity labor delivery birthing unit closed stopped deliveries November 2 2026",
+      "psychiatric behavioral mental health hospital admissions suspended closure November 2 2026",
+      "dialysis center suspended treatments closed patients November 1 2026 US",
+      "oncology infusion chemotherapy clinic suddenly closed November 1 2026 patients",
+      "primary care clinic urgent care rural health closed November 2 2026 patients",
+      "ambulance EMS service base suspended closed November 2 2026 county",
+      "air ambulance medevac helicopter base closed suspended November 1 2 2026 United States",
+      "hospital emergency department clinic reopens restored services effective November 2 2026 US",
+      "Puerto Rico Guam Saipan US Virgin Islands American Samoa hospital clinic ambulance closure November 2 2026",
+      "Alaska tribal rural clinic medical service closed suspended November 2 2026"
+    ],
+    "search_method": "Official CMS public notices first, followed by exactly 12 targeted fresh searches filtered to a 2-day recency window. Evaluated source publication date separately from reported event/effective date. Inspected previous heartbeat for exclusions.",
+    "reviewed_exclusions": [
+      {
+        "item": "Isla Community Health Kagman clinic temporary closure, Saipan, CNMI",
+        "source_url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+        "published_date": "2026-11-01",
+        "effective_date": "2026-10-30",
+        "reason": "Previous supplementary watch already recorded; no distinct access change during this interval."
+      },
+      {
+        "item": "Cruz Bay clinic and ambulance-station relocation, St. John, USVI",
+        "source_url": "https://stcroixsource.com/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "published_date": "2026-11-01",
+        "reason": "Previously screened in prior verified heartbeat; direct article remains inaccessible, and VI Department of Health source timed out. No separately verified new development within this interval. Not a positive finding."
+      },
+      {
+        "item": "Kula Hospital ED restoration, Maui, Hawaii",
+        "source_url": "https://www.aha.org/tellingthehospitalstory/stories/hawaii-hospital-set-comeback-after-storm-damage-closure",
+        "reason": "Reopening is planned, not concretely effective; September reporting confirms ED remained closed. Excluded as future proposal."
+      },
+      {
+        "item": "UNM Health System ambulance diversion and clinic disruptions, New Mexico",
+        "source_url": "https://apnews.com/article/7a3593f8a3cee4ca895774ab1574919f",
+        "event_date": "2026-10-26",
+        "reason": "Earlier disruption/recovery outside the new watch interval."
+      },
+      {
+        "item": "Dauphin Regional Health Centre dialysis restoration",
+        "source_url": "https://730ckdm.com/news-now/34737-dialysis-returns-to-drhc",
+        "reason": "Reported November 2, but facility is in Manitoba, Canada, not U.S. or territories."
+      },
+      {
+        "item": "Vista Medical Center East trauma designation revocation, Illinois",
+        "source_url": "https://www.lakemchenryscanner.com/2026/10/24/state-revokes-trauma-center-designation-for-vista-medical-center-east-in-waukegan-for-2nd-time-in-less-than-3-years/",
+        "published_date": "2026-10-24",
+        "reason": "Occurred in October, outside current interval."
+      },
+      {
+        "item": "Valley Children's Hospital emergency arrival interruption, Madera, California",
+        "reason": "Already captured in previous supplementary watch; no new distinct event found."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://stcroixsource.com/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "issue": "Direct article body inaccessible from web fetch; event details and timing could not be independently validated."
+      },
+      {
+        "url": "https://doh.vi.gov/morris-f-de-castro-clinic-on-st-john-temporarily-closed-due-to-staffing-challenges/",
+        "issue": "Official health department URL fetch timed out."
+      }
+    ],
+    "search_quality": "DEGRADED (continuing, not newly material): despite 2-day recency filters, most results concern older events, non-U.S. facilities, proposals, or general policy. U.S. Virgin Islands article inaccessible; rural and territorial recall is incomplete. No new qualifying in-window event verified; no-findings does not establish nationwide absence.",
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T024556-0800-recall12.json",
+      "previous_completed_at": "2026-11-02T02:48:08-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Append one heartbeat only on ops/watch-ledger. No approval, publication, schedule changes, or task disabling."
+  }
+}

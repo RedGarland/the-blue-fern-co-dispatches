@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T214451-0800-r11-20261102T054750Z",
+  "scheduled_for": "2026-11-01T21:44:51-08:00",
+  "started_at": "2026-11-01T21:47:50-08:00",
+  "completed_at": "2026-11-02T05:49:18.101-00:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T20:45:11.926-08:00",
+    "end": "2026-11-02T05:49:18.101-00:00",
+    "basis": "Previous verified Gaza Source Watch ledger completion on ops/watch-ledger; PST UTC-08:00 after November 1 daylight-saving transition.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO global and WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall only; production collector/publisher authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261101T204451-0800-r11-20261102T044511Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-01/gaza-source-watch-20261101T204451-0800-r11-20261102T044511Z.json",
+      "completed_at": "2026-11-01T20:45:11.926-08:00",
+      "verified_via": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Accessible. Most recent listed humanitarian situation report posted 31 Oct 2026 covering 29 Oct; no new in-window Gaza development."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Situation page has no newly dated Gaza hospital, ambulance, medical evacuation, functional capacity or fuel update in this window."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct access failed with HTTP 502, recurring source restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza November 2 2026 early morning Reuters AP Nov 1 evening killed wounded hospital ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 2 2026 morning strikes aid crossing",
+      "site:apnews.com/article/ Gaza November 2 2026 ceasefire injuries strikes civilians",
+      "site:english.wafa.ps November 2 2026 Gaza killed injured overnight Israel November 1",
+      "site:aljazeera.com/news/2026/11/2 Gaza deaths attacks aid 2 November",
+      "site:un.org November 2 2026 Gaza humanitarian aid fuel medical evacuation access",
+      "site:ochaopt.org 2 November 2026 Gaza access hospital food displacement",
+      "site:who.int 2 November 2026 Gaza hospitals ambulances medical evacuation",
+      "site:unicef.org November 2 2026 Gaza drinking water children displacement",
+      "Gaza Rafah Kerem Shalom crossing November 2 2026 aid WFP UNRWA trucks fuel",
+      "Gaza November 2 2026 hostage prisoners detainees ceasefire negotiations military operations civilians",
+      "Palestinian Red Crescent November 2 2026 Gaza ambulance hospital injuries early morning November 1"
+    ],
+    "search_method": "Official OCHA OPT and WHO pages opened first. Twelve additional targeted web searches at recency 2 days; subsequent direct source page opens not counted as searches.",
+    "direct_checks": [
+      {
+        "source": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest visible November 1 entries concern West Bank; Gaza eight-fatality report posted 12:07 PM Palestine time and previously recorded."
+      },
+      {
+        "source": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible. No distinguishable new, timestamped Gaza development in local Pacific hourly observation window."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible. Latest visible Gaza strikes report dated November 1 concerns previously recorded fatalities, not new attacks."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, recurring."
+      }
+    ],
+    "screened_categories": [
+      "civilian deaths/injuries and military action with documented civilian impact",
+      "displacement and shelter",
+      "aid, food, water and crossings",
+      "hospital, healthcare capacity, ambulance, medical evacuation, fuel and transportation",
+      "infrastructure damage",
+      "detention and hostages",
+      "ceasefire and negotiations"
+    ],
+    "excluded_as_non_new_or_unqualified": [
+      "Previously recorded November 1 Gaza City/al-Rimal three fatalities including young child and seriously wounded woman.",
+      "Previously recorded November 1 west Khan Younis/al-Mawasi five police officers killed.",
+      "Earlier Jabalia and other Gaza injury reports without newly verified reporting times in current hourly window.",
+      "November 1 Gaza doctors' trauma and overwork feature: retrospective feature rather than newly confirmed system-capacity change.",
+      "Prior OCHA, WHO and UNICEF humanitarian statistics/reports without a new in-window event.",
+      "West Bank-only incidents, opinion, unsupported allegations and duplicated summaries."
+    ],
+    "temporal_limitations": [
+      "Some publishers do not expose precise first-publication or revision times; November 1 local or November 2 Palestine calendar dates are not sufficient proof of novelty since previous hourly check.",
+      "No distinct, traceable new qualifying development established after 2026-11-01T20:45:11.926-08:00.",
+      "No findings means bounded verification found none; it does not mean none occurred."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously recurring; WHO global and OCHA accessible."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Previously recurring; other primary/established coverage accessible."
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Previously recurring; other primary/established coverage accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring WHO EMRO/WFP/UNRWA restrictions, without new material degradation or loss of meaningful alternative authoritative coverage.",
+    "safeguards": "One append-only ledger heartbeat; no production, Pages, publication, approval, scheduling or automation changes."
+  }
+}

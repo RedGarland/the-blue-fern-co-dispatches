@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T114451-0800-r11-20261102T194606Z",
+  "scheduled_for": "2026-11-02T11:44:51-08:00",
+  "started_at": "2026-11-02T11:45:01-08:00",
+  "completed_at": "2026-11-02T11:46:06-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-02T10:46:52.045-08:00",
+    "end": "2026-11-02T11:46:06-08:00",
+    "basis": "Prior verified watch heartbeat completed at 2026-11-02T18:46:52.045Z; watch searches for newly discoverable material, not necessarily incident times.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; production daily Gaza collector and publisher remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261102T104451-0800-r11-20261102T184523Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T104451-0800-r11-20261102T184523Z.json",
+      "completed_at": "2026-11-02T18:46:52.045Z",
+      "verified_via": "GitHub fetch_file on ops/watch-ledger in this run"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest entry remained 31 October 2026, for 29 October report. No new November 2 Gaza entry visible."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new dated November 2 hospital, ambulance, fuel, medical evacuation, or health-functioning report visible."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway in direct access; recurrent access limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 2 2026 9:00 PM killed injured latest",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 2 2026 10:00 PM killed injured",
+      "site:reuters.com/world/middle-east/ Gaza November 2 2026 evening ceasefire aid wounded new",
+      "site:apnews.com/article/ Gaza November 2 2026 evening strike civilian deaths",
+      "site:news.un.org/en/story/2026/11 Gaza Monday November 2 ceasefire aid",
+      "site:unicef.org/press-releases Gaza November 2 2026 water child hospital",
+      "site:palestinercs.org/en November 2 2026 ambulance Gaza emergency",
+      "site:who.int Gaza November 2 2026 medical evacuation hospital fuel",
+      "site:wfp.org/news Gaza November 2 2026 aid food crossing",
+      "Gaza November 2 2026 Rafah Kerem Shalom humanitarian crossing aid convoys new 21:00",
+      "Gaza November 2 2026 hostages detainees ceasefire negotiations major developments evening",
+      "Gaza November 2 2026 evening shelling Nuseirat Khan Younis Gaza city killed injured tents water"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; at observation, latest listed November 2 update was 20:20 publisher clock and was about Nablus. Most recent Gaza item was 19:16 Khan Younis gunfire, already recorded in prior heartbeat; timezone of displayed WAFA timestamp unspecified."
+      },
+      {
+        "source": "Reuters Gaza November 2",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+        "result": "Accessible; details older strikes in Khan Younis, Al-Mussadar and Tal al-Hawa, all previously covered. No independent newly discovered follow-up in article."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; public latest-news listing had no November 2 Gaza operational update."
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring restriction."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; recurring restriction."
+      }
+    ],
+    "screened_categories": [
+      "Civilian deaths and injuries; civilian effects of military operations",
+      "Displacement and shelter; food, drinking water, aid and crossings",
+      "Healthcare and hospital/ambulance/medical transport/fuel/evacuation/functioning capacity; infrastructure",
+      "Detention, hostages, ceasefire and negotiations"
+    ],
+    "excluded_as_nonqualifying": [
+      "WAFA Khan Younis Al-Batn al-Sameen death and injuries reported 19:16 publisher clock, previously recorded in prior watch.",
+      "Tal al-Hawa vehicle strike, Al-Zaytoun kitchen-affiliated minibus, Nuseirat tent, Al-Masdar, and Khan Younis strike reports already present in earlier heartbeat records.",
+      "November 2 cumulative mortality update reporting 15 deaths and 38 injuries over preceding 48 hours and 18 retroactively verified deaths was previously recorded; not new deaths in this recall window.",
+      "West Bank, Rahat and historical Gaza material outside the geographic/time constraints; opinion and unsupported social claims."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News targeted search",
+        "problem": "robots.txt restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "Some publisher search indexes lag publication; zero verified new items in this bounded watch does not establish no incident occurred.",
+      "WAFA's displayed clock timezone is unspecified; assessment uses prior watch discovery and dedupe instead of assigning precise UTC incident times.",
+      "WHO EMRO, WFP, UNRWA, and UN News direct-access restrictions limit official coverage, but OCHA, WHO global, WAFA, Reuters, and PRCS remained accessible."
+    ],
+    "status_rationale": "DEGRADED for recurring official-source access failures; no newly material deterioration and no qualifying nonduplicate development in this window.",
+    "safeguards": "One append-only JSON heartbeat on ops/watch-ledger only. No approval, publication, schedule, public-site or production mutation."
+  }
+}

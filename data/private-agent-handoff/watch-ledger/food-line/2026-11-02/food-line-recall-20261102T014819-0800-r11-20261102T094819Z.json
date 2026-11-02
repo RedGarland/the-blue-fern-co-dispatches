@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T014819-0800-r11-20261102T094819Z",
+  "scheduled_for": "2026-11-02T01:45:54-08:00",
+  "started_at": "2026-11-02T01:48:19-08:00",
+  "completed_at": "2026-11-02T01:49:22.162-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T00:58:58.381-08:00",
+    "end_at": "2026-11-02T01:49:22.162-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified Food Line heartbeat completion to this execution; search-engine recency indicates index freshness, not original publication timestamp.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster of the only, sole, last, or full-service grocery store in a community",
+      "Canceled/suspended emergency food distribution due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank closure or material food-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      1,
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" OR \"sole grocery store\" closed fire November 2 2026",
+      "\"last grocery store\" OR \"only supermarket\" closed burned November 2026",
+      "\"full-service grocery\" closed fire power outage November 2026",
+      "\"food distribution\" canceled storm flooding November 2 2026",
+      "\"food pantry\" closed abruptly November 2 2026",
+      "\"food bank\" closed outage flooding fire November 2 2026",
+      "SNAP benefits outage delay EBT November 2 2026 state agency",
+      "WIC benefits interruption suspended November 2 2026 state health department",
+      "site:facebook.com \"food pantry\" \"closed today\" \"November 2, 2026\"",
+      "\"food pantry\" \"temporarily closed\" \"November 2026\" flood fire",
+      "\"food distribution\" \"cancelled\" \"November 2\" 2026 storm outage",
+      "\"EBT\" \"outage\" \"November 2, 2026\" OR \"November 1, 2026\""
+    ],
+    "observation": "No new independently verified, source-dated and qualifying U.S. food-access disruption surfaced in the 12 bounded searches since the previous verified completion. Returned material was predominantly historical, routine service calendars or SNAP issuance information; no new official immediate benefits interruption was substantiated.",
+    "excluded_examples": [
+      {
+        "publisher": "Kaua‘i Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Historical relief and resource information rather than new distribution cancellation in the bounded window."
+      },
+      {
+        "publisher": "Center on Budget and Policy Priorities",
+        "source_published_at": "2026-10-23",
+        "url": "https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+        "reason": "Prior month general policy/participation tracker, not a newly announced benefit interruption in the hourly window."
+      },
+      {
+        "publisher": "California EBT Reload Dates",
+        "source_published_at": null,
+        "url": "https://ebtcheckup.com/states/california/",
+        "reason": "Routine issuance schedule and general troubleshooting; not a verified outage."
+      },
+      {
+        "publisher": "Salt Lake County Journal",
+        "source_published_at": "2026-11-01",
+        "url": "https://saltlakejournal.com/article/provo-food-bank-closes-after-raising-100-000-in-emergency-fund/",
+        "reason": "Previously identified Provo closure; excluded as duplicate per prior verified heartbeat."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T005737-0800-r11-20261102T085737Z.json",
+      "prior_verified_completed_at": "2026-11-02T00:58:58.381-08:00",
+      "method": "Fetched prior watch-ledger heartbeat from GitHub branch and used its completion as cutoff."
+    },
+    "source_failures": [],
+    "limitations": "Targeted indexed web searches cannot prove absence of unindexed or delayed hyperlocal/official notices. Some search results are older despite 1-2 day recency filters; source publication date is used for screening. The watch remains supplementary.",
+    "production_authority": "No approvals, publication, schedule changes, task disabling, or production collector changes."
+  }
+}

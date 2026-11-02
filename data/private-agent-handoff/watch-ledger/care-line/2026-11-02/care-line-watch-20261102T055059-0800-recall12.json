@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T055059-0800-recall12",
+  "scheduled_for": "2026-11-02T05:45:22-08:00",
+  "started_at": "2026-11-02T05:50:59-08:00",
+  "completed_at": "2026-11-02T05:51:35-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T04:45:00-08:00",
+    "end": "2026-11-02T05:51:35-08:00",
+    "basis": "Previous verified supplementary Care Line heartbeat completed at 04:45 PST; searched for newly reported or concretely effective qualifying access changes after that point. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "CMS official Public Notices listing opened and inspected before supplemental searches; no November 2 or new post-October-30 provider termination, rescission, CLIA limitation/suspension, or similar action was listed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended services November 2 2026 United States rural",
+      "maternity labor delivery unit closure suspension November 2 2026 hospital US",
+      "rural hospital emergency room no longer accepting patients November 1 2 2026",
+      "ambulance EMS station base closing suspension November 2 2026 United States",
+      "air ambulance medical helicopter base closes grounding November 1 2 2026 US",
+      "behavioral health psychiatric hospital inpatient unit closing temporary suspension November 2 2026",
+      "dialysis oncology chemotherapy clinic closure cancelled treatment November 1 2 2026",
+      "primary care clinic community health center sudden closure November 2 2026",
+      "Guam CNMI Puerto Rico USVI American Samoa healthcare clinic emergency ambulance closure November 2 2026",
+      "Alaska tribal rural hospital emergency health clinic closure suspension November 2 2026",
+      "hospital emergency department maternity reopened services restored November 2 2026",
+      "CMS Medicare termination CLIA suspension rescission provider public notices November 2 2026"
+    ],
+    "search_method": "Direct CMS source check first, then twelve targeted web searches with two-day recency; screened dates of publication and concrete access effects separately. Targeted search ceiling respected.",
+    "reviewed_exclusions": [
+      {
+        "item": "Ohio Emergency Medicine Services begins managing Hocking Valley Community Hospital ED, Logan, Ohio; announcement November 2",
+        "url": "https://www.accessnewswire.com/newsroom/en/healthcare-and-pharmaceutical/ohio-emergency-medicine-services-to-lead-emergency-department-at-hock-1244408",
+        "reason": "Management partnership with explicit confirmation that 24/7 emergency department service remains open; no concrete loss or restoration."
+      },
+      {
+        "item": "Roseland Community Hospital maternity closure, Chicago, Illinois",
+        "reason": "Previously announced and covered; no new in-window development independently verified."
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital labor/delivery closure announcement",
+        "reason": "Board decision occurred August 2026; no distinct current-window change."
+      },
+      {
+        "item": "Madera Community Hospital reopening",
+        "reason": "Reopening reported March 2025, outside the window."
+      },
+      {
+        "item": "Sturgis Hospital, Michigan closure",
+        "reason": "Reported June 2026, outside the window."
+      },
+      {
+        "item": "U.S. Virgin Islands Cruz Bay clinic / ambulance station relocation",
+        "url": "https://stcroixsource.com/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "reason": "Previously screened November 1 source predates current window; earlier inability to directly access source remains unresolved. Not a newly confirmed current-window finding."
+      },
+      {
+        "item": "American Heart Association rural heart attack outcomes and American Hospital Association rural hospital risk brief",
+        "reason": "General research/background; not a new specific facility access loss."
+      },
+      {
+        "item": "Malkangiri cyclone healthcare preparation",
+        "reason": "India, not U.S. or its territories."
+      }
+    ],
+    "source_failures": [],
+    "search_quality": "DEGRADED, continuing from previous hourly checks rather than new material incident: most indexed results were stale, generic, non-U.S., or nonqualifying despite freshness filters; territorial and rural recall remain incomplete. This negative result does not establish absence of events.",
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T044346-0800-recall12.json",
+      "previous_completed_at": "2026-11-02T04:45:00-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Exactly one append-only heartbeat on ops/watch-ledger; no publication, editorial approval, schedule change, or task disablement."
+  }
+}

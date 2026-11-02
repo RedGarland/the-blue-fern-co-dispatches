@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T134420-0800-recall12",
+  "scheduled_for": "2026-11-02T13:45:22-08:00",
+  "started_at": "2026-11-02T13:44:20-08:00",
+  "completed_at": "2026-11-02T13:45:52.282-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T12:50:40-08:00",
+    "end": "2026-11-02T13:45:52.282-08:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed_at through this run's observation; supplementary recall only, primary production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-02",
+      "latest_notice": "Network for Hope (KY), CCN 18P001, termination notice",
+      "disposition": "Already identified in earlier November 2 watch and pending review; CMS index showed no newer notice during this run."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 2 2026 hospital emergency department temporarily closed suspended patients local news",
+      "November 2 2026 hospital maternity labor delivery unit closing service suspension",
+      "November 2 2026 mental health psychiatric behavioral health facility closure suspended services",
+      "November 2 2026 dialysis center oncology cancer clinic closure service disruption",
+      "November 2 2026 rural hospital primary care clinic closes temporarily no appointments United States",
+      "November 2 2026 ambulance service ceases operations station base closure county EMS United States",
+      "November 2 2026 air medical helicopter base closes suspends flights services United States",
+      "November 2 2026 emergency room reopened reopened hospital after suspension United States",
+      "site:stthomassource.com OR site:stjohnsource.com OR site:stcroixsource.com clinic hospital closed reopened November 2 2026",
+      "Guam CNMI American Samoa Puerto Rico US Virgin Islands November 2 2026 clinic emergency room hospital temporarily closed reopened service",
+      "November 2 2026 United States hospital clinic emergency department halted service effective today patients redirected",
+      "Nov 2 2026 county rural health hospital dialysis ambulance closure reopening access effective Monday"
+    ],
+    "recency_filter_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Network for Hope (Kentucky), CMS notice November 2",
+        "reason": "Duplicate of prior pending-review finding; no new change in current window.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Roseland Community Hospital labor-and-delivery closure, Chicago",
+        "reason": "Previously announced effective October 31; not a new in-window report.",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/"
+      },
+      {
+        "item": "Madison County Fire Rescue takes over Madison city operations, Florida",
+        "reason": "November 2 reporting explicitly says no EMS coverage gap; transfer effective November 1, nonqualifying.",
+        "url": "https://fox49.tv/news/local/madison-county-fire-rescue-takes-over-madison-city-fire-operations-with-no-service-lapse"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Airport base, Illinois",
+        "reason": "September 16 closure; historical, outside window.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "UNM Health system emergency department and clinic reopening, New Mexico",
+        "reason": "Restoration already reported October 27–28; historical, not within this observation window.",
+        "url": "https://www.govtech.com/security/unm-health-center-reopens-to-patients-after-cyber-event"
+      },
+      {
+        "item": "Guam Regional Medical City outpatient reopening",
+        "reason": "Effective October 19; historical, out of window.",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      },
+      {
+        "item": "Kula Hospital emergency department, Hawaii",
+        "reason": "Closure from March 2026 and September update without confirmed new effective restoration.",
+        "url": "https://www.mauihealth.org/important-community-updates/kula-hospital-facility-and-operations-updates/"
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital labor and delivery",
+        "reason": "Closure planned for December 18; previously announced, not an effective in-window loss.",
+        "url": "https://apnews.com/article/labor-delivery-mainehealth-lincoln-hospital-close-december-5f27dae0086adc0ff56aff5e6b409b96"
+      }
+    ],
+    "source_failures": [],
+    "search_quality": "DEGRADED: CMS Public Notices was accessible and all 12 targeted searches executed. Results were dominated by historical events, no-lapse transitions, prospective changes and non-U.S. events; high-signal rural and territory recall remains limited. No new material failure or qualifying in-window finding confirmed.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T124959-0800-recall12.json",
+      "previous_heartbeat_verified": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only; one append-only heartbeat on ops/watch-ledger. No approval, publication, primary collection changes, schedule changes or task disabling."
+  }
+}

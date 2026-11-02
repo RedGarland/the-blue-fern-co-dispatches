@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T184604-0800-recall12",
+  "scheduled_for": "2026-11-01T18:45:22-08:00",
+  "started_at": "2026-11-01T18:46:04-08:00",
+  "completed_at": "2026-11-01T18:46:37-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T17:47:39-08:00",
+    "end": "2026-11-01T18:46:37-08:00",
+    "basis": "Since prior verified Care Line supplementary heartbeat completed_at; source search also screened same-day previously unrecorded developments as possible recall candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Supplementary recall only, across US states/DC/territories. Production national collection remains authoritative. Focus: essential hospital, emergency, maternity, behavioral health, dialysis, oncology and primary care; rural/EMS/air-medical; CMS certification actions; effective restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Direct CMS table inspected first. Top entries remain 2026-10-30; no newer termination, rescission, or CLIA notice listed.",
+      "source_ref": "turn573129view0"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 1 2026 hospital emergency department temporarily closed ambulance diverted United States",
+      "November 1 2026 maternity labor delivery unit closure hospital local news",
+      "November 1 2026 rural hospital emergency service suspended closed",
+      "November 1 2026 ambulance service shutdown suspended county 911",
+      "November 1 2026 air ambulance base closing flights suspended",
+      "November 1 2026 dialysis center patients closure shut down",
+      "November 1 2026 mental health psychiatric behavioral hospital service closure suspension",
+      "November 1 2026 cancer clinic oncology service closing closed",
+      "November 1 2026 primary care clinic closes patients relocated",
+      "November 1 2026 hospital emergency department service reopened restored",
+      "November 1 2026 Guam Puerto Rico US Virgin Islands Northern Mariana healthcare clinic closure ambulance",
+      "November 1 2026 Alaska tribal hospital rural emergency care outage reopening"
+    ],
+    "search_method": "12 additional targeted fast searches with recency=2 days and explicit November 1, 2026 terms; evaluated available current local and official reports for actual service changes. No more than 12 additional searches.",
+    "reviewed_exclusions": [
+      {
+        "item": "Kagman clinic, Saipan, Northern Mariana Islands",
+        "url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+        "reason": "Previously detected and recorded effective October 30; November 1 release is duplicative, not a new access change."
+      },
+      {
+        "item": "Valley Children's Hospital, Madera, CA",
+        "url": "https://kmph.com/news/local/valley-childrens-hospital-on-lockdown-as-deputies-investigate-threat-call",
+        "reason": "Intake suspension and restoration recorded by the prior supplementary heartbeat, review pending; no newly verified repeat event."
+      },
+      {
+        "item": "Watsonville Community Hospital maternity closure plan, CA",
+        "url": "https://santacruzlocal.org/2026/10/28/watsonville-community-hospital-moves-to-shutter-labor-and-delivery/",
+        "reason": "October 28 vote toward possible March 2027 closure still subject to further resolution/notice; no current concrete access change in observation window."
+      },
+      {
+        "item": "Doylestown Hospital, PA emergency department",
+        "url": "https://centralbucksnews.com/news/public-safety/doylestown-health-responds-to-emergency-department-incident/",
+        "reason": "October 23 temporary incident, predates this hourly search window."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T174518-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T17:47:39-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: Search engine returned stale or geographically unrelated stories and incomplete territory/rural coverage despite same-day and recency constraints. Negative recall is not comprehensive.",
+    "limitations": "No independent visibility into authoritative production ingestion. No new qualifying access interruption/restoration confirmed within hourly window, but search relevance prevents asserting full national or territorial coverage.",
+    "controls": "Exactly one append-only heartbeat to ops/watch-ledger only; no approval, publication, schedule change or disabling."
+  }
+}

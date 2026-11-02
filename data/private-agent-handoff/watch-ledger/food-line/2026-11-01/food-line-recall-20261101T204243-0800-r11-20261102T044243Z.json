@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T204243-0800-r11-20261102T044243Z",
+  "scheduled_for": "2026-11-01T20:45:54-08:00",
+  "started_at": "2026-11-01T20:42:43-08:00",
+  "completed_at": "2026-11-01T20:43:45.153-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T19:46:34.792-08:00",
+    "end_at": "2026-11-01T20:43:45.153-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified Food Line watch heartbeat completion through this run's observation; publication/event time governs qualification, not search crawl date.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch of high-value missed food-access disruptions only. Primary nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster involving a community's only/sole/last/full-service grocery store",
+      "Cancellation/suspension of emergency food distributions because of storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or major immediate access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": 2,
+    "bounded_query_context": [
+      "November 1 2026 town only grocery store closed fire disaster food access",
+      "November 1 2026 last grocery store closes town rural residents",
+      "Nov 1 2026 sole supermarket burned down community access",
+      "November 1 2026 full service supermarket closes only grocery community",
+      "November 1 2026 food distribution canceled due to storm flooding pantry",
+      "Nov 1 2026 emergency food giveaway canceled weather power outage food bank",
+      "November 1 2026 disaster food distribution suspended flooding fire",
+      "Nov 1 2026 food pantry closed unexpectedly service suspended",
+      "November 1 2026 food bank shut down facility damage water leak",
+      "November 1 2026 pantry closes immediately families food assistance",
+      "site:gov SNAP benefit outage delayed November 1 2026 state notice benefits",
+      "site:gov WIC services suspended November 1 2026 closures outage food benefits"
+    ],
+    "observation": "No independently verifiable newly reported qualifying U.S. disruption within the observation window. The searches returned primarily older grocery loss stories, 2025 SNAP interruption reports, routine November pantry schedules, and the previously recorded Provo, Utah closure. None establishes a novel eligible disruption since the prior check.",
+    "excluded_examples": [
+      {
+        "publisher": "KSL",
+        "title": "Nonprofit temporarily closes its doors, impacting more than 20,000",
+        "source_published_at": "2026-10-31T22:24:00-06:00",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Provo, Utah food-bank closure already identified and excluded by earlier verified run."
+      },
+      {
+        "publisher": "WBNG",
+        "title": "Town of Spencer recovering after losing only grocery store in fire",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Valid miss class but September event, not new in the current hour."
+      },
+      {
+        "publisher": "Peak of Ohio",
+        "title": "Food for the holidays: November mobile pantry schedule released",
+        "source_published_at": "2026-11-01",
+        "url": "https://www.peakofohio.com/local-news/food-for-the-holidays-november-mobile-pantry-schedule-released/",
+        "reason": "Routine distributions/schedule announcement, not a disruption."
+      },
+      {
+        "publisher": "The Texas Tribune",
+        "title": "Texas SNAP benefit pause: Here’s how to receive and give help",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-lone-star-card-how-to-help/",
+        "reason": "Historical 2025 report, not new November 2026 access interruption."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T194444-0800-r11-20261102T034444Z.json",
+      "prior_verified_completed_at": "2026-11-01T19:46:34.792-08:00",
+      "method": "Read prior heartbeat from ops/watch-ledger and screened prior exclusions against search results and dated direct sources."
+    },
+    "source_failures": [],
+    "limitations": "Targeted web recall is not exhaustive; local notices may not be indexed in this interval. Zero findings does not demonstrate zero incidents.",
+    "production_authority": "No approvals, publication, primary production changes, schedule modifications, or disabling."
+  }
+}

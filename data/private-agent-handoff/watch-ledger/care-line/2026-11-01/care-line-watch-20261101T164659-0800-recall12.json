@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T164659-0800-recall12",
+  "scheduled_for": "2026-11-01T16:45:22-08:00",
+  "started_at": "2026-11-01T16:46:59-08:00",
+  "completed_at": "2026-11-01T16:48:42.094-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T15:44:33-08:00",
+    "end": "2026-11-01T16:48:42.094-08:00",
+    "basis": "Since the previous verified supplementary Care Line heartbeat (2026-11-01 15:44:33 PST); authoritative national production collection not modified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "U.S., DC, Puerto Rico, Guam, U.S. Virgin Islands, CNMI and American Samoa; hospital/ED, maternity, behavioral health, dialysis, oncology, primary-care, rural/emergency, EMS/air-medical service losses; CMS actions; actual service restorations.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "page_last_modified": "2026-10-30 04:16 PM",
+      "observation": "Direct CMS page inspection first: the newest seven notices all show 2026-10-30; no November 1 or October 31 entries, new rescission, CLIA sanction or provider termination observed.",
+      "source_ref": "turn610197view0"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-11-01\" OR \"2026-10-31\" termination CLIA",
+      "hospital emergency department closes suspends service November 1 2026 United States",
+      "maternity labor delivery unit closes November 1 2026 hospital United States",
+      "psychiatric behavioral health inpatient hospital service closure November 1 2026 US",
+      "dialysis cancer oncology primary care clinic closes reopens Nov 1 2026 US",
+      "ambulance EMS service suspension closure station November 1 2026 county US",
+      "air ambulance medevac helicopter base closing suspended October 31 November 1 2026 US",
+      "\"November 1, 2026\" \"hospital\" \"services\" \"closing\" OR \"closed\"",
+      "rural emergency room ER closed reopened November 1 2026 \"hospital\" United States",
+      "Guam CNMI Saipan Puerto Rico hospital clinic emergency service closure November 1 2026",
+      "American Samoa US Virgin Islands healthcare clinic hospital service interruption November 1 2026",
+      "hospital emergency department clinic reopened resumed services October 31 November 1 2026 United States"
+    ],
+    "search_method": "Twelve targeted fast web searches with 2-day recency; reviewed source publication dates, geography, concrete access changes and previously recorded events.",
+    "reviewed_exclusions": [
+      {
+        "item": "Isla Community Health Kagman clinic, Saipan, CNMI",
+        "url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+        "reason": "Temporary Kagman closure effective October 30, previously recorded and pending review; no newly documented change since prior check."
+      },
+      {
+        "item": "Sutter Health Alta Bates/Emeryville hospital plans",
+        "url": "https://www.kqed.org/news/12107583/sutter-abandons-plan-for-new-emeryville-hospital-pitched-as-replacement-for-alta-bates",
+        "reason": "November 1 plan/location decision with no concrete current service shutdown or restoration; excluded as proposal/business development."
+      },
+      {
+        "item": "University of New Mexico Health cyberattack disruptions",
+        "url": "https://apnews.com/article/7a3593f8a3cee4ca895774ab1574919f",
+        "reason": "October 26 ambulance diversions and clinic interruption with partial restoration already reported; not a new change in this check window."
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital birthing unit",
+        "url": "https://mainebeacon.com/midcoast-mothers-family-physicians-fight-mainehealths-birthing-unit-closure/",
+        "reason": "October 28 coverage of previously decided future December closure; no newly effective change."
+      },
+      {
+        "item": "HCA Florida Capital Hospital Level II NICU",
+        "url": "https://www.wctv.tv/2026/08/28/hca-florida-capital-hospital-discontinue-its-level-ii-nicu-services-effective-nov-1/",
+        "reason": "Previously announced November 1 change, but no independent fresh confirmation of effective closure in this run."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T154401-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T15:44:33-08:00"
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: despite recency constraints, discovery contained numerous stale, non-U.S., policy-only, and unrelated returns. Substantial rural and territorial recall gaps remain. No new qualifying U.S. service-access event verified.",
+    "limitations": "Negative finding is not proof of no changes; near-real-time local/territorial indexing is incomplete. Primary production collector remains authoritative.",
+    "controls": "One append-only JSON heartbeat on ops/watch-ledger only. No approval, public publication, schedule change or disabling."
+  }
+}

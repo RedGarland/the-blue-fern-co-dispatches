@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T194444-0800-r11-20261102T034444Z",
+  "scheduled_for": "2026-11-01T19:45:54-08:00",
+  "started_at": "2026-11-01T19:44:44-08:00",
+  "completed_at": "2026-11-01T19:46:34.792-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T18:49:00-08:00",
+    "end_at": "2026-11-01T19:46:34.792-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Started at independently read-back-verified latest Food Line watch heartbeat completed_at on ops/watch-ledger; classified by publication and event time, not crawler date.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss-class recall only; authoritative nationwide Food Line production collection unchanged.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss, closure, fire or disaster",
+      "Emergency food distribution canceled or suspended because of storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food bank service closure or major immediate access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate food-access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "query_recency_days": 2,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 1 2026 community",
+      "\"last grocery store\" shut down fire October 31 November 1 2026",
+      "\"sole grocery\" closed storm flood November 2026",
+      "\"full-service grocery store\" closing November 1 2026 food desert",
+      "\"food distribution\" canceled storm November 1 2026 food bank",
+      "\"food distribution\" suspended flood fire October 31 2026",
+      "food bank pantry closed abruptly November 1 2026 residents",
+      "food pantry temporarily closed storm damage November 1 2026",
+      "food bank services suspended building damage November 2026",
+      "site:gov \"SNAP\" \"interruption\" \"November 1, 2026\"",
+      "site:gov \"WIC\" \"benefits\" \"interruption\" November 2026",
+      "SNAP benefits delayed outage state agency November 1 2026 notice"
+    ],
+    "observation": "Twelve bounded targeted searches yielded no independently verified new U.S. disruption published or materially updated since the 18:49 PST prior completed check. Results principally repeated the previously recorded Provo, Utah closure, a September 2026 sole-grocery fire in Spencer, New York, and October 2025 SNAP shutdown notices. No new agency/provider SNAP or WIC interruption, qualifying emergency-distribution cancellation, or novel pantry closure was verified.",
+    "excluded_examples": [
+      {
+        "title": "Provo food bank announces temporary closure amid financial shortfall",
+        "publisher": "The Salt Lake Tribune",
+        "source_published_at": "2026-11-01T11:03:00-07:00",
+        "url": "https://www.sltrib.com/news/2026/11/01/provo-food-bank-announces/",
+        "reason": "Previously recorded Community Action Services and Food Bank closure in Provo; already excluded by preceding heartbeat as duplicate."
+      },
+      {
+        "title": "Nonprofit temporarily closes its doors, impacting more than 20,000",
+        "publisher": "KSL",
+        "source_published_at": "2026-10-31T22:24:00-06:00",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Same previously known Provo closure, original report predates search window."
+      },
+      {
+        "title": "Town of Spencer recovering after losing only grocery store in fire",
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Qualifying class but historical September 2026 incident, not newly reported in current window."
+      },
+      {
+        "title": "Governor Murphy, Senate President Scutari, and Assembly Speaker Coughlin Announce Accelerated Delivery of $42.5 Million in Food and Hunger Grants",
+        "publisher": "New Jersey Department of Human Services",
+        "source_published_at": "2025-10-30",
+        "url": "https://www.nj.gov/humanservices/news/pressreleases/2025/approved/20251030.shtml",
+        "reason": "Historical 2025 SNAP program interruption and grants, not a new 2026 immediate-access development."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T184734-0800-r11-20261102T024734Z.json",
+      "prior_verified_completed_at": "2026-11-01T18:49:00-08:00",
+      "method": "Fetched most recent branch-head commit and prior heartbeat with the GitHub connector, and compared incident/source dates with its known exclusions."
+    },
+    "source_failures": [],
+    "limitations": "Bounded web search is not exhaustive; same-hour local notices may not yet be indexed. No findings does not establish absence of events. A public GitHub page browser fetch failed, but direct GitHub connector reads succeeded and source searches remained usable.",
+    "production_authority": "No approval, public publication, production collection, schedule modification, or task disabling."
+  }
+}

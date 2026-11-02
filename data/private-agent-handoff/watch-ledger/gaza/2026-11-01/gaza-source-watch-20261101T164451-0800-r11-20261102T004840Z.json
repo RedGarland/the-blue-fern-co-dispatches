@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T164451-0800-r11-20261102T004840Z",
+  "scheduled_for": "2026-11-01T16:44:51-08:00",
+  "started_at": "2026-11-01T16:48:40-08:00",
+  "completed_at": "2026-11-01T16:50:47-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T14:46:48.791-08:00",
+    "end": "2026-11-01T16:50:47-08:00",
+    "basis": "Latest directly verified prior Gaza heartbeat completed 14:46:48 PST; conservative overlap covers potential intervening run not enumerated by available branch file-list interface.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO global and WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only. Authoritative daily Gaza production collector/publisher remains unchanged.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed humanitarian report posted 31 October 2026, covering 29 October. No report in bounded window."
+      },
+      {
+        "source": "WHO global crisis",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; ongoing health capacity and medical evacuation constraints, but no new dated hospital, ambulance, fuel, transport or evacuation operational change in window."
+      },
+      {
+        "source": "WHO EMRO Palestine",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502 Bad Gateway, recurring source restriction. WHO global alternative accessed."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza latest humanitarian situation report November 1 2026 OCHA OPT",
+      "site:who.int Gaza occupied Palestinian territory health emergency update November 1 2026 WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza November 1 2026 after 14:45 Pacific latest deaths injuries Israeli attack Reuters AP AFP",
+      "site:english.wafa.ps \"November 1, 2026\" Gaza killed wounded afternoon latest",
+      "site:apnews.com Gaza Nov 1 2026 hospital strike deaths ceasefire November 2",
+      "site:reuters.com/world/middle-east/ Gaza November 1 2026 latest ceasefire civilian casualties",
+      "Gaza November 1 2026 Kerem Shalom Rafah crossing UN aid trucks restrictions latest",
+      "site:unicef.org \"Gaza\" \"1 November 2026\" children water shelter",
+      "site:prcs.org.ps Gaza \"November 1, 2026\" ambulance injured medical transport",
+      "site:un.org OR site:news.un.org Gaza November 1 2026 aid civilians displaced UN",
+      "site:icrc.org Gaza November 1 2026 detainees hostages humanitarian access",
+      "Gaza Sunday 1 November 2026 night new strike civilian wounded Jabalia Beit Lahia Nuseirat",
+      "Gaza November 1 2026 hospital medical evacuation fuel ambulance WHO EMRO",
+      "Gaza 1 November 2026 ceasefire negotiation Israel Hamas hostages latest changes Red Cross"
+    ],
+    "search_method": "Two official-first targeted search queries followed by exactly 12 further targeted fast web queries (two batches of six), recency 2 days for the latter, plus direct publisher checks; no further search queries.",
+    "direct_checks": [
+      {
+        "source": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Most recent Gaza-specific casualty headline dated 1 November 12:07 PM Palestine time repeats prior recorded Gaza City/Khan Younis eight-death account; later homepage reports relate to West Bank events or political statements."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+        "result": "Accessible; article date 1 November 2026 12:26 UTC predates window and covers the already recorded two strikes and five alleged police officers."
+      },
+      {
+        "source": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-november-1-2026-b918f44d8f212d7daf7f2f9a98c91a0b",
+        "result": "Accessible; known Gaza City child-victim and other November 1 casualty details already recorded; no distinct subsequent incident verified."
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, previously documented; search returned no new specific aid/food access change."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, previously documented; alternatives checked."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties, injuries and military operations with civilian impact",
+      "displacement and emergency shelter",
+      "humanitarian aid access and food security",
+      "water access and WASH",
+      "hospital/healthcare functionality, ambulance, medical transport, fuel and medical evacuations",
+      "civilian infrastructure damage",
+      "crossings and aid logistics",
+      "detainees, prisoners and hostages",
+      "ceasefire and negotiations"
+    ],
+    "excluded_duplicates": [
+      "November 1 Gaza City strike: three previously reported deaths including a four-year-old child; woman seriously wounded; Reuters identification details previously recorded",
+      "November 1 western Khan Younis strike: five reported killed; claimed police affiliations and Israel's militant characterization previously recorded",
+      "Previously recorded Jabalia Halawa camp injury report, and retrospective aggregate Gaza casualty totals"
+    ],
+    "excluded_unverified_or_old": [
+      "OCHA newest listing dated 31 October and WHO overview provide background but no new operational event in window.",
+      "WAFA evening Palestinian-time posts primarily concern West Bank or political statements, not distinct new Gaza physical impact.",
+      "Reuters 12:26 UTC same-day update preceded observation and repeats known deaths; AP summary does not establish a new later casualty.",
+      "ICRC older hostage/prisoner transfer reporting, undated humanitarian-service figures and unsourced or opinion items excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Known persistent; WHO global and OCHA accessible."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Known persistent; alternative humanitarian sources checked."
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Known persistent; alternate coverage remains."
+      },
+      {
+        "source": "UN News search",
+        "error": "Robots exclusion for news.un.org in one targeted search",
+        "materiality": "UN/OCHA source remained accessible; no new material deterioration."
+      }
+    ],
+    "status_rationale": "DEGRADED because recurring WHO EMRO, WFP and UNRWA source-access failures (and a UN News robots block) limited source coverage; no newly material failure was established. No new qualifying event verified.",
+    "limitations": "Web indexing is incomplete in near real time, negative findings are not a proof of no changes, and exact prior-hour ledger enumeration was not available; scan conservatively overlapped the latest directly verified Gaza heartbeat.",
+    "source_evidence_urls": [
+      "https://www.ochaopt.org/updates",
+      "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+      "https://english.wafa.ps/",
+      "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+      "https://apnews.com/article/mideast-news-november-1-2026-b918f44d8f212d7daf7f2f9a98c91a0b"
+    ],
+    "safeguards": "One new append-only heartbeat on ops/watch-ledger only; no approval, publishing, Pages change, schedule change, automation disabling or production mutation."
+  }
+}

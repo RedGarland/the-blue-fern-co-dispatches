@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T044617-0800-r11-20261102T124617Z",
+  "scheduled_for": "2026-11-02T04:45:54-08:00",
+  "started_at": "2026-11-02T04:46:17-08:00",
+  "completed_at": "2026-11-02T04:47:58.954-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T03:50:42.936-08:00",
+    "end_at": "2026-11-02T04:47:58.954-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous Food Line heartbeat read from ops/watch-ledger (completion timestamp), through this run; source publication/event dates distinguished from crawler and search recency.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss-class recall, not the authoritative nationwide production collector.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster involving only/sole/last/full-service community grocery",
+      "Emergency food distributions canceled/suspended due to storm, flood, fire, outage, or damaged facility",
+      "Abrupt pantry/food-bank closure or major immediate access reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate loss of access"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2,
+      3
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed \"November 2\" 2026 community",
+      "\"last grocery store\" closing fire \"November\" 2026 town residents",
+      "\"sole grocery\" store lost burned closed Nov 2026 rural",
+      "\"food distribution\" canceled November 2 2026 weather storm flood",
+      "\"food pantry\" \"closed\" \"power outage\" \"November\" 2026",
+      "\"food bank\" \"distribution\" \"cancelled\" \"November\" 2026 storm",
+      "\"food pantry\" abrupt closure services suspended November 2 2026",
+      "SNAP EBT outage benefits unavailable November 2 2026 official state",
+      "site:gov \"November 2, 2026\" \"SNAP\" \"delay\" OR \"outage\" OR \"suspended\"",
+      "site:gov \"November 2026\" WIC benefits \"unavailable\" \"interruption\" \"outage\"",
+      "\"November 2, 2026\" \"food bank\" \"closed\" OR \"suspended\" OR \"distribution cancelled\"",
+      "\"November 2, 2026\" \"grocery store\" \"only\" \"closed\" OR \"fire\""
+    ],
+    "observation": "All 12 bounded queries returned search results or completed without a tool error. None yielded a new verifiable US incident that qualifies during the interval. Historical grocery closures, Canadian incidents, September 2026 storm interruptions, older November 2025 SNAP shutdown notices, resource material and routine updates were not treated as current evidence. Search dates/crawl freshness were not substituted for event dates.",
+    "excluded_examples": [
+      {
+        "publisher": "Finger Lakes Daily News",
+        "source_published_at": "2025-02-05",
+        "url": "https://www.fingerlakesdailynews.com/local/cayuga/weedsport-grocery-store-closes/",
+        "reason": "Weedsport only grocery store closure reported February 2025, outside observation window."
+      },
+      {
+        "publisher": "Nunatsiaq News",
+        "source_published_at": "2024-09",
+        "url": "https://nunatsiaq.com/stories/article/whale-cove-declares-local-state-of-emergency-as-fire-guts-only-grocery-store/",
+        "reason": "Historical event in Nunavut, Canada; outside United States and observation interval."
+      },
+      {
+        "publisher": "KFOX14/CBS4",
+        "source_published_at": "2026-09-24",
+        "url": "https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+        "reason": "September El Paso food-bank storm closure, not a new November event; previously screened."
+      },
+      {
+        "publisher": "Michigan Department of Health and Human Services",
+        "source_published_at": "2025-11-08",
+        "url": "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/2025/11/08/supreme-court-emergency-order-pauses-november--snap-payments",
+        "reason": "Official November 2025 SNAP interruption notice, not a November 2026 development."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Disaster-recovery resources dated October 29; no new canceled distribution was established."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T034935-0800-r11-20261102T114935Z.json",
+      "prior_verified_completed_at": "2026-11-02T03:50:42.936-08:00",
+      "method": "Read previous heartbeat directly from ops/watch-ledger; compared dated candidate events and exclusions."
+    },
+    "source_failures": [],
+    "limitations": "Fresh search indexing may miss unindexed hyperlocal notices, newly issued alerts, and sites not returned within the bounded search budget; this does not establish nationwide absence of disruptions.",
+    "production_authority": "No approval, publication, primary collector alteration, schedule change, or task disabling."
+  }
+}

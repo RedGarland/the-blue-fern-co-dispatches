@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T144451-0800-r11-20261102T224433Z",
+  "scheduled_for": "2026-11-02T14:44:51-08:00",
+  "started_at": "2026-11-02T14:43:01-08:00",
+  "completed_at": "2026-11-02T14:44:33-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-02T13:50:41.842-08:00",
+    "end": "2026-11-02T14:44:33-08:00",
+    "basis": "Latest verified prior Gaza Source Watch heartbeat on ops/watch-ledger to current observation; recall based on newly discoverable traceable reports rather than assumed event occurrence time. WAFA listing timezone is not explicitly identified.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary source recall; production Gaza daily collector and publisher remain authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261102T134451-0800-r11-20261102T214844Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T134451-0800-r11-20261102T214844Z.json",
+      "completed_at": "2026-11-02T13:50:41.842-08:00",
+      "verified_via": "GitHub ops/watch-ledger directory listing and exact fetch_file before this check"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listing 31 October 2026 for Humanitarian Situation Report dated 29 October; no new 2 November Gaza humanitarian situation update visible."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated 2 November Gaza health-service, ambulance, fuel, medical-evacuation or hospital-capacity update visible."
+      },
+      {
+        "source": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway on direct open; recurrent documented restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 3 2026 00:00 01:00 casualties Khan Younis",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 2 2026 11 PM midnight latest killed wounded",
+      "site:reuters.com/world/middle-east/ Gaza November 2 2026 latest ceasefire casualties humanitarian November 3",
+      "site:apnews.com/article/ Gaza November 2 2026 Monday latest ceasefire strikes killed November 3",
+      "site:news.un.org/en/story/2026/11 Gaza humanitarian latest November 2 2026",
+      "site:unicef.org/press-releases Gaza November 2 2026 water aid hospital children",
+      "site:palestinercs.org/en Gaza November 2 2026 ambulance hospital evacuation wounded response",
+      "site:wfp.org/news Gaza November 2 2026 food distribution convoy crossing",
+      "Gaza Nov 2 2026 Rafah crossing Kerem Shalom cargo aid trucks patients medevac latest hours",
+      "Gaza November 2 November 3 2026 ceasefire hostages detainees talks agreement concrete change",
+      "Gaza November 2 2026 hospital dialysis power generator fuel water line damage operation latest",
+      "Gaza November 2 2026 evening strike tent civilian wounded Nuseirat Khan Younis Gaza City Al Zaytoun new"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible. At observation, latest post was 3 November at 00:19 publisher clock regarding Somaliland, not Gaza. Most recent Gaza casualty item listed was 2 November at 19:16 publisher clock, Khan Younis gunfire, already recovered in prior watch. WAFA site's exact clock timezone not verified."
+      },
+      {
+        "source": "AP November 2 Middle East live updates",
+        "url": "https://apnews.com/article/mideast-news-november-2-2026-8722c8b5a9deb228e7a188d4760ea8ed",
+        "result": "Accessible; no distinct new Gaza development identified in accessible article."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible. Latest visible public-news items dated June 2026; no 2 November Gaza operational bulletin."
+      },
+      {
+        "source": "Muslim Network TV November 2 five-fatality roundup",
+        "url": "https://www.muslimnetwork.tv/israeli-attacks-kill-five-palestinians-across-gaza-strip/",
+        "result": "Article dated 2 November reports five deaths in Khan Younis, Gaza City and central Gaza and cites Civil Defense via The New Arab; incident descriptions overlap previously recorded daily strikes and WAFA's five-deaths roundup. No separable newly verifiable additional case."
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; recurring restriction."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; recurring restriction."
+      }
+    ],
+    "screened_categories": [
+      "Civilian casualties and military operations with civilian impact",
+      "Displacement, food, water, aid, crossings and infrastructure",
+      "Healthcare, medical evacuations, ambulances, hospital capacity and fuel",
+      "Detention, hostages, ceasefire and negotiations"
+    ],
+    "excluded_as_nonqualifying": [
+      "WAFA 2 November Al-Batn al-Sameen gunfire, Tal al-Hawa vehicle strike, Al-Zaytoun kitchen-affiliated minibus, Nuseirat tent strike, Al-Masdar and Khan Younis strikes were already in earlier watch heartbeats; avoid double counts.",
+      "Previously recorded WAFA 2 November cumulative mortality bulletin of 15 fatalities and 38 injuries in previous 48 hours, plus 18 retroactively verified deaths; no new standalone event inferred.",
+      "Muslim Network TV's November 2 five-death roundup repeats known Civil Defense accounts rather than establishing an additional casualty incident.",
+      "WAFA late-night health minister/UNICEF and ICRC detainee discussion reports already assessed in prior watch; no newly verified implemented Gaza operational change.",
+      "AP Middle East live news focused on Iran and Hebron; no new qualifying Gaza item confirmed.",
+      "Older 2023-2025 reports, out-of-geography West Bank events, opinion, unsupported posts and nontraceable claims."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News search",
+        "problem": "robots.txt restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "Search indexing may lag publisher releases; no new qualifying recall finding does not prove no incident occurred.",
+      "WAFA headline timestamps lack an explicit timezone; no precise UTC event time inferred from the listing.",
+      "Some official publishers remained inaccessible, but OCHA OPT, WHO global, WAFA, PRCS, AP and other reporting were available.",
+      "No primary Gaza production collector or daily publication files were modified or used to authorize publication."
+    ],
+    "status_rationale": "DEGRADED only due to recurring, previously documented WHO EMRO, WFP, UNRWA and UN News access restrictions; no newly material search coverage deterioration or qualifying nonduplicate incident discovered.",
+    "safeguards": "Exactly one append-only heartbeat JSON on ops/watch-ledger. No approvals, publication, public-site, social posting, schedule, or production modification."
+  }
+}

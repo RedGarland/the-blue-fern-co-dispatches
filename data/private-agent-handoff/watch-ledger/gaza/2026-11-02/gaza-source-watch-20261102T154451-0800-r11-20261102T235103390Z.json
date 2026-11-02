@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T154451-0800-r11-20261102T235103390Z",
+  "scheduled_for": "2026-11-02T15:44:51-08:00",
+  "started_at": "2026-11-02T15:49:11-08:00",
+  "completed_at": "2026-11-02T15:51:03-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-02T14:44:33-08:00",
+    "end": "2026-11-02T15:51:03-08:00",
+    "basis": "From completion timestamp of the last verified Gaza Source Watch heartbeat on ops/watch-ledger to this execution. Detection is based on newly traceable reports; publisher listing times are not assumed to be Pacific or event occurrence times.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Gaza daily collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261102T144451-0800-r11-20261102T224433Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T144451-0800-r11-20261102T224433Z.json",
+      "completed_at": "2026-11-02T14:44:33-08:00",
+      "verified_via": "GitHub fetch_file on ops/watch-ledger during this run"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest Gaza Humanitarian Situation Report visible was 29 October 2026, posted 31 October; no new 2 November update."
+      },
+      {
+        "source": "WHO global oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated 2 November health-service, medical-evacuation, ambulance, fuel or hospital-capacity update visible."
+      },
+      {
+        "source": "WHO EMRO oPt health crisis",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "result": "HTTP 502."
+      },
+      {
+        "source": "WHO EMRO emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza November 2 2026 late afternoon evening November 3 2026 latest killed wounded strikes civilians 2026",
+      "site:reuters.com/world/middle-east/ Gaza November 2 2026 ceasefire strike civilians latest November 3",
+      "site:apnews.com/article/ Gaza November 2 2026 November 3 2026 latest military strike humanitarian",
+      "site:news.un.org/en/story/2026/11 Gaza November 2 2026 humanitarian ceasefire aid",
+      "site:unicef.org November 2 2026 Gaza water fuel children new response",
+      "site:reliefweb.int/report/occupied-palestinian-territory November 2 2026 Gaza medical aid displacement",
+      "site:wfp.org Gaza 2 November 2026 food aid crossings supplies new update",
+      "site:msf.org Gaza 2 November 2026 hospital ambulance medical services fuel ceasefire",
+      "Gaza November 3 2026 early morning November 2 late night new civilian casualties Khan Younis Nuseirat Gaza city WAFA 2026",
+      "Gaza crossing Rafah Kerem Shalom November 2 2026 aid deliveries medical evacuation new access update",
+      "Gaza ceasefire hostages bodies detainees negotiations November 2 2026 latest specific development",
+      "Gaza 2 November 2026 hospital ambulance medical evacuation capacity dialysis generators fuel water disruption latest"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest visible item dated 3 November at 00:19 publisher clock concerned Somaliland; newest Gaza casualty item remained 2 November 19:16 publisher clock, Al-Batn al-Sameen gunfire, already captured in prior heartbeat. WAFA site timezone not independently verified."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403, recurring."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403, recurring."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest visible PRCS public news June 2026, with no fresh 2 November Gaza operational bulletin."
+      },
+      {
+        "source": "OCHA 29 October situation report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026",
+        "result": "Published 31 October; reporting period largely 19-26 October. Older context, not new during this hourly recall."
+      }
+    ],
+    "screened_categories": [
+      "Civilian casualties and military operations with documented civilian impact",
+      "Displacement, food/water access, humanitarian supplies, crossings and infrastructure",
+      "Health services, hospital functionality, medical evacuation, ambulances, fuel and transport",
+      "Detention, hostages, ceasefire changes and negotiations"
+    ],
+    "excluded_as_nonqualifying": [
+      "Reuters 2 November four-death account of Tal al-Hawa vehicle strike, Khan Younis and Al-Mussadar strikes restates incidents previously logged; no distinct new case. https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+      "WAFA 2 November 19:16 Al-Batn al-Sameen killing and injuries already logged as new in earlier hourly heartbeat; no fresh follow-up in latest listing.",
+      "WAFA 2 November 12:11 cumulative Gaza mortality bulletin, five-death roundup, Tal al-Hawa, Al-Zaytoun kitchen minibus and Nuseirat tent strike previously logged; no additional casualties inferred from aggregations.",
+      "Al-Monitor mirrored earlier Reuters 2 November three-death account, with overlapping incidents rather than an independent new case.",
+      "Search results for WHO/UNICEF/WFP/MSF, crossing and medevac developments were previously dated situation material, not newly verified operational changes.",
+      "AP results and November 1 reporting did not establish a distinct qualifying new November 2 incident; out-of-geography, undated, historical, opinion and unsupported aggregator claims excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502 on both oPt and situation report links",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News targeted search",
+        "problem": "robots.txt domain restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "Search indexing and publisher release schedules can lag; no finding does not establish no events occurred.",
+      "WAFA publisher timestamps lack an expressly verified timezone; do not map its publication clock to Pacific or event time.",
+      "WHO EMRO, WFP, UNRWA and UN News restrictions reduced direct source coverage despite accessible OCHA, WHO global, WAFA, PRCS, Reuters and UNICEF/MSF context.",
+      "No primary Gaza collector, production approval, publication, public website, social post or automation schedule was changed."
+    ],
+    "status_rationale": "DEGRADED for recurring, previously documented official publisher access restrictions. Alternative coverage remained useful and no newly material loss of coverage or distinct verified development was found.",
+    "safeguards": "Exactly one append-only run heartbeat on ops/watch-ledger; no approvals, publication, scheduling or production changes."
+  }
+}

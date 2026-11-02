@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T011739-0800-recall12",
+  "scheduled_for": "2026-11-02T00:45:22-08:00",
+  "started_at": "2026-11-02T01:17:39-08:00",
+  "completed_at": "2026-11-02T01:19:02-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T23:51:59-08:00",
+    "end": "2026-11-02T01:19:02-08:00",
+    "basis": "Since latest verified supplementary Care Line heartbeat on ops/watch-ledger. Nov 1-Nov 2 reports were checked for newly reported or newly effective service-access changes. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_at": "2026-11-02T01:17:39-08:00",
+      "latest_notice_date": "2026-10-30",
+      "observation": "CMS official current-notice listing checked before the 12 targeted searches; no Nov 1 or Nov 2 newly posted termination, rescission, CLIA limitation or suspension identified. The Oct 30 entries are previously observed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency room closed ambulance diverted November 1 2026 United States",
+      "maternity labor delivery unit closed suspended November 1 2026 hospital",
+      "rural hospital emergency care service closure November 1 November 2 2026",
+      "psychiatric behavioral health hospital inpatient unit closing November 2026 announcement",
+      "dialysis facility suspension closure patients November 1 2026",
+      "cancer oncology infusion clinic treatment suspended closed November 1 2026",
+      "community primary care clinic closed patients November 1 2026 United States",
+      "ambulance service air medical helicopter base shut down suspended November 2026 United States",
+      "hospital emergency department reopened service restored November 1 2026 United States",
+      "Alaska rural hospital health clinic medical evacuation air ambulance closure reopening November 2026",
+      "Guam Saipan CNMI American Samoa hospital clinic emergency ambulance closure reopening November 2026",
+      "Puerto Rico US Virgin Islands hospital emergency clinic dialysis suspension closure November 2026"
+    ],
+    "search_method": "CMS Public Notices first, then twelve targeted US/territorial and service-line searches with 2-day recency parameters. Source dates and access effects screened against the previous heartbeat; search recency was not reliably enforced.",
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital labor-and-delivery unit, Chicago, IL",
+        "source_url": "https://www.cbsnews.com/chicago/news/community-worried-closure-labor-and-delivery-roseland-community-hospital/",
+        "reason": "Nov 1 updated reporting but closure previously documented and recorded in prior watch history, with no separate new access consequence verified during observation interval."
+      },
+      {
+        "item": "Spokane VA Medical Center potential inpatient restructuring, WA",
+        "source_url": "https://www.spokesman.com/stories/2026/oct/30/spokane-va-hospital-director-reassigned-after-inte/",
+        "reason": "Oct 30 report of potential restructuring; no concrete newly effective service change."
+      },
+      {
+        "item": "Ute Pass Regional Ambulance District, Teller County, CO",
+        "source_url": "https://gazette.com/pikespeakcourier/2026/11/02/12-5-million-earmarked-for-increased-access-to-healthcare/",
+        "reason": "Nov 2 reporting concerns grant funds and planned expansion; no newly active restoration or closure."
+      },
+      {
+        "item": "Samaritan Health Services / MultiCare, OR/WA",
+        "source_url": "https://www.fiercehealthcare.com/providers/samaritan-health-services-join-multicare-health-system",
+        "reason": "Previously announced Nov 1 merger; ownership transition without verified service change is excluded."
+      },
+      {
+        "item": "Valley Children's Hospital, Madera, CA",
+        "reason": "Temporary admissions interruption and restoration already logged on Nov 1 as a pending-review candidate; no new independent event."
+      },
+      {
+        "item": "Kagman clinic, Saipan, CNMI",
+        "reason": "Previously identified Oct 30 temporary closure and consolidation; no separate newly effective Nov 2 change."
+      },
+      {
+        "item": "CMS Oct 30 legal notices",
+        "reason": "Previously present and already screened; no newly dated notice."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T235109-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T23:51:59-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: Most search results were stale, off-topic, or outside US jurisdiction despite 2-day recency filters. Rural and US-territory recall remains weak.",
+    "limitations": "Persistent previously known search relevance limitation; no newly material failure identified this run. Bounded supplementary watch is not an authoritative proof of zero events.",
+    "controls": "One append-only JSON heartbeat on ops/watch-ledger; no approvals, public publishing, schedule changes or automation disabling."
+  }
+}

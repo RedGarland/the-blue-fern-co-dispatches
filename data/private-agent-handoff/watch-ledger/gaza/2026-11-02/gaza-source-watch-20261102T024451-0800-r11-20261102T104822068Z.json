@@ -1,0 +1,165 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T024451-0800-r11-20261102T104822068Z",
+  "scheduled_for": "2026-11-02T02:44:51-08:00",
+  "started_at": "2026-11-02T02:45:35-08:00",
+  "completed_at": "2026-11-02T02:48:22.068-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-02T01:50:05.417-08:00",
+    "end": "2026-11-02T02:48:22.068-08:00",
+    "basis": "From the last GitHub-readback-verified Gaza watch heartbeat completion to this run. This is a supplementary recall review, not the production collector.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO global oPt emergency",
+      "WHO EMRO occupied Palestinian territory"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261102-wafa-48h-hospital-casualty-update-15-38-18-retroactive",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176544",
+      "title": "Death toll in the Gaza Strip rises to 74,609, with 175,872 injured since the start of the aggression",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-11-02",
+      "publication_date": "2026-11-02",
+      "publication_time_local": "12:11 PM (WAFA site display; timezone not specified)",
+      "event_date": null,
+      "event_time": null,
+      "reporting_period": "Hospitals received cases during the preceding 48 hours; specific endpoint and incident timestamps not supplied.",
+      "location": "Gaza Strip; individual hospitals and incident locations not specified in the aggregate",
+      "affected_population_system": "Gaza hospital and rescue services. A medical-source tally reports 15 fatalities and 38 injured received by hospitals over 48 hours; 18 previously slain people were separately added to the cumulative toll following identity-record verification. It also states ambulances and rescuers cannot reach some casualties under rubble or on roads.",
+      "exact_supporting_passage": "hospitals in the Gaza Strip have received 15 fatalities and 38 injured individuals over the past 48 hours.",
+      "source_type": "Established Palestinian news agency relaying medical-source casualty bulletin",
+      "classification": "follow-up",
+      "confidence": "medium-high (direct source article verified; cumulative and window counts attributed to unnamed Gaza medical sources, not independently audited)",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-02T02:48:22.068-08:00",
+        "relevant_miss_class": "casualties; hospital reception workload; rescue and ambulance access; retrospective casualty-record reconciliation",
+        "distinctness": "Newly issued aggregate bulletin, not a distinct new strike. Do not add 15 to preceding individually reported deaths or 18 retroactive records to the same 48-hour tally; overlaps and cutoffs are unknown.",
+        "source_detail": "WAFA reports 74,609 cumulative fatalities and 175,872 cumulative injured since October 7, 2023; since October 11, 2025 ceasefire, 1,593 fatalities, 5,748 injuries, and 847 bodies recovered. Eighteen earlier deaths were retroactively accredited, first such adjustment since October 24.",
+        "temporal_limitations": "Article displays 02 November 2026 12:11 PM on an unlabeled site clock. If this is Ramallah local time (UTC+02:00 on this date), it corresponds to 02:11 PST, after prior watch completion at 01:50 PST; timezone was not explicitly marked and an exact publication-after-window claim remains conditional.",
+        "comparison": "Prior heartbeat at 2026-11-02 01:50:05 PST records only two specific WAFA casualty stories at 08:25 and 08:41 site time. Neither included this later 12:11 casualty bulletin. Reuters November 2 07:18 UTC coverage describes overlapping strikes and is not separately counted.",
+        "verification": "WAFA source directly opened; Reuters November 2 strike coverage reviewed to avoid double counting."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch; production publication/collection remains authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261102T014451-0800-r11-20261102T094642Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T014451-0800-r11-20261102T094642Z.json",
+      "completed_at": "2026-11-02T01:50:05.417-08:00",
+      "outcome": "findings",
+      "verified_via": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT homepage and humanitarian situation update list",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest visible entry posted October 31 for report dated October 29; no newer November 2 report."
+      },
+      {
+        "source": "WHO global oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated November 2 Gaza hospital, evacuation, ambulance, fuel or operating-capacity update shown."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; ongoing official-source impairment."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"Monday\" \"November 2, 2026\" killed injured ambulance",
+      "site:reuters.com/world/middle-east/ Gaza November 2 2026 ceasefire airstrike aid civilians",
+      "site:apnews.com Gaza November 2 2026 Palestinians killed wounded aid",
+      "site:aljazeera.com/news/2026/11/2/ Gaza killed wounded displacement",
+      "site:news.un.org Gaza 2 November 2026 aid hospital evacuation crossings",
+      "site:palestinercs.org/en Gaza November 2 2026 ambulance medical emergency",
+      "Gaza November 2 2026 Rafah crossing medical evacuations WHO hospital ambulance fuel",
+      "Gaza November 2 2026 humanitarian aid deliveries Kerem Shalom trucks WFP UNRWA border",
+      "site:unicef.org Gaza \"2 November 2026\" children water displacement food",
+      "site:reliefweb.int Gaza \"2 Nov 2026\" humanitarian situation health water displacement",
+      "Gaza November 2 2026 ceasefire negotiation hostages detainees civilian impacts Israel Hamas",
+      "Gaza November 2 2026 tent camps homes destroyed water desalination hospitals generator"
+    ],
+    "search_method": "Official-first OCHA OPT and WHO queries and direct opens, followed by exactly twelve additional targeted fast searches with recency two days. Direct article opens are not searches.",
+    "direct_source_checks": [
+      {
+        "source": "WAFA November 2 noon mortality bulletin",
+        "url": "https://english.wafa.ps/Pages/Details/176544",
+        "result": "Accessible, direct publication time 12:11 PM November 2 on unlabelled website clock; new aggregate casualty and medical-access bulletin."
+      },
+      {
+        "source": "Reuters November 2 strikes",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+        "result": "Accessible, published 07:18 UTC November 2, before prior heartbeat; overlaps two earlier WAFA incident reports, not separately counted."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; recurring."
+      },
+      {
+        "source": "AP November 1 Middle East report",
+        "url": "https://apnews.com/article/mideast-news-november-1-2026-b918f44d8f212d7daf7f2f9a98c91a0b",
+        "result": "Accessible; primarily prior-day incidents, not a new distinct development in the hourly window."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties and military operations with civilian impact",
+      "displacement/shelter",
+      "food, water and aid access",
+      "healthcare, ambulance, transport, fuel, hospitals and medical evacuation",
+      "crossings, detention, hostages and ceasefire/negotiations"
+    ],
+    "exclusions": [
+      "November 2 Reuters three-strike fatalities report released 07:18 UTC before prior completed watch; substantially overlaps prior WAFA incident findings.",
+      "November 1 Gaza deaths, prior-day AP account, and old OCHA/WHO/PRCS material.",
+      "Evergreen or opinion articles, West Bank-only reports, unsourced social claims, and ambiguous duplicated casualty numbers."
+    ],
+    "limitations": [
+      "WAFA medical-source 48-hour figures overlap prior incident reporting; counts are not additive.",
+      "WAFA website uses an unlabeled local time display, so publication-time conversion to PST is conditional.",
+      "No new November 2 verified healthcare facility shutdown, medical evacuation halt, aid crossing closure, water system failure or independently documented hostage/negotiation change established by the bounded searches.",
+      "The initial UN News targeted search returned a robots access warning; alternative coverage was searched."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "HTTP 502",
+        "context": "Recurring failure; WHO global and OCHA accessible."
+      },
+      {
+        "source": "WFP",
+        "issue": "HTTP 403",
+        "context": "Recurring failure; alternatives available."
+      },
+      {
+        "source": "UNRWA",
+        "issue": "HTTP 403",
+        "context": "Recurring failure; alternatives available."
+      },
+      {
+        "source": "UN News domain",
+        "issue": "Robots access restriction",
+        "context": "Targeted search impaired; alternative established sources available."
+      }
+    ],
+    "status_rationale": "DEGRADED because some primary humanitarian-source access remains impaired (WHO EMRO 502; WFP/UNRWA 403; UN News robots restriction). Despite this, OCHA/WHO global and WAFA/Reuters/AP provided useful coverage. Outcome findings: one new medical-source casualty tally bulletin, not a new distinct strike.",
+    "safeguards": "Exactly one append-only heartbeat on ops/watch-ledger for this run. No approvals, public content changes, publication, schedule edits or automation disablement."
+  }
+}

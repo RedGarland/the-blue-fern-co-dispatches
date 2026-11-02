@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T084412-0800-r11-20261102T164412Z",
+  "scheduled_for": "2026-11-02T08:45:54-08:00",
+  "started_at": "2026-11-02T08:44:12-08:00",
+  "completed_at": "2026-11-02T08:45:38.880-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T07:50:11.638-08:00",
+    "end_at": "2026-11-02T08:45:38.880-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start based on most recent hourly watch last-run timestamp available to this execution (2026-11-02T15:50:11.638Z). Search index retrieval widened three days for publication lag, but only newly documented changes in the bounded hourly window qualify.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss, closure, fire, disaster",
+      "Emergency distribution cancellation/suspension from storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance service or payment interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      3
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 2 2026 community",
+      "\"sole grocery store\" fire closure November 2026 town",
+      "\"last grocery store\" closing closed November 2026 rural",
+      "\"only full service grocery\" closed fire November 2026",
+      "\"food distribution\" canceled storm outage November 2 2026",
+      "\"food pantry\" cancelled distribution flood fire November 2026",
+      "\"food bank\" \"distribution canceled\" storm November 2026 US",
+      "\"food pantry\" \"closed indefinitely\" November 2 2026",
+      "\"food bank\" \"suspend services\" November 2026 outage damage",
+      "site:gov \"SNAP\" \"November 2, 2026\" benefits suspended delay outage",
+      "site:gov \"WIC\" \"November 2026\" \"benefits\" outage interruption",
+      "SNAP EBT processing outage November 2 2026 state official notice"
+    ],
+    "observation": "No new qualifying U.S. food-access disruption substantiated within the hourly observation window. Search results skewed to historical incidents, unrelated services, state benefits guidance, routine policy updates, and out-of-scope non-U.S. events; crawl/update timestamps were not mistaken for incident dates.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, New York sole-grocery fire is a September event, already identified in prior watch; outside new hourly window."
+      },
+      {
+        "publisher": "21Alive",
+        "source_published_at": "2026-05-06",
+        "url": "https://www.21alivenews.com/2026/05/06/butler-loses-only-full-service-grocery-store-after-more-than-six-decades/",
+        "reason": "Butler, Indiana last full-service grocer closed in May 2026."
+      },
+      {
+        "publisher": "Tucson Spotlight",
+        "source_published_at": null,
+        "url": "https://www.tucsonspotlight.org/south-tucson-approves-fire-truck-restructures-fire-services/",
+        "reason": "Older South Tucson grocery closure mentioned as background; no fresh closure in current interval."
+      },
+      {
+        "publisher": "FOX 10 Phoenix",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.fox10phoenix.com/news/snap-benefits-arizona-will-not-be-issued-november-heres-what-know",
+        "reason": "Refers to 2025 shutdown SNAP payments, not November 2026."
+      },
+      {
+        "publisher": "NYC Community Board 4",
+        "source_published_at": "2026-10-03",
+        "url": "https://www.nyc.gov/site/brooklyncb4/news/news.page",
+        "reason": "October portal enhancement notice; not evidence of immediate SNAP interruption."
+      }
+    ],
+    "duplicate_screen": {
+      "last_run_completion_reference": "2026-11-02T07:50:11.638-08:00",
+      "last_read_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T055314-0800-r11-20261102T135314Z.json",
+      "method": "Checked previously persisted November 2 heartbeat on ops/watch-ledger; excluded previously reported Spencer and other dated historical incidents."
+    },
+    "source_failures": [],
+    "limitations": "Index recency filters do not ensure fresh underlying publication or local notice coverage; absence of indexed notices cannot prove no disruptions. Several targeted queries returned largely irrelevant/historical results. This is not an exhaustive national check.",
+    "production_authority": "No approvals, public publication, collector mutations, schedule changes or task disabling."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T014334-0800-r11-recall12",
+  "scheduled_for": "2026-11-02T01:45:22-08:00",
+  "started_at": "2026-11-02T01:43:34-08:00",
+  "completed_at": "2026-11-02T01:44:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T01:19:02-08:00",
+    "end": "2026-11-02T01:44:48-08:00",
+    "basis": "Since the most recent verified supplementary Care Line watch heartbeat on ops/watch-ledger. Newly announced or newly effective concrete U.S. and territory healthcare-access changes were sought. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Official public notices checked before supplementary targeted queries. Most recent notices dated October 30, including previously known provider terminations; no November 2 new termination, rescission, CLIA suspension, limitation or similar action identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"hospital\" \"emergency department\" closed OR closure OR suspended \"November 2, 2026\" United States",
+      "\"maternity\" \"labor and delivery\" closure suspended November 2026 hospital",
+      "\"rural hospital\" \"emergency services\" shut OR closed \"November 2026\"",
+      "\"behavioral health\" \"psychiatric\" hospital unit \"closure\" \"November 2026\"",
+      "\"dialysis center\" closed suspended patients November 1 2 2026 United States",
+      "\"oncology\" \"infusion center\" closed suspended cancer treatments November 2026",
+      "\"primary care clinic\" \"closed\" \"November 2, 2026\" patients",
+      "\"ambulance\" OR \"air medical\" \"base\" closure suspension \"November 2026\" USA",
+      "hospital emergency department reopened restored ambulance diversion lifted November 2 2026 United States",
+      "Alaska rural hospital clinic emergency air ambulance suspended reopened November 2026",
+      "Guam Saipan Northern Mariana Islands American Samoa hospital clinic ambulance closed reopened November 2 2026",
+      "Puerto Rico US Virgin Islands hospital emergency clinic dialysis suspension reopening November 2 2026"
+    ],
+    "search_method": "CMS Public Notices first; then 12 additional bounded targeted web searches using one-day recency filters, screening true source publication/event dates separately because recency filters admit stale or evergreen sources.",
+    "reviewed_exclusions": [
+      {
+        "item": "Novi DaVita Dialysis Center, Michigan",
+        "source_url": "https://www.clickondetroit.com/news/local/2026/06/30/novi-davita-dialysis-center-to-reopen-following-investigation-into-patient-death-hospitalizations/",
+        "reason": "Temporary closure June 2026 and reopening July 2, 2026, outside observation interval."
+      },
+      {
+        "item": "Guam Regional Medical City, Dededo, Guam",
+        "source_url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/",
+        "reason": "Previously restored outpatient services on October 19, 2026; no newly effective November 2 change."
+      },
+      {
+        "item": "Kula Hospital, Maui, Hawaii",
+        "source_url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/",
+        "reason": "Previously reported future restoration plan; emergency department remains closed, no actual reopening established."
+      },
+      {
+        "item": "Morris F. De Castro Clinic, St. John, USVI",
+        "source_url": "https://doh.vi.gov/morris-f-de-castro-clinic-on-st-john-temporarily-closed-due-to-staffing-challenges/",
+        "reason": "Clinic temporary staffing suspension dated January 13, 2026, outside interval."
+      },
+      {
+        "item": "Valley Children's Hospital, Madera, CA",
+        "reason": "November 1 temporary emergency access suspension and restoration already captured as pending review by preceding watch; no distinct new event."
+      },
+      {
+        "item": "Kagman Clinic, Saipan, CNMI",
+        "reason": "Previously recorded temporary clinic closure; no new separate access change."
+      },
+      {
+        "item": "CMS October 30 legal notices",
+        "reason": "Already available before the prior hourly check; excluded as previously identified."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T011739-0800-recall12.json",
+      "previous_completed_at": "2026-11-02T01:19:02-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: Search results despite one-day recency filters heavily favored older or irrelevant material and lacked timely, broad local/territorial coverage. Absence of findings does not establish nationwide absence of events.",
+    "limitations": "Persistent known bounded recall limitation; no new material degradation identified. The brief interval and source indexing latency further reduce detection certainty. Production collector is authoritative.",
+    "controls": "Append exactly one ledger JSON on ops/watch-ledger. No review approvals, production publication, social posts, schedule modification or task disabling."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T224637-0800-r11-20261102T064637Z",
+  "scheduled_for": "2026-11-01T22:45:54-08:00",
+  "started_at": "2026-11-01T22:46:37-08:00",
+  "completed_at": "2026-11-01T22:48:01.860-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T21:44:41-08:00",
+    "end_at": "2026-11-01T22:48:01.860-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior confirmed ops/watch-ledger Food Line heartbeat completion to present observation. Only event/source publication timestamps after the prior check qualify as new; indexing timestamps do not.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall; primary nationwide Food Line production collection remains authoritative.",
+    "target_classes": [
+      "Closure/fire/disaster affecting the only, sole, last, or full-service grocery store in a community",
+      "Emergency food distributions canceled or suspended because of storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": 2,
+    "bounded_query_context": [
+      "\"November 1, 2026\" \"only grocery store\" fire closed",
+      "\"November 1, 2026\" \"last grocery store\" closed town",
+      "\"Nov 1, 2026\" \"sole supermarket\" damaged shut",
+      "\"November 1 2026\" \"only full-service grocery\" closure",
+      "\"Nov 1 2026\" emergency food distribution cancelled storm flooding",
+      "\"November 1 2026\" food pantry distribution canceled power outage",
+      "\"November 1 2026\" \"food bank\" \"closed\" \"until further notice\"",
+      "\"November 1 2026\" \"food pantry\" \"temporarily closed\" emergency",
+      "\"November 1 2026\" \"food distribution\" \"suspended\" facility damage",
+      "site:gov \"November 1, 2026\" \"SNAP\" \"benefits\" \"delayed\" \"outage\"",
+      "site:gov \"November 1, 2026\" \"WIC\" \"benefits\" \"interruption\" \"closed\"",
+      "\"November 1 2026\" \"EBT system\" outage unable purchases"
+    ],
+    "observation": "No new source-published qualifying U.S. food-access disruption verifiable after the prior 21:44:41 PST check. Search results were dominated by older grocery closures, routine mobile pantry scheduling, old SNAP/EBT guidance, generic weather advisories, and unconnected outages. No official immediate benefits interruption, emergency distribution cancellation, or verified sole-store loss newly surfaced.",
+    "excluded_examples": [
+      {
+        "publisher": "Salt Lake County Journal",
+        "title": "Provo Food Bank Closes After Raising $100,000 in Emergency Fund",
+        "source_published_at": "2026-11-01",
+        "url": "https://saltlakejournal.com/article/provo-food-bank-closes-after-raising-100-000-in-emergency-fund/",
+        "reason": "Prior runs had already identified and screened the Provo, Utah closure; duplicate, not a new signal this window."
+      },
+      {
+        "publisher": "Peak of Ohio (republished by DiningAndCooking)",
+        "title": "Food for the holidays: November mobile pantry schedule released",
+        "source_published_at": "2026-11-01",
+        "url": "https://www.diningandcooking.com/us/73378/",
+        "reason": "Routine distribution schedule, not a canceled/suspended service or abrupt access reduction."
+      },
+      {
+        "publisher": "FOX Local",
+        "title": "SNAP benefits gone? How to get free or discounted groceries",
+        "source_published_at": "2025-10-29",
+        "url": "https://www.livenowfox.com/news/snap-benefits-november-2025-groceries-free-delivery-door-dash-go-puff",
+        "reason": "Historical 2025 article, not a new November 2026 official benefits interruption."
+      },
+      {
+        "publisher": "WCTI",
+        "title": "Aurora ends decade-long food desert as Goodwill Community Cupboard opens",
+        "source_published_at": "2026-09-15",
+        "url": "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "reason": "Old positive service expansion, not a new grocery loss."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T214405-0800-r11-20261102T054405Z.json",
+      "prior_verified_completed_at": "2026-11-01T21:44:41-08:00",
+      "method": "Read prior GitHub watch ledger heartbeat and checked previously surfaced Provo/other older events for duplicates."
+    },
+    "source_failures": [],
+    "limitations": "Twelve search queries returned indexed results but precision was poor, especially on official SNAP/WIC terms. This bounded recall is not comprehensive and does not establish absence of unindexed local updates.",
+    "production_authority": "No approvals, publication, primary-collector changes, schedule changes, or task disabling."
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T235109-0800-recall12",
+  "scheduled_for": "2026-11-01T23:45:22-08:00",
+  "started_at": "2026-11-01T23:51:09-08:00",
+  "completed_at": "2026-11-01T23:51:59-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T22:48:02-08:00",
+    "end": "2026-11-01T23:51:59-08:00",
+    "basis": "Since preceding verified supplementary Care Line Watch heartbeat; searched nearby 2026-10-31 through 2026-11-01 reports for missed concrete access events. Production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Current official CMS public notice listing inspected first. No 2026-11-01 new termination, rescission, CLIA limitation or suspension."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure ambulance diversion November 1 2026 United States",
+      "hospital maternity labor and delivery ward closure suspension November 1 2026",
+      "rural hospital emergency room closed or service suspended October 31 November 1 2026",
+      "behavioral health psychiatric inpatient unit closure November 2026 hospital",
+      "dialysis center closed patients service suspended November 1 2026",
+      "cancer treatment oncology infusion clinic closure suspended November 2026",
+      "primary care community health clinic closed effective November 1 2026",
+      "ambulance emergency medical services base closure air medical helicopter shutdown November 1 2026",
+      "hospital emergency department service reopened restored November 1 2026",
+      "Alaska rural health clinic hospital emergency air ambulance service closed November 2026",
+      "Guam Northern Mariana American Samoa hospital clinic ambulance suspension reopening November 2026",
+      "Puerto Rico Virgin Islands hospital emergency dialysis clinic closure reopening November 2026"
+    ],
+    "search_method": "Official CMS public notices first, then exactly 12 US/territory/service-specific web searches with two-day recency filters and source/date verification. The recency filter did not reliably restrict publication dates.",
+    "reviewed_exclusions": [
+      {
+        "item": "Kagman clinic, Saipan, Commonwealth of the Northern Mariana Islands",
+        "source_url": "https://marianaspress.com/news/article/isla-community-health-announces-temporary-pause-of-kagman-clinic-services-while-planning-to-strengthen-and-expand-community-healthcare-access",
+        "reason": "October 30 temporary closure and service consolidation already recorded in prior watches; November 1 press release contains no separate newly effective change."
+      },
+      {
+        "item": "Wood County, Ohio planned school-based community health center",
+        "source_url": "https://bgindependentmedia.org/first-school-based-community-health-center-being-planned-in-wood-county/",
+        "reason": "November 1 reporting describes planned early-2027 opening, not a concrete currently effective restoration or service change."
+      },
+      {
+        "item": "Lincoln Hospital, Damariscotta, Maine birthing unit",
+        "source_url": "https://mainebeacon.com/midcoast-mothers-family-physicians-fight-mainehealths-birthing-unit-closure/",
+        "reason": "October 28 story recaps previously announced December 18 closure; no new qualifying change this hourly window."
+      },
+      {
+        "item": "University Hospitals Geneva Seidman Cancer Center, Ohio",
+        "source_url": "https://www.cleveland19.com/2026/09/20/ill-just-have-go-further-patients-brace-longer-commutes-geneva-cancer-center-closes/",
+        "reason": "September 19 report of future November 13 closure, outside new development window."
+      },
+      {
+        "item": "October 30 CMS provider termination notices",
+        "reason": "Present in CMS public notices during previous watches; no newly published notice within interval."
+      },
+      {
+        "item": "Valley Children's Hospital, Madera, California",
+        "reason": "Previously reported temporary admission disruption and restoration, already logged as pending review in November 1 17:45 watch; no new event identified."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T224633-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T22:48:02-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: Results from targeted searches were mostly stale, off-topic, or outside US jurisdiction despite two-day recency constraints. Bounded recall has weak sensitivity for rural and territorial access events.",
+    "limitations": "Persistent known search-relevance limitation, not a newly material degradation. This is a supplementary watch and cannot verify completeness of the authoritative production collector.",
+    "controls": "Single append-only heartbeat on ops/watch-ledger; no approval, production publish, schedule change, or automation disable."
+  }
+}

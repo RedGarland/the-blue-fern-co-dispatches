@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T005737-0800-r11-20261102T085737Z",
+  "scheduled_for": "2026-11-02T00:45:54-08:00",
+  "started_at": "2026-11-02T00:57:37-08:00",
+  "completed_at": "2026-11-02T00:58:58.381-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T00:08:30-08:00",
+    "end_at": "2026-11-02T00:58:58.381-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified Food Line heartbeat completion, not search-index recency; screen source-published and event timestamps against this bounded window.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not the authoritative Food Line nationwide production collector.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting the only, sole, last or full-service grocery store in a community",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      1,
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 2026 community",
+      "\"sole grocery store\" fire closed November 2026",
+      "\"last grocery store\" closing closed fire November 2026",
+      "\"food distribution\" canceled storm November 2 2026",
+      "food pantry distribution suspended flood fire power outage November 2026",
+      "food bank pantry emergency closure canceled today November 2 2026",
+      "site:gov \"SNAP\" \"November 2, 2026\" delayed interrupted EBT outage",
+      "\"WIC\" \"November 2026\" benefits unavailable suspended outage state",
+      "\"EBT\" outage \"November 1, 2026\" SNAP unable access",
+      "\"food pantry\" \"closed\" \"November 2, 2026\" emergency",
+      "\"food distribution\" \"canceled\" \"November 1, 2026\" weather",
+      "\"food bank\" \"suspended\" \"November 2026\" services"
+    ],
+    "observation": "No newly source-published, verifiable qualifying U.S. food-access interruption identified since the prior persisted check. Results largely covered September/October local incidents, 2025 SNAP shutdown reports, routine benefits program information and pre-existing Provo closure reporting. A November 2 revision to Washington ABAWD eligibility instructions did not establish an immediate interruption to food access.",
+    "excluded_examples": [
+      {
+        "publisher": "Salt Lake County Journal",
+        "source_published_at": "2026-11-01",
+        "title": "Provo Food Bank Closes After Raising $100,000 in Emergency Fund",
+        "url": "https://saltlakejournal.com/article/provo-food-bank-closes-after-raising-100-000-in-emergency-fund/",
+        "reason": "Predates prior run's completion and concerns already monitored Provo food-bank closure/access loss; duplicate within this hourly watch."
+      },
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "title": "Town of Spencer recovering after losing only grocery store in fire",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September incident; not newly published or changed within this watch window."
+      },
+      {
+        "publisher": "KVIA",
+        "source_published_at": "2026-09-25",
+        "title": "El Paso food bank suffers severe flooding damage, closes for clean up efforts",
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "Historical temporary storm disruption, outside time window."
+      },
+      {
+        "publisher": "Washington State DSHS",
+        "source_published_at": "2026-11-02",
+        "title": "ABAWDs - Able-Bodied Adults Without Dependents",
+        "url": "https://www.dshs.wa.gov/abawds-able-bodied-adults-without-dependents",
+        "reason": "Policy/instructions revised Nov 2; no verified newly interrupted benefits, outage or immediate access loss."
+      },
+      {
+        "publisher": "North Metro Realty",
+        "source_published_at": "2026-10-29",
+        "title": "Arvada Loses Its Safeway and The Bluegrass This Fall",
+        "url": "https://northmetrorealty.com/blog/arvada-loses-its-safeway-and-the-bluegrass-this-fall-heres-where-november-goes-instead",
+        "reason": "Preannounced upcoming closure; other grocery store across street and therefore not sole grocery access loss."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T000655-0800-r11-20261102T080655Z.json",
+      "prior_verified_completed_at": "2026-11-02T00:08:30-08:00",
+      "method": "Fetched prior ops/watch-ledger heartbeat, used persisted completion as cutoff, excluded duplicate Provo reports and prior disruptions."
+    },
+    "source_failures": [],
+    "limitations": "Twelve targeted web-index searches do not establish exhaustive coverage of unindexed hyperlocal or provider notices. Search indexing and crawler freshness were not treated as incident publication timestamps.",
+    "production_authority": "No approval, publication, schedule/automation, or production collector changes."
+  }
+}

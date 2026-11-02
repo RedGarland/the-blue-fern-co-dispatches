@@ -1,0 +1,146 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261101T194451-0800-r11-20261102T034527Z",
+  "scheduled_for": "2026-11-01T19:44:51-08:00",
+  "started_at": "2026-11-01T19:44:27-08:00",
+  "completed_at": "2026-11-01T19:45:27-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-01",
+    "start": "2026-11-01T18:46:40.944-08:00",
+    "end": "2026-11-01T19:45:27-08:00",
+    "basis": "Latest verified prior Gaza watch-ledger completion (18:46:40.944 PST) to current review; US Pacific DST ended earlier on Nov 1, so the offset is UTC-08:00.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO global",
+      "WHO EMRO Palestine"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; primary Gaza production collector/publisher remains authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261101T184451-0800-r11-20261102T024439Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-01/gaza-source-watch-20261101T184451-0800-r11-20261102T024439Z.json",
+      "completed_at": "2026-11-01T18:46:40.944-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Read exact prior JSON from GitHub ops/watch-ledger"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed humanitarian situation report posted October 31 2026, covering October 29; no in-window OCHA update."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new dated Gaza medical evacuation, hospital functioning, ambulance, fuel or healthcare capacity item in the observation window; general situation and previous published items only."
+      },
+      {
+        "source": "WHO EMRO Palestine",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "result": "HTTP 502 Bad Gateway; previously documented recurring restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza November 2 2026 early morning latest casualties hospital strikes Reuters AP November 1 night",
+      "site:english.wafa.ps November 2 2026 Gaza dawn killed injured displaced",
+      "site:aa.com.tr/en/middle-east \"Nov 2, 2026\" Gaza injured attacks",
+      "Gaza November 2 2026 hospital medical evacuation ambulance fuel WHO Palestine Red Crescent",
+      "Gaza November 2 2026 aid crossings Kerem Shalom Rafah humanitarian trucks WFP UN",
+      "Gaza November 2 2026 water food shelter displacement UNICEF UNRWA latest",
+      "Gaza November 2 2026 ceasefire hostage detainees negotiations Israel Hamas Reuters",
+      "Gaza November 2 2026 Gaza City Jabalia Khan Younis civilian casualties new shooting airstrike",
+      "Gaza overnight November 2 2026 04:00 local casualties Palestinian killed attack latest",
+      "Gaza 2 November 2026 latest Israel ceasefire civilians Reuters AP health",
+      "site:english.wafa.ps/Pages/Details/ 02/11/2026 Gaza killed injured",
+      "Gaza Monday November 2 2026 dawn aid crossings hospital medical evacuation UNICEF WHO news"
+    ],
+    "search_method": "OCHA and WHO source-targeted searches and direct pages first, then eight fast and four slow additional targeted searches; 12 total. Direct opens of already identified source pages and publisher newsrooms were not additional searches.",
+    "direct_checks": [
+      {
+        "source": "WAFA homepage",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; latest listed stories are November 1 Palestinian-local evening, mainly West Bank actions; latest Gaza fatalities item is the earlier 12:07 PM local report of eight deaths, previously captured."
+      },
+      {
+        "source": "WAFA LastNews",
+        "url": "https://english.wafa.ps/Pages/LastNews?pageNumber=1",
+        "result": "Accessible but navigation appears stale/inconsistent with homepage. No new Gaza-specific verified event in window."
+      },
+      {
+        "source": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible. No newly timestamped Gaza development verified after window start."
+      },
+      {
+        "source": "Australian Broadcasting Corporation/Reuters",
+        "url": "https://www.abc.net.au/news/2026-11-02/israeli-strikes-kill-eight-people-in-gaza-medics-say/107334984",
+        "result": "Nov 2 Australian-local publication repeats previously captured Nov 1 Gaza City three fatalities and Khan Younis five fatalities; not a new incident or new detail."
+      },
+      {
+        "source": "Reuters original",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-eight-people-gaza-medics-say-2026-11-01/",
+        "result": "Nov 1 source story on eight known fatalities, published well before watch window."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; previously documented."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; previously documented."
+      }
+    ],
+    "screened_categories": [
+      "civilian fatalities and injuries; military attacks with documented civilian impact",
+      "displacement and shelter; infrastructure damage",
+      "food and water/WASH access; humanitarian aid delivery and crossings",
+      "healthcare, hospital functionality, ambulance and medical transport, fuel, medical evacuation",
+      "detainees and hostages",
+      "ceasefire violations and negotiations"
+    ],
+    "exclusions": [
+      "November 1 Gaza City al-Thawra/Taj Mall attack: three deaths including a child; already recorded",
+      "November 1 western Khan Younis/al-Mawasi attack: five deaths and reported police affiliation; already recorded",
+      "Jabalia Halawa camp injuries: previously recorded",
+      "November 1 Khan Younis other gunshot wounds and prior-wound death: event/report update time not verified as in-window",
+      "November 2 Australian-local reprints of November 1 Reuters casualty reporting: duplicates",
+      "Historical OCHA/WHO situation reports, older reporting, uncorroborated or opinion claims"
+    ],
+    "temporal_qualification_limitations": [
+      "No verified event/new fact or source update time later than prior watch completion (Nov 1 18:46:40.944 PST) was identified; no_findings is bounded, not proof nothing happened.",
+      "Some search results are indexed under regional dates or show recent crawl dates for old articles; dates of publication and events were checked rather than equating appearance in search with newness.",
+      "Some publisher feeds are partially cached or lack precise revision timestamps."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously recurring, not a newly material degradation; WHO global and OCHA accessible."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Previously recurring; alternative established reporting accessible."
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Previously recurring; alternative established reporting accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring WHO EMRO 502 and WFP/UNRWA 403 restrictions, with useful alternative authoritative and established reporting. No newly material watch failure or new qualifying development identified.",
+    "safeguards": "Exactly one append-only heartbeat in ops/watch-ledger; no approval, publication, Pages, production, automation schedule or task state changes."
+  }
+}

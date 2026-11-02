@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T144226-0800-r11-20261102T224226Z",
+  "scheduled_for": "2026-11-02T14:45:54-08:00",
+  "started_at": "2026-11-02T14:42:26-08:00",
+  "completed_at": "2026-11-02T14:43:31.467-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T13:44:10-08:00",
+    "end_at": "2026-11-02T14:43:31.467-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Starts at last independently verified Food Line heartbeat completed_at; 2-day search recency was used to account for indexing lag, but only newly published or newly substantiated material since the previous check is eligible.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplemental recall only; the primary Food Line nationwide collector remains authoritative.",
+    "target_classes": [
+      "Closure/loss/fire/disaster affecting a community's only, sole, last, or full-service grocery",
+      "Emergency food distribution canceled or suspended because of storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12
+    },
+    "targeted_web_searches": 12,
+    "search_recency_days": 2,
+    "bounded_query_context": [
+      "November 2 2026 \"only grocery store\" closing OR closed fire rural town",
+      "November 2 2026 \"last grocery store\" shut down town residents",
+      "November 2 2026 \"sole grocery store\" closure fire flood community",
+      "November 2 2026 \"food distribution\" \"canceled\" storm OR flood OR power outage",
+      "November 2 2026 \"mobile pantry\" canceled weather OR storm OR damage",
+      "November 2 2026 \"food bank\" \"distribution\" \"suspended\" storm flood damage",
+      "November 2 2026 food pantry \"closed\" \"until further notice\" fire or damage",
+      "November 2 2026 \"food bank\" \"suspend\" operations emergency closure",
+      "November 2 2026 emergency food pantry canceled distribution outage flood severe weather",
+      "November 2 2026 site:gov \"SNAP\" \"delayed\" \"benefits\" November 2026 outage",
+      "November 2 2026 site:gov \"WIC\" \"outage\" or \"interruption\" benefits",
+      "November 2 2026 state agency \"EBT\" system failure card purchases denied SNAP"
+    ],
+    "observation": "No verifiable new U.S. food-access disruption within the post-13:44:10 PST window. Results were principally older grocery closures, historic storm coverage, routine food support notices, unrelated facility closures, and November 2025 SNAP shutdown alerts. Crawl date was not substituted for source publication/event date.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Qualifying event class but reported in September, not new this hour."
+      },
+      {
+        "publisher": "North Metro Realty",
+        "source_published_at": "2026-10-29",
+        "url": "https://northmetrorealty.com/blog/arvada-loses-its-safeway-and-the-bluegrass-this-fall-heres-where-november-goes-instead",
+        "reason": "Only Safeway brand outlet, not only full-service grocer; other grocery options immediately across the street."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Prior recovery/resource overview, not a newly canceled food distribution."
+      },
+      {
+        "publisher": "North Carolina DHHS",
+        "source_published_at": "2025-10-27",
+        "url": "https://www.ncdhhs.gov/news/press-releases/2025/10/27/disruption-snap-benefits-north-carolina-federal-government-shutdown-continues",
+        "reason": "Official interruption but dated 2025; not a new 2026 incident."
+      },
+      {
+        "publisher": "Nebraska DHHS",
+        "source_published_at": "2025-10-28",
+        "url": "https://dhhs.ne.gov/Pages/SNAP-Benefits-Paused-in-November-Due-to-Federal-Shutdown.aspx",
+        "reason": "Official 2025 SNAP notice, not an immediate newly announced 2026 interruption."
+      },
+      {
+        "publisher": "Federal Register",
+        "source_published_at": "2026-10-23",
+        "url": "https://www.federalregister.gov/documents/2026/10/23/2026-21658/supplemental-nutrition-assistance-program-electronic-benefits-transfer-card-security-measures",
+        "reason": "Regulatory paperwork, not an immediate benefits outage."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T134314-0800-r11-20261102T214314Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T13:44:10-08:00",
+      "method": "Exact prior heartbeat fetched from ops/watch-ledger; no positive records to deduplicate."
+    },
+    "source_failures": [],
+    "limitations": "Query-bounded search is not an exhaustive national census. Results skewed toward older reports and 2025 SNAP notices; no independently substantiated current agency/provider interruption was found.",
+    "production_authority": "No approvals, publication, primary collector modifications, schedule changes or disabling."
+  }
+}

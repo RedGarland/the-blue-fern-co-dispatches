@@ -1,0 +1,230 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T014451-0800-r11-20261102T094642Z",
+  "scheduled_for": "2026-11-02T01:44:51-08:00",
+  "started_at": "2026-11-02T01:46:42-08:00",
+  "completed_at": "2026-11-02T01:50:05.417-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-01T22:43:37-08:00",
+    "end": "2026-11-02T01:50:05.417-08:00",
+    "basis": "Latest GitHub-verified Gaza watch heartbeat completed 2026-11-01 22:43:37 PST; no heartbeat directory existed for 2026-11-02 when checked. Widened to last durable completion to avoid silently dropping a gap spanning scheduled 23:44 and 00:44 cycles. Exact source publication times use WAFA's unlabelled local clock and are not claimed to be after the prior completion.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO global",
+      "WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261102-wafa-central-khan-younis-strikes-2-deaths",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176526",
+      "title": "Two killed and one injured in Israeli bombing of areas in Gaza",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-11-02",
+      "publication_date": "2026-11-02",
+      "publication_time_local": "08:25 (WAFA site clock; timezone not explicitly labelled)",
+      "event_date": "2026-11-02",
+      "event_time": null,
+      "location": "East of Al-Masdar, central Gaza Strip; an area northwest of Khan Younis; Za'roub Street near Be'er 19 Junction, Khan Younis",
+      "affected_population_system": "Reported Palestinian fatalities and injuries: one person killed near Al-Masdar, another killed northwest of Khan Younis, additional unspecified injured persons and a child injured near Be'er 19. Civilian status not independently established.",
+      "exact_supporting_passage": "Two Palestinians were killed, Monday morning, after Israeli occupation aircraft bombed various areas in the Gaza Strip.",
+      "source_type": "established Palestinian news agency reporting hospital medical-source information and local casualty reports",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-02T01:50:05.417-08:00",
+        "first_seen_in_watch": "this execution",
+        "relevant_miss_class": "fatalities, child injury, air/drone strikes with populated-area effects",
+        "distinctness": "Different locations and morning incident description from the November 1 Gaza City/al-Rimal and west Khan Younis deaths cited by previous watch heartbeats; exact victim identities and independent corroboration remain unavailable.",
+        "timing_limitation": "WAFA story bears November 2 08:25 on an unlabeled local website clock; it may have been available before the 2026-11-01 22:43 PST prior heartbeat. This is a newly recovered previously missed source report, NOT proven to have been published after the prior heartbeat.",
+        "verification": "Direct source article inspected; compared against previous nine recent November 1 watch heartbeat texts; no exact event-location or headline duplicate found. Do not sum with earlier November 1 casualties absent cross-source de-duplication."
+      }
+    },
+    {
+      "finding_id": "gaza-20261102-wafa-yousef-abu-younis-dies-rafah-wounds",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176533",
+      "title": "Man dies from injuries sustained in Gaza's Rafah",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-11-02",
+      "publication_date": "2026-11-02",
+      "publication_time_local": "08:41 (WAFA site clock; timezone not explicitly labelled)",
+      "event_date": "2026-11-02",
+      "event_time": null,
+      "location": "Al-Mawasi area of Rafah, southern Gaza Strip; death announced by Nasser Medical Complex",
+      "affected_population_system": "Yousef Abu Younis, reported to have died on November 2 of wounds from an airstrike days earlier at a General Authority for Crossings and Borders site.",
+      "exact_supporting_passage": "Nasser Medical Complex announced the death of Yousef Abu Younis",
+      "source_type": "established Palestinian news agency attributing named casualty confirmation to Nasser Medical Complex",
+      "classification": "follow-up",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-02T01:50:05.417-08:00",
+        "first_seen_in_watch": "this execution",
+        "relevant_miss_class": "later death from previously sustained strike injuries; crossing-infrastructure-related site",
+        "distinctness": "Named death from older Rafah-area strike, not a new November 2 bombing. It is not assumed additive to any prior Khan Younis/al-Mawasi fatality totals without reconciliation.",
+        "timing_limitation": "WAFA article 08:41 November 2 on unlabeled local clock may predate last completed PST heartbeat. Announcement and death are reported for November 2, but precise death time is unknown.",
+        "verification": "Direct WAFA article names both the deceased and the announcing medical center. No direct hospital notice or independent second-source corroboration located under the bounded watch."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall; authoritative production Gaza collection/publication unaffected. No approvals or publications.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261101T224451-0800-r11-20261102T064337Z",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-01/gaza-source-watch-20261101T224451-0800-r11-20261102T064337Z.json",
+      "completed_at": "2026-11-01T22:43:37-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verified_via": "GitHub fetch_file and November 1 directory listing; November 2 directory returned 404 before this write."
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Available; latest listed humanitarian report published October 31 for October 29, no new November 2 Gaza report."
+      },
+      {
+        "source": "OCHA OPT humanitarian situation publications",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Available; latest dated October 31."
+      },
+      {
+        "source": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring impairment."
+      },
+      {
+        "source": "WHO global oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated hospital, ambulance, fuel, medical evacuation, or functioning-capacity update for current observation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza November 2 2026 morning civilians killed wounded strikes medics AFP Reuters AP",
+      "site:reuters.com/world/middle-east/ Gaza November 2 2026 ceasefire deaths aid today",
+      "site:apnews.com/article/ Gaza November 2 2026 Israeli airstrike civilians injured",
+      "site:english.wafa.ps November 2 2026 Gaza strip casualties ambulance hospital",
+      "site:aljazeera.com/news/2026/11/2 Gaza November 2 attack casualties ceasefire",
+      "site:un.org Gaza November 2 2026 humanitarian crossings aid displaced",
+      "site:ochaopt.org November 2 2026 Gaza water hospital damage humanitarian situation",
+      "site:who.int November 2 2026 Gaza medical evacuation hospitals ambulances fuel",
+      "site:unicef.org November 2 2026 Gaza water food children displacement",
+      "Gaza November 2 2026 Rafah Kerem Shalom Zikim crossing aid food water WFP UNRWA",
+      "Gaza November 2 2026 negotiations ceasefire hostage prisoner releases Israeli military civilian impacts",
+      "site:palestinercs.org November 2 2026 Gaza paramedics ambulance emergency medical"
+    ],
+    "search_method": "First checked direct OCHA OPT and WHO pages; subsequently executed exactly twelve targeted web fast searches with recency 2 days. Source-page opens, link clicks, and GitHub ledger readbacks are not searches.",
+    "direct_source_checks": [
+      {
+        "source": "WAFA homepage",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible on this run; two previously unrecorded Gaza casualty stories dated November 2 at 08:25 and 08:41 on WAFA site clock."
+      },
+      {
+        "source": "WAFA casualty stories",
+        "url": "https://english.wafa.ps/Pages/Details/176526",
+        "result": "Direct full article available; two fatalities, additional injured including child reported in distinct central/southern Gaza locations."
+      },
+      {
+        "source": "WAFA Rafah death report",
+        "url": "https://english.wafa.ps/Pages/Details/176533",
+        "result": "Direct full article available; Nasser Medical Complex-reported named death of older strike victim."
+      },
+      {
+        "source": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Accessible; no matching newly dated Gaza account visible in feed."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; newest visible Gaza fatalities on November 1, earlier than newly recovered WAFA articles; no distinct November 2 corroboration in feed."
+      },
+      {
+        "source": "Palestine Red Crescent",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; front-page news last dated June 10, 2026, not useful for this hourly interval."
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      {
+        "source": "UNISPAL",
+        "url": "https://www.un.org/unispal/",
+        "result": "HTTP 403 Forbidden."
+      },
+      {
+        "source": "UN News Gaza tag",
+        "url": "https://news.un.org/en/tags/gaza",
+        "result": "URL restricted by fetch layer."
+      }
+    ],
+    "screened_categories": [
+      "civilian fatalities and military operations with documented impact",
+      "displacement; shelter and infrastructure damage",
+      "aid, crossings, water and food access",
+      "healthcare, hospital/ambulance/transport/fuel/medical-evacuation capacity",
+      "detention, hostages, negotiations and ceasefire"
+    ],
+    "excluded_as_non_new_or_unqualified": [
+      "Prior November 1 Gaza City/al-Rimal fatalities and western Khan Younis police fatalities repeated across established outlets.",
+      "October OCHA reports and older WHO/UNICEF and PRCS material.",
+      "West Bank-only November 2 developments, including Hebron raid and withdrawal.",
+      "Opinion, stale background, unsupported social claims and claims whose distinctness could not be verified."
+    ],
+    "temporal_limitations": [
+      "Both WAFA reports are newly found but publication times on the website may predate the preceding 22:43 PST heartbeat; treat as retrospective recall discoveries, not proof of events newly occurring after that heartbeat.",
+      "Previous two scheduled hourly cycles were not represented by a November 2 GitHub ledger directory when checked; reason for their absence not determined.",
+      "The twelve targeted searches returned mostly old or evergreen material; direct WAFA browsing produced the positive findings.",
+      "No independent second-source corroboration was identified within the bounded search."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "materiality": "Previously documented persistent; WHO global and OCHA accessible."
+      },
+      {
+        "source": "WFP",
+        "error": "HTTP 403",
+        "materiality": "Previously documented persistent; alternative humanitarian/established coverage accessible."
+      },
+      {
+        "source": "UNRWA",
+        "error": "HTTP 403",
+        "materiality": "Previously documented persistent; alternative humanitarian/established coverage accessible."
+      },
+      {
+        "source": "UNISPAL",
+        "error": "HTTP 403",
+        "materiality": "Supplementary direct page blocked."
+      },
+      {
+        "source": "UN News",
+        "error": "Restricted fetch",
+        "materiality": "Alternative sources available."
+      },
+      {
+        "source": "watch-ledger",
+        "error": "No November 2 directory before execution",
+        "materiality": "Possible missed prior scheduled heartbeats; cannot infer cause or claim full operational health."
+      }
+    ],
+    "status_rationale": "DEGRADED: recurring official-page access limitations, weak indexing, and a possible two-hour ledger gap; still useful direct WAFA discovery and available OCHA/WHO global coverage. Outcome findings.",
+    "safeguards": "Exactly one append-only watch heartbeat created on ops/watch-ledger for this execution. No changes to production, schedule, approvals, public Pages, or social feeds."
+  }
+}

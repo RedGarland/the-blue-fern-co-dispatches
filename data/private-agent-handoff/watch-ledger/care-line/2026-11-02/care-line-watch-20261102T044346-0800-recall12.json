@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T044346-0800-recall12",
+  "scheduled_for": "2026-11-02T04:45:22-08:00",
+  "started_at": "2026-11-02T04:43:46-08:00",
+  "completed_at": "2026-11-02T04:45:00-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T03:47:21-08:00",
+    "end": "2026-11-02T04:45:00-08:00",
+    "basis": "From previous verified supplementary Care Line heartbeat completion to current watch completion; searched for newly reported or concretely effective service change, with production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Official CMS Public Notices checked before all 12 supplemental targeted searches. The latest listed notices were dated 2026-10-30; no newly dated termination, rescission, CLIA limitation/suspension or similar official action observed in the window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed suspended Nov 2 2026 United States",
+      "hospital maternity obstetrics labor delivery closed suspended November 2 2026 U.S.",
+      "rural hospital emergency services lost emergency room shut Nov 1 2 2026 county",
+      "ambulance EMS agency service suspended stopped operations November 2 2026",
+      "air ambulance medevac helicopter base closed suspended November 1 2 2026 US",
+      "psychiatric behavioral health hospital psychiatric unit closure halted admissions November 2 2026",
+      "dialysis clinic treatment service suspended closed November 2 2026 United States",
+      "oncology chemotherapy infusion center closed services November 2 2026 United States",
+      "primary care urgent care rural health clinic temporary closure November 2 2026",
+      "Puerto Rico Guam Saipan American Samoa Virgin Islands hospital clinic ambulance service closure November 2 2026",
+      "hospital emergency department service restored reopened operating again November 2 2026 United States",
+      "Alaska tribal rural hospital clinic emergency care temporarily closed November 2 2026"
+    ],
+    "search_method": "CMS official listing first, then 12 targeted U.S. and territory queries with 2-day recency filtering. Examined concrete access effect and original publication/event dates separately. Primary national collector was not altered or asserted to be complete.",
+    "reviewed_exclusions": [
+      {
+        "item": "Previously recorded Valley Children's Hospital emergency arrivals suspension/restoration, Madera, CA",
+        "reason": "Earlier event captured in a previous watch; no distinct new in-window development."
+      },
+      {
+        "item": "Previously recorded Kagman clinic suspension, Saipan, CNMI",
+        "reason": "Earlier published and captured in a previous watch; no new in-window effect verified."
+      },
+      {
+        "item": "Cruz Bay clinic/ambulance station report, St. John, USVI",
+        "source_url": "https://stcroixsource.com/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "reason": "Previously screened; November 1 report predates the current window and previous source-access issues were not resolved by these 12 searches."
+      },
+      {
+        "item": "Shuttered Weiss Memorial and West Suburban medical centers, Chicago area, IL",
+        "reason": "Search results dated July and March 2026; not current-window access change."
+      },
+      {
+        "item": "Greene County EMS ambulance service, AL",
+        "reason": "Suspension dates to July 2026; not newly reported here."
+      },
+      {
+        "item": "Roseland maternity service reductions, IL",
+        "reason": "Previously reported, no fresh distinct change established."
+      },
+      {
+        "item": "Cleveland Clinic Florida cancer-care profile",
+        "source_url": "https://southfloridahospitalnews.com/2026/11/01/cleveland-clinic-is-floridas-destination-for-cancer-care-2/",
+        "reason": "Promotional service profile with no new concrete loss/restoration."
+      },
+      {
+        "item": "Planned Crozer-Chester primary care restoration, PA",
+        "reason": "Future aspirational plans, no confirmed effective reopening."
+      },
+      {
+        "item": "Malkangiri cyclone medical preparations, India; Canada ER/dialysis stories",
+        "reason": "Outside U.S. and territories."
+      }
+    ],
+    "source_failures": [],
+    "search_quality": "DEGRADED (continuing, not newly material): search retrieval produced mostly stale, generic, non-U.S., or nonqualifying material despite 2-day recency filters; rural, overnight, and territorial recall coverage remains incomplete. No qualifying newly confirmed change was identified; not proof that none occurred.",
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T034611-0800-recall12.json",
+      "previous_completed_at": "2026-11-02T03:47:21-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Append exactly one heartbeat only on ops/watch-ledger. No approval, publication, schedule modification, or disabling."
+  }
+}

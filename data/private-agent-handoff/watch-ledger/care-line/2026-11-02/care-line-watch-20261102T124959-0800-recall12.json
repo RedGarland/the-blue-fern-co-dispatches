@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T124959-0800-recall12",
+  "scheduled_for": "2026-11-02T12:45:22-08:00",
+  "started_at": "2026-11-02T12:49:59-08:00",
+  "completed_at": "2026-11-02T12:50:40-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T11:41:06-08:00",
+    "end": "2026-11-02T12:50:40-08:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through this run's last observed local clock time; supplementary recall, not primary production collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-02",
+      "latest_notice": "Network for Hope (KY), CCN 18P001, termination notice",
+      "disposition": "Already recorded as pending_review in the 09:45 PST watch and screened as a duplicate; no newly posted notice in this watch."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended service November 2 2026 United States",
+      "maternity labor delivery unit closing closed November 2 2026 hospital",
+      "rural hospital emergency services closure today November 2 2026",
+      "behavioral health psychiatric inpatient services closed suspended Nov 2 2026 US",
+      "dialysis center oncology chemotherapy clinic closure November 2 2026",
+      "primary care clinic suddenly closed suspended November 2 2026 US",
+      "ambulance station EMS service closed suspended November 2 2026 county",
+      "air ambulance medical helicopter base closure November 2 2026 United States",
+      "hospital emergency room reopened services restored November 2 2026",
+      "site:cms.gov 2026-11-02 termination rescission CLIA provider notices",
+      "hospital clinic emergency ambulance closed reopened November 2 2026 Puerto Rico Guam Virgin Islands American Samoa Northern Mariana",
+      "hospital clinic service closures November 2 2026 local news new today"
+    ],
+    "recency_filter_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Network for Hope (KY), 2026-11-02 CMS OPO revised termination notice",
+        "reason": "Duplicate of a prior watch's pending-review finding; no additional new effective action."
+      },
+      {
+        "item": "CommonSpirit/Penrose Hospital (Colorado Springs, CO): 10-year reorganization, planned reduction from 300 to 100 inpatient beds, planned transfer of specialty surgery over 12–18 months",
+        "url": "https://gazette.com/2026/11/02/details-of-commonspirit-plans-for-colorado-springs-hospitals-released/",
+        "reason": "Published Nov 2 06:30 local, before observation start. Planned future service transfers, no concrete within-window closure; ED and oncology remain. Opening of new cardiology clinic is expansion rather than restoration of previously lost essential service."
+      },
+      {
+        "item": "Community Medical Center pediatric intensive care, Missoula, MT",
+        "url": "https://missoulacurrent.com/hospital-beds-kids/",
+        "reason": "Nov 2 reporting describes service ended in October; previously screened and outside observation window."
+      },
+      {
+        "item": "Kanawha County Ambulance Authority South Charleston substation, WV",
+        "url": "https://www.capito.senate.gov/news/press-releases/photos-capito-attends-ribbon-cutting-for-kanawha-county-ambulance-authoritys-south-charleston-substation",
+        "reason": "New EMS capacity, not documented restoration/reopening of a previously lost essential service; no qualifying outage."
+      },
+      {
+        "item": "Madison County Fire Rescue assumption of city fire operations",
+        "url": "https://fox49.tv/news/local/madison-county-fire-rescue-takes-over-madison-city-fire-operations-with-no-service-lapse",
+        "reason": "Transition reported with no service lapse; not a qualifying access loss or restoration."
+      },
+      {
+        "item": "Dialysis Returns to DRHC",
+        "url": "https://730ckdm.com/news-now/34737-dialysis-returns-to-drhc",
+        "reason": "Canadian facility outside U.S. or territories; excluded, full article not accessible."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://fox49.tv/news/local/madison-county-fire-rescue-takes-over-madison-city-fire-operations-with-no-service-lapse",
+        "error": "Web full-text open DisabledError; headline and search summary accessible."
+      },
+      {
+        "url": "https://wvmetronews.com/2026/11/02/with-federal-state-and-local-funds-kanawha-county-ambulance-authority-building-four-ems-stations-in-region/",
+        "error": "Web full-text open DisabledError; search summary accessible."
+      },
+      {
+        "url": "https://730ckdm.com/news-now/34737-dialysis-returns-to-drhc",
+        "error": "Web full-text open DisabledError; out-of-scope Canadian event."
+      }
+    ],
+    "search_quality": "DEGRADED: Twelve targeted searches were executed successfully, but results were predominantly historical, proposals or non-U.S. items. Three follow-up pages could not be opened; searchable excerpts remained available. Rural and U.S. territorial recall remains limited. No newly material system-wide failure established.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T114028-0800-recall12.json",
+      "previous_heartbeat_verified": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Only this one watch ledger heartbeat is written on ops/watch-ledger; no approval, publication, production collection modification, schedule modification, or task disabling."
+  }
+}

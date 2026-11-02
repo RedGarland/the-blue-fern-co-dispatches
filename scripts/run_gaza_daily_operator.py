@@ -796,7 +796,15 @@ def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def _normalize_operator_args(args: argparse.Namespace) -> argparse.Namespace:
+    """Supply defaults for legacy in-process callers predating opt-in flags."""
+    if not hasattr(args, "contract_prepare"):
+        args.contract_prepare = False
+    return args
+
+
 def run_operator(args: argparse.Namespace) -> dict[str, Any]:
+    args = _normalize_operator_args(args)
     result = _operator_result_base(args)
     pages_repo = Path(args.pages_repo).resolve()
     source_status_before = _git_status_lines(ROOT)

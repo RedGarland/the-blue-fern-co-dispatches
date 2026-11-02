@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T104632-0800-recall12",
+  "scheduled_for": "2026-11-02T10:45:22-08:00",
+  "started_at": "2026-11-02T10:46:32-08:00",
+  "completed_at": "2026-11-02T10:48:22.460-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T09:45:08-08:00",
+    "end": "2026-11-02T10:48:22.460-08:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through this run; candidate reports screened for newly verifiable U.S./territory essential-service changes, not mere article publication dates. Supplementary recall only; national production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-02",
+      "latest_notice": "Network for Hope, KY, CCN 18P001: revised OPO termination notice",
+      "disposition": "Duplicate of previously verified 09:45 PST watch finding cms-network-for-hope-18p001-revised-effective-2027-06-04-2026-11-02. No later CMS listing identified.",
+      "last_checked": "2026-11-02"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 2 2026 hospital emergency department closed suspended patients United States",
+      "November 2 2026 rural hospital emergency room service closure announced",
+      "November 2 2026 maternity labor delivery unit closes suspended service",
+      "November 2 2026 behavioral health inpatient psychiatric unit closing service",
+      "November 2 2026 dialysis clinic temporarily closes service disruption",
+      "November 2 2026 oncology cancer treatment center closed suspended appointments",
+      "November 2 2026 primary care clinic sudden closed patients physician office United States",
+      "November 2 2026 ambulance EMS service shut down suspended coverage county",
+      "November 2 2026 air medical helicopter base closed grounded service",
+      "November 2 2026 hospital emergency department clinic reopened restored after suspension",
+      "November 2 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana clinic hospital ambulance closed reopened",
+      "November 2 2026 hospital unit service closes today medical patients local news"
+    ],
+    "recency_filter_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Network for Hope CMS revised de-certification date to 2027-06-04",
+        "reason": "Already present as pending_review in the immediately preceding verified heartbeat; not a new development."
+      },
+      {
+        "item": "Community Medical Center (Missoula, MT) pediatric intensive-care unit discontinued in October; KFF Health News report dated November 2",
+        "url": "https://missoulacurrent.com/hospital-beds-kids/",
+        "reason": "Confirmed service loss but occurred during October, outside this observation window. Date/time of first public availability of the November 2 syndicated report is not sufficiently demonstrated to treat as a new within-window event. Retrospective coverage may merit separate production backlog audit."
+      },
+      {
+        "item": "Cheshire Medical Center Winchester Family Medicine (NH) Nov 6 closure",
+        "url": "https://mykeenenow.com/news/219912-cheshire-medical-center-to-close-winchester-family-medicine-clinic-in-november/",
+        "reason": "Announced October 16, prior to search window; not newly effective yet."
+      },
+      {
+        "item": "Clarvida Project RENEW California offices Nov 1 closure; Comprehensive Life Resources WA youth residential closure Nov 21",
+        "url": "https://bhbusiness.com/2026/10/02/layoffs-closures-planned-at-newport-healthcare-clarvida-comprehensive-life-resources/",
+        "reason": "Reported October 2; CA Nov 1 services ceased before this check's interval and WA closure is future announced service loss; no fresh confirmation within the observation window."
+      },
+      {
+        "item": "Spokane VA Mann-Grandstaff restructuring and potential inpatient cuts",
+        "url": "https://www.spokesman.com/stories/2026/oct/30/spokane-va-hospital-director-reassigned-after-inte/",
+        "reason": "Proposed or planned changes without a verified new service interruption; report dated October 30."
+      },
+      {
+        "item": "St. John/Cruz Bay USVI clinic-ambulance relocation",
+        "reason": "Previously screened October/November event; no new independently verified access change in the current interval."
+      },
+      {
+        "item": "Other returns",
+        "reason": "Older coverage, foreign hospitals (UK, Haiti, Mexico, Canada), service expansion without restoration of a prior loss, funding/reorganization without concrete access impact, and irrelevant results."
+      }
+    ],
+    "search_quality": "DEGRADED: All twelve bounded searches returned usable results, but retrieval favored older stories, non-U.S. locations, proposals, and unrelated material. Rural/territorial recall confidence remains limited, consistent with preceding runs; no newly material collector outage verified.",
+    "source_failures": [
+      {
+        "source": "Missoula Current Kaiser Health News author link",
+        "issue": "Link to author archive returned 404; full relevant article itself was accessible and reviewed.",
+        "material_impact": false
+      }
+    ],
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T094343-0800-recall12-cms1.json",
+      "previous_heartbeat_verified": true,
+      "production_collector_dedupe_verified": false,
+      "explanation": "This supplementary run screened prior heartbeat events, but is not an authoritative check of production collection."
+    },
+    "controls": "No story approved or published, no schedule alteration, no automation disabled, no public-site mutation. Exactly one run heartbeat committed on ops/watch-ledger."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T094952-0800-r11-20261102T174952Z",
+  "scheduled_for": "2026-11-02T09:45:54-08:00",
+  "started_at": "2026-11-02T09:49:52-08:00",
+  "completed_at": "2026-11-02T09:50:54.808-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T08:45:38.880-08:00",
+    "end_at": "2026-11-02T09:50:54.808-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior read-back verified watch heartbeat completed at 08:45:38.880 PST. Search retrieval broadened to two days for indexing lag; only newly substantiated disruptions since the prior hourly check are eligible.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only. Production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery-store closure, fire, disaster or loss",
+      "Storm/flood/fire/outage/facility-damage emergency food distribution cancellation",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12
+    },
+    "targeted_web_searches": 12,
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "November 2 2026 \"only grocery store\" closed fire town",
+      "November 2 2026 \"sole grocery store\" fire closure",
+      "Nov 2 2026 \"last grocery store\" closes community",
+      "November 2 2026 food pantry emergency distribution canceled storm power outage",
+      "Nov 2 2026 food bank distribution cancelled flooding storm",
+      "November 2 2026 food pantry suddenly closed no longer serving",
+      "November 2 2026 food bank suspended services facility damage",
+      "November 2 2026 SNAP benefits delayed suspended official state notices",
+      "November 2 2026 WIC benefits system outage unable redeem notice",
+      "November 2 2026 emergency food assistance interruption state agency warning",
+      "site:gov \"SNAP\" \"November 2, 2026\" benefits delay",
+      "site:org \"food pantry\" \"November 2, 2026\" \"closed\""
+    ],
+    "observation": "No newly substantiated U.S. access disruption in the four narrowly defined classes during this hourly window. Fresh-targeted search indexing yielded very few pertinent hits; results included an April 2023 Canadian grocery item and a routine November 2026 pantry calendar, neither qualifying.",
+    "excluded_examples": [
+      {
+        "publisher": "Global News",
+        "source_published_at": "2023-04-13",
+        "url": "https://globalnews.ca/news/9622919/saskatoon-saves-local-grocery-store/",
+        "reason": "Canadian 2023 store remained open; non-U.S., historical, and no loss."
+      },
+      {
+        "publisher": "North Kent Connect",
+        "source_published_at": null,
+        "url": "https://nkconnect.org/about-us/calendar/",
+        "reason": "Routine pantry calendar, including regularly scheduled closures; no abrupt disruption shown."
+      }
+    ],
+    "duplicate_screen": {
+      "last_read_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T084412-0800-r11-20261102T164412Z.json",
+      "last_completed_at": "2026-11-02T08:45:38.880-08:00",
+      "method": "Read prior ops/watch-ledger heartbeat; kept historical sole-grocery and food-assistance incidents outside the new hourly window."
+    },
+    "source_failures": [],
+    "limitations": "Search returns sparse and often historical or calendar results despite recency constraints; lack of a freshly indexed matching report does not prove the absence of local incidents. This bounded check is not exhaustive.",
+    "production_authority": "No approval, public publication, schedule change, task disabling, or mutation of the authoritative production collector."
+  }
+}

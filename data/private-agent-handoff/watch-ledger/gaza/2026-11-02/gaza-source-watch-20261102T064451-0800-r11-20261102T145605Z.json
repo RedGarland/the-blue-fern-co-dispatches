@@ -1,0 +1,143 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T064451-0800-r11-20261102T145605Z",
+  "scheduled_for": "2026-11-02T06:44:51-08:00",
+  "started_at": "2026-11-02T06:56:05-08:00",
+  "completed_at": "2026-11-02T06:57:48.184-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-02T05:57:13.921-08:00",
+    "end": "2026-11-02T06:57:48.184-08:00",
+    "basis": "From last verified ledger heartbeat completion to this run's observation completion; new publications/updates assessed, not assumed to be event times.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO global oPt emergency situation and WHO EMRO oPt"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; daily Gaza production collector/publisher remains authoritative.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261102T054451-0800-r11-20261102T135713921Z",
+      "completed_at": "2026-11-02T05:57:13.921-08:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T054451-0800-r11-20261102T135713921Z.json",
+      "verified_via": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest site-listed situation report 29 October 2026, posted 31 October; no new 2 November Gaza report surfaced."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No new 2 November health, hospital functioning-capacity or medical-evacuation update found."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/medical-evacuation-of-patients-from-the-gaza-strip.html",
+        "result": "HTTP 502 Bad Gateway during direct read; pre-existing access limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza Monday November 2 2026 3:00 PM 4:00 PM deaths shelling wounded",
+      "site:reuters.com/world/middle-east/ Gaza November 2 2026 updated afternoon casualties ceasefire Israel strikes",
+      "site:apnews.com/article/ Gaza November 2 2026 afternoon latest airstrike civilians injuries",
+      "site:news.un.org/en/story/2026/11 Gaza November 2 aid humanitarian casualties displacement",
+      "site:palestinercs.org/en November 2 2026 ambulance Gaza hospital evacuation fuel",
+      "site:unicef.org/press-releases Gaza November 2 2026 water children nutrition shelter",
+      "Gaza November 2 2026 Rafah Kerem Shalom crossing food water fuel aid trucks WFP UNRWA OCHA afternoon",
+      "Gaza November 2 2026 ceasefire hostage detainees prisoner exchange negotiation latest mediators",
+      "Gaza November 2 2026 3 pm 4 pm 5 pm WAFA latest Israeli shelling new killed wounded",
+      "site:aljazeera.com/news/2026/11/2 Gaza latest casualties strikes humanitarian aid",
+      "site:middleeasteye.net/news Gaza November 2 2026 wounded killed aid crossings",
+      "Gaza November 2 2026 hospital closure ambulances medical evacuation water pipeline sewage displacement damage today"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA live/latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza roundup remains 2 November 2:56 PM on publisher's unspecified timezone; already present in previous verified heartbeat. Latest visible story 4:02 PM about Jericho, not Gaza."
+      },
+      {
+        "source": "WAFA roundup",
+        "url": "https://english.wafa.ps/Pages/Details/176563",
+        "result": "Previously recorded Tal al-Hawa fatality update, Al-Zaytoun aid-kitchen minibus injuries, and Nuseirat tent injuries; no new distinct update."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+        "result": "Four reported deaths on November 2 in Khan Younis, Al-Masdar and Tal al-Hawa; event set already captured in prior heartbeats; no additional distinct development."
+      },
+      {
+        "source": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-november-2-2026-8722c8b5a9deb228e7a188d4760ea8ed",
+        "result": "Two southern Gaza deaths early Monday described by Nasser Hospital; overlap earlier Khan Younis reports, not additional casualties."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest homepage press material predates November 2."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, recurring restriction."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, recurring restriction."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties and military operations with documented civilian impact",
+      "food and water access, humanitarian aid, crossings, infrastructure damage and displacement",
+      "healthcare disruption, hospital/ambulance/fuel/transport/medical evacuations",
+      "detention/hostages, ceasefire negotiations, prisoner exchanges"
+    ],
+    "exclusions": [
+      "WAFA's November 2 2:56 PM Gaza roundup already appeared in previous verified heartbeat; no double counting of its five-death aggregate.",
+      "Reuters' four-death summary includes earlier-reported Khan Younis, Al-Masdar and Tal al-Hawa incidents; not four new deaths in this interval.",
+      "Associated Press' two southern-Gaza deaths are consistent with earlier Khan Younis reports; no independent distinct incident established.",
+      "Older UN/UNICEF/WHO articles, West Bank-only Hebron stories, opinion pieces and unverifiable social/aggregated claims excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502 Bad Gateway",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403 Forbidden",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403 Forbidden",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News search",
+        "problem": "robots.txt restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "Publication time zone unspecified for WAFA; event timing within hourly window cannot be inferred.",
+      "Search engine indexing and blocked official subdomains may delay discovery; no negative claim that no events occurred.",
+      "Direct source coverage plus bounded search found no previously unrecorded qualifying development."
+    ],
+    "status_rationale": "DEGRADED because recurring WHO EMRO, WFP, UNRWA and UN News access restrictions persist. Alternative OCHA, WHO global, WAFA, Reuters, AP and PRCS coverage remained usable; no newly material deterioration.",
+    "safeguards": "Append-only heartbeat only. No publication, editorial approval, production changes, schedule changes or task disabling."
+  }
+}

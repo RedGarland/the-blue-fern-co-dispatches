@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T154340-0800-r11-20261102T234340Z",
+  "scheduled_for": "2026-11-02T15:45:54-08:00",
+  "started_at": "2026-11-02T15:43:40-08:00",
+  "completed_at": "2026-11-02T15:44:33.214-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T14:43:31.467-08:00",
+    "end_at": "2026-11-02T15:44:33.214-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Begins at last independently read-back verified Food Line heartbeat completed_at. One- and two-day search recency was used to accommodate indexing lag; only newly reported or newly substantiated disruptions since prior check qualify.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss recall; primary nationwide Food Line production collection remains authoritative.",
+    "target_classes": [
+      "Loss or disaster closure of community's only, sole, last, or full-service grocery",
+      "Cancellation or suspension of emergency food distribution due to weather, flood, fire, outage or facility damage",
+      "Abrupt closure or major access reduction at a pantry or food bank",
+      "New official SNAP, WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12
+    },
+    "targeted_web_searches": 12,
+    "search_recency_days": [
+      1,
+      2
+    ],
+    "bounded_query_context": [
+      "November 2 2026 only grocery store closed fire town food desert USA",
+      "November 2 2026 last remaining grocery store shuts down community local news",
+      "November 2 2026 food bank distribution canceled storm flooding power outage",
+      "November 2 2026 food pantry suddenly closed flood fire no service",
+      "site:gov November 2 2026 SNAP benefits outage interruption emergency",
+      "site:gov November 2 2026 WIC benefits system outage food assistance",
+      "Nov 2 2026 food pantry closes permanently today service reduced Utah local",
+      "Nov 2 2026 last grocery store fire closed rural town community",
+      "Nov 2 2026 canceled food distribution due to hurricane storm power outage Hawaii",
+      "November 2 2026 official SNAP EBT card outages transactions denied benefits state",
+      "November 2 2026 WIC clinic services suspended closed outage notice",
+      "Nov 2 2026 food bank closed unexpectedly facility damage fire flooding distribution"
+    ],
+    "observation": "No independently confirmed qualifying U.S. food-access disruption first reported or newly substantiated in this observation window. Results mostly concerned prior-month grocery closures, ownership transfers without demonstrated current access loss, reopening of a pantry closed three months earlier, historical storm reports, or 2025 SNAP interruption alerts. Source publication and underlying event dates were used rather than crawl dates.",
+    "excluded_examples": [
+      {
+        "publisher": "The Salt Lake Tribune",
+        "source_published_at": "2026-11-02T06:00:00-07:00",
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "reason": "St. George-area Salvation Army pantry reopening after a closure approximately three months earlier; no newly occurring service loss this hour."
+      },
+      {
+        "publisher": "WLUK FOX 11",
+        "source_published_at": "2026-11-02T14:56:00-06:00",
+        "url": "https://fox11online.com/news/business/piggly-wiggly-grocery-stores-de-pere-kaukauna-sold-stoneridge-fox-brothers",
+        "reason": "New ownership announcement for De Pere/Kaukauna, not current closure; Little Chute closing was reported October 1, before window."
+      },
+      {
+        "publisher": "Western Mass News",
+        "source_published_at": "2026-11-02T18:16:00-05:00",
+        "url": "https://www.westernmassnews.com/2026/11/02/big-es-supermarket-changing-ownership/",
+        "reason": "Supermarket ownership transition in Easthampton, not an established sole/full-service grocery closure or immediate interruption."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Older storm recovery information without new cancellation of food distribution."
+      },
+      {
+        "publisher": "The Texas Tribune",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "2025 SNAP shutdown reporting; not a new 2026 official interruption."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T144226-0800-r11-20261102T224226Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T14:43:31.467-08:00",
+      "method": "Fetched and inspected last specified heartbeat from ops/watch-ledger; no new positive records to compare."
+    },
+    "source_failures": [],
+    "limitations": "Twelve query-bounded web searches are supplemental, not exhaustive; no provider or state agency notice corroborated a new interruption in this hour. Historical reports and sale/reopening stories are not treated as fresh access losses.",
+    "production_authority": "No approval, publication, main collector change, schedule change or task disabling."
+  }
+}

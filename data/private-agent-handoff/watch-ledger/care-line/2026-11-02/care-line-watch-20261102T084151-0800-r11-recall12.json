@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T084151-0800-r11-recall12",
+  "scheduled_for": "2026-11-02T08:45:22-08:00",
+  "started_at": "2026-11-02T08:41:51-08:00",
+  "completed_at": "2026-11-02T08:43:17.332-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T07:46:19-08:00",
+    "end": "2026-11-02T08:43:17.332-08:00",
+    "basis": "Start is completed_at of previous verified Care Line Watch heartbeat. New first reports/concrete effective service changes screened in this interval. Production national collector remains authoritative; deduplication against that collector was not independently performed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "page_last_modified": "2026-10-30 04:16 PM",
+      "observation": "CMS page opened and entries checked before any targeted web searches. No Nov 2 notices; latest listed notices dated Oct 30, including Kalamazoo Behavioral Health Hospital, hospice and home-health terminations."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed temporarily November 2 2026 United States local news",
+      "hospital maternity labor delivery unit service suspended reopening November 2 2026 US",
+      "rural hospital emergency room closure suspension November 2 2026 state health",
+      "behavioral health psychiatric inpatient hospital closed admissions suspended November 2 2026",
+      "dialysis clinic closure patients transferred November 2 2026 United States",
+      "oncology cancer center clinic closure appointment cancellation November 2 2026",
+      "primary care rural health clinic closed abruptly November 2 2026",
+      "ambulance service EMS base closure suspension November 2 2026 local news US",
+      "air medical helicopter base shut down suspends service November 2 2026 USA",
+      "hospital emergency department resumed reopened after closure November 2 2026 local news",
+      "Puerto Rico Guam CNMI American Samoa hospital clinic ambulance closures November 2 2026",
+      "US Virgin Islands St John Cruz Bay clinic ambulance closure reopening November 2 2026"
+    ],
+    "search_method": "12 additional targeted recent-result searches after direct CMS inspection, covering hospital/ED, maternity, rural, behavioral health, dialysis, oncology, primary care, ground and air ambulance, reopening and territories. Source results screened for announcement/effective date and concrete access consequence.",
+    "reviewed_exclusions": [
+      {
+        "item": "Morris F. deCastro Clinic closure and ambulance station relocation, Cruz Bay, U.S. Virgin Islands",
+        "url": "https://stthomassource.com/content/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "reason": "Report dated 2026-11-01 and already screened before the previous watch boundary; direct full-text retrieval returned HTTP 403. Not a newly verifiable event in current interval."
+      },
+      {
+        "item": "Doylestown Hospital emergency rooms temporarily closed, Pennsylvania",
+        "url": "https://centralbucksnews.com/news/public-safety/emergency-rooms-at-doylestown-hospital-closed-until-further-notice/",
+        "reason": "Article dated 2026-10-22; outside current observation interval."
+      },
+      {
+        "item": "Palo Verde Hospital temporary community clinic closure, California",
+        "url": "https://riversiderecord.org/blythe-palo-verde-hospital-community-clinic/",
+        "reason": "Article dated 2026-08-06; outside current interval."
+      },
+      {
+        "item": "West Suburban Medical Center reopening some clinics, Illinois",
+        "url": "https://abc7chicago.com/post/west-suburban-medical-center-resumes-hospital-based-clinic-services-er-remain-suspended/18891103/",
+        "reason": "Article dated 2026-04-15; older reopening, not newly effective in interval."
+      },
+      {
+        "item": "University of Mississippi Medical Center outpatient clinics reopening",
+        "url": "https://www.healthcaredive.com/news/university-of-mississippi-medical-center-ransomware-attack/812823/",
+        "reason": "Reopening announced March 2026, not new."
+      },
+      {
+        "item": "Other results",
+        "reason": "Predominantly old, non-U.S., unrelated, preliminary proposals, or reports lacking a concrete newly effective healthcare-access change."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://stthomassource.com/content/2026/11/01/cruz-bay-clinic-closure-forces-relocation-of-ambulance-station-reconstruction-project-set-to-begin/",
+        "error": "HTTP 403 on direct full-text request; search excerpt available. Recurrent access restriction."
+      }
+    ],
+    "search_quality": "DEGRADED: all 12 additional searches executed, but recent-result precision remained weak (mostly stale/non-U.S./off-topic hits), and a known USVI local-source page returned HTTP 403. Limited rural and territorial recall confidence. These limitations recur from previous runs, with no newly material failure demonstrated. Zero validated findings does not imply no events.",
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T074509-0800-recall12.json",
+      "previous_completed_at": "2026-11-02T07:46:19-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only. No review approval, publication, schedule modification, or automation disabling."
+  }
+}

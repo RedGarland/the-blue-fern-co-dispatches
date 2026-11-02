@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T214405-0800-r11-20261102T054405Z",
+  "scheduled_for": "2026-11-01T21:45:54-08:00",
+  "started_at": "2026-11-01T21:44:05-08:00",
+  "completed_at": "2026-11-01T21:44:41-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T20:43:45.153-08:00",
+    "end_at": "2026-11-01T21:44:41-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified food-line ops/watch-ledger heartbeat completion to present observation. Source publication/event timestamps govern eligibility; web index dates do not.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value food-access recall only; primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Community's only/sole/last/full-service grocery loss, closure, fire, or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": 2,
+    "bounded_query_context": [
+      "\"November 1 2026\" \"only grocery store\" fire closure rural",
+      "\"November 1 2026\" \"last grocery store\" closed community",
+      "\"Nov 1, 2026\" \"sole supermarket\" fire flood shutdown",
+      "\"November 1 2026\" \"only full-service grocery\" closed",
+      "\"November 1 2026\" food distribution canceled storm flooding",
+      "\"Nov 1 2026\" food bank distribution cancelled power outage",
+      "\"November 1, 2026\" emergency food distribution suspended facility damage",
+      "\"November 1 2026\" food pantry abruptly closed temporarily",
+      "\"November 1 2026\" food bank shut down service disruption",
+      "\"Nov 1 2026\" food pantry closure no longer serving families",
+      "site:gov \"November 1, 2026\" SNAP benefits delayed interruption EBT outage",
+      "site:gov \"November 1, 2026\" WIC benefits suspended offices closed outage"
+    ],
+    "observation": "No newly published and independently verifiable qualifying U.S. food-access disruption surfaced since the previous check. Search responses predominantly surfaced off-topic pages, historical 2025 SNAP-related stories, old disasters, or background emergency-preparedness material; no positive finding met criteria.",
+    "excluded_examples": [
+      {
+        "publisher": "FOX Local",
+        "title": "SNAP benefits gone? How to get free or discounted groceries",
+        "source_published_at": "2025-10-29",
+        "url": "https://www.livenowfox.com/news/snap-benefits-november-2025-groceries-free-delivery-door-dash-go-puff",
+        "reason": "Historical 2025 program-help article, not a new official November 2026 interruption."
+      },
+      {
+        "publisher": "The Cool Down",
+        "title": "Blackout planning for elderly mom 8 hours away raises a basic question: Can she open the food?",
+        "source_published_at": "2026-11-01",
+        "url": "https://www.thecooldown.com/green-home/elderly-mother-blackout-emergency-food-access/",
+        "reason": "General household emergency preparedness; no actual food distribution outage, pantry closure, or official benefits interruption."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T204243-0800-r11-20261102T044243Z.json",
+      "prior_verified_completed_at": "2026-11-01T20:43:45.153-08:00",
+      "method": "Read prior durable heartbeat directly from ops/watch-ledger; screened dates and prior Provo, UT and historical incidents for duplicates."
+    },
+    "source_failures": [],
+    "limitations": "All 12 search requests returned results but topical precision was low. No individual search transport failure was observed. Targeted web discovery is non-exhaustive; local posts not yet indexed could be missed.",
+    "production_authority": "No approvals, publication, primary production changes, schedule modifications, or task disabling."
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T044451-0800-r11-20261102T124834985Z",
+  "scheduled_for": "2026-11-02T04:44:51-08:00",
+  "started_at": "2026-11-02T04:47:00-08:00",
+  "completed_at": "2026-11-02T04:49:36.394-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-02T03:45:08.649-08:00",
+    "end": "2026-11-02T04:49:36.394-08:00",
+    "basis": "Since the prior verified watch completion; this is a supplementary discovery/recall window, not a claim that all event times fell within it.",
+    "official_first_sources": [
+      "OCHA OPT updates and humanitarian situation reports",
+      "WHO global occupied Palestinian territory emergency page",
+      "WHO EMRO occupied Palestinian territory"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261102-wafa-tal-al-hawa-vehicle-strike-injuries",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176556",
+      "title": "People injured following Israeli strike on vehicle west of Gaza City",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-11-02",
+      "publication_date": "2026-11-02",
+      "publication_time_on_source": "01:45 PM",
+      "publication_timezone": null,
+      "event_date": "2026-11-02",
+      "event_time": null,
+      "location": "Al-Khour Roundabout, Tal al-Hawa, southwest Gaza City, Gaza Strip",
+      "affected_population_system": "Several people reportedly injured, some seriously, following a strike on a civilian vehicle; hospital received wounded people. Exact casualty count and identities unknown.",
+      "exact_supporting_passage": "A medical source reported that a number of injured individuals—some in serious condition—arrived at the hospital",
+      "source_type": "Established Palestinian news agency citing a medical source; direct article verified",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-11-02T04:48:00-08:00",
+        "discovery_route": "After OCHA OPT and WHO first checks, 12 targeted searches and direct WAFA homepage/article readback; WAFA latest list showed this 01:45 PM Gaza article not present in previous heartbeat.",
+        "prior_heartbeat_end": "2026-11-02T03:45:08.649-08:00",
+        "previous_run_comparison": "Previous heartbeat excluded only pre-existing WAFA Gaza mortality and two-death/follow-up incidents; this Tal al-Hawa vehicle strike was not listed. Reuters November 2 article concerns separate Khan Younis and Al-Mussadar strikes.",
+        "time_qualification": "WAFA site publication clock does not label its timezone. Posting at 01:45 PM is close to previous 03:45 AM PST checkpoint if displayed in Palestine time; report is newly recovered since the prior watch, not independently proven to have occurred afterward.",
+        "corroboration": "WAFA reported a medical source; independent corroboration not found in bounded review. Exact number of wounded unverified.",
+        "report_url": "https://english.wafa.ps/Pages/Details/176556",
+        "search_limits": "Twelve targeted searches beyond first-party OCHA and WHO checks; no further broad query expansion."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza watch only; production remains authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261102T034451-0800-r11-20261102T114508651Z",
+      "completed_at": "2026-11-02T03:45:08.649-08:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T034451-0800-r11-20261102T114508651Z.json",
+      "verified_via": "GitHub connector fetch_file; current-date directory inspected"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest Gaza situation report dated October 29 and published October 31. No Nov 2 posting."
+      },
+      {
+        "source": "OCHA OPT humanitarian reports",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Accessible; same most recent October 31 listing."
+      },
+      {
+        "source": "WHO global emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no November 2 health system or medical evacuation event evident on page."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Region",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; repeated access degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"Monday\" \"November 2, 2026\" \"afternoon\" killed injured",
+      "site:reuters.com/world/middle-east/ Gaza November 2 2026 latest strikes civilians ceasefire",
+      "site:apnews.com/article/ Gaza November 2 2026 strike casualties ceasefire",
+      "site:news.un.org Gaza November 2 2026 humanitarian aid crossing",
+      "site:palestinercs.org Gaza 2 November 2026 ambulance rescue health",
+      "site:aljazeera.com/news/2026/11/2/ Gaza Israeli strike deaths ceasefire",
+      "site:unicef.org Gaza November 2 2026 water aid children displaced",
+      "Gaza November 2 2026 Rafah crossing Kerem Shalom Zikim humanitarian truck aid WFP UNRWA",
+      "Gaza November 2 2026 Nasser Al Aqsa Shifa hospital WHO ambulance medical evacuation fuel",
+      "Gaza November 2 2026 hostages detainees ceasefire negotiations prisoner exchange humanitarian",
+      "Gaza November 2 2026 displacement damaged shelter tents sewage drinking water infrastructure",
+      "site:english.wafa.ps/Pages/Details/ \"November 2, 2026\" \"Gaza\" \"PM\" 2026 injuries"
+    ],
+    "search_method": "Official OCHA OPT and WHO searched and directly opened first. Twelve additional targeted fast web searches (1-day recency). Source opens/clicks and GitHub checks were not additional searches.",
+    "direct_checks": [
+      {
+        "source": "WAFA homepage/latest index",
+        "url": "https://english.wafa.ps/",
+        "result": "November 2 01:45 PM vehicle-strike injuries in Tal al-Hawa found; direct article clicked and verified; newer 02:31 and 02:32 PM listings were not Gaza incident reports."
+      },
+      {
+        "source": "WAFA article on vehicle strike",
+        "url": "https://english.wafa.ps/Pages/Details/176556",
+        "result": "Several reportedly injured, some seriously, after reported strike on civilian vehicle near Al-Khour Roundabout, Tal al-Hawa."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+        "result": "Published Nov 2 07:18 UTC, before the window. Three casualties reported in Khan Younis and Al-Mussadar; overlaps existing earlier WAFA recalls, not a new Tal al-Hawa corroboration."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new November 2 Gaza ambulance or service interruption visible."
+      },
+      {
+        "source": "World Food Programme newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; preexisting direct-access restriction."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; preexisting direct-access restriction."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties and documented military operations affecting civilians",
+      "displacement/shelter, food/water access, infrastructure damage and aid crossings",
+      "hospital/medical evacuation/ambulance/fuel/functioning capacity",
+      "hostages/detentions, ceasefire and negotiation changes"
+    ],
+    "exclusions": [
+      "Reuters November 2 07:18 UTC report of three casualties in Khan Younis/Al-Mussadar overlaps already recorded earlier WAFA November 2 incident and retrospective Rafah death reports; excluded as duplicate.",
+      "WAFA November 2 hospital 48-hour tally (15 deaths, 38 injuries and 18 retrospective deaths) was previously captured, not additive.",
+      "OCHA and UNICEF older situation assessments and evergreen information did not supply a new hourly development.",
+      "West Bank-only, political commentary, unsourced and stale items excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "502 Bad Gateway",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP newsroom",
+        "problem": "403 Forbidden",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA newsroom",
+        "problem": "403 Forbidden",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News",
+        "problem": "robots.txt restriction during one targeted search",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "WAFA's publication clock does not explicitly specify timezone; exact event time was not established.",
+      "The wounded count is described as several, with some serious injuries; no numeric total supported.",
+      "The new WAFA incident has not been independently corroborated in this bounded search.",
+      "Search indexing and source publication lag may cause later discoveries."
+    ],
+    "status_rationale": "DEGRADED due to ongoing WHO EMRO, WFP, UNRWA and UN News access restrictions; useful alternate official and established news coverage remained. One distinct newly discovered qualifying casualty report.",
+    "safeguards": "Append-only single heartbeat on ops/watch-ledger; no approval, public publishing, production mutation, automation schedule change or disabling."
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T174518-0800-recall12",
+  "scheduled_for": "2026-11-01T17:45:22-08:00",
+  "started_at": "2026-11-01T17:45:18-08:00",
+  "completed_at": "2026-11-01T17:47:39-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T16:48:42.094-08:00",
+    "end": "2026-11-01T17:47:39-08:00",
+    "basis": "Since prior verified supplementary Care Line heartbeat completion; late discovery of a same-day acute access event that became reportable shortly before the prior check finished is explicitly labeled as a recall/backfill candidate, not a claim that its occurrence postdates this window."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-ca-madera-valley-childrens-20261101-patient-intake-lockdown-lifted",
+      "canonical_source_url": "https://kmph.com/news/local/valley-childrens-hospital-on-lockdown-as-deputies-investigate-threat-call",
+      "title": "UPDATE: Lockdown lifted at Valley Children’s Hospital",
+      "publisher": "FOX26 News / KMPH",
+      "exact_supporting_passage": "The hospital was not accepting patients arriving by car, ambulance, or helicopter.",
+      "source_published_date": "2026-11-01",
+      "state": "CA",
+      "city": "Madera",
+      "county": "Madera",
+      "territory": null,
+      "event_type": "temporary_hospital_patient_intake_suspension_and_restoration",
+      "service_line": "Hospital patient arrival/intake, including ambulance and helicopter transport; exact clinical units affected not specified",
+      "access_consequences": "Hospital temporarily declined patient arrivals by car, ground ambulance, and helicopter during a precautionary lockdown following a threat call. Local reporting says deputies gave the all-clear and lifted the lockdown after approximately 2.5 hours. Direct admission/ED routing details were not specified.",
+      "affected_population": "Patients seeking admission or urgent care at Valley Children's Hospital, including pediatric patients and medical transport arrivals; number affected unknown.",
+      "effective_date": "2026-11-01",
+      "announcement_date": "2026-11-01",
+      "confidence": "high",
+      "source_role": "local_news_direct_reporting",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "scope": "Supplementary recall coverage across U.S. states, DC and five inhabited territories; hospital, emergency, maternity, behavioral health, dialysis, oncology, primary care, rural services, EMS/air-medical access loss or restoration, and official CMS sanctions. Production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Direct CMS Public Notices list inspected before all 12 targeted searches; newest entries dated 2026-10-30, no newer listed November 1 notice found.",
+      "source_ref": "turn363649view0"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "site:gov \"November 1, 2026\" hospital emergency room closure suspension United States",
+      "\"November 1, 2026\" \"emergency department\" closed hospital",
+      "\"November 1, 2026\" maternity labor delivery hospital closes",
+      "\"November 1, 2026\" ambulance service suspends operations county",
+      "\"November 1, 2026\" medevac air ambulance base closure",
+      "\"November 1, 2026\" rural hospital closure services patients",
+      "\"November 1, 2026\" \"dialysis center\" closed patients",
+      "\"November 1, 2026\" behavioral health clinic hospital closure",
+      "\"November 1, 2026\" oncology cancer center service suspension",
+      "\"November 1, 2026\" primary care clinic closes patients",
+      "\"November 1, 2026\" \"reopens\" emergency department clinic hospital",
+      "\"November 1, 2026\" Guam \"Northern Mariana\" \"Puerto Rico\" hospital clinic ambulance closed"
+    ],
+    "search_method": "12 targeted fast web searches with one-day recency, with direct source inspection for credible same-day local reporting; quality and concrete access effect screened.",
+    "finding_timing_caveat": "FOX26 article was first published 2026-11-01 and updated 4:37 p.m. as displayed, before the prior watch's 4:48:42 p.m. completion. This is a newly detected same-day recall/backfill candidate missed by the previous heartbeat, not evidence that the lockdown began or ended after 4:48 p.m.; production dedupe/ingestion not independently confirmed. Review must verify it is absent from production before accepting.",
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity ward, Chicago, IL",
+        "url": "https://www.cbsnews.com/chicago/news/community-worried-closure-labor-and-delivery-roseland-community-hospital/",
+        "reason": "Confirmed closure effective 2026-10-31 at 11:59 p.m., already documented by earlier Care Line watch, not a new event."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, Preston County, WV",
+        "url": "https://www.wvnews.com/prestoncountynews/bruceton-community-ambulance-service-halts-services-until-insurance-is-reinstated/article_8aac0518-da54-425f-bab6-2663d5344ad8.html",
+        "reason": "October 27 service suspension, previously identified and outside hourly event window."
+      },
+      {
+        "item": "Northwood school-based community health center, Wood County, OH",
+        "url": "https://bgindependentmedia.org/first-school-based-community-health-center-being-planned-in-wood-county/",
+        "reason": "November 1 report of proposed center opening in early 2027, no current service restoration."
+      },
+      {
+        "item": "HCA Florida Capital Hospital Level II NICU",
+        "url": "https://www.wctv.tv/2026/08/28/hca-florida-capital-hospital-discontinue-its-level-ii-nicu-services-effective-nov-1/",
+        "reason": "Previously announced November 1 closure, but no new independent confirmation in this search window."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T164659-0800-recall12.json",
+      "previous_completed_at": "2026-11-01T16:48:42.094-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "source_failures": [],
+    "search_quality": "DEGRADED: Web recency search predominantly returned old, unrelated, international, or future-plan stories. The same-day Valley Children's acute patient-intake interruption was verifiable through local reporting, but rural and territorial negative-coverage confidence remains limited.",
+    "limitations": "Source gives only an approximate 2.5-hour lockdown duration, no definitive start/end timestamps or count of affected patients. Discovery is a candidate pending production dedupe. No evidence that all U.S. and territory access changes were covered.",
+    "controls": "Exactly one append-only JSON heartbeat to ops/watch-ledger only. No approval, public publication, task schedule change or disabling."
+  }
+}

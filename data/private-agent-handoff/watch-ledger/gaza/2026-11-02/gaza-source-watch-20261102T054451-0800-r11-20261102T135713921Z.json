@@ -1,0 +1,214 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T054451-0800-r11-20261102T135713921Z",
+  "scheduled_for": "2026-11-02T05:44:51-08:00",
+  "started_at": "2026-11-02T05:54:58-08:00",
+  "completed_at": "2026-11-02T05:57:13.921-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-02T04:49:36.394-08:00",
+    "end": "2026-11-02T05:57:13.921-08:00",
+    "basis": "Supplementary new-report discovery since verified prior heartbeat, including updates to earlier events; no claim each underlying event occurred within interval.",
+    "official_first_sources": [
+      "OCHA OPT updates",
+      "WHO global oPt emergency page",
+      "WHO EMRO oPt"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176563",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-11-02",
+      "publication_date": "2026-11-02",
+      "publication_time_on_source": "02:56 PM",
+      "publication_timezone": null,
+      "event_date": "2026-11-02",
+      "event_time": null,
+      "source_type": "Established Palestinian news agency citing local and medical sources; direct article checked",
+      "confidence": "high",
+      "finding_id": "gaza-20261102-tal-al-hawa-vehicle-strike-fatality-update",
+      "title": "Tal al-Hawa vehicle strike: one reported fatality and five injuries",
+      "location": "Near Al-Hidaya Mosque, Al-Khour Roundabout, Tal al-Hawa, Gaza City",
+      "affected_population_system": "Hani Hamed Kahil reported killed and five others injured in a strike on a vehicle; prior watch had only reported injuries without a verified death or count.",
+      "exact_supporting_passage": "Hani Hamed Kahil was killed",
+      "classification": "follow-up",
+      "bounded_discovery_context": {
+        "observed_at": "2026-11-02T05:57:13.921-08:00",
+        "previous_heartbeat": "2026-11-02T04:49:36.394-08:00",
+        "discovery_route": "WAFA November 2 2:56 PM roundup posted after earlier Tal al-Hawa injuries-only report; Reuters article updated to include vehicle-strike death",
+        "corroboration_url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+        "dedupe": "Same Tal al-Hawa strike as prior injuries-only finding; update severity instead of creating separate attack count.",
+        "time_qualification": "New reporting/discovery since prior heartbeat, not verified strike time; WAFA publication timezone unspecified."
+      }
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176563",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-11-02",
+      "publication_date": "2026-11-02",
+      "publication_time_on_source": "02:56 PM",
+      "publication_timezone": null,
+      "event_date": "2026-11-02",
+      "event_time": null,
+      "source_type": "Established Palestinian news agency citing local and medical sources; direct article checked",
+      "confidence": "medium",
+      "finding_id": "gaza-20261102-al-zaytoun-charitable-kitchen-minibus-3-injured",
+      "title": "Three reportedly injured in strike on charitable-kitchen minibus in Al-Zaytoun",
+      "location": "Barham Street, Al-Zaytoun neighborhood, southeast Gaza City",
+      "affected_population_system": "Three people reportedly injured when a minibus affiliated with a local charitable kitchen (takiyya) was targeted; service disruption or staff status not independently established.",
+      "exact_supporting_passage": "three people were injured",
+      "classification": "new",
+      "bounded_discovery_context": {
+        "observed_at": "2026-11-02T05:57:13.921-08:00",
+        "previous_heartbeat": "2026-11-02T04:49:36.394-08:00",
+        "discovery_route": "WAFA newly visible November 2 2:56 PM casualty roundup; not present in earlier reviewed Tal al-Hawa or two-death reports",
+        "corroboration": "No independent established or primary corroboration found in bounded searches; automated social-aggregation result excluded.",
+        "time_qualification": "Event reported for Monday but precise occurrence time and WAFA's publication timezone not verified."
+      }
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176563",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-11-02",
+      "publication_date": "2026-11-02",
+      "publication_time_on_source": "02:56 PM",
+      "publication_timezone": null,
+      "event_date": "2026-11-02",
+      "event_time": null,
+      "source_type": "Established Palestinian news agency citing local and medical sources; direct article checked",
+      "confidence": "medium",
+      "finding_id": "gaza-20261102-nuseirat-tent-strike-injuries",
+      "title": "Injuries reported after strike on tent in Nuseirat refugee camp",
+      "location": "West of Abu Amra supermarket, Nuseirat refugee camp, central Gaza Strip",
+      "affected_population_system": "People reportedly suffered minor injuries in a strike targeting a tent; number, names, displaced status, and tent damage not verified.",
+      "exact_supporting_passage": "minor injuries when a tent was targeted",
+      "classification": "new",
+      "bounded_discovery_context": {
+        "observed_at": "2026-11-02T05:57:13.921-08:00",
+        "previous_heartbeat": "2026-11-02T04:49:36.394-08:00",
+        "discovery_route": "WAFA November 2 2:56 PM roundup, direct article; distinct location from earlier Khan Younis, Al-Masdar, Rafah and Tal al-Hawa reports.",
+        "corroboration": "One established agency citing local and medical sources; no independent corroboration in bounded review.",
+        "time_qualification": "Event dated Monday but precise time and publication timezone not independently verified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch only; production authoritative.",
+    "prior_heartbeat": {
+      "run_id": "gaza-source-watch-20261102T044451-0800-r11-20261102T124834985Z",
+      "completed_at": "2026-11-02T04:49:36.394-08:00",
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T044451-0800-r11-20261102T124834985Z.json",
+      "verified_via": "GitHub fetch_file"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed humanitarian report dated October 29/published October 31; no new November 2 Gaza report."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no dated November 2 healthcare or evacuation updates."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "Gaza November 2 2026 Hani Hamed Kahil Tal al Hawa Al Khour roundabout killed injured vehicle",
+      "Gaza November 2 2026 Asad Qashta Well 19 southwest Khan Younis killed",
+      "Gaza November 2 2026 Barham Street Al Zaytoun takiyya minibus injured kitchen",
+      "Gaza November 2 2026 Nuseirat Abu Amra supermarket tent injured strike",
+      "site:reuters.com/world/middle-east/ Gaza Nov 2 2026 strikes killed civilians afternoon",
+      "site:apnews.com/article/ Gaza November 2 2026 ceasefire killed humanitarian",
+      "site:news.un.org Gaza 2 November 2026 aid medical evacuations access",
+      "site:palestinercs.org 2 November 2026 Gaza ambulance strike medical",
+      "Gaza November 2 2026 WHO medical evacuation hospital fuel supplies patient transfer November 2",
+      "Gaza November 2 2026 WFP UNICEF food water humanitarian crossings Rafah Kerem Shalom aid trucks",
+      "Gaza November 2 2026 ceasefire negotiations Israeli withdrawal hostages prisoner detainees updated",
+      "Gaza November 2 2026 new displaced families shelters destroyed infrastructure flooding"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176563",
+        "result": "New 2:56 PM roundup provides Tal al-Hawa fatality/count, separate charitable kitchen minibus and Nuseirat tent injuries."
+      },
+      {
+        "source": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+        "result": "Current article independently describes one death in Tel al-Hawa vehicle strike and previously reported three deaths elsewhere; dated November 2 at 07:18 UTC with update unspecified."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible, no new November 2 healthcare/ambulance update evident."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, previously documented."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, previously documented."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties; military operations with documented civilian impact",
+      "food distribution and aid-linked vehicle access",
+      "displacement/shelter; water access; infrastructure; crossings",
+      "healthcare/hospitals/ambulance/evacuation/fuel",
+      "hostages/detention/ceasefire negotiations"
+    ],
+    "exclusions": [
+      "WAFA roundup's five deaths aggregates multiple already reported November 2 casualties including Rafah retrospective death; not counted as five new deaths.",
+      "As'ad Qashta's Well 19 death was mentioned in the roundup but may be one of two earlier Reuters Khan Younis fatalities; excluded from findings pending deduplication.",
+      "WAFA headline states 'including child' but supporting body lacks victim age; child classification not independently verified.",
+      "Prior WAFA 48-hour hospital tally (15 deaths, 38 injuries, 18 retrospective) is not an additional incident.",
+      "Older articles, opinion, unverified automated aggregators, social claims and West Bank-only reporting excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "502 Bad Gateway",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "403 Forbidden",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "403 Forbidden",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News search",
+        "problem": "robots.txt restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "WAFA publication clock does not disclose timezone; hourly timing of events unverified.",
+      "Reuters corroborates Tal al-Hawa death but not exact five wounded count; WAFA reports count.",
+      "Minibus and tent injuries have not been independently corroborated in bounded review.",
+      "No verified new cross-border aid, medical evacuation, healthcare capacity, or ceasefire-negotiation changes found."
+    ],
+    "status_rationale": "DEGRADED owing to continuing official/publisher access restrictions; official OCHA, WHO global, WAFA, PRCS and Reuters coverage remained usable; three developments/updates newly found.",
+    "safeguards": "Exactly one append-only ledger file intended; no publication, approvals, production, schedule changes or disabling."
+  }
+}

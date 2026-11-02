@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T114630-0800-r11-20261102T194630Z",
+  "scheduled_for": "2026-11-02T11:45:54-08:00",
+  "started_at": "2026-11-02T11:46:30-08:00",
+  "completed_at": "2026-11-02T11:47:39.776-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T10:42:40.061-08:00",
+    "end_at": "2026-11-02T11:47:39.776-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start anchored to completed_at of preceding read-back verified heartbeat from ops/watch-ledger (10:41:04 local run). Two-day web retrieval recency used for indexing lag; eligible findings must be new and substantiated after start.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value Food Line miss classes; authoritative nationwide production collection is unchanged.",
+    "target_classes": [
+      "Closure, loss, fire or disaster of community only/sole/last/full-service grocery",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry/food-bank closure or major service/access reduction",
+      "New official SNAP/WIC/food assistance benefit or service interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed November 2 2026 town",
+      "\"sole grocery store\" closed November 2026 town fire",
+      "\"last grocery store\" closed town November 2026 residents",
+      "\"food distribution\" canceled November 2 2026 storm power outage",
+      "\"food pantry\" \"cancelled\" November 2 2026 flooding outage",
+      "\"food bank\" \"distribution suspended\" November 2026 storm fire",
+      "\"food pantry\" closure \"November 2, 2026\" services",
+      "\"food bank\" \"temporarily closed\" \"November 2\" 2026",
+      "\"food pantry\" \"shut down\" \"November 2026\" food access",
+      "site:gov \"SNAP\" \"November 2, 2026\" benefits outage delayed interrupted",
+      "site:gov \"WIC\" \"November 2026\" service outage suspended benefits",
+      "\"EBT system\" outage November 2 2026 SNAP unable purchase"
+    ],
+    "observation": "No newly verified qualifying U.S. food-access interruption published or substantiated in the hourly observation window. Search surfaced older grocery loss/fire/closure, prior-month storm-related distribution cancelation, routine reopening or program notices, and non-interruption policy guidance. Checked underlying event/publication date rather than crawl/relative indexing date.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Historical Spencer NY only-grocery fire; already excluded in earlier watches."
+      },
+      {
+        "publisher": "WABI",
+        "source_published_at": "2026-09-02",
+        "url": "https://www.wabi.tv/2026/09/02/eastports-only-grocery-store-closing-owner-retires/",
+        "reason": "September Eastport ME only-grocer closure announcement; predates window."
+      },
+      {
+        "publisher": "NBC 15",
+        "source_published_at": "2026-10-07",
+        "url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+        "reason": "October 7 severe-weather food distribution cancellation; predates window."
+      },
+      {
+        "publisher": "Washington Department of Social and Health Services",
+        "source_published_at": null,
+        "url": "https://www.dshs.wa.gov/abawds-able-bodied-adults-without-dependents",
+        "reason": "Revised Nov 2 ABAWD policy guidance, not evidence of a new official benefit interruption or failed service access."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Pre-window hurricane-recovery resource information, no newly substantiated canceled distribution in this window."
+      }
+    ],
+    "duplicate_screen": {
+      "last_read_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T104104-0800-r11-20261102T184104Z.json",
+      "last_completed_at": "2026-11-02T10:42:40.061-08:00",
+      "method": "Read preceding ledger record and listed dated directory from ops/watch-ledger before screening results."
+    },
+    "source_failures": [],
+    "limitations": "All twelve searches returned usable indexed results; these targeted queries cannot establish exhaustive absence, and historical sources may surface under short recency filters.",
+    "production_authority": "No approval, publication, schedule, production collector, or task-status changes made."
+  }
+}

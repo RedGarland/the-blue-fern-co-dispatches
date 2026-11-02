@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T124727-0800-r11-20261102T204727Z",
+  "scheduled_for": "2026-11-02T12:45:54-08:00",
+  "started_at": "2026-11-02T12:47:27-08:00",
+  "completed_at": "2026-11-02T12:48:17-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T10:42:40.061-08:00",
+    "end_at": "2026-11-02T12:48:17-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative overlap from the most recent heartbeat independently fetched and verified in this execution (10:42:40 PST); an intervening 11:45 check could not be independently located using available repository file listing actions. Retrieval queries use two-day recency to accommodate indexing lag, while eligibility requires a new substantive disruption in the observation window.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value food access disruption recall, not authoritative nationwide production collection.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery closure, fire, disaster or loss",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major reduction in access",
+      "New official SNAP/WIC/food-assistance payment or service interruption with immediate food access impact"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": 2,
+    "bounded_query_context": [
+      "November 2 2026 \"only grocery store\" closes OR fire OR destroyed town",
+      "November 2 2026 \"last grocery store\" closing community",
+      "November 2 2026 \"sole supermarket\" fire OR closed rural",
+      "November 2 2026 \"food distribution\" canceled storm OR flooding OR power outage",
+      "November 2 2026 \"food pantry\" distribution canceled due to weather",
+      "November 2 2026 \"food bank\" closed storm fire flooding operations",
+      "November 2 2026 \"food pantry\" abruptly closed indefinitely",
+      "November 2 2026 \"food bank\" services suspended closure",
+      "November 2 2026 \"food pantry\" closed due to building damage",
+      "November 2 2026 SNAP benefits delayed EBT system outage state agency",
+      "November 2 2026 WIC benefits interruption outage state health department",
+      "November 2 2026 SNAP emergency suspension payments agency notice November"
+    ],
+    "observation": "No newly verified U.S. event in any of the four specified disruption classes was found in the bounded queries. Search hits were predominantly dated months or a year earlier, from outside the United States, or routine resource/schedule notices. A November 1, 2026 Ohio mobile-pantry schedule did not identify any emergency cancellation. Search-result crawl dates were not treated as event dates.",
+    "excluded_examples": [
+      {
+        "publisher": "Nunatsiaq News",
+        "source_published_at": null,
+        "url": "https://nunatsiaq.com/stories/article/whale-cove-declares-local-state-of-emergency-as-fire-guts-only-grocery-store/",
+        "reason": "Whale Cove event is in Canada and published more than two years ago."
+      },
+      {
+        "publisher": "Nunatsiaq News",
+        "source_published_at": null,
+        "url": "https://nunatsiaq.com/stories/article/fire-damages-baker-lake-food-bank-halts-services/",
+        "reason": "Baker Lake closure is Canadian and dated approximately six months prior."
+      },
+      {
+        "publisher": "Peak of Ohio",
+        "source_published_at": "2026-11-01",
+        "url": "https://www.peakofohio.com/local-news/food-for-the-holidays-november-mobile-pantry-schedule-released/",
+        "reason": "Routine November mobile pantry calendar; no qualifying emergency distribution cancellation."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Older general recovery/resource summary without a newly verified eligible distribution cancellation."
+      },
+      {
+        "publisher": "Texas Tribune",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "Historical November 2025 SNAP disruption; not a new November 2026 official interruption."
+      },
+      {
+        "publisher": "Center on Budget and Policy Priorities",
+        "source_published_at": "2026-10-23",
+        "url": "https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+        "reason": "October 23 broader SNAP policy tracker; no newly substantiated hourly official service outage."
+      }
+    ],
+    "duplicate_screen": {
+      "last_read_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T104104-0800-r11-20261102T184104Z.json",
+      "last_completed_at": "2026-11-02T10:42:40.061-08:00",
+      "method": "Fetched exact previously reported heartbeat on ops/watch-ledger and conservatively extended observation interval through current check; no new positive records to deduplicate."
+    },
+    "source_failures": [],
+    "limitations": "Web searches returned usable coverage but were heavily weighted toward older results and historical 2025 SNAP interruptions. No fresh official notice confirming one of the narrow disruption classes was located. Cannot establish absence of nationwide incidents; supplementary recall only. Immediate predecessor 11:45 ledger file was not independently discovered with available connector directory operations.",
+    "production_authority": "No approval, publication, schedule change, task disablement, or production collector mutation."
+  }
+}

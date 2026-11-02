@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T104104-0800-r11-20261102T184104Z",
+  "scheduled_for": "2026-11-02T10:45:54-08:00",
+  "started_at": "2026-11-02T10:41:04-08:00",
+  "completed_at": "2026-11-02T10:42:40.061-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T09:50:54.808-08:00",
+    "end_at": "2026-11-02T10:42:40.061-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start anchored to the completed_at timestamp of the immediately preceding read-back verified 09:49:52 PST heartbeat on ops/watch-ledger. Retrieval broadened two days to allow indexing lag; only new qualifying access disruptions substantiated since that completed_at timestamp are eligible.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded high-value miss-class recall; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Loss/fire/disaster/closure of only, sole, last, or full-service grocery store",
+      "Canceled or suspended emergency food distributions caused by storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank closure or major service/access reduction",
+      "New official SNAP/WIC/food-assistance service or payment interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire community November 2 2026",
+      "\"sole grocery store\" closure fire November 2026 small town",
+      "\"last full service grocery store\" closure November 2026 rural",
+      "\"food distribution\" canceled storm outage November 2 2026",
+      "\"food pantry\" distribution cancelled flooding fire outage November 2026",
+      "\"food bank\" \"distribution suspended\" November 2026 storm",
+      "\"food pantry\" \"closed\" \"November 2, 2026\" services",
+      "\"food bank\" \"suspended services\" \"November 2026\" closure",
+      "\"food pantry\" \"temporarily closed\" \"Nov 2\" 2026",
+      "site:gov SNAP November 2 2026 benefits delayed outage suspended EBT notice",
+      "site:gov WIC November 2 2026 system outage benefits unavailable",
+      "November 2 2026 \"EBT\" \"outage\" \"SNAP\" benefits state"
+    ],
+    "observation": "No new verifiable U.S. food-access disruption in the four narrowly specified classes within the hourly observation interval. Search results consisted largely of pre-window grocery fires, earlier food-bank flooding/closure, older agency shutdown notices, routine service calendars, reopening stories, and a non-interruption SNAP policy eligibility change. Results were screened by underlying publication/incident dates, not crawl dates.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer NY only grocery store fire dated September 2026, predates interval and was recorded in previous checks."
+      },
+      {
+        "publisher": "KVIA",
+        "source_published_at": "2026-09-25",
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "El Paso food-bank storm-damage closure was September 2026; not new."
+      },
+      {
+        "publisher": "Local News Matters / San Jose Spotlight",
+        "source_published_at": "2026-10-10",
+        "url": "https://localnewsmatters.org/2026/10/10/san-jose-food-pantry-faces-closure-zoning-violations/",
+        "reason": "October prospective cessation notice; no newly substantiated abrupt closure in this watch interval."
+      },
+      {
+        "publisher": "Bountiful Food Pantry",
+        "source_published_at": null,
+        "url": "https://www.bountifulfoodpantry.org/component/dpcalendar/location/6",
+        "reason": "Calendar lists a November 5 mobile pantry as CANCELLED but provides no qualifying storm, fire, flood, outage, or facility-damage cause; future date and undated notice cannot establish new hourly occurrence."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_published_at": null,
+        "url": "https://dss.virginia.gov/relief/food-assistance/ebt/",
+        "reason": "November 1 beverage purchase eligibility policy, not an EBT service/payment interruption."
+      },
+      {
+        "publisher": "Community News",
+        "source_published_at": "2026-11-02",
+        "url": "https://communitynews.org/towns/trenton-downtowner/arm-in-arm-reopens-renovated-hudson-street-pantry-trenton/",
+        "reason": "Reopening after renovations, not a newly occurring closure or access loss."
+      }
+    ],
+    "duplicate_screen": {
+      "last_read_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T094952-0800-r11-20261102T174952Z.json",
+      "last_completed_at": "2026-11-02T09:50:54.808-08:00",
+      "method": "Listed dated ledger directory on ops/watch-ledger and fetched latest persisted hourly heartbeat before filtering fresh web search results."
+    },
+    "source_failures": [],
+    "limitations": "No tool-level search failures. Targeted search indexes yielded sparse directly relevant local/provider notices; recency filters can surface historical pages. Nonappearance in these 12 targeted queries is not proof of absence; coverage is supplementary rather than exhaustive.",
+    "production_authority": "No approvals, publications, production collector changes, schedule changes, or task disabling."
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T164657-0800-r11-20261102T004657Z",
+  "scheduled_for": "2026-11-01T16:45:54-08:00",
+  "started_at": "2026-11-01T16:46:57-08:00",
+  "completed_at": "2026-11-01T16:48:18-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T15:42:06-08:00",
+    "end_at": "2026-11-01T16:48:18-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Started at the previously verified ops/watch-ledger Food Line heartbeat completed_at; screened source publication/event dates rather than crawler timestamps.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary, bounded recall check of four high-value missed classes only; authoritative nationwide production collection unchanged.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting sole/only/last/full-service community grocery",
+      "Emergency food distributions canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "November 1 2026 only grocery store closed fire town rural food desert",
+      "October 31 November 1 2026 \"only grocery store\" fire closed",
+      "November 1 2026 \"last grocery store\" closing community",
+      "November 1 2026 \"sole grocery store\" fire closure",
+      "November 1 2026 food pantry closed abruptly service suspended",
+      "October 31 November 1 2026 food bank closed indefinitely operations",
+      "November 1 2026 food distribution canceled storm power outage flood",
+      "November 1 2026 emergency food distribution suspended severe weather",
+      "November 1 2026 official SNAP benefit interruption delayed EBT state notice",
+      "November 1 2026 official WIC food benefits unavailable interrupted state agency",
+      "Kauai Lowell hurricane November 1 2026 emergency food distributions canceled suspended food bank",
+      "November 1 2026 food pantry emergency distribution canceled closed weather outage United States"
+    ],
+    "observation": "No new same-window U.S. incident independently verified by fresh local or official sources. All twelve targeted searches returned usable results, but mostly old incidents, prior reports and unrelated material. The October 31 Provo, Utah Community Action Services and Food Bank closure is a known candidate, not a new signal.",
+    "excluded_examples": [
+      {
+        "title": "Nonprofit temporarily closes its doors, impacting more than 20,000",
+        "publisher": "KSL",
+        "source_published_at": "2026-10-31",
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Previously identified Provo, Utah Community Action Services and Food Bank closure candidate; duplicate, not a new report in this hour."
+      },
+      {
+        "title": "Oct. 29 Hurricane Lowell recovery, County of Kauaʻi services update",
+        "publisher": "County of Kauaʻi",
+        "source_published_at": "2026-10-29",
+        "url": "https://content.govdelivery.com/accounts/HIKAUAICOUNTY/bulletins/431030e",
+        "reason": "Older official bulletin confirms a planned October 30 emergency distribution, not a new cancellation."
+      },
+      {
+        "title": "Kauaʻi flood warning: Hanalei refuge offers shelter but not food, water or medical care",
+        "publisher": "The Economic Times",
+        "source_published_at": "2026-11-01",
+        "url": "https://m.economictimes.com/news/international/world-news/kauai-flood-warning-hanalei-refuge-area-offers-a-safe-place-to-shelter-but-no-food-water-or-medical-care-what-residents-need-to-know-to-take/articleshow/135429223.cms",
+        "reason": "Refuge facility does not offer food as standard service; no cancellation or reduction of an existing food distribution verified."
+      },
+      {
+        "title": "El Paso food bank to close Friday due to storm damage",
+        "publisher": "KVIA",
+        "source_published_at": "2026-09-23",
+        "url": "https://kvia.com/news/el-paso/2026/09/23/el-paso-food-bank-asks-for-help-with-rain-damaged-canopies-sign/",
+        "reason": "Actual qualifying disruption class but September event is historical, not a new same-hour change."
+      },
+      {
+        "title": "SNAP benefits: California among states that will partially fund food stamps amid shutdown",
+        "publisher": "KTVU",
+        "source_published_at": "2025-10-30",
+        "url": "https://www.ktvu.com/news/snap-benefits-california-among-states-will-partially-fund-food-stamps-amid-shutdown",
+        "reason": "2025 federal-shutdown reporting is a year old; excluded as current 2026 access evidence."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T154120-0800-r11-20261101T234120Z.json",
+      "prior_verified_completed_at": "2026-11-01T15:42:06-08:00",
+      "method": "Read prior committed heartbeat on ops/watch-ledger and compared returned incident/source dates and previously surfaced Provo candidate."
+    },
+    "source_failures": [],
+    "limitations": "Bounded web recall is non-exhaustive, and same-hour local agency notices may be unavailable or not yet indexed. No findings does not prove absence of incidents.",
+    "production_authority": "No content approval, production publishing, production collection changes, schedule change, or task disabling."
+  }
+}

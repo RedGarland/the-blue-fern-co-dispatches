@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261101T224633-0800-recall12",
+  "scheduled_for": "2026-11-01T22:45:22-08:00",
+  "started_at": "2026-11-01T22:46:33-08:00",
+  "completed_at": "2026-11-01T22:48:02-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-01T21:46:24-08:00",
+    "end": "2026-11-01T22:48:02-08:00",
+    "basis": "Since immediately preceding verified supplementary Care Line heartbeat; searched date-nearby material for previously missed verified developments; production national collection is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "scope": "Bounded US states, DC and territories recall: hospital/ED/maternity/behavioral/dialysis/oncology/primary-care access interruptions; rural emergency service loss; ambulance/air-medical base closure; CMS termination/rescission/CLIA sanctions; effective restoration of essential services.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-10-30",
+      "observation": "Current CMS public notice list was inspected before 12 other targeted searches. No new notice dated 2026-11-01. An incorrect legacy/alternate URL was inaccessible; canonical CMS page loaded.",
+      "source_ref": "turn142710search0"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department \"November 1, 2026\" closure OR closed OR suspension OR divert ambulances",
+      "hospital labor delivery maternity \"November 1, 2026\" closure OR suspension",
+      "hospital psychiatric behavioral health \"November 1, 2026\" closed OR suspended patients",
+      "dialysis center oncology clinic primary care closed November 2026 patients",
+      "rural hospital emergency room closed reopened November 1 2026",
+      "ambulance service shut down base closed air medical November 1 2026",
+      "hospital emergency department reopening restored service November 1 2026",
+      "Puerto Rico hospital emergency ambulance dialysis suspended November 1 2026",
+      "Guam Northern Mariana Islands American Samoa USVI healthcare clinic hospital closed November 2026",
+      "Alaska rural hospital clinic air ambulance closure November 2026",
+      "site:gov hospital emergency department service closure November 1 2026 notice",
+      "November 1 2026 hospital lockdown ambulance diversion emergency patient arrivals latest"
+    ],
+    "search_method": "12 fresh (2-day recency constrained) targeted US and territory web searches following direct CMS public notices check. Source dates and location filtered; search-result relevance was weak.",
+    "reviewed_exclusions": [
+      {
+        "item": "Valley Children's Hospital, Madera CA",
+        "reason": "Earlier November 1 closure/restoration already recorded as pending in prior watch; no new event in window."
+      },
+      {
+        "item": "Existing October 30 CMS notices",
+        "reason": "Previously present, not newly issued during this observation interval."
+      },
+      {
+        "item": "Miles maternity Maine",
+        "reason": "July 22 letter about risk, no concrete effect in interval."
+      },
+      {
+        "item": "Martin County NC hospital revival",
+        "reason": "July plans and financing, not effective reopening in current window."
+      },
+      {
+        "item": "Haiti maternity/hospital restoration",
+        "reason": "Outside US and territories and older."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-01/care-line-watch-20261101T214537-0800-r11-recall12.json",
+      "previous_completed_at": "2026-11-01T21:46:24-08:00",
+      "previous_heartbeat_inspected": true,
+      "production_collector_dedupe_verified": false
+    },
+    "source_failures": [
+      {
+        "source": "CMS alternate URL",
+        "failure": "Incorrect/obsolete path inaccessible; recovered by finding and reading current public notices listing.",
+        "severity": "nonfatal"
+      }
+    ],
+    "search_quality": "DEGRADED: 12 targeted queries mostly surfaced stale, foreign, or unrelated results despite 2-day search-recency filter. No newly verified qualifying concrete event. Rural and territorial recall sensitivity remains limited.",
+    "limitations": "Supplementary recall only, not a systematic nationwide provider-by-provider or all local media sweep. Search engine recency filter does not guarantee article publication recency. No direct authoritative production collector ingestion visibility. This is a persistent, not newly material, degradation.",
+    "controls": "Exactly one append-only heartbeat written to ops/watch-ledger; no approve/publish/schedule/task-disable operations."
+  }
+}

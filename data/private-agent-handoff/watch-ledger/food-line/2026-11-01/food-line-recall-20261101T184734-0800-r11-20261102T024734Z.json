@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261101T184734-0800-r11-20261102T024734Z",
+  "scheduled_for": "2026-11-01T18:45:54-08:00",
+  "started_at": "2026-11-01T18:47:34-08:00",
+  "completed_at": "2026-11-01T18:49:00-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-01T17:46:01-08:00",
+    "end_at": "2026-11-01T18:49:00-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at of newest verified preceding Food Line watch heartbeat on ops/watch-ledger; assessed event/publication dates rather than web crawl timestamps.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-impact U.S. food-access disruptions only; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss, closure, fire or disaster",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major immediate service-access reduction",
+      "New official SNAP/WIC/food assistance interruption causing immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 1 2026 rural town",
+      "\"last grocery store\" closing November 2026 community",
+      "\"sole grocery store\" fire November 2026",
+      "\"food distribution\" cancelled storm November 1 2026 food bank",
+      "\"food pantry\" \"closed\" \"November 1, 2026\" emergency",
+      "\"food bank\" \"suspended\" distribution power outage November 2026",
+      "SNAP benefits delayed interrupted November 1 2026 state official EBT",
+      "WIC benefits outage interruption November 1 2026 official state agency",
+      "November 1 2026 Kauai Lowell food bank distribution cancelled flood Sunday",
+      "November 1 2026 Colorado flooding pantry food distribution closure Durango",
+      "site:gov \"SNAP\" \"November 1, 2026\" \"delayed\" OR \"interruption\" OR \"outage\"",
+      "\"food pantry\" OR \"food bank\" \"November 1, 2026\" \"closed\" \"storm\" OR \"emergency\""
+    ],
+    "observation": "No independently verified, newly reported food-access disruption in the four specified categories since 2026-11-01 17:46:01 PST. Results mainly surfaced 2025 federal-shutdown SNAP stories, older sole-grocery fires, established Hawaiian storm recovery distribution schedules and southwest Colorado flooding/road closures without verified emergency food-service cancellation.",
+    "excluded_examples": [
+      {
+        "title": "Provo food bank announces temporary closure amid financial shortfall",
+        "publisher": "The Salt Lake Tribune",
+        "source_published_at": "2026-11-01",
+        "url": "https://www.sltrib.com/news/2026/11/01/provo-food-bank-announces/",
+        "reason": "Known closure candidate recorded in prior hourly watches; duplicate."
+      },
+      {
+        "title": "Town of Spencer recovering after losing only grocery store in fire",
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September loss, not a newly occurring/reported disruption in current window."
+      },
+      {
+        "title": "Some city services closed Monday due to flooding",
+        "publisher": "City of Durango, Colorado",
+        "source_published_at": "2026-11-01",
+        "url": "https://www.durangoco.gov/m/newsflash/Home/Detail/4937",
+        "reason": "Official city facility/transit adjustments; no food pantry, distribution or assistance program interruption specified."
+      },
+      {
+        "title": "Mandatory evacuations in southwestern Colorado as storms bring another round of historic flooding",
+        "publisher": "Colorado Public Radio",
+        "source_published_at": "2026-11-01",
+        "url": "https://www.cpr.org/2026/11/01/southwest-colorado-pagosa-springs-flooding-san-luis-valley-november-2026/",
+        "reason": "Disaster and road access impacts confirmed, but a specific food-distribution cancellation or qualifying grocery loss was not confirmed."
+      },
+      {
+        "title": "What Kauaʻi County residents, visitors need to know Oct. 29 about Hurricane Lowell recovery",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Scheduled emergency distribution, not newly canceled or suspended."
+      },
+      {
+        "title": "The federal shutdown will halt November SNAP benefits. Here’s what you need to know.",
+        "publisher": "The Texas Tribune",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "Historical 2025 SNAP interruption coverage; not a fresh 2026 official notice."
+      }
+    ],
+    "duplicate_screen": {
+      "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/food-line/2026-11-01/food-line-recall-20261101T174442-0800-r11-20261102T014442Z.json",
+      "prior_verified_completed_at": "2026-11-01T17:46:01-08:00",
+      "method": "Read and compared newest preceding committed heartbeat and its known exclusions; screened fresh search hits by event dates."
+    },
+    "source_failures": [],
+    "limitations": "A maximum of twelve targeted web searches was used. Same-hour local notices may remain unindexed; non-exhaustive recall and no findings do not establish that no disruption occurred.",
+    "production_authority": "No approval, publishing, production collector changes, schedule changes or task disabling."
+  }
+}

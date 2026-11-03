@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T174440-0800-r11-20261103T014440Z",
+  "scheduled_for": "2026-11-02T17:45:54-08:00",
+  "started_at": "2026-11-02T17:44:40-08:00",
+  "completed_at": "2026-11-03T01:45:35.822+00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T16:42:23.767-08:00",
+    "end_at": "2026-11-03T01:45:35.822+00:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since independently verified prior Food Line Source Watch heartbeat, with 1-2 day search recency to allow indexing lag; qualification requires newly reported or materially substantiated immediate access disruption within observation window, not merely a fresh crawl.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded high-value recall only; primary nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Only, sole, last or community full-service grocery lost to closure, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry or food bank service closure or major access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access effects"
+    ],
+    "search_breakdown": {
+      "fast": 12
+    },
+    "targeted_web_searches": 12,
+    "search_recency_days": [
+      1,
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 2 2026 community",
+      "\"sole grocery store\" OR \"last grocery store\" fire closure 2026 November 2",
+      "\"only supermarket\" shut down fire town November 2 2026",
+      "\"full service grocery store\" closure community November 2 2026",
+      "\"food distribution\" canceled storm Monday November 2 2026",
+      "\"food pantry\" closed flooding power outage November 2 2026",
+      "\"food bank\" suspended services storm damage November 2 2026",
+      "\"food pantry\" \"temporarily closed\" November 2 2026 emergency",
+      "site:gov \"SNAP\" \"benefits\" interrupted outage November 2 2026",
+      "site:gov \"WIC\" \"services suspended\" November 2 2026",
+      "\"SNAP\" \"EBT\" \"outage\" November 2 2026 statewide",
+      "\"food distribution\" \"cancelled\" \"flood\" \"November 2\" 2026"
+    ],
+    "observation": "Twelve targeted searches were executed. No corroborated new qualifying U.S. disruption emerged after the 16:42:23 PST prior heartbeat. Returned matches primarily described older sole-grocery losses, historical fire/storm events, routine grocery policy or proposed incentives, a 2026-11-01 SNAP food-category eligibility rule rather than an issuance/access outage, and 2025 SNAP shutdown notices.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, NY only-store fire is from September 2026, not a new hourly event."
+      },
+      {
+        "publisher": "The Maine Wire",
+        "source_published_at": "2026-08",
+        "url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "reason": "Eastport, Maine sole-grocery closure previously announced in August; duplicate historical case."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Four-day-old recovery/resource guidance, no verified canceled distribution newly reported in window."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_published_at": null,
+        "url": "https://dss.virginia.gov/relief/food-assistance/snap/",
+        "reason": "November 1, 2026 soda purchase eligibility change; the agency says benefit amount is unchanged; not an outage or distribution failure."
+      },
+      {
+        "publisher": "Stamford Advocate",
+        "source_published_at": "2026-11-02",
+        "url": "https://www.stamfordadvocate.com/news/article/stamford-ct-grocery-store-tax-abatement-22500649.php",
+        "reason": "Proposed grocery tax incentives to expand access; no newly lost grocery access."
+      },
+      {
+        "publisher": "Georgia Department of Human Services",
+        "source_published_at": "2025",
+        "url": "https://dhs.georgia.gov/update-november-snap-amid-federal-government-shutdown",
+        "reason": "Prior-year November SNAP shutdown context, not a new 2026 interruption."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T164102-0800-r11-20261103T004102Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T16:42:23.767-08:00",
+      "method": "Read previous heartbeat directly from ops/watch-ledger and screened results for prior-known cases and report/event-date mismatches."
+    },
+    "source_failures": [],
+    "limitations": "A bounded 12-query web recall is not comprehensive; very recent local provider notices may be unindexed or undiscoverable; no new qualifying signal was independently verified.",
+    "production_authority": "No approvals, publication, modifications of primary collection, schedule changes or task disabling."
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T045024-0800-r11-20261103T125024Z",
+  "scheduled_for": "2026-11-03T04:45:54-08:00",
+  "started_at": "2026-11-03T04:50:24-08:00",
+  "completed_at": "2026-11-03T04:51:31.078-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T03:52:45.920-08:00",
+    "end_at": "2026-11-03T04:51:31.078-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently read-back verified Food Line Source Watch heartbeat in ops/watch-ledger. Publication dates and underlying event dates screened separately; no backdated event treated as new solely because it appeared in a fresh search.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting only/sole/last/full-service community grocery store",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access consequence"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed": 0
+    },
+    "bounded_query_context": [
+      "November 3 2026 \"only grocery store\" closed fire town USA",
+      "November 3 2026 \"last grocery store\" closes rural residents",
+      "November 3 2026 full service grocery store damaged fire closure local news",
+      "November 3 2026 food bank distribution canceled storm flooding closure",
+      "November 3 2026 emergency food distribution suspended weather outage",
+      "November 3 2026 food pantry closed abruptly services suspended",
+      "November 3 2026 food bank pantry shuts doors temporarily damaged building",
+      "November 3 2026 SNAP benefits interrupted EBT outage state agency",
+      "November 3 2026 WIC benefits service outage access official state notice",
+      "November 3 2026 emergency SNAP delay no benefits state USDA EBT",
+      "November 3 2026 food pantry reduced hours indefinitely access closure",
+      "November 3 2026 sole supermarket closure fire community"
+    ],
+    "results": "Twelve targeted fresh-index searches found no newly verified U.S. food-access disruption in the checked interval matching the four audit miss classes.",
+    "noteworthy_exclusions": [
+      {
+        "publisher": "WBNG",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, NY sole grocery store loss occurred in September 2026; old incident, not new in this hourly window."
+      },
+      {
+        "publisher": "KFOX",
+        "url": "https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+        "reason": "Earlier storm-related food-bank disruption; published in October 2026, outside new interval."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "October 29 hurricane recovery service/resource information, not a newly verified November 3 canceled distribution."
+      },
+      {
+        "publisher": "Multiple sources",
+        "reason": "November 2025 government shutdown SNAP interruption articles surfaced via month/day matches; excluded as prior-year reports."
+      },
+      {
+        "publisher": "ClickOrlando",
+        "url": "https://www.clickorlando.com/news/local/2026/11/02/brevard-county-schools-closed-amid-flash-flood-warning-heavy-rain/",
+        "reason": "November 2 school closure from flooding, without verified qualifying emergency-food distribution cancellation."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T035035-0800-r11-20261103T115035Z.json",
+      "completed_at": "2026-11-03T03:52:45.920-08:00"
+    },
+    "source_failures": [],
+    "limitations": "Targeted 12-query web recall is not comprehensive national surveillance. Indexed publication recency can differ from event dates; unindexed provider notices may be missed. No generic food assistance, donation, recipe, inflation, or program-promotion results were promoted.",
+    "production_authority": "No approvals, publications, schedule changes, task disabling, or production collection changes."
+  }
+}

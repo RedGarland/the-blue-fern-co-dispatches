@@ -8,11 +8,11 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 3.0
 
 $Expected = @(
-    [ordered]@{ relative = 'scripts\food_line_daily_scheduler.py'; bytes = 126634; sha256 = 'F050887CAA99EF5CED1BFC7015009CFA93E04CE5D81DD82CD296A32B8C95EA3E'; canonical_lf_bytes = 124001; canonical_lf_sha256 = '142499013D338B06F732F2384BA3D88B25F89686EA32168F40AA9B90BB78C757' },
+    [ordered]@{ relative = 'scripts\food_line_daily_scheduler.py'; bytes = 131280; sha256 = 'D9C72B89E6C49E451E5D11BBAC119BB16BEFF0493F2D60C97C68008E122E2384'; canonical_lf_bytes = 128573; canonical_lf_sha256 = '4567DC157D004AE9AAAF7472B45956A477122AAF6E81D6AB1CCAD6CE50552EC3' },
     [ordered]@{ relative = 'scripts\food_line_continuation_ledger.py'; bytes = 35707; sha256 = 'CC20CBF6DF6366418F8DC8BD63B4524923D9EF9A2C6715CA90040C7E6DC8419D'; canonical_lf_bytes = 34943; canonical_lf_sha256 = '8CF226BD81B96ADE1C7107D4D01687F9F5AC76C469A6525674E0677A97C808B7' },
-    [ordered]@{ relative = 'scripts\run_food_line_continuation.py'; bytes = 22806; sha256 = '959A34466AEE3B32A6D7EF3E448688C5F37F34397A1393FED6B3136796A3EC0B'; canonical_lf_bytes = 22307; canonical_lf_sha256 = 'E46B1CD6F158335BEF2C2610F3782E681C17F7A1A7DFED8BA32FDFE6422B3387' },
-    [ordered]@{ relative = 'scripts\windows\resume_food_line_daily_current.ps1'; bytes = 1989; sha256 = 'E9E655C28EA2830E5EDD18D7380A0F56EF142F1DB857A4A3F513E15C69C08163'; canonical_lf_bytes = 1953; canonical_lf_sha256 = 'BF3149F2B0EFBA9ABD294E2422D7C4BB97753F29C3E9720E56BC5D69A104FEFC' },
-    [ordered]@{ relative = 'scripts\windows\run_food_care_proof_continuation.ps1'; bytes = 13757; sha256 = '98994C8A75C7F9EB8DC23BA0EB19A3B8DADA4BF35F9B4DC5472CCC55FA3DB2C7'; canonical_lf_bytes = 13561; canonical_lf_sha256 = 'ADC0358A7C405C8524724116D477BC17DFF2D598E1DF5D5DA18CE726FD65E619' }
+    [ordered]@{ relative = 'scripts\run_food_line_continuation.py'; bytes = 22740; sha256 = '27ED434AE868AD913167CC263BCBBADBF55B6C58BD43D2556F03AF804B1B10BB'; canonical_lf_bytes = 22242; canonical_lf_sha256 = '5282BF69E4615CBA8F1A554D0EEE8E7C760CDE8BBC1D89A64CCD6557C335207C' },
+    [ordered]@{ relative = 'scripts\windows\resume_food_line_daily_current.ps1'; bytes = 2125; sha256 = 'E5FA1257B876BF5C08A5DC60C10AC42C172AE9D5E774766F43EA8DF6D3880E98'; canonical_lf_bytes = 2087; canonical_lf_sha256 = '6F31BF50F17F660DE03289A80213B664F73B8171D434084BECE2A08F3F91D6AC' },
+    [ordered]@{ relative = 'scripts\windows\run_food_care_proof_continuation.ps1'; bytes = 16836; sha256 = '00CD1BF4C87AE3C480F6A861A3266C2EA6E716B43555041C66600627F8A8A73D'; canonical_lf_bytes = 16623; canonical_lf_sha256 = '31B985262729F80164812CC5FB36CDFDF385F4D5D61234EF56D7A32CD8BB3691' }
 )
 
 function ConvertTo-CanonicalUtf8Lf {
@@ -61,22 +61,49 @@ function Get-ReceiptParser {
 
 function New-Envelope {
     param([Parameter(Mandatory)][string]$SourceIdentity,[bool]$CollectionTriggered)
+    $binding = [ordered]@{
+        edition_date = $EditionDate
+        run_id = 'fixture-selected-run'
+        source_identity = $SourceIdentity
+        source_module_sha256 = ('b' * 64)
+        config_sha256 = ('c' * 64)
+        plan_sha256 = ('d' * 64)
+    }
+    $handoff = [ordered]@{
+        status = 'not_requested'
+        intake_eligible = $false
+        public_export_status = 'not_requested'
+        publication_attempted = $false
+        publication_side_effects = @{}
+    }
     $child = [ordered]@{
         schema = 'food_line_continuation_receipt_v1'
         status = 'completed'
-        source_identity = $SourceIdentity
         execution_mode = 'collection_only'
+        source_stage_handoff = $handoff
+        legacy_run_state_path = $null
         gates = [ordered]@{
             publication_attempted = $false
             publication_side_effects = @{}
+            intake_eligible = $false
             release_ready = $false
             export_status = 'not_requested'
             public_export_status = 'not_requested'
+            source_stage_handoff = $handoff
         }
     }
+    foreach ($key in $binding.Keys) { $child[$key] = $binding[$key] }
     return [ordered]@{
         schema_version = 'food_line_source_watch_receipt_v1'
         action = 'status_resume'
+        edition_date = $EditionDate
+        run_id = $binding.run_id
+        continuation_run_directory = $ContinuationRunDirectory
+        runtime_source_commit = $ExpectedRuntimeHead
+        ledger_binding = $binding
+        child_command_exit_code = 0
+        command_exit_code = 0
+        exit_code = 0
         execution_mode = 'collection_only'
         source_commit = $SourceIdentity
         publication_attempted = $false
@@ -111,13 +138,16 @@ New-Item -ItemType Directory -Path $evidence | Out-Null
 $pins = Assert-CandidateClosure -Root $candidate
 $operatorPath = Join-Path $candidate 'scripts\windows\run_food_care_proof_continuation.ps1'
 $ExpectedProtectedHead = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+$ExpectedRuntimeHead = 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+$EditionDate = '2026-11-02'
+$ContinuationRunDirectory = Join-Path $evidence 'selected-run'
 $parserDefinition = Get-ReceiptParser -OperatorPath $operatorPath
 . $parserDefinition
 
 $validPath = Join-Path $evidence 'valid.stdout.log'
 $valid = New-Envelope -SourceIdentity $ExpectedProtectedHead -CollectionTriggered $true
 ($valid | ConvertTo-Json -Depth 12 -Compress) | Set-Content -LiteralPath $validPath -Encoding UTF8
-$validStep = [pscustomobject]@{ stdout_path = $validPath }
+$validStep = [pscustomobject]@{ stdout_path = $validPath; exit_code = 0 }
 $parsed = Read-StructuredContinuationReceipt -Step $validStep
 if ($parsed.child_continuation_receipt.status -ne 'completed' -or $parsed.continuation_progress.collection_triggered -ne $true) { throw 'valid scheduler envelope was not accepted' }
 
@@ -125,12 +155,41 @@ $missingPath = Join-Path $evidence 'missing-child.stdout.log'
 $missing = New-Envelope -SourceIdentity $ExpectedProtectedHead -CollectionTriggered $true
 $missing.Remove('child_continuation_receipt')
 ($missing | ConvertTo-Json -Depth 12 -Compress) | Set-Content -LiteralPath $missingPath -Encoding UTF8
-$missingStep = [pscustomobject]@{ stdout_path = $missingPath }
+$missingStep = [pscustomobject]@{ stdout_path = $missingPath; exit_code = 0 }
 $missingRejected = $false
 try { Read-StructuredContinuationReceipt -Step $missingStep | Out-Null } catch {
     if ($_.Exception.Message -like '*lacks the bound child continuation receipt*') { $missingRejected = $true } else { throw }
 }
 if (-not $missingRejected) { throw 'missing child receipt was not rejected by the bounded parser' }
+
+$rejectedCases = @()
+foreach ($case in @('runtime', 'run', 'plan', 'intake', 'handoff', 'exit', 'null-effects', 'string-bool')) {
+    $bad = New-Envelope -SourceIdentity $ExpectedProtectedHead -CollectionTriggered $true
+    switch ($case) {
+        'runtime' { $bad.runtime_source_commit = ('f' * 40) }
+        'run' { $bad.child_continuation_receipt.run_id = 'foreign-run' }
+        'plan' { $bad.child_continuation_receipt.plan_sha256 = ('f' * 64) }
+        'intake' { $bad.child_continuation_receipt.gates.intake_eligible = $true }
+        'handoff' { $bad.child_continuation_receipt.source_stage_handoff.status = 'eligible' }
+        'exit' { $bad.child_command_exit_code = 1 }
+        'null-effects' { $bad.child_continuation_receipt.gates.publication_side_effects = $null }
+        'string-bool' { $bad.child_continuation_receipt.gates.intake_eligible = 'false' }
+    }
+    $badPath = Join-Path $evidence ("rejected-{0}.stdout.log" -f $case)
+    ($bad | ConvertTo-Json -Depth 12 -Compress) | Set-Content -LiteralPath $badPath -Encoding UTF8
+    $rejected = $false
+    try { Read-StructuredContinuationReceipt -Step ([pscustomobject]@{ stdout_path = $badPath; exit_code = 0 }) | Out-Null } catch { $rejected = $true }
+    if (-not $rejected) { throw "contradictory $case envelope was accepted" }
+    $rejectedCases += $case
+}
+$pending = New-Envelope -SourceIdentity $ExpectedProtectedHead -CollectionTriggered $true
+$pending.child_continuation_receipt.status = 'incomplete_pending'
+$pending.child_command_exit_code = 2
+$pending.command_exit_code = 2
+$pending.exit_code = 2
+$pendingPath = Join-Path $evidence 'pending.stdout.log'
+($pending | ConvertTo-Json -Depth 12 -Compress) | Set-Content -LiteralPath $pendingPath -Encoding UTF8
+Read-StructuredContinuationReceipt -Step ([pscustomobject]@{ stdout_path = $pendingPath; exit_code = 2 }) | Out-Null
 
 $result = [ordered]@{
     status = 'passed'
@@ -138,6 +197,8 @@ $result = [ordered]@{
     candidate_pins = $pins
     valid_envelope = 'accepted'
     missing_child_envelope = 'rejected'
+    contradictory_envelopes_rejected = $rejectedCases
+    pending_envelope = 'accepted'
     providers_invoked = $false
     installed_runners_touched = $false
     scheduler_changed = $false

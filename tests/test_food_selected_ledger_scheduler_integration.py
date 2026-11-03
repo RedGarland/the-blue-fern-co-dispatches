@@ -181,6 +181,7 @@ def _args(fixture: dict, *, selected: bool = True) -> argparse.Namespace:
         continuation_run_directory=str(fixture["continuation"]) if selected else "",
         continuation_run_root="",
         expected_protected_head=SOURCE_IDENTITY if selected else "",
+        expected_runtime_head="d" * 40 if selected else "",
     )
 
 

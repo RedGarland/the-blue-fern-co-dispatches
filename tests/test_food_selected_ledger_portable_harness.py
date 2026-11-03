@@ -69,6 +69,7 @@ def test_private_workflow_selects_only_portable_checks_and_existing_root() -> No
         "tests/test_food_selected_ledger_manifest_portable.py",
         "tests/test_food_selected_ledger_scheduler_integration.py",
         "tests/test_food_selected_ledger_portable_harness.py",
+        "tests/test_food_selected_runtime_production_path.py",
     ):
         assert workflow.count(test_name) == 1
     assert workflow.count("Run portable Food selected-ledger tests on Windows") == 1
@@ -81,3 +82,14 @@ def test_private_workflow_selects_only_portable_checks_and_existing_root() -> No
     assert "providers_invoked" not in workflow
     assert "food-selected-ledger-step.patch" not in workflow
     assert "native-offline-parser-test-20261102.ps1" not in workflow
+
+
+def test_windows_51_parser_and_real_chain_are_selected() -> None:
+    workflow = _text(WORKFLOW)
+    assert "Run Food receipt parser under Windows PowerShell 5.1" in workflow
+    assert "shell: powershell" in workflow
+    assert "food-ledger-native-parser-ps51-" in workflow
+    tests = _text(ROOT / "tests/test_food_selected_runtime_production_path.py")
+    assert "powershell.exe" in tests
+    assert "test_windows_powershell_operator_to_actual_python_chain" in tests
+    assert "test_mode=True" not in tests

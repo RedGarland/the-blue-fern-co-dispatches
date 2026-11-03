@@ -7,6 +7,7 @@ param(
     [string]$ContinuationRunDirectory = "",
     [string]$ContinuationRunRoot = "",
     [string]$ExpectedProtectedHead = "",
+    [string]$ExpectedRuntimeHead = "",
     [switch]$TestMode
 )
 
@@ -31,6 +32,7 @@ $arguments = @($helper, "resume", "--repo-root", $RepositoryRoot, "--python", $P
 if ($ContinuationRunDirectory) { $arguments += @("--continuation-run-directory", $ContinuationRunDirectory) }
 if ($ContinuationRunRoot) { $arguments += @("--continuation-run-root", $ContinuationRunRoot) }
 if ($ExpectedProtectedHead) { $arguments += @("--expected-protected-head", $ExpectedProtectedHead) }
+if ($ExpectedRuntimeHead) { $arguments += @("--expected-runtime-head", $ExpectedRuntimeHead) }
 if ($TestMode) { $arguments += "--test-mode" }
 & $PythonExecutable @arguments
 exit $LASTEXITCODE

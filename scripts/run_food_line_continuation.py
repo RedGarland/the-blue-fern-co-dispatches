@@ -450,8 +450,7 @@ def run(args: argparse.Namespace) -> int:
     payload = {
         "schema": "food_line_continuation_receipt_v1",
         "status": "completed" if (collection_complete if selected_only else handoff["intake_eligible"]) else "incomplete_pending",
-        "source_identity": source_identity,
-        "config_sha256": config_sha256,
+        **binding,
         "execution_mode": "collection_only",
         "gates": gate_summary(state),
         "source_stage_handoff": handoff,

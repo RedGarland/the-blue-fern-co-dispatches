@@ -35,6 +35,7 @@ from scripts.food_line_continuation_ledger import (
     claim_source_watch_batch,
     prepare_ledger,
     record_source_watch_batch,
+    load_ledger,
 )
 
 PRODUCTION_BRANCH = "add/pages-repo-default"
@@ -1285,13 +1286,21 @@ def _validate_explicit_continuation_directory(
     run_id: str,
     continuation_run_directory: str,
 ) -> Path:
-    """Permit only a one-run directory bound to the loaded source-watch run."""
-    expected = (root / DIRECT_CONTINUATION_RELATIVE / edition_date / run_id / "continuation").resolve()
+    """Accept only the two existing owned layouts, never a migrated/guessed ledger."""
+    if run_id in {".", ".."} or not run_id or any(
+        char not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-" for char in run_id
+    ):
+        raise SchedulerError("continuation run ID is not a safe exact directory name")
+    canonical = (root / CONTINUATION_ROOT_RELATIVE / edition_date / run_id).resolve()
+    direct = (root / DIRECT_CONTINUATION_RELATIVE / edition_date / run_id / "continuation").resolve()
     supplied = Path(continuation_run_directory).expanduser().resolve()
-    if supplied != expected:
+    if supplied not in {canonical, direct}:
         raise SchedulerError(
-            f"explicit continuation directory must be the exact run-bound path {expected}, found {supplied}"
+            f"explicit continuation directory must be an exact run-bound path {canonical} or {direct}, found {supplied}"
         )
+    for alternative in {canonical, direct} - {supplied}:
+        if any((alternative / name).exists() for name in ("continuation-ledger.json", "continuation-query-plan.json")):
+            raise SchedulerError("multiple populated continuation layouts exist for the selected run; refusing ambiguous copies")
     return supplied
 
 
@@ -1749,6 +1758,17 @@ def _verify_same_source_commit(root: Path, branch: str, expected: str, *, test_m
         raise SchedulerError(f"runner source commit changed after source watch: expected {expected}, found {current}")
 
 
+def _verify_selected_runtime(root: Path, branch: str, expected_runtime_head: str, *, test_mode: bool) -> str:
+    """Pin installed recovery code independently of immutable collection provenance."""
+    pin = str(expected_runtime_head or "").strip().lower()
+    if len(pin) != 40 or any(char not in "0123456789abcdef" for char in pin):
+        raise SchedulerError("selected continuation requires an explicit 40-hex ExpectedRuntimeHead")
+    if branch != PRODUCTION_BRANCH:
+        raise SchedulerError("selected continuation requires the production source branch")
+    _verify_same_source_commit(root, branch, pin, test_mode=test_mode)
+    return pin
+
+
 def _canonical_selected_json(value: Any) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
@@ -1785,14 +1805,19 @@ def _selected_continuation_context(
         raise SchedulerError("selected continuation run ID is not a safe exact directory name")
     if str(plan.get("edition_date") or "") != edition_date:
         raise SchedulerError("selected continuation edition date does not match the requested date")
-    expected_directory = (root / DIRECT_CONTINUATION_RELATIVE / edition_date / run_id / "continuation").resolve()
-    if supplied != expected_directory:
-        raise SchedulerError(f"selected continuation path is not the exact owned path {expected_directory}")
+    _validate_explicit_continuation_directory(
+        root=root, edition_date=edition_date, run_id=run_id,
+        continuation_run_directory=str(supplied),
+    )
     binding_names = ("edition_date", "run_id", "source_identity", "source_module_sha256", "config_sha256", "plan_sha256")
     expected_binding = {name: plan.get(name) if name != "plan_sha256" else plan_sha256 for name in binding_names}
     binding = ledger.get("binding")
     if not isinstance(binding, dict) or binding != expected_binding:
         raise SchedulerError("selected continuation ledger binding differs from its ordered plan")
+    try:
+        ledger = load_ledger(supplied, binding=expected_binding)
+    except ContinuationLedgerError as exc:
+        raise SchedulerError(str(exc)) from exc
     source_identity = str(expected_binding.get("source_identity") or "")
     protected_head = str(expected_protected_head or "").strip()
     if not protected_head or protected_head != source_identity:
@@ -1840,7 +1865,7 @@ def _selected_continuation_context(
     return record, state, state_path, context
 
 
-def _selected_child_receipt(result: subprocess.CompletedProcess[str], *, source_identity: str, config_sha256: str) -> dict[str, Any]:
+def _selected_child_receipt(result: subprocess.CompletedProcess[str], *, binding: dict[str, Any]) -> dict[str, Any]:
     lines = [line.strip() for line in str(result.stdout or "").splitlines() if line.strip()]
     if not lines:
         raise SchedulerError("selected continuation produced no structured receipt")
@@ -1850,17 +1875,30 @@ def _selected_child_receipt(result: subprocess.CompletedProcess[str], *, source_
         raise SchedulerError("selected continuation terminal output was not JSON") from exc
     if not isinstance(payload, dict) or payload.get("schema") != "food_line_continuation_receipt_v1":
         raise SchedulerError("selected continuation receipt schema is invalid")
-    if payload.get("source_identity") != source_identity or payload.get("config_sha256") != config_sha256:
+    if any(payload.get(name) != value for name, value in binding.items()):
         raise SchedulerError("selected continuation receipt binding differs from the selected ledger")
     if payload.get("execution_mode") != "collection_only":
         raise SchedulerError("selected continuation receipt is not collection-only")
     gates = payload.get("gates")
     if not isinstance(gates, dict) or gates.get("publication_attempted") is not False or gates.get("publication_side_effects") != {}:
         raise SchedulerError("selected continuation receipt does not prove no public effects")
-    if gates.get("release_ready") is not False or gates.get("export_status") != "not_requested" or gates.get("public_export_status") != "not_requested":
+    if gates.get("intake_eligible") is not False or gates.get("release_ready") is not False or gates.get("export_status") != "not_requested" or gates.get("public_export_status") != "not_requested":
         raise SchedulerError("selected continuation receipt has an unexpected downstream gate")
-    if payload.get("status") not in {"completed", "incomplete_pending"}:
-        raise SchedulerError("selected continuation receipt has an unknown terminal status")
+    handoff = payload.get("source_stage_handoff")
+    if (
+        not isinstance(handoff, dict)
+        or handoff.get("status") != "not_requested"
+        or handoff.get("intake_eligible") is not False
+        or handoff.get("public_export_status") != "not_requested"
+        or handoff.get("publication_attempted") is not False
+        or handoff.get("publication_side_effects") != {}
+        or gates.get("source_stage_handoff") != handoff
+        or payload.get("legacy_run_state_path") is not None
+    ):
+        raise SchedulerError("selected continuation receipt does not prove suppressed source-stage handoff")
+    expected_exit = {"completed": 0, "incomplete_pending": 2}.get(payload.get("status"))
+    if expected_exit is None or result.returncode != expected_exit:
+        raise SchedulerError("selected continuation child exit/status combination is invalid")
     return payload
 
 
@@ -1870,14 +1908,22 @@ def run_resume(args: argparse.Namespace) -> int:
     edition_date = validate_date(args.edition_date)
     layout = Layout(root)
     started_at = utc_now()
+    child_command_exit_code: int | None = None
+    runtime_source_commit = ""
+    record: dict[str, Any] | None = None
     try:
         initial_continuation_directory = str(getattr(args, "continuation_run_directory", "") or "").strip()
         initial_continuation_root = str(getattr(args, "continuation_run_root", "") or "").strip()
         if initial_continuation_directory and initial_continuation_root:
             raise SchedulerError("continuation directory and continuation root are mutually exclusive")
+        if str(getattr(args, "expected_runtime_head", "") or "").strip() and not initial_continuation_directory:
+            raise SchedulerError("ExpectedRuntimeHead requires an explicit continuation directory")
         selected_continuation = bool(initial_continuation_directory)
         selected_context: dict[str, Any] | None = None
         if selected_continuation:
+            runtime_source_commit = _verify_selected_runtime(
+                root, args.branch, str(getattr(args, "expected_runtime_head", "") or ""), test_mode=args.test_mode,
+            )
             record, state, state_path, selected_context = _selected_continuation_context(
                 root=root,
                 layout=layout,
@@ -1946,7 +1992,8 @@ def run_resume(args: argparse.Namespace) -> int:
         state_path = _expected_state_path(layout, edition_date, record)
         state = read_json(state_path)
         validate_run_state(state, edition_date, str(record.get("run_id") or ""))
-        _verify_same_source_commit(root, args.branch, str(record.get("source_commit")), test_mode=args.test_mode)
+        if not selected_continuation:
+            _verify_same_source_commit(root, args.branch, str(record.get("source_commit")), test_mode=args.test_mode)
         run_preflight(root, python, test_mode=args.test_mode)
         run_id = str(record["run_id"])
         status_result = _invoke_python(
@@ -2113,6 +2160,8 @@ def run_resume(args: argparse.Namespace) -> int:
                 if not selected_continuation:
                     write_run_record(layout, edition_date, record, preserve_success=False)
                 child_receipt: dict[str, Any] | None = None
+                if selected_continuation:
+                    _verify_selected_runtime(root, args.branch, runtime_source_commit, test_mode=args.test_mode)
                 resumed = _invoke_python(
                     python,
                     root,
@@ -2126,13 +2175,16 @@ def run_resume(args: argparse.Namespace) -> int:
                     ),
                 )
                 command_exit = int(resumed.returncode)
+                child_command_exit_code = command_exit
                 handoff_error = ""
                 if selected_continuation:
+                    # Runner synchronization is external to this lock. Detect any
+                    # persistent runtime drift before certifying the child result.
+                    _verify_selected_runtime(root, args.branch, runtime_source_commit, test_mode=args.test_mode)
                     selected_binding = dict(selected_context["binding"])
                     child_receipt = _selected_child_receipt(
                         resumed,
-                        source_identity=str(selected_binding["source_identity"]),
-                        config_sha256=str(selected_binding["config_sha256"]),
+                        binding=selected_binding,
                     )
                     before_ledger = selected_context["ledger"]
                     _record, state, state_path, after_context = _selected_continuation_context(
@@ -2148,14 +2200,14 @@ def run_resume(args: argparse.Namespace) -> int:
                     after_ledger = after_context["ledger"]
                     after_completed = set(after_ledger.get("completed_query_ids") or [])
                     new_completed = after_completed - before_completed
-                    if not new_completed and child_receipt.get("status") == "incomplete_pending":
-                        resume_status = "continuation_no_progress"
-                    elif child_receipt.get("status") == "completed" and not after_ledger.get("pending_query_ids"):
-                        resume_status = "continuation_complete"
-                        command_exit = 0
-                    else:
-                        resume_status = "continuation_progress" if new_completed else "continuation_no_progress"
-                        command_exit = 2
+                    if not before_completed <= after_completed or not new_completed <= set(before_ledger["pending_query_ids"]):
+                        raise SchedulerError("selected continuation ledger transition contradicts prior progress")
+                    complete = not after_ledger["pending_query_ids"]
+                    if (child_receipt["status"] == "completed") != complete:
+                        raise SchedulerError("selected continuation child status contradicts durable ledger")
+                    resume_status = "continuation_complete" if complete else (
+                        "continuation_progress" if new_completed else "continuation_no_progress"
+                    )
                     selected_context = after_context
                 else:
                     if command_exit == 0:
@@ -2189,7 +2241,21 @@ def run_resume(args: argparse.Namespace) -> int:
                 before_completed_count = len(before_ledger.get("completed_query_ids") or [])
                 after_completed_count = len(after_ledger.get("completed_query_ids") or [])
                 before_pending_count = len(before_ledger.get("pending_query_ids") or [])
-                receipt["execution_mode"] = "collection_only"
+                # Historical capped-run evidence is not this invocation's gates.
+                # Preserve it intact while reporting the validated no-handoff child.
+                receipt["legacy_source_state"] = dict(state)
+                receipt.update({
+                    "execution_mode": "collection_only",
+                    "intake_eligible": child_receipt["gates"]["intake_eligible"],
+                    "release_ready": child_receipt["gates"]["release_ready"],
+                    "export_status": child_receipt["gates"]["export_status"],
+                    "inbox_export_path": None,
+                    "inbox_export_sha256": None,
+                    "continuation_handoff": child_receipt["source_stage_handoff"],
+                })
+                receipt["runtime_source_commit"] = runtime_source_commit
+                receipt["ledger_binding"] = selected_binding
+                receipt["child_command_exit_code"] = child_command_exit_code
                 receipt["child_continuation_receipt"] = child_receipt
                 receipt["continuation_progress"] = {
                     "before_completed_count": before_completed_count,
@@ -2343,7 +2409,10 @@ def run_resume(args: argparse.Namespace) -> int:
             "resume_status": "status_resume_failed",
             "reason": str(exc),
             "attention_path": str(attention),
-            "command_exit_code": 10,
+            "command_exit_code": child_command_exit_code if child_command_exit_code is not None else 10,
+            "child_command_exit_code": child_command_exit_code,
+            "runtime_source_commit": runtime_source_commit or None,
+            "source_commit": (record or {}).get("source_commit"),
             "exit_code": 10,
         }
         receipt_path = _source_receipt_path(layout, edition_date, "status-resume")
@@ -2612,6 +2681,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--expected-protected-head",
         default="",
         help="Require the selected continuation ledger source identity to equal this protected source head.",
+    )
+    subparsers.choices["resume"].add_argument(
+        "--expected-runtime-head",
+        default="",
+        help="Explicit installed recovery-runtime commit; separate from historical ledger provenance.",
     )
     subparsers.choices["intake"].add_argument("--lock-wait-seconds", type=int, default=300)
     subparsers.choices["intake"].add_argument("--lock-poll-seconds", type=float, default=2.0, help=argparse.SUPPRESS)

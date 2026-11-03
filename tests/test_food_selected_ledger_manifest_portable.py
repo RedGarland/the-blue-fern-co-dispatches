@@ -56,7 +56,7 @@ def test_manifest_preserves_explicit_operator_repository_mapping() -> None:
     )
     assert operator["candidate_path"] == "scripts/windows/run_food_care_proof_continuation.ps1"
     assert operator["candidate_sha256"] == (
-        "98994C8A75C7F9EB8DC23BA0EB19A3B8DADA4BF35F9B4DC5472CCC55FA3DB2C7"
+        "00CD1BF4C87AE3C480F6A861A3266C2EA6E716B43555041C66600627F8A8A73D"
     )
 
 

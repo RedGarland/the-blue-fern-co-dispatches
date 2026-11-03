@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T094748-0800-r11-recall12",
+  "scheduled_for": "2026-11-03T09:45:22-08:00",
+  "started_at": "2026-11-03T09:47:48-08:00",
+  "completed_at": "2026-11-03T09:49:11-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T08:43:12-08:00",
+    "end": "2026-11-03T09:49:11-08:00",
+    "basis": "Since the last verified supplementary Care Line heartbeat. Includes bounded review for newly disclosed effective access changes; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization termination notice",
+      "disposition": "No newly dated November 3 notice. Network for Hope was previously recorded, as were October 30 Kalamazoo and other provider notices. No new CMS termination, rescission, or CLIA action detected."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department temporarily closed services today flooding fire rural US",
+      "November 3 2026 hospital labor delivery obstetrics maternity unit closing suspended emergency care",
+      "November 3 2026 community ambulance EMS air medical service base suspended operations closure",
+      "November 3 2026 behavioral health inpatient psychiatric facility urgent care clinic closure suspension patients",
+      "November 3 2026 dialysis clinic center shutdown service suspended site:usnews.com OR site:local10.com OR site:abcnews.go.com",
+      "November 3 2026 oncology cancer treatment infusion center patient care suspended closure",
+      "November 3 2026 rural primary care clinic community health center closed patients until further notice",
+      "November 3 2026 hospital clinic reopening restored services following outage flooding closure",
+      "November 3 2026 Puerto Rico Guam US Virgin Islands American Samoa hospital clinic ambulance closure suspended services",
+      "November 3 2026 Alaska rural hospital emergency medical ambulance closure service disruption",
+      "site:wihcc.com November 3 2026 Leupp Dilkon Winslow clinic reopened restored services",
+      "November 3 2026 Cleveland Clinic Sebastian urgent care reopened flooding closure Florida"
+    ],
+    "watchlist_future_effect": {
+      "provider": "Winslow Indian Health Care Center (WIHCC)",
+      "source_url": "https://www.wihcc.com/",
+      "dated_update": "2026-11-03 09:52 America/Phoenix (08:52 America/Los_Angeles)",
+      "exact_supporting_passage": "As of (11/3/2026 9:52am) : Winslow Campus will begin a soft opening of walk-in services for patients at 1:00 PM today. Pharmacy services for prescription refills will also be available.",
+      "planned_effective_at": "2026-11-03T13:00:00-07:00",
+      "disposition": "Official, concrete same-day restoration notice, but at observation end the announced 13:00 Arizona opening was still in the future; not counted as effective restoration. Verify actual start in subsequent watch. Leupp closure and Dilkon service restrictions continue."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Network for Hope, KY, CMS November 2 termination notice",
+        "reason": "Previously recorded official notice; duplicate"
+      },
+      {
+        "item": "Kalamazoo Behavioral Health Hospital, MI, CMS October 30",
+        "reason": "Previously recorded official notice; duplicate"
+      },
+      {
+        "item": "WIHCC Leupp and Dilkon flood restrictions",
+        "reason": "Previously recorded; no verified effective restoration as of this observation"
+      },
+      {
+        "item": "Roseland Community Hospital maternity, IL",
+        "reason": "Previously recorded closure; duplicate"
+      },
+      {
+        "item": "Cleveland Clinic Sebastian Outpatient and Urgent Care, FL",
+        "reason": "Previously recorded November 2 flood closure; no verified reopening"
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, WV",
+        "reason": "Previously recorded October 27 suspension; duplicate"
+      },
+      {
+        "item": "Santa Clara Valley Healthcare Behavioral Health Pavilion opening November 3",
+        "reason": "First-time expansion rather than verified reopening of previously lost service; outside narrow restoration class"
+      },
+      {
+        "item": "Older Guam/CNMI storm clinic closures and international results",
+        "reason": "Historical or outside window/geography"
+      },
+      {
+        "item": "Rural hospital finance and future closure risk reports",
+        "reason": "No concrete service change"
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "usnews.com",
+        "type": "robots_block",
+        "detail": "Domain was blocked by robots.txt during a multi-domain dialysis query. Other searches and official sources remained accessible; no full-query abort."
+      }
+    ],
+    "search_quality": "Twelve searches completed with usable overall results; one domain blocked. Results largely concerned older, international, proposed, or duplicate changes. Territorial, oncology, dialysis, air-medical, and small rural service recall remain non-exhaustive.",
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one private heartbeat written to ops/watch-ledger. No editorial review approval, publication, schedule changes, or disablement."
+  }
+}

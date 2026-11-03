@@ -132,8 +132,8 @@ class SelectedProductionPathTests(unittest.TestCase):
             args += ["--expected-runtime-head", self.runtime_head]
         return args
 
-    def run_scheduler(self, args=None, driver=None):
-        invocation = [sys.executable, str(self.root / "scripts/food_line_daily_scheduler.py")]
+    def run_scheduler(self, args=None, driver=None, interpreter=None):
+        invocation = [str(interpreter or sys.executable), str(self.root / "scripts/food_line_daily_scheduler.py")]
         if driver:
             invocation = [sys.executable, "-c", driver]
         result = subprocess.run(invocation + (args if args is not None else self.args()),
@@ -200,11 +200,42 @@ class SelectedProductionPathTests(unittest.TestCase):
         self.assertFalse((self.root / "output").exists())
         self.assertEqual(self.git("diff", "--exit-code"), "")
 
+    def create_fixture_venv(self):
+        import venv
+        # EnvBuilder's API does not create SCM ignore files by default, even
+        # on Python 3.13. Ignore only this generated fixture environment, not
+        # source changes or other untracked paths; production guards stay real.
+        directory = self.root / ".venv"
+        venv.EnvBuilder(with_pip=False).create(directory)
+        (directory / ".gitignore").write_text("# Synthetic test environment only\n*\n", encoding="utf-8")
+        status = self.git("status", "--porcelain=v1", "--untracked-files=all")
+        self.assertEqual(scheduler._unexpected_dirty_paths(status), [], status)
+        self.assertEqual(self.git("diff", "--exit-code"), "")
+        return directory / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+
+    def test_fixture_venv_real_chain_preserves_dirty_source_guard(self):
+        interpreter = self.create_fixture_venv()
+        args = self.args()
+        args[args.index("--python") + 1] = str(interpreter)
+        result, receipt = self.run_scheduler(args, interpreter=interpreter)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(receipt["child_command_exit_code"], 0)
+        self.assertEqual(receipt["runtime_source_commit"], self.runtime_head)
+        rogue = self.root / "unexpected-fixture-file.txt"
+        rogue.write_text("not runtime evidence\n", encoding="utf-8")
+        result, receipt = self.run_scheduler(args, interpreter=interpreter)
+        self.assert_rejected_without_continuation(result, receipt)
+        self.assertIn("dirty", receipt["reason"])
+        rogue.unlink()
+        self.source_path.write_bytes(self.source_path.read_bytes() + b"\n# synthetic dirty source\n")
+        result, receipt = self.run_scheduler(args, interpreter=interpreter)
+        self.assert_rejected_without_continuation(result, receipt)
+        self.assertIn("dirty", receipt["reason"])
+
     @unittest.skipUnless(os.name == "nt" and shutil.which("powershell.exe"), "requires Windows PowerShell 5.1")
     def test_windows_powershell_operator_to_actual_python_chain(self):
-        import venv
         # Uses the existing interpreter, without pip or package/network installs.
-        venv.EnvBuilder(with_pip=False).create(self.root / ".venv")
+        self.create_fixture_venv()
         operator_root = self.base / "operator"
         if " " in str(self.base):
             self.skipTest("configured-shape transport fixture requires a no-space temporary parent")

@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T164932-0800-r11-recall12",
+  "scheduled_for": "2026-11-02T16:45:22-08:00",
+  "started_at": "2026-11-02T16:49:32-08:00",
+  "completed_at": "2026-11-02T16:51:54.415-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T15:44:36.884-08:00",
+    "end": "2026-11-02T16:51:54.415-08:00",
+    "basis": "Prior verified care-line heartbeat completed_at through current observation. Newly observed material access consequences and late-discovered updates included; production collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "fl-brevard-health-first-flooding-outpatient-suspension-extension-2026-11-03",
+      "canonical_source_url": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/",
+      "title": "Health First expands flooding-related outpatient suspension into November 3; reschedules appointments and cancels elective surgeries",
+      "publisher": "Space Coast Daily",
+      "exact_supporting_passage": "The following Health First locations and services are closed and will reopen no earlier than 10 a.m. Tuesday, Nov. 3.",
+      "source_published_date": "2026-11-02",
+      "state": "FL",
+      "city": null,
+      "county": "Brevard County",
+      "territory": null,
+      "event_type": "weather_related_outpatient_service_suspension_extension",
+      "service_line": "Medical Group outpatient/primary care; laboratory; imaging; outpatient, cardiac and pulmonary rehabilitation; pharmacy; elective surgery",
+      "access_consequences": "Material follow-up to November 2 morning closure: all Health First Medical Group sites, outpatient laboratory/imaging sites, rehabilitation programs and Gateway Family Pharmacy remain closed until no earlier than 10 a.m. November 3; Medical Group appointments are being rescheduled. Palm Bay Hospital elective surgeries canceled all day November 3; Babcock Surgery Center closed all day. Elective surgeries at Holmes Regional, Cape Canaveral, and Viera hospitals cannot resume before 10 a.m. November 3. Hospitals and emergency departments remain operational. No actual reopening is claimed.",
+      "affected_population": "Health First outpatient patients, patients with scheduled laboratory, rehabilitation, pharmacy and elective surgery services in Brevard County; exact number unknown.",
+      "effective_date": "2026-11-03",
+      "announcement_date": "2026-11-02",
+      "confidence": "high",
+      "source_role": "strong_local_reporting_relaying_health_system_operational_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "related_finding_id": "fl-brevard-health-first-medical-group-flooding-outpatient-suspension-2026-11-02",
+      "qualification_note": "Newly surfaced material change in projected duration and documented scope, not a duplicate of the initial Monday morning clinic closure. Article dated November 2 but exact publication time not supplied, so announcement timing within this hourly window is not independently confirmed. Provider's hf.org/alert unavailable through browsing; production deduplication unverified."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-02",
+      "latest_notice": "Network for Hope (KY, 18P001), organ procurement organization termination notice",
+      "disposition": "Already recorded in an earlier watch; no newer notice or novel revision observed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended November 2 2026 today US patients",
+      "maternity labor delivery service closed November 2 2026 hospital rural",
+      "behavioral health psychiatric inpatient unit closure November 2 2026",
+      "dialysis center oncology cancer clinic closure suspension November 2 2026",
+      "primary care medical clinic closed abruptly November 2 2026 patients",
+      "ambulance service suspended operations closed November 2 2026 United States",
+      "air medical helicopter base closure suspension November 2 2026",
+      "rural hospital emergency services shut down November 2 2026",
+      "CMS Medicare provider terminated CLIA limitation suspension November 2 2026 notice",
+      "hospital clinic emergency department reopened resumed services November 2 2026",
+      "Puerto Rico US Virgin Islands Guam American Samoa Northern Mariana healthcare clinic hospital closure November 2 2026",
+      "Health First medical group Brevard November 2 2026 flooding reopened pharmacies labs update"
+    ],
+    "recency_filter_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Network for Hope CMS revised termination notice (KY)",
+        "reason": "Logged earlier November 2; duplicate, not a new regulatory action.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Health First Brevard November 2 initial medical-group suspension",
+        "reason": "Existing previously recorded finding. Separate materially expanded November 3 continuation is retained in this run.",
+        "url": "https://www.clickorlando.com/news/local/2026/11/02/brevard-county-schools-closed-amid-flash-flood-warning-heavy-rain/"
+      },
+      {
+        "item": "Kula Hospital, Maui HI",
+        "reason": "Contractor selected, hospital and ED reopening targeted for late summer 2027; restoration has not become effective.",
+        "url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/"
+      },
+      {
+        "item": "Marshfield Medical Center Beaver Dam WI / UW Health integration",
+        "reason": "Ownership/rebranding with no concrete closure or interruption established.",
+        "url": "https://www.wmtv15news.com/2026/11/02/beaver-dams-marshfield-medical-center-becomes-part-uw-health-system/"
+      },
+      {
+        "item": "Missoula MT Community Medical Center pediatric ICU",
+        "reason": "October closure in November 2 report, already reviewed by earlier watches; outside hourly window.",
+        "url": "https://missoulacurrent.com/hospital-beds-kids/"
+      },
+      {
+        "item": "Madison County FL city fire rescue operations transfer",
+        "reason": "Officially uninterrupted EMS transition; no service loss or restoration.",
+        "url": "https://fox49.tv/news/local/madison-county-fire-rescue-takes-over-madison-city-fire-operations-with-no-service-lapse"
+      },
+      {
+        "item": "Mass General Brigham specialist leaving at end of 2026",
+        "reason": "Future individual physician departure; no currently effective service closure verified.",
+        "url": "https://www.boston.com/news/the-boston-globe/2026/11/02/mgb-doctor-treating-pans-pandas-patients-to-leave-the-hospital-at-the-end-of-the-year/"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "reason": "Direct provider alert page could not be opened (tool internal error). Local reporting gives specific provider operational instructions, but primary confirmation is unavailable."
+      }
+    ],
+    "search_quality": "DEGRADED: CMS list directly accessible, all twelve searches executed, and substantive local reporting was readable. Search index heavily favored archival, irrelevant and non-U.S. results, particularly reducing rural and territorial recall assurance. Direct Health First provider alert unavailable. No assertion of exhaustive national coverage.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T154330-0800-r11-recall12.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T15:44:36.884-08:00",
+      "prior_cms_notice_already_recorded": true,
+      "prior_brevard_initial_disruption_already_recorded": true,
+      "new_finding_is_material_continuation": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only; one append-only heartbeat on ops/watch-ledger; no approvals, publication, schedule modification, task disabling or production collector mutation."
+  }
+}

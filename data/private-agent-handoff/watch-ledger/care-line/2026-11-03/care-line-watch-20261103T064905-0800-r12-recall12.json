@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T064905-0800-r12-recall12",
+  "scheduled_for": "2026-11-03T06:45:22-08:00",
+  "started_at": "2026-11-03T06:49:05-08:00",
+  "completed_at": "2026-11-03T14:50:29.828Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T05:47:29.083-08:00",
+    "end": "2026-11-03T14:50:29.828Z",
+    "basis": "Since preceding verified supplementary Care Line heartbeat; discovery also considered late confirmations for previously effective disruptions. Production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, Organ Procurement Organization termination notice",
+      "disposition": "No new November 3 CMS notice; Network for Hope and October 30 Kalamazoo notices previously logged and excluded. Older CMS home-health/hospice and CLIA notices not new to this window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department closed today suspension rural United States",
+      "November 3 2026 labor delivery maternity unit temporarily closed hospital services",
+      "November 3 2026 ambulance EMS agency stopped operations air ambulance base closure",
+      "November 3 2026 hospital clinic urgent care closed flood power outage Arizona Florida",
+      "November 3 2026 dialysis oncology cancer treatment service suspended clinic closure",
+      "November 3 2026 behavioral mental health inpatient facility closed patients service",
+      "Nov 3 2026 hospital closed emergency local news USA",
+      "Nov 2 Nov 3 2026 clinic closed patients healthcare flood",
+      "Nov 3 2026 ambulance service suspended county",
+      "Nov 3 2026 Puerto Rico Guam US Virgin Islands hospital clinic closure emergency care disruption",
+      "Nov 3 2026 reopened emergency department hospital after closure",
+      "Nov 2 2026 rural primary care health clinic closure doctors emergency service suspend"
+    ],
+    "official_provider_followup": {
+      "url": "https://www.wihcc.com/",
+      "observed": "November 2 at 5:30 PM notice still displayed regarding November 3 Winslow, Leupp and Dilkon flooding disruptions; no later reopening or new effective restoration confirmed."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center / Leupp Clinic / Dilkon Medical Center, Arizona",
+        "reason": "Already recorded in preceding supplementary run; no new operational change on provider website."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian, Florida",
+        "reason": "November 2 flood-related outpatient/urgent-care suspension previously watch-recorded."
+      },
+      {
+        "item": "Kalamazoo Behavioral Health Hospital and Network for Hope",
+        "reason": "Previously recorded CMS notices; not new additions."
+      },
+      {
+        "item": "Kula Hospital, Hawaii",
+        "reason": "Target late-summer 2027 restoration plan, not concrete reopening."
+      },
+      {
+        "item": "Watsonville Community Hospital, California",
+        "reason": "Maternity reduction or closure proposed, with no new concrete effective access loss in this observation window."
+      },
+      {
+        "item": "Older U.S. events, international facilities, contextual hospital finance reports and emergency incidents",
+        "reason": "Not newly verified U.S. or territorial healthcare service changes in watch window."
+      }
+    ],
+    "search_quality": "CMS index and provider site accessible; 12 targeted searches executed. Many results were older, off-topic or international. Bounded recall is not exhaustive, particularly for territories, air medical, dialysis, oncology and small rural providers.",
+    "source_failures": [],
+    "production_collector_dedupe_verified": false,
+    "controls": "Supplementary private ledger only. No approval, publication, schedule modification or disable action."
+  }
+}

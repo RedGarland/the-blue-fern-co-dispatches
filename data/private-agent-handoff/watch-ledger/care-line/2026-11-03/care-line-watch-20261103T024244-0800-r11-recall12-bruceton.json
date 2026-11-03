@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T024244-0800-r11-recall12-bruceton",
+  "scheduled_for": "2026-11-03T02:45:22-08:00",
+  "started_at": "2026-11-03T02:42:44-08:00",
+  "completed_at": "2026-11-03T02:45:07.133-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T01:43:47-08:00",
+    "end": "2026-11-03T02:45:07.133-08:00",
+    "basis": "Since latest verified supplementary Care Line heartbeat, with a bounded retrospective recall to catch locally reported service losses missed by earlier hourly scans; production collection authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-wv-preston-bruceton-ambulance-2026-10-27-suspension",
+      "canonical_source_url": "https://www.aol.com/articles/bruceton-ambulance-suspends-operations-preston-231810000.html",
+      "title": "Bruceton Ambulance Service suspends operations in Preston County",
+      "publisher": "WBOY (Nexstar Media; full story syndicated by AOL)",
+      "exact_supporting_passage": "Bruceton suspended operations as of Oct. 27 and said it is switching insurance carriers.",
+      "source_published_date": "2026-11-02",
+      "state": "West Virginia",
+      "city": null,
+      "county": "Preston",
+      "territory": null,
+      "event_type": "ground_ambulance_service_suspension",
+      "service_line": "Emergency medical services / ground ambulance",
+      "access_consequences": "Preston County has one fewer operating ambulance service and one fewer available truck, per the county EMS ordinance administrator. The impact on response times, substitution and restoration date is unknown.",
+      "affected_population": "Preston County residents who would otherwise rely on Bruceton Community Ambulance Service; number of patients or calls affected not reported.",
+      "effective_date": "2026-10-27",
+      "announcement_date": "2026-11-02",
+      "confidence": "high",
+      "source_role": "strong_local_reporting_syndicated",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "temporal_note": "Late-discovered access loss, effective October 27 and published November 2 (before current hourly window); not a November 3 operational change. Requires production deduplication."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY) organ procurement organization termination, CCN 18P001",
+      "disposition": "Seen in preceding watch heartbeat; no November 3 notice visible; not duplicated."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 3, 2026\" hospital emergency department closed services suspended US",
+      "\"November 2, 2026\" hospital maternity labor delivery closed service suspended",
+      "\"November 3, 2026\" urgent care clinic temporarily closed flooding",
+      "\"November 2, 2026\" ambulance service suspends operations base closure rural",
+      "\"November 3, 2026\" dialysis center closed patients relocated",
+      "\"November 2, 2026\" hospital behavioral health psychiatric unit closures patients",
+      "site:wboy.com \"Bruceton Ambulance\" \"Nov\" \"2026\" suspended operations",
+      "\"November 3, 2026\" \"emergency room\" \"closed\" hospital US",
+      "\"November 2, 2026\" \"air ambulance\" \"suspended\" OR \"base closed\" United States",
+      "\"November 3, 2026\" \"primary care\" \"closing\" OR \"closure\" clinic",
+      "\"November 2, 2026\" \"cancer center\" \"closed\" OR \"suspended\" oncology",
+      "\"November 3, 2026\" Puerto Rico Guam Virgin Islands clinic hospital services closed suspended"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Network for Hope, Kentucky CMS termination notice dated Nov. 2",
+        "reason": "Already identified in previous heartbeat; no new notice dated Nov. 3."
+      },
+      {
+        "item": "Roseland Community Hospital maternity unit, Chicago",
+        "reason": "Previously recorded October 31 suspension, reported Nov. 2; no new access effect."
+      },
+      {
+        "item": "Health First, Brevard County, Florida",
+        "reason": "Previously recorded flooding-related outpatient shutdown and tentative Tuesday resumption; no verified operational reopening yet."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian Outpatient and Urgent Care",
+        "reason": "Previously recorded November 2 flooding closure; no verified reopening."
+      },
+      {
+        "item": "Ridge Meadows Hospital maternity diversion",
+        "reason": "Canada, outside U.S. and territories."
+      },
+      {
+        "item": "Children's Mercy Hospital staff restructuring in Kansas City",
+        "reason": "No specific clinical service closure or suspension confirmed."
+      },
+      {
+        "item": "Nonessential municipal offices Election Day and older services",
+        "reason": "No qualifying direct essential healthcare service change in window."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "WBOY original domain",
+        "issue": "Search result for site:wboy.com inaccessible due to robots.txt; full WBOY/Nexstar syndicated report accessible on AOL.",
+        "impact": "Original canonical newsroom URL not verified; syndicated report preserves county-official attribution."
+      }
+    ],
+    "search_quality": "DEGRADED: 12 additional targeted searches completed but many returned stale, non-U.S. or irrelevant pages; weak rural/territorial recall remains. Direct original WBOY domain blocked, but syndicated reporting is accessible. One late-discovered substantive ground-ambulance loss surfaced.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-03/care-line-watch-20261103T014246-0800-r11-recall12.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-03T01:43:47-08:00",
+      "previously_watch_reported": false,
+      "production_collector_dedupe_verified": false,
+      "finding_disposition": "Pending review; compare to authoritative production collection before inclusion; publication Nov. 2 and effective Oct. 27."
+    },
+    "controls": "Supplementary recall only; no approval, production publication, schedule modification, or task disabling."
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T074749-0800-r12-recall12",
+  "scheduled_for": "2026-11-03T07:45:22-08:00",
+  "started_at": "2026-11-03T07:47:49-08:00",
+  "completed_at": "2026-11-03T07:50:01-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T06:50:29.828-08:00",
+    "end": "2026-11-03T07:50:01-08:00",
+    "basis": "Since preceding verified supplementary Care Line heartbeat; late-discovery checks for relevant previously effective changes. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination; previously recorded",
+      "disposition": "No newly listed November 3 CMS notices. November 2 Network for Hope and October 30 Kalamazoo Behavioral Health Hospital previously covered; earlier California hospice and Ohio home-health agency notices predate window. No new rescission or CLIA restriction on the current index."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department closed temporarily suspended services US rural",
+      "November 3 2026 maternity labor delivery hospital service closure suspension",
+      "November 3 2026 EMS ambulance air ambulance helicopter base shuts down service",
+      "November 3 2026 flood clinics health center closed urgent care US",
+      "November 3 2026 dialysis center suspended treatments patients closure",
+      "November 3 2026 behavioral health psychiatric hospital closed unit admissions",
+      "Nov 3 2026 Nov 2 2026 cancer treatment infusion oncology clinic closing services US",
+      "November 3 2026 primary care rural clinic shut down closure urgent care patients US",
+      "November 3 2026 hospital emergency services restored reopened after outage storm",
+      "November 3 2026 Puerto Rico Guam Virgin Islands Samoa Northern Mariana health clinic hospital closed services",
+      "November 2 2026 rural hospital emergency department ambulance closure local community",
+      "November 3 2026 health department hospital clinics closed today storm flooding tribal clinic"
+    ],
+    "official_provider_followup": {
+      "url": "https://www.wihcc.com/",
+      "observed": "The November 2 5:30 p.m. Arizona flood-disruption notice for November 3 remains displayed; Leupp closed, Winslow urgent care open with other services unavailable, Dilkon emergency and acute care open with dental/podiatry/wound care closed. No new restoration announcement."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity services, Chicago IL",
+        "reason": "October 31 closure previously recorded; November 2 WTTW article repeats established loss."
+      },
+      {
+        "item": "Winslow Indian Health Care Center, Leupp Clinic and Dilkon Medical Center, AZ",
+        "reason": "November 3 closures already previously recorded, no new operational change on original provider website."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian and Health First outpatient services, FL",
+        "reason": "November 2 flood-related closures already watch-recorded; no independently verified restoration."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, WV",
+        "reason": "October 27 service suspension already recorded."
+      },
+      {
+        "item": "Kalamazoo Behavioral Health Hospital, MI; Network for Hope, KY",
+        "reason": "CMS notices previously recorded; no newly dated notice."
+      },
+      {
+        "item": "Kula Hospital, Maui HI",
+        "reason": "Late-summer 2027 prospective reopening, not an effective service restoration."
+      },
+      {
+        "item": "North Devon maternity service, United Kingdom; Dauphin hospital emergency care, Canada",
+        "reason": "Outside U.S. and territories."
+      },
+      {
+        "item": "Older service closures, general rural hospital risk stories, financing and policy discussions",
+        "reason": "Not new verified effective healthcare-access changes within watch window."
+      }
+    ],
+    "search_quality": "CMS current notice index and WIHCC official operational page accessible. Twelve bounded targeted searches completed; high volume of stale, international, nonservice, and broad policy results limits supplementary recall especially in territories, air-medical, dialysis, and oncology. No new qualifying development verified.",
+    "source_failures": [
+      {
+        "source": "CMS Network for Hope detail page",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices/network-hope-0",
+        "error": "Detail-page navigation returned DisabledError; CMS public notices index remained accessible and the notice was already tracked.",
+        "impact": "Limited detail verification only; no impact on confirmation of current index or other searches."
+      }
+    ],
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one new private watch heartbeat on ops/watch-ledger. No approval, publication, schedule modification or disabling."
+  }
+}

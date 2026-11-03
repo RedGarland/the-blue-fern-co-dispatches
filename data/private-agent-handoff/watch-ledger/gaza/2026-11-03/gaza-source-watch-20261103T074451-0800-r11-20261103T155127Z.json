@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T074451-0800-r11-20261103T155127Z",
+  "scheduled_for": "2026-11-03T07:44:51-08:00",
+  "started_at": "2026-11-03T07:49:25-08:00",
+  "completed_at": "2026-11-03T07:51:27-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T06:43:38.723-08:00",
+    "end": "2026-11-03T07:51:27-08:00",
+    "basis": "Previous directly verified Gaza watch heartbeat completion to present observation; publication and event clocks are distinguished where known.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; production remains authoritative and unchanged.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T064451-0800-r11-20261103T144338723Z.json",
+      "completed_at": "2026-11-03T06:43:38.723-08:00",
+      "outcome": "no_findings",
+      "verification": "Fetched exact content through GitHub connector on ops/watch-ledger; identified against intervening Gaza files using commit comparison from known 04:45 run."
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed 31 October 2026, covering 29 October report; no newly issued Gaza situation report for this interval."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest directly listed Gaza-oriented WHO updates predate observation window."
+      },
+      {
+        "source": "WHO EMRO OPT page",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502; recurring direct-source failure; fallback WHO global page accessible."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:unicef.org Gaza \"3 November 2026\" water displacement children hospital humanitarian",
+      "site:news.un.org/en/ \"3 November 2026\" Gaza aid deaths crossing hospital",
+      "site:icrc.org Gaza \"3 November 2026\" detainees exchange hostages medical access",
+      "site:msf.org Gaza \"3 November 2026\" hospital fuel ambulance evacuated",
+      "Gaza November 3 2026 afternoon latest Israeli strike civilians killed wounded Khan Younis Gaza City Reuters AP",
+      "Gaza November 3 2026 Rafah Kerem Shalom crossing aid trucks blocked resumed ceasefire negotiations",
+      "site:english.wafa.ps/Pages/Details/ November 3 2026 Gaza casualties hospital ambulance new 4 PM",
+      "Gaza November 3 2026 health ministry hospital fuel shortages medical evacuations WHO latest",
+      "site:reuters.com/world/middle-east/ \"November 3, 2026\" Gaza Palestinians ceasefire",
+      "site:apnews.com/article/ \"Nov 3, 2026\" Gaza strikes hospital aid",
+      "site:aljazeera.com/news/2026/11/3/ Gaza killed displaced crossing medical",
+      "site:palestinercs.org/en \"Nov 3 2026\" Gaza ambulance fuel humanitarian operations"
+    ],
+    "targeted_search_count": 12,
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest entry at publisher 16:52 3 November concerns Nur Shams refugee camp in the West Bank. Other entries after prior watch concern West Bank grapes, a political meeting and settler assault; latest Gaza report at 13:48 is the already-logged Applied College strike."
+      },
+      {
+        "source": "PRCS homepage",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest remains 3 November Saudi KSrelief logistical support, logged in an earlier watch."
+      },
+      {
+        "source": "MSF latest",
+        "url": "https://www.msf.org/latest",
+        "result": "Accessible; no distinct newly evidenced Gaza health service disruption identified."
+      },
+      {
+        "source": "ICRC Israel and occupied territories",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no verified new detainee/hostage exchange or Gaza medical access event identified."
+      },
+      {
+        "source": "UNICEF press releases",
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible; November 3 child-casualty item located through UNICEF search was about Myanmar, excluded."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; recurring."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; recurring."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties, military actions with civilian impacts, displacement and infrastructure",
+      "aid delivery, crossings, food, water, fuel and shelter",
+      "health care, hospital functioning, medical supplies, ambulances and evacuations",
+      "hostages, detainees, ceasefire and diplomatic negotiation developments"
+    ],
+    "exclusions": [
+      "WAFA 3 November Applied College strike (three killed) and retrospective six-fatality/27-injury bulletin already documented in 04:45 watch, not new.",
+      "PRCS 3 November KSrelief logistics support already documented in 03:44 watch.",
+      "Al Jazeera 3 November story describes 2 November incidents and previously recorded deaths, no new qualifying post-prior-check development.",
+      "WAFA latest 3 November 16:52 Nur Shams and other recent entries concern the West Bank rather than Gaza.",
+      "Older OCHA 2025 reporting surfaced due to matching month/day, excluded after verification of publication year.",
+      "UNICEF 3 November school attack report concerns Myanmar, not Gaza; older Reuters/AP/al Jazeera results and opinion excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP newsroom",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA newsroom",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News",
+        "problem": "robots.txt restriction on targeted search",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "Indexing/publisher time lags may conceal items published shortly before the end of the bounded observation.",
+      "WHO EMRO, WFP, UNRWA and UN News source access restrictions persist, although WHO global, OCHA, WAFA, PRCS, MSF, ICRC and UNICEF were available.",
+      "Negative bounded search is not proof of absence of all qualifying events. No reporting was approved or published."
+    ],
+    "status_rationale": "DEGRADED for recurring partial direct-source restrictions. Useful coverage remained and restrictions showed no newly material deterioration; no new high-value event was verified.",
+    "production_authority": "No approval, publication, production change, schedule edit or task disabling."
+  }
+}

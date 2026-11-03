@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T014246-0800-r11-recall12",
+  "scheduled_for": "2026-11-03T01:45:22-08:00",
+  "started_at": "2026-11-03T01:42:46-08:00",
+  "completed_at": "2026-11-03T01:43:47-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T00:47:43-08:00",
+    "end": "2026-11-03T01:43:47-08:00",
+    "basis": "Since the last independently verified supplementary Care Line heartbeat; searches include bounded retrospective discovery to detect previously missed events, with production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, termination notice (organ procurement organization, CCN 18P001)",
+      "disposition": "Previously recorded; no newly dated November 3 CMS termination, rescission, or CLIA action visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"hospital\" \"closed\" \"November 3, 2026\" emergency services",
+      "\"hospital\" \"closure\" \"November 2, 2026\" patients rural",
+      "\"labor and delivery\" \"closed\" \"November 2, 2026\" hospital",
+      "\"emergency department\" \"suspended\" \"November 2, 2026\" hospital",
+      "\"behavioral health\" \"closed\" \"November 2, 2026\" inpatient hospital",
+      "\"dialysis\" OR \"oncology\" \"clinic\" \"closed\" \"November 2, 2026\"",
+      "\"ambulance service\" \"closed\" OR \"suspended\" \"November 2, 2026\" United States",
+      "\"air ambulance\" \"base\" \"closure\" \"November 2026\" rural",
+      "\"primary care\" \"clinic\" \"closing\" OR \"closed\" \"November 3, 2026\"",
+      "\"hospital\" \"reopened\" OR \"resumed\" \"November 3, 2026\" emergency department",
+      "\"Puerto Rico\" OR \"Guam\" OR \"Virgin Islands\" \"hospital\" \"closed\" \"November 2, 2026\"",
+      "\"Cleveland Clinic Sebastian\" OR \"Health First\" \"reopen\" \"November 3, 2026\" flooding"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity unit, Chicago, Illinois",
+        "reason": "October 31 effective suspension reported November 2; present in prior Care Line watch ledger, with no further confirmed access change."
+      },
+      {
+        "item": "Health First clinics, imaging/labs and elective procedures, Brevard County, Florida",
+        "reason": "November 2 flooding suspension and provisional November 3 reopening timing previously recorded; no confirmation of completed restoration or later extension in retrieved results."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian Outpatient and Urgent Care, Indian River County, Florida",
+        "reason": "November 2 flooding closure found and recorded in immediate previous heartbeat; no confirmed reopening."
+      },
+      {
+        "item": "Kula Hospital, Maui, Hawaii",
+        "reason": "November 2 contractor selection and late-summer 2027 reopening target is a plan, not a completed return of service."
+      },
+      {
+        "item": "Community Medical Center pediatric intensive care, Missoula, Montana",
+        "reason": "October closure surfaced in November 2 KFF reporting, previously reviewed as outside recent-event window."
+      },
+      {
+        "item": "Other results",
+        "reason": "Non-U.S. cases, older closures, service proposals without concrete effect, irrelevant listings, and low-evidence results."
+      }
+    ],
+    "source_failures": [],
+    "search_quality": "DEGRADED: all 12 targeted searches returned results, but relevance/coverage is weak for rural, ambulance, dialysis/oncology and territorial access changes; absence of hits is not proof of comprehensive national recall. This is a persistent limitation and no newly material tooling failure was observed.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-03/care-line-watch-20261103T004522-0800-r11-recall12-sebastian.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-03T00:47:43-08:00",
+      "production_collector_dedupe_verified": false,
+      "finding_disposition": "No newly qualifying event found; previously recorded events and future-only plans excluded."
+    },
+    "controls": "Supplementary recall only. No editorial approval, publication, task schedule change or task disable."
+  }
+}

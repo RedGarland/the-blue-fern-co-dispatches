@@ -1,0 +1,67 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T074235-0800-r11-20261103T154235Z",
+  "scheduled_for": "2026-11-03T07:45:54-08:00",
+  "started_at": "2026-11-03T07:42:35-08:00",
+  "completed_at": "2026-11-03T07:44:18.389-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T06:50:02.398-08:00",
+    "end_at": "2026-11-03T07:44:18.389-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last independently read GitHub heartbeat; reports screened for both article date and underlying event date.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded high-value recall; primary nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss/closure/fire/disaster",
+      "Storm/flood/fire/outage/damage cancellation of emergency food distribution",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate loss of access"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed": 0,
+      "distinct_surfaced_results": 2
+    },
+    "bounded_query_context": [
+      "November 3 2026 \"only grocery store\" fire closed community",
+      "November 3 2026 \"last grocery store\" closes town",
+      "\"sole grocery store\" \"November\" 2026 storm closed US",
+      "\"food distribution\" canceled storm November 3 2026 food bank",
+      "\"food pantry\" distribution suspended power outage November 2026",
+      "\"food bank\" cancelled distribution due to weather November 3 2026",
+      "\"food bank\" \"temporarily closed\" \"November 3, 2026\"",
+      "\"pantry\" \"services suspended\" \"November 2026\" food",
+      "\"food pantry\" \"closed indefinitely\" \"November 2026\"",
+      "site:gov \"SNAP\" \"November 3, 2026\" \"delay\" \"benefits\"",
+      "site:gov \"WIC\" \"November 2026\" \"suspended\" benefits",
+      "\"EBT\" outage SNAP benefits November 3 2026 state agency"
+    ],
+    "result": "No new qualifying U.S. food-access disruption could be verified. Only two distinct sources surfaced from the narrow searches; they were irrelevant or prior-year. This negative search result does not establish nationwide absence.",
+    "noteworthy_exclusions": [
+      {
+        "publisher": "Nelson County, Virginia",
+        "url": "https://www.nelsoncounty-va.gov/news-announcements/",
+        "reason": "November 2025 SNAP interruption notice; prior-year event."
+      },
+      {
+        "publisher": "City of Newark, New Jersey",
+        "url": "https://www.newarknj.gov/m/newsflash?cat=6",
+        "reason": "Municipal shelter and Code Blue announcements; unrelated to current food access interruptions."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T064859-0800-r11-20261103T144859Z.json",
+      "completed_at": "2026-11-03T06:50:02.398-08:00"
+    },
+    "source_failures": [],
+    "limitations": "Sparse indexed results; unindexed local-provider notices and search indexing lag remain possible. Targeted recall is not exhaustive.",
+    "production_authority": "No approval, publication, production collector edit, schedule change, or task disabling."
+  }
+}

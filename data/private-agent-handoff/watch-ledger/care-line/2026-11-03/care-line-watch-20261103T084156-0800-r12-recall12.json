@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T084156-0800-r12-recall12",
+  "scheduled_for": "2026-11-03T08:45:22-08:00",
+  "started_at": "2026-11-03T08:41:56-08:00",
+  "completed_at": "2026-11-03T08:43:12-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T07:50:01-08:00",
+    "end": "2026-11-03T08:43:12-08:00",
+    "basis": "Since previous verified supplementary Care Line heartbeat; includes bounded late-discovery review of concrete earlier effective changes. This watch is supplementary; production collection is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY organ procurement organization, termination notice",
+      "disposition": "No newly dated November 3 CMS public notice. Network for Hope was already identified as recorded in preceding heartbeat. Earlier Kalamazoo Behavioral Health Hospital and other 2026-10-30 provider notices are outside observation window; no new relevant rescission or CLIA change identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department temporarily closed suspended services USA rural",
+      "November 3 2026 maternity labor delivery hospital unit closure suspension patients",
+      "November 3 2026 psychiatric behavioral health hospital clinic closed admissions suspended",
+      "November 3 2026 dialysis center closed suspended patients treatment facility",
+      "November 3 2026 cancer infusion oncology center closed suspended patients",
+      "November 3 2026 primary care clinic rural health center closed temporarily access",
+      "November 3 2026 county ambulance EMS service stopped operating suspended response",
+      "November 3 2026 air ambulance medical helicopter base closure suspended emergency response",
+      "November 3 2026 Puerto Rico Guam US Virgin Islands Northern Mariana Samoa hospital clinic closure service disruption",
+      "November 3 2026 Winslow Indian Health Care Leupp Dilkon services reopening flood",
+      "November 3 2026 Sebastian Cleveland Clinic Health First urgent care reopening flooding",
+      "November 2 3 2026 rural hospital emergency room ambulance service access shutdown opened"
+    ],
+    "official_provider_followup": {
+      "url": "https://www.wihcc.com/",
+      "checked": "2026-11-03",
+      "observed": "As of this watch, WIHCC home page still displays Nov 2 5:30 p.m. service restrictions for Nov 3: Leupp closed; Winslow only urgent care available; Dilkon emergency and acute care operational, dental/podiatry/wound care suspended. No new reopening/restoration notice."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center, Leupp Clinic, Dilkon Medical Center, AZ",
+        "reason": "Previously recorded November 3 flooding restrictions; no new restoration."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian Outpatient and Urgent Care, FL",
+        "reason": "November 2 weather closure already recorded; no confirmed reopening."
+      },
+      {
+        "item": "Roseland Community Hospital maternity services, Chicago IL",
+        "reason": "October 31 previously recorded closure; November 2 report describes same event."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, Preston County WV",
+        "reason": "October 27 suspension already recorded."
+      },
+      {
+        "item": "Kalamazoo Behavioral Health Hospital, MI and Network for Hope, KY",
+        "reason": "CMS public notices previously identified; no new notice."
+      },
+      {
+        "item": "Tehama County air ambulance base, CA",
+        "reason": "September 17 report; predates recall window and has no verified new operational change."
+      },
+      {
+        "item": "MaineHealth Lincoln maternity unit, ME",
+        "reason": "Proposed/future closure without concrete newly effective change."
+      },
+      {
+        "item": "International medical-service items, stale closures, finance/policy discussion",
+        "reason": "Outside geography, time, or concrete-access criteria."
+      }
+    ],
+    "search_quality": "All twelve targeted searches returned usable results but were dominated by older, international, business/policy, or unrelated stories. No newly verifiable qualifying healthcare-access change was found; supplementary recall is non-exhaustive particularly for U.S. territories, air-medical, dialysis, oncology, and small rural services.",
+    "source_failures": [],
+    "production_collector_dedupe_verified": false,
+    "controls": "Single private heartbeat on ops/watch-ledger; no approval, publication, schedule modification, or disablement."
+  }
+}

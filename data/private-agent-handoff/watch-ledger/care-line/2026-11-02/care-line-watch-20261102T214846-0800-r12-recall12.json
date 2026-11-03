@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T214846-0800-r12-recall12",
+  "scheduled_for": "2026-11-02T21:45:22-08:00",
+  "started_at": "2026-11-02T21:48:46-08:00",
+  "completed_at": "2026-11-02T21:49:54.741-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T20:49:27.070-08:00",
+    "end": "2026-11-02T21:49:54.741-08:00",
+    "basis": "Prior verified supplementary heartbeat completion to this observation; includes bounded late-discovery recall, not the primary production national collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, OPO termination (CCN 18P001)",
+      "disposition": "Already recorded in preceding watch periods; no newly dated notice visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 2, 2026\" hospital emergency department closed overnight services",
+      "\"November 2, 2026\" hospital maternity labor delivery services closing suspended",
+      "\"November 2, 2026\" rural hospital emergency services suspended closure",
+      "\"November 2, 2026\" ambulance service air ambulance base closure suspended",
+      "\"November 2, 2026\" dialysis cancer clinic primary care closed patients",
+      "\"November 2, 2026\" hospital psychiatric behavioral health unit closing service",
+      "\"November 2, 2026\" \"reopened\" emergency department clinic hospital after closure",
+      "\"November 2, 2026\" \"closed\" emergency room hospital \"Tuesday\" US",
+      "\"November 2, 2026\" \"ambulance\" service \"suspended\" county",
+      "\"November 2, 2026\" \"dialysis\" \"suspended\" \"patients\" clinic",
+      "site:news \"November 2, 2026\" \"Puerto Rico\" OR \"Guam\" OR \"Virgin Islands\" hospital emergency services closed",
+      "\"November 2, 2026\" \"medical center\" \"closing\" \"effective\" community clinic"
+    ],
+    "source_failures": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity suspension, Chicago IL",
+        "reason": "Previously recorded, effective October 31; WTTW report November 2, no new material change.",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Health First Medical Group, outpatient labs/imaging and other closures, Brevard County FL",
+        "reason": "Previously recorded flood-related suspensions, announced November 2; Tuesday 10 a.m. is earliest provisional reopening, not confirmed restoration.",
+        "url": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/"
+      },
+      {
+        "item": "Kula Hospital/ED, Maui HI",
+        "reason": "No reopening; contractor selected and tentative late-summer 2027 target. ED remains closed from March 2026.",
+        "url": "https://www.mauihealth.org/news/releases/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/"
+      },
+      {
+        "item": "Long County Georgia EMS ambulance initially unavailable for shooting response",
+        "reason": "Same-day single-call ambulance unavailability reported midday; no proven closure or suspension of an ambulance service/base or new development in this watch window.",
+        "url": "https://newsnowgeorgia.org/2026/11/02/person-reported-shot-in-long-county-ambulance-initially-unavailable/"
+      },
+      {
+        "item": "Valley Children's Hospital Madera County CA security lockdown/diversion",
+        "reason": "Reported November 1, with lockdown and diversions already lifted by November 2 reporting, no fresh restoration during this watch window.",
+        "url": "https://www.newsbeep.com/us-ca/515640/"
+      },
+      {
+        "item": "Trumbull County OH opposition to St Joseph Warren Hospital proposed maternity closure",
+        "reason": "Opposition to future closure; no verified new effective service loss this hour.",
+        "url": "https://businessjournaldaily.com/officials-oppose-st-joseph-maternity-closure-saenger-outlines-priorities-for-williamson-college/"
+      },
+      {
+        "item": "UNM hospital patient diversions and clinic cancellations after cyber incident",
+        "reason": "October 26 incident surfaced in older reporting; not newly developed in this watch window.",
+        "url": "https://ground.news/article/apparent-computer-hacking-attack-hits-unm-hospital"
+      },
+      {
+        "item": "Northern Regional Hospital becomes part of Novant Health, NC",
+        "reason": "Ownership/network change with services explicitly continuing, no access loss.",
+        "url": "https://jbiznews.com/category/health/"
+      }
+    ],
+    "search_quality": "DEGRADED: all 12 targeted searches returned results but freshness and category recall were weak, with significant older, planned-only, non-US or unrelated material; territory and rural results particularly sparse. This is a persistent coverage limitation, not a newly material outage. A bounded supplementary watch cannot establish comprehensive absence of events.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T204811-0800-r12-recall12.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T20:49:27.070-08:00",
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only, production collection remains authoritative. No approval, publication, schedule modification, or disabling."
+  }
+}

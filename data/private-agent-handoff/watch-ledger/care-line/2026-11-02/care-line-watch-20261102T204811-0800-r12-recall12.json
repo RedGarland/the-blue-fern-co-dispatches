@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T204811-0800-r12-recall12",
+  "scheduled_for": "2026-11-02T20:45:22-08:00",
+  "started_at": "2026-11-02T20:48:11-08:00",
+  "completed_at": "2026-11-02T20:49:27.070-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T19:46:04-08:00",
+    "end": "2026-11-02T20:49:27.070-08:00",
+    "basis": "Prior verified Care Line supplementary recall heartbeat completion to current run; previously reported late discoveries are deduplicated; primary production national collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-02",
+      "latest_notice": "Network for Hope (Kentucky), termination notice, CCN 18P001",
+      "disposition": "Already in earlier watch ledger; no later-dated notice visible at observation."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 2 2026 hospital emergency department closed suspended service overnight United States",
+      "November 2 2026 labor delivery maternity unit stopped births hospital closing",
+      "November 2 2026 rural hospital emergency department shutdown suspension",
+      "November 2 2026 ambulance service suspended closed base air ambulance rural",
+      "November 2 2026 psychiatric behavioral health hospital unit closure suspension",
+      "November 2 2026 dialysis clinic closure patients transfer treatment",
+      "November 2 2026 oncology cancer infusion center closed suspended operations United States",
+      "November 2 2026 primary care health clinic urgent care closure patients",
+      "November 2 2026 hospital emergency services reopened restored after closure United States",
+      "November 2 2026 Puerto Rico Guam US Virgin Islands Northern Marianas American Samoa hospital clinic ambulance closure suspended",
+      "November 2 2026 Health First Brevard Florida flooding clinics hospital reopening updated 8 pm",
+      "November 2 2026 evening hospital clinic emergency health services shutdown closure cancelled operations local news"
+    ],
+    "search_recency_days": 2,
+    "source_failures": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital labor-and-delivery suspension, Chicago IL",
+        "reason": "Already recorded as a late-discovered October 31 closure in preceding 19:46 PST heartbeat; WTTW report published November 2 at 8:01 p.m. Central (6:01 p.m. PST).",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Health First Medical Group/outpatient services closures and November 3 deferred resumption, Brevard County FL",
+        "reason": "Same flooding-related closure and provisional reopening already recorded; no newly confirmed restoration or extension in current reporting.",
+        "url": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/"
+      },
+      {
+        "item": "Kula Hospital and emergency department, Maui HI",
+        "reason": "Projected late-summer 2027 reopening; not an effective restored service.",
+        "url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/"
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital planned maternity closure, Maine",
+        "reason": "Previously announced vote and anticipated December change; no new effective closure in observation window.",
+        "url": "https://apnews.com/article/labor-delivery-mainehealth-lincoln-hospital-close-december-5f27dae0086adc0ff56aff5e6b409b96"
+      },
+      {
+        "item": "Jersey City Heights University Hospital / Christ Hospital closure",
+        "reason": "Closure months earlier; retrospective hearing coverage, not an in-window new event.",
+        "url": "https://jerseyvindicator.org/2026/08/29/jersey-city-residents-officials-condemn-hospital-closure-at-state-hearing/"
+      }
+    ],
+    "search_quality": "DEGRADED due to persistent weak relevance and older/non-U.S. results in rural, ambulance, dialysis, oncology, primary-care, and territory-oriented searches; no new material source/tool failure. Bounded 12-query sampling does not prove nationwide absence.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T194424-0800-r11-recall12-roseland.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T19:46:04-08:00",
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only. No editorial approval, public publication, schedule modification, or task disable."
+  }
+}

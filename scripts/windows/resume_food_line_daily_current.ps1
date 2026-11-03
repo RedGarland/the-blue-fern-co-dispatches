@@ -6,6 +6,7 @@ param(
     [string]$EditionDate = "",
     [string]$ContinuationRunDirectory = "",
     [string]$ContinuationRunRoot = "",
+    [string]$ExpectedProtectedHead = "",
     [switch]$TestMode
 )
 
@@ -29,6 +30,7 @@ if ($ContinuationRunDirectory -and $ContinuationRunRoot) { throw "Choose one con
 $arguments = @($helper, "resume", "--repo-root", $RepositoryRoot, "--python", $PythonExecutable, "--edition-date", $EditionDate, "--branch", $SourceBranch)
 if ($ContinuationRunDirectory) { $arguments += @("--continuation-run-directory", $ContinuationRunDirectory) }
 if ($ContinuationRunRoot) { $arguments += @("--continuation-run-root", $ContinuationRunRoot) }
+if ($ExpectedProtectedHead) { $arguments += @("--expected-protected-head", $ExpectedProtectedHead) }
 if ($TestMode) { $arguments += "--test-mode" }
 & $PythonExecutable @arguments
 exit $LASTEXITCODE

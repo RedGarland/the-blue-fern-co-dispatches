@@ -1302,9 +1302,10 @@ def _continuation_command(
     run_id: str,
     continuation_directory: str,
     source_identity: str,
+    suppress_source_stage_handoff: bool = False,
 ) -> list[str]:
     """Build the exact child command used by the scheduled resume path."""
-    return [
+    command = [
         "scripts/run_food_line_continuation.py",
         "--repo-root", str(root),
         "--edition-date", edition_date,
@@ -1314,6 +1315,9 @@ def _continuation_command(
         "--max-queries", str(FOOD_LINE_DISCOVERY_MAX_QUERIES),
         "--collection-only",
     ]
+    if suppress_source_stage_handoff:
+        command.append("--suppress-source-stage-handoff")
+    return command
 
 
 def _initialize_source_watch_ledger(
@@ -1745,6 +1749,121 @@ def _verify_same_source_commit(root: Path, branch: str, expected: str, *, test_m
         raise SchedulerError(f"runner source commit changed after source watch: expected {expected}, found {current}")
 
 
+def _canonical_selected_json(value: Any) -> bytes:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def _selected_continuation_context(
+    *,
+    root: Path,
+    layout: Layout,
+    edition_date: str,
+    continuation_run_directory: str,
+    expected_protected_head: str,
+    validate_legacy_state: bool = True,
+    expected_binding_digest: str | None = None,
+) -> tuple[dict[str, Any], dict[str, Any], Path, dict[str, Any]]:
+    """Load one explicit ledger without consulting the date-level latest record."""
+    supplied = Path(continuation_run_directory).expanduser().resolve()
+    if not supplied.is_dir():
+        raise SchedulerError(f"selected continuation directory is absent: {supplied}")
+    plan_path = supplied / "continuation-query-plan.json"
+    ledger_path = supplied / "continuation-ledger.json"
+    if not plan_path.is_file() or not ledger_path.is_file():
+        raise SchedulerError("selected continuation requires both continuation-query-plan.json and continuation-ledger.json")
+    plan = read_json(plan_path)
+    ledger = read_json(ledger_path)
+    schema = "food_line_stable_continuation_v1"
+    if plan.get("schema") != schema or ledger.get("schema") != schema:
+        raise SchedulerError("selected continuation schema is unsupported")
+    plan_without_hash = {key: plan[key] for key in plan if key != "plan_sha256"}
+    plan_sha256 = hashlib.sha256(_canonical_selected_json(plan_without_hash)).hexdigest()
+    if str(plan.get("plan_sha256") or "") != plan_sha256:
+        raise SchedulerError("selected continuation query plan hash mismatch")
+    run_id = str(plan.get("run_id") or "")
+    if not run_id or any(char not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-" for char in run_id):
+        raise SchedulerError("selected continuation run ID is not a safe exact directory name")
+    if str(plan.get("edition_date") or "") != edition_date:
+        raise SchedulerError("selected continuation edition date does not match the requested date")
+    expected_directory = (root / DIRECT_CONTINUATION_RELATIVE / edition_date / run_id / "continuation").resolve()
+    if supplied != expected_directory:
+        raise SchedulerError(f"selected continuation path is not the exact owned path {expected_directory}")
+    binding_names = ("edition_date", "run_id", "source_identity", "source_module_sha256", "config_sha256", "plan_sha256")
+    expected_binding = {name: plan.get(name) if name != "plan_sha256" else plan_sha256 for name in binding_names}
+    binding = ledger.get("binding")
+    if not isinstance(binding, dict) or binding != expected_binding:
+        raise SchedulerError("selected continuation ledger binding differs from its ordered plan")
+    source_identity = str(expected_binding.get("source_identity") or "")
+    protected_head = str(expected_protected_head or "").strip()
+    if not protected_head or protected_head != source_identity:
+        raise SchedulerError("ExpectedProtectedHead does not match selected continuation source identity")
+    config_path = root / "data" / "dispatches" / "food-line" / "discovery_expansion_config.json"
+    source_path = root / "src" / "bluefern_dispatches" / "food_line_discovery_expansion.py"
+    if not config_path.is_file() or not source_path.is_file():
+        raise SchedulerError("selected continuation source/configuration files are absent")
+    if hashlib.sha256(config_path.read_bytes()).hexdigest() != str(expected_binding.get("config_sha256") or ""):
+        raise SchedulerError("selected continuation configuration binding drifted")
+    if hashlib.sha256(source_path.read_bytes()).hexdigest() != str(expected_binding.get("source_module_sha256") or ""):
+        raise SchedulerError("selected continuation source-module binding drifted")
+    planned_ids = list(plan.get("query_ids") or [])
+    if planned_ids != list(ledger.get("planned_query_ids") or []):
+        raise SchedulerError("selected continuation ledger/query-plan IDs differ")
+    if ledger.get("unknown_query_ids") or ledger.get("in_flight_query_ids"):
+        raise SchedulerError("selected continuation has unknown or in-flight query IDs")
+    state_path = layout.run_dir(edition_date, run_id) / "run-state.json"
+    state = read_json(state_path)
+    validate_run_state(state, edition_date, run_id)
+    if validate_legacy_state and (state.get("status") != INCOMPLETE_CAPPED_STATUS or bool(state.get("resumable"))):
+        raise SchedulerError("selected continuation requires an incomplete_capped, non-resumable legacy state")
+    binding_digest = hashlib.sha256(_canonical_selected_json(expected_binding)).hexdigest()
+    if expected_binding_digest and expected_binding_digest != binding_digest:
+        raise SchedulerError("selected continuation binding changed during lock revalidation")
+    record = {
+        "schema_version": RUN_RECORD_SCHEMA,
+        "edition_date": edition_date,
+        "run_id": run_id,
+        "source_branch": PRODUCTION_BRANCH,
+        "source_commit": source_identity,
+        "run_state_path": str(state_path),
+        "scheduled_start_at": state.get("scheduled_start_at") or state.get("started_at") or "",
+        "source_watch_status": state.get("status"),
+        "last_status": state.get("status"),
+        "resume_attempted": bool(state.get("resume_count") or 0),
+    }
+    context = {
+        "binding": expected_binding,
+        "binding_digest": binding_digest,
+        "plan_sha256": plan_sha256,
+        "ledger": ledger,
+        "ledger_digest": hashlib.sha256(ledger_path.read_bytes()).hexdigest(),
+    }
+    return record, state, state_path, context
+
+
+def _selected_child_receipt(result: subprocess.CompletedProcess[str], *, source_identity: str, config_sha256: str) -> dict[str, Any]:
+    lines = [line.strip() for line in str(result.stdout or "").splitlines() if line.strip()]
+    if not lines:
+        raise SchedulerError("selected continuation produced no structured receipt")
+    try:
+        payload = json.loads(lines[-1])
+    except (TypeError, ValueError) as exc:
+        raise SchedulerError("selected continuation terminal output was not JSON") from exc
+    if not isinstance(payload, dict) or payload.get("schema") != "food_line_continuation_receipt_v1":
+        raise SchedulerError("selected continuation receipt schema is invalid")
+    if payload.get("source_identity") != source_identity or payload.get("config_sha256") != config_sha256:
+        raise SchedulerError("selected continuation receipt binding differs from the selected ledger")
+    if payload.get("execution_mode") != "collection_only":
+        raise SchedulerError("selected continuation receipt is not collection-only")
+    gates = payload.get("gates")
+    if not isinstance(gates, dict) or gates.get("publication_attempted") is not False or gates.get("publication_side_effects") != {}:
+        raise SchedulerError("selected continuation receipt does not prove no public effects")
+    if gates.get("release_ready") is not False or gates.get("export_status") != "not_requested" or gates.get("public_export_status") != "not_requested":
+        raise SchedulerError("selected continuation receipt has an unexpected downstream gate")
+    if payload.get("status") not in {"completed", "incomplete_pending"}:
+        raise SchedulerError("selected continuation receipt has an unknown terminal status")
+    return payload
+
+
 def run_resume(args: argparse.Namespace) -> int:
     root = Path(args.repo_root).resolve()
     python = Path(args.python).resolve()
@@ -1752,7 +1871,22 @@ def run_resume(args: argparse.Namespace) -> int:
     layout = Layout(root)
     started_at = utc_now()
     try:
-        record = _load_run_record(layout, edition_date)
+        initial_continuation_directory = str(getattr(args, "continuation_run_directory", "") or "").strip()
+        initial_continuation_root = str(getattr(args, "continuation_run_root", "") or "").strip()
+        if initial_continuation_directory and initial_continuation_root:
+            raise SchedulerError("continuation directory and continuation root are mutually exclusive")
+        selected_continuation = bool(initial_continuation_directory)
+        selected_context: dict[str, Any] | None = None
+        if selected_continuation:
+            record, state, state_path, selected_context = _selected_continuation_context(
+                root=root,
+                layout=layout,
+                edition_date=edition_date,
+                continuation_run_directory=initial_continuation_directory,
+                expected_protected_head=str(getattr(args, "expected_protected_head", "") or ""),
+            )
+        else:
+            record = _load_run_record(layout, edition_date)
         if record is None:
             receipt = _source_noop_receipt(
                 action="status_resume",
@@ -1891,7 +2025,7 @@ def run_resume(args: argparse.Namespace) -> int:
             )
             return 10
 
-        if state.get("execution_mode") == "collection_only":
+        if state.get("execution_mode") == "collection_only" and not selected_continuation:
             return block_collection_only_resume(record, state, state_path)
 
         continuation_directory_arg = str(getattr(args, "continuation_run_directory", "") or "").strip()
@@ -1944,16 +2078,30 @@ def run_resume(args: argparse.Namespace) -> int:
                 stale_minutes=args.stale_lock_minutes,
                 run_id=str(record.get("run_id") or ""),
             ):
-                fresh_record, fresh_state, fresh_state_path = _load_record_and_state(layout, edition_date)
-                if (
-                    str(fresh_record.get("run_id") or "") != str(record.get("run_id") or "")
-                    or str(fresh_record.get("source_commit") or "") != str(record.get("source_commit") or "")
-                    or str(fresh_record.get("scheduled_start_at") or "") != expected_scheduled_start_at
-                    or fresh_state_path != state_path
-                ):
-                    raise SchedulerError("source-watch record or state changed before continuation lock revalidation")
+                if selected_continuation:
+                    fresh_record, fresh_state, fresh_state_path, fresh_context = _selected_continuation_context(
+                        root=root,
+                        layout=layout,
+                        edition_date=edition_date,
+                        continuation_run_directory=continuation_directory,
+                        expected_protected_head=str(getattr(args, "expected_protected_head", "") or ""),
+                        expected_binding_digest=str(selected_context["binding_digest"]),
+                    )
+                    if str(fresh_record.get("run_id") or "") != str(record.get("run_id") or ""):
+                        raise SchedulerError("selected continuation run changed before lock revalidation")
+                    selected_context = fresh_context
+                else:
+                    fresh_record, fresh_state, fresh_state_path = _load_record_and_state(layout, edition_date)
+                    if (
+                        str(fresh_record.get("run_id") or "") != str(record.get("run_id") or "")
+                        or str(fresh_record.get("source_commit") or "") != str(record.get("source_commit") or "")
+                        or str(fresh_record.get("scheduled_start_at") or "") != expected_scheduled_start_at
+                        or fresh_state_path != state_path
+                    ):
+                        raise SchedulerError("source-watch record or state changed before continuation lock revalidation")
                 if fresh_state.get("execution_mode") == "collection_only":
-                    raise SchedulerError("source-watch changed to collection-only mode before continuation")
+                    if not selected_continuation:
+                        raise SchedulerError("source-watch changed to collection-only mode before continuation")
                 if fresh_state.get("status") != INCOMPLETE_CAPPED_STATUS or bool(fresh_state.get("resumable")):
                     raise SchedulerError("source-watch state changed before continuation lock revalidation")
                 record = fresh_record
@@ -1962,7 +2110,9 @@ def run_resume(args: argparse.Namespace) -> int:
                 run_id = str(record["run_id"])
                 record["resume_attempted"] = True
                 record["resume_started_at"] = utc_now()
-                write_run_record(layout, edition_date, record, preserve_success=False)
+                if not selected_continuation:
+                    write_run_record(layout, edition_date, record, preserve_success=False)
+                child_receipt: dict[str, Any] | None = None
                 resumed = _invoke_python(
                     python,
                     root,
@@ -1972,17 +2122,49 @@ def run_resume(args: argparse.Namespace) -> int:
                         run_id=str(record["run_id"]),
                         continuation_directory=continuation_directory,
                         source_identity=str(record.get("source_commit") or ""),
+                        suppress_source_stage_handoff=selected_continuation,
                     ),
                 )
                 command_exit = int(resumed.returncode)
                 handoff_error = ""
-                if command_exit == 0:
-                    state = read_json(state_path)
-                    validate_run_state(state, edition_date, str(record.get("run_id") or ""))
-                    if not collection_qualifies(state):
-                        command_exit = 10
-                        handoff_error = "continuation exited successfully but legacy state is not intake-qualifying"
-                resume_status = "continuation_complete" if command_exit == 0 else "continuation_incomplete"
+                if selected_continuation:
+                    selected_binding = dict(selected_context["binding"])
+                    child_receipt = _selected_child_receipt(
+                        resumed,
+                        source_identity=str(selected_binding["source_identity"]),
+                        config_sha256=str(selected_binding["config_sha256"]),
+                    )
+                    before_ledger = selected_context["ledger"]
+                    _record, state, state_path, after_context = _selected_continuation_context(
+                        root=root,
+                        layout=layout,
+                        edition_date=edition_date,
+                        continuation_run_directory=continuation_directory,
+                        expected_protected_head=str(getattr(args, "expected_protected_head", "") or ""),
+                        validate_legacy_state=False,
+                        expected_binding_digest=str(selected_context["binding_digest"]),
+                    )
+                    before_completed = set(before_ledger.get("completed_query_ids") or [])
+                    after_ledger = after_context["ledger"]
+                    after_completed = set(after_ledger.get("completed_query_ids") or [])
+                    new_completed = after_completed - before_completed
+                    if not new_completed and child_receipt.get("status") == "incomplete_pending":
+                        resume_status = "continuation_no_progress"
+                    elif child_receipt.get("status") == "completed" and not after_ledger.get("pending_query_ids"):
+                        resume_status = "continuation_complete"
+                        command_exit = 0
+                    else:
+                        resume_status = "continuation_progress" if new_completed else "continuation_no_progress"
+                        command_exit = 2
+                    selected_context = after_context
+                else:
+                    if command_exit == 0:
+                        state = read_json(state_path)
+                        validate_run_state(state, edition_date, str(record.get("run_id") or ""))
+                        if not collection_qualifies(state):
+                            command_exit = 10
+                            handoff_error = "continuation exited successfully but legacy state is not intake-qualifying"
+                    resume_status = "continuation_complete" if command_exit == 0 else "continuation_incomplete"
             receipt = {
                 "schema_version": SOURCE_RECEIPT_SCHEMA,
                 "action": "status_resume",
@@ -2001,6 +2183,22 @@ def run_resume(args: argparse.Namespace) -> int:
                 "publication_attempted": False,
                 "publication_side_effects": {},
             }
+            if selected_continuation:
+                if child_receipt is None:
+                    raise SchedulerError("selected continuation did not produce a bound child receipt")
+                before_completed_count = len(before_ledger.get("completed_query_ids") or [])
+                after_completed_count = len(after_ledger.get("completed_query_ids") or [])
+                before_pending_count = len(before_ledger.get("pending_query_ids") or [])
+                receipt["execution_mode"] = "collection_only"
+                receipt["child_continuation_receipt"] = child_receipt
+                receipt["continuation_progress"] = {
+                    "before_completed_count": before_completed_count,
+                    "after_completed_count": after_completed_count,
+                    "before_pending_count": before_pending_count,
+                    "new_completed_query_ids": sorted(new_completed),
+                    "collection_triggered": bool(before_pending_count),
+                    "durable_progress": bool(new_completed),
+                }
             if handoff_error:
                 receipt["reason"] = handoff_error
             receipt_path = _source_receipt_path(layout, edition_date, "status-resume")
@@ -2016,13 +2214,19 @@ def run_resume(args: argparse.Namespace) -> int:
             receipt["operational_health_receipt_path"] = str(operational_receipt_path)
             atomic_write_json(receipt_path, receipt)
             record.update({"resume_status": resume_status, "resume_receipt_path": str(receipt_path)})
-            receipt["run_record_update_applied"] = _write_run_record_if_owner(
-                layout,
-                edition_date,
-                record,
-                run_id=run_id,
-                stale_minutes=args.stale_lock_minutes,
-            )
+            if selected_continuation:
+                # An explicitly selected historical ledger is an independent
+                # recovery target.  Never overwrite the date-level latest-run
+                # record, which may belong to a newer run B.
+                receipt["run_record_update_applied"] = False
+            else:
+                receipt["run_record_update_applied"] = _write_run_record_if_owner(
+                    layout,
+                    edition_date,
+                    record,
+                    run_id=run_id,
+                    stale_minutes=args.stale_lock_minutes,
+                )
             atomic_write_json(receipt_path, receipt)
             print(terminal_json({"ok": command_exit == 0, "receipt_path": str(receipt_path), **receipt}))
             return command_exit
@@ -2403,6 +2607,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--continuation-run-root",
         default="",
         help="Derive a date/run-bound stable-ID continuation directory under the runner-owned root.",
+    )
+    subparsers.choices["resume"].add_argument(
+        "--expected-protected-head",
+        default="",
+        help="Require the selected continuation ledger source identity to equal this protected source head.",
     )
     subparsers.choices["intake"].add_argument("--lock-wait-seconds", type=int, default=300)
     subparsers.choices["intake"].add_argument("--lock-poll-seconds", type=float, default=2.0, help=argparse.SUPPRESS)

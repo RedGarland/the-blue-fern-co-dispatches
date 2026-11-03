@@ -142,6 +142,16 @@ jobs:
         shell: pwsh
         run: python -m pytest -q -p no:cacheprovider --basetemp "$env:DISPATCHES_TEST_ROOT/pytest" tests/test_care_line_collection_scheduler_wrapper.py
 
+      - name: Run portable Food selected-ledger tests on Windows
+        shell: pwsh
+        run: python -m pytest -q -p no:cacheprovider --basetemp "$env:DISPATCHES_TEST_ROOT/food-ledger-pytest" tests/test_food_selected_ledger_manifest_portable.py tests/test_food_selected_ledger_scheduler_integration.py tests/test_food_selected_ledger_portable_harness.py
+
+      - name: Run portable Food receipt parser harness on Windows
+        shell: pwsh
+        run: |
+          $evidenceRoot = Join-Path $env:DISPATCHES_TEST_ROOT ("food-ledger-native-parser-{0}-{1}" -f $env:GITHUB_RUN_ID, $env:GITHUB_RUN_ATTEMPT)
+          & .\scripts\windows\food-selected-ledger-native-offline-parser-test-portable-20261103.ps1 -CandidateRoot $env:GITHUB_WORKSPACE -EvidenceRoot $evidenceRoot
+
   visual_regression:
     name: Staged Gaza visual regression
     runs-on: ubuntu-latest
@@ -228,3 +238,4 @@ jobs:
               description: state === 'success' ? 'Dispatch validation passed' : 'Dispatch validation failed',
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             });
+

@@ -417,8 +417,28 @@ def run(args: argparse.Namespace) -> int:
         checkpoint_outcomes=True,
     )
     handoff = source_stage_handoff_assessment(state)
+    selected_only = bool(getattr(args, "suppress_source_stage_handoff", False))
     handoff_state: dict[str, Any] | None = None
-    if handoff["intake_eligible"]:
+    collection_complete = (
+        not state.get("pending_query_ids")
+        and not state.get("in_flight_query_ids")
+        and not state.get("unknown_query_ids")
+        and set(state.get("completed_query_ids") or []) == set(state.get("planned_query_ids") or [])
+    )
+    if selected_only:
+        handoff = dict(handoff)
+        handoff.update(
+            {
+                "status": "not_requested",
+                "intake_eligible": False,
+                "collection_status": "collection_only_complete" if collection_complete else "collection_only_pending",
+                "reason": "selected recovery explicitly suppresses source-stage handoff",
+                "public_export_status": "not_requested",
+                "publication_attempted": False,
+                "publication_side_effects": {},
+            }
+        )
+    elif handoff["intake_eligible"]:
         handoff_state, handoff = commit_source_stage_handoff(
             root,
             edition_date=args.edition_date,
@@ -429,7 +449,7 @@ def run(args: argparse.Namespace) -> int:
         )
     payload = {
         "schema": "food_line_continuation_receipt_v1",
-        "status": "completed" if handoff["intake_eligible"] else "incomplete_pending",
+        "status": "completed" if (collection_complete if selected_only else handoff["intake_eligible"]) else "incomplete_pending",
         "source_identity": source_identity,
         "config_sha256": config_sha256,
         "execution_mode": "collection_only",
@@ -437,6 +457,18 @@ def run(args: argparse.Namespace) -> int:
         "source_stage_handoff": handoff,
         "legacy_run_state_path": str(_run_state_path(root, args.edition_date, args.run_id)) if handoff_state else None,
     }
+    if selected_only:
+        payload["gates"].update(
+            {
+                "intake_eligible": False,
+                "release_ready": False,
+                "export_status": "not_requested",
+                "public_export_status": "not_requested",
+                "publication_attempted": False,
+                "publication_side_effects": {},
+                "source_stage_handoff": handoff,
+            }
+        )
     print(json.dumps(payload, sort_keys=True))
     return 0 if payload["status"] == "completed" else 2
 
@@ -451,6 +483,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-queries", type=int, default=200)
     parser.add_argument("--max-run-minutes", type=float, default=30.0)
     parser.add_argument("--collection-only", action="store_true")
+    parser.add_argument(
+        "--suppress-source-stage-handoff",
+        action="store_true",
+        help="Keep selected recovery collection-only; do not write legacy handoff/export state.",
+    )
     return parser
 
 

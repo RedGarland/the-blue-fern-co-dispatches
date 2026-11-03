@@ -474,6 +474,56 @@ def checkpoint_in_flight_outcome(
         return state
 
 
+def _validate_partition_state(ledger: dict[str, Any], planned_query_ids: Sequence[str]) -> None:
+    """Validate the durable state partition before any claim or provider call.
+
+    The four lifecycle partitions are the complete state machine for planned
+    IDs.  Rejecting duplicates, overlaps, foreign IDs, and missing IDs here
+    prevents a malformed ledger from replaying a query that is already marked
+    completed or from silently dropping a query.
+    """
+    if not isinstance(planned_query_ids, list):
+        planned_query_ids = list(planned_query_ids)
+    if any(not isinstance(query_id, str) or not query_id for query_id in planned_query_ids):
+        raise ContinuationLedgerError("planned query IDs must be non-empty strings")
+    if len(planned_query_ids) != len(set(planned_query_ids)):
+        raise ContinuationLedgerError("query plan contains duplicate partition IDs")
+    planned = set(planned_query_ids)
+    partitions = {
+        "pending_query_ids": ledger.get("pending_query_ids"),
+        "in_flight_query_ids": ledger.get("in_flight_query_ids"),
+        "completed_query_ids": ledger.get("completed_query_ids"),
+        "unknown_query_ids": ledger.get("unknown_query_ids"),
+    }
+    seen: dict[str, str] = {}
+    union: set[str] = set()
+    for name, values in partitions.items():
+        if not isinstance(values, list):
+            raise ContinuationLedgerError(f"{name} must be a list")
+        local: set[str] = set()
+        for query_id in values:
+            if not isinstance(query_id, str) or not query_id:
+                raise ContinuationLedgerError(f"{name} contains a non-empty string violation")
+            if query_id in local:
+                raise ContinuationLedgerError(f"{name} contains duplicate query ID: {query_id}")
+            local.add(query_id)
+            prior = seen.get(query_id)
+            if prior is not None:
+                raise ContinuationLedgerError(
+                    f"query ID appears in multiple state partitions: {query_id} ({prior}, {name})"
+                )
+            if query_id not in planned:
+                raise ContinuationLedgerError(f"{name} contains foreign query ID: {query_id}")
+            seen[query_id] = name
+        union.update(local)
+    if union != planned:
+        missing = sorted(planned - union)
+        foreign = sorted(union - planned)
+        raise ContinuationLedgerError(
+            f"state partitions do not cover planned IDs; missing={missing}, foreign={foreign}"
+        )
+
+
 def load_ledger(directory: Path, *, binding: dict[str, str]) -> dict[str, Any]:
     _reject_legacy(directory)
     plan = _read_json(directory / PLAN_NAME)
@@ -489,6 +539,7 @@ def load_ledger(directory: Path, *, binding: dict[str, str]) -> dict[str, Any]:
     query_ids = list(plan.get("query_ids") or [])
     if query_ids != list(ledger.get("planned_query_ids") or []):
         raise ContinuationLedgerError("ledger/query-plan ID mismatch")
+    _validate_partition_state(ledger, query_ids)
     return ledger
 
 

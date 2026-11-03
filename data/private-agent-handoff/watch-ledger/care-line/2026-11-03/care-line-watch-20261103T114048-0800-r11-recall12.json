@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T114048-0800-r11-recall12",
+  "scheduled_for": "2026-11-03T11:45:22-08:00",
+  "started_at": "2026-11-03T11:40:48-08:00",
+  "completed_at": "2026-11-03T11:42:16-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T10:46:36-08:00",
+    "end": "2026-11-03T11:42:16-08:00",
+    "basis": "Since previous verified Care Line Watch heartbeat, with bounded recall for late-arriving notices. Authoritative production deduplication not independently verified."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY) termination notice, organ procurement organization, CCN 18P001",
+      "disposition": "Official CMS page accessible and checked first. Same latest notice as preceding heartbeat; no newly dated Nov 3 termination, rescission, CLIA limitation or suspension."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department closed suspended patient services today United States flood fire",
+      "November 3 2026 maternity labor delivery unit services closed immediate hospital",
+      "November 3 2026 ambulance service EMS station air medical base abruptly closed suspended service",
+      "November 3 2026 urgent care clinic primary care health center closed unexpectedly today",
+      "November 3 2026 dialysis center temporarily closed flooding power outage United States patients",
+      "November 3 2026 cancer infusion oncology clinic suspended appointments closed hospital",
+      "November 3 2026 psychiatric behavioral health hospital inpatient unit admissions halted suspended",
+      "November 3 2026 rural hospital emergency service closed shut down effective November 2026",
+      "November 3 2026 Puerto Rico Guam USVI CNMI American Samoa clinic hospital emergency department ambulance suspended closure official",
+      "November 3 2026 health system flood clinic closures reopening resumed today Florida Arizona",
+      "November 3 2026 community hospital outpatient clinic closed today local news",
+      "November 3 2026 helicopter emergency medical air ambulance base station ceased operations rural"
+    ],
+    "pending_restoration_follow_up": {
+      "facility": "Winslow Indian Health Care Center (Winslow Campus)",
+      "official_url": "https://www.wihcc.com/",
+      "official_notice_as_of": "2026-11-03T09:52:00-07:00",
+      "exact_supporting_passage": "As of (11/3/2026 9:52am) : Winslow Campus will begin a soft opening of walk-in services for patients at 1:00 PM today. Pharmacy services for prescription refills will also be available.",
+      "scheduled_effective_local": "2026-11-03T13:00:00-07:00",
+      "scheduled_effective_pst": "2026-11-03T12:00:00-08:00",
+      "disposition": "Reopening remains future at the 11:41 PST observation; not confirmed actually effective. Prior closures already in ledger. Recheck after effective time."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "CMS Network for Hope and October 30 terminations",
+        "reason": "Already visible and expressly documented by previous heartbeat; not a newly discovered or changed notice."
+      },
+      {
+        "item": "Watsonville Community Hospital maternity and NICU vote, California",
+        "reason": "Closure vote does not establish present service loss; 120-day state notice required, possible rescission."
+      },
+      {
+        "item": "Roseland Community Hospital obstetrics closure, Illinois",
+        "reason": "Previously recorded; no new action verified."
+      },
+      {
+        "item": "Winslow/Leupp/Dilkon flooding closures, Arizona",
+        "reason": "Prior findings; no confirmed new completed restoration by end of search."
+      },
+      {
+        "item": "Health First outpatient, elective procedure suspensions, Florida",
+        "reason": "Previously recorded; reporting says some services resume no earlier than 10 a.m., not confirmation of actual operation."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian outpatient/urgent care closure, Florida",
+        "reason": "Previously reported; no new official reopening verified."
+      },
+      {
+        "item": "Kula Hospital restoration plan, Hawaii",
+        "reason": "Projected late-summer 2027, not concrete effective restoration."
+      },
+      {
+        "item": "Guam Regional Medical City April storm suspension",
+        "reason": "Old April 2026 notice; unrelated to current window."
+      },
+      {
+        "item": "Singing River Surgery Center, Alabama",
+        "reason": "New facility opened July; not reopening of lost essential service."
+      },
+      {
+        "item": "Overseas services and general policy/ownership stories",
+        "reason": "Outside geography or no concrete access effect."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_not_accessible",
+        "detail": "Direct official Health First alert URL could not be opened on this run or the preceding one. Secondary local report corroborates existing suspension but does not verify actual reopening."
+      }
+    ],
+    "quality_limitations": "Twelve targeted recall searches completed; hits heavily recycled previously recorded cases or out-of-scope general articles. Rural, territorial, specialized dialysis/oncology and air-medical coverage non-exhaustive. One existing Health First official source failure; useful CMS, provider and local coverage remained.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Supplementary private handoff only; no editorial approval, public publication, schedule modification or task disabling."
+  }
+}

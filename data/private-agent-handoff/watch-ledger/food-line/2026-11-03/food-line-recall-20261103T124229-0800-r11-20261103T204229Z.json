@@ -1,0 +1,77 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T124229-0800-r11-20261103T204229Z",
+  "scheduled_for": "2026-11-03T12:45:54-08:00",
+  "started_at": "2026-11-03T12:42:29-08:00",
+  "completed_at": "2026-11-03T12:43:25-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T11:48:35.617-08:00",
+    "end_at": "2026-11-03T12:43:25-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Begins at the independently read-back-verified previous watch ledger heartbeat completed_at. Indexing recency or live page chrome does not prove incident publication inside the hourly window.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall of high-value local food-access misses. The primary nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, fire, or closure",
+      "Weather, fire, outage, or damage-driven emergency food distribution cancellation",
+      "Abrupt pantry or food bank shutdown or major access reduction",
+      "New official SNAP, WIC, EBT, or food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire \"November 3\" 2026",
+      "\"last grocery store\" shutting down \"Nov\" \"2026\" town",
+      "\"sole grocery store\" destroyed fire November 2026 community",
+      "\"food distribution\" canceled storm flood \"November 3\" \"2026\"",
+      "\"food bank\" \"distribution\" \"cancelled\" storm power November 2026",
+      "\"food pantry\" \"flood\" \"closed\" November 2026",
+      "\"food pantry\" \"permanently closed\" \"November 3, 2026\"",
+      "\"food bank\" \"suspend\" \"services\" \"November 2026\"",
+      "\"food pantry\" \"operations\" \"shut down\" \"November 3 2026\"",
+      "site:gov \"SNAP\" \"benefits\" \"November 3, 2026\" delayed interruption",
+      "site:gov \"WIC\" \"system\" \"outage\" \"November 2026\"",
+      "\"EBT\" \"not working\" \"November 3, 2026\" official"
+    ],
+    "result": "Twelve targeted current-web queries were run. No new in-window, independently verifiable event meeting these narrow classes was found. Returned hits were predominantly historical incidents, unrelated administrative or routine food information, and old SNAP disruptions.",
+    "noteworthy_exclusions": [
+      {
+        "publisher": "WVII/WGME",
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine sole-grocery closure reported September 3, 2026, outside hourly window."
+      },
+      {
+        "publisher": "WLUK/FOX 11",
+        "url": "https://fox11online.com/news/local/rubys-pantry-network-of-80-plus-pop-up-sites-closes-amid-rising-costs-northeast-wisconsin-food-hungry-community-economy-distribution-operations-midwest",
+        "reason": "Ruby's Pantry closure was reported April 1, 2026, outside hourly window."
+      },
+      {
+        "publisher": "KUTV",
+        "url": "https://kutv.com/news/local/rising-fuel-costs-limit-food-deliveries-to-washington-county-pantry",
+        "reason": "Funding-related pantry supply pressure reported September 22, 2026, not new in the observation interval."
+      },
+      {
+        "publisher": "Delaware Governor's Office",
+        "url": "https://news.delaware.gov/2025/10/29/governor-matt-meyer-declares-state-of-emergency-due-to-interruption-of-federal-snap-benefits/",
+        "reason": "SNAP interruption report dated October 29, 2025; outside the watch window."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T114703-0800-r11-20261103T194703Z.json",
+      "completed_at": "2026-11-03T11:48:35.617-08:00"
+    },
+    "source_failures": [],
+    "limitations": "Search recency filters still return dated legacy articles. Unindexed local/provider announcements, real-time outages, and publication/indexing delays may be missed. No independently confirmed, newly posted official SNAP/WIC/EBT interruption was recovered.",
+    "scheduling_note": "This execution began before the nominal scheduled_for anchor supplied by the hourly task recurrence; started_at and completed_at record actual execution timing.",
+    "production_authority": "No editorial review approvals, publication, changes to production collector, scheduling, or task disablement were performed."
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T104509-0800-r12-recall12",
+  "scheduled_for": "2026-11-03T10:45:22-08:00",
+  "started_at": "2026-11-03T10:45:09-08:00",
+  "completed_at": "2026-11-03T10:46:36-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T09:49:11-08:00",
+    "end": "2026-11-03T10:46:36-08:00",
+    "basis": "Since last verified supplementary Care Line heartbeat. Bounded recall includes late-arriving announcements and verifies whether known essential-service restorations have taken effect. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), organ procurement organization termination",
+      "disposition": "Official notice index accessible and checked before the targeted searches; no newly dated November 3 termination, rescission, CLIA limitation/suspension or other access-risk notice. November 2 Network for Hope and October 30 Kalamazoo/other providers previously covered and excluded as repeats."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 emergency department hospital urgent care temporarily closed services flooding fire Tuesday U.S.",
+      "November 3 2026 maternity labor delivery obstetrics unit immediate suspension closed hospital",
+      "November 3 2026 ambulance EMS air ambulance base operations shut down suspended rural",
+      "site:wihcc.com November 3 2026 Winslow Leupp Dilkon reopening walk-in services flood notice",
+      "November 3 2026 dialysis clinic hemodialysis unit temporarily closed suspended treatment patients United States",
+      "November 3 2026 cancer center oncology infusion chemotherapy appointments suspended clinic closed storm flood",
+      "November 3 2026 psychiatric behavioral health inpatient hospital unit closing suspended services now",
+      "November 3 2026 community health center primary care clinic unexpectedly closed suspended operations medical",
+      "November 3 2026 rural critical access hospital emergency service closing suspending admissions United States",
+      "November 3 2026 Puerto Rico Guam US Virgin Islands CNMI American Samoa hospital clinic ambulance service closure suspension",
+      "November 3 2026 hospital clinic resumed reopened operations after flood power outage healthcare service",
+      "site:hf.org/alert November 3 2026 Health First reopening outpatient clinics Tuesday flood"
+    ],
+    "watchlist_future_effect": {
+      "provider": "Winslow Indian Health Care Center",
+      "official_url": "https://www.wihcc.com/",
+      "notice_as_of": "2026-11-03T09:52:00-07:00",
+      "exact_supporting_passage": "As of (11/3/2026 9:52am) : Winslow Campus will begin a soft opening of walk-in services for patients at 1:00 PM today. Pharmacy services for prescription refills will also be available.",
+      "planned_effective_at": "2026-11-03T13:00:00-07:00",
+      "planned_effective_at_los_angeles": "2026-11-03T12:00:00-08:00",
+      "disposition": "Future at observation end (10:46 PST); provider has announced a concrete limited opening but it has not yet taken effect. Not a qualifying effective restoration yet. Carry for next watch, avoid duplicating prior suspension findings."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity ward (Illinois)",
+        "reason": "Previously recorded shutdown; fresh November 2 WTTW report confirms existing action rather than a new development."
+      },
+      {
+        "item": "Winslow, Leupp, Dilkon flooding restrictions (Arizona)",
+        "reason": "Previously recorded service suspensions; Winslow partial restoration planned for noon PST, not yet effective."
+      },
+      {
+        "item": "Health First clinics and surgery interruptions (Brevard County, Florida)",
+        "reason": "Previously recorded suspensions; no independently verified effective restoration. Separate Health First alert endpoint unavailable."
+      },
+      {
+        "item": "Kula Hospital (Hawaii)",
+        "reason": "Newer contractor announcement describes tentative 2027 reopening; hospital ED remains closed, not immediate restoration."
+      },
+      {
+        "item": "Santa Clara Valley Healthcare new behavioral health pavilion",
+        "reason": "New service capacity, not restoration of a previously lost essential service."
+      },
+      {
+        "item": "Guam storm-related hospital elective service suspension notices",
+        "reason": "Old October 16 or April 2026 official notices, outside this recall window."
+      },
+      {
+        "item": "Older ambulance base/behavioral-health/dialysis/primary-care closures",
+        "reason": "Search results dated months earlier; no novel confirmed change."
+      },
+      {
+        "item": "Overseas hospital service closures",
+        "reason": "Outside United States and territories."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://www.hf.org/alert",
+        "type": "direct_official_url_unavailable",
+        "detail": "Opening the known Health First alert endpoint failed. The prior official Health First status could not be used to confirm a restoration. Its original closure reporting and other targeted sources remained available."
+      }
+    ],
+    "search_quality": "CMS official index and WIHCC provider site accessible; 12 searches completed. Search relevance remained limited for small rural facilities, U.S. territories, dialysis, oncology and air-medical bases; coverage is non-exhaustive. One Health First official alert follow-up could not be opened. No independently verified new qualifying effective change.",
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one new heartbeat in ops/watch-ledger; no editorial approval, public publication, schedule change or task disablement."
+  }
+}

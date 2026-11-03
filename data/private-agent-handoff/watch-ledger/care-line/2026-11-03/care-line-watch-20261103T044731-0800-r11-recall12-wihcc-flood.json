@@ -1,0 +1,161 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T044731-0800-r11-recall12-wihcc-flood",
+  "scheduled_for": "2026-11-03T04:45:22-08:00",
+  "started_at": "2026-11-03T04:47:31-08:00",
+  "completed_at": "2026-11-03T04:50:19.782-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T03:47:11.292-08:00",
+    "end": "2026-11-03T04:50:19.782-08:00",
+    "basis": "From last verified supplementary Care Line heartbeat to current observation; includes explicit retrospective checks for provider notices previously missed. Production collection remains authoritative."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://www.wihcc.com/",
+      "publisher": "Winslow Indian Health Care Center, Inc.",
+      "source_published_date": "2026-11-02",
+      "state": "Arizona",
+      "county": null,
+      "territory": null,
+      "effective_date": "2026-11-03",
+      "announcement_date": "2026-11-02",
+      "confidence": "high",
+      "source_role": "official_provider_operational_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "finding_id": "care-line-az-wihcc-leupp-clinic-flood-closure-2026-11-03",
+      "title": "Leupp Clinic closed Tuesday, November 3, because of flooding and unsafe roads",
+      "exact_supporting_passage": "CLOSED Tuesday, November 3.",
+      "city": "Leupp",
+      "event_type": "temporary_rural_primary_care_clinic_closure",
+      "service_line": "Rural outpatient / primary care clinic",
+      "access_consequences": "Full-day Leupp Clinic closure for November 3 during flooding/unsafe-road conditions; provider has not announced a firm reopening date for this site beyond the specified closure day.",
+      "affected_population": "Leupp-area Navajo Nation patients and others who ordinarily rely on the clinic; number unknown."
+    },
+    {
+      "canonical_source_url": "https://www.wihcc.com/",
+      "publisher": "Winslow Indian Health Care Center, Inc.",
+      "source_published_date": "2026-11-02",
+      "state": "Arizona",
+      "county": null,
+      "territory": null,
+      "effective_date": "2026-11-03",
+      "announcement_date": "2026-11-02",
+      "confidence": "high",
+      "source_role": "official_provider_operational_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "finding_id": "care-line-az-wihcc-winslow-clinic-services-flood-suspension-2026-11-03",
+      "title": "Winslow Indian Health Care Center suspends all services except urgent care on November 3",
+      "exact_supporting_passage": "All other services will be unavailable.",
+      "city": "Winslow",
+      "event_type": "temporary_multiservice_outpatient_suspension",
+      "service_line": "Outpatient and primary care services; urgent care remains open 8 a.m.–8 p.m. local",
+      "access_consequences": "Routine outpatient services at the Winslow facility are unavailable November 3; its urgent care remains available 8 a.m.–8 p.m. The provider attributes disruption to flooding and unsafe roads.",
+      "affected_population": "Winslow-area patients, including Navajo Nation community members needing non-urgent outpatient services; number unknown."
+    },
+    {
+      "canonical_source_url": "https://www.wihcc.com/",
+      "publisher": "Winslow Indian Health Care Center, Inc.",
+      "source_published_date": "2026-11-02",
+      "state": "Arizona",
+      "county": null,
+      "territory": null,
+      "effective_date": "2026-11-03",
+      "announcement_date": "2026-11-02",
+      "confidence": "high",
+      "source_role": "official_provider_operational_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "finding_id": "care-line-az-dilkon-wound-care-podiatry-dental-flood-suspension-2026-11-03",
+      "title": "Dilkon Medical Center suspends wound care, podiatry and dental services for November 3",
+      "exact_supporting_passage": "Dental, Podiatry, and Wound Care services will be CLOSED.",
+      "city": "Dilkon",
+      "event_type": "temporary_essential_outpatient_specialty_service_suspension",
+      "service_line": "Wound care; podiatry; dental",
+      "access_consequences": "Wound care, podiatry and dental appointments/services at Dilkon Medical Center are closed November 3; emergency department and acute care remain open, as do optometry and pharmacy, with telephone appointments and limited physical therapy available.",
+      "affected_population": "Patients requiring wound care, podiatry or dental services in the Dilkon service area, including Navajo Nation communities; number unknown."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY (CCN 18P001), OPO termination notice; already reported by earlier watch",
+      "disposition": "No newer dated CMS public notice observed; previously logged Oct 30 Kalamazoo behavioral-health provider termination and Nov 2 Network for Hope notice are duplicates. Earlier Oct 30 hospice/home-health actions predate this window and were not independently validated as new in this run."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 3, 2026\" hospital \"emergency department\" closure suspension United States",
+      "\"November 3, 2026\" \"labor and delivery\" closed hospital maternity",
+      "\"November 3, 2026\" \"ambulance service\" suspended ceased operations base",
+      "\"November 3, 2026\" \"behavioral health\" hospital unit closure service suspended",
+      "\"November 3, 2026\" dialysis clinic closed patients services",
+      "\"November 3, 2026\" cancer oncology clinic closed suspended service",
+      "\"November 2, 2026\" \"rural hospital\" emergency services shut closed patients",
+      "\"November 2, 2026\" \"air ambulance\" base closure suspended United States",
+      "\"November 3, 2026\" \"primary care\" clinic closed services suspended",
+      "\"November 3, 2026\" \"Puerto Rico\" \"Guam\" \"U.S. Virgin Islands\" hospital clinic closure",
+      "\"November 3, 2026\" hospital clinic emergency urgent care \"reopened\" after closure",
+      "November 3 2026 Navajo Nation flood clinic closed Leupp Winslow Dilkon healthcare operational update"
+    ],
+    "primary_source_verified": {
+      "url": "https://www.wihcc.com/",
+      "notice_as_of": "2026-11-02 17:30 (site's stated clock time; timezone not explicitly designated in the notice)",
+      "reason": "ongoing flooding and unsafe road conditions",
+      "november_3_service_status": {
+        "Leupp Clinic": "closed",
+        "Winslow Indian Health Care Center": "urgent care 8:00–20:00 remains open; all other services unavailable",
+        "Dilkon Medical Center": "dental, podiatry and wound care closed; emergency department and acute care remain open; telephone appointments, optometry and pharmacy available; physical therapy limited"
+      }
+    },
+    "deduplication": {
+      "comparison": "Verified November 2 17:50–23:49 watch heartbeats and November 3 00:45–03:47 watch history. No Leupp, Winslow or Dilkon closure recorded in those checked files; the original official update was dated Nov 2 at 17:30, so this is late-discovered rather than a fresh Nov 3 announcement.",
+      "production_collector_dedupe_verified": false,
+      "disposition": "Three site-specific findings from one provider operational notice; all pending_review, with authoritative production deduplication required."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity closure, Chicago IL",
+        "reason": "Previously watch-recorded; effective October 31."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian and Health First flood-related outpatient suspensions, Florida",
+        "reason": "Previously watch-recorded; no confirmed new reopening or service change."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, WV",
+        "reason": "Previously watch-recorded suspension."
+      },
+      {
+        "item": "Kalamazoo Behavioral Health Hospital CMS termination",
+        "reason": "Previously watch-recorded 2026-10-30 notice, future effective 2026-11-16."
+      },
+      {
+        "item": "One Community Health clinics, Oregon",
+        "reason": "Routine scheduled 90-minute morning closure Nov 3 with published same-day resumption and emergency/on-call coverage; not a high-value essential-service-loss event."
+      },
+      {
+        "item": "UNM Health October 26 cyber incident and October 28 restoration",
+        "reason": "Prior-week incident/restoration, not a current newly effective change."
+      },
+      {
+        "item": "Rockwell Medical dialysis-assets acquisition",
+        "reason": "Ownership/transaction story without service closure or patient-access change."
+      },
+      {
+        "item": "India and other non-U.S. care news and proposed future facility openings",
+        "reason": "Out of geography or no concrete current access effect."
+      }
+    ],
+    "search_quality": "All 12 searches executed. Results were often stale, overseas, broad or irrelevant; limited recall particularly for territories, ambulance/air-medical, dialysis and oncology. Official CMS index and official rural care-provider advisory were accessible. This is a bounded supplementary search and not exhaustive national coverage.",
+    "source_failures": [],
+    "controls": "No article approval, public publication, schedule modification, or task disabling. Findings are pending_review. Exactly one new watch heartbeat created on ops/watch-ledger."
+  }
+}

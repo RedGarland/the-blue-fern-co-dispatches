@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T214527-0800-r11-20261103T054527Z",
+  "scheduled_for": "2026-11-02T21:45:27-08:00",
+  "started_at": "2026-11-02T21:45:27-08:00",
+  "completed_at": "2026-11-03T05:46:56.072Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T20:42:56.032-08:00",
+    "end_at": "2026-11-03T05:46:56.072Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "From latest verified prior Food Line heartbeat completion at 20:42:56.032 PST on 2026-11-02; discovery queries used 2-day recency for indexing lag. Only new qualifying access disruptions in this observation interval count.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary national Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Closure/fire/disaster/loss of only, sole, last, or full-service community grocery",
+      "Canceled or suspended emergency food distribution due to storm/flood/fire/outage/facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "Official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" \"fire\" \"November 2\" 2026",
+      "\"sole grocery store\" closes fire town November 2026",
+      "\"last grocery store\" closed November 2 2026",
+      "\"only supermarket\" closed fire community November 2026",
+      "\"food distribution\" canceled storm Monday November 2 2026",
+      "\"food bank\" distribution cancelled flooding outage November 2 2026",
+      "\"emergency food distribution\" suspended damage November 2026",
+      "\"food pantry\" closed due to fire November 2 2026",
+      "\"food bank\" temporarily closed storm power outage November 2026",
+      "\"food pantry\" suspended services November 2 2026",
+      "site:gov \"SNAP\" \"November 2, 2026\" \"outage\" OR \"delay\" OR \"interruption\"",
+      "site:gov \"WIC\" \"November 2, 2026\" \"closed\" OR \"outage\" OR \"benefits\""
+    ],
+    "observation": "All 12 targeted searches produced usable coverage. No newly verified qualifying U.S. food-access interruption reported after the prior heartbeat was identified. Returned items were mainly older single-store closures, historical disaster cases, routine pantry fundraising, prior-year SNAP notices, and older food-bank problems without new hour-specific developments.",
+    "excluded_examples": [
+      {
+        "publisher": "FOX 13 Utah",
+        "source_published_at": null,
+        "url": "https://www.fox13now.com/news/local-news/utah-county/provo-food-bank-announces-temporary-closure-amid-financial-shortfall",
+        "reason": "Material Provo food bank temporary closure was announced before this hour and planned for November 1; article indexed as about two days old. No independently verified new development in the search window."
+      },
+      {
+        "publisher": "KCHA News",
+        "source_published_at": "2026-11-02",
+        "url": "https://kchanews.com/2026/11/02/floyd-county-food-pantry-gauges-citys-appetite-for-leasing-former-city-tap/",
+        "reason": "Exploratory facility lease for Floyd County pantry, not verified closure or immediate access cut."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Earlier storm recovery information lists an operating emergency food distribution, not a newly canceled distribution."
+      },
+      {
+        "publisher": "Southwest Regional Publishing",
+        "source_published_at": "2026-11-02",
+        "url": "https://southwestregionalpublishing.com/2026/11/02/fire-academy-students-fill-shelves-at-moraine-valley-food-pantry/",
+        "reason": "Donation/collection item, no service disruption."
+      },
+      {
+        "publisher": "FOX 10 Phoenix",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.fox10phoenix.com/news/snap-benefits-arizona-will-not-be-issued-november-heres-what-know",
+        "reason": "SNAP stoppage refers to the 2025 federal shutdown, not a 2026 interruption."
+      },
+      {
+        "publisher": "Nunatsiaq News",
+        "source_published_at": null,
+        "url": "https://nunatsiaq.com/stories/article/whale-cove-declares-local-state-of-emergency-as-fire-guts-only-grocery-store/",
+        "reason": "Historical Canadian grocery fire outside U.S. remit."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T204142-0800-r11-20261103T044142Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-03T04:42:56.032Z",
+      "method": "Read branch ledger listing and preceding three heartbeats; checked publication/event dates, immediacy of food-access consequence, and duplication."
+    },
+    "source_failures": [],
+    "limitations": "Search-engine discovery and indexing can miss same-hour primary-source notices. Twelve searches found no *verified* new eligible item; this does not establish complete national absence.",
+    "production_authority": "No approval, publishing, primary pipeline modification, schedule change, or disable action."
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T134726-0800-r11-20261103T214726Z",
+  "scheduled_for": "2026-11-03T13:45:54-08:00",
+  "started_at": "2026-11-03T13:47:26.484-08:00",
+  "completed_at": "2026-11-03T13:48:17.217-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T12:43:25-08:00",
+    "end_at": "2026-11-03T13:48:17.217-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Verified preceding watch heartbeat completed_at on ops/watch-ledger; screened for new evidence published or first confirmed since previous watch, not article crawler/indexing time.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss recall; primary nationwide Food Line production collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store lost through closure, fire, or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, power outage, or facility damage",
+      "Abrupt food pantry or food-bank shutdown or major access reduction",
+      "New official SNAP/WIC/EBT or food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed November 3 2026 town community",
+      "\"last grocery store\" closing November 2026 town rural",
+      "\"sole grocery store\" closed fire November 2026",
+      "\"food distribution\" canceled storm power outage November 3 2026",
+      "\"food bank\" distribution suspended cancelled flood storm November 2026",
+      "\"food pantry\" closed suddenly services November 3 2026",
+      "site:gov \"SNAP\" benefits delayed interrupted November 3 2026",
+      "site:gov WIC EBT system outage interruption November 3 2026",
+      "food pantry unexpectedly closed Tuesday November 3 2026 distribution operations",
+      "food distribution cancelled today November 3 2026 storm flooding power outage local",
+      "Nov 3 2026 grocery store fire only one in town shutdown",
+      "November 3 2026 SNAP WIC EBT benefits not available delayed state agency outage"
+    ],
+    "result": "No independently confirmed new qualifying in-window incident identified. Current search returned predominately older stories; some results were indexed/crawled today but published outside this interval.",
+    "noteworthy_exclusions": [
+      {
+        "publisher": "WBNG",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer NY only grocery store fire reported Sep 14, 2026, outside observation window."
+      },
+      {
+        "publisher": "MPR News",
+        "url": "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+        "reason": "Ruby's Pantry network closed Apr 1, 2026; historic/duplicate of prior watch exclusions."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "url": "https://dss.virginia.gov/relief/food-assistance/ebt/",
+        "reason": "November 1, 2026 pre-announced SNAP beverage eligibility change is not a newly posted benefit/payment interruption during this hourly interval."
+      },
+      {
+        "publisher": "KQED",
+        "url": "https://www.kqed.org/news/12060770/snap-calfresh-food-stamps-government-shutdown-november-payments-ebt",
+        "reason": "Prior-year October/November 2025 federal shutdown/CalFresh disruption, not new."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T124229-0800-r11-20261103T204229Z.json",
+      "completed_at": "2026-11-03T12:43:25-08:00"
+    },
+    "source_failures": [],
+    "limitations": "Fast-index search results can include historical articles despite 1-2-day recency filters; unindexed provider notices and real-time SNAP/WIC problems may be missed. The watch is recall-only, not comprehensive production coverage.",
+    "production_authority": "No approval, public publication, schedule change, production collector mutation, or task disablement."
+  }
+}

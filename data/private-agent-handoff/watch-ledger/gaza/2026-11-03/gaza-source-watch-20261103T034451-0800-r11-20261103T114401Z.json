@@ -1,0 +1,169 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T034451-0800-r11-20261103T114401Z",
+  "scheduled_for": "2026-11-03T03:44:51-08:00",
+  "started_at": "2026-11-03T03:42:05-08:00",
+  "completed_at": "2026-11-03T03:44:54-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T02:48:45-08:00",
+    "end": "2026-11-03T03:44:54-08:00",
+    "basis": "Previous verified Gaza Source Watch heartbeat completion through current observation; source published dates are not presumed to establish exact event times.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-prcs-ksrelief-logistical-support-20261103-article12264",
+      "canonical_source_url": "https://www.palestinercs.org/en/Article/12264/Saudi-Arabia-Provides-Operational-and-Logistical-Support-to-the-Palestine-Red-Crescent-Society",
+      "title": "Saudi Arabia Provides Operational and Logistical Support to the Palestine Red Crescent Society",
+      "publisher": "Palestine Red Crescent Society (PRCS)",
+      "source_date": "2026-11-03",
+      "publication_date": "2026-11-03",
+      "event_date": null,
+      "publication_time": null,
+      "event_time": null,
+      "location": "Gaza Strip, occupied Palestinian territory (contribution also addresses West Bank operations)",
+      "affected_population_system": "PRCS humanitarian and relief operations in Gaza; aid storage, transportation, fuel availability, volunteer support and in-kind aid distribution logistics",
+      "exact_supporting_passage": "This includes renting warehouse facilities, providing logistical equipment, contributing to the costs of securing two four-wheel-drive vehicles",
+      "source_type": "primary humanitarian organization / operational announcement",
+      "classification": "new",
+      "confidence": "high for announced operational contribution; delivery/implementation not verified",
+      "discovery_context": {
+        "first_observed_during_this_watch": true,
+        "first_observed_url": "https://www.palestinercs.org/en",
+        "prior_observation": "Prior 02:48 PST heartbeat checked PRCS homepage; latest item then was dated June 2026. New PRCS November 3 item was present at this watch.",
+        "verification": "Direct PRCS article, published 3 Nov 2026, lists KSrelief contribution toward warehouse rental, logistics equipment, two four-wheel-drive vehicles, operational fuel, volunteer subsistence and distribution costs. No amount, arrival date or completed delivery is given.",
+        "last_watch_run_id": "gaza-source-watch-20261103T024451-0800-r11-20261103T104845Z",
+        "bounded_time_caveat": "Publication date verified, exact article release and on-the-ground implementation timestamps unknown. Change is a newly observed funding/logistics announcement, not verified delivery of aid or restored access."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; production collector and public publication remain authoritative and untouched.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T024451-0800-r11-20261103T104845Z.json",
+      "completed_at": "2026-11-03T02:48:45-08:00",
+      "outcome": "no_findings",
+      "verified_via": "GitHub fetch_file ops/watch-ledger"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; newest news update remains 31 October 2026, on situation as of 29 October."
+      },
+      {
+        "source": "OCHA OPT situation updates index",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Accessible; newest dated entry 31 October 2026."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502; previously documented recurring restriction."
+      },
+      {
+        "source": "WHO global emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated November 3 Gaza hospital capacity or medevac development on page."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"November 3, 2026\" Gaza Khan Younis Rafah killed wounded 12:00 13:00",
+      "site:reuters.com/world/middle-east/ Gaza November 3 2026 Israeli strikes ceasefire deaths",
+      "site:apnews.com/article/ Gaza November 3 2026 Palestinians deaths aid ceasefire",
+      "site:aljazeera.com/news/2026/11/3/ Gaza Israeli operations killed wounded Tuesday afternoon",
+      "site:news.un.org/en/ 3 November 2026 Gaza humanitarian crossings aid fuel",
+      "site:unicef.org Gaza \"3 November 2026\" water children displacement",
+      "site:wfp.org Gaza \"3 November 2026\" food aid access",
+      "site:msf.org Gaza \"3 November 2026\" hospital ambulances medical",
+      "site:icrc.org Gaza \"3 November 2026\" hostages detainees Red Cross",
+      "site:palestinercs.org/en 3 November 2026 Gaza ambulance emergency",
+      "site:ochaopt.org \"3 Nov 2026\" Gaza hospital aid displacement",
+      "Gaza November 3 2026 11:00 UTC 12:00 UTC November 3 new deaths yellow line Rafah talks aid crossings"
+    ],
+    "targeted_search_count": 12,
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "11:41 publisher-clock November 3 headlines concern West Bank and other subjects; newest Gaza item (08:58 publisher clock) is Imad Omar Ahmed Radi death, previously logged."
+      },
+      {
+        "source": "PRCS homepage",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Now displays 3 November 2026 KSrelief contribution announcement absent at previous watch; original item verified by direct article read."
+      },
+      {
+        "source": "PRCS article",
+        "url": "https://www.palestinercs.org/en/Article/12264/Saudi-Arabia-Provides-Operational-and-Logistical-Support-to-the-Palestine-Red-Crescent-Society",
+        "result": "Direct primary statement supports operational/logistics contribution; no implementation date, completed delivery or aid access change independently verified."
+      },
+      {
+        "source": "Al Jazeera November 3 summary",
+        "url": "https://www.aljazeera.com/amp/news/2026/11/3/israeli-forces-kill-four-in-gaza-as-fifth-palestinian-dies-of-wounds",
+        "result": "Recaps November 2 killings and follow-up deaths; no distinct additional incident verified in interval."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; previously documented recurring restriction."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; previously documented recurring restriction."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties, displacement and military operations with documented civilian impact",
+      "aid access, food and water, crossing operations, fuel and infrastructure",
+      "health care, hospital/ambulance capacity, patient transport and medical evacuations",
+      "detention/hostages, ceasefire and negotiations"
+    ],
+    "exclusions": [
+      "WAFA November 3 report on Imad Omar Ahmed Radi death already logged November 2 23:44 PST watch.",
+      "Reuters November 1 and 2 casualty stories and Al Jazeera November 3 compilation recap older incidents, excluded as duplicates.",
+      "West Bank-only reports, opinion, unsourced social claims, older humanitarian background and unverifiable event timing excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP newsroom",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA newsroom",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News targeted search",
+        "problem": "robots.txt restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "Source indexing and release timestamps can lag. PRCS gives an article publication date but no exact publication clock or delivery timetable.",
+      "The operational contribution should not be described as proof supplies or vehicles arrived, or that crossings/access reopened.",
+      "Recurring WHO EMRO, WFP, UNRWA and UN News access restrictions limit direct coverage; OCHA, WHO global, PRCS, WAFA and established media were available."
+    ],
+    "status_rationale": "DEGRADED for recurring direct access failures; qualifying new PRCS logistical funding announcement found with direct primary-source corroboration; failures do not represent newly material deterioration.",
+    "safeguards": "Exactly one append-only JSON on ops/watch-ledger; no release approvals, publishing, production writes, schedule changes, or automation disablement.",
+    "scheduler_note": "Automation runtime indicated start before nominal 03:44:51 PST scheduled trigger; preserved exact schedule and observed start times instead of backdating."
+  }
+}

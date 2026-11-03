@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T154806-0800-r12-recall12",
+  "scheduled_for": "2026-11-03T15:45:22-08:00",
+  "started_at": "2026-11-03T15:48:06-08:00",
+  "completed_at": "2026-11-03T15:49:39-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T14:42:55-08:00",
+    "end": "2026-11-03T15:49:39-08:00",
+    "basis": "Since last verified prior Care Line heartbeat; bounded supplementary recall, with detection-date checks for late-indexed same-day reporting. Production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — OPO termination, CCN 18P001, Kentucky",
+      "result": "Official listing showed no November 3 notices; October 30–November 2 CMS entries were already seen in prior watches. No new termination, rescission, CLIA limitation/suspension or other CMS access notice identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 3, 2026\" hospital emergency department closed reopening suspension patients United States",
+      "\"November 3, 2026\" maternity labor delivery unit closing suspended services hospital",
+      "\"November 3, 2026\" rural hospital clinic closure emergency services suspended",
+      "\"November 3, 2026\" ambulance service air medical base suspended closed",
+      "\"November 3, 2026\" dialysis center oncology clinic closed temporarily patients",
+      "\"November 3, 2026\" behavioral health psychiatric hospital clinic services closed suspended",
+      "November 3 2026 \"closed today\" \"clinic\" \"hospital\" flooding storm patients United States",
+      "November 3 2026 \"emergency department\" \"reopened\" OR \"temporarily closed\" hospital",
+      "November 3 2026 ambulance provider service shutdown suspend operations paramedics county",
+      "November 3 2026 \"urgent care\" \"closed\" OR \"reopened\" primary care U.S.",
+      "November 3 2026 Puerto Rico Guam Virgin Islands hospital clinic emergency services closure interruption",
+      "November 3 2026 Winslow Indian Health Care Center Leupp Dilkon reopen flood Health First service alert"
+    ],
+    "search_recency_days": 2,
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "As of November 3 09:52 Arizona time, provider announces Winslow walk-in soft-opening at 13:00 Arizona time plus pharmacy refills. Same provider notice and restoration already recorded by prior 12:43 local heartbeat; no fresh completed-operations confirmation. Leupp closed November 3 and Dilkon dental, podiatry, wound-care services still unavailable."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Official Health First alert remains inaccessible through browser; prior-documented limitation. No independently verified reopening found."
+      }
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center limited walk-in/pharmacy reopening, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Duplicate — recorded in earlier 2026-11-03 12:43 local heartbeat; no new service change."
+      },
+      {
+        "item": "Health First outpatient service disruptions/restoration, Florida",
+        "source": "https://hf.org/alert",
+        "reason": "Earlier known flood-related disruption; attempted official check failed. No new independently verified operational restoration."
+      },
+      {
+        "item": "St. Joseph Christie Clinic, Illinois",
+        "source": "https://www.stjosephrecord.com/2026/11/03/st-joseph-christie-clinic-location-closing/",
+        "reason": "Local November 3 report says closure is scheduled December 31, 2026; no current clinical-service loss. Future closure follow-up only; no demonstrated newly effective change within the hourly window; detailed page could not be opened."
+      },
+      {
+        "item": "Kula Hospital restoration, Maui, Hawaii",
+        "source": "https://www.mauihealth.org/news/releases/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Future summer 2027 target, not an effective reopening; official search excerpt accessible but detail fetch failed."
+      },
+      {
+        "item": "Crozer-Chester Medical Center, Pennsylvania",
+        "source": "https://crozerhealthcenter.com/crozer-chester-campus-today/",
+        "reason": "Closure dates to April 2025; November 3 update does not establish a new service change."
+      },
+      {
+        "item": "Gloucestershire maternity restoration, United Kingdom",
+        "source": "https://www.aol.com/articles/home-births-resume-maternity-unit-154933000.html",
+        "reason": "Outside US/territories; future 2027 reopening."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Official alert page returned browser internal error; repeated known limitation from preceding Care Line watches."
+      },
+      {
+        "source": "https://www.stjosephrecord.com/2026/11/03/st-joseph-christie-clinic-location-closing/",
+        "type": "detail_fetch_disabled",
+        "detail": "Search excerpt accessible; full article could not be opened to verify timestamp and underlying letter."
+      },
+      {
+        "source": "https://www.mauihealth.org/news/releases/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "type": "detail_fetch_disabled",
+        "detail": "Official indexed excerpt available; detail page unavailable to browser."
+      }
+    ],
+    "quality_limitations": "Bounded recall, not national exhaustive. Poor targeted-search yield for US territories, EMS and air bases, oncology and dialysis. CMS listing and Winslow official site accessible. Several document endpoints could not be opened; no evidence of a novel watch-wide outage.",
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private ledger heartbeat only. No approval, public publication, production runner change, schedule change or task disabling."
+  }
+}

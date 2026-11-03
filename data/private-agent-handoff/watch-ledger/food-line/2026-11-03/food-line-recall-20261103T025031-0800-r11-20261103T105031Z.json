@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T025031-0800-r11-20261103T105031Z",
+  "scheduled_for": "2026-11-03T02:45:54-08:00",
+  "started_at": "2026-11-03T02:50:31-08:00",
+  "completed_at": "2026-11-03T02:51:43.927-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T01:44:03.901-08:00",
+    "end_at": "2026-11-03T02:51:43.927-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous completed heartbeat independently fetched from ops/watch-ledger; two-day recency discovery and November 2–3, 2026 source-date screening, with positive eligibility restricted to newly verified developments after the prior check.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall; primary nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service community grocery store loss, closure, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food bank closure or material access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed \"November 3\" \"2026\"",
+      "\"sole grocery store\" closing town \"November 3, 2026\"",
+      "\"last grocery store\" \"closed\" November 2026 community",
+      "\"full service grocery\" closed fire November 2026 town",
+      "\"food bank\" \"closed\" \"storm\" \"November 3, 2026\"",
+      "\"food pantry\" \"suspended\" service \"Nov 3 2026\"",
+      "\"food distribution\" canceled cancelled \"November 3, 2026\" weather",
+      "\"food bank\" outage \"Nov 2 2026\" closure",
+      "SNAP benefit issuance outage state notice November 3 2026",
+      "site:gov \"SNAP\" \"November 3, 2026\" delay interruption benefits",
+      "site:gov WIC EBT system outage \"November 2, 2026\"",
+      "food pantry abruptly closed November 3 2026 local news"
+    ],
+    "observation": "All 12 targeted searches returned usable results; no independently verified eligible U.S. food-access interruption newly arising after the preceding heartbeat. Results were predominantly old grocery-store fires/closures and November 2025 SNAP shutdown articles.",
+    "excluded_examples": [
+      {
+        "publisher": "The Salt Lake Tribune",
+        "source_published_at": "2026-11-02T06:00:00-07:00",
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "reason": "Report published before the preceding check describes St. George Salvation Army pantry reopening on Nov. 2 after a closure three months earlier; no new abrupt access loss in the observation window."
+      },
+      {
+        "publisher": "KATU",
+        "source_published_at": "2025-11-03",
+        "url": "https://katu.com/news/local/no-snap-benefits-distributed-in-oregon-food-providers-calling-it-a-crisis-portland-snap-food-stamps-welfare-support-hunger-support-oregon-food-banks-overwhelmed-as-snap-benefits-halt-amid-federal-shutdown-blanchet-house",
+        "reason": "2025 SNAP shutdown impact, not new in 2026."
+      },
+      {
+        "publisher": "MPR News",
+        "source_published_at": "2018-11-13",
+        "url": "https://www.mprnews.org/story/2018/11/13/town-of-cooks-only-grocery-burns-but-owners-vow-to-rebuild",
+        "reason": "Historical sole-store fire, outside the window."
+      },
+      {
+        "publisher": "Santa Clarita KHTS",
+        "source_published_at": "2026-01",
+        "url": "https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102",
+        "reason": "Older pantry closure outside the window."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T014249-0800-r11-20261103T094249Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-03T01:44:03.901-08:00",
+      "method": "Read previous heartbeat directly from ops/watch-ledger and screened event/publication timing for newly verifiable developments."
+    },
+    "source_failures": [],
+    "limitations": "Search recall only, not exhaustive nationwide coverage. Search engine date filters surfaced stale articles; very recent social/provider notices may not yet be indexed.",
+    "production_authority": "No content approved or published and no schedules, production collectors or automations changed."
+  }
+}

@@ -536,6 +536,7 @@ def _daily_args(
     audio_model: str,
     audio_voice: str,
     audio_format: str,
+    source_mode: str = "both",
     skip_tests: bool = False,
 ) -> list[str]:
     args = [
@@ -547,6 +548,8 @@ def _daily_args(
         pages_branch,
         "--remote-url",
         remote_url,
+        "--source-mode",
+        source_mode,
     ]
     if dry_run:
         args.append("--dry-run")
@@ -800,6 +803,8 @@ def _normalize_operator_args(args: argparse.Namespace) -> argparse.Namespace:
     """Supply defaults for legacy in-process callers predating opt-in flags."""
     if not hasattr(args, "contract_prepare"):
         args.contract_prepare = False
+    if not hasattr(args, "source_mode"):
+        args.source_mode = "both"
     return args
 
 
@@ -989,6 +994,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         audio_model=args.audio_model,
         audio_voice=args.audio_voice,
         audio_format=args.audio_format,
+        source_mode=args.source_mode,
     )
     result["daily_pipeline_started"] = True
     code, summary, _stdout = _capture_daily_run(daily_args)
@@ -1299,6 +1305,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Pages branch.")
     parser.add_argument("--remote-url", default=DEFAULT_REMOTE_URL, help="Pages repo remote URL.")
     parser.add_argument("--expected-source-branch", default=DEFAULT_SOURCE_BRANCH, help="Required source repo branch for safety checks.")
+    parser.add_argument(
+        "--source-mode",
+        choices=("auto", "manual", "both"),
+        default="both",
+        help="Source collection mode forwarded to run_daily_gaza.py; default preserves the normal auto-plus-manual flow.",
+    )
     parser.add_argument("--tts-provider", choices=("none", "openai"), default="openai", help="TTS provider used with --generate-audio.")
     parser.add_argument("--audio-model", default="gpt-4o-mini-tts", help="TTS model used with --generate-audio.")
     parser.add_argument("--audio-voice", default="alloy", help="TTS voice used with --generate-audio.")

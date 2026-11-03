@@ -1,0 +1,171 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261102T234451-0800-r11-20261103T074504Z",
+  "scheduled_for": "2026-11-02T23:44:51-08:00",
+  "started_at": "2026-11-02T23:45:04-08:00",
+  "completed_at": "2026-11-03T07:47:07.065Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-02",
+    "start": "2026-11-02T22:50:45.608-08:00",
+    "end": "2026-11-03T07:47:07.065Z",
+    "basis": "From completion of prior verified Gaza Source Watch heartbeat through this run; primary source publisher timezones are not assumed to be UTC/Pacific.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261103-khan-yunis-japanese-neighborhood-imad-omar-ahmed-radi-death",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176590",
+      "title": "Gaza youth dies from injuries sustained in Israeli bombardment of Khan Yunis",
+      "publisher": "Palestine News & Information Agency (WAFA)",
+      "source_date": "2026-11-03",
+      "publication_date": "2026-11-03",
+      "publication_time_reported": "08:58 AM (publisher time; timezone not independently specified)",
+      "event_date": "2026-11-03",
+      "related_injury_event_date": "2026-11-02",
+      "location": "Al-Yabani (Japanese Neighborhood), northwest Khan Yunis, southern Gaza Strip",
+      "affected_population_system": "One Palestinian civilian casualty reported by WAFA: Imad Omar Ahmed Radi, age 39, died from wounds sustained during 2 November bombardment. Civilian status not independently established.",
+      "supporting_passage": "Medical sources reported the death of Imad Omar Ahmed Radi, 39, who succumbed to injuries sustained yesterday",
+      "source_type": "Official Palestinian news agency citing medical sources; single-source attribution",
+      "classification": "follow-up",
+      "new_follow_up_classification": "follow-up: newly reported death from previously reported 2 November Khan Yunis strike",
+      "confidence": "medium",
+      "corroboration": "WAFA medical-source report only; no independent confirmation located in bounded watch",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA latest-news index opened after OCHA/WHO-first checks and 12 supplementary targeted searches",
+        "index_url": "https://english.wafa.ps/Pages/LastNews",
+        "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T224451-0800-r11-20261103T065008Z.json",
+        "prior_heartbeat_completed_at": "2026-11-03T06:50:45.608Z",
+        "related_prior_report_url": "https://english.wafa.ps/Pages/Details/176563",
+        "related_prior_report_note": "2 Nov WAFA reported casualties and wounded from Al-Yabani bombardment, naming Mahmoud Jihad Mahmoud Quffa as a person killed; the new WAFA item names a different person dying on Nov 3 from wounds from that strike.",
+        "duplicate_handling": "Flag new death as follow-up to earlier Al-Yabani incident, not a new airstrike. Not added to aggregate without deduplication; no assertion of whether already included in any Gaza MoH total.",
+        "timestamp_limit": "WAFA page lists 3 Nov 2026 08:58 AM; publisher timezone not explicitly stated."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not primary collector/publisher; no public edits or approval.",
+    "previous_heartbeat": {
+      "run_id": "gaza-source-watch-20261102T224451-0800-r11-20261103T065008Z",
+      "completed_at": "2026-11-03T06:50:45.608Z",
+      "verified_via": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; latest linked situation report posted 31 Oct 2026, dated 29 Oct; no new item in watch window."
+      },
+      {
+        "source": "OCHA OPT situation update index",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Accessible, 31 Oct latest."
+      },
+      {
+        "source": "WHO global oPt overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no new source-dated relevant operational updates in interval."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "502 Bad Gateway, same recurring source restriction as prior heartbeat."
+      }
+    ],
+    "targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"3/November/2026\" Gaza killed injured wounded",
+      "site:english.wafa.ps/Pages/Details/ \"3/November/2026\" Gaza hospital ambulance displaced aid",
+      "site:reuters.com/world/middle-east/ gaza november 3 2026 early morning civilians killed strikes ceasefire",
+      "site:apnews.com/article/ gaza November 3 2026 strike crossing aid hospitals civilians",
+      "site:aljazeera.com/news/2026/11/3/ Gaza casualties ceasefire Israel",
+      "site:news.un.org/en/ Gaza \"3 November 2026\" humanitarian hospital aid",
+      "site:msf.org Gaza \"3 November 2026\" hospital medical supplies closure",
+      "site:unicef.org Gaza \"3 November 2026\" water shelter child",
+      "site:palestinercs.org \"November 3, 2026\" Gaza ambulances",
+      "site:wfp.org Gaza November 3 2026 food delivery distribution shortages",
+      "Gaza November 3 2026 Rafah Kerem Shalom crossing aid fuel medical evacuations news",
+      "Gaza November 3 2026 morning strikes civilian injuries killed November 2 overnight Khan Younis Jabalia Nuseirat detention hostages"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "New top Gaza story dated 3 Nov 08:58 publisher time, directly opened and qualified as a follow-up death."
+      },
+      {
+        "source": "Reuters Nov 2 Gaza casualty item",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+        "result": "Prior documented 2 Nov deaths and strikes; excluded as duplicates."
+      },
+      {
+        "source": "WAFA 2 Nov casualty roundup",
+        "url": "https://english.wafa.ps/Pages/Details/176563",
+        "result": "Earlier Al-Yabani strike recorded, named separate victim; supports follow-up classification."
+      },
+      {
+        "source": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; homepage latest dated 10 Jun 2026."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "403 Forbidden, prior known issue."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "403 Forbidden, prior known issue."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties and displacement",
+      "aid, food, water, infrastructure and crossings",
+      "healthcare, ambulances, fuel, medical evacuation and hospital capacity",
+      "detention, hostages, ceasefire talks and military operations with civilian impact"
+    ],
+    "exclusions": [
+      "Reuters 2 Nov Gaza strikes and WAFA 2 Nov casualty roundup are prior reported events; only subsequent named death on Nov 3 is captured as follow-up.",
+      "WAFA 2 Nov Al-Batn al-Sameen Khan Yunis shooting is prior heartbeat finding, not new.",
+      "Old humanitarian reports, opinions, unverified social claims, and unrelated West Bank stories not findings."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP newsroom",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA newsroom",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News targeted search",
+        "problem": "robots.txt restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "Independent confirmation of the newly reported fatality is outstanding.",
+      "Event/publication clocks supplied by the Palestinian publisher have no explicitly indicated timezone; do not treat them as verified UTC timestamps.",
+      "No finding in other classes means no new verified distinct item recovered within bounded queries, not proof that no change occurred."
+    ],
+    "status_rationale": "DEGRADED due to recurring WHO EMRO 502 and WFP/UNRWA 403 plus UN News robots restriction; the bounded watch otherwise recovered one new reportable follow-up casualty development.",
+    "safeguards": "Single append-only heartbeat on ops/watch-ledger. No approval, schedule disable/change, public publishing, production collector change, or public Pages mutation."
+  }
+}

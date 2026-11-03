@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T034354-0800-r12-recall12-kalamazoo",
+  "scheduled_for": "2026-11-03T03:45:22-08:00",
+  "started_at": "2026-11-03T03:43:54-08:00",
+  "completed_at": "2026-11-03T03:47:11.292-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T02:45:07.133-08:00",
+    "end": "2026-11-03T03:47:11.292-08:00",
+    "basis": "Latest verified preceding supplementary heartbeat through completion, with bounded retrospective checks for previously missed official access-risk notices. Production national collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-cms-mi-kalamazoo-behavioral-health-234047-termination-2026-11-16",
+      "canonical_source_url": "https://www.cms.gov/files/document/kalamazoo-behavioral-health-hospital.pdf",
+      "title": "Kalamazoo Behavioral Health Hospital — Medicare provider agreement termination scheduled for November 16, 2026",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "exact_supporting_passage": "Notice is hereby given that on November 16, 2026, the agreement between Kalamazoo Behavioral Health Hospital, 5802 S 9th St, Kalamazoo, MI 49009 and the Secretary of Health and Human Services, as a psychiatric hospital in the Medicare program, will be terminated.",
+      "source_published_date": "2026-10-30",
+      "state": "Michigan",
+      "city": "Kalamazoo",
+      "county": "Kalamazoo",
+      "territory": null,
+      "event_type": "cms_medicare_psychiatric_hospital_provider_agreement_termination_notice",
+      "service_line": "Inpatient psychiatric / behavioral health hospital services; Medicare reimbursement",
+      "access_consequences": "CMS notice states that Medicare will not make payment for inpatient hospital services for patients admitted on or after 2026-11-16; up to 30 days of covered services may continue for patients admitted earlier. A full hospital closure, current suspension of care, or patient transfers are NOT established by the notice.",
+      "affected_population": "Medicare beneficiaries considering admission to Kalamazoo Behavioral Health Hospital on or after November 16, 2026, and patients admitted earlier whose reimbursement may be affected; number unknown.",
+      "effective_date": "2026-11-16",
+      "announcement_date": "2026-10-30",
+      "confidence": "high",
+      "source_role": "official_federal_primary_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "provider_ccn": "234047",
+      "detail_page_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices/kalamazoo-behavioral-health-hospital",
+      "temporal_note": "Late-discovered October 30 CMS public notice, not a newly announced or executed November 3 service closure. Found by examining the official PDF in this watch. Duplicate check against the immediately previous and selected November 2 watch findings found no matching prior watch finding; full authoritative production deduplication remains unverified.",
+      "source_type_note": "CMS index categorizes the facility as PRTF, while the signed notice describes the participating provider as a psychiatric hospital; the signed notice controls the reimbursement-effect description."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY (CCN 18P001), revised termination effective date, previously recorded 2026-11-02 09:45 PST",
+      "newly_reviewed_older_notice": "Kalamazoo Behavioral Health Hospital, MI (CCN 234047), notice dated October 30, effective November 16; signed CMS PDF was read and visually inspected.",
+      "no_november_3_notice_visible": true
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 3, 2026\" hospital \"emergency department\" closure suspended",
+      "\"November 2, 2026\" \"labor and delivery\" \"closed\" hospital",
+      "\"November 3, 2026\" ambulance service operations suspended closed",
+      "\"November 2, 2026\" psychiatric behavioral hospital unit closed patients",
+      "\"November 3, 2026\" dialysis center \"closed\" patients",
+      "\"November 3, 2026\" oncology cancer center services suspended closed",
+      "\"November 3, 2026\" \"rural hospital\" \"closed\" \"emergency\"",
+      "\"November 2, 2026\" \"air ambulance\" \"base\" \"closed\" OR \"suspended\"",
+      "\"November 3, 2026\" \"primary care clinic\" closed patients",
+      "\"November 3, 2026\" \"Puerto Rico\" OR \"Guam\" OR \"Virgin Islands\" hospital clinic closed",
+      "\"November 3, 2026\" \"reopened\" \"emergency department\" OR \"urgent care\"",
+      "\"November 3, 2026\" Cleveland Clinic Sebastian flooding urgent care reopened OR Health First Viera Palm Bay reopened"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Network for Hope (KY) CMS revised OPO termination",
+        "reason": "Previously watch-reported in Nov 2 09:45 PST heartbeat; duplicate."
+      },
+      {
+        "item": "Roseland Community Hospital maternity suspension, Chicago",
+        "reason": "Previously watch-reported; effective Oct 31."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service suspension, West Virginia",
+        "reason": "Previously watch-reported at Nov 3 02:45 PST; effective Oct 27."
+      },
+      {
+        "item": "Health First outpatient suspensions and Cleveland Clinic Sebastian temporary urgent care closure, Florida",
+        "reason": "Previously watch-reported flooding-related closures; no directly verified new restoration."
+      },
+      {
+        "item": "Planned or anticipated clinic openings, unimplemented service changes, Canadian air-medical business deal",
+        "reason": "No current concrete U.S. essential-service loss or restoration; non-U.S./ownership stories excluded."
+      },
+      {
+        "item": "Florida flood warnings, road closures, and EMS rescue operations",
+        "reason": "No new separately verified clinical facility or ambulance/base closure or reopening beyond previously recorded service losses."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "CMS previously guessed legacy URL",
+        "issue": "Obsolete/unavailable endpoint; correct CMS Public Notices URL was retrieved and examined successfully.",
+        "impact": "None to official notices coverage."
+      }
+    ],
+    "search_quality": "DEGRADED. Twelve bounded searches completed but returned predominantly stale, non-U.S., unrelated or indirect material; rural, territory, dialysis, oncology and ambulance recall is not exhaustive. CMS official source and signed notice were accessible.",
+    "deduplication": {
+      "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-03/care-line-watch-20261103T024244-0800-r11-recall12-bruceton.json",
+      "previous_completed_at": "2026-11-03T02:45:07.133-08:00",
+      "prior_watch_match_found": false,
+      "production_collector_dedupe_verified": false,
+      "disposition": "pending_review; compare official notice and CCN with production records before inclusion; not evidence that facility is closed today."
+    },
+    "controls": "Supplementary recall only. No approval, public publication, schedule change or task disabling."
+  }
+}

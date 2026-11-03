@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T184808-0800-r11-20261103T024808Z",
+  "scheduled_for": "2026-11-02T18:45:54-08:00",
+  "started_at": "2026-11-02T18:48:08-08:00",
+  "completed_at": "2026-11-03T02:49:21.279Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T17:45:35.822-08:00",
+    "end_at": "2026-11-03T02:49:21.279Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since most recent independently read-back verified Food Line Source Watch heartbeat at 17:45:35 PST; 2-day recency search used to allow indexing lag, but qualification requires new or newly substantiated immediate food-access harm since that heartbeat.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value food-access disruptions only; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Loss of only/sole/last/full-service community grocery by closure, fire or disaster",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "Official new SNAP, WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closure fire November 2 2026 local community",
+      "\"last grocery store\" \"closed\" \"November 2\" 2026",
+      "\"sole grocery store\" fire destroyed November 2026 town",
+      "\"full-service grocery\" closure fire November 2 2026 small town",
+      "\"food distribution\" canceled storm November 2 2026 county",
+      "\"food pantry\" closed flood power outage November 2 2026",
+      "\"food bank\" suspended distribution storm November 2 2026",
+      "\"food distribution\" canceled November 2 2026 damage emergency",
+      "\"food pantry\" \"temporarily closed\" November 2 2026",
+      "site:gov \"SNAP\" \"benefits\" interrupted November 2 2026",
+      "site:gov \"WIC\" \"service interruption\" November 2 2026",
+      "\"EBT\" \"outage\" SNAP November 2 2026 state benefits"
+    ],
+    "observation": "All 12 targeted searches returned usable coverage, but no independently verifiable newly reported qualifying U.S. food-access disruption in the window. Matches were mostly older sole-store losses, historical disaster/pantry incidents, routine access resources and unrelated or dated benefits notices. A fresh search crawl alone did not establish a new event.",
+    "excluded_examples": [
+      {
+        "publisher": "WGME/WVII",
+        "source_published_at": "2026-09-03",
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine only grocery closure is a historical September report, not new this hour."
+      },
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, New York only grocery fire reported in September."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Earlier resource/recovery guide, no newly verified suspended emergency distribution."
+      },
+      {
+        "publisher": "Nunatsiaq News",
+        "source_published_at": null,
+        "url": "https://nunatsiaq.com/stories/article/whale-cove-declares-local-state-of-emergency-as-fire-guts-only-grocery-store/",
+        "reason": "Historical fire report from Canada, outside U.S. remit."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T174440-0800-r11-20261103T014440Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T17:45:35.822-08:00",
+      "method": "Inspected branch directory and previous heartbeat; compared search matches by event date, source date, U.S. geography, and already known cases."
+    },
+    "source_failures": [],
+    "limitations": "This bounded recall is not exhaustive; very recent local/provider notices may not yet be indexed. No confirmed positive signal in targeted search coverage.",
+    "production_authority": "No editorial approval, publication, primary pipeline mutation, schedule change, or disabling."
+  }
+}

@@ -12,7 +12,7 @@ $Expected = @(
     [ordered]@{ relative = 'scripts\food_line_continuation_ledger.py'; bytes = 35707; sha256 = 'CC20CBF6DF6366418F8DC8BD63B4524923D9EF9A2C6715CA90040C7E6DC8419D'; canonical_lf_bytes = 34943; canonical_lf_sha256 = '8CF226BD81B96ADE1C7107D4D01687F9F5AC76C469A6525674E0677A97C808B7' },
     [ordered]@{ relative = 'scripts\run_food_line_continuation.py'; bytes = 22740; sha256 = '27ED434AE868AD913167CC263BCBBADBF55B6C58BD43D2556F03AF804B1B10BB'; canonical_lf_bytes = 22242; canonical_lf_sha256 = '5282BF69E4615CBA8F1A554D0EEE8E7C760CDE8BBC1D89A64CCD6557C335207C' },
     [ordered]@{ relative = 'scripts\windows\resume_food_line_daily_current.ps1'; bytes = 2125; sha256 = 'E5FA1257B876BF5C08A5DC60C10AC42C172AE9D5E774766F43EA8DF6D3880E98'; canonical_lf_bytes = 2087; canonical_lf_sha256 = '6F31BF50F17F660DE03289A80213B664F73B8171D434084BECE2A08F3F91D6AC' },
-    [ordered]@{ relative = 'scripts\windows\run_food_care_proof_continuation.ps1'; bytes = 16836; sha256 = '00CD1BF4C87AE3C480F6A861A3266C2EA6E716B43555041C66600627F8A8A73D'; canonical_lf_bytes = 16623; canonical_lf_sha256 = '31B985262729F80164812CC5FB36CDFDF385F4D5D61234EF56D7A32CD8BB3691' }
+    [ordered]@{ relative = 'scripts\windows\run_food_care_proof_continuation.ps1'; bytes = 17099; sha256 = 'CBBA242BABF5A186538C591A1BA8AF940630C880B9D8719A37BAC58788E0509D'; canonical_lf_bytes = 16883; canonical_lf_sha256 = 'B502601A251762D58B72FE3FC6D3503D835D1DDEFB0AD93116DFC0C1D0717D2A' }
 )
 
 function ConvertTo-CanonicalUtf8Lf {
@@ -151,6 +151,33 @@ $validStep = [pscustomobject]@{ stdout_path = $validPath; exit_code = 0 }
 $parsed = Read-StructuredContinuationReceipt -Step $validStep
 if ($parsed.child_continuation_receipt.status -ne 'completed' -or $parsed.continuation_progress.collection_triggered -ne $true) { throw 'valid scheduler envelope was not accepted' }
 
+$prettyPath = Join-Path $evidence 'valid-pretty.stdout.log'
+$prettyJson = $valid | ConvertTo-Json -Depth 12
+$compactJson = $valid | ConvertTo-Json -Depth 12 -Compress
+$prettyJson | Set-Content -LiteralPath $prettyPath -Encoding UTF8
+$prettyParsed = Read-StructuredContinuationReceipt -Step ([pscustomobject]@{ stdout_path = $prettyPath; exit_code = 0 })
+if ($prettyParsed.child_continuation_receipt.status -ne 'completed') { throw 'pretty-printed scheduler envelope was not accepted' }
+
+$framingCases = [ordered]@{
+    'leading-junk' = "diagnostic output`n" + $prettyJson
+    'trailing-junk' = $prettyJson + "`ndiagnostic output"
+    'truncated' = $prettyJson.TrimEnd().Substring(0, $prettyJson.TrimEnd().Length - 1)
+    'multiple-documents' = $compactJson + "`n" + $compactJson
+    'leading-comment' = "/* diagnostic output */`n" + $prettyJson
+    'trailing-comment' = $prettyJson + "`n/* diagnostic output */"
+}
+$framingRejected = @()
+foreach ($case in $framingCases.Keys) {
+    $badFramingPath = Join-Path $evidence ("framing-{0}.stdout.log" -f $case)
+    $framingCases[$case] | Set-Content -LiteralPath $badFramingPath -Encoding UTF8
+    $rejected = $false
+    try { Read-StructuredContinuationReceipt -Step ([pscustomobject]@{ stdout_path = $badFramingPath; exit_code = 0 }) | Out-Null } catch {
+        if ($_.Exception.Message -like '*invalid JSON receipt*') { $rejected = $true } else { throw }
+    }
+    if (-not $rejected) { throw "invalid $case framing was accepted" }
+    $framingRejected += $case
+}
+
 $missingPath = Join-Path $evidence 'missing-child.stdout.log'
 $missing = New-Envelope -SourceIdentity $ExpectedProtectedHead -CollectionTriggered $true
 $missing.Remove('child_continuation_receipt')
@@ -196,6 +223,8 @@ $result = [ordered]@{
     candidate_root = $candidate
     candidate_pins = $pins
     valid_envelope = 'accepted'
+    pretty_envelope = 'accepted'
+    invalid_framing_rejected = $framingRejected
     missing_child_envelope = 'rejected'
     contradictory_envelopes_rejected = $rejectedCases
     pending_envelope = 'accepted'

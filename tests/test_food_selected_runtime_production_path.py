@@ -159,6 +159,16 @@ class SelectedProductionPathTests(unittest.TestCase):
     def test_actual_preflight_status_and_continuation_with_separate_pins(self):
         result, receipt = self.run_scheduler()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        # Real scheduler transport is a whole pretty-printed JSON document,
+        # not JSONL. This platform-independent assertion covers its framing.
+        whole_stdout = json.loads(result.stdout)
+        self.assertEqual(whole_stdout["schema_version"], scheduler.SOURCE_RECEIPT_SCHEMA)
+        self.assertEqual(whole_stdout["child_continuation_receipt"], receipt["child_continuation_receipt"])
+        lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+        self.assertGreater(len(lines), 1)
+        self.assertEqual(lines[-1], "}")
+        with self.assertRaises(json.JSONDecodeError):
+            json.loads(lines[-1])
         self.assertEqual(receipt["source_commit"], self.source_head)
         self.assertEqual(receipt["runtime_source_commit"], self.runtime_head)
         self.assertEqual(receipt["child_command_exit_code"], 0)
@@ -206,7 +216,29 @@ class SelectedProductionPathTests(unittest.TestCase):
             "-ContinuationRunDirectory", str(self.directory) + os.sep,
             "-ExpectedProtectedHead", self.source_head, "-ExpectedRuntimeHead", self.runtime_head,
         ], cwd=self.root, env=self.env, capture_output=True, text=True, timeout=120)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        diagnostic = ""
+        if result.returncode != 0:
+            # Only synthetic fixture logs are inspected. Report bounded framing
+            # metadata and stderr, not full receipt bodies or environment values.
+            details = []
+            for log in sorted(operator_root.rglob("food_resume.*.log")):
+                raw = log.read_bytes()
+                text = raw.decode("utf-8-sig", errors="replace")
+                row = {"file": log.name, "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
+                if log.name.endswith("stdout.log"):
+                    nonempty = [line.strip() for line in text.splitlines() if line.strip()]
+                    row["nonempty_lines"] = len(nonempty)
+                    row["last_line"] = nonempty[-1][:160] if nonempty else ""
+                    try:
+                        value = json.loads(text)
+                        row["whole_document_json"] = isinstance(value, dict)
+                    except json.JSONDecodeError as error:
+                        row["parse_error"] = str(error)[:240]
+                else:
+                    row["stderr_tail"] = text[-1200:]
+                details.append(row)
+            diagnostic = "\nSynthetic inner transport diagnostics: " + json.dumps(details, sort_keys=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr + diagnostic)
         self.assertFalse(self.network_marker.exists())
         paths = list(operator_root.rglob("food-care-proof-continuation-receipt.json"))
         self.assertEqual(len(paths), 1)
@@ -218,7 +250,7 @@ class SelectedProductionPathTests(unittest.TestCase):
         self.assertEqual(operator["steps"][0]["exit_code"], 0)
         self.assertFalse(operator["public_side_effects"]["collection_triggered"])
         scheduler_stdout = Path(operator["steps"][0]["stdout_path"]).read_text(encoding="utf-8-sig")
-        receipt = json.loads(scheduler_stdout.strip().splitlines()[-1])
+        receipt = json.loads(scheduler_stdout)
         self.assertEqual(receipt["runtime_source_commit"], self.runtime_head)
         self.assertEqual(receipt["source_commit"], self.source_head)
         self.assertEqual(receipt["child_command_exit_code"], 0)
@@ -227,6 +259,16 @@ class SelectedProductionPathTests(unittest.TestCase):
         self.assertFalse((self.state_path.parent / "continuation-agent-export.json").exists())
         self.assertFalse((self.root / "output").exists())
         self.assertEqual(self.git("diff", "--exit-code"), "")
+
+    def test_operator_receipt_parser_consumes_complete_stdout_document(self):
+        text = (ROOT / "scripts/windows/run_food_care_proof_continuation.ps1").read_text()
+        parser = text.split("function Read-StructuredContinuationReceipt {", 1)[1].split("\ntry {", 1)[0]
+        self.assertIn("$document = $stdoutText.Trim()", parser)
+        self.assertIn("$document | ConvertFrom-Json -ErrorAction Stop", parser)
+        self.assertIn("$document.StartsWith('{')", parser)
+        self.assertIn("$document.EndsWith('}')", parser)
+        self.assertNotIn("$lines", parser)
+        self.assertNotIn("-split", parser)
 
     def test_operator_rejects_runtime_pin_without_selection_before_default_actions(self):
         text = (ROOT / "scripts/windows/run_food_care_proof_continuation.ps1").read_text()

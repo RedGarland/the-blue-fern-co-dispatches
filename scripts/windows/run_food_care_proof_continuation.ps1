@@ -133,9 +133,12 @@ function Invoke-ContinuationStep {
 function Read-StructuredContinuationReceipt {
     param([Parameter(Mandatory)][object]$Step)
     $stdoutText = Get-Content -LiteralPath ([string]$Step.stdout_path) -Raw -ErrorAction Stop
-    $lines = @($stdoutText -split "`r?`n" | Where-Object { $_.Trim() })
-    if ($lines.Count -eq 0) { throw "food_resume produced no structured receipt" }
-    try { $receipt = $lines[$lines.Count - 1] | ConvertFrom-Json -ErrorAction Stop } catch { throw "food_resume produced invalid JSON receipt" }
+    if ([string]::IsNullOrWhiteSpace($stdoutText)) { throw "food_resume produced no structured receipt" }
+    # Scheduler stdout is one complete JSON document, possibly pretty-printed.
+    # Never recover a final line/object from mixed or truncated diagnostic output.
+    $document = $stdoutText.Trim()
+    if (-not $document.StartsWith('{') -or -not $document.EndsWith('}')) { throw "food_resume produced invalid JSON receipt" }
+    try { $receipt = $document | ConvertFrom-Json -ErrorAction Stop } catch { throw "food_resume produced invalid JSON receipt" }
     if ($receipt.schema_version -ne "food_line_source_watch_receipt_v1" -or $receipt.action -ne "status_resume") { throw "food_resume receipt schema is not bound source-watch continuation" }
     if ($receipt.execution_mode -ne "collection_only") { throw "food_resume receipt is not collection-only" }
     if ($receipt.runtime_source_commit -ne $ExpectedRuntimeHead) { throw "food_resume runtime identity differs from ExpectedRuntimeHead" }

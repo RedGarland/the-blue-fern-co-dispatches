@@ -47,10 +47,10 @@
       "candidate_path": "scripts/windows/run_food_care_proof_continuation.ps1",
       "base_bytes": 8447,
       "base_sha256": "28AE56FF86069384A709D1F6FAD2C8FAD75E2D83E753BE29F8BB2ADB0E688322",
-      "candidate_bytes": 16836,
-      "candidate_sha256": "00CD1BF4C87AE3C480F6A861A3266C2EA6E716B43555041C66600627F8A8A73D",
-      "canonical_lf_bytes": 16623,
-      "canonical_lf_sha256": "31B985262729F80164812CC5FB36CDFDF385F4D5D61234EF56D7A32CD8BB3691"
+      "candidate_bytes": 17099,
+      "candidate_sha256": "CBBA242BABF5A186538C591A1BA8AF940630C880B9D8719A37BAC58788E0509D",
+      "canonical_lf_bytes": 16883,
+      "canonical_lf_sha256": "B502601A251762D58B72FE3FC6D3503D835D1DDEFB0AD93116DFC0C1D0717D2A"
     }
   ],
   "reviewed_pr_head": "6118be08f95d5a3ab2276b8c2f8890fd11a2a6a4",

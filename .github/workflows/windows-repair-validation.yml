@@ -1,0 +1,37 @@
+name: Disposable Windows repair validation
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [add/pages-repo-default]
+permissions:
+  contents: read
+jobs:
+  disposable_repair:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'ci/disposable-repair-validation-20261030'
+    runs-on: windows-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: cmd
+        working-directory: tests/repair_validation
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run six disposable native cases once
+        run: |
+          python test_windows_disposable.py --run-disposable > synthetic-receipt.txt 2>&1
+          set TEST_EXIT=%ERRORLEVEL%
+          type synthetic-receipt.txt
+          exit /b %TEST_EXIT%
+      - name: Preserve synthetic test receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: disposable-repair-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: tests/repair_validation/synthetic-receipt.txt
+          if-no-files-found: error
+          retention-days: 7

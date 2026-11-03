@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T054530-0800-r11-recall12",
+  "scheduled_for": "2026-11-03T05:45:22-08:00",
+  "started_at": "2026-11-03T05:45:30-08:00",
+  "completed_at": "2026-11-03T05:47:29.083-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T04:50:19.782-08:00",
+    "end": "2026-11-03T05:47:29.083-08:00",
+    "basis": "Since most recent verified supplementary Care Line heartbeat; retrospective source discovery checked for late-breaking confirmations. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO termination; already logged in earlier watch; next most recent notices dated 2026-10-30.",
+      "disposition": "No new CMS public notice since previous watch. Prior Kalamazoo and Network for Hope notices excluded as previously tracked; older hospice, home-health and CLIA notices not newly qualifying this interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department closed suspended patients rural US",
+      "November 3 2026 hospital labor delivery maternity services closing suspended",
+      "November 3 2026 ambulance EMS service ceased suspended closed operations",
+      "November 3 2026 urgent care outpatient primary care clinic shut flooding closure",
+      "November 3 2026 dialysis center treatments suspended closure patients",
+      "November 3 2026 behavioral health mental health inpatient unit service closed suspended",
+      "Nov 2 2026 Nov 3 2026 oncology cancer center clinic temporarily closed chemotherapy USA",
+      "November 2026 air ambulance helicopter base suspended services closed state emergency medical",
+      "Nov 3 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital clinic service suspension closure",
+      "November 3 2026 emergency department or hospital reopens after closure restored services",
+      "November 2 2026 rural hospital closes emergency department services local news",
+      "November 3 2026 hospital clinic closure flooding Arizona Florida urgent care health update"
+    ],
+    "official_provider_followup": {
+      "url": "https://www.wihcc.com/",
+      "observed": "The November 2, 5:30 p.m. WIHCC flooding update remains posted without a newer operational notice. The November 3 Leupp, Winslow and Dilkon disruptions were recorded in the immediately prior heartbeat; no independently confirmed restoration."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center, Leupp Clinic and Dilkon Medical Center, AZ",
+        "reason": "Three November 3 flooding-related service disruptions already recorded in previous watch; no new update."
+      },
+      {
+        "item": "Roseland Community Hospital maternity unit, IL",
+        "reason": "October 31 closure already watch-recorded."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian and Health First flood-related outpatient suspensions, FL",
+        "reason": "November 2 suspensions already watch-recorded; no confirmed substantive reopening."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, WV",
+        "reason": "October 27 suspension already watch-recorded."
+      },
+      {
+        "item": "Kalamazoo Behavioral Health Hospital, MI and Network for Hope, KY",
+        "reason": "Previously recorded CMS notices; no new notice or rescission."
+      },
+      {
+        "item": "Community Medical Center pediatric ICU, Missoula MT",
+        "reason": "October closure reported November 2; previously reviewed/excluded as outside the bounded observation window."
+      },
+      {
+        "item": "Kula Hospital, HI",
+        "reason": "Restoration contract and projected late-summer 2027 reopening, not a current confirmed reopening."
+      },
+      {
+        "item": "Dauphin Regional Health Centre dialysis restoration",
+        "reason": "Canada, outside U.S. and territories."
+      },
+      {
+        "item": "Other search results about acquisitions, costs, policy proposals, international closures and older incidents",
+        "reason": "No verified newly effective U.S. healthcare-service access change in the observation window."
+      }
+    ],
+    "search_quality": "CMS index and WIHCC official operational page accessible. Twelve targeted searches completed, but returns contained stale, international and contextual results; especially weak recall for territories, air-medical, dialysis and oncology. Bounded supplementary watch, not exhaustive coverage.",
+    "source_failures": [],
+    "production_collector_dedupe_verified": false,
+    "controls": "No approvals, public publication, schedule changes or disabling; exactly one new private watch heartbeat created on ops/watch-ledger."
+  }
+}

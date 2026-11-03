@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T234755-0800-r12-recall12",
+  "scheduled_for": "2026-11-02T23:45:22-08:00",
+  "started_at": "2026-11-02T23:47:55-08:00",
+  "completed_at": "2026-11-02T23:49:23.594-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T22:49:45-08:00",
+    "end": "2026-11-02T23:49:23.594-08:00",
+    "basis": "From previous verified supplementary heartbeat completion to current observation. Bounded retrospective recall of recent access changes; production national collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination notice (CCN 18P001)",
+      "disposition": "Existing previously recorded Nov 2 notice; no newer notice was visible at this check. Earlier Oct 30 facility termination notices also predate the observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency room closures suspended services November 2 2026 November 3 2026 emergency department",
+      "maternity labor delivery closure November 2 2026 US hospital new",
+      "dialysis oncology clinic outpatient services closed reopening November 2 2026",
+      "behavioral health psychiatric hospital services closure suspension November 2 2026",
+      "ambulance service EMS station base shutdown suspended Nov 2 2026 Nov 3 2026 United States",
+      "air ambulance medical helicopter base closure grounded November 2 2026 United States",
+      "rural emergency department hospital closed lost service November 2 2026 state",
+      "Health First Brevard flood medical group Tuesday November 3 updated reopening November 2 2026",
+      "(Puerto Rico OR Guam OR U.S. Virgin Islands OR American Samoa OR Northern Mariana Islands) hospital clinic ambulance service closed suspended November 2 2026",
+      "Alaska Montana Wyoming North Dakota Idaho rural hospital emergency ambulance closure November 2 2026",
+      "primary care clinic closure family medicine November 2 2026 announced effective November 2026",
+      "hospital emergency dialysis maternity reopen resumed restored care November 2 2026 United States"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital labor and delivery services, Chicago IL",
+        "reason": "Oct 31 closure and November 2 evening WTTW coverage already recorded by earlier watch; duplicate with no newly verified change.",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Health First Medical Group and outpatient service suspensions, Brevard County FL",
+        "reason": "Previously recorded flooding closure extension through at least Nov 3 10 a.m.; the 10 a.m. time is tentative future reopening, not confirmed service restoration during this window.",
+        "url": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/"
+      },
+      {
+        "item": "Winchester Family Medicine clinic, Winchester NH",
+        "reason": "Permanent closure effective Nov 6 had already been publicly announced on October 16, before this hourly window. No newly dated or effective change found.",
+        "url": "https://mykeenenow.com/news/219912-cheshire-medical-center-to-close-winchester-family-medicine-clinic-in-november/"
+      },
+      {
+        "item": "PHI Air Medical base, Red Bluff CA",
+        "reason": "Closure occurred September 14, 2026; older than hourly window, with no new access change verified.",
+        "url": "https://avi-go.com/news/articles/beace79c9282552d4e3da210067625ca"
+      },
+      {
+        "item": "Hocking Valley Community Hospital ED, Logan OH",
+        "reason": "November 1 management transition; press release explicitly states emergency services remain available 24/7, so no loss or restoration.",
+        "url": "https://www.accessnewswire.com/newsroom/en/healthcare-and-pharmaceutical/ohio-emergency-medicine-services-to-lead-emergency-department-at-hock-1244408"
+      },
+      {
+        "item": "Rural hospital financial-risk and policy stories",
+        "reason": "Reports and polling discuss potential future closures without a new concrete access change; excluded."
+      }
+    ],
+    "source_failures": [],
+    "search_quality": "DEGRADED: all searches returned results, but considerable irrelevant, non-US, old, proposed and duplicate results; rural and U.S. territorial one-hour recall remains low confidence. Continuing search-precision limitation, not newly material source outage.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T224821-0800-r12-recall12.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T22:49:45-08:00",
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only, not primary collector. No editorial approval, publication, schedule modification, or task disabling."
+  }
+}

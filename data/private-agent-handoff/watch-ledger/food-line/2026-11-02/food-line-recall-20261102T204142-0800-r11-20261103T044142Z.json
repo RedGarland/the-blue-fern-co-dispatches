@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T204142-0800-r11-20261103T044142Z",
+  "scheduled_for": "2026-11-02T20:41:42-08:00",
+  "started_at": "2026-11-02T20:41:42-08:00",
+  "completed_at": "2026-11-03T04:42:56.032Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T19:44:29.597-08:00",
+    "end_at": "2026-11-03T04:42:56.032Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior independently verified hourly heartbeat completed at 19:44:29.597 PST on November 2; search recency extended 2 days for indexing lag, but only new immediate food-access impacts in the interval qualify.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall; primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Closure, fire, disaster, or loss of only/sole/last/full-service grocery store",
+      "Emergency food distribution cancellation/suspension due to storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closes fire November 2 2026 town",
+      "\"last grocery store\" \"closed\" fire November 2026",
+      "\"sole grocery store\" burned shut November 2026",
+      "\"only supermarket\" closes community November 2 2026",
+      "\"food distribution\" canceled storm flood November 2 2026",
+      "\"emergency food distribution\" postponed canceled weather November 2026",
+      "\"food pantry\" closed fire flood November 2 2026",
+      "\"food bank\" suspend services power outage November 2026",
+      "\"food pantry\" \"temporarily closed\" November 2 2026 storm outage",
+      "\"distribution canceled\" \"food bank\" November 2 2026",
+      "site:gov \"SNAP\" \"benefits\" \"interruption\" \"November 2, 2026\"",
+      "site:gov \"WIC\" \"outage\" \"November 2, 2026\" food"
+    ],
+    "observation": "Twelve targeted searches completed; no newly verified, qualifying U.S. food-access interruption since the prior hourly check. Search retrieval returned dated older incidents, unrelated policy materials, and an expansion of pantry services, not a newly qualifying disruption.",
+    "excluded_examples": [
+      {
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Only-grocery-store fire report dates to September, not new this hour."
+      },
+      {
+        "publisher": "WGME/WVII",
+        "source_published_at": "2026-09-03",
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "September notice concerning Eastport, Maine, closing at the end of September, not a newly reported November 2 disruption."
+      },
+      {
+        "publisher": "Flathead Beacon",
+        "source_published_at": "2026-11-01",
+        "url": "https://flatheadbeacon.com/2026/11/01/flathead-food-bank-to-launch-hungry-horse-location/",
+        "reason": "New food-bank location opening November 3, with existing mobile pantry continuing, is service expansion, not access loss."
+      },
+      {
+        "publisher": "Texas Tribune",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "SNAP benefits interruption described in 2025, not 2026."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T194305-0800-r11-20261103T034305Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T19:44:29.597-08:00",
+      "method": "Read ops/watch-ledger directory and preceding heartbeat; screen for novelty, article/event dates, direct food-access effect, and duplications."
+    },
+    "source_failures": [],
+    "limitations": "Supplementary web-index searches cannot rule out just-issued provider posts or unindexed local notices. Search results were frequently stale or irrelevant despite time-scoped queries.",
+    "production_authority": "No approval, publication, production collector change, schedule alteration, or disabling."
+  }
+}

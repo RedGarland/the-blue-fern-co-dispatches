@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T104451-0800-r11-20261103T184154Z",
+  "scheduled_for": "2026-11-03T10:44:51-08:00",
+  "started_at": "2026-11-03T10:41:54-08:00",
+  "completed_at": "2026-11-03T10:43:58-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T09:45:42-08:00",
+    "end": "2026-11-03T10:43:58-08:00",
+    "basis": "Beginning at the prior verified Gaza heartbeat's completed_at; evaluated publication/event chronology and excluded earlier and previously recorded developments. Search indexing can lag. This execution was started by the automation runtime before its nominal hourly DTSTART offset.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; primary Gaza production collector/publisher remains authoritative.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T094451-0800-r11-20261103T174454Z.json",
+      "completed_at": "2026-11-03T09:45:42-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Read exact prior JSON from the connected GitHub repository on ops/watch-ledger."
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. News/updates homepage still led with October 31 publication of October 29 report; no Gaza source update timestamped within watch window. Official site-specific targeted discovery also yielded no new dated item."
+      },
+      {
+        "source": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct open returned HTTP 502 (recurring access restriction). WHO site-specific targeted search was checked; no new verified health-system change in the watch window."
+      },
+      {
+        "source": "WHO global conflict emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Overview and links available; no fresh time-bounded Gaza service or evacuation change established."
+      },
+      {
+        "source": "WHO global news",
+        "url": "https://www.who.int/news",
+        "result": "Accessible. Listed items were not new Gaza health events."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza November 3 2026 latest casualties strike Khan Younis",
+      "site:palestinercs.org Gaza 3 November 2026 ambulance medical aid access",
+      "site:unicef.org Gaza 3 November 2026 water children humanitarian",
+      "site:wfp.org Gaza November 3 2026 food aid crossings supplies",
+      "site:unrwa.org Gaza 3 November 2026 displacement shelter humanitarian",
+      "site:msf.org Gaza November 3 2026 medical health hospital",
+      "site:icrc.org Gaza 3 November 2026 detainees hostages civilians access",
+      "site:reuters.com Gaza November 3 2026 ceasefire aid civilian deaths",
+      "site:apnews.com Gaza November 3 2026 airstrike civilians negotiations",
+      "site:aljazeera.com/news/2026/11/3 Gaza strike displaced aid November 3",
+      "site:theguardian.com/world/2026/nov/03 Gaza Israel ceasefire humanitarian",
+      "site:news.un.org/en Gaza November 3 2026 humanitarian situation hospitals food"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; most recent indexed item 18:52 Palestine-local on November 3 was West Bank olive harvest attacks. Gaza Khan Younis strike, casualty-statistics bulletin, and wounded-person death items were all previously recorded in prior watch cycles."
+      },
+      {
+        "source": "PRCS homepage",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; November 3 Saudi KSrelief logistics support announcement was already captured by 03:44 PST Gaza watch, so no new finding."
+      },
+      {
+        "source": "MSF latest",
+        "url": "https://www.msf.org/latest",
+        "result": "Accessible, no distinct current-window Gaza operational change."
+      },
+      {
+        "source": "ICRC OPT",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible, no distinct current-window detention, release, or civilian protection event verified."
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403, recurring restriction. Site-targeted search did not establish a new Gaza development."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403, recurring restriction. Site-targeted search did not establish a new Gaza development."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Robots/access restriction on site-targeted discovery, previously observed."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties and military operations with civilian impact",
+      "displacement/shelter and infrastructure damage",
+      "aid/crossing/fuel/food/water access",
+      "hospitals, ambulances, functioning capacity and medical evacuations",
+      "detention/hostages, ceasefire or negotiation changes with verified civilian effects"
+    ],
+    "exclusions": [
+      "WAFA November 3 Applied College strike in western Khan Younis killing three, reported earlier in 04:44 watch; duplicate.",
+      "WAFA November 3 Gaza 48-hour casualty statistics, previously reported in 04:44 watch; duplicate.",
+      "PRCS November 3 KSrelief logistics support, previously reported in 03:44 watch; duplicate.",
+      "Al Jazeera November 3 weekly retrospective covering prior Gaza incidents, earlier PRCS hospital/fuel warnings, and West Bank news; no independently established new event in current observation interval.",
+      "WAFA November 3 18:52 Palestine-local item concerned West Bank olive harvesters, outside Gaza scope.",
+      "Earlier US-Israel aid announcement and Palestinian cabinet warnings did not establish a distinct new civilian/humanitarian operational development within this interval.",
+      "Opinion, unsupported social posts, date-ambiguous material and undated/recycled information excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News",
+        "problem": "Robots restriction for targeted discovery",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "No new verifiable qualifying development identified; absence of a finding does not establish absence of events.",
+      "Recency-indexed searches may omit late-published stories; some source sites remain directly inaccessible. WHO global, OCHA, WAFA, PRCS, MSF and ICRC provided useful alternative coverage.",
+      "News from Nov 3 elsewhere may have been published after the observation cutoff or have unclear publisher timestamps."
+    ],
+    "status_rationale": "DEGRADED owing to longstanding WHO EMRO, WFP, UNRWA and UN News restrictions. No newly material deterioration relative to prior verified heartbeat; coverage otherwise completed.",
+    "safeguards": "Exactly one append-only JSON heartbeat on ops/watch-ledger. No changes to production collection/publication, public pages, editorial approval, task schedule or automation settings."
+  }
+}

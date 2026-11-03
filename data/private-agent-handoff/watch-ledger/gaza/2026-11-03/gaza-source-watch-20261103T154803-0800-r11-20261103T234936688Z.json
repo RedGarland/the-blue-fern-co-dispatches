@@ -1,0 +1,148 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T154803-0800-r11-20261103T234936688Z",
+  "scheduled_for": "2026-11-03T15:44:51-08:00",
+  "started_at": "2026-11-03T15:48:03-08:00",
+  "completed_at": "2026-11-03T15:49:36.688-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T14:46:06.898-08:00",
+    "end": "2026-11-03T15:49:36.688-08:00",
+    "basis": "From the immediately preceding verified Gaza hourly heartbeat's completion on 2026-11-03 14:46:06.898 PST to this observation close, allowing detection of late-indexed evidence about events in that interval.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. The production daily Gaza collector and publisher remain authoritative.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T144429-0800-r11-20261103T224606898Z.json",
+      "completed_at": "2026-11-03T14:46:06.898-08:00",
+      "verification": "Exact file fetched from GitHub branch ops/watch-ledger during this execution."
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest posted 31 October 2026 (report dated 29 October). No current-window Gaza update found."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, same recurring problem as preceding verified watch."
+      },
+      {
+        "source": "WHO global Israel/oPt situation",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; indexed WHO situation-linked news, regional updates, speeches and publications predate current window; no confirmed window-new hospital, medical evacuation, ambulance, fuel, or functional capacity change."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza November 3 2026 humanitarian situation report access casualties 2026",
+      "site:who.int Gaza November 3 2026 health situation hospitals medical evacuations 2026"
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza \"November 3, 2026\" killed injured drone after noon",
+      "site:palestinercs.org/en 3 November 2026 Gaza ambulance hospital operations aid fuel",
+      "site:unicef.org Gaza 3 November 2026 children water displaced school",
+      "site:wfp.org Gaza 3 November 2026 food aid border crossing access",
+      "site:unrwa.org 3 November 2026 Gaza displacement shelter aid water",
+      "site:msf.org Gaza 3 November 2026 hospital medical evacuation care",
+      "site:icrc.org 3 November 2026 Gaza detainees hostages access humanitarian",
+      "site:reuters.com Gaza November 3 2026 ceasefire airstrike displaced aid Palestinians",
+      "site:apnews.com/article/ Gaza November 3 2026 attack aid crossing deaths November 4",
+      "site:aljazeera.com/news/2026/11/3 Gaza November 3 2026 killed ceasefire humanitarian",
+      "site:theguardian.com/world/2026/nov/03 Gaza aid crossings hospital conflict",
+      "site:news.un.org/en/ 3 November 2026 Gaza humanitarian health casualty aid"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA Latest News",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible. Latest list Gaza-specific items were 3 November 13:48 Palestine time (Khan Younis deaths, cabinet statement) and 13:12 casualty totals; all previously captured or known, before watch window. Later listed stories are West Bank, regional politics, or unrelated."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest Gaza-related 3 November Saudi/KSrelief operational support announcement, already captured by earlier watch. No new delivery/implementation confirmed."
+      },
+      {
+        "source": "MSF latest",
+        "url": "https://www.msf.org/latest",
+        "result": "Accessible; 3 November item concerns Ukraine. Gaza situation page last updated 28 September 2026, not current-window event."
+      },
+      {
+        "source": "ICRC",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no date-confirmed current-window Gaza-specific detainee, crossing, or humanitarian operation change."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Targeted search robots.txt restricted, recurring."
+      }
+    ],
+    "category_coverage": [
+      "Civilian deaths and injuries, strike impacts and military activity with documented civilian effects",
+      "Displacement, shelter needs, infrastructure damage and food/water access",
+      "Aid and crossing access, operational logistics and fuel",
+      "Health-care service capacity, hospitals, ambulances, transport and medical evacuations",
+      "Detention/hostages and ceasefire or negotiation developments with traceable civilian effects"
+    ],
+    "exclusions_and_dedupe": [
+      "WAFA 3 November Khan Younis Applied College drone strike with three killed and others injured, already captured at 04:44 hourly watch.",
+      "WAFA 3 November hospital intake (six deaths and 27 injuries over 48 hours) and cumulative casualty tally, already captured at 04:44 watch.",
+      "PRCS 3 November Saudi/KSrelief operational support announcement, already captured at 03:44 watch.",
+      "Al Jazeera 3 November weekly recap describes older October/early November casualties and a 2 November PRCS health-system warning; not a new event in this hour.",
+      "Older OCHA/WHO material, West Bank-only events, recycled reports, undated coverage, opinions and social-only claims."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502 Bad Gateway",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403 Forbidden",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403 Forbidden",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News targeted search",
+        "problem": "robots.txt block",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "No distinct newly verifiable qualifying development identified by this bounded source check; absence from accessible sources does not prove none occurred.",
+      "Search index lag and recurring access failures may prevent detection; accessible OCHA, WHO global, WAFA, PRCS, MSF and ICRC sources provided useful alternative coverage.",
+      "Exactly two official-first OCHA and WHO searches followed by twelve additional targeted searches; other publisher inspections were direct page opens."
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO, WFP, UNRWA and UN News could not be accessed through attempted methods; these failures are recurring and not newly material. The remainder of coverage was useful.",
+    "notification_decision": "No new qualifying development and no newly material deterioration; suppress notification.",
+    "safeguards": "One new append-only JSON on ops/watch-ledger only. No production/publications, content approvals, scheduling, or automation state changed."
+  }
+}

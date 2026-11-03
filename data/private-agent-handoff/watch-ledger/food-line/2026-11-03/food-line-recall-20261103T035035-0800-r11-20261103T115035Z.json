@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T035035-0800-r11-20261103T115035Z",
+  "scheduled_for": "2026-11-03T03:45:54-08:00",
+  "started_at": "2026-11-03T03:50:35-08:00",
+  "completed_at": "2026-11-03T03:52:45.920-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T01:44:03.901-08:00",
+    "end_at": "2026-11-03T03:52:45.920-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative overlap from the latest prior ops/watch-ledger heartbeat read back and verified for this execution (Nov 3 01:44:03.901 PST). Schedule metadata indicates an intervening hourly execution around 02:52 PST but its exact GitHub heartbeat filename was not discoverable through the connected file interface. Results were screened for genuinely new events rather than publication freshness alone.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall for four audit miss classes only. The nationwide production Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Emergency food distribution cancellation/suspension due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed": 0
+    },
+    "bounded_query_context": [
+      "November 3 2026 \"only grocery store\" closed fire town",
+      "November 2 2026 \"last grocery store\" closure town supermarket",
+      "November 3 2026 \"sole grocery\" fire closed community",
+      "November 2 2026 food pantry closes suddenly service suspended",
+      "November 3 2026 food bank pantry closed indefinitely outage damage",
+      "November 3 2026 food distribution canceled storm flood outage",
+      "November 2 2026 emergency food distribution canceled weather closures",
+      "November 3 2026 SNAP EBT benefits outage delayed state announcement",
+      "November 3 2026 WIC benefits interrupted suspended system state",
+      "site:gov November 3 2026 SNAP WIC benefits delayed outage notice",
+      "site:kauainownews.com/2026/11/03 foodbank food pantry canceled distribution hurricane Lowell",
+      "2026 November 3 2026 \"food pantry\" \"closed\" \"storm\" \"distribution\" Hawaii"
+    ],
+    "result": "12 targeted searches returned usable discovery results; no newly dated, directly verifiable qualifying food-access disruption within the checked window.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "publisher": "The Salt Lake Tribune",
+        "reason": "Nov 2 article describes reopening of a Salvation Army pantry that closed months previously; not a new abrupt service loss since last hourly check."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "publisher": "WBNG",
+        "reason": "Spencer, NY, sole grocery store destroyed in September 2026, preexisting incident."
+      },
+      {
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "reason": "Oct 29 update documents emergency food distribution continuing, not a newly canceled distribution."
+      },
+      {
+        "publisher": "Multiple October–November 2025 publications",
+        "reason": "Prior-year shutdown-related SNAP delays and generic benefit articles, not a new 2026 official interruption."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T014249-0800-r11-20261103T094249Z.json",
+      "completed_at": "2026-11-03T01:44:03.901-08:00"
+    },
+    "source_failures": [],
+    "limitations": "A 12-query targeted search is not exhaustive national surveillance. Web index recency did not guarantee event freshness, and unindexed provider notices may be missed. The conservative window was extended to the latest independently readable prior heartbeat.",
+    "production_authority": "No approvals, publishing, scheduling changes, task disabling or production collector changes."
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T004451-0800-r11-20261103T084241Z",
+  "scheduled_for": "2026-11-03T00:44:51-08:00",
+  "started_at": "2026-11-03T00:42:41-08:00",
+  "completed_at": "2026-11-03T08:45:26.672Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-02T23:47:07.065-08:00",
+    "end": "2026-11-03T00:45:26.672-08:00",
+    "basis": "Prior verified Gaza Source Watch heartbeat completion through current bounded observation; do not infer Pacific time from unspecified publisher-local clocks.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; daily Gaza collector/publisher remains authoritative.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-02/gaza-source-watch-20261102T234451-0800-r11-20261103T074504Z.json",
+      "run_id": "gaza-source-watch-20261102T234451-0800-r11-20261103T074504Z",
+      "completed_at": "2026-11-03T07:47:07.065Z",
+      "prior_finding_id": "gaza-20261103-khan-yunis-japanese-neighborhood-imad-omar-ahmed-radi-death",
+      "verified_via": "GitHub fetch_file on ops/watch-ledger"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT homepage",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Most recent linked situation report posted 31 Oct 2026 (covering 29 Oct); no new report within this interval."
+      },
+      {
+        "source": "OCHA OPT updates index",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Accessible. Latest listing dated 31 Oct 2026."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; recurring prior source restriction."
+      },
+      {
+        "source": "WHO global oPt situation",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no verified new health-system/crossing/medical-evacuation change during interval."
+      }
+    ],
+    "targeted_search_count": 12,
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"3/November/2026\" Gaza killed wounded Khan Yunis hospital",
+      "site:english.wafa.ps/Pages/Details/ \"3/November/2026\" Gaza Rafah aid displaced water",
+      "site:reuters.com/world/middle-east/ Gaza November 3 2026 killed ceasefire humanitarian",
+      "site:apnews.com/article/ Gaza November 3 2026 strikes civilians aid",
+      "site:aljazeera.com/news/2026/11/3/ Gaza killed wounded ceasefire evacuation",
+      "site:news.un.org/en/ \"3 November 2026\" Gaza aid hospitals crossing",
+      "site:msf.org Gaza November 3 2026 hospital medicines evacuation",
+      "site:unicef.org Gaza 3 November 2026 drinking water displaced children",
+      "site:palestinercs.org Gaza November 3 2026 ambulances emergency",
+      "Gaza November 3 2026 Rafah Kerem Shalom crossing aid fuel medical evacuations WHO",
+      "Gaza November 3 2026 Tuesday 09:00 10:00 Israel ceasefire hostages crossing new updates",
+      "Gaza November 3 2026 early morning Israeli airstrikes casualties northern Gaza Jabalia Khan Younis medical sources"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest news index",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest posted 3 Nov 09:59 publisher clock concerns West Bank; Gaza death report dated 08:58 already recorded in prior heartbeat."
+      },
+      {
+        "source": "WAFA earlier Gaza death follow-up",
+        "url": "https://english.wafa.ps/Pages/Details/176590",
+        "result": "Imad Omar Ahmed Radi death from 2 Nov Khan Yunis bombardment is prior finding; same page mentions artillery/naval shelling without new independently timed or verified incident. Excluded as duplicate/insufficient newness."
+      },
+      {
+        "source": "Reuters 2 Nov casualty roundup",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-gaza-medics-say-2026-11-02/",
+        "result": "Four deaths from Nov 2 strikes; report and event predate watch window. Excluded."
+      },
+      {
+        "source": "PRCS homepage",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no newly dated qualifying update recovered."
+      },
+      {
+        "source": "UNICEF Gaza overview",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible overview; broad ongoing needs, not a newly dated event."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring source restriction."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; recurring source restriction."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties, displacement and documented civilian impact",
+      "aid, food, water, infrastructure and crossings",
+      "hospital functioning, ambulances, transport, fuel, medical evacuation",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "exclusions": [
+      "3 Nov WAFA Imad Omar Ahmed Radi follow-up death is prior verified heartbeat finding; do not re-report.",
+      "2 Nov Reuters four-death report and WAFA earlier Khan Yunis incidents predate interval; no duplicate case added.",
+      "West Bank reports, opinion, unsupported social allegations, undated general conditions, and older humanitarian material excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP newsroom",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA newsroom",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News targeted search",
+        "problem": "robots.txt access restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "No distinct source-verified qualifying development found within bounded coverage; this is not evidence of no events.",
+      "Publisher-local timestamps without explicit timezone were not assumed equivalent to America/Los_Angeles.",
+      "Ongoing WHO EMRO, WFP and UNRWA restrictions limit direct source access; OCHA, WHO global and other reporting remained accessible."
+    ],
+    "status_rationale": "DEGRADED because persistent WHO EMRO 502 and WFP/UNRWA 403 and UN News robot restrictions, not a newly material decline in coverage; alternative primary reporting remained available.",
+    "safeguards": "Exactly one append-only private-agent heartbeat on ops/watch-ledger; no publication, approval, production edits, schedule change or disablement."
+  }
+}

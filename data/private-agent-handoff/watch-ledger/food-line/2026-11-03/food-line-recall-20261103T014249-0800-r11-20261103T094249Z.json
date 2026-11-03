@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T014249-0800-r11-20261103T094249Z",
+  "scheduled_for": "2026-11-03T01:42:49-08:00",
+  "started_at": "2026-11-03T01:42:49-08:00",
+  "completed_at": "2026-11-03T01:44:03.901-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T00:43:03.653-08:00",
+    "end_at": "2026-11-03T01:44:03.901-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior completed Food Line watch heartbeat fetched from ops/watch-ledger: 2026-11-03T08:43:03.653Z. Indexed local and official notices were searched using November 2–3 2026 wording and two-day recency, with eligibility restricted to verifiably new events since the prior heartbeat.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall; production nationwide Food Line collection remains authoritative and unchanged.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting only, sole, last or full-service local grocery store",
+      "Emergency food distribution cancellation or suspension from storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank closure or major service reduction",
+      "New official SNAP, WIC, EBT or other food-assistance interruption with immediate access impact"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 2 2026 United States",
+      "\"sole grocery store\" fire closure November 2026 town",
+      "\"last grocery store\" closing November 2026 community",
+      "\"food bank\" \"closed\" storm November 2 2026",
+      "\"food pantry\" \"temporarily closed\" November 2 2026",
+      "\"food distribution\" canceled storm November 3 2026",
+      "SNAP benefits outage delayed November 3 2026 state agency notice",
+      "WIC benefits interrupted system outage November 2 2026",
+      "site:gov \"SNAP\" \"November 3, 2026\" delay outage interruption benefits",
+      "site:gov \"WIC\" \"November 2, 2026\" \"closed\" \"outage\"",
+      "\"food pantry\" \"closed\" \"November 3, 2026\" emergency",
+      "\"food distribution\" \"cancelled\" \"Nov 3, 2026\" weather"
+    ],
+    "observation": "All 12 targeted queries returned usable discovery responses. No candidate was independently verified to represent a new qualifying U.S. food-access disruption after the previous check. Search output skewed toward previously reported incidents and November 2025 SNAP funding notices.",
+    "excluded_examples": [
+      {
+        "publisher": "WGME/WVII",
+        "source_published_at": "2026-09-03",
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport sole-store closure was previously reported in September 2026; no verified new Nov 3 development."
+      },
+      {
+        "publisher": "Spectrum News Texas",
+        "source_published_at": "2026-09-28",
+        "url": "https://spectrumlocalnews.com/tx/austin/news/2026/09/28/el-paso-braces-for-another-round-of-rain-after-already-shutting-down-a-food-bank-",
+        "reason": "El Paso food-bank shutdown due to storm damage reported in September, outside new-hour window."
+      },
+      {
+        "publisher": "Delaware Governor's Office",
+        "source_published_at": "2025-10-29",
+        "url": "https://news.delaware.gov/2025/10/29/governor-matt-meyer-declares-state-of-emergency-due-to-interruption-of-federal-snap-benefits/",
+        "reason": "SNAP interruption notice concerns 2025 shutdown, not November 2026."
+      },
+      {
+        "publisher": "Low Income Relief",
+        "source_published_at": "2026-11-03",
+        "url": "https://lowincomerelief.com/catholic-charities-christmas-help/",
+        "reason": "Holiday assistance resource guide and routine eligibility information; no abrupt pantry closure or official food-assistance interruption."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T004154-0800-r11-20261103T084154Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-03T08:43:03.653Z",
+      "method": "Read prior ops/watch-ledger heartbeat directly, screened events by publication date and whether an eligible development actually occurred within the observation period."
+    },
+    "source_failures": [],
+    "limitations": "This is limited search recall, not an assertion of complete nationwide coverage. Search engines returned mostly older reports despite a two-day recency filter; ultra-recent provider posts not indexed may be missed.",
+    "production_authority": "No content approved/published or changed; no task/schedule modification.",
+    "scheduled_for_note": "Invocation time used because execution preceded nominal scheduled recurrence minute."
+  }
+}

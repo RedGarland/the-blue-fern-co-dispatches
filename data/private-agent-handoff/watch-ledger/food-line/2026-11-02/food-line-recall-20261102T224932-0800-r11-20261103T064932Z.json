@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T224932-0800-r11-20261103T064932Z",
+  "scheduled_for": "2026-11-02T22:45:54-08:00",
+  "started_at": "2026-11-02T22:49:32-08:00",
+  "completed_at": "2026-11-03T06:51:03.617Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T21:46:56.072-08:00",
+    "end_at": "2026-11-03T06:51:03.617Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Latest independently read-back-verified prior Food Line watch heartbeat completed at 21:46:56 PST Nov 2. Queries targeted most recent 1-2 days to absorb indexing lag; only events first verified after last heartbeat count.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; authoritative Food Line national production collection remains unchanged.",
+    "target_classes": [
+      "Loss/closure/fire/disaster of community's only, sole, last, or full-service grocery",
+      "Emergency food distribution cancellation/suspension due to storm/flood/fire/outage/facility damage",
+      "Abrupt food pantry/food-bank closure or material reduction in access",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      1,
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" \"November 2\" \"2026\"",
+      "\"only grocery store\" fire closed \"November 2026\" USA",
+      "\"last supermarket\" closed \"November 2026\" small town",
+      "\"sole grocery store\" destroyed fire \"Nov 2 2026\"",
+      "\"food distribution\" canceled storm flooding \"November 2\" \"2026\"",
+      "\"food pantry\" closed fire flood storm \"November 2\" \"2026\"",
+      "\"food bank\" suspended distribution power outage November 2026",
+      "SNAP benefits outage delayed November 2 2026 state official",
+      "\"food bank\" \"temporarily closed\" November 2 2026 storm fire",
+      "\"food distribution\" \"cancelled\" \"Nov 3\" 2026 storm",
+      "\"WIC\" \"system outage\" \"Nov 2\" 2026",
+      "site:gov \"SNAP\" \"November 2, 2026\" \"delayed\" OR \"interruption\" OR \"system\""
+    ],
+    "observation": "All 12 targeted web queries executed and returned usable discovery responses. No newly verified eligible access disruption occurred within the post-21:46:56 PST observation interval. Most matches were stale or irrelevant, including prior-year SNAP halt coverage, historic disasters, unrelated outages, and routine aid news. Search-engine date relevance was weak for very recent local notices but did not fail.",
+    "excluded_examples": [
+      {
+        "publisher": "KSAT San Antonio",
+        "source_published_at": "2026-11-02T19:51:00-06:00",
+        "url": "https://www.ksat.com/news/local/2026/11/03/snap-application-delays-leave-around-a-third-of-san-antonio-area-applicants-waiting-for-benefits/",
+        "reason": "Report dated November 2 at 7:51 PM Central (5:51 PM PST), before prior heartbeat. Ongoing application backlog sourced to Food Bank CEO, not a newly announced official stoppage."
+      },
+      {
+        "publisher": "SC Daily Gazette",
+        "source_published_at": "2026-11-02T11:10:00-05:00",
+        "url": "https://scdailygazette.com/2026/11/02/sc-grocery-aid-no-longer-covers-candy-sodas-other-sugary-foods/",
+        "reason": "Known SNAP eligible-item restrictions effective Nov 1 and reported Nov 2 morning, before prior heartbeat; not a newly issued aid interruption."
+      },
+      {
+        "publisher": "Texas Tribune",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "Federal SNAP benefit interruption from 2025, not new in 2026."
+      },
+      {
+        "publisher": "CalMatters",
+        "source_published_at": "2025-03",
+        "url": "https://calmatters.org/politics/2025/03/california-food-banks-cuts/",
+        "reason": "Historical program-funding changes, not a new closure or distribution stoppage."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T214527-0800-r11-20261103T054527Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-03T05:46:56.072Z",
+      "method": "Verified branch directory and prior record; screened candidate publication/event times against previous completion and excluded out-of-window reports."
+    },
+    "source_failures": [],
+    "limitations": "Twelve targeted searches are not exhaustive, and search indexing can lag same-hour local provider notices. No verified qualifying *new* item found; national absence cannot be established.",
+    "production_authority": "No approval, publication, primary collection modification, schedule change or disabling action."
+  }
+}

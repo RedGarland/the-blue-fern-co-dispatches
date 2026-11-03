@@ -1,0 +1,150 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T114451-0800-r11-20261103T194329Z",
+  "scheduled_for": "2026-11-03T11:44:51-08:00",
+  "started_at": "2026-11-03T11:41:35-08:00",
+  "completed_at": "2026-11-03T11:43:29-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T10:43:58-08:00",
+    "end": "2026-11-03T11:43:29-08:00",
+    "basis": "From the completed_at of the immediately prior exact GitHub heartbeat. Dated events/publisher timestamps evaluated against this interval; indexing lag possible. Watch initiated before nominal scheduled offset.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch only; production Gaza collector and publisher remain authoritative.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T104451-0800-r11-20261103T184154Z.json",
+      "completed_at": "2026-11-03T10:43:58-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "Exact GitHub fetch_file read on ops/watch-ledger before research."
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; most recent news/updates item is 31 October 2026 (humanitarian situation report for 29 October), not an in-window Gaza development."
+      },
+      {
+        "source": "WHO global conflict emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; regional news and linked health emergency publications are older, with no in-window Gaza functioning-capacity or medical-evacuation change established."
+      },
+      {
+        "source": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct open HTTP 502; recurring restriction also present in prior heartbeat; WHO global alternative accessible."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps Gaza 3 November 2026 \"20:\" \"21:\" killed injured airstrikes",
+      "site:palestinercs.org/en Gaza 3 November 2026 ambulance hospital fuel evacuation",
+      "site:unicef.org Gaza November 3 2026 water children humanitarian aid",
+      "site:wfp.org Gaza November 3 2026 crossings food distribution",
+      "site:unrwa.org Gaza November 3 2026 families shelter aid",
+      "site:msf.org Gaza November 3 2026 hospitals surgery patients",
+      "site:reuters.com/world/middle-east/ Gaza November 3 2026 aid ceasefire killed",
+      "site:apnews.com Gaza November 3 2026 civilian deaths ceasefire",
+      "Gaza Nov 3 2026 humanitarian ceasefire displacement hospital crossings latest 20:00 GMT aljazeera",
+      "site:theguardian.com/world/2026/nov/03/gaza deaths strike humanitarian aid ceasefire",
+      "site:news.un.org/en/story/2026/11 Gaza hospital evacuation relief crossing food",
+      "Gaza November 3 2026 latest deaths injuries Rafah crossings hospital MSF ICRC 3 November"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible. Newest postings at 21:00 and 20:44 Palestine local (11:00 and 10:44 PST) concern West Bank arrests and property occupation. No new qualifying Gaza reporting within observation interval; Khan Younis deaths and 48-hour Gaza casualty bulletin appeared earlier and were already captured."
+      },
+      {
+        "source": "PRCS homepage",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible. November 3 Saudi KSrelief operational/logistics support remains most recent; duplicate of 03:44 PST watch."
+      },
+      {
+        "source": "MSF latest",
+        "url": "https://www.msf.org/latest",
+        "result": "Accessible; no verified new Gaza health-service operational event in window."
+      },
+      {
+        "source": "ICRC OPT",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new time-bounded detainee/hostage, access or civilian impact event identified."
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403, recurring from preceding run. Site-targeted search found no in-window development."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403, recurring from preceding run. Site-targeted search found no in-window development."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Robots restriction on targeted search, previously observed."
+      },
+      {
+        "source": "Al Jazeera Nov 3 Gaza casualty roundup",
+        "url": "https://www.aljazeera.com/amp/news/2026/11/3/israeli-forces-kill-four-in-gaza-as-fifth-palestinian-dies-of-wounds",
+        "result": "Accessible; describes November 2 casualties and earlier November 1 incidents, not new in-window casualty events. Historical totals predate the 04:44 PST WAFA update."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties and military operations with civilian impact",
+      "displacement/shelter and infrastructure damage",
+      "humanitarian aid, crossings, food, water and fuel access",
+      "hospitals, ambulances, medical evacuations and functioning capacity",
+      "detention/hostages and ceasefire/negotiation developments with directly documented civilian impact"
+    ],
+    "exclusions": [
+      "November 3 WAFA three-person Khan Younis strike and 48-hour casualty statistics: already captured by 04:44 PST watch.",
+      "November 3 PRCS Saudi KSrelief operational/logistics support: already captured by 03:44 PST watch.",
+      "November 3 Al Jazeera four deaths and one subsequently deceased person: recap of November 2 and earlier incidents, not a distinct new event; preexisting incident lineage.",
+      "November 3 US administration announcement about year-end military funding to Israel: no verified immediate direct Gaza civilian or humanitarian operational impact and announced before current watch window.",
+      "Newest WAFA 21:00 and 20:44 Palestine-local articles on West Bank events: outside Gaza watch scope.",
+      "Stale 2025/earlier-2026 search results, opinion, unsourced claims and unverified social posts excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News",
+        "problem": "Robots restriction in search",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "No new in-window verified development was identified; this does not establish that no new event occurred.",
+      "Source indexing/publication lags and previously documented restrictions could hide an event; accessible OCHA, WHO global, WAFA, PRCS, MSF, ICRC, Reuters/AP and Al Jazeera provided alternative coverage."
+    ],
+    "status_rationale": "DEGRADED due to recurring access restrictions. No new material deterioration relative to preceding verified heartbeat; meaningful alternative coverage available.",
+    "safeguards": "Exactly one append-only heartbeat on ops/watch-ledger. No production publication, approval, schedule, task-disable or other mutation."
+  }
+}

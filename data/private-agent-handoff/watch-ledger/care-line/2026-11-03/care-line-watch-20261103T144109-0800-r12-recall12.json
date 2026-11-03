@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T144109-0800-r12-recall12",
+  "scheduled_for": "2026-11-03T14:45:22-08:00",
+  "started_at": "2026-11-03T14:41:09-08:00",
+  "completed_at": "2026-11-03T14:42:55-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T13:44:28-08:00",
+    "end": "2026-11-03T14:42:55-08:00",
+    "basis": "Since latest verified prior hourly Care Line Watch heartbeat; includes fresh reports and follow-up confirmations. Supplementary recall only; production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope; OPO termination notice, Kentucky, CCN 18P001",
+      "result": "No new November 3 CMS termination, CLIA, rescission or other access-risk entry identified; November 2 and October 30 notices already considered by prior watches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department closed temporarily service disruption county ambulance United States",
+      "November 3 2026 rural hospital suspends emergency services maternity labor delivery hospital closure",
+      "November 3 2026 behavioral health psychiatric care facility closed services suspended",
+      "November 3 2026 air ambulance base grounded closing operations state",
+      "November 3 2026 dialysis cancer oncology infusion clinic services closed suspended",
+      "November 3 2026 clinic primary care urgent care closed flooding or power outage",
+      "Cleveland Clinic Sebastian urgent care outpatient November 3 2026 reopened flooding services latest update",
+      "November 3 2026 Winslow Indian Health Care Center Leupp Dilkon reopening update after 1 pm MST",
+      "November 3 2026 ambulance service EMS suspended ceased operations county city November",
+      "November 3 2026 hospital reopened emergency department services resumed today United States",
+      "November 3 2026 clinic hospital emergency medical services shut temporarily Puerto Rico Guam Virgin Islands American Samoa Northern Mariana",
+      "November 3 2026 rural hospital maternity dialysis emergency room suspended services USA"
+    ],
+    "search_recency_days": "2-7",
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "Provider still displays November 3 09:52 MST Winslow soft opening at 13:00 MST and continuing Leupp/Dilkon restrictions; limited restoration already recorded by prior watch. No new independently confirmed restoration."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Direct provider endpoint inaccessible through browser following redirect to www.hf.org/alert; previously documented non-new issue. Local November 2 reporting lists anticipated no-earlier-than-10:00 November 3 Health First outpatient service reopening, not proof that reopening occurred."
+      }
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center partial walk-in and prescription refill restoration, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Already recorded in prior 12:43 local heartbeat; same provider notice, no updated operational confirmation."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian outpatient and urgent-care flood-related temporary closure, Florida",
+        "source": "https://veronews.com/2026/11/02/county-declares-local-state-of-emergency-amid-flooding-schools-to-close/",
+        "reason": "November 2 closure previously identified; no reliable new reopening confirmed."
+      },
+      {
+        "item": "Health First clinics, imaging/labs and elective procedure disruptions, Brevard County, Florida",
+        "source": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/",
+        "reason": "November 2 announcement of earlier disruption, already noted by prior watch. Tuesday reopen no earlier than 10:00 not independently confirmed as operational; Palm Bay elective surgery cancellations and Babcock Surgery Center all-day closure are components of earlier-noticed disruption."
+      },
+      {
+        "item": "Roseland Community Hospital maternity service, Chicago, Illinois",
+        "source": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "October 31 service withdrawal already previously documented; November 2 article repeats established closure."
+      },
+      {
+        "item": "Kula Hospital, Maui, Hawaii",
+        "source": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Prospective late-summer 2027 restoration target; no new effective reopening."
+      },
+      {
+        "item": "Ohio Emergency Medicine Services management of Hocking Valley Community Hospital ED",
+        "source": "https://www.newswire.com/news/ohio-emergency-medicine-services-to-lead-emergency-department-at-hocking-valley",
+        "reason": "Management change without service interruption; emergency services continue 24/7."
+      },
+      {
+        "item": "Indian River County flooding-related road and school closures, Florida",
+        "source": "https://veronews.com/2026/11/03/indian-river-schools-to-remain-closed-wednesday-amid-flooding/",
+        "reason": "Updated local reporting identifies roads and school closures, not a new named clinical service interruption."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Redirect to www.hf.org/alert inaccessible (web 500); same pre-existing problem as preceding watches; alternative local reporting accessible."
+      }
+    ],
+    "quality_limitations": "Bounded recall not exhaustive national or territorial collection. Poor result relevance for territories, EMS bases, dialysis and oncology; one provider alert endpoint inaccessible. No evidence of a new material watch-wide outage.",
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private watch ledger only. No approval, publication, production modifications, schedule changes, or task disabling."
+  }
+}

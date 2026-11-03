@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T004522-0800-r11-recall12-sebastian",
+  "scheduled_for": "2026-11-03T00:45:22-08:00",
+  "started_at": "2026-11-03T00:45:51-08:00",
+  "completed_at": "2026-11-03T00:47:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T23:49:23.594-08:00",
+    "end": "2026-11-03T00:47:43-08:00",
+    "basis": "From previous independently verified supplementary heartbeat completion through current observation. Earlier November 2 closure found in bounded retrospective search is a late-discovered miss, not an event newly occurring in this window. Production national collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261102-fl-indian-river-sebastian-cleveland-clinic-urgent-outpatient-flood-closure",
+      "canonical_source_url": "https://veronews.com/2026/11/02/county-declares-local-state-of-emergency-amid-flooding-schools-to-close/",
+      "title": "Gov. declares state of emergency amid flooding; Indian River schools to close",
+      "publisher": "Vero News",
+      "exact_supporting_passage": "Patients should not come to the location until further notice",
+      "source_published_date": "2026-11-02",
+      "state": "Florida",
+      "city": "Sebastian",
+      "county": "Indian River",
+      "territory": null,
+      "event_type": "temporary_closure",
+      "service_line": "outpatient care; urgent care",
+      "access_consequences": "Cleveland Clinic's Sebastian outpatient and urgent care location was temporarily closed during November 2 flooding; the health system instructed patients not to go to the location until further notice. Reopening timing is unknown.",
+      "affected_population": "Patients seeking outpatient and urgent care at Cleveland Clinic's Sebastian facility",
+      "effective_date": "2026-11-02",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "local_reporting_with_attributed_provider_statement",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, termination notice (OPO, CCN 18P001)",
+      "disposition": "Already present in previous watch ledger; no new Nov 3 official notices visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed November 2 2026 November 3 2026 service suspended local news",
+      "maternity labor delivery unit shutdown November 2 2026 November 3 2026 hospital",
+      "rural hospital emergency services lost clinic closures Nov 2 2026 Nov 3 2026",
+      "mental health behavioral health inpatient unit closing November 2 2026 November 3 2026",
+      "ambulance service station base shutdown closed November 2 2026 November 3 2026 United States",
+      "air ambulance medical helicopter base closed suspended November 2026 Nov 2",
+      "dialysis oncology cancer infusion clinic closure November 2 2026 November 3",
+      "primary care health clinic urgent care closure flooding November 2 2026 Florida Sebastian Indian River Cleveland Clinic",
+      "Puerto Rico Virgin Islands Guam American Samoa Northern Mariana Islands hospital clinic emergency ambulance closed November 2 2026",
+      "hospital emergency department reopened restored service November 2 2026 November 3 2026 rural United States",
+      "site:health.*.gov November 2 2026 hospital laboratory CLIA suspension closure provider care service",
+      "November 2 2026 November 3 2026 hospital clinic closed urgent care floods storm disruption southeast Florida"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity ward, Chicago, IL",
+        "reason": "October 31 effective closure and Nov 2 reporting already logged in earlier supplementary watch; no new change."
+      },
+      {
+        "item": "Health First Medical Group/outpatient closures, Brevard County, FL",
+        "reason": "Flood-related closures and provisional Nov 3 10 a.m. reopening already recorded; no confirmed later extension or restoration."
+      },
+      {
+        "item": "Santa Clara Valley Healthcare Behavioral Health Pavilion, San Jose, CA",
+        "reason": "New psychiatric capacity announced earlier, planned to begin admitting patients Nov 3; not restoration of previously lost essential service and no completed opening confirmed within window."
+      },
+      {
+        "item": "Kula Hospital planned 2027 reopening, Maui, HI",
+        "reason": "Proposed future return; not a completed restoration."
+      },
+      {
+        "item": "Other search hits",
+        "reason": "Older unrelated stories, service-change proposals, management changes without loss of care, non-U.S. stories, and policy speculation."
+      }
+    ],
+    "source_failures": [],
+    "search_quality": "DEGRADED: targeted search retrieval was completed, but relevance remained poor for rural, territory, ambulance and dialysis/oncology classes; completeness cannot be inferred. No new material tooling failure observed.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T234755-0800-r12-recall12.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T23:49:23.594-08:00",
+      "previous_heartbeat_did_not_record_sebastian": true,
+      "production_collector_dedupe_verified": false,
+      "finding_disposition": "Late-discovered Nov 2 closure, not a newly occurring November 3 event; subject to production deduplication and human review."
+    },
+    "controls": "Supplementary recall only. No editorial approval, publication, schedule modification, or task disabling."
+  }
+}

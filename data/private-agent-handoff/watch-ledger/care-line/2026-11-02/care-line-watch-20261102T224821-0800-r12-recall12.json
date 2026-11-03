@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T224821-0800-r12-recall12",
+  "scheduled_for": "2026-11-02T22:45:22-08:00",
+  "started_at": "2026-11-02T22:48:21-08:00",
+  "completed_at": "2026-11-02T22:49:45-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T21:49:54.741-08:00",
+    "end": "2026-11-02T22:49:45-08:00",
+    "basis": "From the previous verified supplementary heartbeat's completion to current observation. Searches included bounded retrospective recall; this is not production national collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination notice (CCN 18P001)",
+      "disposition": "Previously identified/recorded; no newer notice visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing suspended November 2 2026 November 3 2026 patients local news",
+      "maternity labor delivery services closure effective November 2026 hospital",
+      "rural hospital emergency services shutdown November 2 2026 local",
+      "ambulance service EMS air medical base closure suspended service November 2026",
+      "dialysis center cancer clinic oncology closure suspension November 2 2026",
+      "behavioral psychiatric inpatient hospital closing admissions November 2 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana healthcare hospital clinic services closed November 2 2026",
+      "hospital emergency urgent care reopened restored after shutdown November 2 2026",
+      "Community Medical Center Missoula pediatric intensive care closed October 2026 KFF Health News date exact",
+      "November 2 2026 hospital announced closing service line emergency room primary care effective november 3",
+      "November 2 2026 regional ambulance air ambulance service stopped operating base permanently closure",
+      "November 2 2026 hospital clinic reopening after closure restored care now open"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Health First Medical Group/outpatient services, Brevard County FL",
+        "reason": "Previously recorded Nov 2 flooding-related closures and Tuesday tentative reopening; no newly confirmed restoration or additional extension during this period.",
+        "url": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/"
+      },
+      {
+        "item": "Roseland Community Hospital labor/delivery, Chicago IL",
+        "reason": "Previously recorded Oct 31 closure, confirmed by Nov 2 local reporting; duplicate with no change in this period.",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Community Medical Center pediatric intensive care unit, Missoula MT",
+        "reason": "Confirmed historical October 2026 PICU closure; original KFF reporting October 27/28; November 2 local republication is not a new access change in this hourly observation. Historical production dedup not verified.",
+        "url": "https://kffhealthnews.org/health-industry/picu-hospital-beds-disappearing-sick-children-intensive-care-montana/"
+      },
+      {
+        "item": "Kula Hospital and Emergency Department, Maui HI",
+        "reason": "Remains closed since March 2026; November 2 contractor selection and tentative summer 2027 reopening are not a concrete restoration.",
+        "url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/"
+      },
+      {
+        "item": "Redeemer Health/Holy Redeemer Hospital, Abington PA",
+        "reason": "Bankruptcy/sale-or-close possibility, not verified effective service closure in the watch window.",
+        "url": "https://glensidelocal.com/redeemer-health-files-bankruptcy-holy-redeemer-hospital-in-abington-to-be-sold-or-close/"
+      },
+      {
+        "item": "Hocking Valley Community Hospital, Logan OH",
+        "reason": "ED staffing/management transition without service loss; 24/7 emergency service explicitly continues.",
+        "url": "https://www.accessnewswire.com/newsroom/en/healthcare-and-pharmaceutical/ohio-emergency-medicine-services-to-lead-emergency-department-at-hock-1244408"
+      },
+      {
+        "item": "Dauphin Regional Health Centre dialysis restoration",
+        "reason": "Located in Manitoba, Canada, outside U.S. and territorial scope.",
+        "url": "https://730ckdm.com/news-now/34737-dialysis-returns-to-drhc"
+      }
+    ],
+    "source_failures": [],
+    "search_quality": "DEGRADED: targeted queries returned results, but low precision, older stories, proposed changes and off-scope Canadian material dominated; rural and territorial one-hour coverage could not be established comprehensively. This is a recurring relevance limitation, not a newly material outage.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T214846-0800-r12-recall12.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T21:49:54.741-08:00",
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only; production collection remains authoritative. No approval, publication, schedule modification, or task disabling."
+  }
+}

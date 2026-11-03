@@ -1,0 +1,199 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T044451-0800-r11-20261103T124529Z",
+  "scheduled_for": "2026-11-03T04:44:51-08:00",
+  "started_at": "2026-11-03T04:43:13-08:00",
+  "completed_at": "2026-11-03T04:46:27-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T03:44:54-08:00",
+    "end": "2026-11-03T04:46:27-08:00",
+    "basis": "Previous verified heartbeat completion through current supplementary observation; publication clock and event clock not assumed to use the same timezone.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-wafa-khan-yunis-applied-college-drone-20261103-176620",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176620",
+      "title": "Three killed and others injured in Israeli bombing of Gaza's Khan Yunis city",
+      "publisher": "Palestine News & Information Agency (WAFA)",
+      "source_date": "2026-11-03",
+      "publication_date": "2026-11-03",
+      "publication_time": "01:48 PM (publisher-site clock; timezone unverified)",
+      "event_date": "2026-11-03",
+      "event_time": "Tuesday afternoon (exact time unknown)",
+      "location": "Applied College, western Khan Yunis, southern Gaza Strip",
+      "affected_population_system": "Three Palestinians reported killed, others injured; college site struck (institutional functioning or structural damage unverified).",
+      "exact_supporting_passage": "three citizens were killed and others wounded when a drone struck the Applied College, located in the western part of the city.",
+      "source_type": "Established Palestinian news agency; correspondent citing medical sources",
+      "classification": "new",
+      "confidence": "medium (specific attributed local reporting; no independent confirmation in bounded searches)",
+      "discovery_context": {
+        "first_observed_during_this_watch": true,
+        "previous_verified_watch": "gaza-source-watch-20261103T034451-0800-r11-20261103T114401Z",
+        "previous_coverage": "Previous WAFA latest-news direct check ended at publisher 11:41 November 3; new 13:48 report absent from previous watch.",
+        "verified_against": "Direct WAFA article and WAFA latest news index, 3 November 2026.",
+        "dedupe_context": "Separately identified strike at Applied College on November 3; November 2 Khan Yunis casualty reports and a November 3 death from earlier wounds were excluded. Do not infer that all victims were students or that college damage was verified.",
+        "bounded_time_caveat": "Publisher's site shows 13:48 but its timezone is not established; event described only as Tuesday afternoon. Israeli military account and independent corroboration not retrieved."
+      }
+    },
+    {
+      "finding_id": "gaza-wafa-medical-sources-48hr-casualty-update-20261103-176614",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176614",
+      "title": "Death toll in the Gaza Strip rises to 74,615, with 175,899 injured since the start of the aggression",
+      "publisher": "Palestine News & Information Agency (WAFA)",
+      "source_date": "2026-11-03",
+      "publication_date": "2026-11-03",
+      "publication_time": "01:12 PM (publisher-site clock; timezone unverified)",
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Gaza hospital casualty intake and cumulative death/injury tally; reported six fatalities and 27 injured over previous 48 hours, cumulative totals 74,615 deaths and 175,899 injuries.",
+      "exact_supporting_passage": "hospitals in the Gaza Strip have received six fatalities and 27 injured individuals over the past 48 hours.",
+      "source_type": "Established Palestinian news agency relaying Gaza medical sources",
+      "classification": "follow-up",
+      "confidence": "medium (attributed aggregate report; figures not independently audited)",
+      "discovery_context": {
+        "first_observed_during_this_watch": true,
+        "previous_verified_watch": "gaza-source-watch-20261103T034451-0800-r11-20261103T114401Z",
+        "verification": "Direct WAFA article dated November 3. It is a 48-hour retrospective medical-sources report, not evidence of six distinct deaths during this one-hour check.",
+        "dedupe_context": "Must not add these six deaths or 27 injuries to the separate three-killed Applied College report; overlap and temporal boundaries are unknown. Not a new separate attack.",
+        "bounded_time_caveat": "Publisher-site 13:12 time appears before the latest search-window boundary if treated as local Gaza time, but the report was absent from the previous source check and newly discovered during this recall; publisher clock timezone and independent publication timing not verified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary production collector and publisher remain authoritative, untouched.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T034451-0800-r11-20261103T114401Z.json",
+      "completed_at": "2026-11-03T03:44:54-08:00",
+      "outcome": "findings",
+      "verification": "GitHub fetch_file on ops/watch-ledger before search."
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible, latest homepage update 31 October 2026, concerning 29 October situation."
+      },
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Accessible, newest report 31 October 2026."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 recurring direct-source failure."
+      },
+      {
+        "source": "WHO global Israel/oPt situation page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no distinct newly dated November 3 Gaza medical/evacuation event."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ \"November 3, 2026\" \"Khan Yunis\" \"Applied College\" drone",
+      "site:reuters.com/world/middle-east/ Gaza November 3 2026 Khan Younis drone strike college killed",
+      "site:apnews.com/article/ Gaza November 3 2026 strike deaths injured civilian",
+      "site:aljazeera.com/news/2026/11/3/ Gaza Khan Younis college Israeli drone killed",
+      "site:news.un.org/en/ 3 November 2026 Gaza casualties humanitarian aid crossings",
+      "site:unicef.org Gaza November 3 2026 displacement water children fuel",
+      "site:wfp.org Gaza 3 November 2026 food aid truck crossings",
+      "site:msf.org Gaza 3 November 2026 hospital medical evacuation wounded",
+      "site:icrc.org Gaza 3 November 2026 detainees hostages release",
+      "site:palestinercs.org/en November 3 2026 ambulance Gaza casualties",
+      "site:who.int Gaza \"3 November 2026\" health medical evacuation hospital",
+      "Gaza November 3 2026 12:00 UTC 13:00 UTC Rafah crossing hostage ceasefire new military strike humanitarian"
+    ],
+    "targeted_search_count": 12,
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "New items at publisher 13:48 and 13:12 November 3, compared with prior latest 11:41; original articles directly verified."
+      },
+      {
+        "source": "WAFA Applied College report",
+        "url": "https://english.wafa.ps/Pages/Details/176620",
+        "result": "New reported drone strike in western Khan Yunis causing 3 deaths and unspecified injuries; direct text verified."
+      },
+      {
+        "source": "WAFA 48-hour medical casualty bulletin",
+        "url": "https://english.wafa.ps/Pages/Details/176614",
+        "result": "6 fatalities, 27 injuries across 48 hours; retrospective figures are potentially overlapping, not additive to strike."
+      },
+      {
+        "source": "PRCS homepage",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest remains November 3 KSrelief logistics pledge already logged in previous heartbeat; excluded as duplicate."
+      },
+      {
+        "source": "MSF latest",
+        "url": "https://www.msf.org/latest",
+        "result": "Accessible; no distinct new verified Gaza medical update in window."
+      },
+      {
+        "source": "WFP newsroom",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 recurring."
+      },
+      {
+        "source": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 recurring."
+      }
+    ],
+    "screened_categories": [
+      "civilian casualties and military strikes with documented civilian impact",
+      "aid access, food, water, fuel, crossings, infrastructure and displacement",
+      "hospital operations, ambulance, transport, medical evacuations and health capacity",
+      "detainees/hostages, ceasefire and negotiation developments"
+    ],
+    "exclusions": [
+      "PRCS November 3 KSrelief support announcement already logged in preceding watch.",
+      "November 2 Reuters casualty accounts and November 3 reprints of previously recorded Khan Yunis deaths.",
+      "WAFA November 3 cabinet concerns about restrictions/winter risk lacked a distinct dated, implemented access change; treated as context.",
+      "Search hits with January-August 2026 publication dates; West Bank-only reports; opinions and unsupported social claims."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News search",
+        "problem": "robots.txt restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "Independent corroboration and military response to the specific Applied College strike were unavailable within bounded searches; assess as single-source medium confidence.",
+      "The 48-hour casualty summary may overlap prior incidents and the newly reported three deaths; counts are not additive.",
+      "Site publication clocks are not certified as Gaza-local or UTC. Source indexing and archive release may lag.",
+      "Recurring WHO EMRO, UNRWA, WFP and UN News restrictions prevented complete direct-source coverage, while other authoritative and established sources were accessible."
+    ],
+    "status_rationale": "DEGRADED because multiple recurring source access restrictions remain, while useful verification and two distinctly scoped qualifying reports were obtained. No newly material access deterioration verified.",
+    "safeguards": "Exactly one append-only private heartbeat on ops/watch-ledger. No approvals, public publication, production modification, scheduling change or disablement."
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261102T194305-0800-r11-20261103T034305Z",
+  "scheduled_for": "2026-11-02T19:43:05-08:00",
+  "started_at": "2026-11-02T19:43:05-08:00",
+  "completed_at": "2026-11-03T03:44:29.597Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-02T18:49:21.279-08:00",
+    "end_at": "2026-11-03T03:44:29.597Z",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since most recent independently read-back verified Food Line Source Watch heartbeat, completed at 18:49:21.279 PST; 2-day search recency used only to accommodate indexing lag, with event qualification restricted to new immediate U.S. food-access harm since prior check.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value miss classes; production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Loss of only/sole/last/full-service grocery store from closure, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food bank closure or material service reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_web_searches": 12,
+    "search_breakdown": {
+      "fast": 12
+    },
+    "search_recency_days": [
+      2
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" \"November 2\" 2026 town",
+      "\"last grocery store\" fire closure \"November\" 2026 America",
+      "\"sole grocery\" fire destroyed \"November 2\" 2026",
+      "\"only supermarket\" shutdown town November 2 2026",
+      "\"food distribution\" cancelled storm flood Monday November 2 2026",
+      "\"food pantry\" \"closed\" fire flood November 2 2026",
+      "\"food bank\" \"suspended\" distribution outage November 2 2026",
+      "\"food distribution\" canceled \"power outage\" November 2026",
+      "\"food pantry\" \"temporarily closed\" \"November 2\" 2026",
+      "site:gov \"SNAP\" \"interruption\" \"November 2, 2026\"",
+      "site:gov \"WIC\" \"suspended\" \"November 2, 2026\"",
+      "\"EBT\" \"outage\" \"SNAP\" \"November 2\" 2026 benefits"
+    ],
+    "observation": "All 12 targeted queries executed with usable web search coverage. No newly reported, independently verified qualifying U.S. food-access disruption was identified in the bounded window. Most matches were unrelated, older incidents or dated benefits notices; a fresh crawl is not proof of a new event.",
+    "excluded_examples": [
+      {
+        "publisher": "NBC Palm Springs",
+        "source_published_at": "2026-09-03",
+        "url": "https://www.nbcpalmsprings.com/therogginreport/contributors/2026/09/03/palm-springs-fire-station-displaces-food-bank-serving-250-families",
+        "reason": "Food-bank displacement news is from September, not a new interruption this hour."
+      },
+      {
+        "publisher": "FOX 10 Phoenix",
+        "source_published_at": "2025-10-28",
+        "url": "https://www.fox10phoenix.com/news/snap-benefits-arizona-will-not-be-issued-november-heres-what-know",
+        "reason": "SNAP stoppage notice is October 2025, not November 2026."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-10-29",
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "October 29 storm recovery guide has no new verifiable emergency food-distribution cancellation in this window."
+      },
+      {
+        "publisher": "Finger Lakes Daily News",
+        "source_published_at": null,
+        "url": "https://www.fingerlakesdailynews.com/local/cayuga/weedsport-grocery-store-closes/",
+        "reason": "Search result describes an older Weedsport store closure, not new on November 2, 2026."
+      }
+    ],
+    "duplicate_screen": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-02/food-line-recall-20261102T184808-0800-r11-20261103T024808Z.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T18:49:21.279-08:00",
+      "method": "Read current ops/watch-ledger directory and preceding heartbeat; screened search matches by event and publication date, location, food-access consequence, and duplication."
+    },
+    "source_failures": [],
+    "limitations": "Supplemental search is not exhaustive. Provider social posts and just-issued local notices may not yet be indexed. No positive signal confirmed from the bounded search.",
+    "production_authority": "No approval, publication, primary-collector change, schedule alteration, or disabling."
+  }
+}

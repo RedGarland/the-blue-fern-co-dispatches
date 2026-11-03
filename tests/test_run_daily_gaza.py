@@ -405,6 +405,33 @@ def test_invalid_manual_falls_back_to_auto_when_both(isolated, monkeypatch, caps
     assert "Run: python scripts/add_gaza_manual_source.py --date 2026-05-07 --validate-only" in warning
 
 
+def test_manual_source_mode_never_starts_auto_collection(isolated, monkeypatch):
+    edition_date = "2026-05-07"
+    manual_path = write_manual_sources(
+        isolated,
+        edition_date,
+        json.dumps([make_manual_source_record(edition_date, 1), make_manual_source_record(edition_date, 2)], indent=2),
+    )
+    args = argparse.Namespace(source_mode="manual", date=edition_date, min_sources=1, max_sources=12)
+    summary = {"warnings": [], "errors": []}
+    log_path = isolated / "logs" / "manual-mode.log"
+
+    def fail_auto_collection(*_args, **_kwargs):
+        raise AssertionError("manual source mode must not invoke auto collection")
+
+    monkeypatch.setattr(daily, "collect_gaza_sources", fail_auto_collection)
+
+    source_path, records, context = daily.collect_or_load_sources(args, summary, log_path)
+
+    assert source_path == manual_path
+    assert [record["source_record_id"] for record in records] == [
+        f"gaza-src-{edition_date}-001",
+        f"gaza-src-{edition_date}-002",
+    ]
+    assert context is None
+    assert summary["errors"] == []
+
+
 def test_invalid_manual_source_fields_are_reported_in_both_mode(isolated, monkeypatch, capsys):
     root = isolated
     manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"

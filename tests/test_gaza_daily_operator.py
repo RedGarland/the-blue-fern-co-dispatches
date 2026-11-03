@@ -84,6 +84,89 @@ def _write_audio_fixture(root: Path, edition_date: str, audio_format: str = "mp3
     return output_audio, pages_audio
 
 
+def test_operator_source_mode_defaults_both_and_forwards_manual() -> None:
+    defaults = operator.parse_args(["--date", "2026-06-26"])
+    manual = operator.parse_args(["--date", "2026-06-26", "--source-mode", "manual"])
+    common = {
+        "edition_date": "2026-06-26",
+        "pages_repo": Path("pages"),
+        "pages_branch": "gh-pages",
+        "remote_url": "https://example.test/repo.git",
+        "dry_run": True,
+        "generate_audio": False,
+        "allow_listing_shrink": False,
+        "tts_provider": "none",
+        "audio_model": "gpt-4o-mini-tts",
+        "audio_voice": "alloy",
+        "audio_format": "mp3",
+    }
+
+    default_args = operator._daily_args(**common, source_mode=defaults.source_mode)
+    manual_args = operator._daily_args(**common, source_mode=manual.source_mode)
+
+    assert defaults.source_mode == "both"
+    assert default_args[default_args.index("--source-mode") + 1] == "both"
+    assert manual.source_mode == "manual"
+    assert manual_args[manual_args.index("--source-mode") + 1] == "manual"
+
+
+def test_operator_forwards_explicit_manual_source_mode_to_daily_runner(
+    isolated: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = operator.parse_args(
+        [
+            "--date",
+            "2026-06-26",
+            "--source-mode",
+            "manual",
+            "--skip-audio",
+            "--pages-repo",
+            str(isolated / "bluefern-dispatches-pages"),
+        ]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    captured: list[list[str]] = []
+    monkeypatch.setattr(
+        operator,
+        "_run_command",
+        lambda *_args, **_kwargs: type(
+            "Completed", (), {
+                "returncode": 0,
+                "stdout": json.dumps({"local_pages_copy_ok": True, "pages_commit_ok": True}),
+                "stderr": "",
+            }
+        )(),
+    )
+
+    def capture_daily_run(daily_args: list[str]) -> tuple[int, dict, str]:
+        captured.append(daily_args)
+        return (
+            1,
+            {
+                "source_count": 0,
+                "publisher_count": 0,
+                "public_story_count": 0,
+                "generation_ok": False,
+                "validation_ok": False,
+                "tests_ok": False,
+                "source_coverage_status": "complete_no_qualifying_records",
+                "collection_completion_status": "complete_no_qualifying_records",
+                "no_update_eligible": True,
+                "no_update_status_written": True,
+                "errors": ["No source-backed Gaza stories survived curation/dedupe."],
+            },
+            "{}",
+        )
+
+    monkeypatch.setattr(operator, "_capture_daily_run", capture_daily_run)
+    result = operator.run_operator(args)
+
+    assert result["ok"] is True
+    assert result["operator_status"] == "NO_UPDATE_LOCAL_PUBLISH_READY"
+    assert captured
+    assert captured[0][captured[0].index("--source-mode") + 1] == "manual"
+
+
 def test_manual_source_validation_accepts_template_shaped_record(isolated: Path) -> None:
     write_manual_sources(
         isolated,

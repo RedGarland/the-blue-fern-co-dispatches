@@ -1,0 +1,74 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T184218-0800-r11-recall12",
+  "scheduled_for": "2026-11-02T18:45:22-08:00",
+  "started_at": "2026-11-02T18:42:18-08:00",
+  "completed_at": "2026-11-02T18:43:29-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T17:50:45.080-08:00",
+    "end": "2026-11-02T18:43:29-08:00",
+    "basis": "Last verified completed care-line heartbeat through current observation; only newly qualifying changes since the previous check counted; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-02",
+      "latest_notice": "Network for Hope, KY, CCN 18P001 (organ procurement organization), revised termination notice",
+      "disposition": "Previously recorded in earlier November 2 heartbeat; no notice with a later notice date observed."
+    },
+    "additional_targeted_searches": 12,
+    "recency_filter_days": 1,
+    "targeted_queries": [
+      "November 2 2026 hospital emergency department closure suspended services Monday United States",
+      "November 2 2026 rural hospital maternity labor delivery obstetrics closure service suspended",
+      "November 2 2026 ambulance service air medical base closure suspension emergency coverage",
+      "November 2 2026 behavioral health psychiatric inpatient hospital unit closing patients",
+      "November 2 2026 dialysis oncology cancer center clinic closed disrupted services",
+      "November 2 2026 primary care clinic rural hospital urgent care abruptly closed temporarily",
+      "November 2 2026 \"closed\" \"emergency department\" hospital patients diversion",
+      "\"Nov 2, 2026\" \"ambulance\" \"suspend\" service county",
+      "\"November 2, 2026\" \"hospital\" \"reopened\" emergency services after closure",
+      "November 2 2026 \"Health First\" Brevard closures Tuesday flooding latest update 6 pm",
+      "November 2 2026 Puerto Rico Guam US Virgin Islands hospital clinic emergency service closure",
+      "November 2 2026 hospital service closure announced dialysis maternity outpatient local news"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Health First outpatient, lab, imaging, rehab, pharmacy and elective-surgery interruptions, Brevard County FL",
+        "reason": "November 2 closure and November 3 extension already documented in the immediately preceding watches; latest accessible reporting confirms same not-before-10AM reopening target, which is not a confirmed restoration; hospitals and EDs remain operational.",
+        "url": "https://spacecoastdaily.com/2026/11/health-first-clinics-outpatient-services-to-remain-closed-until-at-least-10-a-m-tuesday/"
+      },
+      {
+        "item": "Kula Hospital and Emergency Department, Maui HI",
+        "reason": "November 2 announcement selects restoration contractor and sets tentative late-summer 2027 reopening; hospital/ED closure dates to March 2026; no current reopening or new access effect.",
+        "url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/"
+      },
+      {
+        "item": "Trinity Health Michigan post-hospital psychiatric suicide care grant",
+        "reason": "Funding/program expansion, not newly effective essential service closure or restoration.",
+        "url": "https://www.whmi.com/news/article/trinity-health-receives-200000-grant-strengthen-suicide-prevention-services"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "reason": "Health First's direct emergency alert could not be opened by browsing tool; contemporaneous local reporting was readable. This is a repeated limitation rather than a new material failure."
+      }
+    ],
+    "search_quality": "DEGRADED: CMS notice index read successfully and all 12 targeted queries returned, but general searches were dominated by historical, unrelated or non-U.S. articles. Limited evidence for small rural and territorial facilities; direct Health First alert inaccessible. No assertion of exhaustive nationwide or territory coverage.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T174919-0800-r12-recall12.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T17:50:45.080-08:00",
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only; no editorial approval, publication, schedule change, or disabling of watch."
+  }
+}

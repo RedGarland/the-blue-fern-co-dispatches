@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261102T174919-0800-r12-recall12",
+  "scheduled_for": "2026-11-02T17:45:22-08:00",
+  "started_at": "2026-11-02T17:49:19-08:00",
+  "completed_at": "2026-11-02T17:50:45.080-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-02T16:51:54.415-08:00",
+    "end": "2026-11-02T17:50:45.080-08:00",
+    "basis": "Previous confirmed care-line heartbeat completed_at through current observation. Reported developments outside window reviewed for newly surfaced material changes; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-02",
+      "latest_notice": "Network for Hope (KY, 18P001), organ procurement organization termination notice",
+      "disposition": "Same November 2 notice was recorded in prior watch; no newer notice or changed CMS action observed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 2 2026 Monday hospital emergency department closure suspended service tonight US",
+      "November 2 2026 maternity labor delivery unit hospital closing patients rural",
+      "November 2 2026 behavioral health psychiatric hospital unit suddenly shut closed",
+      "November 2 2026 dialysis cancer oncology clinic closed services patients",
+      "November 2 2026 primary care medical clinic flood closed today reopened",
+      "November 2 2026 ambulance EMS rescue service shut down suspended operations",
+      "November 2 2026 air ambulance medical helicopter base shut closed grounded",
+      "November 2 2026 rural hospital emergency department services closure patient diversion",
+      "November 2 2026 Medicare termination provider rescission CLIA suspension certification notice",
+      "November 2 2026 hospital emergency department clinic reopened restored services",
+      "November 2 2026 Puerto Rico Virgin Islands Guam CNMI American Samoa hospital clinic emergency closed suspended",
+      "November 2 2026 Health First Brevard flooding latest service closure reopening November 3 Tuesday"
+    ],
+    "recency_filter_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Health First Medical Group, outpatient labs, imaging, rehabilitation, pharmacy and surgery suspensions, Brevard County FL",
+        "reason": "Substantive November 2-3 continuation already logged in immediately preceding heartbeat; no additional extension, reopening, or other newly effective access change verified.",
+        "url": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/"
+      },
+      {
+        "item": "Health First duplicate local article, Brevard County FL",
+        "reason": "Repeats pre-existing suspension and reopening-not-before 10 a.m. November 3; no newer material update.",
+        "url": "https://spacecoastdaily.com/2026/11/health-first-clinics-outpatient-services-to-remain-closed-until-at-least-10-a-m-tuesday/"
+      },
+      {
+        "item": "Hocking Valley Community Hospital ED management handoff, Logan OH",
+        "reason": "November 2 press release explicitly affirms 24/7 emergency department access throughout transition; no service closure, suspension or restoration.",
+        "url": "https://www.accessnewswire.com/newsroom/en/healthcare-and-pharmaceutical/ohio-emergency-medicine-services-to-lead-emergency-department-at-hock-1244408"
+      },
+      {
+        "item": "Greene County EMS, Alabama",
+        "reason": "July 2026 suspension and July reopening; out of window.",
+        "url": "https://abc3340.com/news/local/greene-county-ems-back-in-service-but-leaders-say-long-term-funding-remains-unresolved"
+      },
+      {
+        "item": "Jersey City Christ Hospital emergency department",
+        "reason": "Earlier 2026 notice; no newly effective change established for this window.",
+        "url": "https://abc7ny.com/post/community-pushes-back-christ-hospital-emergency-room-announces-closure-2-day-notice-staff/18658827/"
+      },
+      {
+        "item": "Albany Memorial Hospital emergency department reopening",
+        "reason": "June 2025 event; outside window.",
+        "url": "https://cbs6albany.com/news/local/temporary-suspension-of-services-and-er-dept-diversion-at-albany-memorial-hospital-samaritan-st-peters-emergency-services-troy-albany-north-health-partners-"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "reason": "Health system alert page returned browsing-tool internal error; substantiating local report readable. This is a repeated source limitation, not a newly material failure."
+      }
+    ],
+    "search_quality": "DEGRADED: CMS public notice list accessible; all 12 targeted searches returned, but index results largely historical, off-topic or international, particularly limiting rural and territorial recall. Provider direct status alert page inaccessible. No claim of exhaustive coverage.",
+    "deduplication": {
+      "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-02/care-line-watch-20261102T164932-0800-r11-recall12.json",
+      "previous_heartbeat_verified": true,
+      "previous_completed_at": "2026-11-02T16:51:54.415-08:00",
+      "prior_cms_notice_already_recorded": true,
+      "prior_brevard_service_suspension_and_extension_already_recorded": true,
+      "production_collector_dedupe_verified": false
+    },
+    "controls": "Supplementary recall only; append one heartbeat in ops/watch-ledger. No editorial approval, publication, schedule modification, or task disabling."
+  }
+}

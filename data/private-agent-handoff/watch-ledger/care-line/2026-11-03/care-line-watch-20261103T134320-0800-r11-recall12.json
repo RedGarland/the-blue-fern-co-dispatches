@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T134320-0800-r11-recall12",
+  "scheduled_for": "2026-11-03T13:45:22-08:00",
+  "started_at": "2026-11-03T13:43:20-08:00",
+  "completed_at": "2026-11-03T13:44:28-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T12:45:44.814-08:00",
+    "end": "2026-11-03T13:44:28-08:00",
+    "basis": "Since latest verified prior Care Line Watch heartbeat, with bounded supplementary recall. Production collection remains authoritative; newness assessed against prior hourly heartbeat and already flagged service changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination notice (CCN 18P001)",
+      "disposition": "No new November 3 notice visible; November 2 and October 30 entries predate this hourly watch and were already considered."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 3, 2026\" hospital emergency department closed temporarily reopened flooding",
+      "\"November 3, 2026\" maternity unit labor delivery services suspension closure hospital",
+      "\"November 3, 2026\" behavioral health psychiatric clinic emergency care closing patients",
+      "Winslow Indian Health Care Center November 3 2026 reopening walk in flood Leupp Dilkon updates",
+      "\"November 3, 2026\" ambulance service \"suspended\" OR \"closed\" OR \"stopped\"",
+      "\"November 3, 2026\" air ambulance base closure suspended service",
+      "\"November 3, 2026\" rural hospital emergency department temporarily closed OR reopening",
+      "\"November 3, 2026\" dialysis cancer center clinic closed services suspension",
+      "\"November 3, 2026\" hospital clinic \"closed\" flooding Brevard Palm Bay Melbourne Florida",
+      "\"November 3, 2026\" \"clinic\" \"closed\" \"Puerto Rico\" OR \"Guam\" OR \"Virgin Islands\" OR \"American Samoa\"",
+      "\"November 3, 2026\" \"ambulance\" \"service\" \"closed\" \"county\"",
+      "\"November 3, 2026\" hospital \"services resumed\" OR \"reopened\" emergency department urgent care"
+    ],
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "disposition": "Provider website still displays the November 3 09:52 Arizona MST soft-opening notice for Winslow walk-ins and prescription refills, previously recorded in prior heartbeat. No subsequent actual-operations confirmation or new Leupp/Dilkon restoration bulletin visible."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "disposition": "Attempted direct official endpoint; inaccessible via browsing. May conceal Health First flood-related restoration; pre-existing recurring limitation."
+      }
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield IL",
+        "source": "https://www.springfieldbusinessjournal.com/columns/memorials-west-lake-campus-to-close/",
+        "reason": "November 3 article reports expected December residential program wind-down contingent on resident transfers; no current confirmed closure or effective service withdrawal in this window."
+      },
+      {
+        "item": "Winslow Indian Health Care Center walk-in and refill reopening",
+        "source": "https://www.wihcc.com/",
+        "reason": "Already documented as a limited time-effective restoration in previous hourly heartbeat; website still shows same notice."
+      },
+      {
+        "item": "Brevard and Treasure Coast Florida flooding",
+        "source": "https://www.wqcs.org/wqcs-news/2026-11-03/flooding-causes-widespread-road-closures-government-shutdowns-across-treasure-coast",
+        "reason": "General road, public-office and transportation disruption; no newly confirmed named clinical service loss or restoration in retrieved reporting."
+      },
+      {
+        "item": "Kula Hospital Hawai'i renovation",
+        "source": "https://hawaiiexpres.com/local-news/maui-health-names-general-contractor-for-kula-hospital-restoration",
+        "reason": "Planning and construction update; hospital closure occurred in March 2026 and no actual new restoration."
+      },
+      {
+        "item": "Vantive hemodialysis asset divestment",
+        "source": "https://www.vantive.com/news/press-releases/vantive-announces-agreement-divest-majority-hemodialysis-assets-and-associated",
+        "reason": "Ownership/business transaction only; no concrete reduction in patient access."
+      },
+      {
+        "item": "Daisy Hill Hospital maternity changes, Northern Ireland",
+        "source": "https://downnews.co.uk/inpatient-maternity-update-from-southern-trust/",
+        "reason": "Outside U.S. and territories."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Repeated previous-hour access error. Other official and local sources remained accessible; no new material degradation."
+      }
+    ],
+    "quality_limitations": "Bounded recall, not exhaustive nationwide or territorial collector. Search relevance remains weak for territories, primary care, air-medical, dialysis and oncology. Health First's official alert source remains inaccessible; no new confirmed restoration could be deduced from absence of evidence.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private handoff only; no editorial approval, public publication, schedule modification, task disabling, or production collector mutation."
+  }
+}

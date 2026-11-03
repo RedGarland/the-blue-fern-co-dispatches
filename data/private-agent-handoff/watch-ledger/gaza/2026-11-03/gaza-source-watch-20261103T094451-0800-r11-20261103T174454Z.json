@@ -1,0 +1,149 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T094451-0800-r11-20261103T174454Z",
+  "scheduled_for": "2026-11-03T09:44:51-08:00",
+  "started_at": "2026-11-03T09:43:58-08:00",
+  "completed_at": "2026-11-03T09:45:42-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T08:47:29-08:00",
+    "end": "2026-11-03T09:45:42-08:00",
+    "basis": "Prior completed run end obtained by exact GitHub readback on ops/watch-ledger; all new/previous results evaluated against this window and earlier findings. Publisher timestamps may differ from America/Los_Angeles and search indexing may lag.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only. Primary production Gaza collector/publisher remains authoritative. No publication, approval, runner, task schedule, or automation state changed.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T084451-0800-r11-20261103T164729Z.json",
+      "completed_at": "2026-11-03T08:47:29-08:00",
+      "outcome": "no_findings",
+      "verification": "Fetched exact preceding heartbeat JSON via connected GitHub from ops/watch-ledger."
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Direct update list accessible; most recent item posted October 31, covering October 29. No newer Gaza update in current window."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 on direct open; recurring direct-source restriction."
+      },
+      {
+        "source": "WHO global emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible alternative; no new dated Gaza hospital, medical evacuation, health capacity or ambulance change found in this window."
+      },
+      {
+        "source": "WHO global newsroom",
+        "url": "https://www.who.int/news",
+        "result": "Accessible; latest listed November 3 items unrelated to Gaza."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:who.int OR site:emro.who.int Gaza November 3 2026 health hospital ambulance evacuation",
+      "site:english.wafa.ps Gaza November 3 2026 latest killings Khan Younis new",
+      "site:palestinercs.org Gaza November 3 2026 ambulance hospital evacuation",
+      "site:unicef.org Gaza November 3 2026 water children aid",
+      "site:wfp.org Gaza November 3 2026 food aid crossings",
+      "site:reuters.com Gaza November 3 2026 latest ceasefire civilians killed",
+      "site:apnews.com Gaza November 3 2026 Israeli strike civilians ceasefire",
+      "site:aljazeera.com/news/2026/11/3 Gaza strikes displacement aid",
+      "site:theguardian.com/world/2026/nov/03 gaza Gaza Palestinians ceasefire",
+      "site:unrwa.org Gaza November 3 2026 humanitarian shelter",
+      "site:msf.org Gaza 3 November 2026 hospitals medical services",
+      "site:icrc.org Gaza November 3 2026 hostages detainees aid crossing"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest 18:52 Palestine-local entry concerns attacks on olive harvesters in the West Bank. Gaza casualty incident and 48-hour totals dated earlier November 3 are previously recorded."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; most recent November 3 KSrelief logistics support announcement already reported by earlier Gaza watch."
+      },
+      {
+        "source": "MSF latest",
+        "url": "https://www.msf.org/latest",
+        "result": "Accessible; no new Gaza health or access event established in this interval."
+      },
+      {
+        "source": "ICRC occupied territories",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new release, detention or aid operation verified in observation interval."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; recurring direct-access restriction. Targeted web search found no current-window qualifying item."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; recurring direct-access restriction. Targeted web search found no current-window qualifying item."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Direct access restricted; recurring problem."
+      }
+    ],
+    "screened_categories": [
+      "Civilian casualties, strikes with civilian impact, displacement, damage",
+      "Aid and food/water access, crossings, fuel, shelter and logistics",
+      "Hospital function, ambulances, medical transports and evacuations",
+      "Detention and hostages; ceasefire/negotiation developments with confirmed material civilian impact"
+    ],
+    "exclusions": [
+      "WAFA November 3 Applied College strike in western Khan Younis killing three and associated injuries, and separate retrospective Gaza hospital fatality/injury bulletin, both in the earlier 04:44 watch; duplicate.",
+      "PRCS November 3 Saudi KSrelief logistical contribution, already recorded in the 03:44 watch; duplicate.",
+      "Al Jazeera November 3 article recounts November 2 Gaza strikes and earlier injuries; recycled event chronology, not a newly occurring strike in this observation interval.",
+      "WAFA November 3 18:52 Palestine-local report describes attacks on West Bank olive harvesters, outside Gaza geographic scope.",
+      "WAFA late-day US-Israel annual financial assistance announcement not tied to verified Gaza civilian or humanitarian operational impact; previously screened.",
+      "Earlier-dated news, unrelated West Bank news, opinion, unsupported social posts and unverified claims excluded."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News",
+        "problem": "Direct URL fetch restriction",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "No newly verified qualifying development was found; this is not proof that none occurred.",
+      "Fresh news and primary reports may appear after this observation window due to publisher or search-index delays.",
+      "Recurring restrictions limit comprehensive direct-source coverage; primary OCHA and global WHO pages plus WAFA, PRCS, MSF and ICRC remained accessible."
+    ],
+    "status_rationale": "DEGRADED because recurring WHO EMRO, WFP, UNRWA and UN News access restrictions persist; no new material deterioration observed and meaningful alternative coverage was completed.",
+    "safeguards": "Exactly one append-only heartbeat created on ops/watch-ledger only. No changes to production, public outputs, approvals or automation."
+  }
+}

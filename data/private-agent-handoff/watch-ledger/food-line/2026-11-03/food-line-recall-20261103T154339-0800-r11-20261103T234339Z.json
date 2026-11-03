@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T154339-0800-r11-20261103T234339Z",
+  "scheduled_for": "2026-11-03T15:45:54-08:00",
+  "started_at": "2026-11-03T15:43:39-08:00",
+  "completed_at": "2026-11-03T23:45:53.526-00:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-11-03T14:49:58.074-08:00",
+    "end_at": "2026-11-03T23:45:53.526-00:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last directly verified ops/watch-ledger heartbeat completed_at; supplemented by same-day recall of previously missed high-value source notices. Event was announced earlier on November 3, not necessarily first published inside this hour.",
+    "targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-wi-eau-claire-feed-my-people-popup-cancel-20261103",
+      "canonical_source_url": "https://www.facebook.com/659830472845949/posts/1592768562885464",
+      "source_url": "https://www.fmpfoodbank.org/",
+      "corroborating_source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+      "publisher": "Feed My People Food Bank",
+      "source_published_at": "2026-11-03",
+      "corroborating_source_published_at": "2026-11-03T09:27:00-06:00",
+      "title": "Regularly Scheduled Pop-Ups Canceled for the Remainder of 2026 — Eau Claire",
+      "exact_supporting_passage": "Due to continued logistical issues with our parking lot, Feed My People will be canceling all remaining regularly scheduled pop-up food distributions",
+      "summary": "Feed My People Food Bank announced cancellation of all remaining regularly scheduled pop-up food distributions at its Eau Claire food-bank location for the remainder of 2026 because of parking-lot logistical issues. Other communities' pop-ups are unaffected, and the provider says it remains available for emergency pop-ups as needed. This is a major local access reduction, not a systemwide shutdown.",
+      "location": "Eau Claire, Wisconsin",
+      "state": "WI",
+      "scope": "Eau Claire food-bank site only; remaining scheduled pop-ups through December 31, 2026",
+      "affected_groups": [
+        "People relying on scheduled free pop-up food distributions at Feed My People's Eau Claire site"
+      ],
+      "pressure_type": "abrupt_food_bank_distribution_access_reduction",
+      "confidence": "high",
+      "source_role": "primary_provider_notice",
+      "evidence_level": "first_party_statement_corroborated_by_local_news",
+      "bounded_query_context": [
+        "\"Feed My People\" \"Eau Claire\" \"pop-up\" cancelled November 3 2026 official",
+        "site:fmpfoodbank.org Eau Claire pop-up distributions cancelled remainder 2026 November 3",
+        "food pantry closed indefinitely November 3 2026 food bank disruption"
+      ],
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "event_first_announced_in_observation_window": false,
+      "newly_detected_by_watch_in_observation_window": true,
+      "time_of_official_notice": null,
+      "estimated_people_affected": null,
+      "qualifying_miss_class": 3
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Food Line recall, not the authoritative nationwide production collector.",
+    "target_classes": [
+      "Sole/only/last/full-service community grocery loss",
+      "Storm/flood/fire/outage/facility-damage emergency distribution suspension",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 3 2026 US",
+      "\"sole grocery store\" closure fire November 2026 local",
+      "\"last grocery store\" closed November 3 2026 town",
+      "\"full service grocery\" closing November 3 2026 rural community",
+      "food pantry emergency distribution canceled storm November 3 2026",
+      "food bank distribution canceled flooding outage November 3 2026",
+      "\"Feed My People\" \"Eau Claire\" \"pop-up\" cancelled November 3 2026 official",
+      "site:fmpfoodbank.org Eau Claire pop-up distributions cancelled remainder 2026 November 3",
+      "food pantry closed indefinitely November 3 2026 food bank disruption",
+      "SNAP WIC EBT benefits outage interruption November 3 2026 state agency",
+      "site:gov November 3 2026 SNAP WIC EBT disruption suspended payments",
+      "food assistance emergency distribution canceled November 3 2026 fire outage storm"
+    ],
+    "result": "One new-to-watch qualifying major access reduction from November 3: Eau Claire WI pop-up distributions canceled through year-end. The provider's announcement and WEAU local reporting substantiate the cancellation. The WEAU article was initially published earlier than the last hourly heartbeat; treat as late-recalled missed signal, not as a first-publication-in-hour claim.",
+    "source_failures": [
+      {
+        "source_url": "https://www.facebook.com/659830472845949/posts/1592768562885464",
+        "failure": "Direct Facebook post fetch returned DisabledError; the full provider statement was available on the provider's official home page and the cancellation was corroborated by WEAU."
+      }
+    ],
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 2026 community grocery-fire loss predates this watch window."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "September 2026 planned sole-grocery closure predates window."
+      },
+      {
+        "url": "https://dhr.alabama.gov/november-snap-benefits-suspended-10272025/",
+        "reason": "Official agency SNAP suspension dated October 2025, not a new 2026 disruption."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T144818-0800-r11-20261103T224818Z.json",
+      "completed_at": "2026-11-03T14:49:58.074-08:00",
+      "outcome": "no_findings"
+    },
+    "limitations": "Facebook direct fetch restricted; official food-bank website mirrors announcement. Source time-of-day unknown; local report originally published at 07:27 PST before the previous check. Search results may omit unindexed local sources. No estimate of affected households.",
+    "production_authority": "No approval, public publication, production collection alteration, schedule change, or task disabling."
+  }
+}

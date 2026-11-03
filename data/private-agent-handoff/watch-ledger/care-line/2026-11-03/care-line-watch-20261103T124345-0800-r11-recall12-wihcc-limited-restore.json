@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T124345-0800-r11-recall12-wihcc-limited-restore",
+  "scheduled_for": "2026-11-03T12:45:22-08:00",
+  "started_at": "2026-11-03T12:43:45-08:00",
+  "completed_at": "2026-11-03T12:45:44.814-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T11:42:16-08:00",
+    "end": "2026-11-03T12:45:44.814-08:00",
+    "basis": "Since most recent verified Care Line Watch heartbeat, plus bounded recall. Provider-announced Winslow reopening crossed effective time during this window; actual on-site operation not independently verified. Production collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261103-az-winslow-wihcc-walkin-pharmacy-partial-reopening",
+      "canonical_source_url": "https://www.wihcc.com/",
+      "title": "Winslow Indian Health Care Center announces same-day soft reopening of walk-in care and prescription refills after flooding disruption",
+      "publisher": "Winslow Indian Health Care Center",
+      "exact_supporting_passage": "Winslow Campus will begin a soft opening of walk-in services for patients at 1:00 PM today. Pharmacy services for prescription refills will also be available.",
+      "source_published_date": "2026-11-03",
+      "state": "Arizona",
+      "city": "Winslow",
+      "county": "Navajo",
+      "territory": null,
+      "event_type": "limited_essential_service_restoration",
+      "service_line": [
+        "walk-in primary care",
+        "pharmacy prescription refills"
+      ],
+      "access_consequences": "Provider announced that walk-in patient visits would partially resume at 1 p.m. Arizona MST on November 3, along with prescription refill pharmacy access; this followed flooding-related suspension of most services. Not a full campus reopening. Scheduled effective time had passed at observation; post-opening patient operations not independently verified.",
+      "affected_population": "Winslow campus walk-in patients and prescription refill patients, including Navajo Nation chapter communities served by WIHCC",
+      "effective_date": "2026-11-03T13:00:00-07:00",
+      "announcement_date": "2026-11-03",
+      "confidence": "medium",
+      "source_role": "primary_official_provider_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "official_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination notice (CCN 18P001)",
+      "disposition": "Checked official CMS index first. No newly dated November 3 notice; November 2 notice and October 30 notices already documented in previous run."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "Winslow Indian Health Care Center November 3 2026 walk-in services reopened 1 pm flood",
+      "November 3 2026 hospital emergency department maternity unit closed suspended services US",
+      "November 3 2026 ambulance EMS service suspended shut down rural county",
+      "November 3 2026 rural clinic health center dialysis oncology services closure",
+      "\"Winslow Campus\" \"soft opening\" \"1:00 PM\" \"11/3/2026\"",
+      "site:wihcc.com \"As of (11/3/2026\" \"soft\"",
+      "2026 November 3 hospital reopening emergency urgent care flood Arizona Winslow Health First Florida resumed services",
+      "November 3 2026 Puerto Rico Guam US Virgin Islands CNMI American Samoa medical facility clinic emergency ambulance service suspended",
+      "November 3 2026 \"emergency department\" \"closed\" \"hospital\" US",
+      "November 3 2026 \"maternity\" \"suspended\" \"hospital\" labor delivery US",
+      "November 3 2026 \"ambulance\" \"no longer\" \"service\" county EMS",
+      "November 3 2026 \"dialysis\" \"closed\" clinic OR \"air ambulance\" \"base\" closure"
+    ],
+    "qualifying_update": {
+      "official_url": "https://www.wihcc.com/",
+      "official_noticed_at": "2026-11-03T09:52:00-07:00",
+      "reopening_announced_at": "2026-11-03T13:00:00-07:00",
+      "disposition": "Previously pending future reopening reached its exact provider-announced effective time (12:00 PST) before this watch; report as limited, time-effective provider-announced restoration only, not independently observed operational confirmation."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "WIHCC Leupp clinic closure and Dilkon specialty suspension",
+        "reason": "Same November 2 announcement and previously recorded; no restoration verified for those facilities."
+      },
+      {
+        "item": "CMS November 2 Network for Hope termination and October 30 notices",
+        "reason": "Previously documented; no fresh CMS change."
+      },
+      {
+        "item": "Health First Brevard County outpatient, lab, imaging and elective procedure suspensions",
+        "reason": "Previous closure records; report said some services may reopen no earlier than 10 a.m. November 3, not confirmation of actual restoration."
+      },
+      {
+        "item": "Dennys River Ambulance, Maine",
+        "reason": "Previously announced future November 30 shutdown, not a newly effective service loss."
+      },
+      {
+        "item": "Greene County EMS, Alabama and Klamath Fire District 3, Oregon",
+        "reason": "Old July and August events; outside new window."
+      },
+      {
+        "item": "Guam medical emergency limitations",
+        "reason": "Retrieved notices dated April through July, not new November event."
+      },
+      {
+        "item": "Watsonville obstetric closure vote and Greene County IL ambulance contract dispute",
+        "reason": "Future proposals/negotiations, no current concrete loss."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct Health First alert endpoint returned access failure again, preventing verification of possible reopening; independent provider WIHCC and CMS sources available."
+      }
+    ],
+    "quality_limitations": "Bounded supplementary recall, not exhaustive national or territorial collection. Search relevance poor for territorial, air-medical, dialysis, oncology and rural closures. WIHCC reopening is time-effective according to provider notice, but no later provider bulletin or eyewitness confirmation of actually reopened walk-in services found. Existing Health First official endpoint inaccessible; DEGRADED despite useful coverage.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private handoff only; pending editorial review; no approval, publication, schedule alteration, task disabling or production collector mutation."
+  }
+}

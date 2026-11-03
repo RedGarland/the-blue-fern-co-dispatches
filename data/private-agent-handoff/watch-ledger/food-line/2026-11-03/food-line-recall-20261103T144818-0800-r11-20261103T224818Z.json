@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T144818-0800-r11-20261103T224818Z",
+  "scheduled_for": "2026-11-03T14:45:54-08:00",
+  "started_at": "2026-11-03T14:48:18-08:00",
+  "completed_at": "2026-11-03T14:49:58.074-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T13:48:17.217-08:00",
+    "end_at": "2026-11-03T14:49:58.074-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last verified watch heartbeat completed_at from ops/watch-ledger; screened for first-published or independently newly confirmed evidence since the last watch rather than current crawler/index date.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only; production nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Loss of only, sole, last, or full-service grocery through closure, fire, or disaster",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank closure or major food-access reduction",
+      "New official SNAP/WIC/EBT/food-assistance interruption with immediate access impact"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 3 2026 town",
+      "\"last grocery store\" closing November 3 2026 rural town",
+      "\"sole grocery store\" fire shutdown November 2026 community",
+      "\"food distribution\" cancelled storm outage \"November 3\" 2026",
+      "\"food bank\" distribution suspended flood storm \"Nov 3\" 2026",
+      "\"food pantry\" abrupt closure stopped services November 3 2026",
+      "site:gov \"SNAP\" \"November 3, 2026\" benefits delayed outage",
+      "site:gov WIC EBT outage interruption November 3 2026",
+      "food distribution canceled today November 3 2026 severe weather power",
+      "grocery fire \"only grocery\" November 2026",
+      "SNAP benefits unavailable November 3 2026 official agency notice",
+      "pantry food bank emergency closure November 3 2026 facility damage"
+    ],
+    "result": "No newly verified qualifying event first published or confirmed during the observation window. Returned high-ranking stories were historical/out of window, unrelated, generic assistance pages or 2025 disruptions; no fresh local or official incident notice meeting criteria.",
+    "noteworthy_exclusions": [
+      {
+        "publisher": "WBNG",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Qualifying-type Spencer, NY grocery loss occurred in September 2026, previously screened and outside the current hourly window."
+      },
+      {
+        "publisher": "WGME/WVII",
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport ME only-grocery closure news published Sep 3, 2026; outside window."
+      },
+      {
+        "publisher": "AP News",
+        "url": "https://apnews.com/article/government-shutdown-food-lines-snap-6b55e2c21c0198f3309f3a45a55f33b6",
+        "reason": "SNAP funding disruption from 2025 shutdown; historic not newly reported 2026."
+      },
+      {
+        "publisher": "KQED",
+        "url": "https://www.kqed.org/news/12060770/snap-calfresh-food-stamps-government-shutdown-november-payments-ebt",
+        "reason": "October-November 2025 CalFresh shutdown coverage; not a November 2026 interruption."
+      },
+      {
+        "publisher": "FOX Local",
+        "url": "https://www.livenowfox.com/news/cinnamon-recall-issued-14-states-over-possible-lead-exposure",
+        "reason": "Nov 3 2026 cinnamon product recall; unrelated to the four high-value access-disruption classes."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T134726-0800-r11-20261103T214726Z.json",
+      "completed_at": "2026-11-03T13:48:17.217-08:00"
+    },
+    "source_failures": [],
+    "limitations": "Results were dominated by old or irrelevant hits despite two-day recency settings; indexing cannot rule out unindexed local pantry closures, distribution cancellations, or real-time SNAP/WIC issues. This bounded recall watch is not an exhaustive primary collector.",
+    "production_authority": "No approvals, public publication, schedule change, collector mutation, or task disabling."
+  }
+}

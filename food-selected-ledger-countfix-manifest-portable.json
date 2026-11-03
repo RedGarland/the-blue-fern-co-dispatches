@@ -1,0 +1,59 @@
+{
+  "schema": "food.selected_ledger.source_package.v3.portable_review",
+  "source_commit": "d5f5106320827e8c6dabdc90fc19ac84bec835b2",
+  "runtime_files": [
+    {
+      "repository_path": "scripts/food_line_daily_scheduler.py",
+      "candidate_path": "scripts/food_line_daily_scheduler.py",
+      "base_bytes": 113140,
+      "base_sha256": "ED24CA5FE7711E5CC7C56E062D41CD510F50C17F92C0E3A52B66FC87365DBDEC",
+      "candidate_bytes": 131280,
+      "candidate_sha256": "D9C72B89E6C49E451E5D11BBAC119BB16BEFF0493F2D60C97C68008E122E2384",
+      "canonical_lf_bytes": 128573,
+      "canonical_lf_sha256": "4567DC157D004AE9AAAF7472B45956A477122AAF6E81D6AB1CCAD6CE50552EC3"
+    },
+    {
+      "repository_path": "scripts/food_line_continuation_ledger.py",
+      "candidate_path": "scripts/food_line_continuation_ledger.py",
+      "base_bytes": 33115,
+      "base_sha256": "D3159DD765CB14F369AA5F4291C21B0E2A86CD65F075D3CE9F39741F048C0E54",
+      "candidate_bytes": 35707,
+      "candidate_sha256": "CC20CBF6DF6366418F8DC8BD63B4524923D9EF9A2C6715CA90040C7E6DC8419D",
+      "canonical_lf_bytes": 34943,
+      "canonical_lf_sha256": "8CF226BD81B96ADE1C7107D4D01687F9F5AC76C469A6525674E0677A97C808B7"
+    },
+    {
+      "repository_path": "scripts/run_food_line_continuation.py",
+      "candidate_path": "scripts/run_food_line_continuation.py",
+      "base_bytes": 21178,
+      "base_sha256": "7F5AE7B44ED860A6FF098A9854B818FEB1DE44D6D3126CF8FAE770E28C91F900",
+      "candidate_bytes": 22740,
+      "candidate_sha256": "27ED434AE868AD913167CC263BCBBADBF55B6C58BD43D2556F03AF804B1B10BB",
+      "canonical_lf_bytes": 22242,
+      "canonical_lf_sha256": "5282BF69E4615CBA8F1A554D0EEE8E7C760CDE8BBC1D89A64CCD6557C335207C"
+    },
+    {
+      "repository_path": "scripts/windows/resume_food_line_daily_current.ps1",
+      "candidate_path": "scripts/windows/resume_food_line_daily_current.ps1",
+      "base_bytes": 1845,
+      "base_sha256": "CB55A2AD4E9462AEC7090E2101C38F28AD098B3F5B65096B6443EEEA135D7F8E",
+      "candidate_bytes": 2125,
+      "candidate_sha256": "E5FA1257B876BF5C08A5DC60C10AC42C172AE9D5E774766F43EA8DF6D3880E98",
+      "canonical_lf_bytes": 2087,
+      "canonical_lf_sha256": "6F31BF50F17F660DE03289A80213B664F73B8171D434084BECE2A08F3F91D6AC"
+    },
+    {
+      "repository_path": "scripts/windows/run_food_care_proof_continuation.ps1",
+      "candidate_path": "scripts/windows/run_food_care_proof_continuation.ps1",
+      "base_bytes": 8447,
+      "base_sha256": "28AE56FF86069384A709D1F6FAD2C8FAD75E2D83E753BE29F8BB2ADB0E688322",
+      "candidate_bytes": 17099,
+      "candidate_sha256": "CBBA242BABF5A186538C591A1BA8AF940630C880B9D8719A37BAC58788E0509D",
+      "canonical_lf_bytes": 16883,
+      "canonical_lf_sha256": "B502601A251762D58B72FE3FC6D3503D835D1DDEFB0AD93116DFC0C1D0717D2A"
+    }
+  ],
+  "reviewed_pr_head": "6118be08f95d5a3ab2276b8c2f8890fd11a2a6a4",
+  "runtime_pin_required": true,
+  "source_commit_role": "Original source-package fixture baseline; not the selected ledger source identity or installed runtime identity."
+}

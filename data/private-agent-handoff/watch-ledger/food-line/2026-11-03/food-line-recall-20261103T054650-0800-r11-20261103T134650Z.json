@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T054650-0800-r11-20261103T134650Z",
+  "scheduled_for": "2026-11-03T05:45:54-08:00",
+  "started_at": "2026-11-03T05:46:50-08:00",
+  "completed_at": "2026-11-03T05:48:26.199-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T04:51:31.078-08:00",
+    "end_at": "2026-11-03T05:48:26.199-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently verified watch-ledger heartbeat; screened publication and underlying event dates separately.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall; primary nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster affecting only, sole, last, or full-service community grocery store",
+      "Canceled or suspended emergency food distribution due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or major immediate food-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequence"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire town November 2026",
+      "\"last grocery store\" shutdown closed fire Nov 2026 rural",
+      "\"sole supermarket\" closed fire storm November 2026 United States",
+      "\"food distribution\" canceled storm flooding November 3 2026 food bank",
+      "\"food pantry\" distribution suspended power outage storm November 2026",
+      "\"food bank\" canceled distribution weather November 2 2026",
+      "\"food pantry\" \"closed\" \"November 3, 2026\" emergency",
+      "\"food bank\" \"shut down\" \"November 2, 2026\" distribution",
+      "\"food pantry\" abruptly closed reduction hours November 2026",
+      "site:gov \"SNAP\" \"November 3, 2026\" \"delayed\" \"benefits\"",
+      "site:gov \"WIC\" \"November 2026\" \"interruption\" \"benefits\"",
+      "SNAP EBT benefits processing outage November 2 November 3 2026 state agency"
+    ],
+    "results": "No independently verified new qualifying U.S. food-access disruptions published or newly reported within the checked interval. All 12 targeted searches yielded usable results; no search-tool errors.",
+    "noteworthy_exclusions": [
+      {
+        "publisher": "WBNG",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 2026 sole grocery-store fire in Spencer, New York; preexisting event, not new in this run."
+      },
+      {
+        "publisher": "KFOX",
+        "url": "https://kfoxtv.com/newsletter-daily/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+        "reason": "September 24, 2026 El Paso storm-related food-bank closure; historical event."
+      },
+      {
+        "publisher": "The Gazette",
+        "url": "https://gazette.com/2025/09/06/church-and-food-source-for-the-needy-in-colorado-springs-abruptly-closes-f499c954-cf59-4199-9873-478990694c92/",
+        "reason": "September 2025 abrupt closure, not a new 2026 disruption."
+      },
+      {
+        "publisher": "Food Bank of Northern Indiana via 95.3 MNC",
+        "url": "https://www.953mnc.com/2026/11/03/food-bank-of-northern-indianas-november-mobile-food-distribution-schedule-2/",
+        "reason": "Routine November food distribution schedule, no cancellation or reduction."
+      },
+      {
+        "publisher": "Multiple 2025 SNAP reports",
+        "reason": "Prior-year November 2025 SNAP shutdown and benefits-delay coverage; excludes month/day false matches."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "This 12-search supplementary recall does not prove a nationwide absence. Search indexing and undated provider notices can lag. Local reports and official notices were prioritized, but relevant items not indexed at search time may remain unseen.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T045024-0800-r11-20261103T125024Z.json",
+      "completed_at": "2026-11-03T04:51:31.078-08:00"
+    },
+    "production_authority": "No approvals, publication, schedule alteration, task disabling, or changes to primary collection.",
+    "exclusions": "Donation drives, routine schedules, resource guides, opinion, inflation, recipes, promotions, historical duplicates, and speculative claims."
+  }
+}

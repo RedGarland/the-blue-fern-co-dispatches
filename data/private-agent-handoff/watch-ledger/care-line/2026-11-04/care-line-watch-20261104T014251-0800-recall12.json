@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T014251-0800-recall12",
+  "scheduled_for": "2026-11-04T01:45:22-08:00",
+  "started_at": "2026-11-04T01:42:51-08:00",
+  "completed_at": "2026-11-04T01:44:26.585-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T00:45:50.608-08:00",
+    "end": "2026-11-04T01:44:26.585-08:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed 2026-11-04T00:45:50.608-08:00; supplementary recall only, primary production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO, termination, CCN 18P001",
+      "result": "Direct official CMS table showed no entries dated November 3-4, 2026. November 2 entry was already present in prior watch; no distinct new notice in window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure diversion overnight November 4 2026 United States",
+      "hospital labor delivery maternity unit closure suspension November 3 2026 November 4 2026",
+      "rural emergency hospital temporarily closed November 4 2026 US",
+      "ambulance service air ambulance helicopter base closes suspends November 3 4 2026",
+      "psychiatric behavioral health inpatient unit closed suspended November 4 2026 US",
+      "dialysis clinic cancer oncology services closed suspended November 4 2026 US",
+      "primary care urgent care facility abruptly closed patients November 4 2026 US",
+      "site:gov \"November 4, 2026\" emergency department clinic closure services",
+      "hospital reopened resumed emergency services November 4 2026 after closure",
+      "site:gov \"November 3, 2026\" \"CLIA\" \"suspension\" \"laboratory\"",
+      "Puerto Rico Guam US Virgin Islands American Samoa hospital emergency department closure November 4 2026",
+      "November 4 2026 emergency medical service EMS suspended service county"
+    ],
+    "search_recency_days": 2,
+    "search_results": "Twelve bounded targeted searches for hospital/ED, maternity, rural services, ambulance/air-medical, behavioral health, dialysis/oncology, primary care, official access notices, reopening/restoration and US territories. No independently verified newly announced or effective qualifying healthcare-access change since prior hourly heartbeat. Indexed results skewed historical, foreign, speculative and irrelevant; early-November results were previously known.",
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center (AZ) limited walk-in and pharmacy restoration; Leupp/Dilkon flood restrictions",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Provider's latest visible notice still time-stamped November 3, 2026 09:52 Arizona time; previously recorded, no newly verified change."
+      },
+      {
+        "item": "Roseland Community Hospital, IL, labor/delivery closure",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "October 28 reporting and previously screened; not new in observation window."
+      },
+      {
+        "item": "Benefis Health System, Great Falls, MT, announced service changes",
+        "source_url": "https://montanafreepress.org/2026/11/03/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/",
+        "reason": "Earlier announcement with December 19 anticipated effective transition; not new or effective in this window."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Accessible; same November 3 notice; no distinct new service change."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Not accessible through research browser; prior known source limitation persists."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct official alert endpoint returned tool access error again. CMS and all 12 independent indexed searches remained usable; previously known degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Overnight sources may be unindexed; bounded recall is not exhaustive. One official alert page remains inaccessible, so status is DEGRADED; failure was present in prior runs.",
+    "controls": "No approval, public publication, schedule alteration, task disabling, or modification of production collector. One heartbeat only for this execution."
+  }
+}

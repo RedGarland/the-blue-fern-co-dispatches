@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T164649-0800-r12-recall12",
+  "scheduled_for": "2026-11-03T16:45:22-08:00",
+  "started_at": "2026-11-03T16:46:49-08:00",
+  "completed_at": "2026-11-03T16:47:45-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T15:49:39-08:00",
+    "end": "2026-11-03T16:47:45-08:00",
+    "basis": "From preceding verified Care Line heartbeat through this observation; same-day late indexing considered; bounded supplementary recall, not authoritative production collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — OPO termination notice (CCN 18P001, Kentucky)",
+      "result": "No November 3 CMS public notice visible; the October 30-November 2 entries were already identified during previous hourly watches. No new termination, rescission, CLIA limitation or suspension verified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 November 4 2026 hospital emergency department temporarily closed reopened US patients",
+      "November 3 2026 maternity labor delivery suspended closed hospital rural US",
+      "November 3 2026 ambulance service air medical helicopter base shutdown suspended closure US",
+      "November 3 2026 psychiatric behavioral health hospital crisis stabilization services closed today",
+      "\"Nov 3, 2026\" \"clinic\" \"closed\" patients emergency care",
+      "\"Nov. 3, 2026\" \"dialysis\" OR \"oncology\" \"closed\" OR \"suspended\" OR \"reopened\"",
+      "\"November 3, 2026\" \"hospital\" \"service\" \"suspended\" OR \"reopened\" United States",
+      "\"November 3, 2026\" \"primary care\" \"closing\" OR \"closed\" clinic patients",
+      "November 3 2026 Indian River Sebastian Vero Beach hospital clinic flooding outpatient closed reopen Health First Cleveland Clinic",
+      "November 3 2026 Puerto Rico Guam U.S. Virgin Islands American Samoa Northern Mariana hospital clinic dialysis ambulance services closed",
+      "November 3 2026 ambulance EMS paramedic station base closure suspended response coverage county US",
+      "November 3 2026 clinic hospital emergency service reopening today storm flooding power outage US"
+    ],
+    "search_recency_days": 2,
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "Provider still displays November 3 09:52 Arizona-time notice of scheduled 13:00 Arizona-time Winslow walk-in soft reopening and pharmacy refills; Leupp remains closed November 3; Dilkon dental, podiatry, and wound-care closed; urgent care open. Previously recorded service restoration, no newer effective change confirmed."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Official Health First alert endpoint inaccessible again; no independently verifiable update or reopening."
+      }
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center soft reopening and pharmacy refills, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Duplicate of 2026-11-03 12:43 PST heartbeat finding; official page unchanged."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian outpatient and urgent care flooding closure, Florida",
+        "source": "https://veronews.com/2026/11/03/indian-river-schools-to-remain-closed-wednesday-amid-flooding/",
+        "reason": "Previously known November 2-3 weather closure; current reporting repeats suspension, without new effective service change or confirmed reopening."
+      },
+      {
+        "item": "Roseland Community Hospital maternity ward closure, Chicago",
+        "source": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Closure took effect November 1 and was already recorded in prior watches."
+      },
+      {
+        "item": "Kula Hospital Maui restoration",
+        "source": "https://www.hawaiinewsnow.com/2026/11/03/kula-hospital-targets-late-summer-2027-reopening-after-storm-damage/",
+        "reason": "Expected late summer 2027 reopening, not a current restoration."
+      },
+      {
+        "item": "Newark city health clinic Election Day closure",
+        "source": "https://patch.com/new-jersey/newarknj/what-know-closures-trash-court-election-day-newark",
+        "reason": "Pre-announced routine Election Day single-day administrative/clinic scheduling closure, not an abrupt essential-service access disruption in the watch's high-value classes."
+      },
+      {
+        "item": "Children's Mercy and other healthcare staff reductions",
+        "source": "https://www.fiercehealthcare.com/finance/fierce-healthcare-layoff-tracker-2026-job-cuts-eliminations-health-systems-hospitals",
+        "reason": "Latest job cuts reported as principally nonclinical and no confirmed newly effective healthcare service suspension within the window."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Browser returned internal error; previously documented in recent hourly Care Line watches."
+      }
+    ],
+    "quality_limitations": "This was a bounded, search-index-dependent national/territorial recall rather than exhaustive coverage. Targeted query results were thin for ambulance/air-medical, dialysis/oncology, rural, and US territorial changes. The inaccessible Health First endpoint prevents independent confirmation of a potential reopening; no other source provided substantiation.",
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private GitHub heartbeat only; no approval, public publication, production runner changes, schedule changes, or task disabling."
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T024727-0800-recall12",
+  "scheduled_for": "2026-11-04T02:45:22-08:00",
+  "started_at": "2026-11-04T02:47:27-08:00",
+  "completed_at": "2026-11-04T02:48:44-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T01:44:26.585-08:00",
+    "end": "2026-11-04T02:48:44-08:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed at 2026-11-04T01:44:26.585-08:00; bounded supplementary recall only, not the primary national collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), OPO, termination notice, CCN 18P001",
+      "result": "The official CMS table had no November 3 or November 4 notice and no new notice identifiable since the previous hourly heartbeat."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed reopened November 4 2026 US rural hospital",
+      "hospital maternity labor delivery unit closure suspension November 3 4 2026",
+      "hospital behavioral health psychiatric unit closes suspends services November 3 4 2026",
+      "dialysis clinic abruptly closed patients transferred November 3 4 2026",
+      "oncology cancer treatment center temporarily closed services November 3 4 2026",
+      "rural health clinic primary care closure effective November 3 4 2026",
+      "ambulance service suspends operations shuts down November 3 2026 city county EMS",
+      "medical helicopter air ambulance base closed suspended November 3 2026 United States",
+      "November 4 2026 emergency room closed temporarily hospital power outage evacuation",
+      "November 3 2026 hospital clinic reopened restored services after closure",
+      "site:gov 2026 November 3 closure health center patient services emergency care alert",
+      "November 3 2026 healthcare hospital behavioral health service closure Great Falls Benefis update"
+    ],
+    "search_recency_days": 2,
+    "search_results": "No verified qualifying announcement or effective access change newly arising during the 01:44–02:48 Pacific window. Twelve indexed targeted searches returned mainly prior-day or older events, out-of-scope results, prospective closures, and duplicates. US territories were in general search scope but there was no separately verified territory event.",
+    "reviewed_exclusions": [
+      {
+        "item": "Benefis Health System, Great Falls, Montana, announced Northwest Clinic relocation, inpatient rehabilitation discontinuation, and outpatient counseling/psychiatry/psychology discontinuation",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "The Nov 3 announcement was reviewed by the previous watch. Changes begin Dec 19 and proceed into 2027; no new effective service loss during current window."
+      },
+      {
+        "item": "Benefis Helena specialty center oncology and infusion cessation",
+        "source_url": "https://www.ktvh.com/news/helena-patients-face-uncertainty-after-benefis-closes-infusion-services",
+        "reason": "KRTV says the services were already stopped and earlier reported; a later Great Falls article mentioned the prior Helena change without a distinct event in this watch window."
+      },
+      {
+        "item": "Winslow Indian Health Care Center, Dilkon Medical Center and Leupp Clinic, Arizona, flood-related access and partial restoration",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official site still displays the previously recorded Nov 3, 09:52 Arizona-time notice. No new update."
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago, Illinois, maternity closure",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Previously recorded October closure; no newly distinct change."
+      },
+      {
+        "item": "Kula Hospital, Maui, Hawaii, planned late-summer-2027 reopening",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "November 2 construction/restoration planning, not an actually effective restoration of ED or hospital services."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Accessible; no update newer than the previous November 3 notice."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Direct open unsuccessful; previously documented inaccessible official Health First alert endpoint."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Known prior-run research-access problem persists; official CMS table and twelve independent targeted searches remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Rapid overnight developments may not yet be indexed. This watch is a bounded recall supplement, not exhaustive national production collection. Existing Health First official-alert access failure warrants DEGRADED, not FAILED.",
+    "controls": "No editorial approval, public publication, production collection change, schedule modification or disabling occurred. Exactly one heartbeat intended for this run."
+  }
+}

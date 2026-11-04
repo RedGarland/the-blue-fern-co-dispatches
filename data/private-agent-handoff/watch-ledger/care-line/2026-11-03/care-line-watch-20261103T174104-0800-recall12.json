@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T174104-0800-recall12",
+  "scheduled_for": "2026-11-03T17:45:22-08:00",
+  "started_at": "2026-11-03T17:41:04-08:00",
+  "completed_at": "2026-11-03T17:42:15-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T16:47:45-08:00",
+    "end": "2026-11-03T17:42:15-08:00",
+    "basis": "Prior independently verified Care Line heartbeat completed 16:47:45 PST; searched current local window and recent same-day indexing. Bounded supplementary recall only; production collection is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky organ procurement organization termination notice, CCN 18P001",
+      "result": "Verified live CMS notice table; no November 3 entries or newly listed terminations, rescissions, or CLIA restrictions since the preceding hourly check. Most recent November 2 and October 30 entries previously known."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 3, 2026\" hospital \"emergency department\" closed OR suspended OR reopened",
+      "\"November 3, 2026\" maternity \"labor and delivery\" closed OR suspended OR reopened",
+      "\"November 3, 2026\" dialysis OR oncology treatment center closed OR reopened",
+      "\"November 3, 2026\" rural hospital clinic urgent care closure temporary service",
+      "\"Nov 3, 2026\" \"ambulance\" \"service\" \"suspended\" OR \"closed\" OR \"shutdown\"",
+      "\"November 3, 2026\" air ambulance helicopter medical base closure suspended emergency",
+      "\"November 3, 2026\" behavioral health hospital crisis stabilization unit services closed suspended",
+      "November 3 2026 Puerto Rico Guam US Virgin Islands American Samoa Mariana hospital clinic closure emergency services",
+      "Winslow Indian Health Care Center November 3 2026 evening Leupp Dilkon clinic emergency update reopening",
+      "Health First November 3 2026 Florida flooding outpatient urgent care clinic restoration hf.org alert Melbourne Sebastian",
+      "\"November 3, 2026\" primary care clinic \"closed\" OR \"suspended\" OR \"reopened\" patients",
+      "November 3 2026 hospital emergency service ambulance reopened after flooding power outage United States Tuesday"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center limited walk-in/pharmacy reopening, AZ",
+        "source": "https://www.wihcc.com/",
+        "reason": "Official November 3 09:52 Arizona-time 13:00 soft-reopening notice unchanged; recorded in earlier 12:43 PST heartbeat; no later verified reopening status or new service transition."
+      },
+      {
+        "item": "Cleveland Clinic Sebastian outpatient and urgent-care flooding closure, FL",
+        "source": "https://veronews.com/2026/11/03/indian-river-schools-to-remain-closed-wednesday-amid-flooding/",
+        "reason": "Already observed in prior hourly watches; November 3 local report repeats prior closure, does not verify newly effective extension or reopening."
+      },
+      {
+        "item": "Health First Brevard County outpatient closures, FL",
+        "source": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/",
+        "reason": "November 2 report describes previously known closures and no-earlier-than November 3 10am restart; does not prove actual restoration. Official alert inaccessible."
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake residential services, Springfield IL",
+        "source": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/",
+        "reason": "November 3 announcement describes potential end-of-December closure; future planned reduction, not a newly effective service withdrawal."
+      },
+      {
+        "item": "Kickapoo Tribal Health Center Behavioral Health Building Q remodeling closure, OK",
+        "source": "https://okkthc.com/",
+        "reason": "Closure dated October 28, outside current window; notice indicates patient visits reassigned rather than new interruption this hour."
+      },
+      {
+        "item": "Vantive/Rockwell hemodialysis asset transaction",
+        "source": "https://www.vantive.com/news/press-releases/vantive-announces-agreement-divest-majority-hemodialysis-assets-and-associated",
+        "reason": "Corporate divestiture agreement announced November 3; no documented new dialysis treatment-center access change."
+      },
+      {
+        "item": "Kula Hospital Maui construction target",
+        "source": "https://hawaiiexpres.com/local-news/maui-health-names-general-contractor-for-kula-hospital-restoration",
+        "reason": "Projected summer 2027 reopening; no immediate restored services."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "Official 09:52 Arizona-time notice for November 3 13:00 limited Winslow walk-in and prescription-refill restoration unchanged; Leupp closed November 3; Dilkon ED/acute care open; other named services restricted."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Official alert endpoint still inaccessible (browser internal error); no independent confirmation of restoration. Previously documented repeated limitation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Known repeated failure; fallback local reporting covers previously announced 11/2-11/3 restrictions but cannot confirm whether services actually resumed."
+      }
+    ],
+    "quality_limitations": "Bounded index-dependent national and territory scan, not exhaustive; thin results for air-medical, dialysis/oncology, rural and U.S. territories. Source publication timestamps within the last ~hour generally unavailable. No new qualifying independent source claim survived duplicate, concreteness, and effective-date filters.",
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private GitHub ledger heartbeat only; no approval, public publication, primary production collector change, task schedule change, or disable."
+  }
+}

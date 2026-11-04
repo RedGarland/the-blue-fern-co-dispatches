@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T004930-0800-r11-20261104T084930Z",
+  "scheduled_for": "2026-11-04T00:45:54-08:00",
+  "started_at": "2026-11-04T00:49:30-08:00",
+  "completed_at": "2026-11-04T00:50:23-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T23:48:46-08:00",
+    "end_at": "2026-11-04T00:50:23-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous directly verified watch-ledger heartbeat completion through current run, including narrow delayed-indexing recall. Search results evaluated by source event/publication date rather than index freshness.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only; production nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster affecting a community's only/sole/last/full-service grocery store",
+      "Canceled or suspended emergency food distribution due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "New official SNAP, WIC, or food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closes fire November 3 2026 town",
+      "\"last grocery store\" closure 2026 November 3 4 local",
+      "food pantry forced close indefinitely November 3 2026 food bank local",
+      "food distribution cancelled storm fire power outage November 3 2026 food bank",
+      "site:gov \"SNAP\" \"benefits\" \"delayed\" \"November 2026\" state",
+      "site:gov \"WIC\" \"temporarily unavailable\" \"November 2026\"",
+      "\"food pantry\" \"closed\" \"Nov. 3, 2026\" emergency",
+      "\"food distribution\" \"canceled\" \"November 4, 2026\" storm",
+      "November 4 2026 \"food bank\" \"closure\" emergency pantry",
+      "November 3 2026 \"only grocery store\" \"closed\" fire",
+      "November 3 2026 \"food pantry\" \"suspend\" \"services\"",
+      "November 4 2026 SNAP WIC EBT outage benefits delay official state agency"
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T234732-0800-r11-20261104T074732Z.json",
+      "completed_at": "2026-11-03T23:48:46-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "result": "No verified nonduplicate qualifying newly reported U.S. food-access disruption found within the observation window.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire, Wisconsin pop-up cancellation is a duplicate of the previously recorded November 3 finding."
+      },
+      {
+        "url": "https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+        "reason": "Community Action Services and Food Bank Utah closure/reduction covered in the previous November 3 positive finding; reporting originated October 26."
+      },
+      {
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "reason": "St. George Salvation Army pantry reopening November 2, rather than a new loss of service."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17248782/99-ranch-market-closing-store-trader-joes-pleasanton-california/",
+        "reason": "Pleasanton 99 Ranch Market planned December 5 closure with alternative nearby stores, not sole/full-service loss; no immediate qualifying food-access interruption."
+      },
+      {
+        "url": "https://www.capradio.org/articles/2025/11/03/snap-benefits-will-restart-but-will-be-half-the-normal-payment-and-delayed/",
+        "reason": "November 3 SNAP payment delay article was published in 2025, not November 2026."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, NY only grocery lost in September 2026, outside current recall window."
+      },
+      {
+        "url": "https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+        "reason": "October 23, 2026 trend tracker, not a new agency-confirmed immediate benefit interruption."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search engine returned many historical and recycled November 2025 results despite tight date terms. No finding from this bounded indexed search does not establish absence of unindexed local incidents.",
+    "production_authority": "No production collection, editorial approval, publication, schedule or automation-state changes."
+  }
+}

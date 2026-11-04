@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T124554-0800-r11-20261104T204554Z",
+  "scheduled_for": "2026-11-04T12:45:54-08:00",
+  "started_at": "2026-11-04T12:45:54-08:00",
+  "completed_at": "2026-11-04T12:48:08.103-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T11:47:38.013-08:00",
+    "end_at": "2026-11-04T12:48:08.103-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified supplementary Food Line heartbeat completion through this run; index recency alone does not show event or posting time.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall watch only; Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Closure, fire, disaster or loss of sole/only/last/full-service grocery",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distributions",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T114612-0800-r11-20261104T194612Z.json",
+      "completed_at": "2026-11-04T11:47:38.013-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 4 2026 community",
+      "\"sole grocery store\" fire shut down November 2026 town",
+      "\"last grocery store\" closing November 4 2026 rural",
+      "November 4 2026 food distribution canceled storm flooding food bank",
+      "November 4 2026 \"food pantry\" \"closed\" emergency",
+      "November 4 2026 food bank distribution cancelled power outage",
+      "November 4 2026 SNAP benefits delayed suspended state agency notice",
+      "November 4 2026 WIC benefits interruption EBT system state notice",
+      "\"November 4, 2026\" \"food distribution\" \"canceled\" OR \"cancelled\"",
+      "\"November 4, 2026\" \"food pantry\" \"closed\" OR \"suspended\"",
+      "\"November 4, 2026\" \"only grocery store\" OR \"full-service grocery\"",
+      "\"November 4, 2026\" \"SNAP\" OR \"WIC\" \"outage\" OR \"delayed\" benefits"
+    ],
+    "direct_page_checks": [
+      {
+        "url": "https://pagosadailypost.com/2026/11/04/healthy-archuleta-food-resources-for-flood-recovery/",
+        "result": "New Nov. 4 flood-recovery resource notice confirms food pantries AVAILABLE; does not document cancellation, closure, or material access reduction."
+      },
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "result": "Still lists Nov. 4 Goodwill Integrated Solutions and SEED–Van Buren mobile distributions CANCELED. No storm/flood/fire/outage/facility-damage cause or interval-new posting timestamp. Provider page displays update Nov. 3, 2026 15:53 EST, before search interval; already excluded in previous heartbeat."
+      },
+      {
+        "url": "https://www.millvalleyrecreation.org/m/newsflash?cat=1",
+        "result": "City notices and historical relief information do not establish a newly occurring SNAP/WIC benefits interruption in this interval."
+      }
+    ],
+    "other_exclusions": [
+      "2025 SNAP government-shutdown stories and outdated emergency-aid guidance (not 2026 interval-new)",
+      "Historical sole-grocery fires/closures and October 2026 distribution-cancellation stories",
+      "Routine pantry calendars/resource guides, donation and program-promotion articles",
+      "Same-day Archuleta County Colorado flood support notice directs residents to available pantries; no qualifying loss of service"
+    ],
+    "result": "Twelve bounded searches and three direct-page checks yielded no verified new, nonduplicate qualifying high-value food-access disruption since the preceding heartbeat.",
+    "limitations": "Search engine results often surface 2025 articles with matching month/day and older closures; hour-level first-publication/cause data are scarce. This bounded watch is not exhaustive national collection.",
+    "source_failures": [],
+    "action_limits": "No approvals, publications, production collection changes, schedule changes, or disabling."
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T234222-0800-r11-20261104T074419277Z",
+  "scheduled_for": "2026-11-03T23:44:51-08:00",
+  "started_at": "2026-11-03T23:42:22-08:00",
+  "completed_at": "2026-11-03T23:44:19.277-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T22:47:38-08:00",
+    "end": "2026-11-03T23:44:19.277-08:00",
+    "basis": "Last verified heartbeat's completed_at; checks allow earlier-dated late-discovered high-value events only if distinct, with prior-November-3 Gaza City municipal-park and Khan Younis cases de-duplicated.",
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; no production collection, approval, publication, scheduling, or public-site changes.",
+    "last_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T224507-0800-r11-20261104T064738Z.json",
+      "completed_at": "2026-11-03T22:47:38-08:00",
+      "finding_ids_already_recorded": [
+        "gaza-20261103-gazacity-municipalpark-rimas-al-madhoun-drone"
+      ],
+      "verification": "Exact-file fetch from GitHub ops/watch-ledger; parent folder listing confirms no later Nov 3 Gaza heartbeat before this run."
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT Updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; newest listed November 3 observation was not available: newest publication October 31 (October 29 humanitarian situation report). No newly published Nov 3/4 Gaza item."
+      },
+      {
+        "source": "WHO oPt situation",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; overview/news shows no newly dated Nov 3/4 Gaza health operational event."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct check returned HTTP 502, recurring issue from previous run."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza November 3 2026 humanitarian situation report latest update November 4",
+      "site:who.int Gaza 3 November 2026 health situation medical evacuations hospital WHO"
+    ],
+    "additional_targeted_searches": [
+      "Gaza November 4 2026 Wednesday killed injured airstrikes Gaza City Khan Younis Reuters AFP",
+      "site:english.wafa.ps/Pages/Details/ \"04/November/2026\" \"Gaza\" killed injured",
+      "site:unicef.org \"November 2026\" Gaza water children hospital aid November 4",
+      "Gaza 4 November 2026 Rafah Kerem Shalom aid crossings medical evacuation fuel WHO PRCS",
+      "site:reuters.com/world/middle-east/ Gaza November 4 2026 ceasefire strike hostages negotiations",
+      "site:msf.org Gaza \"4 November 2026\" OR \"3 November 2026\" medical hospitals access",
+      "site:english.wafa.ps \"November 4, 2026\" Gaza Israeli army casualties hospital displaced",
+      "site:palestinercs.org/en \"4 November 2026\" Gaza ambulance medical evacuation",
+      "site:ochaopt.org OR site:un.org \"3 November 2026\" Gaza food aid water displacement hospital",
+      "site:apnews.com/article/ Gaza November 4 2026 Israel civilians ceasefire strikes hostages",
+      "Gaza November 4 2026 Nasser Shifa Aqsa Hospital medical fuel WHO evacuation updates",
+      "Gaza Israel November 4 2026 overnight ceasefire negotiation civilian displacement military operations"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA Latest News",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Nov 4 at 09:00 and 08:58 Palestine-local items concern Jenin and Tulkarm, not Gaza. Last Nov 3 Gaza reports repeat previously recorded fatalities, civilian injury counts and related coverage."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest headline is Nov 3 Saudi Arabia logistical support, already observed in prior watch; no distinct fresh operational Gaza change."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Nov 3 Gaza casualties item does not establish an independent new within-window event; older items excluded."
+      },
+      {
+        "source": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "No qualifying new November 4 Gaza event verified on index."
+      },
+      {
+        "source": "AP Israel-Hamas hub",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "No distinct November 4 Gaza event verified; historical and election stories excluded."
+      },
+      {
+        "source": "WFP News",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden (recurring restriction)."
+      },
+      {
+        "source": "UNRWA Newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden (recurring restriction)."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Denied by robots.txt (recurring restriction)."
+      }
+    ],
+    "miss_classes_checked": [
+      "civilian casualties and displacement",
+      "aid and food/water access",
+      "hospitals, ambulances, fuel, medical evacuation and capacity",
+      "crossings",
+      "military operations with documented civilian impact",
+      "ceasefire, hostages/detention and negotiations",
+      "infrastructure damage"
+    ],
+    "exclusions": "Older November 1-3 strike reports and previously identified November 3 Gaza City displaced-tent fatality; unchanged Gaza casualty rollups; historical 2023-2025 results; Nov 4 West Bank arrests; opinion and unsourced claims.",
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring_restrictions": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News robots exclusion"
+      ],
+      "coverage_compensation": "OCHA OPT and WHO primary global pages accessible; WAFA, PRCS, Al Jazeera, Reuters and AP checked; 12 bounded targeted searches conducted."
+    },
+    "limitations": "Search indexing and publisher timestamps may lag; a no-findings result means no independently traceable distinct development verified within this bounded search, not that no event occurred.",
+    "scheduled_start_note": "Nominal hourly RRULE time 23:44:51 PST; run was started early at automation's supplied local current time 23:42:22 PST."
+  }
+}

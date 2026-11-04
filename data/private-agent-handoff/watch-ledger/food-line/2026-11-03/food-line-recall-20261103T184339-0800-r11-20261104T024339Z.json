@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T184339-0800-r11-20261104T024339Z",
+  "scheduled_for": "2026-11-03T18:45:54-08:00",
+  "started_at": "2026-11-03T18:43:39-08:00",
+  "completed_at": "2026-11-03T18:45:03-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T16:43:49-08:00",
+    "end_at": "2026-11-03T18:45:03-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative lower bound: last directly verified food-line heartbeat on ops/watch-ledger completed at 16:43:49 PST; directory-level GitHub listing unavailable through the connected file-read tool, so any intervening 17:xx heartbeat could not be independently enumerated. Targeted searches also reviewed same-day publications for delayed indexing; only previously recorded Utah disruption returned.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall only; primary nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service grocery store loss/closure/fire/disaster",
+      "Emergency food distribution canceled or suspended because of weather, outage, fire, flood, or facility damage",
+      "Abrupt food bank/pantry closure or major service-access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"November 3, 2026\" closed fire town",
+      "\"last grocery store\" closing \"November 2026\" community",
+      "\"sole grocery store\" burned fire closed Nov 3 2026",
+      "\"full service grocery store\" closure \"November 3\" 2026 rural",
+      "\"food distribution\" canceled cancelled \"November 3, 2026\" storm",
+      "\"food bank\" \"distribution canceled\" \"November 2026\" outage fire flood",
+      "\"food pantry\" closing \"November 3, 2026\" emergency",
+      "\"food bank\" \"temporarily closed\" \"November 3, 2026\"",
+      "\"food pantry\" suspended services November 2026 fire flood outage",
+      "site:gov \"SNAP\" \"EBT\" \"November 3, 2026\" outage delay benefits",
+      "site:gov \"WIC\" \"November 3, 2026\" temporarily unavailable suspended",
+      "\"November 3, 2026\" \"food assistance\" interruption suspended shutdown benefits"
+    ],
+    "result": "No independently verified new qualifying U.S. food-access interruption after the last directly verified watch heartbeat. Current same-day reporting about Community Action Services and Food Bank, Utah, adds corroboration to an already recorded 16:43 finding but is not a distinct new signal.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T164146-0800-r11-20261104T004146Z.json",
+      "completed_at": "2026-11-03T16:43:49-08:00",
+      "outcome": "findings",
+      "finding_ids": [
+        "food-line-ut-community-action-services-food-bank-closure-20261101"
+      ]
+    },
+    "noteworthy_exclusions": [
+      {
+        "url": "https://lehifreepress.com/2026/11/03/provo-food-bank-announces-temporary-closure-due-to-financial-issues/",
+        "reason": "November 3 report corroborates already ledgered Community Action Services and Food Bank closure, effective November 1; duplicate of prior watch finding."
+      },
+      {
+        "url": "https://www.chilichili.net/468279/shutdown-could-stop-snap-benefits-for-77000-montanans/",
+        "reason": "Syndicated November 3, 2026 page repeats 2025 federal shutdown and November SNAP interruption; source's linked Montana Free Press timeline references September 30, 2025. No verified new 2026 benefit suspension."
+      },
+      {
+        "url": "https://www.diningandcooking.com/us/75904/",
+        "reason": "Homeland Oklahoma store-closure repost dated November 3, 2026 refers to consolidations that would reopen in July and 2025 SNAP effects; cannot substantiate an in-window loss of a specific community's sole grocery store."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine only-grocery closure reported September 3, 2026; not new."
+      },
+      {
+        "url": "https://www.nbcbayarea.com/news/local/hayward-food-pantry-closure/4127106/",
+        "reason": "South Hayward Parish pantry closing reported August 12, 2026; outside this run's window."
+      },
+      {
+        "url": "https://wic.sbcounty.gov/events/2026-11-03/",
+        "reason": "Rancho Cucamonga WIC office closure effective October 16, 2026, with alternate office referrals; no new November 3 benefits interruption."
+      },
+      {
+        "url": "https://albemarleobserver.news/2026/11/03/carlie-cs-signs-edenton-lease-as-shopping-center-redevelopment-gains-momentum/",
+        "reason": "Announces new grocery lease and improved access, not loss."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Web index includes undated schedules, stale/republished 2025 content, and later same-day corroboration of a previously recorded Utah closure. No new source passed recency, direct-access impact, and deduplication tests. An intervening prior watch heartbeat, if any, was not enumerable through available GitHub connector directory reading.",
+    "production_authority": "No approvals, production collection changes, publications, schedule changes, or task disabling."
+  }
+}

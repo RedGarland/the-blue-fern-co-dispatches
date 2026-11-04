@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T184451-0800-r12-recall12",
+  "scheduled_for": "2026-11-03T18:45:22-08:00",
+  "started_at": "2026-11-03T18:44:51-08:00",
+  "completed_at": "2026-11-03T18:46:17-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T17:42:15-08:00",
+    "end": "2026-11-03T18:46:17-08:00",
+    "basis": "Previous verified Care Line heartbeat completed 17:42:15 PST; bounded hourly recall of effective newly reported disruptions/restorations, with same-day indexing. Production collection is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization, termination notice CCN 18P001",
+      "result": "Direct CMS table checked before targeted searches. No November 3 entries; November 2 and October 30 entries precede window and were visible to prior watches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed temporarily Nov 3 2026 evening US flooding power outage",
+      "November 3 2026 hospital maternity labor delivery unit suspended closed service",
+      "Nov 3 2026 behavioral health psychiatric crisis center closed temporarily patients",
+      "Nov 3 2026 dialysis center oncology infusion cancer treatment closure suspension reopening",
+      "Nov 3 2026 rural clinic primary care hospital closure services immediate",
+      "Nov 3 2026 ambulance service county stopped operating suspended base closed",
+      "Nov 3 2026 air ambulance helicopter medevac medical flight base suspended closing operations United States",
+      "November 3 2026 Puerto Rico Guam Virgin Islands American Samoa Northern Mariana hospital clinic emergency dialysis closures",
+      "November 3 2026 emergency department reopened after outage flood hospital official access evening",
+      "Winslow Indian Health Care Center Leupp Dilkon 3 November 2026 5 pm reopening emergency services official",
+      "Health First November 3 2026 6 pm outpatient locations reopen flood Melbourne Brevard",
+      "Nov 3 2026 clinic urgent care dialysis ambulance restoration resumed services city county"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center walk-in and pharmacy soft reopening, AZ",
+        "source": "https://www.wihcc.com/",
+        "reason": "Official 11/3 09:52 Arizona-time announcement unchanged from 12:43 PST recorded finding; no new confirmation of actual operations or distinct access transition after prior hourly check."
+      },
+      {
+        "item": "Health First Brevard County outpatient and elective procedure disruption, FL",
+        "source": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/",
+        "reason": "November 2 report already captured; no fresh independent confirmation of actual November 3 service restoration."
+      },
+      {
+        "item": "Roseland Community Hospital maternity ward closed, IL",
+        "source": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "November 1 service loss reported November 2, previously known, not new this window."
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake residential campus, Springfield IL",
+        "source": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/",
+        "reason": "Potential end-of-December closure, future and not yet effective; previously reviewed."
+      },
+      {
+        "item": "Chorus Aviation acquisition of SkyCare Air Ambulance",
+        "source": "https://avi-go.com/news/articles/4b3c47d9bfd79927d2cde5e27362fdd5",
+        "reason": "Ownership change without documented ambulance base or service loss."
+      },
+      {
+        "item": "Guam Memorial Hospital emergency storm suspension",
+        "source": "https://ghs.guam.gov/node/4352",
+        "reason": "October 16 action, outside current window."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "11/3 09:52 local notice for 13:00 Arizona-time limited Winslow walk-in/pharmacy soft reopening remains; Dilkon ED/acute care open, Leupp closed Tuesday. No later notice."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Official alert endpoint still inaccessible to browser; no authoritative resumed-operations confirmation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Repeated known limitation; local reporting describes previously announced restrictions but does not verify real-world restoration."
+      }
+    ],
+    "quality_limitations": "Supplementary, indexed national/territory scan is not exhaustive; rural/territory/air-medical/dialysis coverage thin. Searches returned older and already-recorded stories, with no new verified effective healthcare-access change. No production ledger or live collector cross-check.",
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private GitHub heartbeat only; no approval, public publication, schedule change, disabling, or primary collector mutation."
+  }
+}

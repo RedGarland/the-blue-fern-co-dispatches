@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T014631-0800-r11-20261104T094631Z",
+  "scheduled_for": "2026-11-04T01:45:54-08:00",
+  "started_at": "2026-11-04T01:46:31-08:00",
+  "completed_at": "2026-11-04T01:47:53.949-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T00:50:23-08:00",
+    "end_at": "2026-11-04T01:47:53.949-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous directly verified watch-ledger heartbeat completion through current run, with a bounded delayed-indexing recall of November 3-4 reporting. Publication/event dates checked rather than treating crawl freshness as new reporting.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for high-value food-access misses only. Primary nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service grocery store closure/loss/fire/disaster",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distributions",
+      "Abrupt pantry or food bank closure or major reduction in access",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" fire \"November 4, 2026\" town",
+      "\"sole grocery store\" fire closure November 3 4 2026 town",
+      "\"last grocery store\" closed suddenly November 2026 rural town",
+      "\"full service grocery store\" closes fire town \"November 2026\"",
+      "\"food distribution\" \"canceled\" storm \"November 4, 2026\"",
+      "\"food bank\" \"distribution canceled\" outage flood November 3 4 2026",
+      "\"emergency food distribution\" suspended weather November 2026 provider",
+      "\"food pantry\" \"closing immediately\" \"November 4, 2026\"",
+      "\"food bank\" \"services suspended\" \"November 4, 2026\"",
+      "\"food pantry\" \"temporarily closed\" November 3 4 2026 local",
+      "site:gov \"SNAP\" benefits delayed interrupted outage November 4 2026",
+      "site:gov \"WIC\" \"closed\" \"November 4, 2026\" benefits"
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T004930-0800-r11-20261104T084930Z.json",
+      "completed_at": "2026-11-04T00:50:23-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "result": "No verified new, nonduplicate, qualifying U.S. food-access disruption found within the observation window.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://dss.mo.gov/federal-shutdown-impacts",
+        "reason": "Missouri agency FAQ references November 13 end-of-shutdown guidance, inconsistent with a new November 4, 2026 interruption. The dated material reflects prior shutdown context, not a newly evidenced interruption."
+      },
+      {
+        "url": "https://www.dcf.ks.gov/Newsroom/Pages/SNAPBenefits.aspx",
+        "reason": "Official Kansas SNAP delay announcement explicitly dates October 21, 2025."
+      },
+      {
+        "url": "https://www.pa.gov/agencies/dhs/newsroom/due-to-federal-shutdown--november-snap-payments-will-not-be-made",
+        "reason": "Official Pennsylvania SNAP interruption announcement explicitly dates October 20, 2025."
+      },
+      {
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "October 29, 2026 recovery and scheduled emergency distribution notice, not a new distribution cancellation."
+      },
+      {
+        "url": "https://dss.virginia.gov/relief/food-assistance/snap/",
+        "reason": "Virginia SNAP beverage eligibility change effective November 1, 2026 explicitly does not change benefits or food-item access generally; not an immediate benefit interruption."
+      },
+      {
+        "url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire, Wisconsin pop-up cancellation already recorded in November 3 positive heartbeat; duplicate."
+      },
+      {
+        "url": "https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+        "reason": "Utah Community Action Services and Food Bank major access reduction already recorded in November 3 positive heartbeat; duplicate."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "12 bounded indexed searches yielded few timely local results, with numerous irrelevant or 2025 shutdown references. Absence of a verified signal does not establish absence of unindexed or unpublished local disruptions. No direct source outage prevented meaningful coverage.",
+    "production_authority": "No production collection, editorial approval, public publication, schedule or automation-state changes."
+  }
+}

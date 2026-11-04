@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T004401-0800-recall12",
+  "scheduled_for": "2026-11-04T00:45:22-08:00",
+  "started_at": "2026-11-04T00:44:01-08:00",
+  "completed_at": "2026-11-04T00:45:50.608-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T23:51:05-08:00",
+    "end": "2026-11-04T00:45:50.608-08:00",
+    "basis": "Last durable Care Line Watch heartbeat completed 2026-11-03T23:51:05-08:00. Supplementary indexed recall only; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO, termination, CCN 18P001",
+      "result": "CMS current notice table accessed and checked before other targeted searches. No entry dated November 3–4, 2026 was visible. The most recent visible notice was November 2, 2026."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed diverted patients November 4 2026 US",
+      "hospital maternity labor delivery unit suspended closed November 3 4 2026",
+      "rural hospital emergency services suspension closure announced Nov 4 2026",
+      "ambulance service base closed air medical halted emergency transport November 4 2026",
+      "behavioral health psychiatric services suspended permanently closed Nov 4 2026 United States",
+      "dialysis center cancer oncology clinic unexpected closure November 3 4 2026",
+      "site:gov \"November 3, 2026\" hospital clinic closure emergency services suspension",
+      "\"Nov. 3, 2026\" \"ambulance\" \"closed\" service",
+      "\"November 4, 2026\" \"clinic\" \"closed\" primary care patients",
+      "\"November 3, 2026\" \"reopened\" \"emergency department\" hospital",
+      "site:gov \"Nov 3 2026\" \"dialysis\" OR \"oncology\" OR \"CLIA\" service",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital emergency service closure November 3 4 2026"
+    ],
+    "search_recency_days": 2,
+    "search_results": "Twelve targeted searches covering acute/ED, obstetrics, rural emergency, ambulance/air-medical, behavioral health, dialysis/oncology, primary care, official notices, restoration and U.S. territories returned no independently verified new qualifying development in this observation window. Most surfaced items were older, foreign, speculative, or unrelated.",
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital labor-and-delivery closure, Chicago, IL",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Published 2026-10-28 and previously identified by watch; not a new development since prior hourly check."
+      },
+      {
+        "item": "Winslow Indian Health Care Center, Leupp Clinic and Dilkon Medical Center, AZ",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official alert remains dated 2026-11-03 09:52 Arizona time and matches previously recorded soft reopening and flood-related restrictions; no newer change visible."
+      },
+      {
+        "item": "Benefis Health System announced Great Falls, MT service changes",
+        "source_url": "https://montanafreepress.org/2026/11/03/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/",
+        "reason": "Previously identified announcement; planned transition begins 2026-12-19, not new effective loss during this window."
+      },
+      {
+        "item": "Generic indexed material",
+        "source_url": null,
+        "reason": "Historical hospital/EMS closures, proposed changes without concrete access effect, foreign hospitals, general finance/policy or ownership stories and unrelated results excluded."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Accessible; provider notice still as of 2026-11-03 09:52 Arizona time. No distinct new restoration or loss."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Inaccessible through the browser; cannot verify any changed Health First service alert. Previously documented ongoing limitation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct official alert retrieval returned an access error; 12 other searches and CMS official source remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Overnight publications and unindexed provider alerts may lag; bounded searches are not exhaustive. A single pre-existing official alert endpoint access failure caused DEGRADED status.",
+    "controls": "No article approved, public output published, production collector modified, schedule altered, or task disabled. Exactly one durable heartbeat intended for this execution."
+  }
+}

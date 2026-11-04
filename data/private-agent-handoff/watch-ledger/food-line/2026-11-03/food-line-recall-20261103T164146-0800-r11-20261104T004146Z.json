@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T164146-0800-r11-20261104T004146Z",
+  "scheduled_for": "2026-11-03T16:45:54-08:00",
+  "started_at": "2026-11-03T16:41:46-08:00",
+  "completed_at": "2026-11-03T16:43:49-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-11-03T15:45:53.526-08:00",
+    "end_at": "2026-11-03T16:43:49-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified watch-ledger heartbeat completed_at. Additional same-day recall for previously missed high-value notices; the discovered Utah closure was effective November 1 and surfaced in November 3 local reporting, not first announced during the current hour.",
+    "targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-ut-community-action-services-food-bank-closure-20261101",
+      "canonical_source_url": "https://communityactionprovo.org/",
+      "source_url": "https://communityactionprovo.org/",
+      "corroborating_source_url": "https://utah.news/article/FB6B0140-917B-4876-9C62-E3EC96BFDDAE",
+      "publisher": "Community Action Services and Food Bank (CASFB)",
+      "source_published_at": null,
+      "corroborating_source_published_at": "2026-11-03",
+      "title": "Community Action Services and Food Bank temporary closure effective November 1, 2026",
+      "exact_supporting_passage": "Community Action Services and Food Bank (CASFB) will temporarily close its doors effective November 1, 2026.",
+      "summary": "CASFB's current official homepage states it will temporarily close its doors effective November 1, 2026, reflecting a material food-access disruption. A November 3 local Park Record report, surfaced via Utah.News, says its Heber City pantry has shut and Oakley and Coalville locations are temporarily closed, with Christian Center of Park City filling gaps. A separate CASFB status page last updated October 27 says the Provo/Oakley/Coalville pantries remained open and Heber would close mid-November; the two provider pages conflict. Do not imply every pantry closure or count affected households as resolved without direct new confirmation.",
+      "location": "Heber City, Oakley, Coalville, and Provo service areas, Utah",
+      "state": "UT",
+      "scope": "Community Action Services and Food Bank network; confirmed provider-level effective closure notice, specific pantry status conflicting across dated/undated provider pages",
+      "affected_groups": [
+        "Residents relying on CASFB food pantry services in Wasatch and Summit counties",
+        "Food-insecure people dependent on CASFB services, including Heber City, Oakley, and Coalville"
+      ],
+      "pressure_type": "abrupt_food_bank_pantry_closure_or_major_access_reduction",
+      "confidence": "medium_high",
+      "source_role": "primary_provider_notice",
+      "evidence_level": "first_party_current_homepage_notice_with_secondary_local_report; provider_subpage_conflict",
+      "bounded_query_context": [
+        "\"food pantry\" \"closed\" \"November 3, 2026\" urgent",
+        "\"Christian Center of Park City steps up\" Heber Oakley Coalville pantry closed Park Record November 3 2026",
+        "site:communityactionprovo.org Heber Coalville Oakley food pantry closure November 2026"
+      ],
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "qualifying_miss_class": 3,
+      "event_first_announced_in_observation_window": false,
+      "newly_detected_by_watch_in_observation_window": true,
+      "estimated_people_affected": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss",
+      "Disaster-caused distribution suspension",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate effects"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed OR closure OR fire November 3 2026 town US",
+      "\"sole grocery store\" \"November 3, 2026\" closing OR fire",
+      "\"last grocery store\" closes November 2026 town",
+      "\"full service grocery store\" closing rural November 3 2026",
+      "KCUR Kansas City Prospect 31st Sun Fresh closure full service grocery November 2 2026",
+      "November 3 2026 \"food bank\" \"cancelled\" \"distribution\" storm outage",
+      "\"food pantry\" \"closed\" \"November 3, 2026\" urgent",
+      "\"food distribution\" \"canceled\" flood fire storm November 2026",
+      "\"Christian Center of Park City steps up\" Heber Oakley Coalville pantry closed Park Record November 3 2026",
+      "site:communityactionprovo.org Heber Coalville Oakley food pantry closure November 2026",
+      "site:gov SNAP WIC EBT benefits suspended delayed outage November 3 2026 official",
+      "\"SNAP\" \"November 3, 2026\" interrupted suspended EBT payments state"
+    ],
+    "result": "One high-value missed class-3 pantry closure/access reduction recovered from an official Utah food bank notice and local reporting. Closure effective November 1; local reporting November 3. Not newly announced in the last hour.",
+    "source_failures": [
+      {
+        "url": "https://utah.news/article/FB6B0140-917B-4876-9C62-E3EC96BFDDAE",
+        "failure": "Web open returned DisabledError; November 3 search result provided a short Park Record-derived summary. Park Record original article was not directly retrieved."
+      }
+    ],
+    "source_conflicts": [
+      {
+        "current_notice": "https://communityactionprovo.org/",
+        "claims": "Temporary organization closure effective November 1, 2026",
+        "dated_update": "https://communityactionprovo.org/get-to-know-us/update.html",
+        "update_date": "2026-10-27",
+        "conflict": "Older update says Provo, Oakley, Coalville pantries remain open and Heber to close mid-November; current notice and November 3 local report imply expanded closure. Current status for each site needs confirmation."
+      }
+    ],
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.diningandcooking.com/us/74028/",
+        "reason": "November 2, 2026 repost of the 31st/Prospect Sun Fresh closure already reported August 12, 2025; not a new grocery loss."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Grocery fire was reported September 2026, prior to watch window."
+      },
+      {
+        "url": "https://www.pa.gov/agencies/dhs/newsroom/due-to-federal-shutdown--november-snap-payments-will-not-be-made",
+        "reason": "SNAP alert is dated October 20, 2025, not a new November 2026 interruption."
+      },
+      {
+        "url": "https://dss.virginia.gov/relief/food-assistance/snap/",
+        "reason": "November 1, 2026 beverage eligibility restriction is a scheduled purchase-rule change, not verified card outage, benefit suspension, or new immediate assistance interruption in this window."
+      },
+      {
+        "url": "https://www.blwcenter.org/",
+        "reason": "Single neighborhood center closed for election-day voting while pantry activity remains scheduled; does not constitute material pantry-system interruption."
+      }
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T154339-0800-r11-20261103T234339Z.json",
+      "completed_at": "2026-11-03T15:45:53.526-08:00",
+      "outcome": "findings",
+      "finding_ids": [
+        "food-line-wi-eau-claire-feed-my-people-popup-cancel-20261103"
+      ]
+    },
+    "production_authority": "No approvals, publication, production collection changes, schedule changes or task disabling.",
+    "limitations": "Utah provider homepage is undated, dated October 27 status page has conflicting site-level details, and original November 3 Park Record story was not directly retrieved. This justifies DEGRADED verification; queue for review without overstating exact pantry statuses or counts."
+  }
+}

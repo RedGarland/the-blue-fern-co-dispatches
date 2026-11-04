@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T204132-0800-r11-20261104T044132Z",
+  "scheduled_for": "2026-11-03T20:45:54-08:00",
+  "started_at": "2026-11-03T20:41:32-08:00",
+  "completed_at": "2026-11-03T20:42:43-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T19:46:07-08:00",
+    "end_at": "2026-11-03T20:42:43-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior directly verified Food Line heartbeat completed 2026-11-03 at 19:46:07 PST; discovery queries also include older dates to account for indexing lag, but only distinct newly discovered access disruptions qualify.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall for priority misses, not the authoritative nationwide production collector.",
+    "target_classes": [
+      "Community's only/sole/last/full-service grocery store lost, closed or affected by fire/disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "Newly official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 3 2026 United States",
+      "\"sole grocery store\" fire closure November 2026 US town",
+      "\"last grocery store\" shutting down November 3 2026 rural",
+      "\"food distribution\" cancelled November 3 2026 storm flood fire outage",
+      "\"food pantry\" \"temporarily closed\" November 3 2026 power flood fire",
+      "\"food bank\" \"suspended\" \"November 3, 2026\" service",
+      "site:gov \"SNAP\" \"November 3, 2026\" delayed benefits outage EBT",
+      "site:gov \"WIC\" \"November 3, 2026\" interruption outage closed",
+      "\"food bank\" \"closes\" \"November 3, 2026\" pantry locations access",
+      "\"food pantry\" \"shut down\" \"November 3, 2026\" emergency",
+      "\"mobile food distribution\" canceled November 3 2026 weather",
+      "\"EBT\" \"outage\" \"November 3, 2026\" SNAP benefits"
+    ],
+    "result": "No new independently verifiable and nonduplicate U.S. food-access interruption located in the bounded search window.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T194520-0800-r11-20261104T034520Z.json",
+      "completed_at": "2026-11-03T19:46:07-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "noteworthy_exclusions": [
+      {
+        "url": "https://utah.news/article/FB6B0140-917B-4876-9C62-E3EC96BFDDAE",
+        "reason": "Heber City/Oakley/Coalville CASFB closure previously recorded in 16:43 PST watch; no new distinct disruption."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Maine only-grocery closure originally announced September 3, 2026; not newly discovered and outside hourly window."
+      },
+      {
+        "url": "https://www.macombgov.org/departments/macomb-community-action/macomb-food-bank",
+        "reason": "Archived weather cancellations from January and July 2026; November dates are scheduled, not newly canceled."
+      },
+      {
+        "url": "https://www.lincolnfoodbank.org/get-food/food-distribution-schedule/",
+        "reason": "General weather-cancellation policy; no specific new canceled distribution found."
+      },
+      {
+        "url": "https://ebtcheckup.com/ebt-news/",
+        "reason": "Older SNAP work rules, planned payments, and purchase limitations do not establish a new official immediate benefit outage in the observation window."
+      },
+      {
+        "url": "https://www.953mnc.com/2026/11/03/food-bank-of-northern-indianas-november-mobile-food-distribution-schedule-2/",
+        "reason": "Routine food distribution calendar, excluded."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search results included older announcements, routine food-distribution calendars, prior-year SNAP interruption notices and unrelated pages. Search indexing may lag very recent local/provider notices; zero results is not proof that none exist.",
+    "production_authority": "No review approval, public publication, production collection change, task disablement, or schedule alteration."
+  }
+}

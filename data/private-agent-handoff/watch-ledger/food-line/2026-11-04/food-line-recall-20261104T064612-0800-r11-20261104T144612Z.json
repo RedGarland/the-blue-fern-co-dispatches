@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T064612-0800-r11-20261104T144612Z",
+  "scheduled_for": "2026-11-04T06:45:54-08:00",
+  "started_at": "2026-11-04T06:46:12-08:00",
+  "completed_at": "2026-11-04T06:47:28.058-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T05:49:55-08:00",
+    "end_at": "2026-11-04T06:47:28.058-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior directly verified Food Line watch heartbeat; bounded lookback over November 3-4, 2026 reporting for delayed-indexed local and provider notices. No newly published or independently new qualifying disruptions verified.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall watch only; the authoritative nationwide production collector remains unchanged.",
+    "target_classes": [
+      "Community's only/sole/last or full-service grocery loss, fire, disaster, or closure",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank closure or material access reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate access loss"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0,
+      "search_successful": true
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire town November 4 2026 United States (recency 2 days)",
+      "\"last grocery store\" fire shutdown residents November 3 4 2026 (recency 2 days)",
+      "\"full service grocery store\" closing November 4 2026 community access (recency 2 days)",
+      "November 4 2026 food bank canceled distribution storm outage fire flood (recency 2 days)",
+      "\"food pantry\" \"closed\" \"November 4, 2026\" unexpected service (recency 2 days)",
+      "\"food bank\" \"suspended\" \"November 4, 2026\" operations (recency 2 days)",
+      "site:gov \"SNAP\" \"November 4, 2026\" \"delay\" \"benefits\" (recency 2 days)",
+      "site:gov \"WIC\" \"November 4, 2026\" \"outage\" benefits (recency 2 days)",
+      "food pantry shut down suddenly today November 4 2026 America (recency 1 day)",
+      "mobile food distribution canceled November 4 2026 storm weather damage United States (recency 2 days)",
+      "SNAP EBT payments delayed outage November 4 2026 state agency announcement (recency 1 day)",
+      "WIC system down benefits suspended November 4 2026 state health department (recency 2 days)"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T054846-0800-r11-20261104T134846Z.json",
+      "completed_at": "2026-11-04T05:49:55-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "result": "No new verified nonduplicate U.S. food-access disruptions in the targeted classes since previous completed watch.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "November 3 Feed My People cancellation already covered by earlier watch; prior review specifically acknowledged Wisconsin disruption. Not a new event in this window."
+      },
+      {
+        "url": "https://www.diningandcooking.com/us/74028/",
+        "reason": "November 2 republication of KCUR Kansas City Sun Fresh neighborhood grocery closure; not newly reported since previous hourly check and repost is not original source."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Only-grocer Eastport, Maine closure announced September 3, 2026 for end of September; historical."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Only-grocer Spencer, New York fire news from September 14, 2026; historical."
+      },
+      {
+        "url": "https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+        "reason": "October 23 2026 policy/participation trend, not an immediate new official November 4 benefits issuance or EBT interruption."
+      },
+      {
+        "url": "https://www.texastribune.org/2025/10/17/texas-snap-federal-shutdown/",
+        "reason": "2025 federal shutdown SNAP report appears in November 2026 searches; out of window."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Exact-date indexes mostly returned historical grocery closures, 2025 SNAP shutdown results, or routine resource news. No direct source failure, but bounded search cannot establish absence of unindexed incidents. Publication dates were differentiated from crawl/update dates.",
+    "production_authority": "No review approvals, public publication, runner changes, schedule changes, or disabling."
+  }
+}

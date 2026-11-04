@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T234732-0800-r11-20261104T074732Z",
+  "scheduled_for": "2026-11-03T23:45:54-08:00",
+  "started_at": "2026-11-03T23:47:32-08:00",
+  "completed_at": "2026-11-03T23:48:46-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T22:42:17-08:00",
+    "end_at": "2026-11-03T23:48:46-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified hourly watch-ledger completion; 12 targeted searches for newly observed U.S. food-access disruptions, including limited delayed-indexing recall.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only; production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery closure, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry/food bank service closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire community \"November 3, 2026\"",
+      "\"last grocery store\" closure fire rural \"November 2026\"",
+      "\"sole grocery store\" \"fire\" OR \"closed\" November 2026 town",
+      "\"food distribution\" canceled storm flood fire outage \"November 3\" 2026",
+      "\"mobile food pantry\" cancellation weather \"November 4, 2026\"",
+      "\"food bank\" \"distribution canceled\" November 3 2026",
+      "\"food pantry\" \"closed\" \"power outage\" November 3 2026",
+      "\"food pantry\" \"temporarily closed\" \"November 3, 2026\"",
+      "\"food bank\" \"services suspended\" \"November 3\" 2026",
+      "site:gov \"SNAP\" benefits delayed outage November 3 2026",
+      "site:gov \"WIC\" benefits interrupted suspended November 3 2026",
+      "site:gov food assistance office EBT outage November 4 2026"
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T224146-0800-r11-20261104T064146Z.json",
+      "completed_at": "2026-11-03T22:42:17-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "result": "No newly substantiated, nonduplicate qualifying U.S. food-access disruption found within the bounded observation window.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine only-grocery closure reported September 3, 2026; historical and already seen in prior checks."
+      },
+      {
+        "url": "https://wpde.com/news/local/latta-church-offers-free-gas-to-help-residents-reach-groceries-after-iga-closes",
+        "reason": "Latta, South Carolina closure follow-up dated August 16, 2026; not new."
+      },
+      {
+        "url": "https://dss.virginia.gov/relief/food-assistance/ebt/",
+        "reason": "November 1 beverage eligibility change explicitly states SNAP benefit amounts remain unchanged; not a benefit interruption."
+      },
+      {
+        "url": "https://housedemocrats.wa.gov/nance/shutdown-resources/",
+        "reason": "Historical 2025 shutdown and SNAP/WIC disruption guidance; no new November 2026 interruption verified."
+      },
+      {
+        "url": "https://www.in.gov/dhs/emergency-management-and-preparedness/august-2026-disaster",
+        "reason": "Page freshly indexed, but describes August 11, 2026 storms and not a current emergency food distribution cancellation."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search indexing was temporally noisy; retrieved historical closures, earlier funding-shutdown resources, general agency service pages, and nonqualifying changes. The absence of indexed new findings is not proof that no new incidents occurred.",
+    "production_authority": "No editorial approvals, production collection or publication changes, schedule changes, or disabling of this watch."
+  }
+}

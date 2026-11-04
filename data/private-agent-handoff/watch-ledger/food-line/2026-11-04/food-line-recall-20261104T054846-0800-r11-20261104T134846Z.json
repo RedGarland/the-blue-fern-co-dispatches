@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T054846-0800-r11-20261104T134846Z",
+  "scheduled_for": "2026-11-04T05:45:54-08:00",
+  "started_at": "2026-11-04T05:48:46-08:00",
+  "completed_at": "2026-11-04T05:49:55-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T04:49:23-08:00",
+    "end_at": "2026-11-04T05:49:55-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since preceding independently verified 04:49:23 PST Food Line heartbeat; checked November 3-4 local and official reports for delayed indexing, requiring a distinct new access disruption.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch, not the authoritative production nationwide collector.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster affecting the community's only, sole, last, or full-service grocery",
+      "Weather, fire, flood, outage, or facility-damage cancellation/suspension of emergency food distribution",
+      "Abrupt pantry/food-bank closure or major service-access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "November 4 2026 last only grocery store closed fire town residents",
+      "November 4 2026 only supermarket grocery store closure community",
+      "November 4 2026 food bank cancels distribution due to storm power outage",
+      "November 4 2026 food pantry closed unexpectedly food bank operations suspended",
+      "November 4 2026 official SNAP benefit interruption EBT outage state",
+      "November 4 2026 WIC benefits interruption outage state health department",
+      "food pantry closed suddenly November 4 grocery food bank (recency 2 days)",
+      "food bank food distribution canceled Wednesday November 4 storm 2026 (recency 2 days)",
+      "last grocery store burned down closed November 3 2026 town (recency 2 days)",
+      "food pantry operations suspended Tuesday November 3 2026 (recency 2 days)",
+      "site:.gov SNAP EBT service outage November 3 2026 emergency (recency 2 days)",
+      "site:.gov WIC benefits unavailable November 4 2026 state (recency 2 days)"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T044854-0800-r11-20261104T124854Z.json",
+      "completed_at": "2026-11-04T04:49:23-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "result": "No verified, nonduplicate U.S. food-access disruption in the specified classes found since the previous completed watch.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "reason": "Community Action Services and Food Bank Utah closure effective November 1, 2026 was captured in the November 3 watch; duplicate."
+      },
+      {
+        "url": "https://www.mprnews.org/story/2026/04/01/rubys-pantry-abruptly-closes-37-minnesota-upper-midwest-food-shelf-sites",
+        "reason": "Ruby's Pantry regional network closure occurred April 1, 2026; historical."
+      },
+      {
+        "url": "https://www.953mnc.com/2026/11/03/food-bank-of-northern-indianas-november-mobile-food-distribution-schedule-2/",
+        "reason": "Routine mobile pantry schedule, no canceled or interrupted food access."
+      },
+      {
+        "url": "https://contracosta.news/2026/08/03/brentwood-raleys-to-close-in-november/",
+        "reason": "Brentwood Raley's closing November 3 was announced August 3; not a newly reported sole-store access disruption."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17238534/99-ranch-market-closing-permanently-chino-california/",
+        "reason": "Chino 99 Ranch location planned to close November 15; no evidence it is an only/sole/full-service community grocery or an immediate disruption."
+      },
+      {
+        "url": "https://dhs.georgia.gov/press-releases/2025-10-24/update-due-federal-government-shutdown-snap-benefits-will-not-be",
+        "reason": "SNAP outage report dated 2025; not a November 2026 development."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Recent exact-date results are sparse, especially pre-morning U.S. local news and provider postings; search index mixed 2025 SNAP shutdown articles into 2026 queries. Bounded searches cannot prove absence of unindexed incidents.",
+    "production_authority": "No content approval, publishing, production collector modifications, task schedule changes, or disabling."
+  }
+}

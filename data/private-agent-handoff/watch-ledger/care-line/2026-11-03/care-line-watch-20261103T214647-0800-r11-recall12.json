@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T214647-0800-r11-recall12",
+  "scheduled_for": "2026-11-03T21:45:22-08:00",
+  "started_at": "2026-11-03T21:46:47-08:00",
+  "completed_at": "2026-11-03T21:48:00-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T20:46:08-08:00",
+    "end": "2026-11-03T21:48:00-08:00",
+    "basis": "Prior verified Care Line watch-ledger heartbeat completed 20:46:08 PST. Bounded supplementary same-day indexed recall; authoritative production collector not altered."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_date": "2026-11-03",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY; OPO termination; CCN 18P001",
+      "result": "Direct CMS table inspected first. No November 3 notice visible, and previously listed November 2 / October 30 notices predate window. No new CMS terminations, rescissions or CLIA actions confirmed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency room service suspended closed tonight United States",
+      "November 3 2026 labor delivery maternity unit closure service patients hospital",
+      "November 3 2026 rural hospital emergency department shut down ambulance diversion",
+      "November 3 2026 ambulance EMS service or air medical helicopter base closed suspended",
+      "November 3 2026 dialysis treatment oncology infusion patients clinic shutdown cancelled",
+      "November 3 2026 psychiatric behavioral health residential hospital closed effective patients",
+      "November 3 2026 primary care urgent care clinic FQHC closure effective patients",
+      "November 3 2026 hospital service reopened emergency department restored flooding power outage",
+      "November 3 2026 healthcare emergency room hospital temporary closure site:gov",
+      "November 3 2026 Puerto Rico Guam Virgin Islands American Samoa emergency hospital clinic ambulance suspension",
+      "November 3 2026 patient care hospital closure outpatient suspended local news tonight",
+      "site:hf.org/alert \"Nov 3\" \"2026\" healthcare outpatient closed restored Health First"
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center soft reopening of walk-in and refill services, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Same official November 3 09:52 Arizona notice and 13:00 Arizona soft opening already recorded in earlier watch; no later distinct development."
+      },
+      {
+        "item": "Dilkon outpatient restrictions and Leupp Clinic closure, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Previously recorded flood-related status unchanged; provider confirms emergency department remains open."
+      },
+      {
+        "item": "Roseland Community Hospital maternity closure, Chicago, Illinois",
+        "source": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Closure on November 1, reported November 2, already recorded before observation window."
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake, Springfield, Illinois",
+        "source": "https://www.springfieldbusinessjournal.com/columns/memorials-west-lake-campus-to-close/",
+        "reason": "Possible closure by late December; no currently effective suspension; exclude prospective."
+      },
+      {
+        "item": "Baystate Mercy Hospital acquisition/integration, Springfield, Massachusetts",
+        "source": "https://www.wamc.org/news/2026-11-03/officials-ring-in-baystate-mercy-hospital-in-springfield-after-months-long-acquisition",
+        "reason": "Rename and acquisition without documented current service-line change."
+      },
+      {
+        "item": "Alta Bates Emeryville replacement plan, California",
+        "source": "https://ww2.kqed.org/news/2026/11/01/sutter-abandons-plan-for-new-emeryville-hospital-pitched-as-replacement-for-alta-bates/",
+        "reason": "Older replacement-site proposal, not effective service loss."
+      },
+      {
+        "item": "Other retrieved search results",
+        "source": null,
+        "reason": "Old, outside US/territories, non-clinical, speculative or no verified new concrete access effect."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "Accessible, still displays November 3 09:52 Arizona notice. No new announcement; listed Winslow Urgent Care and Dilkon ED as open, some outpatient services and Leupp Tuesday operations restricted."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Official Health First alert inaccessible again; independent restoration confirmation unavailable."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Previously documented, recurring limitation. Remaining CMS and search coverage usable."
+      }
+    ],
+    "quality_limitations": "Bounded indexed supplementary recall may lag local events; national and territory completeness cannot be asserted. Production collector remains authoritative; production duplicate status not directly checked.",
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "One private watch heartbeat only; no approval, publishing, schedule changes or task disabling."
+  }
+}

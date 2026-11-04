@@ -1,0 +1,172 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T134451-0800-r11-20261104T215205485Z",
+  "scheduled_for": "2026-11-04T13:44:51-08:00",
+  "started_at": "2026-11-04T13:49:20-08:00",
+  "completed_at": "2026-11-04T13:52:05.485-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T12:47:32.762-08:00",
+    "end": "2026-11-04T13:52:05.485-08:00",
+    "basis": "From preceding exact-file verified heartbeat completion. Searches also examined late-indexed reports for previously missed distinct Gaza developments. Publication date is not equated with incident date.",
+    "official_first_check_count": 3,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-euromed-child-amputees-rehabilitation-access-20261104",
+      "canonical_source_url": "https://www.euromedmonitor.org/en/article/7126/Gaza%3A-Israel-denies-treatment-and-dignity-to-children-left-amputees-by-its-genocide",
+      "title": "Gaza: Israel denies treatment and dignity to children left amputees by its genocide",
+      "publisher": "Euro-Med Human Rights Monitor",
+      "source_date": "2026-11-04",
+      "publication_date": "2026-11-04",
+      "publication_time": null,
+      "event_date": null,
+      "data_as_of_date": "2026-10-09",
+      "location": "Gaza Strip, occupied Palestinian territory",
+      "affected_population_or_system": "Children with limb amputations; prosthetics, rehabilitation, specialist healthcare access and medical evacuation pathways",
+      "exact_supporting_passage": "Israel’s restrictions on patient travel and obstruction of medical evacuations further limit children’s access to specialised treatment unavailable inside the Gaza Strip.",
+      "source_type": "primary NGO field-report/rights-monitor assessment; Al Jazeera secondary reporting",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "summary": "In a November 4 assessment, Euro-Med Human Rights Monitor reported 1,134 children in Gaza had undergone amputations as of October 9, 2026 and described ongoing barriers to specialized treatment, rehabilitation and patient travel. Its report references previously published WHO data that 500 of 2,300 amputees assessed September 2024–May 2026 received permanent prosthetics. This is newly surfaced quantified documentation of continuing healthcare access disruption, NOT 1,134 new amputations, a newly imposed restriction, or a newly confirmed November 4 incident. Primary claims have not been independently verified by the watch.",
+      "corroborating_reporting_url": "https://www.aljazeera.com/news/2026/11/4/israel-restricting-treatment-for-1100-child-amputees-in-gaza-ngo",
+      "bounded_discovery_context": {
+        "search_window_start": "2026-11-04T12:47:32.762-08:00",
+        "discovered_on_observation_date": "2026-11-04",
+        "prior_ledger_comparison": "The directly read prior 12:47 PST heartbeat does not enumerate this November 4 Euro-Med assessment. Adjacent current Al Jazeera Palestine feed also surfaced it during this run.",
+        "source_retrieval": "Primary Euro-Med page located via indexed search excerpt with 2026-11-04 date; direct primary-site page fetch failed with DisabledError. Al Jazeera article retrieved directly and independently confirmed its report and attribution.",
+        "qualification": "Newly reported quantified follow-up on existing medical evacuation/rehabilitation access constraints; actual injury dates and dates of claimed access restrictions are not established as within the current hourly window.",
+        "uncertainty": "First publication hour is unavailable. Quantification and access claims are attributed to NGO; WHO May 2026 figures are historical."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall. Production Gaza publisher/collector remains authoritative and was not accessed or altered.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T124456-0800-r11-20261104T204456Z.json",
+    "previous_verified_completed_at": "2026-11-04T12:47:32.762-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent listed product is 31 October 2026 reporting on 29 October. No new OCHA situation product in the window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no in-window new Gaza health bulletin on emergency landing page; regional page links remain older."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct fetch HTTP 502; same recurring restriction as preceding watch."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details Gaza November 4 2026 Wednesday killed wounded Israeli forces",
+      "site:palestinercs.org Gaza 4 November 2026 ambulance health patient emergency",
+      "Gaza November 4 2026 casualties hospitals civilians killed Reuters AP latest",
+      "site:aljazeera.com/news/2026/11/4 Gaza Israeli military ceasefire displaced killed",
+      "site:euromedmonitor.org 4 November 2026 1134 children amputees Gaza prosthetics medical evacuations",
+      "site:unicef.org Gaza 4 November 2026 children water healthcare supply announcement",
+      "site:reliefweb.int/report/occupied-palestinian-territory 4 Nov 2026 Gaza humanitarian situation",
+      "site:msf.org Gaza 4 November 2026 hospitals surgeries evacuation",
+      "Gaza Rafah Kerem Shalom humanitarian aid fuel water crossing changes November 4 2026",
+      "Gaza ceasefire hostage detainee negotiations November 4 2026 latest Reuters",
+      "Gaza Ministry of Health November 4 2026 hospitals killed wounded last 24 hours death toll",
+      "site:reuters.com/world/middle-east/ Gaza November 4 2026 humanitarian health aid civilians"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest page loaded; November 4 updates visible concern West Bank/Jerusalem, not a new verifiable Gaza development."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; last visible new operational/logistical note November 3, not new EMS access disruption."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; November 4 new article on Euro-Med Gaza amputee care assessment identified and read."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible; no further distinct in-window Gaza civilian impact item confirmed."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/gaza-israel-war",
+        "result": "Accessible; response content marked last updated September 28, 2026."
+      },
+      {
+        "publisher": "Euro-Med Human Rights Monitor",
+        "url": "https://www.euromedmonitor.org/en/article/7126/Gaza%3A-Israel-denies-treatment-and-dignity-to-children-left-amputees-by-its-genocide",
+        "result": "Indexed excerpt accessible; direct page fetch DisabledError. Same-day article independently reported by Al Jazeera."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; preexisting."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; preexisting."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "robots.txt access denied; preexisting."
+      }
+    ],
+    "checked_categories": [
+      "civilian deaths, injuries, military actions with documented civilian impact",
+      "displacement, shelter, infrastructure",
+      "aid, food, water, fuel, transport and crossings",
+      "healthcare, hospital capacity, ambulance, medical rehabilitation and evacuations",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "excluded": [
+      {
+        "title": "Gaza youth dies from wounds after Khan Younis bombardment",
+        "url": "https://english.wafa.ps/Pages/Details/176590",
+        "reason": "November 3 event already recorded as the Imad Omar Ahmed Radi follow-up in earlier heartbeat."
+      },
+      {
+        "title": "Old casualty reports and hostage/aid reports from prior dates",
+        "url": null,
+        "reason": "Search index repeatedly returned 2025 and October 2026 accounts without independently verified in-window changes."
+      },
+      {
+        "title": "Contemporaneous November 4 WAFA headlines on West Bank",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "reason": "Not Gaza-specific."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News robots.txt denial"
+      ],
+      "new_or_limited": [
+        "Primary NGO page could be read as indexed search excerpt but direct article fetch returned DisabledError"
+      ],
+      "alternative_coverage": "OCHA OPT, WHO global, WAFA, PRCS, Al Jazeera, AP, MSF and indexed NGO source accessible."
+    },
+    "limitations": "Newly published NGO assessment may summarize older injuries and previously documented restrictions; this watch does not establish an actual event in the last hour or independent validation of all figures. Article hour unknown, direct primary-page fetch failed, and production candidate/queue data were not inspected. Search index can omit or delay developments.",
+    "notification_decision": "Notify: newly discovered qualifying healthcare-access follow-up with primary-source trace and current secondary confirmation; existing access limitations are not materially worse.",
+    "safeguards": "Exactly one heartbeat target created in ops/watch-ledger only; no approval, publication, social posting, production modification, schedule change or disabling."
+  }
+}

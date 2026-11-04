@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T134632-0800-recall12",
+  "scheduled_for": "2026-11-04T13:45:22-08:00",
+  "started_at": "2026-11-04T13:46:32-08:00",
+  "completed_at": "2026-11-04T13:47:26-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T12:43:41-08:00",
+    "end": "2026-11-04T13:47:26-08:00",
+    "basis": "Previous verified Care Line heartbeat completed_at to this recall check. Search index freshness alone not proof of interval-new changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY) termination notice, organ procurement organization",
+      "result": "Checked official CMS notices first. Latest listed notice was November 2; no newly dated provider termination, rescission, CLIA limitation/suspension, or similar notice in recall interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 4 2026 hospital emergency department temporarily closes suspends services patients November 4",
+      "November 4 2026 maternity labor delivery obstetrics unit closure hospital announcement",
+      "November 4 2026 rural hospital emergency services suspension urgent closure",
+      "November 4 2026 ambulance service county EMS coverage suspends shuts down",
+      "November 4 2026 dialysis clinic services closed relocation treatment patients",
+      "November 4 2026 behavioral health psychiatric inpatient center suspends closes admissions patients",
+      "November 4 2026 oncology chemotherapy cancer center closes treatment clinic patients",
+      "November 4 2026 family medicine primary care clinic abruptly closes patient services",
+      "November 4 2026 air ambulance helicopter medical base service stops closure suspended",
+      "November 4 2026 emergency department hospital reopens resumes service following closure",
+      "November 4 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital emergency clinic closure service suspension",
+      "November 4 2026 health department EMS license suspended hospital clinic closure official notice"
+    ],
+    "search_recency_days": 2,
+    "search_result_summary": "No confirmed newly announced or newly effective service closures, suspensions, emergency/rural or EMS/air-base losses, or abrupt previously lost essential-service restorations in the US/territories since prior hourly check. Most search hits were older incidents, foreign locations, expansions, research or other non-qualifying reports.",
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center, Dilkon Medical Center and Leupp Clinic November 4 normal-hours restoration; Leupp Dental still closed",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official notice still visible but was already documented in the prior heartbeat, not interval-new."
+      },
+      {
+        "item": "Reading Hospital emergency care center construction",
+        "source_url": "https://lvb.com/reading-hospital-emergency-department-expansion-berks/",
+        "reason": "Expansion plan, not restoration of a previously lost essential service."
+      },
+      {
+        "item": "Anaheim Global Medical Center EMS receiving designation suspended",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/",
+        "reason": "May 2026 report, not new."
+      },
+      {
+        "item": "Greene County Alabama ambulance operations suspension",
+        "source_url": "https://abc3340.com/news/local/greene-county-ems-suspends-ambulance-service",
+        "reason": "July 5, 2026, not new."
+      },
+      {
+        "item": "Government of Guam medical services reduced for typhoon",
+        "source_url": "https://ghs.guam.gov/node/4161",
+        "reason": "April 13, 2026 notice, not new."
+      },
+      {
+        "item": "Roseland Hospital labor and delivery loss",
+        "source_url": "https://www.medicaldaily.com/roseland-hospital-labor-delivery-closure-chicago-south-side-479408",
+        "reason": "Earlier October 2026 announcement, previously reviewed."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Previously recorded November 4 restoration notice unchanged; Leupp Dental remains closed."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Known inaccessible official Health First alert endpoint still returned internal error."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct web reader internal error, persistent and documented on previous run. CMS and targeted searches worked."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Supplementary bounded web recall, not exhaustive collection; a zero-result watch does not establish that no changes occurred. One already-known official endpoint could not be opened.",
+    "controls": "No approvals, publication, schedule changes, automation disabling or production system changes."
+  }
+}

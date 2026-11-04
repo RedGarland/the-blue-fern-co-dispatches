@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T094942-0800-r11",
+  "scheduled_for": "2026-11-04T09:44:51-08:00",
+  "started_at": "2026-11-04T09:49:42-08:00",
+  "completed_at": "2026-11-04T09:51:05-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T08:44:22-08:00",
+    "end": "2026-11-04T09:51:05-08:00",
+    "basis": "From prior verified Gaza Source Watch heartbeat completion to this observation; older late-indexed material screened for newly discovered distinct developments.",
+    "official_first_check_count": 3,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only. Production Gaza publisher and collector remain authoritative; no editorial or publication action.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T084317-0800-r11-20261104T164422Z.json",
+    "previous_verified_completed_at": "2026-11-04T08:44:22-08:00",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed Gaza humanitarian situation report posted 31 Oct, covering 29 Oct, and impact snapshot 30 Oct. No Nov 4 Gaza update listed."
+      },
+      {
+        "source": "WHO global conflict emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. General Gaza health overview without a newly dated Nov 4 operational change."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502; same recurring restriction noted in previous verified heartbeat."
+      }
+    ],
+    "additional_targeted_searches": [
+      "Gaza November 4 2026 9 am PST casualties airstrikes civilians reported WAFA medical sources",
+      "site:english.wafa.ps November 4 2026 Gaza killed wounded ambulance Khan Yunis",
+      "site:palestinercs.org Gaza 4 November 2026 ambulance hospital attacks access",
+      "Gaza November 4 2026 crossing Rafah Kerem Shalom aid restrictions supplies latest",
+      "site:unicef.org Gaza November 4 2026 water children displacement access",
+      "site:wfp.org Gaza November 4 2026 food trucks distributions humanitarian",
+      "Gaza November 4 2026 latest Reuters AP AFP casualties humanitarian ceasefire Wednesday",
+      "site:reuters.com/world/middle-east/ Gaza Nov 4 2026 humanitarian civilians ceasefire",
+      "Gaza November 4 2026 medical evacuation WHO hospitals fuel ambulances patients",
+      "site:unrwa.org 4 November 2026 Gaza shelter displacement",
+      "site:aljazeera.com/news/2026/11/4 Gaza Israeli Palestinian casualties humanitarian live",
+      "Gaza 4 November 2026 hostage release bodies negotiations crossings latest verified"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest displayed 4 Nov 17:43 Palestine time and other listed recent updates focused on West Bank/Jerusalem, with no distinct new Gaza item in inspected portion."
+      },
+      {
+        "source": "Al Jazeera Palestine feed",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; new Nov 4 entries about Hebron and West Bank, not Gaza developments in scope."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest featured news dated Nov 3 about Saudi operational and logistical support; no new dated Gaza EMS disruption identified."
+      },
+      {
+        "source": "AP Gaza hub",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible; no independently verified new Gaza civilian-impact event in bounded checks."
+      },
+      {
+        "source": "ICRC area page",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new within-window Gaza detainee, aid or hospital change confirmed."
+      },
+      {
+        "source": "MSF Gaza",
+        "url": "https://www.msf.org/gaza-israel-war",
+        "result": "Accessible; no new within-window Gaza healthcare service change confirmed."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; recurring."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Restricted URL; recurring."
+      }
+    ],
+    "checked_categories": [
+      "civilian casualties, injury and military operations with documented civilian impact",
+      "displacement, shelter, infrastructure",
+      "food, water, aid delivery and crossing access",
+      "hospitals, healthcare capacity, ambulances, transport, fuel and medical evacuation",
+      "hostages, detention, negotiations and ceasefire changes"
+    ],
+    "excluded": [
+      "Previously recorded November 2–3 Gaza casualties, including Khan Younis and Gaza City incidents, not new for this run.",
+      "Search hits with older publication dates including 2023–2025 and earlier 2026 reports, not a new November 4 development.",
+      "November 4 West Bank incidents outside Gaza remit; speculative statements, opinion and unsupported social claims."
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News access restricted"
+      ],
+      "alternative_coverage": "OCHA OPT and WHO global accessible, with WAFA, PRCS, Al Jazeera, AP, ICRC and MSF direct checks and targeted indexed searches."
+    },
+    "limitations": "Search-index lag and restricted direct feeds limit completeness; no qualifying event verified in bounded supplementary coverage, which does not establish absence of real-world events. Production feeds not accessed or modified.",
+    "notification_decision": "No newly qualifying development verified and no materially new degradation; suppress user notification under standing rule.",
+    "safeguards": "Exactly one heartbeat file on ops/watch-ledger; no approvals, publication, schedules, or other production mutations."
+  }
+}

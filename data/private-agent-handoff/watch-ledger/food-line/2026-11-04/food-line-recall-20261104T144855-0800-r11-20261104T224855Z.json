@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T144855-0800-r11-20261104T224855Z",
+  "scheduled_for": "2026-11-04T14:45:54-08:00",
+  "started_at": "2026-11-04T14:48:55-08:00",
+  "completed_at": "2026-11-04T14:50:06.768-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T13:46:48-08:00",
+    "end_at": "2026-11-04T14:50:06.768-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified Food Line supplementary heartbeat completion through this run; article publication dates alone do not establish that a notice was newly announced in this hour.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall only; Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss from closure, fire, or disaster",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "Official new SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T134555-0800-r11-20261104T214555Z.json",
+      "completed_at": "2026-11-04T13:46:48-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"November 4, 2026\" closes OR fire OR destroyed",
+      "\"last grocery store\" November 2026 closed burned town",
+      "\"sole grocery\" fire closed Wednesday November 4 2026",
+      "\"full service grocery store\" closes November 4 2026 rural",
+      "\"food distribution\" canceled \"November 4, 2026\" storm OR flood",
+      "\"mobile food pantry\" canceled \"Nov 4\" 2026 weather",
+      "\"food pantry\" \"closed\" \"November 4, 2026\" fire OR flood OR outage",
+      "\"food bank\" \"suspended operations\" November 4 2026",
+      "\"pantry\" \"temporarily closed\" \"Nov 4, 2026\" emergency",
+      "site:.gov SNAP EBT \"November 4, 2026\" benefits delayed OR outage OR suspended",
+      "site:.gov WIC outage \"November 4, 2026\" food benefits",
+      "\"November 4, 2026\" \"food distribution\" \"canceled\" storm OR power"
+    ],
+    "direct_page_checks": [
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "result": "Direct open returned DisabledError. Search listing dated Nov. 4 reports planned Nov. 30 closure of Daniels WV Cornerstone IGA, but it did not establish this was the only, last, sole, or only full-service grocery in Daniels; no verified interval-new notice timing. Do not qualify from snippet alone."
+      }
+    ],
+    "other_exclusions": [
+      "Eastport, Maine only grocery was already scheduled to close September 3, 2026; historical non-interval story.",
+      "Grocery Outlet and Winn-Dixie multi-store closure recaps published August and September 2026, outside interval; no specific newly verified sole-grocery impact.",
+      "November 4 La Hacienda project in Romeoville and November 3 Edenton Carlie C's lease are grocery openings, not disruptions.",
+      "Food Bank of Northern Indiana November 2026 mobile distribution schedule describes services proceeding; not a cancellation.",
+      "Search results for pantry closures and SNAP/WIC emergency interruptions produced generic official pages, planned Veterans Day closures, and dated/nonqualifying material, not a verified new interruption."
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "failure": "DisabledError on direct source open",
+        "impact": "Unable to verify the fresh closure report directly; no evidence of sole grocery loss or exact interval-new announcement. Usable coverage from 12 searches remains."
+      }
+    ],
+    "result": "No new verified, nonduplicate qualifying food-access disruption detected in the bounded interval; direct verification of one candidate article failed, so status DEGRADED.",
+    "limitations": "Index is not comprehensive and publication date does not imply an interval-new announcement; one candidate source blocked on direct retrieval. Production nationwide collection remains authoritative.",
+    "action_limits": "No approvals, publication, schedule changes, or task disabling."
+  }
+}

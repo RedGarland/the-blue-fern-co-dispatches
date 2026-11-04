@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T144225-0800-recall12",
+  "scheduled_for": "2026-11-04T14:45:22-08:00",
+  "started_at": "2026-11-04T14:42:25-08:00",
+  "completed_at": "2026-11-04T14:44:00-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T13:47:26-08:00",
+    "end": "2026-11-04T14:44:00-08:00",
+    "basis": "From previous verified Care Line heartbeat completed_at through this bounded recall. Date-only publisher timestamps do not establish first publication within the hour."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-mgh-downtown-associates-closure-20261218",
+      "canonical_source_url": "https://www.bostonglobe.com/2026/11/04/business/mass-general-brigham-downtown/",
+      "title": "‘Kind of heartbreaking’: Mass General Brigham to close its only primary care clinic in Downtown Crossing",
+      "publisher": "The Boston Globe",
+      "exact_supporting_passage": "MGH Downtown Associates will be closing on Dec. 18, Jessica Pastore, a spokesperson for MGB, confirmed on Wednesday.",
+      "source_published_date": "2026-11-04",
+      "state": "Massachusetts",
+      "city": "Boston",
+      "county": "Suffolk County",
+      "territory": null,
+      "event_type": "confirmed_scheduled_primary_care_closure",
+      "service_line": "Primary care (MGH Downtown Associates, 294 Washington St., Downtown Crossing)",
+      "access_consequences": "The Downtown Crossing practice is scheduled to close December 18, 2026, removing this neighborhood practice site. Six providers and most staff are reportedly being offered positions at other MGB-affiliated practices, but individual patient continuity and placement were not confirmed. This is a confirmed scheduled loss of the site, not a currently effective shutdown.",
+      "affected_population": "Existing MGH Downtown Associates primary-care patients; a clinic employee estimated approximately 8,000–10,000 patients, unverified by the operator.",
+      "effective_date": "2026-12-18",
+      "announcement_date": "2026-11-04",
+      "confidence": "high",
+      "source_role": "strong_local_reporting_with_named_health_system_spokesperson_confirmation",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination notice",
+      "result": "No new CMS notices dated in this hourly recall window; latest listed notice remains November 2, 2026."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed or suspends care November 4 2026 United States",
+      "November 4 2026 hospital maternity labor delivery closes suspends obstetrics service",
+      "November 4 2026 rural hospital emergency room suspended services closure patients",
+      "November 4 2026 ambulance EMS service suspends operations closes coverage county",
+      "hospital behavioral health psychiatric residential treatment facility admissions suspended November 4 2026 US",
+      "dialysis center patients treatment closed suspended November 4 2026 United States",
+      "oncology infusion chemotherapy cancer clinic services closed November 4 2026",
+      "family medicine primary care clinic closes patients November 4 2026",
+      "November 4 2026 medical helicopter air ambulance station base closes suspends operations US",
+      "November 4 2026 reopened emergency department hospital resumed ambulance maternity dialysis service after suspension",
+      "November 4 2026 Puerto Rico Guam Virgin Islands Northern Mariana Samoa hospital clinic emergency service closure suspension",
+      "November 4 2026 site:gov healthcare facility license emergency department suspension closure medical center"
+    ],
+    "search_recency_days": 2,
+    "verified_new_candidates": 1,
+    "search_result_summary": "One newly surfaced, concrete confirmed scheduled primary-care site closure in Boston, MA, effective December 18; no independently verified newly effective disruption/restoration found in other priority classes. Publication date is November 4; article timestamp within this hour is unknown.",
+    "reviewed_exclusions": [
+      {
+        "item": "Bruceton Community Ambulance Service (Preston County, WV) suspension",
+        "source_url": "https://www.wvnews.com/prestoncountynews/preston-county-ems-crisis-deepens-as-bruceton-ambulance-service-suspends-operations-again/article_9c1166d2-8bb8-42f5-8e66-39f9c31e0351.html",
+        "reason": "Dated October 28, 2026; not interval-new."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, IL air base closure",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "Closure effective September 16, 2026; older."
+      },
+      {
+        "item": "Mercy primary care clinic at Alice L. Walton School of Medicine, Bentonville, AR",
+        "source_url": "https://www.mercy.net/newsroom/2026-11-02/Mercy_Opens_Primary_Care_Clinic_at_AWSOM/",
+        "reason": "New expansion opening Nov 23, not reopening a previously lost essential service."
+      },
+      {
+        "item": "New Jersey health facility enforcement notices",
+        "source_url": "https://www.nj.gov/health/healthfacilities/surveys-insp/enforcement_actions.shtml",
+        "reason": "Latest listed action November 2 is a financial penalty notice, not a new access-restricting action in this interval."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://hf.org/alert",
+        "result": "Known official Health First alert endpoint remains inaccessible to web reader."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Persistent previously documented access error; CMS and targeted search coverage continued."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Supplementary recall is bounded, not a comprehensive national collector. Boston Globe report has date November 4 without an extractable exact posting time; not possible to prove first publication after the previous heartbeat. Reconcile with production before any editorial action.",
+    "controls": "No editorial approval, publication, automation schedule changes, automation disabling or production collector changes."
+  }
+}

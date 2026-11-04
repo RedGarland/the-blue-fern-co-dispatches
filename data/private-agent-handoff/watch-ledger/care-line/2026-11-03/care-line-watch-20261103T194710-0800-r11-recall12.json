@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T194710-0800-r11-recall12",
+  "scheduled_for": "2026-11-03T19:45:22-08:00",
+  "started_at": "2026-11-03T19:47:10-08:00",
+  "completed_at": "2026-11-03T19:48:09-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T18:46:17-08:00",
+    "end": "2026-11-03T19:48:09-08:00",
+    "basis": "Previous confirmed Care Line watch heartbeat completed 18:46:17 PST; bounded supplementary recall, with indexed same-day source checking. Production collector is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization termination notice, CCN 18P001",
+      "result": "Direct CMS Public Notices current table checked first. No November 3 entry was visible. November 2 and October 30 entries precede observation window; no newly added official notice was verified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department closed today temporary diversion United States",
+      "November 3 2026 maternity labor delivery unit closed suspended hospital",
+      "November 3 2026 rural hospital emergency service closure suspension",
+      "November 3 2026 ambulance service air medical base closure suspended",
+      "November 3 2026 dialysis center oncology infusion clinic unexpectedly closed",
+      "November 3 2026 behavioral health psychiatric hospital facility closed suddenly",
+      "November 3 2026 federally qualified health center primary care clinic immediate closure",
+      "November 3 2026 hospital services reopening restored after flood outage evacuation",
+      "site:gov November 3 2026 healthcare clinic emergency service temporary closure reopening",
+      "November 3 2026 Guam Puerto Rico Virgin Islands hospital emergency clinic closure restoration",
+      "site:wihcc.com \"November 3, 2026\" \"reopen\" \"walk-in\" Leupp Dilkon updates",
+      "site:hf.org/alert \"November 3\" \"2026\" outpatient reopen Health First Melbourne"
+    ],
+    "search_recency_days": "10 queries with recency=1; two exact-source follow-ups without recency filter",
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center limited walk-in and prescription refill soft reopening, AZ",
+        "source": "https://www.wihcc.com/",
+        "reason": "Same official November 3 09:52 Arizona notice from prior watch, without a new documented after-hours change or independently verified distinct restoration; recorded earlier and not repeated."
+      },
+      {
+        "item": "Roseland Community Hospital maternity closure, Chicago IL",
+        "source": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Maternity ward closed November 1, reported November 2 and previously reviewed; not new in this window."
+      },
+      {
+        "item": "Maine Lincoln Hospital maternity unit",
+        "source": "https://wgme.com/news/local/protesters-speak-out-against-proposed-closure-of-lincoln-hospital-maternity-unit-maine-damariscotta-miles-campus-birthing-center",
+        "reason": "Older reporting of proposed closure, not new effective service withdrawal."
+      },
+      {
+        "item": "Health First Brevard County Florida flooding/outpatient service restoration",
+        "source": "https://hf.org/alert",
+        "reason": "No newly verified restoration; previously reported restrictions, official alert page inaccessible."
+      },
+      {
+        "item": "United States and territories other retrieved reports",
+        "source": null,
+        "reason": "Results were older, outside US coverage, forecasts/plans, broad policy commentary, or non-access business changes."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "Direct provider page still shows November 3 09:52 Arizona-time update; planned 13:00 Arizona-time limited Winslow walk-in and prescription-refill soft reopening. Dilkon ED/acute care open, Leupp closed Tuesday. No later official change shown."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Official Health First alert endpoint inaccessible in this run; actual outpatient restoration cannot be independently established."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Previously documented recurring source-access limitation, not new watch-wide degradation."
+      }
+    ],
+    "quality_limitations": "Supplementary indexed searches are not exhaustive for all counties/territories; real-time local alerts may lag indexing. The inaccessible Health First provider alert prevents confirming restoration. No primary production collector ledger cross-check performed; production stays authoritative.",
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private watch-ledger heartbeat only. No approval, public publication, primary collector mutation, schedule modification, or disabling."
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T054216-0800-recall12",
+  "scheduled_for": "2026-11-04T05:45:22-08:00",
+  "started_at": "2026-11-04T05:42:16-08:00",
+  "completed_at": "2026-11-04T05:43:09-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T04:44:47.826-08:00",
+    "end": "2026-11-04T05:43:09-08:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed at 04:44:47.826 PST; supplementary recall is not the primary collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization, CCN 18P001, termination notice.",
+      "result": "CMS page directly accessed before targeted searches. No November 3–4 dated termination, rescission, CLIA limitation/suspension or other newly published access-risk notice visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended services November 4 2026 United States",
+      "maternity obstetrics labor delivery service closed suspension November 4 2026 hospital",
+      "behavioral health psychiatric inpatient hospital unit closed November 4 2026 patients",
+      "dialysis center abruptly closing closed November 3 4 2026 access",
+      "oncology cancer treatment clinic closure suspension November 4 2026",
+      "primary care clinic sudden closure November 4 2026 patients",
+      "ambulance service closed suspended operations November 4 2026 county",
+      "air medical helicopter base closed suspended November 2026 EMS",
+      "rural hospital emergency service shut down November 4 2026",
+      "hospital emergency clinic service reopened restored effective November 4 2026",
+      "CMS Medicare provider termination CLIA suspension November 4 2026 notice",
+      "Puerto Rico Guam USVI American Samoa Northern Mariana hospitals clinic ambulance closure November 4 2026"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No newly verified qualifying, currently effective U.S. or territory service loss, suspension, emergency/rural/EMS access reduction, CMS notice, or concrete restoration within 04:44–05:43 PST. Searches returned earlier or already-assessed events, speculative future changes, business/policy news without specific service loss, and unrelated items. Indexing latency limits near-real-time recall.",
+    "reviewed_exclusions": [
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield, Illinois",
+        "source_url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/",
+        "reason": "November 3 report describes residential programs expected to cease by end of December only if existing clients can be transferred. No current service termination or new development within this hourly recall window; future conditional plan."
+      },
+      {
+        "item": "Santa Clara County Behavioral Health Pavilion, San Jose, California",
+        "source_url": "https://sanjosespotlight.com/santa-clara-county-long-overdue-youth-psychiatric-hospital/",
+        "reason": "October 26 article announced Nov 3 planned opening of new inpatient psychiatric facility; not a sudden reopening of a previously lost essential service, and announcement predates this window."
+      },
+      {
+        "item": "Roseland Community Hospital maternity ward, Chicago",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Maternity closure effective November 1, already recorded during earlier watches; duplicate."
+      },
+      {
+        "item": "Benefis Health System planned service reductions, Great Falls, Montana",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Previously reviewed, service reductions scheduled from December 19; no new currently effective loss."
+      },
+      {
+        "item": "Winslow Indian Health Care Center, Dilkon Medical Center, and Leupp Clinic flood-related changes",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official Nov 3 09:52 Arizona-time alert remains latest visible, with previously recorded closures and partial restoration; no update within recall window."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Accessible; Nov 3 09:52 local alert unchanged. Winslow walk-in soft opening and DMC/Leupp restrictions previously documented."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Official Health First alert endpoint inaccessible via reader; same previously documented recurring limitation, not a new material failure."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Reader returned internal error; access failure persists from earlier runs. Other official and local search coverage remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Bounded search recall is neither exhaustive nor authoritative. No reconciliation with the production national collector; source publication or indexing may lag behind the observation window.",
+    "controls": "Exactly one immutable heartbeat committed to ops/watch-ledger. No approval, publication, task schedule change, production state mutation, or disabling."
+  }
+}

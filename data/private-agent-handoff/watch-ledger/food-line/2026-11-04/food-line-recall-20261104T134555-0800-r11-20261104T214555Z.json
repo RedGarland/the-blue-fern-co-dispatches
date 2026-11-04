@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T134555-0800-r11-20261104T214555Z",
+  "scheduled_for": "2026-11-04T13:45:54-08:00",
+  "started_at": "2026-11-04T13:45:55-08:00",
+  "completed_at": "2026-11-04T13:46:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T12:48:08.103-08:00",
+    "end_at": "2026-11-04T13:46:48-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified supplementary Food Line heartbeat completion through this run; indexed publication dates are not evidence of interval-new announcements.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value miss classes only; production Food Line collector is authoritative.",
+    "target_classes": [
+      "Loss, fire, closure, disaster affecting only/sole/last/full-service grocery store",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T124554-0800-r11-20261104T204554Z.json",
+      "completed_at": "2026-11-04T12:48:08.103-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 4 2026 community",
+      "\"last grocery store\" closing fire November 2026 town",
+      "\"sole grocery store\" closed fire flood November 4 2026",
+      "\"food distribution\" canceled storm November 4 2026 food bank",
+      "\"mobile food pantry\" cancelled weather November 4 2026",
+      "\"food pantry\" \"closed\" \"November 4, 2026\" emergency",
+      "\"food bank\" \"suspended\" \"November 4, 2026\" service",
+      "SNAP benefits outage delayed unavailable November 4 2026 state official",
+      "\"Nov. 4, 2026\" food distribution canceled storm closure pantry",
+      "\"November 4, 2026\" \"food bank\" \"closed\" storm flooding",
+      "\"November 4, 2026\" WIC \"benefits\" \"interrupted\" OR \"outage\" OR \"suspended\"",
+      "\"Nov 4, 2026\" \"SNAP\" \"delayed\" \"benefits\" state agency"
+    ],
+    "direct_page_checks": [
+      {
+        "url": "https://indianriver.floridahealth.gov/event/food-pantry-closed-office-is-open-2026-09-02-e406fa01-6f1d-5557-8a97-f778c2a4bd57/",
+        "result": "Official Indian River County Department of Health calendar shows Wabasso satellite pantry closed November 4, 2026, while office remains open. URL indicates calendar entry originated September 2; no demonstrated interval-new abrupt reduction, emergency cause, or major impact. Excluded."
+      },
+      {
+        "url": "https://www.orbisweather.com/catastrophic-flooding-forces-florida-schools-to-remain-closed-as-communities-struggle-to-recover/",
+        "result": "Auxiliary weather report could not be opened (DisabledError). Its search snippet references school closures from earlier rainfall; it provides no independently verified food distribution closure and is not treated as corroboration."
+      }
+    ],
+    "other_exclusions": [
+      "2025 SNAP benefit suspension stories resurfaced on same November dates; not 2026 events",
+      "Eastport, Maine sole grocery shutdown (September 2026), Spencer, New York grocery fire (September 2026), and Ovid, New York earlier fire: outside search interval",
+      "99 Ranch Market Pleasanton, California prospective closure reported November 3; two other nearby stores preclude sole-grocery classification and pre-dates interval",
+      "Routine food-bank event schedules, upcoming Veterans Day planned closures, informational resources and program promotion",
+      "Indian River November 4 single-day pantry calendar closure lacks evidence of interval-new abrupt or major access reduction or disaster cause"
+    ],
+    "result": "No newly verified, nonduplicate, qualifying disruption in the interval in twelve bounded targeted searches. Auxiliary weather page retrieval was blocked, so DEGRADED rather than SUCCESS despite usable primary coverage.",
+    "limitations": "Search index surfaces older articles and same-day calendar events without posting timestamps; bounded search not comprehensive national collection. One auxiliary page inaccessible.",
+    "source_failures": [
+      {
+        "url": "https://www.orbisweather.com/catastrophic-flooding-forces-florida-schools-to-remain-closed-as-communities-struggle-to-recover/",
+        "failure": "DisabledError on direct open",
+        "impact": "No direct verification from this auxiliary weather page; official pantry calendar remained readable."
+      }
+    ],
+    "action_limits": "No review approval, publication, production changes, schedule changes, or task disabling."
+  }
+}

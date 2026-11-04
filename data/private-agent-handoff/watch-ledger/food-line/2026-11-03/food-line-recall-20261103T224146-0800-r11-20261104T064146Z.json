@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T224146-0800-r11-20261104T064146Z",
+  "scheduled_for": "2026-11-03T22:45:54-08:00",
+  "started_at": "2026-11-03T22:41:46-08:00",
+  "completed_at": "2026-11-03T22:42:17-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T21:43:56-08:00",
+    "end_at": "2026-11-03T22:42:17-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Directly verified prior hourly watch-ledger heartbeat completion; targeted searches prioritize November 3 but tolerate delayed indexing and exclude older or duplicate disruptions.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value missed food access disruptions; nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Closure, fire or disaster affecting the only/sole/last/full-service community grocery",
+      "Emergency food distribution canceled or suspended because of storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food-bank service closure or major access reduction",
+      "New official SNAP, WIC or other food-assistance interruption with immediate access impacts"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" OR \"fire\" November 3 2026 rural community US",
+      "\"sole grocery store\" OR \"last grocery store\" closing fire November 2026 town",
+      "\"full-service grocery\" \"closed\" \"November 3, 2026\" food access",
+      "\"food distribution\" canceled storm flooding fire November 3 2026",
+      "\"food bank\" \"mobile distribution\" canceled November 3 2026 weather",
+      "\"food pantry\" \"power outage\" \"closed\" November 3 2026",
+      "\"food pantry\" \"abruptly closed\" November 3 2026",
+      "\"food bank\" \"suspend services\" \"November 3, 2026\"",
+      "\"food pantry\" \"temporarily closed\" \"November 3, 2026\" food access",
+      "site:gov SNAP EBT November 3 2026 benefits delayed outage suspended",
+      "site:gov WIC benefits outage office closed November 3 2026",
+      "\"food assistance\" \"benefits delayed\" \"November 3, 2026\" SNAP emergency"
+    ],
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T214238-0800-r11-20261104T054238Z.json",
+      "completed_at": "2026-11-03T21:43:56-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "result": "No newly verified, nonduplicate U.S. food-access disruption in the bounded window. Fresh search queries returned historical grocery losses, unrelated weather event cancellations, routine pantry schedules, old outage articles, or noninterruption agency notices.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.thecooldown.com/green-business/eastport-maine-grocery-store-closure-impact/",
+        "reason": "Only full-service grocery closure in Eastport, Maine was reported September 7, 2026, previously seen in watch; not a new November 3 event."
+      },
+      {
+        "url": "https://www.dailyherald.com/20260729/news/so-caring-community-rallies-to-help-wheaton-pantry-that-lost-three-tons-of-food-after-storm/",
+        "reason": "Power-outage pantry inventory loss reported July 29, 2026; historical."
+      },
+      {
+        "url": "https://cbs12.com/news/local/flooding-forces-cancellation-of-st-lucie-county-4-h-fall-festival-november-7-heavy-rains-waterlogged-grounds-uf-ifas-extension-st-lucie-county",
+        "reason": "October 30 cancellation is a 4-H festival, not an emergency food distribution; food donations mentioned only incidentally."
+      },
+      {
+        "url": "https://www.peakofohio.com/local-news/food-for-the-holidays-november-mobile-pantry-schedule-released/",
+        "reason": "Routine November mobile pantry distribution schedule, not a newly suspended service."
+      },
+      {
+        "url": "https://dss.virginia.gov/relief/food-assistance/ebt/",
+        "reason": "November 1 scheduled SNAP sweetened beverage eligibility restriction expressly says benefits unchanged; not an official EBT interruption."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search discovery had low temporal precision, returning dated older and broadly related pages despite recency targeting. Very new provider posts may not yet be indexed; no verified findings does not establish no incidents anywhere.",
+    "production_authority": "No editorial approvals, public publication, production collection changes, schedule changes, or task disabling."
+  }
+}

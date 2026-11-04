@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T235008-0800-recall12",
+  "scheduled_for": "2026-11-03T23:45:22-08:00",
+  "started_at": "2026-11-03T23:50:08-08:00",
+  "completed_at": "2026-11-03T23:51:05-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T22:44:20-08:00",
+    "end": "2026-11-03T23:51:05-08:00",
+    "basis": "Previous durable Care Line watch heartbeat completed 2026-11-03 22:44:20 PST; this is bounded supplementary recall, not the authoritative production collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_at": "2026-11-03T23:50:08-08:00",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, Organ Procurement Organization, termination notice CCN 18P001",
+      "result": "CMS official notice table accessible and examined before other topics. No November 3 notice or notice dated within current observation window visible. Initial site-scoped query returned no hits; a second CMS query located the authoritative page."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended \"November 4, 2026\" United States",
+      "hospital maternity labor delivery closure \"November 3, 2026\" \"November 4\"",
+      "rural hospital emergency services suspended reopened November 3 2026",
+      "ambulance service shuts down paramedic base closed November 3 2026",
+      "behavioral health psychiatric hospital outpatient services closing effective November 3 2026",
+      "dialysis oncology clinic closures patients November 3 2026",
+      "hospital closure emergency department \"Nov. 3, 2026\" local news United States",
+      "\"Nov. 3, 2026\" \"closing\" \"clinic\" patients medical",
+      "site:gov \"November 3, 2026\" \"hospital\" \"suspended\" \"services\"",
+      "\"November 4, 2026\" ambulance \"service\" closed rural",
+      "\"November 3, 2026\" \"reopen\" \"emergency department\" hospital",
+      "Benefis inpatient rehabilitation outpatient behavioral health services discontinued when November 2026 Great Falls"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Benefis Health System, Great Falls, Montana: Northwest Clinic consolidation, 20-bed inpatient rehabilitation closure, outpatient behavioral health services withdrawal",
+        "source": "https://montanafreepress.org/2026/11/03/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/",
+        "corroboration": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Reported November 3 daytime and already considered by prior watch. Subsequent publisher detail establishes transition begins December 19, 2026 and continues into 2027, not a completed access change during this hourly window. Preserve as future closure follow-up rather than a new immediate finding."
+      },
+      {
+        "item": "Winslow Indian Health Care Center soft opening and Leupp/Dilkon service restrictions, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Official notice last updated November 3 at 9:52 a.m. Arizona time and previously recorded. No new alert or service change in this observation window."
+      },
+      {
+        "item": "Santa Clara Valley Healthcare new Behavioral Health Pavilion, California",
+        "source": "https://news.santaclaracounty.gov/santa-clara-valley-healthcare-open-new-behavioral-health-pavilion-bringing-critical-services-closer",
+        "reason": "Announced October 26 and scheduled to open November 3; new capacity rather than abrupt restoration of a previously lost service, and not a new announcement in the current window."
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield, Illinois",
+        "source": "https://www.springfieldbusinessjournal.com/columns/memorials-west-lake-campus-to-close/",
+        "reason": "Previously reported November 3 possible closure by December; not an effective new service withdrawal in this window."
+      },
+      {
+        "item": "Search returns outside the observation window or coverage scope",
+        "source": null,
+        "reason": "Older closures, future proposals, corporate layoffs not tied to immediate patient access loss, foreign coverage, and generic policy discussion were screened out."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "Accessible; November 3 09:52 official flood/service update unchanged. Winslow soft opening plan and Dilkon/Leupp status already captured."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Still inaccessible in browser; no independently confirmed Health First service restoration. This is a recurring, pre-existing limitation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Browser retrieval error. Other CMS and local reporting checks usable; known from earlier runs, not new material degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "quality_limitations": "Bounded indexed searches of emerging nighttime publications may lag local outlets. No claim of exhaustive U.S./territory coverage. Production collector remains authoritative, with production deduplication not directly verified.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "No approval, publication, schedule change, or task disabling. Exactly one new heartbeat file created for this run."
+  }
+}

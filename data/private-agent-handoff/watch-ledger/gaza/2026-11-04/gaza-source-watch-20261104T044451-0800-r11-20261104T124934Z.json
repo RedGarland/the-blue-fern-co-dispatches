@@ -1,0 +1,151 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T044451-0800-r11-20261104T124934Z",
+  "scheduled_for": "2026-11-04T04:44:51-08:00",
+  "started_at": "2026-11-04T04:45:39-08:00",
+  "completed_at": "2026-11-04T04:49:34-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T03:48:19-08:00",
+    "end": "2026-11-04T04:49:34-08:00",
+    "basis": "Since previous verified Gaza Source Watch heartbeat; bounded late-reporting recall checked against daily history; event chronology separately identified.",
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261103-khanyunis-japanese-neighborhood-imad-radi-died-of-wounds",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176590",
+      "title": "Gaza youth dies from injuries sustained in Israeli bombardment of Khan Yunis",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-03",
+      "publication_date": "2026-11-03",
+      "event_date": "2026-11-03",
+      "location": "Japanese Neighborhood (Al-Hayy al-Yabani), northwest Khan Yunis, southern Gaza Strip",
+      "affected_population_system": "Imad Omar Ahmed Radi, 39, reported dead from wounds sustained in bombardment; civilian affiliation not independently verified.",
+      "exact_supporting_passage": "Medical sources reported the death of Imad Omar Ahmed Radi, 39, who succumbed to injuries sustained yesterday",
+      "source_type": "Palestinian official news agency citing medical sources",
+      "classification": "follow-up",
+      "confidence": "medium-high for WAFA-reported death, age, date and location; no independent medical confirmation",
+      "bounded_discovery_context": {
+        "discovered_in_current_run": true,
+        "event_inside_strict_hourly_window": false,
+        "event_date_detail": "Reported death on Tuesday November 3, 2026, following injuries from a November 2 bombardment.",
+        "article_publication_date_detail": "November 3, 2026, 08:58 (WAFA site local time).",
+        "distinctness": "WAFA describes Japanese Neighborhood bombardment on Nov 2 and death Nov 3 morning; distinct in time/place from Nov 3 afternoon Applied College drone strike (three killed), and Gaza City municipal-park displaced-person tent fatality.",
+        "cross_check": "Read 24 Nov 3 and four earlier Nov 4 watch-ledger heartbeats on ops/watch-ledger; no matching Imad Radi death finding was present. The prior watch's 48-hour aggregate figures are not separately counted as additional casualties here.",
+        "related_non_duplicate_report": "https://english.wafa.ps/Pages/Details/176620",
+        "verification_limitations": "Medical sources quoted by WAFA were not independently accessed; event is outside the strict hourly occurrence window and may already be held by the authoritative production collector. Do not infer an increase to aggregate fatality counts."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza production collector and publisher remain authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T034554-0800-60bd62ad.json",
+    "previous_verified_completed_at": "2026-11-04T03:48:19-08:00",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; latest listed report published Oct 31 for Oct 29; no new Nov 4 Gaza situation publication."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible overview, no Nov 4 dated health operations or medical evacuation change observed."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 recurring."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report November 4 2026 latest OCHA occupied Palestinian territory",
+      "site:who.int Gaza November 4 2026 health emergency WHO occupied Palestinian territory updates"
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps November 4 2026 Gaza killed injured Israeli shelling strikes morning",
+      "site:palestinercs.org November 4 2026 Gaza ambulance medical evacuation attack",
+      "site:reuters.com/world/middle-east/ Gaza November 4 2026 Israel ceasefire civilian casualties negotiations",
+      "site:apnews.com Gaza November 4 2026 strike killed Palestinians ceasefire humanitarian",
+      "site:aljazeera.com/news/2026/11/4/ Gaza Palestinians killed wounded attack ceasefire November 4",
+      "Gaza Nov 4 2026 AFP civil defence displaced tent attack victims overnight hospital",
+      "Gaza 4 November 2026 aid crossing Kerem Shalom Rafah trucks fuel World Food Programme UNRWA humanitarian supplies",
+      "site:msf.org Gaza 2026 November 4 hospital ambulance medical evacuation functionality",
+      "site:unicef.org Gaza November 2026 children water displacement shelter November 4",
+      "Gaza 4 Nov 2026 Palestinian health ministry casualties 24 hours November 4 2026",
+      "Gaza Hamas Israel ceasefire talks hostages detainees prisoner exchange 4 November 2026 latest",
+      "Gaza November 4 2026 military operations civilian impact drones shelling displaced journalist Nov 3 4"
+    ],
+    "direct_checks": {
+      "WAFA": {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Nov 4 listed updates primarily concern the West Bank; Nov 3 08:58 WAFA report surfaced as a distinct previously unlogged death; Nov 3 13:48 Applied College deaths already logged."
+      },
+      "PRCS": {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Nov 3 Saudi operational support announcement previously logged; no Nov 4 distinct Gaza response change in latest visible items."
+      },
+      "AlJazeera": {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza article Nov 3 primarily recaps Nov 1-2 attacks and another differently named death; not independent corroboration of Imad Radi."
+      },
+      "AP": {
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible; no distinct new in-window development verified."
+      },
+      "MSF": {
+        "url": "https://www.msf.org/gaza-israel-war",
+        "result": "Accessible; no new dated Gaza health-capacity change in visible latest reports."
+      },
+      "WHO_EMRO": {
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, recurring."
+      },
+      "WFP": {
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      "UNRWA": {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      "UNNews": {
+        "url": "https://news.un.org/en/",
+        "result": "Restricted access, recurring."
+      }
+    },
+    "checked_categories": [
+      "civilian casualties and attacks with documented population impacts",
+      "displacement, shelter and infrastructure damage",
+      "aid, food, water, crossing flows and fuel",
+      "healthcare, hospitals, ambulances, medical evacuation and service functioning",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "excluded": [
+      "Nov 3 Khan Yunis Applied College strike (three deaths) and Gaza City municipal-park tent death (Rimas al-Madhoun) already in ledger.",
+      "Nov 3 Gaza health ministry 48-hour aggregate and PRCS Saudi operational support announcement previously logged.",
+      "Nov 4 WAFA female detainee medical-neglect article concerns detainees from Ramallah, not Gaza-specific.",
+      "Older materials, non-Gaza West Bank developments, opinion and unsupported claims."
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News access restricted"
+      ],
+      "alternative_coverage": "OCHA OPT, WHO global, WAFA, PRCS, MSF, AP, Al Jazeera and other indexed reports."
+    },
+    "limitations": "No additional distinct Gaza development verified to have occurred inside the strict 03:48-04:49 PST window. Search-index lag and sources with access restrictions constrain recall; ledger novel does not establish production absence or independent event verification.",
+    "notification_decision": "Notify about one late-discovered, traceable, previously unlogged fatality; note that occurrence predates the hourly window. Recurring degradation not materially worse.",
+    "safeguards": "Only one private ledger write on ops/watch-ledger; no approval, publication, production change, schedule alteration or disabling."
+  }
+}

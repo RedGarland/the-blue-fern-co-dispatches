@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T104611-0800-recall12",
+  "scheduled_for": "2026-11-04T10:45:22-08:00",
+  "started_at": "2026-11-04T10:46:11-08:00",
+  "completed_at": "2026-11-04T10:47:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T09:48:36-08:00",
+    "end": "2026-11-04T10:47:43-08:00",
+    "basis": "Start at prior persisted Care Line heartbeat completed_at; supplementary high-value recall only. Publication/search result timestamp freshness does not establish hourly newness."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY — organ procurement organization termination",
+      "result": "Official CMS listing checked before targeted searches. No newly dated November 3–4 terminations, rescissions, CLIA limitations or suspensions in the visible listing. Prior October 30 Kalamazoo Behavioral Health Hospital termination is outside recall window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 4, 2026\" \"hospital\" \"emergency department\" closed OR suspended OR reopened",
+      "\"November 4, 2026\" hospital maternity OR labor delivery unit closure OR suspended",
+      "rural hospital emergency services closed temporarily November 3 4 2026 US",
+      "\"November 4, 2026\" ambulance service closed OR ceasing OR base shutdown helicopter air medical",
+      "dialysis clinic oncology cancer treatment services closing closure November 4 2026 USA",
+      "\"November 4, 2026\" psychiatric behavioral health hospital unit services closing OR suspended",
+      "primary care clinic shuts down closed patients November 4 2026 USA",
+      "\"November 4, 2026\" hospital OR emergency department OR clinic reopened services restored",
+      "hospital emergency room diverting ambulances temporary service suspension November 4 2026",
+      "site:gov \"November 4, 2026\" \"clinic\" \"closed\" OR \"suspended\" health services",
+      "Puerto Rico Guam Virgin Islands hospital emergency service closure suspension November 4 2026",
+      "November 4 2026 hospital emergency department suspended operations health care closure local news"
+    ],
+    "search_recency_days": 2,
+    "search_result_summary": "No new independently verified qualifying U.S./territory hospital, ED, maternity, behavioral health, dialysis, oncology, primary care, emergency/rural, ambulance/air-medical service loss or concrete newly announced restoration within the elapsed interval. Many results were older articles, national funding discussion, industry/ownership commentary, or non-U.S. results.",
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center, Dilkon Medical Center and Leupp Clinic Nov 4 normal-hours restoration; Leupp Dental remains closed",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official update visible but previously observed in earlier watch; no newly announced change identified in this interval."
+      },
+      {
+        "item": "Private equity ownership of methadone clinics",
+        "source_url": "https://cobbcountycourier.com/2026/11/private-equity-is-buying-up-more-methadone-clinics-access-to-the-lifesaving-drug-isnt-getting-easier/",
+        "reason": "November 4 research/analysis on ownership and longstanding access constraints, not a new facility closure, suspension or restoration."
+      },
+      {
+        "item": "Anaheim Global Medical Center 911 receiving designation suspension",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/",
+        "reason": "May 9, 2026 event, not a new development."
+      },
+      {
+        "item": "Southwest Virginia school-based clinic closures",
+        "source_url": "https://virginiamercury.com/2026/07/10/eight-school-based-health-clinics-close-in-southwest-virginia-as-federal-funding-pressures-mount/",
+        "reason": "July 10, 2026 reporting, outside recall interval."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Official flood operations update on normal hours November 4 visible; previously reviewed, not new."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Attempted official Health First alert endpoint; inaccessible via browser reader, same known recurring limitation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Web open yielded an internal access error. Other CMS and targeted search coverage remained usable; known repeated issue."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Hourly recall is bounded by index freshness, search precision and available local official sources; not an exhaustive 50-state/territory sweep. Health First endpoint failed (persistent).",
+    "controls": "One heartbeat on ops/watch-ledger; no editorial approval, publication, automation schedule/task change, or production modification."
+  }
+}

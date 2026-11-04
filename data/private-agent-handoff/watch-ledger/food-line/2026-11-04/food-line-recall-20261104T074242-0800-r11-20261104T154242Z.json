@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T074242-0800-r11-20261104T154242Z",
+  "scheduled_for": "2026-11-04T07:42:42-08:00",
+  "started_at": "2026-11-04T07:42:42-08:00",
+  "completed_at": "2026-11-04T07:43:49.710-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T06:47:28.058-08:00",
+    "end_at": "2026-11-04T07:43:49.710-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior directly read-back verified completed Food Line hourly heartbeat. Searched fresh and recently indexed local, provider, agency and government notices; excluded reports of historical events.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall watch; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Loss, fire, disaster or closure of only/sole/last/full-service community grocery",
+      "Emergency food distribution cancellations or suspensions due to storm, flood, fire, outages or facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption immediately affecting access"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0,
+      "search_successful": true
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 4 2026 United States (recency 2d)",
+      "\"last grocery store\" closing November 2026 town (recency 3d)",
+      "\"sole grocery store\" \"fire\" \"November\" 2026 (recency 7d)",
+      "\"only full service grocery\" closed 2026 November (recency 7d)",
+      "food pantry \"closed today\" \"November 4\" 2026 outage storm (recency 2d)",
+      "food bank distribution \"canceled\" \"November 4\" 2026 storm (recency 2d)",
+      "food distribution \"cancelled\" \"November 4, 2026\" flood power (recency 2d)",
+      "food pantry \"temporarily closed\" November 4 2026 fire water damage (recency 3d)",
+      "site:gov \"SNAP\" \"November 4, 2026\" outage delay benefits",
+      "\"WIC\" \"November 4, 2026\" benefits interrupted unavailable",
+      "\"food bank\" \"closed\" \"November 4, 2026\" emergency service",
+      "\"food pantry\" \"November 4, 2026\" suspended closed distribution"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T064612-0800-r11-20261104T144612Z.json",
+      "completed_at": "2026-11-04T06:47:28.058-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "result": "No verified new, nonduplicative qualifying U.S. food-access disruption since previous completed watch.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://indianriver.floridahealth.gov/event/food-pantry-closed-office-is-open-2026-09-02-e406fa01-6f1d-5557-8a97-f778c2a4bd57/",
+        "reason": "Official Nov 4 Indian River County, FL food pantry closed notice; undated publication and no evidence of abrupt shutdown, incident cause, or newly announced major loss. Calendar event alone insufficient for qualifying unexpected reduction."
+      },
+      {
+        "url": "https://www.theflanaganfoundation.org/pantry-dates/",
+        "reason": "November 4 Texas food pantry closure is posted as part of recurring planned schedule; not abrupt disruption."
+      },
+      {
+        "url": "https://wic.sbcounty.gov/events/2026-11-04/",
+        "reason": "Rancho Cucamonga WIC office closure was effective October 16 with alternate offices available; old and no new immediate statewide benefit interruption."
+      },
+      {
+        "url": "https://www.fna.usda.gov/taxonomy/term/52",
+        "reason": "Nov 4 SNAP retailer stocking rule compliance deadline is not verified SNAP service or benefit interruption."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport sole-grocery closure announced September 3; preexisting."
+      },
+      {
+        "url": "https://www.fingerlakes1.com/2026/09/13/fire-destroys-spencers-only-full-service-grocery-store/",
+        "reason": "Spencer sole-grocer fire September 2026; preexisting."
+      },
+      {
+        "url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "November 3 Wisconsin distribution cancellation already recognized in prior Food Line recall; duplicate, not a newly discovered event."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Date-limited web search results disproportionately included calendar posts, prior-year incidents and historically reported grocery closures. The official Florida pantry calendar gives no unexpected-closure cause or dated new announcement. Search coverage is bounded and does not assert zero unindexed events.",
+    "production_authority": "No publication, review approval, production runner mutation, schedule change, or watch disabling."
+  }
+}

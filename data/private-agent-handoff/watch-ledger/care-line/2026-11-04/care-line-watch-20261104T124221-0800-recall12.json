@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T124221-0800-recall12",
+  "scheduled_for": "2026-11-04T12:45:22-08:00",
+  "started_at": "2026-11-04T12:42:21-08:00",
+  "completed_at": "2026-11-04T12:43:41-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T11:47:07-08:00",
+    "end": "2026-11-04T12:43:41-08:00",
+    "basis": "Start at the previous verified Care Line heartbeat completed_at; current automation run began ahead of nominal hourly scheduled_for. Indexed article publication/crawl freshness is not evidence that a development occurred within this interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky organ procurement organization termination notice",
+      "result": "Direct CMS public-notices page opened before targeted searches. The newest listed notice is dated 2026-11-02, preceding the previous heartbeat; no interval-new provider termination, rescission, CLIA limitation/suspension, or related official access-risk notice identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 4 2026 hospital emergency department closes temporarily suspended service patients",
+      "November 4 2026 maternity labor delivery hospital services closed suspended",
+      "November 4 2026 rural hospital emergency department loss service shutdown",
+      "November 4 2026 ambulance EMS shuts down suspends coverage rural county",
+      "November 4 2026 dialysis clinic closes patients treatment relocation US",
+      "November 4 2026 psychiatric behavioral health inpatient residential program closed service suspended United States",
+      "November 4 2026 oncology cancer treatment center closes services patients USA",
+      "November 4 2026 primary care medical clinic closes patients notice US",
+      "November 4 2026 air medical helicopter ambulance base closure suspended operations United States",
+      "November 4 2026 hospital emergency room reopened resumed services medical center after suspension",
+      "November 4 2026 Puerto Rico Guam Virgin Islands American Samoa health clinic hospital ambulance suspended",
+      "November 4 2026 state health department official closure emergency medical services hospital access alert"
+    ],
+    "search_recency_days": 2,
+    "search_result_summary": "Twelve targeted searches across hospital/ED, maternity, rural service loss, EMS/air medical, dialysis, behavioral health, oncology, primary care, reopening, territories and official disruption alerts found no independently verified qualifying change newly announced or newly effective in the recall interval. Several search results were older, outside U.S./territory scope, prospective, or unrelated business/policy news.",
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center, Dilkon Medical Center, and Leupp Clinic resume normal hours on November 4; Leupp Dental remains closed",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Direct official recheck confirmed the same prior-reviewed, already-recorded restoration notice; no interval-new announcement or changed access consequence."
+      },
+      {
+        "item": "Roseland Community Hospital labor and delivery closure",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Report dated October 28, 2026; previously reviewed, not interval-new."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Airport helicopter base closure",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "September 16, 2026 effective event previously reviewed; not newly announced."
+      },
+      {
+        "item": "Adventist Health Advanced Care Pavilion opened in Bakersfield",
+        "source_url": "https://hconews.com/2026/11/04/adventist-health-unveils-30-million-advanced-care-pavilion-in-bakersfield/",
+        "reason": "Article published November 4 but ribbon-cutting was October 8; new capacity and expansion, not abrupt restoration of previously lost essential service."
+      },
+      {
+        "item": "Kula Hospital restoration plan",
+        "source_url": "https://www.aha.org/tellingthehospitalstory/stories/hawaii-hospital-set-comeback-after-storm-damage-closure",
+        "reason": "Recovery/reopening remains prospective, not yet effective; previously reviewed."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Previously reviewed flood-related restoration remains posted with November 4 normal-hour resumption; Leupp Dental still closed."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Direct opening failed with access/internal error; known persistent source limitation also recorded by previous heartbeat."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct web reader failed to access official Health First alert page. CMS and all twelve targeted search queries succeeded; same previously documented failure."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "This is a bounded supplementary recall rather than exhaustive U.S. and territory collection. Search engines index news unevenly, so no_findings is not proof of no real-world developments. Health First official alert access remains degraded.",
+    "controls": "No approval, publication, production collector modification, schedule modification, or automation disabling."
+  }
+}

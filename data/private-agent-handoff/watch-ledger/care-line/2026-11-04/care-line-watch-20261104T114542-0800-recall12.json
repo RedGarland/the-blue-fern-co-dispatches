@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T114542-0800-recall12",
+  "scheduled_for": "2026-11-04T11:45:22-08:00",
+  "started_at": "2026-11-04T11:45:42-08:00",
+  "completed_at": "2026-11-04T11:47:07-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T10:47:43-08:00",
+    "end": "2026-11-04T11:47:07-08:00",
+    "basis": "Start at prior successfully persisted Care Line heartbeat completed_at; supplementary search recall only. Indexed article freshness does not prove news arose in this interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky organ procurement organization termination notice",
+      "result": "Official CMS public notice index checked first. No new November 4 or post-prior-check CMS provider terminations, rescissions, CLIA limitations, suspensions, or related access-risk notices visible. Latest listed November 2 notice predates the recall window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 4, 2026\" hospital emergency department closing closure suspension United States",
+      "\"November 4, 2026\" maternity labor delivery unit service suspended closure",
+      "November 4 2026 rural hospital emergency services closed temporarily local news",
+      "November 4 2026 ambulance service ceases operations air medical helicopter base closure",
+      "November 4 2026 dialysis center clinic patients closure suspension",
+      "November 4 2026 psychiatric behavioral health hospital closing suspended services",
+      "\"November 4, 2026\" cancer center oncology clinic closed patients services",
+      "\"November 4, 2026\" primary care clinic closing no longer accepting patients",
+      "November 4 2026 hospital emergency department reopened restored services local news",
+      "November 4 2026 health department emergency hospital clinic services suspended official notice",
+      "November 4 2026 Puerto Rico Guam U.S. Virgin Islands hospital emergency ambulance service closure",
+      "November 4 2026 rural EMS ambulance service suspended closed county"
+    ],
+    "search_recency_days": 2,
+    "search_result_summary": "None of the 12 bounded searches independently verified a newly announced or newly effective qualifying healthcare-access loss/restoration or a newly published CMS action in the 10:47–11:47 PST recall interval. Search results primarily contained older events, out-of-jurisdiction developments, funding/general policy analysis, and ownership/news without concrete access changes.",
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center, Dilkon Medical Center and Leupp Clinic resuming normal hours on November 4 following flooding; Leupp Dental still closed",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official notice still visible, but already recorded and reviewed in previous Care Line watches. No new change detected during this interval."
+      },
+      {
+        "item": "Kula Hospital restoration targeting late summer 2027",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "November 2 announcement; emergency department remains closed and reopening has not occurred. Prior review already excluded this prospective reopening."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur airport base and PHI Air Medical Red Bluff base closures",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "Both are reported September 2026 closures, not interval-new events."
+      },
+      {
+        "item": "Dauphin Regional Health Centre dialysis restoration",
+        "source_url": "https://730ckdm.com/news-now/34737-dialysis-returns-to-drhc",
+        "reason": "Outside U.S./territory geographic scope (Manitoba, Canada)."
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital labor and delivery litigation",
+        "source_url": "https://www.penbaypilot.com/article/mainehealth-sued-over-potential-closure-labor-and-delivery-unit/273156",
+        "reason": "August 2026 reporting on a potential closure, not an interval-new confirmed service loss."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Same previously observed flood-related normal-hours restoration November 4; no new update."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Reader failed to open official Health First endpoint; persistent previously documented limitation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Web open returned internal access error; CMS and all 12 targeted searches remained usable. Same recurring endpoint failure as previous runs."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Bounded supplementary recall and search indexing do not establish exhaustive coverage of every U.S. state or territory. Health First alert URL remained inaccessible; this is a recurring known limitation.",
+    "controls": "No editorial review decision, approval, public publication, production collection change, schedule modification, or task disabling."
+  }
+}

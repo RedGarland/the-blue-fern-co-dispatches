@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T074437-0800-recall12",
+  "scheduled_for": "2026-11-04T07:45:22-08:00",
+  "started_at": "2026-11-04T07:44:37-08:00",
+  "completed_at": "2026-11-04T07:46:12.307-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T06:49:24.062-08:00",
+    "end": "2026-11-04T07:46:12.307-08:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed 06:49:24.062 PST; supplementary bounded hourly recall, not authoritative national collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky organ procurement organization, CCN 18P001, termination notice",
+      "result": "Official current CMS Public Notices page accessed before targeted searches. Its latest dated notice remained 2026-11-02. No new November 3 or November 4 provider termination, rescission, CLIA limitation or suspension notices were visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporary closure November 4 2026 United States patients diverted",
+      "rural hospital emergency services suspended closed November 3 4 2026",
+      "maternity labor delivery hospital unit closure suspension November 4 2026 US",
+      "mental health psychiatric inpatient behavioral hospital closure November 4 2026",
+      "dialysis treatment center closed patients diverted November 4 2026",
+      "oncology cancer center treatment clinic closure suspension November 4 2026",
+      "primary care medical clinic abruptly closed not accepting patients November 4 2026 US",
+      "ambulance service EMS base closure suspended service November 4 2026 county",
+      "air medical helicopter medical flight base closed operations November 4 2026",
+      "emergency department hospital reopened service restored November 4 2026 local",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands health clinic emergency maternity service closure November 2026",
+      "CMS November 4 2026 provider termination notice CLIA suspension limitation rescission"
+    ],
+    "search_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      7,
+      7
+    ],
+    "result_summary": "No newly verified qualifying healthcare access loss or concrete restoration in the interval. Search recall covered U.S. and territories for hospital/ED/rural, maternity, behavioral, dialysis, oncology, primary care, ground/air EMS, service restoration and CMS access-risk actions. Indexing lag and limited targeted scope prevent proof of absence.",
+    "reviewed_exclusions": [
+      {
+        "item": "Memorial Behavioral Health West Lake residential programs, Springfield, Illinois",
+        "source_url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/",
+        "reason": "November 3 local report says crisis and supervised residential programs are expected to cease by end of December only if clients can be transferred; future conditional change, not actual effective service loss in this window."
+      },
+      {
+        "item": "Med-Trans / Covenant Kite Flight second helicopter, Lubbock, Texas",
+        "source_url": "https://www.airmedandrescue.com/latest/news/med-trans-adds-second-kite-flight-helicopter-critical-care-transfers",
+        "reason": "November 4 article on an additional aircraft already operational since October 21; expansion, not restoration of previously lost service, and event outside hourly window."
+      },
+      {
+        "item": "Roseland Community Hospital labor/delivery, Chicago, Illinois",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "November 1 closure previously documented, duplicate."
+      },
+      {
+        "item": "Winslow, Dilkon and Leupp flood-service disruptions, Arizona",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official November 3 09:52 update unchanged; Winslow walk-in restoration and other access restrictions already reviewed."
+      },
+      {
+        "item": "Health First storm-related outpatient access changes, Brevard County, Florida",
+        "source_url": "https://hf.org/alert",
+        "reason": "Previously assessed storm-related changes; latest official alert unavailable through current reader; cannot verify a newer qualifying update."
+      },
+      {
+        "item": "Kula Hospital emergency services, Maui, Hawaii",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Projected late summer 2027 reopening, not yet effective; previously reviewed."
+      },
+      {
+        "item": "Benefis Great Falls inpatient rehabilitation and outpatient behavioral services, Montana",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Previously reviewed announcement for December 19 prospective service reductions; no newly effective loss in interval."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Airport base, Illinois",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "Older closure effective September 16, 2026, unrelated to current recall window."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Directly readable; last update still November 3 at 09:52 Arizona local time."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Web reader reported internal error; known persistent failure, not newly degraded."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Known persistent web-reader internal accessibility failure; other CMS, official and strong local coverage remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Search indexes can lag new events, region-specific blind spots are possible, and no direct production collector reconciliation was available. This is a bounded recall only.",
+    "controls": "One unique immutable heartbeat committed to ops/watch-ledger only. No approval, publication, schedule change, task disabling, or production mutation."
+  }
+}

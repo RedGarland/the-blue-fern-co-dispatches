@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T224325-0800-recall12",
+  "scheduled_for": "2026-11-03T22:45:22-08:00",
+  "started_at": "2026-11-03T22:43:25-08:00",
+  "completed_at": "2026-11-03T22:44:20-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T21:48:00-08:00",
+    "end": "2026-11-03T22:44:20-08:00",
+    "basis": "Prior verified Care Line watch-ledger heartbeat completed 21:48 PST. This is bounded supplementary late-evening indexed recall, not the production national collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_date": "2026-11-03",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO Medicare termination, CCN 18P001",
+      "assessment": "Public CMS table was inspected before targeted searches. No November 3 notice appeared; November 2 and earlier entries predated the window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department closed temporarily tonight ambulance diversion US",
+      "November 3 2026 labor delivery maternity unit closed service patients local news",
+      "November 3 2026 rural hospital emergency care shutdown urgent service suspension",
+      "November 3 2026 ambulance EMS air medical helicopter base suspended closed",
+      "November 3 2026 dialysis center oncology infusion clinic suddenly closed patients",
+      "November 3 2026 behavioral health psychiatric treatment hospital unit closure suspended",
+      "November 3 2026 primary care clinic urgent care federally qualified health center closed effective",
+      "November 3 2026 hospital ED urgent care reopened restored after shutdown outage flooding",
+      "November 3 2026 hospital clinic EMS closure interruption site:gov OR site:us",
+      "November 3 2026 Puerto Rico Guam Virgin Islands American Samoa healthcare clinic ambulance hospital suspended reopening",
+      "Benefis Great Falls November 3 2026 outpatient behavioral health inpatient rehabilitation discontinued effective date time",
+      "November 3 2026 local news healthcare access services closing tonight hospital counseling psychiatry ambulance"
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Benefis Health System inpatient rehabilitation and outpatient counseling/psychiatry/psychology discontinuation, Great Falls, Montana",
+        "source": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "November 3 local report describes announced service discontinuations but specifies that leadership is still communicating timing and next steps; no independently confirmed effective withdrawal or newly effective closure within this hourly window. Source detail blocked (HTTP 429). Worth production follow-up when dates become concrete."
+      },
+      {
+        "item": "Winslow Indian Health Care Center soft reopening, plus Dilkon and Leupp status, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Official announcement remains November 3 09:52 Arizona time, previously captured as a restoration and restrictions. No new official change since previous heartbeat."
+      },
+      {
+        "item": "Roseland Community Hospital maternity unit, Chicago, Illinois",
+        "source": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Reported November 2 and already handled in previous watches; closure predates this window."
+      },
+      {
+        "item": "Watsonville Community Hospital maternity and NICU services, California",
+        "source": "https://santacruzlocal.org/2026/10/28/watsonville-community-hospital-moves-to-shutter-labor-and-delivery/",
+        "reason": "Board voted to pursue future closure potentially March 2027; no immediate effective maternity closure; NICU past change predates window."
+      },
+      {
+        "item": "Other returned indexed stories",
+        "source": null,
+        "reason": "Older than observation window, outside U.S./territories, proposed only, unrelated health policy, or without verifiable service access consequence."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "Accessible. Still displays November 3 09:52 update: Winslow soft opening at 1 PM Arizona, urgent care open, Dilkon emergency department open, Leupp clinic closed Tuesday. No later update."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Previously documented Health First official alert endpoint remains inaccessible; restoration cannot be independently confirmed."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Recurring prior-run limitation; unrelated searches and CMS source remained usable."
+      },
+      {
+        "source": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "type": "http_429",
+        "detail": "Article details could not be opened due to rate limiting; indexed publisher excerpt available, but effective date unverified."
+      }
+    ],
+    "material_new_degradation": false,
+    "quality_limitations": "Supplementary bounded indexed recall may lag evening-local publication and cannot assert nationwide completeness. Source visibility alone does not prove effective service change. Production is authoritative; production deduplication was not directly checked.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one private watch heartbeat requested. No approval, publication, schedule modification, or task disabling."
+  }
+}

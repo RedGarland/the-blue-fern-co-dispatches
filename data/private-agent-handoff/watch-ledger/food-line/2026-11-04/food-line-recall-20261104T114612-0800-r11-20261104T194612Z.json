@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T114612-0800-r11-20261104T194612Z",
+  "scheduled_for": "2026-11-04T11:45:54-08:00",
+  "started_at": "2026-11-04T11:46:12-08:00",
+  "completed_at": "2026-11-04T11:47:38.013-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T10:42:13-08:00",
+    "end_at": "2026-11-04T11:47:38.013-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified supplementary watch completion to current bounded scan; only newly reported qualifying U.S. food-access disruptions eligible.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall watch only; the primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Closure, loss, fire, or disaster involving the community's only, sole, last, or full-service grocery store",
+      "Emergency food distributions suspended/canceled because of storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or substantial access reduction",
+      "Official newly emerging SNAP, WIC, or food-assistance interruption with immediate access effects"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "slow": 0,
+      "failed_searches": 0,
+      "search_successful": true
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"November 4, 2026\" closed fire",
+      "\"last grocery store\" closed fire November 2026 community",
+      "\"sole grocery store\" fire closed November 2026",
+      "\"food distribution\" \"canceled\" \"November 4, 2026\" storm",
+      "\"food pantry\" \"closed\" \"November 4, 2026\" emergency",
+      "\"food bank\" \"suspended\" \"November 4, 2026\"",
+      "\"Forgotten Harvest\" \"Nov 4\" \"canceled\" \"2026\" reason",
+      "\"Goodwill Integrated Solutions\" \"SEED\" \"Van Buren\" canceled distribution weather November 4 2026",
+      "\"mobile pantry\" \"cancelled\" \"November 4, 2026\" weather power",
+      "\"food pantry\" \"temporarily closed\" \"November 4, 2026\" flood fire",
+      "site:gov \"SNAP\" \"November 4, 2026\" benefits delayed outage interrupted",
+      "site:gov \"WIC\" \"November 4, 2026\" benefits outage closure"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T104131-0800-r11-20261104T184131Z.json",
+      "completed_at": "2026-11-04T10:42:13-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "reason": "Provider's live November 4 schedule lists canceled Dearborn Goodwill Integrated Solutions and Detroit SEED–Van Buren distributions but gives neither cause nor first-posted timestamp. Storm, flood, fire, power, or facility damage cannot be established; not verified newly arising in this hourly window."
+      },
+      {
+        "url": "https://indianriver.floridahealth.gov/event/food-pantry-closed-office-is-open-2026-09-02-e406fa01-6f1d-5557-8a97-f778c2a4bd57/",
+        "reason": "Florida Department of Health Indian River calendar lists November 4 pantry closed, office open; notice does not establish abrupt unexpected disruption or first-posted time."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Feeding America West Michigan's canceled St. Alphonsus mobile distribution is for November 3, not a newly established November 4 event; cause/notice time not supplied."
+      },
+      {
+        "url": "https://wic.sbcounty.gov/events/2026-11-04/",
+        "reason": "Rancho Cucamonga WIC office closure took effect October 16 with alternatives announced; not a new November 4 interruption."
+      },
+      {
+        "url": "https://www.fna.usda.gov/taxonomy/term/52",
+        "reason": "November 4 SNAP retailer stocking-standard compliance effective date is not verified actual benefit interruption or retailer suspension."
+      },
+      {
+        "url": "https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/",
+        "reason": "North Charleston full-service store closure was reported August 2026; outside this hourly window."
+      }
+    ],
+    "result": "No newly published, causally verified, nonduplicate qualifying disruption located in the four targeted classes. Same-day distribution cancellation listings lacked incident cause and first-publication timestamp.",
+    "source_failures": [],
+    "limitations": "Search indexes lack reliable hour-level publication timestamps; announcements without date and causal explanation cannot be designated new qualifying signals. No claim of exhaustive national coverage.",
+    "production_authority": "No approval, publication, primary production collection changes, schedule changes, or task disabling."
+  }
+}

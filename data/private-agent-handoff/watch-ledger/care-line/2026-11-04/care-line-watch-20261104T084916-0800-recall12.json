@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T084916-0800-recall12",
+  "scheduled_for": "2026-11-04T08:45:22-08:00",
+  "started_at": "2026-11-04T08:49:16-08:00",
+  "completed_at": "2026-11-04T08:51:22-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T07:46:12.307-08:00",
+    "end": "2026-11-04T08:51:22-08:00",
+    "basis": "Previous independently read ops/watch-ledger Care Line heartbeat completed at 07:46:12.307 PST; bounded recall covers new developments since then, not full retrospective national collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope; KY; Organ Procurement Organization; termination notice",
+      "result": "Official page opened before targeted searches. No November 3 or November 4 CMS terminations, rescissions, CLIA limitation/suspension, or other newly dated access-risk notices visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes immediately temporarily November 4 2026 United States",
+      "rural hospital emergency services suspended November 3 4 2026",
+      "maternity labor delivery unit closes suspends November 4 2026 hospital",
+      "behavioral health psychiatric inpatient services closed suspended November 4 2026",
+      "dialysis center closed services suspended November 4 2026 patients",
+      "oncology cancer center stops services temporarily closes November 2026",
+      "primary care clinic closed abrupt November 4 2026 patients",
+      "ambulance service shutdown ceases calls November 4 2026",
+      "air ambulance medical helicopter base closure November 4 2026",
+      "hospital emergency department reopens resumes service November 4 2026",
+      "Puerto Rico Guam Virgin Islands hospital emergency clinic closure November 2026",
+      "state health department notice hospital services suspended November 4 2026"
+    ],
+    "targeted_search_recency_days": 2,
+    "search_result_summary": "No previously unrecorded healthcare access loss or effective restoration was verified in this observation interval across hospital/ED/rural, maternity, psychiatric, dialysis, oncology, primary care, ground/air EMS, territories and service restoration. Search indexing surfaced many older and out-of-U.S. results despite date filters; this bounded recall does not establish nationwide absence.",
+    "reviewed_exclusions": [
+      {
+        "item": "Utica Township Fire and Rescue, Indiana, acquisition of two ambulances",
+        "source_url": "https://dailydispatch.com/fire-news/indiana/utica-fire-department-unveils-2-ambulances-after-nearly-closing/",
+        "reason": "November 4 story describes newly purchased vehicles and expanding operations after nearly closing; did not establish a prior actual loss followed by resumption of essential service."
+      },
+      {
+        "item": "Roseland Community Hospital maternity service, Chicago, Illinois",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Older October report of previously recorded maternity-unit loss; duplicate."
+      },
+      {
+        "item": "Dennys River Ambulance Service, Maine",
+        "source_url": "https://www.wabi.tv/2026/10/23/longtime-emts-retirement-ends-maines-only-all-volunteer-ambulance-service/",
+        "reason": "October 23 report of planned November 30 cessation; preexisting development, not newly effective in watch window."
+      },
+      {
+        "item": "Geneva Cancer Center, Ohio",
+        "source_url": "https://www.cleveland19.com/2026/09/20/ill-just-have-go-further-patients-brace-longer-commutes-geneva-cancer-center-closes/",
+        "reason": "September report of scheduled November 13 closure; not newly effective."
+      },
+      {
+        "item": "Tehama County air ambulance base, California",
+        "source_url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times",
+        "reason": "Previously reported September closure; outside recall window."
+      },
+      {
+        "item": "Benefis Health System, Great Falls, Montana",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Previously reviewed November 3 announcement of prospective December 19 service reductions; no newly effective change."
+      },
+      {
+        "item": "Winslow/Dilkon/Leupp Indian health services, Arizona",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official homepage still shows November 3 09:52 local update; same previously reviewed flood-related closures and walk-in restoration."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Directly readable; most recent visible dated update remains November 3 09:52 Arizona time; no new restoration or suspension since preceding watch."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Official Health First alert could not be retrieved through web reader. Same previously documented persistent failure; no new material degradation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Persistent reader internal error; independent official CMS and local search coverage remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Recency-constrained search indexes may be stale or return older events, and the Health First official endpoint remains inaccessible. A bounded supplementary watch cannot verify full nationwide coverage or production deduplication.",
+    "controls": "Exactly one immutable private-agent heartbeat file on ops/watch-ledger. No editorial approvals, public publication, schedule change, task disabling or production edits."
+  }
+}

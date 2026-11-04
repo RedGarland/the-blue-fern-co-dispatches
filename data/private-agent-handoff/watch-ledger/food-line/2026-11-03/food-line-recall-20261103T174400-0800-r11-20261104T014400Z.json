@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T174400-0800-r11-20261104T014400Z",
+  "scheduled_for": "2026-11-03T17:45:54-08:00",
+  "started_at": "2026-11-03T17:44:00-08:00",
+  "completed_at": "2026-11-03T17:45:14-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T16:43:49-08:00",
+    "end_at": "2026-11-03T17:45:14-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior verified watch-ledger heartbeat completed_at; bounded supplementary recall also considered newly surfaced prior misses and excluded already-recorded events.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value missed-signal recall only; authoritative nationwide production collector remains unchanged.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss, fire, closure or disaster",
+      "Disaster/outage/facility-damage cancellation of emergency food distribution",
+      "Abrupt pantry/food-bank closure or major reduction in access",
+      "New official SNAP/WIC/food-assistance interruption with immediate effects"
+    ],
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed November 3 2026 rural town",
+      "\"sole grocery store\" shuttered fire November 2026 United States",
+      "\"last grocery store\" closure November 3 2026 community",
+      "\"full service grocery store\" closure Nov 3 2026 neighborhood",
+      "\"food pantry\" closed suddenly November 3 2026",
+      "\"food bank\" abruptly closed November 3 2026 distribution",
+      "\"food distribution\" canceled November 3 2026 storm flood power outage",
+      "\"mobile food pantry\" cancelled November 3 2026 weather",
+      "site:gov \"SNAP\" outage delayed benefits November 3 2026",
+      "site:gov \"WIC\" office closed benefits interruption November 3 2026",
+      "\"EBT\" \"not working\" \"November 3, 2026\" state",
+      "food pantry disaster closure fire flood November 3 2026 site:org"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0,
+      "search_recency_days": 1
+    },
+    "result": "No newly verifiable qualifying U.S. food-access disruption detected in the latest bounded search. Results were predominantly older closures, 2025 SNAP shutdown reporting, generic program pages, non-U.S. examples, unrelated content, and already-existing notices. Search indexing does not establish exhaustive national coverage.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, ME only-grocery closure reported September 3, 2026; outside observation window."
+      },
+      {
+        "url": "https://www.wcpo.com/news/local-news/hamilton-county/cincinnati/avondale/avondales-only-grocery-store-announces-closing-after-just-over-1-year",
+        "reason": "Older Cincinnati Avondale grocery closure report, not new this hour."
+      },
+      {
+        "url": "https://katu.com/news/local/no-snap-benefits-distributed-in-oregon-food-providers-calling-it-a-crisis-portland-snap-food-stamps-welfare-support-hunger-support-oregon-food-banks-overwhelmed-as-snap-benefits-halt-amid-federal-shutdown-blanchet-house",
+        "reason": "Article expressly dated November 3, 2025, not November 3, 2026."
+      },
+      {
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "October 29 recovery/resources guide; no new specifically documented qualifying distribution cancellation found in search snippet."
+      },
+      {
+        "url": "https://www.civilsociety.co.uk/news/food-bank-charity-closes-suddenly-after-court-order.html",
+        "reason": "October 2025 England event, non-U.S. and historical."
+      }
+    ],
+    "duplicate_exclusions": [
+      {
+        "finding_id": "food-line-wi-eau-claire-feed-my-people-popup-cancel-20261103",
+        "reason": "Previously recorded in November 3 15:43 heartbeat."
+      },
+      {
+        "finding_id": "food-line-ut-community-action-services-food-bank-closure-20261101",
+        "reason": "Previously recorded in November 3 16:41 heartbeat; specific site conditions awaiting review."
+      }
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T164146-0800-r11-20261104T004146Z.json",
+      "completed_at": "2026-11-03T16:43:49-08:00",
+      "status": "DEGRADED",
+      "outcome": "findings"
+    },
+    "limitations": "This bounded watch cannot prove no national events occurred; date-specific search indexing is noisy and source publication times are not consistently exposed.",
+    "production_authority": "No content approval, publication, primary production collection modification, schedule change, or task disabling."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T214238-0800-r11-20261104T054238Z",
+  "scheduled_for": "2026-11-03T21:45:54-08:00",
+  "started_at": "2026-11-03T21:42:38-08:00",
+  "completed_at": "2026-11-03T21:43:56-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T20:42:43-08:00",
+    "end_at": "2026-11-03T21:43:56-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last independently verified Food Line watch heartbeat, plus short dated lookback for indexing lag; only nonduplicate newly discovered U.S. access disruptions qualify.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for priority misses; production nationwide collector is authoritative.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster affecting a community's only/sole/last/full-service grocery",
+      "Canceled or suspended emergency food distribution due to storm, flood, fire, power outage, or damaged facility",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official new SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 3 2026 small town United States",
+      "\"last grocery store\" closure November 3 2026 community",
+      "\"only supermarket\" fire damaged closed November 2026 rural town",
+      "\"food distribution\" \"canceled\" storm November 3 2026 pantry",
+      "\"food bank\" \"distribution canceled\" November 3 2026 flooding power",
+      "\"mobile pantry\" canceled November 3 2026 weather outage",
+      "November 3 2026 food pantry unexpectedly closed services halted food bank US",
+      "November 3 2026 food bank \"temporarily closed\" \"pantry\" residents",
+      "November 3 2026 pantry suspended operations emergency distribution cancelled United States",
+      "site:gov \"SNAP\" \"November 3, 2026\" delay interruption EBT benefit issuance",
+      "site:gov \"WIC\" \"November 3, 2026\" closed outage benefits interruption",
+      "\"November 3, 2026\" EBT system outage SNAP benefits delayed state agency"
+    ],
+    "result": "No independently substantiated, new, nonduplicate qualifying U.S. food-access disruption found during the bounded search. Search result dates were checked and historical events excluded.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T204132-0800-r11-20261104T044132Z.json",
+      "completed_at": "2026-11-03T20:42:43-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Only grocery in Spencer, NY lost in a September 2026 fire; not a new disruption in this hour."
+      },
+      {
+        "url": "https://www.thestreet.com/retail/major-pop-up-food-shop-rubys-pantry-abruptly-closes-82-locations-after-20-years",
+        "reason": "Ruby's Pantry closure reported April 3, 2026; historical."
+      },
+      {
+        "url": "https://www.texastribune.org/2026/09/03/texas-food-banks-struggle-federal-cuts/",
+        "reason": "September 2026 analysis of ongoing supply/rationing concerns; no distinct newly announced abrupt pantry access cutoff."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17248782/99-ranch-market-closing-store-trader-joes-pleasanton-california/",
+        "reason": "New report of a December 5 Pleasanton 99 Ranch closure, but other nearby full-service supermarkets remain; fails sole/last-store test."
+      },
+      {
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-lone-star-card-how-to-help/",
+        "reason": "2025 SNAP shutdown coverage, not a new 2026 official interruption."
+      },
+      {
+        "url": "https://www.abc.net.au/news/2026-01-15/wye-river-great-ocean-road-emergency-warning-flooding-rainfall/106232658",
+        "reason": "Non-U.S. incident, excluded."
+      },
+      {
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T164146-0800-r11-20261104T004146Z.json",
+        "reason": "Previously recorded Utah provider disruption; no new independent developments verified."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search indexing can lag very recent local and provider notices. Results were frequently dated 2025 or earlier in 2026 despite narrow queries; zero confirmed findings is not proof of zero events.",
+    "production_authority": "No review approval, publication, production collector changes, schedule alteration or task disablement."
+  }
+}

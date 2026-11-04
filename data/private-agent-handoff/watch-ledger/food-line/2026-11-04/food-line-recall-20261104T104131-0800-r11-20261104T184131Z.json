@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T104131-0800-r11-20261104T184131Z",
+  "scheduled_for": "2026-11-04T10:41:31-08:00",
+  "started_at": "2026-11-04T10:41:31-08:00",
+  "completed_at": "2026-11-04T10:42:13-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T09:44:38.364-08:00",
+    "end_at": "2026-11-04T10:42:13-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified supplementary watch completion through current bounded scan; evaluated newly published or newly indexed U.S. reports, excluding historical/duplicate incidents.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall detection only. The primary nationwide production Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery-store loss, closure, fire or disaster",
+      "Emergency food distributions canceled/suspended by storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "slow": 0,
+      "failed_searches": 0,
+      "search_successful": true
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 4 2026 town",
+      "\"last grocery store\" closing November 2026 community",
+      "\"sole grocery\" fire closure food desert November 4 2026",
+      "\"food distribution\" cancelled storm November 4 2026 food bank",
+      "\"food pantry\" distribution canceled flooding November 4 2026",
+      "\"mobile food pantry\" canceled power outage November 2026",
+      "\"food pantry\" \"temporarily closed\" November 4 2026",
+      "\"food bank\" \"suspending services\" November 2026",
+      "\"food pantry\" closed fire flood November 2026",
+      "site:gov \"SNAP\" \"benefits\" outage November 4 2026",
+      "site:gov \"WIC\" \"interruption\" November 2026 benefits",
+      "SNAP EBT benefits not available delayed November 4 2026 official state"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T094338-0800-r11-20261104T174338Z.json",
+      "completed_at": "2026-11-04T09:44:38.364-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "noteworthy_exclusions": [
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine only-grocery closure report dated September 3, 2026, outside current hourly window."
+      },
+      {
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, New York sole-grocery fire coverage was published September 14, 2026, not a newly emerging signal."
+      },
+      {
+        "url": "https://www.hhs.nd.gov/stayenrolled",
+        "reason": "North Dakota SNAP/Medicaid guidance last updated September 11, 2026; describes eligibility changes, not new immediate benefit interruption."
+      },
+      {
+        "url": "https://www.nj.gov/humanservices/news/pressreleases/2025/approved/20251030.shtml",
+        "reason": "New Jersey emergency SNAP shutdown grant statement dates to October 30, 2025, not November 2026."
+      }
+    ],
+    "result": "No new, verified, nonduplicate U.S. food-access disruption in the four targeted classes was identified during this bounded scan.",
+    "source_failures": [],
+    "limitations": "Twelve targeted web searches returned largely older stories, 2025 SNAP shutdown material, and ongoing program guidance; no corroborated same-hour incidents. Search-index latency and unindexed local/provider notices can leave gaps. This watch is not exhaustive nationwide collection.",
+    "production_authority": "No approval, publication, production collector mutation, schedule change, or task disabling."
+  }
+}

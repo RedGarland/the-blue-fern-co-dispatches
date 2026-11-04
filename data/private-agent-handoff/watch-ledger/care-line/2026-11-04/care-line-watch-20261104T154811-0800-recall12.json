@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T154811-0800-recall12",
+  "scheduled_for": "2026-11-04T15:45:22-08:00",
+  "started_at": "2026-11-04T15:48:11-08:00",
+  "completed_at": "2026-11-04T15:50:14.561-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T14:44:00-08:00",
+    "end": "2026-11-04T15:50:14.561-08:00",
+    "basis": "Prior verified Care Line heartbeat completed_at to this bounded recall. Discovery within this run does not establish first publication/announcement within the interval."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-taylorville-family-medicine-al-closing-reported-20261104",
+      "canonical_source_url": "https://tuscaloosathread.com/taylorville-family-medicine-closing-26-years/",
+      "title": "Taylorville Family Medicine Closing After 26 Years of Practice",
+      "publisher": "Tuscaloosa Thread",
+      "exact_supporting_passage": "Taylorville Family Medicine is closing after 26 years, the Highway 69 South practice announced on Facebook Monday.",
+      "source_published_date": "2026-11-04",
+      "state": "Alabama",
+      "city": null,
+      "county": "Tuscaloosa County",
+      "territory": null,
+      "event_type": "announced_primary_care_practice_closure",
+      "service_line": "Primary care / family medicine (Taylorville Family Medicine, Highway 69 South)",
+      "access_consequences": "Local report says the family-medicine practice is closing after 26 years. Closure date, operational status, patient numbers, and continuity/referral plans could not be verified from the accessible excerpt; no currently effective closure is asserted.",
+      "affected_population": "Existing Taylorville Family Medicine primary-care patients; number unknown.",
+      "effective_date": null,
+      "announcement_date": "2026-11-02",
+      "confidence": "medium",
+      "source_role": "local_reporting_referencing_practice_announcement; full_article_unavailable",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization termination notice",
+      "result": "Official CMS Public Notices inspected before targeted searches. No newly dated CMS provider termination, rescission, CLIA limitation/suspension, or analogous access notice in the recall interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 4, 2026\" hospital emergency department closed suspended services United States",
+      "\"Nov 4, 2026\" maternity labor delivery unit closure hospital",
+      "\"November 4, 2026\" \"behavioral health\" inpatient closing suspended",
+      "\"November 4, 2026\" dialysis clinic closing patients",
+      "\"November 4, 2026\" ambulance service suspended closed rural",
+      "\"November 4, 2026\" air ambulance base closure suspension",
+      "hospital \"closing\" \"November 4, 2026\" clinic United States",
+      "rural hospital emergency room suspends services Nov 3 4 2026",
+      "primary care practice closing announced November 4 2026 patients",
+      "oncology cancer infusion clinic closure november 2026 announced November 4",
+      "mental health psychiatric residential hospital closure Nov 4 2026 United States",
+      "hospital reopens emergency maternity dialysis services November 4 2026"
+    ],
+    "search_recency_days": "1-3",
+    "result_summary": "One previously unrecorded primary-care practice closure report surfaced from Alabama. Report publication is dated Nov 4 without extractable clock time; practice announcement reportedly occurred Nov 2. No verified newly effective shutdown or new CMS legal notice.",
+    "reviewed_exclusions": [
+      {
+        "item": "MGH Downtown Associates scheduled December 18 closure",
+        "source_url": "https://www.bostonglobe.com/2026/11/04/business/mass-general-brigham-downtown/",
+        "reason": "Duplicate already recorded in immediately prior verified heartbeat."
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake residential programs planned closure",
+        "source_url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/",
+        "reason": "Nov 3 report already reviewed; cessation conditional on transfers, not interval-new or effective."
+      },
+      {
+        "item": "Emergency / rural / EMS / air medical / dialysis / oncology / maternity results",
+        "source_url": null,
+        "reason": "Searches yielded older, foreign, proposed, irrelevant, or unverified reports, with no additional qualifying interval-new access change."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://tuscaloosathread.com/taylorville-family-medicine-closing-26-years/",
+        "type": "direct_article_access_timeout",
+        "detail": "Two direct web opens timed out. Local news search excerpt was available and preserved verbatim; article-specific effective date and patient transition could not be verified."
+      },
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Known persistent Health First official alert endpoint access error; rechecked. Other official and search coverage remained usable."
+      },
+      {
+        "source_url": "https://www.cms.gov/medicare/quality/quality-safety-oversight-general-information/quality-safety-oversight-public-notices",
+        "type": "obsolete_cms_url_inaccessible",
+        "detail": "Attempted an outdated CMS URL; resolved and successfully opened the correct CMS Public Notices page before conducting targeted searches."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Bounded supplementary web recall is not comprehensive. Search snippet and date-only news entry establish reported closure but not exact article first-publication time, effective date, patient impact, or whether production has already captured it. The announcement itself predates the hour. Flag for review, not approval or publication.",
+    "controls": "No approval, publication, production change, schedule change, or task disabling."
+  }
+}

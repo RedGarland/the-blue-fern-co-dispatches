@@ -1,0 +1,171 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T174451-0800-r11-20261104T014842Z",
+  "scheduled_for": "2026-11-03T17:44:51-08:00",
+  "started_at": "2026-11-03T17:48:42-08:00",
+  "completed_at": "2026-11-03T17:50:37-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T16:50:13.196-08:00",
+    "end": "2026-11-03T17:50:37-08:00",
+    "basis": "From latest individually verified ops/watch-ledger Gaza heartbeat completion through this observation; Palestine-local November 4 feeds examined for timezone rollover.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; authoritative production collector and publisher unchanged.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T164755-0800-r11-20261104T005013196Z.json",
+      "completed_at": "2026-11-03T16:50:13.196-08:00",
+      "verification": "Fetched exact JSON from ops/watch-ledger before source checks.",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Most recent listed situation report is dated 29 October and posted 31 October 2026; Gaza impact snapshot 28 October posted 30 October. No new qualifying event in the observation interval."
+      },
+      {
+        "source": "WHO global Israel/oPt",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. Situation overview, latest news and regional health updates contain no dated Gaza health operations change during this interval."
+      },
+      {
+        "source": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, recurring previously documented access issue."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza latest humanitarian situation report November 3 2026 OCHA OPT",
+      "site:who.int Gaza November 3 2026 health emergency WHO occupied Palestinian territory"
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details Gaza \"November 3, 2026\" evening killed injured Khan Younis Gaza City",
+      "site:palestinercs.org/en Gaza November 3 2026 November 4 2026 emergency ambulance medical humanitarian",
+      "site:unicef.org Gaza November 3 2026 November 4 2026 food water children displaced",
+      "site:wfp.org Gaza November 3 2026 November 4 2026 food aid crossings hunger",
+      "site:unrwa.org Gaza 3 November 2026 4 November 2026 clinics displaced shelter fuel",
+      "site:msf.org Gaza November 3 2026 November 4 2026 hospitals healthcare medical evacuation",
+      "site:icrc.org Gaza November 3 2026 November 4 2026 hostages detainees aid access",
+      "site:reuters.com/world/middle-east/ Gaza November 3 2026 November 4 2026 civilian deaths ceasefire aid",
+      "site:apnews.com/article Gaza November 3 2026 November 4 2026 killed humanitarian medical crossings",
+      "site:aljazeera.com/news/2026/11/3/ Gaza November 3 2026 later strikes casualties aid",
+      "site:theguardian.com/world/2026/nov/03 Gaza November 3 2026 ceasefire humanitarian aid casualty",
+      "site:news.un.org/en/ Gaza November 3 2026 November 4 humanitarian hospital food UN"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; listing through 3 Nov 22:42 Palestine time; most recent Gaza-specific casualty items from 3 Nov at 13:48 and 11:41 local Palestine time already captured in earlier watches. No newly dated Gaza item identified."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; 3 Nov Saudi/KSrelief logistics support announcement remains latest, captured earlier; no separate implementation confirmed."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; latest Gaza reporting dated 3 Nov recaps 1–2 Nov attacks and previously reported totals; no distinct incident from this search interval."
+      },
+      {
+        "source": "AP Gaza/Israel-Hamas hub",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible; no publication with a confirmed distinct new Gaza event during the bounded interval."
+      },
+      {
+        "source": "MSF latest",
+        "url": "https://www.msf.org/latest",
+        "result": "Accessible; no qualifying Gaza health service update dated in interval."
+      },
+      {
+        "source": "ICRC Israel and occupied territories",
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no date-verified Gaza hostage/detention/crossing event in current interval."
+      },
+      {
+        "source": "UNICEF Gaza response",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible; background context rather than a dated operational change."
+      },
+      {
+        "source": "Guardian Gaza",
+        "url": "https://www.theguardian.com/world/gaza",
+        "result": "Accessible; no date-verified new humanitarian/operational change during current interval."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; recurring."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Targeted search blocked by robots.txt; recurring."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualties and military activity with civilian impact",
+      "Displacement, infrastructure and shelter",
+      "Aid, crossings, food, water, fuel",
+      "Healthcare capacity, hospitals, ambulances, medical evacuation and transport",
+      "Detention, hostages and ceasefire/negotiations with verified operational impact"
+    ],
+    "excluded_prior_known_items": [
+      "WAFA 3 November Khan Younis Applied College strike, reported three killed and others injured; already logged in earlier watch.",
+      "WAFA 3 November reported hospital intake of six dead/27 injured in preceding 48 hours and cumulative figures; already logged.",
+      "PRCS 3 November Saudi/KSrelief announced operational/logistical support; already logged.",
+      "Al Jazeera 3 November coverage of 1–2 November strikes and earlier casualty summaries; recycled.",
+      "West Bank-only events, opinion, old source material, unverified social reports and undated generalized alerts."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "problem": "HTTP 502",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "WFP",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UNRWA",
+        "problem": "HTTP 403",
+        "material_change_from_previous": false
+      },
+      {
+        "source": "UN News",
+        "problem": "robots.txt blocked targeted search",
+        "material_change_from_previous": false
+      }
+    ],
+    "limitations": [
+      "No distinct new qualifying Gaza development confirmed in checked source set; this does not prove none occurred.",
+      "Source publication lag and recurring access restrictions limit completeness.",
+      "OCHA OPT and WHO first; exactly two initial targeted searches followed by twelve additional targeted searches. Direct page opens/finds are not new searches."
+    ],
+    "status_rationale": "DEGRADED, not FAILED: recurring four access restrictions while useful first-party and reporting coverage remained accessible; no newly material deterioration.",
+    "notification_decision": "No newly verified qualifying event or newly material degradation; do not notify.",
+    "safeguards": "Exactly one append-only private heartbeat on ops/watch-ledger only; no publication, approvals, production or automation changes."
+  }
+}

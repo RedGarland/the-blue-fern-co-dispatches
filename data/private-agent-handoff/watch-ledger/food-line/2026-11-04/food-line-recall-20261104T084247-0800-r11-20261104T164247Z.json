@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T084247-0800-r11-20261104T164247Z",
+  "scheduled_for": "2026-11-04T08:42:47-08:00",
+  "started_at": "2026-11-04T08:42:47-08:00",
+  "completed_at": "2026-11-04T08:43:58.230-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T07:43:49.710-08:00",
+    "end_at": "2026-11-04T08:43:58.230-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "From prior read-back verified supplementary Food Line watch heartbeat to this execution. Targeted new or newly indexed U.S. high-value miss-class reports, official agency/provider notices, and local reporting; old events and duplicates excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss-class recall watch; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss/closure/fire/disaster",
+      "Emergency food distribution cancellation/suspension from storm/flood/fire/outage/facility damage",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate food-access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0,
+      "search_successful": true
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed November 4 2026 United States (recency 1d)",
+      "\"last grocery store\" shut down fire November 2026 rural community (recency 2d)",
+      "\"only full-service grocery\" fire closing November 2026 town (recency 3d)",
+      "\"only supermarket\" closed November 4 2026 fire (recency 2d)",
+      "\"food bank\" distribution canceled \"November 4\" 2026 storm (recency 2d)",
+      "\"food pantry\" \"temporarily closed\" \"November 4\" 2026 outage (recency 2d)",
+      "\"food bank\" \"closed today\" flood power November 2026 (recency 2d)",
+      "\"emergency food distribution\" postponed canceled storm \"November 4\" 2026 (recency 2d)",
+      "site:gov SNAP EBT outage benefits interrupted November 4 2026 (recency 2d)",
+      "site:gov WIC benefits unavailable suspended November 4 2026 (recency 2d)",
+      "\"SNAP\" \"benefits delayed\" \"November 4\" 2026 state (recency 2d)",
+      "\"food pantry\" \"closed\" \"November 4, 2026\" fire flood (recency 2d)"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T074242-0800-r11-20261104T154242Z.json",
+      "completed_at": "2026-11-04T07:43:49.710-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "result": "No newly verified, qualifying, nonduplicative U.S. food-access disruption found within the interval.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine sole grocery closure was reported September 3, 2026, not a newly observed event."
+      },
+      {
+        "url": "https://mendovoice.com/2023/12/laytonvilles-only-full-service-grocery-store-has-not-been-open-for-more-than-two-weeks/",
+        "reason": "Laytonville, California full-service grocer closure was reported in December 2023."
+      },
+      {
+        "url": "https://www.mass.gov/info-details/november-2025-snap-updates",
+        "reason": "Massachusetts page describes November 2025 SNAP shutdown effects and subsequent benefits changes; not a new November 2026 outage."
+      },
+      {
+        "url": "https://westvirginiawatch.com/2025/11/04/morrisey-sends-8m-to-food-banks-so-far-declines-to-fully-fund-west-virginians-snap-benefits/",
+        "reason": "SNAP interruption article published November 4, 2025, not 2026."
+      },
+      {
+        "url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Feed My People cancellation previously recognized in supplementary watch; duplicate, not new since previous hourly check."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search index returned primarily historical grocery losses, November 2025 SNAP-delay stories and routine resource information despite short recency filters; 12-search bound cannot exclude unindexed local or official notices. No new issue met all publication-date, event-date, impact and nonduplication criteria.",
+    "production_authority": "No approval, publication, production collection changes, schedule changes, or disabling."
+  }
+}

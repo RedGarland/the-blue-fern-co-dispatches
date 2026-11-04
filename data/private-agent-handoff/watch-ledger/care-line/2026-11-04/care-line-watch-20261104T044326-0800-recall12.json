@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T044326-0800-recall12",
+  "scheduled_for": "2026-11-04T04:45:22-08:00",
+  "started_at": "2026-11-04T04:43:26-08:00",
+  "completed_at": "2026-11-04T04:44:47.826-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T03:43:56-08:00",
+    "end": "2026-11-04T04:44:47.826-08:00",
+    "basis": "Previous verified durable Care Line Watch heartbeat completed at 03:43:56 PST. Supplementary recall only; production national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, OPO CCN 18P001, termination notice",
+      "result": "Official CMS public notices directly accessed; no newly dated November 3–4 provider termination, rescission, or CLIA limitation/suspension visible. Latest notice predates recall interval."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed overnight November 4 2026 US hospital outage evacuated reopen",
+      "hospital maternity labor and delivery stopped services November 3 4 2026 closure",
+      "mental behavioral psychiatric hospital unit suspended closed services November 4 2026",
+      "dialysis center oncology infusion clinic closure November 3 4 2026 patients",
+      "rural primary care clinic urgent care shuts down November 4 2026 county",
+      "ambulance EMS service air medical helicopter base suspended closed November 4 2026",
+      "\"November 4, 2026\" \"hospital\" \"closed\" \"emergency department\"",
+      "\"November 3, 2026\" \"maternity\" \"closed\" \"hospital\" services",
+      "\"November 4, 2026\" \"ambulance\" \"suspended\" OR \"closed\" service",
+      "\"November 3, 2026\" \"hospital\" \"reopened\" OR \"resumed\" patients",
+      "Puerto Rico Guam US Virgin Islands American Samoa hospital clinic emergency services suspended closure November 3 4 2026",
+      "site:gov \"November 4, 2026\" clinic hospital emergency services temporarily closed public health"
+    ],
+    "search_recency_days": 2,
+    "search_results": "No newly verified concrete, currently effective US or territory essential-service closure, suspension, EMS loss, CMS notice, or service restoration during this interval. Returned items were historical, outside the US, future plans, funding/policy reports without service changes, and previously considered developments. Search-index lag remains possible.",
+    "reviewed_exclusions": [
+      {
+        "item": "Network for Hope, Kentucky, CMS termination notice 2026-11-02",
+        "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "Already visible prior to this recall interval; not a new notice."
+      },
+      {
+        "item": "Winslow Indian Health Care Center / Dilkon Medical Center / Leupp Clinic flooding-related restrictions and partial restoration",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official website still displays November 3, 09:52 Arizona-time alert; no later notice. Previously documented and assessed."
+      },
+      {
+        "item": "Benefis Health System Great Falls announced service reductions",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Reviewed in prior runs; planned beginning December 19, 2026; no new effective service loss."
+      },
+      {
+        "item": "Gloucestershire NHS maternity/home-birth restoration planned January–February 2027",
+        "source_url": "https://www.aol.com/articles/home-births-resume-maternity-unit-154933000.html",
+        "reason": "Outside United States/territories; services not yet reopened."
+      },
+      {
+        "item": "Watsonville Community Hospital maternity discussion",
+        "source_url": "https://lookout.co/watsonville-community-hospital-may-close-maternity-services-to-avoid-shutting-down/story",
+        "reason": "October 21/22 report about possible future closure, no newly effective access consequence."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Accessible; November 3 09:52 announcement remains most recent visible alert. No new restriction/reopening."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Official Health First alert detail endpoint again inaccessible (internal error); persistent same known issue."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Recurrent previously documented failure; other official and local search coverage remained available."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Bounded indexed supplemental searches are not exhaustive; same-day publication/indexing may lag. No primary national collector reconciliation or mutation.",
+    "controls": "Single new immutable heartbeat only. No approval, publishing, schedule modification, production state mutation, or task disabling."
+  }
+}

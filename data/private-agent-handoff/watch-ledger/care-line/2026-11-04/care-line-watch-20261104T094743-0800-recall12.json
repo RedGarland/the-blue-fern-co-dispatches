@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T094743-0800-recall12",
+  "scheduled_for": "2026-11-04T09:45:22-08:00",
+  "started_at": "2026-11-04T09:47:43-08:00",
+  "completed_at": "2026-11-04T09:48:36-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T08:51:22-08:00",
+    "end": "2026-11-04T09:48:36-08:00",
+    "basis": "Previous verified Care Line heartbeat completed at 08:51:22 PST; bounded supplementary recall of new qualifying developments since that check, not production-wide collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination",
+      "page_last_modified": "2026-10-30 04:16 PM (as displayed; inconsistent with latest visible 2026-11-02 row)",
+      "result": "Opened official CMS Public Notices page before any targeted searches. No Nov 3-4 new termination, rescission, CLIA limitation/suspension, or analogous notice visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended services November 4 2026 US local news",
+      "hospital labor delivery maternity unit closed November 4 2026 November 3 2026",
+      "rural hospital emergency service shutdown ambulance diversion November 4 2026",
+      "ambulance service base closing air medical helicopter suspended November 4 2026",
+      "dialysis clinic cancer oncology treatment clinic closure November 4 2026",
+      "behavioral health psychiatric facility closure suspension November 4 2026",
+      "site:gov \"November 4, 2026\" \"hospital\" \"closed\" \"emergency\"",
+      "site:gov \"Nov 4, 2026\" \"health clinic\" \"temporarily closed\"",
+      "\"November 4, 2026\" \"hospital\" \"services\" \"suspended\" site:com",
+      "\"November 4, 2026\" \"reopens\" \"emergency department\" OR \"clinic\" OR \"hospital\"",
+      "\"November 4, 2026\" \"ambulance\" \"cease\" OR \"closure\" OR \"suspend\"",
+      "\"November 4, 2026\" \"primary care\" \"closure\" OR \"shut down\""
+    ],
+    "search_recency_days": "1-2 where specified; date-scoped otherwise",
+    "search_result_summary": "Searches returned no new verified U.S. or territory access loss or newly effective essential-service restoration in the recall interval. Several results were foreign, historical or outside qualifying categories, so this is not evidence of nationwide absence.",
+    "reviewed_exclusions": [
+      {
+        "item": "CommonSpirit Colorado Springs hospital plans",
+        "source_url": "https://gazette.com/2026/11/02/details-of-commonspirit-plans-for-colorado-springs-hospitals-released/",
+        "reason": "Nov 2 planning announcement; no newly effective service change demonstrated in this hourly window."
+      },
+      {
+        "item": "Watsonville Community Hospital maternity services and NICU",
+        "source_url": "https://lookout.co/watsonville-community-hospital-board-votes-to-close-maternity-services-nicu-despite-pushback-from-community-members/story",
+        "reason": "Oct 29 prospective vote; not an immediately effective closure, older known development."
+      },
+      {
+        "item": "South Florida Medicaid/ACA network-contract dispute",
+        "source_url": "https://southfloridahospitalnews.com/2026/11/04/thousands-of-vulnerable-medicaid-and-aca-patients-stand-to-lose-access-to-healthcare-insurance-if-centene-continues-to-stall-on-in-network-renewal/",
+        "reason": "Prospective access risk conditional on negotiations; no concrete effective service loss in recall window."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Airport base",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "Sept 16 closure, older than observation window."
+      },
+      {
+        "item": "Winslow/Dilkon/Leupp flood-related service changes",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official update remains dated Nov 3 at 09:52 Arizona time; already reviewed and no new bulletin."
+      },
+      {
+        "item": "Wotton Lawn hospital Abbey Ward UK",
+        "source_url": "https://www.newsminimalist.com/articles/staff-suspended-at-gloucester-mental-health-hospital-after-safeguarding-probe-577cc0c0",
+        "reason": "United Kingdom, outside U.S. and territories; closure since July."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Official homepage rechecked; November 3 09:52 Arizona-time bulletin unchanged."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Official Health First alert endpoint inaccessible through web reader; persistent known source limitation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Web open returned internal error; repeat of documented access issue. Other searches and official CMS checks remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Search indexing freshness and broad terms constrained precision; territory-specific search coverage was not comprehensive. Official Health First alert endpoint inaccessible. This supplementary bounded recall does not certify national completeness.",
+    "controls": "Exactly one heartbeat on ops/watch-ledger; no approval, publication, schedule change, task disabling, or production modification."
+  }
+}

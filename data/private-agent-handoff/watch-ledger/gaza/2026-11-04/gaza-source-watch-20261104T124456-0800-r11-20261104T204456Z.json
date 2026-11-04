@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T124456-0800-r11-20261104T204456Z",
+  "scheduled_for": "2026-11-04T12:44:51-08:00",
+  "started_at": "2026-11-04T12:44:56-08:00",
+  "completed_at": "2026-11-04T12:47:32.762-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T11:49:31.065-08:00",
+    "end": "2026-11-04T12:47:32.762-08:00",
+    "basis": "Prior verified Gaza Source Watch heartbeat completed 11:49:31 PST. Searched current developments plus late-indexed older reports for unique missed events; event date distinguished from publication/discovery date.",
+    "official_first_check_count": 3,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary production collector/publisher is authoritative and remains untouched.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T114724-0800-r11-20261104T194931Z.json",
+    "previous_verified_completed_at": "2026-11-04T11:49:31.065-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest visible post 31 October 2026 (Humanitarian Situation Report, 29 October); latest Gaza snapshot dated 28 October. No new November 4 report or verified in-window operational change."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; Gaza health emergency overview and links examined. No new verified in-window hospital, ambulance, evacuation, fuel, medical-supply, or functioning-capacity update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean (EMRO)",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct access failed HTTP 502; previously documented recurring limitation."
+      }
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 4 2026 Wednesday wounded killed Israeli bombardment",
+      "site:palestinercs.org Gaza November 4 2026 ambulance hospital medical evacuation emergency",
+      "Gaza November 4 2026 civilians killed wounded strike Reuters AP today",
+      "site:aljazeera.com/news/2026/11/4 Gaza attack aid ceasefire Israeli fire",
+      "site:un.org/sg/en/content/sg/press-encounter/2026-11-04 Gaza humanitarian briefing spokesperson",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza 4 November 2026 situation crossing water supplies",
+      "site:unicef.org Gaza November 4 2026 children water shelter hospitals",
+      "site:msf.org Gaza November 4 2026 emergency clinic hospital access staff patients",
+      "Gaza Rafah Kerem Shalom aid fuel access November 4 2026 update (recency 1 day)",
+      "Gaza November 4 2026 ceasefire hostages detainees prisoner exchange talks withdrawal latest (recency 1 day)",
+      "Gaza November 4 2026 water pipeline food distribution hospital medical evacuation emergency (recency 1 day)",
+      "site:english.wafa.ps November 4 2026 Gaza Israeli artillery airstrike civilian injured (recency 1 day)"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessed November 4 latest-news page; visible current headlines were West Bank/Jerusalem topics. Detainee health story examined; subjects are Ramallah-origin, not traceable to a new Gaza-specific development."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible. Most recent visible update November 3 operational/logistical assistance; no new November 4 Gaza EMS, ambulance or evacuation disruption."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible. November 4 headline was Hebron/West Bank; November 3 Gaza casualty article and related events were prior-window or already accounted for."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible. Gaza commercial-shipment stoppage article describes mid-October 2026 event, not new in this window; election-related Gaza coverage and other headlines are older."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/gaza-israel-war",
+        "result": "Accessible. Landing page says response info last updated September 28, 2026; latest listed Gaza-focused article October 2026, no in-window operational change."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403, preexisting."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403, preexisting."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Access denied by robots restrictions, preexisting."
+      }
+    ],
+    "checked_categories": [
+      "civilian casualties, injuries, military operations with documented civilian effects",
+      "displacement, shelter, infrastructure damage",
+      "aid delivery, food, water, crossings, transport and fuel",
+      "healthcare, hospital functioning, ambulance access, patient transfers and medical evacuations",
+      "detention, hostages, ceasefire and negotiation changes"
+    ],
+    "excluded": [
+      {
+        "title": "Israeli forces kill four in Gaza as fifth Palestinian dies of wounds",
+        "url": "https://www.aljazeera.com/news/2026/11/3/israeli-forces-kill-four-in-gaza-as-fifth-palestinian-dies-of-wounds",
+        "reason": "November 2–3 casualties and late-discovered related follow-up deaths predate observation window; prior heartbeats already account for distinctive incident lineages."
+      },
+      {
+        "title": "Commercial goods are no longer entering Gaza, raising fears of worsening shortages",
+        "url": "https://apnews.com/article/israel-netanyahu-gaza-aid-hamas-744d4b8c005b20d94ce6fc952a63e063",
+        "reason": "AP event documented in mid-October 2026, not a newly observed or verified November 4 change."
+      },
+      {
+        "title": "Two female detainees suffer health problems amid medical neglect in Israeli jails",
+        "url": "https://english.wafa.ps/Pages/Details/176649",
+        "reason": "Report is based on detainees from Ramallah/other locations; not a distinct Gaza-focused event in this watch."
+      },
+      {
+        "title": "Other old or undated search returns",
+        "url": null,
+        "reason": "Search index surfaced older reports and dynamic updates without a verified distinct Gaza development inside observation window."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News robots.txt restriction"
+      ],
+      "alternative_coverage": "OCHA OPT, WHO global, WAFA, PRCS, Al Jazeera, AP, MSF, and bounded indexed searches were accessible."
+    },
+    "limitations": "Search index latency and visibility gaps persist. A zero-finding watch is not proof that no incidents occurred. Direct WHO EMRO/WFP/UNRWA/UN News restrictions continue but are not materially worse than the prior verified run; no direct production queue inspection.",
+    "notification_decision": "No unique qualifying development or material new degradation; no user notification.",
+    "safeguards": "Single heartbeat on ops/watch-ledger only. No approvals, publication, production runner modification, schedule edit, or automation disable."
+  }
+}

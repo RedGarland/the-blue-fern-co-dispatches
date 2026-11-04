@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T044854-0800-r11-20261104T124854Z",
+  "scheduled_for": "2026-11-04T04:45:54-08:00",
+  "started_at": "2026-11-04T04:48:54-08:00",
+  "completed_at": "2026-11-04T04:49:23-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T03:46:33.564-08:00",
+    "end_at": "2026-11-04T04:49:23-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior independently verified 03:46:33.564 PST Food Line heartbeat; also checked delayed-indexing Nov 3-4 coverage without treating crawler freshness as event date.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster affecting sole/only/last/full-service community grocery",
+      "Emergency food distribution cancellation/suspension because of storm, flood, fire, outage, or site damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP, WIC, or food-assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "food pantry abruptly closing November 4 2026 local families",
+      "food bank stops distribution November 4 2026 closure facility",
+      "November 4 2026 SNAP benefits EBT interruption government state alert",
+      "November 4 2026 WIC benefits card outage state agency",
+      "November 4 2026 grocery store fire only supermarket rural town",
+      "November 3 2026 only grocery store destroyed fire closes town",
+      "November 4 2026 food distributions canceled due storm flood weather",
+      "November 3 2026 food bank emergency distribution canceled outage",
+      "site:gov \"November 4, 2026\" \"SNAP\" \"interruption\"",
+      "site:gov \"November 4, 2026\" \"WIC\" \"outage\"",
+      "November 3 2026 food bank suspended food pantry operations local",
+      "November 4 2026 food pantry sudden shut down service closure"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T034507-0800-r11-20261104T114507Z.json",
+      "completed_at": "2026-11-04T03:46:33.564-08:00",
+      "outcome": "no_findings",
+      "status": "SUCCESS"
+    },
+    "result": "No independently verified new qualifying nonduplicate food-access interruption identified in targeted interval.",
+    "noteworthy_exclusions": [
+      {
+        "url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Already captured Eau Claire WI scheduled distribution cancellation on November 3; duplicate."
+      },
+      {
+        "url": "https://utah.news/article/92fa7889-9984-491e-8021-d81dc4732585",
+        "reason": "Utah Community Action Services/Food Bank November 1 temporary closure was captured Nov 3; duplicate."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Only grocery in Spencer NY destroyed September 11, 2026; outside observation window."
+      },
+      {
+        "url": "https://www.wgem.com/2026/06/02/illinois-wic-outage-ebt-cards-not-working-statewide/",
+        "reason": "Illinois WIC statewide outage dated June 2, 2026, not current."
+      },
+      {
+        "url": "https://dhs.georgia.gov/press-releases/2025-10-24/new-guidance-usda-november-snap-amid-federal-government-shutdown",
+        "reason": "November 2025 SNAP shutdown notice; not an incident in November 2026."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Fresh local reports indexed sparsely during this overnight window; search surfaced several historical and duplicate incidents. The 12 searches do not guarantee that all unindexed provider notices were found.",
+    "production_authority": "No approval, publication, production collector changes, schedule changes, or task disablement."
+  }
+}

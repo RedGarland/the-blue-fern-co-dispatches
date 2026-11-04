@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T194520-0800-r11-20261104T034520Z",
+  "scheduled_for": "2026-11-03T19:45:54-08:00",
+  "started_at": "2026-11-03T19:45:20-08:00",
+  "completed_at": "2026-11-03T19:46:07-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T18:45:03-08:00",
+    "end_at": "2026-11-03T19:46:07-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous directly verified Food Line heartbeat completed 2026-11-03 at 18:45:03 PST; broadened search retrieval up to two or three days to catch indexing delays, but no novel current-window event qualified.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary miss-class recall; primary nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster of the only, last, sole or full-service community grocery",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"November 3, 2026\" closed fire town",
+      "\"last grocery store\" closed November 2026 town fire",
+      "\"sole grocery store\" closed burned November 2026",
+      "\"food distribution\" cancelled canceled \"Nov 3, 2026\" storm outage",
+      "\"food bank\" \"closed\" \"November 3, 2026\" fire closure services",
+      "\"food pantry\" \"suspended\" \"November 3, 2026\" service",
+      "site:gov \"SNAP\" \"November 3, 2026\" outage EBT interruption delay",
+      "site:gov \"WIC\" \"November 3, 2026\" service interruption closure outage",
+      "site:gov \"SNAP\" \"November 2026\" benefits delayed system outage",
+      "\"food bank\" \"distribution\" \"canceled\" \"November 3\" 2026 storm flood",
+      "\"food pantry\" \"temporarily closed\" November 3 2026 flood power",
+      "\"food bank\" \"November 3, 2026\" \"suspend\" \"operations\" access"
+    ],
+    "result": "No new independently corroborated qualifying U.S. food-access disruption detected since prior verified hourly check.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T184339-0800-r11-20261104T024339Z.json",
+      "completed_at": "2026-11-03T18:45:03-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "noteworthy_exclusions": [
+      {
+        "url": "https://lehifreepress.com/2026/11/03/provo-food-bank-announces-temporary-closure-due-to-financial-issues/",
+        "reason": "Community Action Services and Food Bank closure in Utah effective November 1 already preserved as finding in earlier 16:43 PST heartbeat; duplicate."
+      },
+      {
+        "url": "https://www.chilichili.net/469307/christian-center-of-park-city-steps-up-as-wasatch-back-food-pantries-are-shuttered/",
+        "reason": "Heber City/Oakley/Coalville access impacts belong to previously reported Utah CASFB closure; not a distinct new event."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine sole grocery closure announced September 3, outside current observation window."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17248782/99-ranch-market-closing-store-trader-joes-pleasanton-california/",
+        "reason": "November 3 report announces a future Pleasanton 99 Ranch closure; two other nearby locations were explicitly available, not a community's sole grocery, and closure had not occurred."
+      },
+      {
+        "url": "https://thenewsaccess.com/ctvnews/",
+        "reason": "Pelly, Saskatchewan sole grocery store fire is in Canada, outside the U.S. geographic scope."
+      },
+      {
+        "url": "https://news.delaware.gov/2025/10/29/governor-matt-meyer-declares-state-of-emergency-due-to-interruption-of-federal-snap-benefits/",
+        "reason": "October 2025 SNAP shutdown interruption, not November 2026."
+      },
+      {
+        "url": "https://www.dshs.wa.gov/abawds-able-bodied-adults-without-dependents",
+        "reason": "November 2 policy handbook revision was not evidence of a newly announced official benefit payment/service outage."
+      }
+    ],
+    "source_failures": [],
+    "limitations": "Search index surfaced prior-year SNAP notices, recurring program calendars, non-U.S. events, and existing Utah closure coverage. No candidate met novelty, U.S. geography, direct food-access consequences, and evidence tests.",
+    "production_authority": "No approval, publication, schedule alteration, task disablement, or production collector change."
+  }
+}

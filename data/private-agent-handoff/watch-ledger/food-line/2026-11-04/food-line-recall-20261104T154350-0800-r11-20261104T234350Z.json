@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T154350-0800-r11-20261104T234350Z",
+  "scheduled_for": "2026-11-04T15:45:54-08:00",
+  "started_at": "2026-11-04T15:43:50-08:00",
+  "completed_at": "2026-11-04T15:45:14.853-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T14:50:06.768-08:00",
+    "end_at": "2026-11-04T15:45:14.853-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently verified Food Line supplementary heartbeat completion to current check; November 4 publication alone does not establish interval-new notice timing.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall only; production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss caused by closure, fire, or disaster",
+      "Emergency food distribution cancellation/suspension caused by storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T144855-0800-r11-20261104T224855Z.json",
+      "completed_at": "2026-11-04T14:50:06.768-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "commit_sha": "eb2859a66aab1a3a816d8e82a6f4d41b8015f336"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"November 4, 2026\" closed OR fire OR closing",
+      "\"last grocery store\" \"November 4, 2026\" fire OR closure",
+      "\"sole grocery store\" \"Nov 4 2026\" closure community",
+      "\"full-service grocery\" community closure fire November 4 2026",
+      "\"food distribution\" canceled November 4 2026 storm OR flood OR outage",
+      "\"mobile food pantry\" cancelled November 4 2026 power storm",
+      "\"food pantry\" \"temporarily closed\" Nov 4 2026 fire OR flood OR outage",
+      "\"food bank\" \"suspended\" \"November 4, 2026\" operations",
+      "site:gov \"SNAP\" \"November 4, 2026\" \"delayed\" OR \"interruption\" OR \"outage\"",
+      "site:gov \"WIC\" \"November 4, 2026\" \"suspended\" OR \"system outage\" OR \"benefits unavailable\"",
+      "\"November 4, 2026\" \"food pantry\" \"closed\" \"emergency\" OR \"damage\"",
+      "\"Daniels\" \"Cornerstone IGA\" \"only grocery\" OR \"last grocery\" OR supermarket"
+    ],
+    "reviewed_primary_provider_page": {
+      "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+      "observation": "Direct provider calendar shows multiple scheduled November 4 Michigan distributions without cancellation marking; neither 'CANCELED' nor 'CANCELLED' matched. Calendar can change and no site-specific disruption was established.",
+      "page_checked_on": "2026-11-04"
+    },
+    "exclusions": [
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine sole-grocery closure announced September 3, outside interval."
+      },
+      {
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "El Paso storm-related food-bank distribution closure occurred September 25, historical."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "reason": "November 4 Daniels WV planned IGA closure already reviewed in prior heartbeat. No corroboration that it is sole/last/full-service community option and no verified interval-new announcement; direct article fetch blocked."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Primary provider schedule lists distributions proceeding on November 4; no qualifying disaster cancellation identified."
+      },
+      {
+        "url": "https://www.diningandcooking.com/us/76653/",
+        "reason": "La Hacienda Romeoville grocery opening, not a closure."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "failure": "DisabledError on direct webpage open",
+        "impact": "Already known from previous degraded run. Search snippet is not sufficient to establish an interval-new sole/last grocery loss. Remaining 12 searches and provider page checks usable."
+      }
+    ],
+    "direct_page_checks": 2,
+    "result": "No newly verified, nonduplicate qualifying food-access disruption since 14:50:06 PST; one previously blocked direct candidate remains inaccessible, so DEGRADED rather than aborting.",
+    "limitations": "Search coverage is bounded, not exhaustive. Failure of the already-known Daniels candidate direct article did not invalidate remaining source checks. Production collection remains authoritative.",
+    "action_limits": "No approval, public publication, production collection change, schedule change, or task disablement.",
+    "timing_note": "Execution began before nominal scheduled_for; search window anchored to previous verified heartbeat completion."
+  }
+}

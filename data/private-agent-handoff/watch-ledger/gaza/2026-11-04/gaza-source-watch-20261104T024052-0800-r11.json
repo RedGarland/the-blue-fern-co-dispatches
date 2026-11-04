@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T024052-0800-r11",
+  "scheduled_for": "2026-11-04T02:44:51-08:00",
+  "started_at": "2026-11-04T02:40:52-08:00",
+  "completed_at": "2026-11-04T02:42:16-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T01:46:53-08:00",
+    "end": "2026-11-04T02:42:16-08:00",
+    "basis": "Since previous verified exact-file Gaza watch heartbeat; includes bounded recall of reporting on earlier events not previously logged",
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production Gaza collector and publisher remain authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T014314-0800-r11.json",
+    "previous_verified_completed_at": "2026-11-04T01:46:53-08:00",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; most recent listed Oct 31 report for Oct 29, 2026; no new Gaza report in checked window."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; no newly dated Nov 4 medical evacuation, hospital, ambulance or health functioning change found."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; previously observed restriction."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report 4 November 2026 OCHA OPT",
+      "site:who.int Gaza occupied Palestinian territory November 4 2026 health emergency evacuation hospitals"
+    ],
+    "additional_targeted_searches": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"November 4, 2026\" killed injured strikes",
+      "site:palestinercs.org Gaza \"4 November 2026\" ambulance patients medical",
+      "site:reuters.com/world/middle-east/ Gaza November 4 2026 civilian killed ceasefire",
+      "site:apnews.com/article/ Gaza \"November 4, 2026\" ceasefire killed civilians",
+      "site:aljazeera.com/news/2026/11/4/ Gaza killed wounded civilians ceasefire",
+      "Gaza November 4 2026 Wednesday dawn Israeli strike killed displaced shelters AFP",
+      "site:unicef.org Gaza \"4 November 2026\" water shelter children healthcare",
+      "Gaza Rafah Kerem Shalom November 4 2026 aid access crossing food water supply",
+      "Gaza 4 November 2026 hospital emergency ambulance fuel medical evacuation WHO MSF",
+      "Gaza November 4 2026 ceasefire negotiations hostages detainees Israeli military Palestinians latest",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"4 Nov 2026\" Gaza OCHA hospital water",
+      "site:wfp.org OR site:unrwa.org Gaza November 4 2026 November 3 food trucks displaced"
+    ],
+    "direct_checks": {
+      "WAFA": {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Nov 4 newest reports checked are West Bank-centered; outside Gaza remit."
+      },
+      "PRCS": {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest Nov 3 Saudi operational support item already recorded."
+      },
+      "Reuters": {
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "No distinct newly verified Gaza development in checked results."
+      },
+      "AP": {
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "No distinct newly verified Gaza development in checked results."
+      },
+      "AlJazeera": {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Nov 4 latest Hebron coverage relates to the West Bank; Nov 3 Gaza casualty article previously covered."
+      },
+      "AFP_republication": {
+        "url": "https://www.arabnews.com/middle-east/hamas-member-among-4-killed-in-israeli-strikes-gaza-officials-3009637",
+        "result": "Nov 3 AFP report repeats three Khan Younis tent casualties and Gaza City death of Rimas al-Madhoun, already recorded in prior watch ledgers."
+      },
+      "MSF": {
+        "url": "https://www.msf.org/gaza-israel-war",
+        "result": "Baseline page; no verified new within-window operational event."
+      },
+      "UNICEF": {
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Baseline page; no verified newly dated within-window event."
+      },
+      "WFP": {
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden; recurring."
+      },
+      "UNRWA": {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden; recurring."
+      },
+      "UNNews": {
+        "url": "https://news.un.org/en/",
+        "result": "Robots exclusion; recurring."
+      }
+    },
+    "checked_categories": [
+      "civilian casualties and civilian effects of military operations",
+      "displacement, shelter and infrastructure damage",
+      "aid, food, water and crossings",
+      "hospitals, ambulances, transport, fuel, medical evacuation and functioning capacity",
+      "detention/hostages and ceasefire or negotiations"
+    ],
+    "excluded": [
+      "Previously recorded November 3 three Khan Younis tent fatalities and Rimas al-Madhoun Gaza City tent death (AFP republications).",
+      "November 3 PRCS Saudi aid support announcement previously recorded.",
+      "November 4 West Bank-only Hebron, Ramallah, Jenin, and Tulkarm reports outside the Gaza-specific remit.",
+      "Older reports, generic humanitarian context, opinion, and unsupported social claims."
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News robots restriction"
+      ],
+      "alternative_coverage": "OCHA OPT and WHO global, WAFA, PRCS, Reuters, AP, Al Jazeera, MSF and UNICEF."
+    },
+    "limitations": "No new distinct qualifying Gaza development verified in this bounded window. Publication lag and recurring source restrictions constrain completeness; no inference that no incident occurred.",
+    "notification_decision": "No alert; no qualifying findings and no newly material degradation.",
+    "safeguards": "No approvals, publication, production mutation, schedule change or task disabling."
+  }
+}

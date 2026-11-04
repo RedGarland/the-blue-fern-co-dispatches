@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261103T204443-0800-r11-recall12",
+  "scheduled_for": "2026-11-03T20:45:22-08:00",
+  "started_at": "2026-11-03T20:44:43-08:00",
+  "completed_at": "2026-11-03T20:46:08-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-03T19:48:09-08:00",
+    "end": "2026-11-03T20:46:08-08:00",
+    "basis": "Prior verified watch-ledger heartbeat completed at 19:48:09 PST; this is a bounded supplementary recall with same-day indexed lookback. Production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_date": "2026-11-03",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO termination notice, CCN 18P001",
+      "result": "CMS current Public Notices table directly inspected before the additional targeted searches. No November 3 notice visible. October 30 and November 2 entries predate the observation window; no new entry was confirmed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 3 2026 hospital emergency department closed tonight service suspended urgent clinic US",
+      "November 3 2026 maternity labor delivery unit shutdown birth hospital closure effective",
+      "November 3 2026 rural hospital emergency service closure operations immediate",
+      "November 3 2026 ambulance EMS service air medical base grounded suspended closure",
+      "November 3 2026 dialysis center oncology infusion cancelled shut down patients",
+      "November 3 2026 behavioral health psychiatric facility closure patients discharged abruptly",
+      "November 3 2026 primary care clinic federally qualified health center closed immediate services patients",
+      "November 3 2026 hospital services reopened restored after flooding power outage evacuation",
+      "site:gov \"November 3, 2026\" \"clinic\" \"closed\" OR \"suspended\" healthcare",
+      "November 3 2026 Puerto Rico Guam US Virgin Islands American Samoa hospital clinic ambulance service suspended",
+      "November 3 2026 urgent care emergency department closure reopened local news hospital",
+      "November 3 2026 healthcare service closure suspended emergency ambulance medical center local hospital"
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center walk-in and prescription-refill soft reopening, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Official page still shows the same November 3 09:52 Arizona update (planned 13:00 Arizona time), recorded as a finding by an earlier watch. No later independent confirmation or distinct change was found; duplicate."
+      },
+      {
+        "item": "Dilkon Medical Center dental, podiatry and wound-care closures; Leupp Clinic November 3 closure, Arizona",
+        "source": "https://www.wihcc.com/",
+        "reason": "Previously reported flood-related restrictions, unchanged on provider page; not a new development within the window."
+      },
+      {
+        "item": "Roseland Community Hospital maternity-ward closure, Chicago, Illinois",
+        "source": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Closure occurred November 1 and was reported November 2, previously recorded; duplicate."
+      },
+      {
+        "item": "Indian River County Florida flooding and school closure",
+        "source": "https://veronews.com/2026/11/03/indian-river-schools-to-remain-closed-wednesday-amid-flooding/",
+        "reason": "Flooding/road and school closures reported, but this retrieved article did not document a specific new healthcare-service closure or restoration."
+      },
+      {
+        "item": "Russell County Hospital 340B reimbursement proposal risk, Kentucky",
+        "source": "https://www.healthcarefinancenews.com/news/340b-rebate-pilot-would-cost-rural-hospital-over-500000",
+        "reason": "Prospective funding risk without demonstrated effective service-line loss."
+      },
+      {
+        "item": "Other retrieved reports",
+        "source": null,
+        "reason": "Older, out-of-country, proposed closures, policy commentary, or no concrete effective access change; no qualifying item verified after the prior check."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "source": "https://www.wihcc.com/",
+        "result": "Provider website accessed; no fresh update beyond the November 3 09:52 Arizona-time status. Walk-in and prescription-refill soft opening already captured earlier; Dilkon and Leupp restrictions remain listed."
+      },
+      {
+        "source": "https://hf.org/alert",
+        "result": "Official Health First alert endpoint inaccessible. Actual restoration status cannot be independently verified."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Previously documented recurring limitation. Remaining CMS and indexed search coverage usable."
+      }
+    ],
+    "quality_limitations": "Supplementary web search is not a comprehensive national or territorial collector, and indexed news or local alerts may lag. Health First endpoint unavailable. Production collector deduplication not independently checked.",
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Private ops/watch-ledger heartbeat only. No approval, publication, primary collector mutation, schedule change or task disable."
+  }
+}

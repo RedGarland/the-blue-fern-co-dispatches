@@ -1,0 +1,198 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261103T224507-0800-r11-20261104T064738Z",
+  "scheduled_for": "2026-11-03T22:44:51-08:00",
+  "started_at": "2026-11-03T22:45:07-08:00",
+  "completed_at": "2026-11-03T22:47:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-03",
+    "start": "2026-11-03T20:43:26-08:00",
+    "end": "2026-11-03T22:47:38-08:00",
+    "basis": "Last individually verified Gaza watch heartbeat on ops/watch-ledger completed 2026-11-03 20:43:26 PST. Later intervening heartbeat, if any, not individually verified. Source event dated November 3 predates this hourly window; record included solely as a newly discovered high-value missed civilian-casualty incident, not a newly occurring within-window event.",
+    "official_first_sources": [
+      "OCHA OPT",
+      "WHO"
+    ],
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261103-gazacity-municipalpark-rimas-al-madhoun-drone",
+      "canonical_source_url": "https://today.lorientlejour.com/article/1553181/israeli-strikes-kill-4-palestinians-in-gaza.html",
+      "title": "Israeli strikes kill 4 Palestinians in Gaza",
+      "publisher": "Agence France-Presse (AFP), syndicated by L'Orient Today",
+      "source_date": "2026-11-03",
+      "publication_date": "2026-11-03",
+      "event_date": "2026-11-03",
+      "location": "Municipal park area, central Gaza City, Gaza Strip",
+      "affected_population_system": "Displaced civilians sheltering in tents; one teenage girl reported killed and others injured",
+      "exact_supporting_passage": "In a separate strike, a girl was killed when an Israeli drone struck a tent in a park in Gaza City",
+      "source_type": "established news-wire reporting citing Gaza Civil Defence spokesperson and Al-Shifa Hospital",
+      "classification": "follow-up",
+      "confidence": "high for separately reported fatality and location; exact age disputed",
+      "bounded_discovery_context": {
+        "discovered_in_current_run": true,
+        "newly_identified_distinct_from_prior_ledger": true,
+        "event_inside_strict_hourly_window": false,
+        "rationale": "Previous verified watch had already logged three killed in Khan Younis on November 3; this is a distinct reported drone strike on a displaced-person tent in Gaza City. The event itself occurred earlier on November 3 and was identified during this bounded recall run. Do not add the three Khan Younis deaths again or infer totals.",
+        "named_victim": "Rimas al-Madhoun",
+        "age": "conflicting reports: Al-Shifa Hospital via AFP says 17; SadaNews medical sources say 16",
+        "corroborating_source_url": "https://www.sadanews.ps/en/news/349954.html",
+        "corroborating_publisher": "SadaNews",
+        "corroborating_publication_date": "2026-11-03",
+        "corroboration_note": "Separate Palestinian reporting describes a deceased girl at a displaced-person tent near Gaza City's municipal park, matching the AFP location. Both appear to describe the same incident, not two deaths.",
+        "additional_wire_republication_url": "https://www.bssnews.net/international/441707",
+        "verification_limitations": "No direct hospital record or independent field verification obtained; incident attributed by AFP to Gaza Civil Defence and Al-Shifa Hospital."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only. Production collector, editorial review, publisher and prior approvals remain authoritative.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-03/gaza-source-watch-20261103T204144-0800-r11-20261104T044326Z.json",
+      "completed_at": "2026-11-03T20:43:26-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings",
+      "verification": "GitHub connector exact-file fetch from ops/watch-ledger"
+    },
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; no publication newer than October 31 (October 29 situation report) on page checked."
+      },
+      {
+        "source": "WHO global oPt situation",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; WHO overview/news has no November 3-4 Gaza operational event."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct access timed out; previously recurring 502/access degradation."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza Strip humanitarian situation report 3 November 2026 4 November 2026 OCHA",
+      "site:who.int OR site:emro.who.int Gaza 3 November 2026 emergency health evacuation hospital 4 November"
+    ],
+    "additional_targeted_searches": [
+      "Gaza November 4 2026 Palestinians killed injured today airstrike drone early morning",
+      "site:english.wafa.ps/Pages/Details/ \"04/November/2026\" Gaza killed hospital displaced",
+      "site:unicef.org \"4 November 2026\" Gaza water children health",
+      "site:palestinercs.org/en \"2026-11-04\" Gaza ambulance medical evacuation",
+      "Gaza November 4 2026 humanitarian aid trucks crossings fuel medical evacuation hospitals UNICEF UNRWA",
+      "Gaza \"November 4, 2026\" ceasefire Israeli troops civilian tents strike morning",
+      "site:reuters.com/world/middle-east/ 2026-11-03 Gaza November 3 aid ceasefire fatalities",
+      "site:msf.org \"3 November 2026\" \"Gaza\" OR \"4 November 2026\"",
+      "\"Rimas al-Madhoun\" Gaza November 3 2026 park drone killed",
+      "\"4 November 2026\" \"Gaza\" \"Rafah\" crossing WHO evacuation hospital",
+      "site:ochaopt.org OR site:un.org \"3 November 2026\" Gaza aid tents water",
+      "site:theguardian.com/world/2026/nov/03 Gaza Israeli strike displacement aid"
+    ],
+    "direct_publisher_checks": [
+      {
+        "source": "WAFA Latest News",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest displayed entries November 3 22:42 Palestine time; Gaza 3 killed Khan Younis and 74,615 tally previously logged; no new November 4 Gaza report."
+      },
+      {
+        "source": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Most recent November 3 Saudi logistical-support announcement already logged; no new Gaza medical event."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "November 3 lead Gaza casualty story describes November 2 deaths (four plus subsequent death), not new within-window attacks."
+      },
+      {
+        "source": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Checked regional index, no fresh within-window verified Gaza development."
+      },
+      {
+        "source": "AP Gaza hub",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "No fresh within-window verified Gaza development."
+      },
+      {
+        "source": "AFP via L'Orient Today",
+        "url": "https://today.lorientlejour.com/article/1553181/israeli-strikes-kill-4-palestinians-in-gaza.html",
+        "result": "November 3 Gaza City park tent strike, separately reported girl killed; late-discovered prior-day item included as missed-event follow-up."
+      },
+      {
+        "source": "SadaNews",
+        "url": "https://www.sadanews.ps/en/news/349954.html",
+        "result": "Independent incident corroboration, November 3; minor age discrepancy."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403, recurring."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403, recurring."
+      },
+      {
+        "source": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "robots.txt restricted, recurring."
+      }
+    ],
+    "categories_checked": [
+      "Civilian fatalities, injuries, military operations with documented civilian harm",
+      "Displacement, shelters, food and water access, infrastructure",
+      "Crossings, humanitarian entry, fuel and logistics",
+      "Hospital, ambulance, healthcare function, transport and medical evacuations",
+      "Detention, hostages, ceasefire and negotiations"
+    ],
+    "excluded_as_prior_or_nonqualifying": [
+      "November 3 Khan Younis three-death strike (WAFA) already logged; may overlap with AFP Khan Younis tally, not recounted.",
+      "November 3 Gaza Ministry of Health cumulative 74,615 deaths / 175,899 injuries and 48-hour update already logged.",
+      "November 3 PRCS Saudi logistical-support announcement already logged.",
+      "November 2 deaths described in November 3 Al Jazeera and Reuters reports; excluded as older.",
+      "November 4 republications of November 3 incidents not counted as a separate event.",
+      "West Bank developments, broad Israel election news, US military-aid policy, unsupported/recycled social claims and old reports."
+    ],
+    "access_degradation": [
+      {
+        "source": "WHO EMRO",
+        "issue": "timeout/502",
+        "new_material_change": false
+      },
+      {
+        "source": "WFP",
+        "issue": "HTTP 403",
+        "new_material_change": false
+      },
+      {
+        "source": "UNRWA",
+        "issue": "HTTP 403",
+        "new_material_change": false
+      },
+      {
+        "source": "UN News",
+        "issue": "robots.txt restriction",
+        "new_material_change": false
+      }
+    ],
+    "limitations": [
+      "No distinct event verified to have occurred in the strict hourly observation window; positive item is an unlogged earlier-November-3 civilian fatality discovered during recall, explicitly not an hourly-timed incident.",
+      "Exact age disputed between AFP/Al-Shifa (17) and SadaNews (16).",
+      "An intervening post-20:43 heartbeat could not be individually verified. Classification is provisional relative to last individually verified heartbeat and not a claim of full cross-system dedupe.",
+      "Short-window publication lag possible; a negative within-window search does not prove nothing happened."
+    ],
+    "status_rationale": "DEGRADED for recurring source access failures, with alternative authoritative news and OCHA/WHO global available. No newly material coverage failure.",
+    "notification_decision": "Notify because a credible, distinct, previously unlogged civilian casualty incident was discovered during recall. Explicitly disclose that event predates current hourly window.",
+    "safeguards": "Exactly one JSON heartbeat on ops/watch-ledger; no editorial approval, publishing, social posting, schedule change or task disabling."
+  }
+}

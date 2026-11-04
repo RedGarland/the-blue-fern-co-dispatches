@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261103T174758-0800-r11-20261104T014758Z",
+  "scheduled_for": "2026-11-03T17:45:54-08:00",
+  "started_at": "2026-11-03T17:47:58-08:00",
+  "completed_at": "2026-11-03T17:48:50-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-03T16:43:49-08:00",
+    "end_at": "2026-11-03T17:48:50-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last directly verified prior Food Line watch heartbeat completed_at (2026-11-03T16:43:49-08:00), supplemented by bounded same-day recall to identify late-indexed missed signals.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; production nationwide collection remains authoritative.",
+    "classes": [
+      "Closure/loss/fire of only/sole/last/full-service grocery store",
+      "Disaster/outage-related emergency food distribution cancellation",
+      "Abrupt pantry or food-bank closure or major service access reduction",
+      "New official SNAP/WIC/assistance interruption with immediate access consequences"
+    ],
+    "search_breakdown": {
+      "fast": 12,
+      "failed_searches": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" fire OR closes OR closure November 3 2026 rural town",
+      "\"sole grocery store\" \"November 3, 2026\" closed OR fire",
+      "\"last grocery store\" closed OR closing \"November 2026\"",
+      "\"full-service grocery\" closed OR closing November 3 2026 community",
+      "\"food distribution\" canceled OR cancelled storm flooding power outage Nov 3 2026",
+      "\"food bank\" \"distribution\" \"canceled\" November 3 2026",
+      "\"food pantry\" \"closed\" \"November 3, 2026\" emergency",
+      "\"food pantry\" \"shut down\" \"November 3\" 2026 service",
+      "\"food bank\" service \"suspended\" November 3 2026",
+      "site:gov \"SNAP\" \"November 3, 2026\" benefits \"delayed\" OR \"interrupted\" OR \"outage\"",
+      "site:gov \"WIC\" \"November 3 2026\" benefits \"suspended\" OR \"outage\"",
+      "\"EBT\" system outage November 3 2026 state benefits unusable"
+    ],
+    "result": "No newly verified qualifying signals or previously missed qualifying high-value developments found in this bounded window. Search indexing and lack of published search hits do not establish absence nationwide.",
+    "prior_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-03/food-line-recall-20261103T164146-0800-r11-20261104T004146Z.json",
+      "completed_at": "2026-11-03T16:43:49-08:00",
+      "outcome": "findings",
+      "finding_ids": [
+        "food-line-ut-community-action-services-food-bank-closure-20261101"
+      ]
+    },
+    "notable_exclusions": [
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Published September 3, 2026, with closure planned for late September; old Maine sole-grocery report, not new in this window."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 14, 2026 coverage of prior Spencer, NY store fire; not an hourly-window event."
+      },
+      {
+        "url": "https://www.wuwf.org/live-updates/tropical-storm-isaias-updates",
+        "reason": "October 2026 Florida hurricane recovery distribution points operating, not a newly canceled emergency food distribution."
+      },
+      {
+        "finding_id": "food-line-wi-eau-claire-feed-my-people-popup-cancel-20261103",
+        "reason": "Already identified in prior 15:45 PST heartbeat; duplicate excluded."
+      },
+      {
+        "finding_id": "food-line-ut-community-action-services-food-bank-closure-20261101",
+        "reason": "Already identified in prior 16:43 PST heartbeat; duplicate excluded."
+      }
+    ],
+    "limitations": "Targeted public web search cannot exhaust every local/official channel; no direct report establishing an eligible event first discovered after the prior heartbeat. No source/search errors were reported.",
+    "production_authority": "No editorial review disposition, approvals, publication, production collector changes, schedule edits or task disabling."
+  }
+}

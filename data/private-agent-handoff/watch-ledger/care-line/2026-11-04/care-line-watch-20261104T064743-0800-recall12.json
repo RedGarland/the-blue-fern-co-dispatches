@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T064743-0800-recall12",
+  "scheduled_for": "2026-11-04T06:45:22-08:00",
+  "started_at": "2026-11-04T06:47:43-08:00",
+  "completed_at": "2026-11-04T06:49:24.062-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T05:43:09-08:00",
+    "end": "2026-11-04T06:49:24.062-08:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed at 05:43:09 PST; hourly supplementary recall, not the primary national collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization, CCN 18P001, termination notice.",
+      "result": "Official CMS public notices page directly checked before any targeted searches. No November 3 or November 4 notice listed; current latest entry is dated November 2. Pre-existing October 30 provider terminations and CLIA notices are outside the recall window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes temporarily November 4 2026 United States",
+      "hospital suspends emergency services November 3 2026 rural closures",
+      "maternity labor delivery unit closed suspended November 3 2026 hospital",
+      "behavioral health psychiatric inpatient hospital closes suspends November 3 2026",
+      "dialysis center closes suspends service November 3 2026",
+      "oncology cancer clinic suspends treatment closes November 3 2026",
+      "primary care clinic abrupt closure patients November 3 2026",
+      "ambulance service station base shuts down ceases November 3 2026",
+      "air medical helicopter base closure grounding service November 3 2026",
+      "hospital emergency department reopened services restored November 3 2026",
+      "Puerto Rico Guam US Virgin Islands hospital clinic medical service closure emergency November 2026",
+      "CMS provider termination CLIA suspension limitation rescission notices November 3 2026"
+    ],
+    "search_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      7,
+      7
+    ],
+    "result_summary": "No newly verified qualifying service closure/suspension, emergency/rural/EMS access loss, new official CMS access-risk notice, or concrete reopening in the observation window. Broad U.S. and territory recall returned older, already-reviewed, off-jurisdiction or future planned items; indexing lag can prevent near-real-time verification.",
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital maternity closure, Chicago, Illinois",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Closure took effect November 1 and was documented in previous hourly watches; duplicate."
+      },
+      {
+        "item": "Health First outpatient location storm-related closures and announced restoration, Brevard County, Florida",
+        "source_url": "https://spacecoastdaily.com/2026/11/update-all-health-first-hospitals-and-emergency-services-remain-open-other-locations-will-reopen-10-a-m-tuesday/",
+        "reason": "November 2 report of service changes around November 3 was examined in earlier watches, not a new development in this window. Official alert source remains inaccessible."
+      },
+      {
+        "item": "Winslow Indian Health Care Center and Dilkon/Leupp flood-related service changes, Arizona",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official notice still dated November 3 09:52 local time; walk-in restoration and remaining restrictions previously documented; no newer changes visible."
+      },
+      {
+        "item": "Kula Hospital targeted reopening, Maui, Hawaii",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Targeted 2027 reopening is future, conditional, and was already reviewed; no essential service restored now."
+      },
+      {
+        "item": "Benefis Health System planned service reductions, Great Falls, Montana",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Previously assessed prospective reductions scheduled from December 19; no new effective loss in this hourly window."
+      },
+      {
+        "item": "Daisy Hill Hospital maternity services suspension, Newry, Northern Ireland",
+        "source_url": "https://www.newryreporter.com/news/people/mcnulty-mla-challenges-the-southern-trusts-decision-to-temporarily-suspend-maternity-services-at-daisy-hill-hospital-9328441",
+        "reason": "Outside United States and territories."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Accessible; November 3 09:52 notice unchanged."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Inaccessible via web reader; same known persistent limitation as prior watches."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Web reader returned an internal accessibility error, consistent with the prior run. Other CMS/official/local coverage remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Bounded targeted search recall is not exhaustive, cannot establish an event's absence, and is sensitive to search indexing delay. No direct production-collector reconciliation performed.",
+    "controls": "One durable immutable JSON heartbeat recorded on ops/watch-ledger only. No approval, publication, task schedule change or disabling."
+  }
+}

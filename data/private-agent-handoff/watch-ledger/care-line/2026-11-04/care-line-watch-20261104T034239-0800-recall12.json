@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T034239-0800-recall12",
+  "scheduled_for": "2026-11-04T03:45:22-08:00",
+  "started_at": "2026-11-04T03:42:39-08:00",
+  "completed_at": "2026-11-04T03:43:56-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T02:48:44-08:00",
+    "end": "2026-11-04T03:43:56-08:00",
+    "basis": "Previous durable Care Line Watch heartbeat ended at 2026-11-04T02:48:44-08:00; national production collector remains authoritative. Short overlap is allowed for recall and deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, OPO, CCN 18P001, Termination Notice",
+      "result": "Official CMS public-notices list checked successfully; newest visible notice dated November 2, 2026. No newer termination, rescission or CLIA restriction since prior check."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed reopened November 4 2026 United States overnight",
+      "hospital maternity labor delivery unit closure suspended services November 4 2026",
+      "behavioral health psychiatric hospital abruptly closed November 4 2026 services",
+      "dialysis clinic closure suspension November 4 2026 patients",
+      "cancer oncology infusion clinic closure suspended November 4 2026",
+      "primary care rural health clinic closure November 4 2026 actual services",
+      "ambulance EMS service shut down suspended operation November 4 2026 county US",
+      "medical helicopter air ambulance base closes grounds service November 4 2026",
+      "hospital emergency department temporarily closes November 3 4 2026 evacuation outage",
+      "hospital reopened restored emergency room services November 4 2026 county",
+      "site:gov November 4 2026 hospital clinic closed services public notice emergency",
+      "Puerto Rico Guam US Virgin Islands hospital emergency clinic closure suspension November 3 4 2026"
+    ],
+    "search_recency_days": 2,
+    "search_results": "No new verifiable, concrete US or territory essential-healthcare access loss or restoration surfaced within the 02:48–03:44 PST recall window. Search results were older events, previously reviewed items, unrelated policy or funding changes, proposals, and results outside the US. Official and local sources were prioritized; overnight indexing may lag.",
+    "reviewed_exclusions": [
+      {
+        "item": "Winslow Indian Health Care Center / Dilkon Medical Center / Leupp Clinic flooding-related closures and partial restoration",
+        "source_url": "https://www.wihcc.com/",
+        "reason": "Official banner remains dated November 3, 2026 at 09:52 Arizona time, previously recorded; no new access update."
+      },
+      {
+        "item": "Roseland Community Hospital maternity/labor-and-delivery closure, Chicago, Illinois",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/",
+        "reason": "Reported October 28 and already recorded, not a new development."
+      },
+      {
+        "item": "Benefis Health System Great Falls, Montana upcoming service discontinuations",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Already assessed in prior watches; service-loss dates begin December 19, no newly effective change."
+      },
+      {
+        "item": "Kula Hospital Maui, Hawaii planned rebuilding/reopening in late summer 2027",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Construction milestone/planned 2027 restoration, no currently effective reopening."
+      }
+    ],
+    "official_rechecks": [
+      {
+        "url": "https://www.wihcc.com/",
+        "result": "Accessible; November 3, 09:52 Arizona-time notice remains the latest displayed access alert."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "result": "Direct official Health First alert endpoint inaccessible in web research, same known prior-watch limitation."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Persistent known limitation from prior watches. CMS official page and twelve independent targeted searches succeeded; full watch did not fail."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "This bounded supplementary indexed search cannot prove no national events exist, and fresh local notices may not yet be indexed. No primary national collector state was mutated or independently reconciled.",
+    "controls": "Exactly one heartbeat for this execution. No review approval, publication, production mutation, scheduling changes, or disabling."
+  }
+}

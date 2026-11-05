@@ -1,0 +1,158 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T174647-0800-r11-20261105T014647Z",
+  "scheduled_for": "2026-11-04T17:44:51-08:00",
+  "started_at": "2026-11-04T17:46:47-08:00",
+  "completed_at": "2026-11-05T01:49:17.270Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T16:50:22.092-08:00",
+    "end": "2026-11-05T01:49:17.270Z",
+    "basis": "Time after previous exact-file verified heartbeat (16:50:22 PST) through this run; earlier event reported Nov 4 is a newly discovered follow-up, not an in-window occurrence.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-rafah-crossing-egypt-aid-travel-suspension-2026-11-03-xinhua",
+      "canonical_source_url": "https://english.himalayatimes.com.np/2026/11/101328/israel-closes-rafah-crossing-to-travelers-aid-commercial-trucks/",
+      "title": "Israel closes Rafah crossing to travelers, aid, commercial trucks",
+      "publisher": "Xinhua (syndicated by Himalaya Times)",
+      "source_date": "2026-11-04",
+      "publication_date": "2026-11-04",
+      "publication_time": null,
+      "event_date": "2026-11-03",
+      "event_time": null,
+      "location": "Rafah crossing, Gaza–Egypt border",
+      "affected_population_system": "Travelers seeking passage between Gaza and Egypt; humanitarian aid and commercial truck entry from Egypt (food, fuel, gas and other goods); Kerem Shalom crossing reportedly unaffected.",
+      "exact_supporting_passage": "Israeli authorities on Tuesday turned back travelers seeking to cross the Rafah border crossing and halted the entry of humanitarian aid and commercial trucks",
+      "source_type": "news_wire_reporting_citing_palestinian_border_authority_and_israeli_military_sources_via_Kan",
+      "classification": "follow-up",
+      "new_or_follow_up": "follow-up",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-05T01:49:17.270Z",
+        "in_observation_window": false,
+        "previously_recorded_in_verified_prior_heartbeat": false,
+        "checks": "Xinhua wire report syndicated by Himalaya Times and reproduced in Detik (Nov 4) and Insight International (Nov 4); those are not independent wire confirmations. The report cites Gaza border crossings authority and Israeli military sources to Kan. Direct primary statements and precise publication hour were not located.",
+        "corroborating_urls": [
+          "https://news.detik.com/internasional/d-8737945/israel-tutup-perlintasan-rafah-hentikan-arus-bantuan-ke-jalur-gaza",
+          "https://theinsightinternational.com/israel-halts-aid-trucks-travelers-rafah-crossing-gaza/"
+        ],
+        "primary_statement_url": null,
+        "details": "According to Xinhua, the Gaza crossings authority said Israel informed Egypt of suspension and approximately 40 aid/commercial trucks a day had been entering from Egypt. Israeli military sources cited alleged smuggling and Hamas security involvement; reasons are disputed/not independently verified. Report concerned Nov 3 event, published Nov 4; not proof closure continued uninterrupted at observation time."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; authoritative daily publisher/collector remains unchanged.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T164741-0800-r11-20261105T005022092Z.json",
+    "prior_verified_completed_at": "2026-11-05T00:50:22.092Z",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Accessible; most recent dated situation report listed October 31 for October 29, not a new Nov 4 in-window bulletin."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest Gaza-related regional listing older than Nov 4; no new medical evacuation or hospital-function notice visible."
+      }
+    ],
+    "official_first_search_queries": [
+      "site:ochaopt.org Gaza humanitarian situation November 4 2026 latest update OCHA",
+      "site:who.int Gaza November 4 2026 medical evacuation health emergency WHO"
+    ],
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza November 4 2026 November 5 2026 killed wounded Rafah Khan Younis medical",
+      "Gaza November 4 2026 evening Reuters AP civilians killed injured strikes ceasefire",
+      "site:aljazeera.com/news/2026/11/4 Gaza Nov 4 2026 latest casualties aid",
+      "site:palestinercs.org/en Gaza November 4 2026 November 5 ambulance Red Crescent",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza 4 Nov 2026 5 Nov 2026 humanitarian response aid",
+      "site:unicef.org Gaza 4 November 2026 water education food shelter",
+      "site:msf.org Gaza 4 November 2026 hospital medicines evacuation",
+      "Gaza Nov 4 2026 Rafah Kerem Shalom crossing ambulances aid trucks food fuel evacuation November 5",
+      "Xinhua November 4 2026 Israel suspends Egyptian aid trucks Rafah crossing Gaza returnees smuggling closure",
+      "Gaza Rafah crossing November 4 2026 closure Egypt aid Xinhua Kan Israel response",
+      "Gaza November 4 2026 ceasefire talks hostages detainees military casualties evening",
+      "Gaza November 4 2026 November 5 hospitals ambulance water pumping displacement attacks military civilians"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest November 4 items West Bank; no distinct Gaza in-window civilian casualty update."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest displayed November 3 logistics notice; no new Gaza EMS service change."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502; recurring."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; recurring."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; recurring."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "robots.txt denied; recurring."
+      }
+    ],
+    "categories_checked": [
+      "civilian casualties and military impacts",
+      "displacement, damaged infrastructure and shelter",
+      "aid, food and water access, crossings, fuel, transport",
+      "hospital and ambulance service capacity, medevac and rehabilitation",
+      "detainees, hostages and ceasefire negotiations"
+    ],
+    "excluded": [
+      {
+        "title": "November 4 child-amputee and treatment-access assessment",
+        "reason": "Previously recorded at November 4 13:52 PST; duplicate."
+      },
+      {
+        "title": "November 1–3 Gaza deaths and casualty tally",
+        "reason": "Outside interval, previously recorded or lacking distinct newly verified facts."
+      },
+      {
+        "title": "November 4 West Bank incidents",
+        "reason": "Outside Gaza geography."
+      },
+      {
+        "title": "Gaza News Live crossing status/truck item",
+        "reason": "AI-assisted source, not used as independent verification."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News robots.txt restriction"
+      ],
+      "alternative_coverage": "OCHA OPT, WHO global, WAFA, PRCS, Xinhua syndicated report and twelve targeted searches provided useful coverage; source restrictions limit completeness."
+    },
+    "limitations": "All accessible independently syndicated accounts of Rafah suspension trace back to Xinhua, which cited differing authorities. Exact timing, expected resumption and live crossing operations were not verified. A negative search does not rule out other events; no primary production candidate-state read was attempted.",
+    "notification_decision": "Notify: one distinct previously unlogged high-value crossing/aid/traveler access follow-up, event November 3 and report November 4, newly found this run.",
+    "safeguards": "Exactly one durable file created on ops/watch-ledger only; no publication, approvals, schedule changes, disabling, production mutation or social posting."
+  }
+}

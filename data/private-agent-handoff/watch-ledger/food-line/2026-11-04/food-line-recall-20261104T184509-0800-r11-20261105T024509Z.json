@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T184509-0800-r11-20261105T024509Z",
+  "scheduled_for": "2026-11-04T18:45:54-08:00",
+  "started_at": "2026-11-04T18:45:09-08:00",
+  "completed_at": "2026-11-04T18:47:46.617-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T17:48:14-08:00",
+    "end_at": "2026-11-04T18:47:46.617-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "basis": "Previous independently verified Food Line supplementary heartbeat completion through the current observation. November 4 publication date alone does not establish that an item was first released during this interval.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value missed-signal recall only; authoritative nationwide Food Line production collector is unchanged.",
+    "target_classes": [
+      "Only, sole, last or community full-service grocery closure/loss/fire/disaster",
+      "Emergency food distribution cancelled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major consumer food-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T174704-0800-r11-20261105T014704Z.json",
+      "completed_at": "2026-11-04T17:48:14-08:00",
+      "run_id": "food-line-recall-20261104T174704-0800-r11-20261105T014704Z",
+      "status": "SUCCESS"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"closing\" November 4 2026 rural town",
+      "\"last grocery store\" fire closed November 4 2026",
+      "\"only supermarket\" closing fire November 2026 community",
+      "\"food pantry\" \"closed\" \"November 4, 2026\" emergency",
+      "\"food bank\" \"suspended\" \"November 4, 2026\" storm",
+      "\"mobile food distribution\" cancelled November 4 2026 weather",
+      "SNAP benefits interruption notice November 4 2026 state agency",
+      "WIC service outage benefits November 4 2026 official",
+      "food bank \"closed\" \"November 4, 2026\" \"storm\" OR \"power\"",
+      "food distribution canceled Wednesday November 4 2026 flooding facility",
+      "site:gov \"SNAP\" \"outage\" \"November 4, 2026\"",
+      "site:gov \"WIC\" \"closure\" \"November 4, 2026\" emergency"
+    ],
+    "direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "publisher": "WGME",
+        "source_published_at": "2026-09-03",
+        "exclusion_reason": "Previously reported sole-grocery closure in Maine; outside interval."
+      },
+      {
+        "url": "https://www.wpr.org/news/food-bank-distribution-center-vandalism-in-madison",
+        "publisher": "Wisconsin Public Radio",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Prior verified Food Line heartbeat already assessed Madison refrigerated-truck fire; deliveries continued; no demonstrated consumer food-access interruption."
+      },
+      {
+        "url": "https://cbs12.com/news/local/six-palm-beach-county-schools-to-remain-closed-thursday-amid-flooding",
+        "publisher": "CBS12",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "School closures from Florida flooding, not evidence of canceled emergency-food distribution, pantry closure or direct nutrition-benefit interruption; published ~2:24 PM PST, before watch interval."
+      },
+      {
+        "url": "https://veronews.com/2026/11/04/indian-river-schools-to-remain-closed-thursday-for-flooding-road-closures/",
+        "publisher": "Vero News",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Flooding-related school closures without verified emergency food-distribution cancellation; publication hour not independently established."
+      },
+      {
+        "url": "https://www.gov.ca.gov/2025/10/20/trump-shutdown-could-soon-halt-food-support-for-millions-in-california-calfresh-cards-face-possibility-of-no-new-funds-in-november/",
+        "publisher": "California Governor's Office",
+        "source_published_at": "2025-10-20",
+        "exclusion_reason": "Historical November 2025 SNAP interruption notice surfaced in current query, not interval-new 2026 action."
+      }
+    ],
+    "source_failures": [],
+    "result": "No new qualifying, verifiable, nonduplicative U.S. grocery loss, emergency distribution cancellation, major pantry/food-bank service reduction or official SNAP/WIC immediate-access interruption discovered during bounded watch.",
+    "limitations": "Hourly publication timestamps are not uniformly exposed by local news or official sites; search indexing can lag and coverage is not exhaustive. Earlier Daniels, West Virginia grocery closure lacks proof of only/last-store status and is not a new interval item.",
+    "action_limits": "No approvals, public publication, change to production collection, schedule modification, or task disabling."
+  }
+}

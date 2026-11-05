@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T114554-0800-r11-20261105T195000Z",
+  "scheduled_for": "2026-11-05T11:45:54-08:00",
+  "started_at": "2026-11-05T11:49:56-08:00",
+  "completed_at": "2026-11-05T11:50:44-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T10:47:39.657-08:00",
+    "end_at": "2026-11-05T11:50:44-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Latest verified Food Line heartbeat completion to this observation; dated reports, index rediscovery, and page-update timestamps alone do not establish within-hour incident novelty.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only; production nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service grocery loss/closure/fire/disaster",
+      "Emergency food distributions canceled/suspended due to severe weather, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP, WIC, or food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T104554-0800-r11-20261105T184554Z.json",
+      "completed_at": "2026-11-05T10:47:39.657-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closes fire November 5 2026 community",
+      "\"sole grocery store\" closure fire \"Nov 5, 2026\"",
+      "\"last grocery store\" closed November 2026 small town",
+      "\"full service grocery store\" closing fire 2026 November 5 town",
+      "\"food distribution\" canceled storm outage \"November 5, 2026\"",
+      "\"food bank\" \"distribution canceled\" November 5 2026 flood power",
+      "\"food distribution\" \"suspended\" \"Nov 5\" 2026 wildfire",
+      "\"mobile pantry\" cancelled November 5 2026 weather",
+      "\"food pantry\" closed suddenly November 5 2026 flood outage fire",
+      "\"food bank\" \"closed\" \"Nov 5, 2026\" services emergency",
+      "site:gov \"SNAP\" \"EBT\" \"outage\" \"November 5, 2026\" benefits",
+      "site:gov \"WIC\" \"closed\" \"November 5, 2026\" outage offices"
+    ],
+    "direct_page_checks": 8,
+    "successful_direct_page_checks": 7,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.wpr.org/news/food-bank-distribution-center-vandalism-in-madison",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Madison, Wisconsin Second Harvest distribution center vandalism on November 4 destroyed a refrigerated truck and caused cancellation of volunteer shifts Wednesday/Thursday; Wisconsin Public Radio explicitly reports food deliveries continued. No confirmed distribution cancellation or major access reduction and event predates this hourly interval."
+      },
+      {
+        "url": "https://www.vdh.virginia.gov/lord-fairfax/",
+        "source_published_at": null,
+        "page_last_updated_date": "2026-11-05",
+        "related_program_page": "https://www.vdh.virginia.gov/lord-fairfax/wic/",
+        "exclusion_reason": "Official Shenandoah County health district office power outage and Clarke County assistance referral remain posted; WIC-specific service suspension, benefit access impact, onset hour, and new developments since 10:47 PST are not established; previously examined last hour."
+      },
+      {
+        "url": "https://www.mercydm.org/event/",
+        "source_published_at": null,
+        "exclusion_reason": "Provider calendar search excerpt references November 4 Birmingham mobile grocery bus cancellation due to inclement weather, but event is from previous day and is a grocery sales bus rather than a verified new emergency-food-distribution suspension. Direct page returned September calendar snapshot, so exact November event details could not be independently validated."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "New Kauai hurricane-recovery roundup says the Hawaii Foodbank Kauai emergency distribution at Hale Lihue on November 6 remains scheduled; no cancellation or outage."
+      },
+      {
+        "url": "https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+        "source_published_at": "2026-10-26",
+        "exclusion_reason": "Known Heber City pantry closure and Provo reduced hours originally announced October 26, not an incident first verified since this hourly check."
+      },
+      {
+        "url": "https://nextdoor.com/city/virginia-beach--va/",
+        "source_published_at": null,
+        "exclusion_reason": "Neighborhood listing contains notice of Virginia Beach pantry closed November 4-11 and Nov 5 distribution not held; no reliable provider identity, cause, new hourly onset, or direct corroboration, so cannot verify a new targeted interruption."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Spencer New York only-grocery-store fire/loss from September, not new in November 5 hourly window."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://spectrumnews1.com/wi/milwaukee/news/2026/11/04/second-harvest-food-bank-distribution-center-vandalism",
+        "operation": "direct_source_open",
+        "error": "DisabledError",
+        "materiality": "nonmaterial; Wisconsin Public Radio independent article directly accessible and explicitly confirms food deliveries continued"
+      }
+    ],
+    "result": "No newly verified incident both meets the four high-value disruption classes and has established novelty within the current hourly window.",
+    "limitations": "Bounded search cannot prove nationwide absence. One auxiliary local-news page could not be opened; alternate authoritative local reporting covered the same event. Official Virginia health-district outage is undated at hour granularity and lacks verified WIC impact.",
+    "materiality": "Nonmaterial degradation limited to one secondary-source access failure; useful coverage completed.",
+    "action_limits": "No approvals, public publication, production collection changes, schedule changes, or task disabling."
+  }
+}

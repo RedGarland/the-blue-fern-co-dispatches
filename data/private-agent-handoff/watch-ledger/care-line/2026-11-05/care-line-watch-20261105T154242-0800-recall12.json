@@ -1,0 +1,73 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T154242-0800-recall12",
+  "scheduled_for": "2026-11-05T15:45:22-08:00",
+  "started_at": "2026-11-05T15:42:42-08:00",
+  "completed_at": "2026-11-05T15:43:32-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T14:47:17-08:00",
+    "end": "2026-11-05T15:43:32-08:00",
+    "basis": "Previous independently verified Care Line heartbeat completed_at through current observation. November 3-5 lookback and target searches capture delayed indexing; events without a new substantiated service change or already recorded are excluded. This is supplementary recall only; production collection is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky organ procurement organization, termination notice, CCN 18P001",
+      "result": "CMS official Public Notices accessed via first dedicated search, then opened and table verified; no November 5 or newer-than-November-2 notice visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 5 2026 hospital emergency department closes suspends services rural hospital United States",
+      "November 5 2026 maternity labor delivery unit closed suspended hospital services",
+      "November 5 2026 behavioral health psychiatric inpatient facility closure suspended patients",
+      "November 5 2026 dialysis clinic oncology center closure suspension patients",
+      "November 5 2026 primary care clinic closure abrupt patients healthcare",
+      "November 5 2026 ambulance service EMS station base closes suspends county",
+      "November 5 2026 air ambulance helicopter base closed grounded discontinued",
+      "November 5 2026 hospital reopening emergency department maternity services restored",
+      "site:gov \"November 5, 2026\" \"hospital\" \"closure\" emergency",
+      "site:gov \"November 5, 2026\" \"ambulance\" \"service\" suspension closure",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa November 2026 hospital emergency services closure",
+      "November 5 2026 rural hospital shutdown clinic closure today local news"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System operations suspension, Sharon, Mercer County, PA",
+        "url": "https://www.bizjournals.com/pittsburgh/news/2026/11/05/sharon-regional-hospital-suspension.html",
+        "reason": "New November 5 follow-up coverage describes the same ED and acute-care service suspension recorded in the 12:48 watch and excluded in 14:47 prior heartbeat; duplicate."
+      },
+      {
+        "item": "Greenbrier Valley Medical Center maternity ward reopening, Greenbrier County, WV",
+        "url": "https://www.wdbj7.com/2026/11/05/greenbrier-valley-medical-center-reopening-maternity-ward-wv-governor-announces/",
+        "reason": "The Letter of Intent and proposed phased implementation starting July 1, 2027 do not establish an effective service restoration; already assessed prior watch."
+      },
+      {
+        "item": "Nebraska rural healthcare funding distribution",
+        "url": "https://panhandle.newschannelnebraska.com/story/370525949/congress-gave-nebraska-millions-for-rural-healthcare-most-isnt-getting-to-rural-hospitals",
+        "reason": "Funding allocation story; no concrete new closure, suspension, or reopening of a named care service."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct open failed; persistent Health First official alert endpoint limitation already documented in preceding watches. No new material degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "U.S. and territories; hospitals and ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency service, ambulance and air-medical bases, CMS/CLIA legal notices, and actually effective reopening/restoration. Twelve additional targeted searches after CMS.",
+    "deduplication": "Previous 2026-11-05 14:47:17 heartbeat and earlier recorded Sharon Regional pending-review finding used for exclusion. Production ledger deduplication not independently inspected.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Search engine coverage is targeted and index dependent; not exhaustive. Previously known Health First official endpoint failure persists. No evidence of another newly degraded source.",
+    "controls": "One private watch heartbeat only on ops/watch-ledger. No editorial approval, public publication, change to production collection, schedule modification, or task disabling."
+  }
+}

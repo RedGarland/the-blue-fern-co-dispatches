@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T064800-0800-r11-20261105T144800Z",
+  "scheduled_for": "2026-11-05T06:45:54-08:00",
+  "started_at": "2026-11-05T06:48:00-08:00",
+  "completed_at": "2026-11-05T06:48:47-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T05:44:14.125-08:00",
+    "end_at": "2026-11-05T06:48:47-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous verified Food Line watch heartbeat completion through the current observation; newly occurring or newly announced qualifying access disruptions only, not search-index freshness.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall; the nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery closure, destruction, or disaster",
+      "Emergency food distribution canceled/suspended by storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry/food-bank closure or material access reduction",
+      "Official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T054147-0800-r11-20261105T134147Z.json",
+      "completed_at": "2026-11-05T05:44:14.125-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 5 2026",
+      "\"last grocery store\" closure Thursday November 5 2026",
+      "\"sole grocery store\" fire closure November 2026",
+      "\"full-service grocery store\" closing town November 5 2026",
+      "\"food distribution canceled\" storm flooding November 5 2026",
+      "\"food bank\" \"distribution\" canceled outage fire November 5 2026",
+      "\"food pantry\" unexpectedly closed November 5 2026",
+      "\"food bank\" suspended service November 5 2026 storm",
+      "SNAP EBT outage November 5 2026 state agency interruption",
+      "site:gov WIC service interrupted outage November 5 2026",
+      "official \"EBT\" service disruption November 5 2026 card office",
+      "November 5 2026 emergency food distribution canceled hurricane flood Hawaii"
+    ],
+    "direct_page_checks": 2,
+    "successful_direct_page_checks": 2,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "The same Kauaʻi Lowell recovery update was assessed in the previous verified heartbeat. It confirms Friday's Hawaiʻi Foodbank Kauaʻi mobile distribution is still scheduled, not canceled; no new hourly service interruption."
+      },
+      {
+        "url": "https://wscpantry.org/",
+        "source_published_at": null,
+        "exclusion_reason": "The West Suburban Community Pantry Nov. 5 in-person-market closure due to an ice-arena parking-lot event was recorded and excluded in the preceding check; online market remains available. Planned one-day notice with no new publication-hour evidence, not an abrupt newly reported disruption."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Only-grocery-store loss in Spencer, New York, occurred months before the hourly interval."
+      },
+      {
+        "url": "https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102",
+        "source_published_at": "2026-01",
+        "exclusion_reason": "Historical Santa Clarita Valley Food Pantry closure, not new in the November 5 hourly window."
+      },
+      {
+        "url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "source_published_at": "2026-08",
+        "exclusion_reason": "Historical Eastport last-grocery report, not new during the hourly interval."
+      }
+    ],
+    "source_failures": [],
+    "result": "No newly published/occurring, source-verifiable qualifying food-access disruption identified for 05:44:14–06:48:47 PST on November 5, 2026. Fresh-source search results mainly surfaced historical events, 2025 SNAP articles, previously reviewed local notices, and routine/non-disruptive information.",
+    "limitations": "Search indexes omit some fresh local or provider notices and often lack publication hour; this is bounded supplementary recall, not exhaustive nationwide verification. Prior notices are excluded unless a new significant access consequence is evidenced.",
+    "materiality": "No qualifying new signal and no material tool/source degradation.",
+    "action_limits": "No editorial approval, publication, schedule alteration, production collector mutation, or task disabling."
+  }
+}

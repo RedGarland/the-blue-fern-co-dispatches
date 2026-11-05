@@ -1,0 +1,156 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T164741-0800-r11-20261105T005022092Z",
+  "scheduled_for": "2026-11-04T16:44:51-08:00",
+  "started_at": "2026-11-04T16:47:41-08:00",
+  "completed_at": "2026-11-05T00:50:22.092Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T15:47:17-08:00",
+    "end": "2026-11-05T00:50:22.092Z",
+    "basis": "Prior exact-file-verified Gaza watch heartbeat through the present check. Earlier indexed material recalled solely to identify distinct previously missed developments; publication date, event date, and discovery date not conflated.",
+    "official_first_checks_count": 3,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall, not authoritative daily production collector, publisher, or comprehensive incident count.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T154620-0800-r11-20261104T234717Z.json",
+    "prior_verified_completed_at": "2026-11-04T15:47:17-08:00",
+    "prior_ledger_validation": "Read prior heartbeat through GitHub connector and compared current branch to the previous 14:43 PST Gaza commit; found one subsequent 15:47 PST Gaza heartbeat before this execution.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible directly; most recent listed product 31 October 2026 (29 October humanitarian situation report), followed by 30 October Gaza snapshot; no November 4 bulletin listed."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible directly; no November 4 Gaza emergency operational bulletin or new service/medical evacuation update visible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean (EMRO)",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway on direct fetch, recurring from earlier watch runs."
+      }
+    ],
+    "official_first_search_queries": [
+      "site:ochaopt.org Gaza humanitarian situation update 4 November 2026 OCHA",
+      "site:who.int Gaza 4 November 2026 health medical evacuation WHO"
+    ],
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza \"November 4, 2026\" killed wounded shelling",
+      "site:palestinercs.org Gaza November 4 2026 ambulances hospital emergency",
+      "Gaza November 4 2026 November 5 Reuters AP civilians killed ceasefire airstrikes latest (recency 2)",
+      "site:aljazeera.com/news/2026/11/4 Gaza killed injured health displacement ceasefire (recency 2)",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"4 Nov 2026\" Gaza humanitarian health access (recency 2)",
+      "site:unicef.org Gaza November 4 2026 water food children shelter (recency 2)",
+      "site:msf.org Gaza November 4 2026 hospital surgery medical evacuation (recency 2)",
+      "Gaza November 4 2026 Rafah Kerem Shalom aid trucks fuel medical evacuation crossing (recency 2)",
+      "Gaza November 4 2026 Palestinian ministry of health 24 hours killed wounded (recency 2)",
+      "Gaza ceasefire negotiations detainees hostages prisoner exchange November 4 2026 today (recency 2)",
+      "site:reuters.com/world/middle-east/ Gaza November 4 2026 aid access civilians military strikes (recency 2)",
+      "Gaza November 4 2026 airstrike tents displaced camp Khan Younis Nuseirat Jabalia wounded (recency 2)"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Direct latest feed accessible through November 4 evening Palestine time; newly visible items concern Hebron, Jericho, Tulkarm, and other West Bank locations, not Gaza-specific incidents."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; most recent displayed news dated November 3 operational/logistical support; no new documented Gaza EMS interruption or response change."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; latest relevant November 4 Gaza pediatric amputation/healthcare restrictions article is already captured by November 4 13:52 PST heartbeat."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/hub/israel-hamas-war",
+        "result": "Accessible; no fresh independently verified in-window Gaza-specific civilian, access, or healthcare impact identified; older and general items excluded."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "result": "Regional feed accessible; no new directly verified in-window Gaza operational development identified."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible; most recent directly visible releases were November 3 Myanmar and Ukraine notices, no November 4 Gaza-specific operational notice."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/gaza-israel-war",
+        "result": "Accessible; no newly dated November 4 Gaza-specific service notice identified."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 Forbidden, recurring."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "robots.txt access denied, recurring."
+      }
+    ],
+    "categories_checked": [
+      "civilian casualties and military operations with documented civilian impact",
+      "displacement, shelter and infrastructure damage",
+      "humanitarian aid access, food, water, crossings, transport and fuel",
+      "hospital, ambulance and healthcare service functionality, medical evacuations and rehabilitation",
+      "detainees, hostages, ceasefire and negotiations"
+    ],
+    "excluded": [
+      {
+        "title": "November 4 Euro-Med child-amputee/medical access assessment",
+        "url": "https://www.euromedmonitor.org/en/article/7126/Gaza%3A-Israel-denies-treatment-and-dignity-to-children-left-amputees-by-its-genocide",
+        "reason": "Already recorded as a November 4 13:52 PST finding; no newly verified interval change."
+      },
+      {
+        "title": "November 2–3 Gaza casualty incidents",
+        "url": "https://english.wafa.ps/Pages/Details/176590",
+        "reason": "Earlier incident date and reviewed in preceding November 4 heartbeats."
+      },
+      {
+        "title": "November 4 WAFA West Bank news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "reason": "Not Gaza; excluded by geography."
+      },
+      {
+        "title": "Earlier or undated aid, hospital, ceasefire and political reporting",
+        "url": null,
+        "reason": "No distinct, verifiable in-window Gaza impact or newly documented service/crossing change."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO direct HTTP 502",
+        "WFP direct HTTP 403",
+        "UNRWA direct HTTP 403",
+        "UN News robots.txt block"
+      ],
+      "alternative_coverage": "OCHA OPT and WHO global direct pages, WAFA, PRCS, Al Jazeera, AP, Reuters, UNICEF, MSF, and 12 additional bounded targeted web searches remained available."
+    },
+    "limitations": "Search-index publication lag, inaccessible regional or agency sources, and absent primary production candidate-state read prevent proving no Gaza incident occurred; findings=[] means only no new qualifying verifiable distinct development was identified in the bounded recall. Previously known inaccessible sites do not constitute a newly material degradation.",
+    "notification_decision": "No notification: no distinct verified new finding and no materially new watch degradation.",
+    "safeguards": "One new durable heartbeat on ops/watch-ledger only; no production access or changes, approval, publication, social posting, schedule edit or disable."
+  }
+}

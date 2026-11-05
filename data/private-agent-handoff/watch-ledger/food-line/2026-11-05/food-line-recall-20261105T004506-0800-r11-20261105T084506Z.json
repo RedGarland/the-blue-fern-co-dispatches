@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T004506-0800-r11-20261105T084506Z",
+  "scheduled_for": "2026-11-05T00:45:54-08:00",
+  "started_at": "2026-11-05T00:45:06-08:00",
+  "completed_at": "2026-11-05T00:46:10-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T23:45:57-08:00",
+    "end_at": "2026-11-05T00:46:10-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous verified supplemental heartbeat completion through current completion. Date-only sources cannot prove publication in the hourly interval.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Food Line miss-class recall only; primary production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster involving a community's only, sole, last or full-service grocery store",
+      "Emergency food distribution cancellation or suspension from storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate food-access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T234448-0800-r11-20261105T074448Z.json",
+      "completed_at": "2026-11-04T23:45:57-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "November 5 2026 grocery store \"only grocery\" closed fire community",
+      "November 4 2026 \"last grocery store\" closes town food access",
+      "November 5 2026 food pantry \"closed\" \"fire\" OR \"flood\" OR \"power\"",
+      "November 4 2026 food bank food pantry \"services suspended\" \"closure\"",
+      "November 5 2026 \"food distribution\" canceled storm flood power outage",
+      "November 4 2026 \"food distribution\" cancelled emergency weather",
+      "site:gov \"November 5, 2026\" \"SNAP\" \"delay\" OR \"interruption\" OR \"EBT\"",
+      "site:gov \"November 4, 2026\" \"WIC\" \"closed\" OR \"outage\" OR \"suspended\"",
+      "site:gov \"November 5, 2026\" \"EBT\" \"system\" OR \"outage\" OR \"replacement\"",
+      "\"Nov 5, 2026\" \"food pantry\" \"temporarily closed\"",
+      "\"Nov 4, 2026\" \"food bank\" \"cancelled\" \"distribution\"",
+      "\"Nov 5, 2026\" \"grocery store\" \"only\" \"closed\" community"
+    ],
+    "direct_page_checks": 3,
+    "reviewed_candidates": [
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Same state-system error affecting replacement EBT card waits in Union County, NJ already recorded in the November 4 22:49 watch; no new interval update in directly checked notice."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "source_published_at": "2026-11-04T14:19:00",
+        "exclusion_reason": "Reported earlier on November 4 and already evaluated in previous watches; closure planned November 30, with no evidence it is Daniels's only/last grocer or that a new food access consequence arose this interval."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Historical September loss of sole grocery store; no new development in this hourly interval."
+      },
+      {
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "source_published_at": "2026-09-25",
+        "exclusion_reason": "September weather-caused food-bank distribution interruption; historical rather than new."
+      },
+      {
+        "url": "https://www.beaumontenterprise.com/news/article/beaumont-grocery-store-closure-22445616.php",
+        "source_published_at": "2026-09-24",
+        "exclusion_reason": "September reporting on a closure from months earlier; not new since previous check."
+      }
+    ],
+    "source_failures": [],
+    "result": "No new qualifying sole/last-grocer loss, canceled disaster-related food distribution, abrupt pantry access reduction, or official SNAP/WIC interruption verified in the window.",
+    "limitations": "Targeted web indexing returned many older events, unrelated date-based pages, and republished content; exact hourly publication times are often absent. This is supplementary recall, not exhaustive U.S. surveillance.",
+    "action_limits": "No editorial approval, publication, production collection changes, task schedule changes or disabling."
+  }
+}

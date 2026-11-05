@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T134533-0800-r11-20261105T214533Z",
+  "scheduled_for": "2026-11-05T13:45:54-08:00",
+  "started_at": "2026-11-05T13:45:33-08:00",
+  "completed_at": "2026-11-05T13:47:00-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T12:46:07-08:00",
+    "end_at": "2026-11-05T13:47:00-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Prior verified heartbeat completion through this observed run. A date-only posting, without reliable publication hour or independently demonstrated incident onset, does not establish newness within the hourly interval.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss-class recall. Production nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery store lost to closure, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank service closure or major access reduction",
+      "New official SNAP, WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T124427-0800-r11-20261105T204427Z.json",
+      "completed_at": "2026-11-05T12:46:07-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed burned fire \"November 5\" 2026",
+      "\"sole grocery store\" shuts closes fire \"November\" \"2026\"",
+      "\"last grocery store\" closes town \"Nov 5\" 2026",
+      "\"only full-service grocery\" closure town fire November 2026",
+      "\"food distribution\" \"canceled\" storm outage November 5 2026",
+      "\"food distribution\" \"cancelled\" flood storm \"Nov 5\" 2026",
+      "\"mobile food pantry\" canceled postponed \"November 5\" 2026",
+      "\"emergency food distribution\" suspended weather power November 5 2026",
+      "\"food pantry\" \"closed\" \"November 5\" 2026 fire power",
+      "\"food bank\" \"suspended operations\" November 5 2026",
+      "site:gov \"SNAP\" \"EBT\" unavailable \"November 5\" 2026",
+      "site:gov \"WIC\" \"closed\" \"November 5\" 2026 outage"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.slocounty.ca.gov/departments/slo-health/public-health/all-public-health-services/health-promotion",
+        "exclusion_reason": "Indexed snippet showed a November 5 2:30–4 PM mandatory-meeting WIC closure (routine preplanned short closure, not abrupt emergency interruption); directly fetched current page instead displayed a stale September 7 Labor Day closure, so November 5 details were not independently confirmed. No new qualifying immediate disruption verified.",
+        "source_published_at": null,
+        "direct_page_retrieval": "SUCCESS, indexed/direct-content inconsistency"
+      },
+      {
+        "url": "https://centralvalleyhealth.org/2026/10/21/",
+        "source_published_at": "2026-10-21",
+        "exclusion_reason": "Official Jamestown, ND announcement schedules Great Plains Food Bank distribution for November 5, 5:15–6:30 PM; no cancellation or suspension reported."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "source_published_at": null,
+        "exclusion_reason": "Provider currently lists seven November 5 Michigan mobile-pantry distributions. No cancellation or suspension established; calendar alone is not proof that each event completed."
+      },
+      {
+        "url": "https://www.21alivenews.com/2026/05/06/butler-loses-only-full-service-grocery-store-after-more-than-six-decades/",
+        "source_published_at": "2026-05-06",
+        "exclusion_reason": "Butler, Indiana only full-service grocery closure is from May 2026, well outside interval."
+      },
+      {
+        "url": "https://www.fingerlakes1.com/2026/09/13/fire-destroys-spencers-only-full-service-grocery-store/",
+        "source_published_at": "2026-09-13",
+        "exclusion_reason": "Spencer, New York only full-service grocery fire occurred September 2026, not new."
+      },
+      {
+        "url": "https://dcf.vermont.gov/dcf-news/vermont-reviewing-new-federal-guidance-following-court-rulings-3squaresvt-state-funded",
+        "source_published_at": "2025-11-05",
+        "exclusion_reason": "Historical November 2025 SNAP interruption; false positive from year-matched search."
+      },
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Union County, NJ EBT replacement-card delay already recorded in November 4 watch ledger; duplicate, not new."
+      }
+    ],
+    "result": "No newly verified qualifying high-value U.S. food-access disruption within the hourly observation interval.",
+    "limitations": "Twelve targeted indexed searches do not establish nationwide absence; indexed hits frequently surfaced older closures, 2025 SNAP notices and routine food pantry schedules. One government WIC page had an index/direct-view mismatch, preventing confirmation of an indexed routine short closure. No tool search or direct-page access failure.",
+    "materiality": "No material watch degradation.",
+    "action_limits": "No approval, publication, production collector modification, schedule alteration, or task disabling."
+  }
+}

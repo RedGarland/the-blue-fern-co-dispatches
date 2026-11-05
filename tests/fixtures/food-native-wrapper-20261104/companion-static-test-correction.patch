@@ -1,0 +1,34 @@
+--- a/tests/test_food_selected_runtime_production_path.py
++++ b/tests/test_food_selected_runtime_production_path.py
+@@ -301,14 +301,25 @@
+         self.assertNotIn("$lines", parser)
+         self.assertNotIn("-split", parser)
+ 
+-    def test_operator_rejects_runtime_pin_without_selection_before_default_actions(self):
++    def test_operator_requires_runtime_pin_before_default_actions(self):
++        # Static contract only: native Windows execution is covered separately.
+         text = (ROOT / "scripts/windows/run_food_care_proof_continuation.ps1").read_text()
+-        guard = text.index('if ($ExpectedRuntimeHead -and -not $ContinuationRunDirectory)')
+-        selection = text.index('if ($ContinuationRunDirectory) {', guard)
++        selection = text.index('if ($ContinuationRunDirectory) {', text.index('\ntry {'))
++        selected_resume = text.index('Invoke-ContinuationStep -Name "food_resume"', selection)
++        default_guard = text.index('throw "default proof requires an explicit 40-hex ExpectedRuntimeHead before source-watch"', selected_resume)
++        default_resolve = text.index('$ExpectedProtectedHead = Resolve-ProtectedHead', default_guard)
+         default_sync = text.index('Invoke-ContinuationStep -Name "guarded_runner_sync"', selection)
+-        self.assertLess(guard, selection)
+-        self.assertLess(selection, default_sync)
+-        self.assertIn('throw "ExpectedRuntimeHead requires an explicit ContinuationRunDirectory"', text[guard:selection])
++        default_source_watch = text.index('Invoke-ContinuationStep -Name "food_source_watch"', default_sync)
++        runtime_guard = "if ([string]::IsNullOrWhiteSpace($ExpectedRuntimeHead) -or $ExpectedRuntimeHead -notmatch '^[0-9a-fA-F]{40}$')"
++        self.assertIn(runtime_guard, text[selection:selected_resume])
++        default_branch = text.rindex('} else {', selected_resume, default_guard)
++        self.assertIn(runtime_guard, text[default_branch:default_guard])
++        self.assertNotIn('Invoke-ContinuationStep', text[default_branch:default_guard])
++        self.assertLess(selected_resume, default_guard)
++        self.assertLess(default_guard, default_resolve)
++        self.assertLess(default_resolve, default_sync)
++        self.assertLess(default_sync, default_source_watch)
++        self.assertNotIn('if ($ExpectedRuntimeHead -and -not $ContinuationRunDirectory)', text)
+ 
+     def test_legacy_direct_layout_remains_supported(self):
+         direct = self.state_path.parent / "continuation"

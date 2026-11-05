@@ -1,0 +1,23 @@
+{
+  "candidate_sha256": "59422d8995cd68b33b41d7c51f6541b01c85f67ebc2f603b379c8513d55dc057",
+  "candidate_bytes": 22152,
+  "instrumented_sha256": "45e600cac8ae4b1497fab417fcda39a4173ee4f8cedb539d2495866f13300194",
+  "edits": [
+    {
+      "before": "$process = Start-Process -FilePath",
+      "after": "$process = Invoke-FixtureChildProcess -FilePath"
+    },
+    {
+      "before": "$remote = & git ls-remote origin",
+      "after": "$remote = Invoke-FixtureGit ls-remote origin"
+    },
+    {
+      "before": "exit $ExitCode",
+      "after": "$FixtureState.ExitCode = [int]$ExitCode; return"
+    }
+  ],
+  "inserted_gate_sha256": "960856ffbf395633e3bf494ea6113eb0f3d9cfd8673e61380f433ec43fc5ae58",
+  "reverse_transformation_matches_exact_source_text": true,
+  "native_execution": "not_run",
+  "production_changes": false
+}

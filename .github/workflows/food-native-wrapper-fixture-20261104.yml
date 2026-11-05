@@ -1,0 +1,74 @@
+{
+  "name": "Food wrapper inert-boundary validation",
+  "on": {
+    "push": {
+      "branches": [
+        "codex/food-native-wrapper-fixture-20261104"
+      ]
+    }
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "concurrency": {
+    "group": "food-native-wrapper-fixture-20261104",
+    "cancel-in-progress": false
+  },
+  "jobs": {
+    "native_fixture": {
+      "if": "github.repository == 'RedGarland/the-blue-fern-co-dispatches' && github.ref == 'refs/heads/codex/food-native-wrapper-fixture-20261104' && github.event.created == true && github.run_attempt == 1",
+      "runs-on": "windows-latest",
+      "timeout-minutes": 10,
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "steps": [
+        {
+          "name": "Check out exact candidate commit",
+          "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "with": {
+            "ref": "${{ github.sha }}",
+            "fetch-depth": 2,
+            "persist-credentials": false,
+            "sparse-checkout": "tests/fixtures/food-native-wrapper-20261104\ntests/test_food_selected_runtime_production_path.py\n.github/workflows/food-native-wrapper-fixture-20261104.yml",
+            "sparse-checkout-cone-mode": false
+          }
+        },
+        {
+          "name": "Set up Python for read-only verification",
+          "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "with": {
+            "python-version": "3.13"
+          }
+        },
+        {
+          "name": "Verify base, pinned payload and companion applicability",
+          "shell": "pwsh",
+          "run": "$ErrorActionPreference = 'Stop'\n$parentLine = git rev-list --parents -n 1 HEAD\nif ($LASTEXITCODE -ne 0) { throw 'Cannot read candidate commit parents' }\n$parts = @($parentLine.Trim() -split ' ')\nif ($parts.Count -ne 2 -or $parts[0] -cne $env:GITHUB_SHA -or $parts[1] -cne '3f58326266abc49546731b791b9cfad3d0d44393') { throw 'Expected exactly one candidate parent at the reviewed base' }\n$changed = @(git diff-tree --no-commit-id --name-only -r HEAD)\nif ($LASTEXITCODE -ne 0) { throw 'Cannot read exact changed-file inventory' }\n$expected = @('.github/workflows/food-native-wrapper-fixture-20261104.yml','tests/fixtures/food-native-wrapper-20261104/.gitattributes','tests/fixtures/food-native-wrapper-20261104/README.md','tests/fixtures/food-native-wrapper-20261104/candidate.ps1','tests/fixtures/food-native-wrapper-20261104/companion-static-test-correction.patch','tests/fixtures/food-native-wrapper-20261104/fixture-gate.ps1','tests/fixtures/food-native-wrapper-20261104/instrumentation.patch','tests/fixtures/food-native-wrapper-20261104/instrumented-candidate.ps1','tests/fixtures/food-native-wrapper-20261104/preparation-manifest.json','tests/fixtures/food-native-wrapper-20261104/prepare_fixture.py','tests/fixtures/food-native-wrapper-20261104/test-real-wrapper.ps1','tests/fixtures/food-native-wrapper-20261104/verify_ci_payload.py')\nif ((@($changed | Sort-Object) -join '|') -cne (@($expected | Sort-Object) -join '|')) { throw 'Changed-file allowlist differs' }\n$checker = 'tests/fixtures/food-native-wrapper-20261104/verify_ci_payload.py'\nif ((Get-FileHash -LiteralPath $checker -Algorithm SHA256).Hash.ToLowerInvariant() -cne '4cec580269642130525f77929e837cafdc5356586b0159aeb6378ffca8ccb612') { throw 'Verifier pin mismatch' }\npython -B $checker\nif ($LASTEXITCODE -ne 0) { throw 'Payload verification failed' }\ngit apply --check --whitespace=error-all -- 'tests/fixtures/food-native-wrapper-20261104/companion-static-test-correction.patch'\nif ($LASTEXITCODE -ne 0) { throw 'Companion patch does not apply to the reviewed base' }\n"
+        },
+        {
+          "name": "Run instrumented fixture under PowerShell 7",
+          "shell": "pwsh",
+          "run": "$ErrorActionPreference = 'Stop'\n$fixture = 'tests/fixtures/food-native-wrapper-20261104'\n$expectedMajor = 7\nif ($PSVersionTable.PSVersion.Major -ne $expectedMajor) { throw 'Unexpected PowerShell host version' }\nWrite-Host ('Native host version: ' + $PSVersionTable.PSVersion.ToString())\nforeach ($file in @('candidate.ps1','instrumented-candidate.ps1','test-real-wrapper.ps1','fixture-gate.ps1')) {\n    $errors=$null\n    [void][Management.Automation.Language.Parser]::ParseFile((Join-Path $fixture $file),[ref]$null,[ref]$errors)\n    if (@($errors).Count -ne 0) { throw ('Native parser rejected ' + $file + ': ' + (($errors | ForEach-Object {$_.Message}) -join '; ')) }\n}\n$parent = Join-Path $env:RUNNER_TEMP 'food-native-pwsh-${{ github.run_id }}-${{ github.run_attempt }}'\nif (Test-Path -LiteralPath $parent) { throw 'Evidence parent must be new' }\nNew-Item -ItemType Directory -Path $parent | Out-Null\n$raw = Join-Path $parent 'native-raw.log'\ntry {\n    & (Join-Path $fixture 'test-real-wrapper.ps1') -EvidenceParent $parent *> $raw\n} catch {\n    Write-Host ('Native fixture failed: ' + $_.Exception.Message.Replace($env:RUNNER_TEMP, '<RUNNER_TEMP>'))\n    throw 'Native fixture did not complete; no passing summary generated'\n}\npython -B (Join-Path $fixture 'verify_ci_payload.py') --summarize $parent --host pwsh --output (Join-Path $env:RUNNER_TEMP 'food-native-summaries/pwsh.json')\nif ($LASTEXITCODE -ne 0) { throw 'Strict synthetic result verification failed' }\n"
+        },
+        {
+          "name": "Run instrumented fixture under Windows PowerShell 5.1",
+          "shell": "powershell",
+          "run": "$ErrorActionPreference = 'Stop'\n$fixture = 'tests/fixtures/food-native-wrapper-20261104'\n$expectedMajor = 5\nif ($PSVersionTable.PSVersion.Major -ne $expectedMajor -or $PSVersionTable.PSVersion.Minor -ne 1) { throw 'Expected Windows PowerShell 5.1' }\nWrite-Host ('Native host version: ' + $PSVersionTable.PSVersion.ToString())\nforeach ($file in @('candidate.ps1','instrumented-candidate.ps1','test-real-wrapper.ps1','fixture-gate.ps1')) {\n    $errors=$null\n    [void][Management.Automation.Language.Parser]::ParseFile((Join-Path $fixture $file),[ref]$null,[ref]$errors)\n    if (@($errors).Count -ne 0) { throw ('Native parser rejected ' + $file + ': ' + (($errors | ForEach-Object {$_.Message}) -join '; ')) }\n}\n$parent = Join-Path $env:RUNNER_TEMP 'food-native-powershell-${{ github.run_id }}-${{ github.run_attempt }}'\nif (Test-Path -LiteralPath $parent) { throw 'Evidence parent must be new' }\nNew-Item -ItemType Directory -Path $parent | Out-Null\n$raw = Join-Path $parent 'native-raw.log'\ntry {\n    & (Join-Path $fixture 'test-real-wrapper.ps1') -EvidenceParent $parent *> $raw\n} catch {\n    Write-Host ('Native fixture failed: ' + $_.Exception.Message.Replace($env:RUNNER_TEMP, '<RUNNER_TEMP>'))\n    throw 'Native fixture did not complete; no passing summary generated'\n}\npython -B (Join-Path $fixture 'verify_ci_payload.py') --summarize $parent --host powershell51 --output (Join-Path $env:RUNNER_TEMP 'food-native-summaries/powershell.json')\nif ($LASTEXITCODE -ne 0) { throw 'Strict synthetic result verification failed' }\n"
+        },
+        {
+          "name": "Retain only path-free synthetic summaries",
+          "if": "always()",
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "with": {
+            "name": "food-native-summaries-${{ github.run_id }}-${{ github.run_attempt }}",
+            "path": "${{ runner.temp }}/food-native-summaries/pwsh.json\n${{ runner.temp }}/food-native-summaries/powershell.json",
+            "if-no-files-found": "warn",
+            "retention-days": 1,
+            "include-hidden-files": false
+          }
+        }
+      ]
+    }
+  }
+}

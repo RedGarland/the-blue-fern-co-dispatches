@@ -1,0 +1,47 @@
+--- food-wrapper-native-fixture-review/candidate.ps1	2026-11-04 02:43:00.626003377 -0800
++++ food-wrapper-native-fixture-review/instrumented-candidate.ps1	2026-11-04 02:43:00.654227973 -0800
+@@ -13,6 +13,20 @@
+     [string]$ContinuationRunDirectory = ""
+ )
+ 
++# Fixture instrumentation guard, before any original wrapper runtime statement.
++# Boundary commands are renamed, so absent test doubles fail instead of falling
++# through to the real Start-Process or git executable.
++if ($null -eq (Get-Variable FixtureState -ErrorAction SilentlyContinue)) { throw 'Fixture harness state required' }
++if ($FixtureState.Token -cne 'food-wrapper-control-flow-fixture-v1') { throw 'Invalid fixture state' }
++foreach ($rootName in @('OperatorRoot','FoodRoot','CareRoot','StatusCheckout')) {
++    $provided = [IO.Path]::GetFullPath([string](Get-Variable -Name $rootName -ValueOnly))
++    if ($provided -cne $FixtureState.Roots[$rootName]) { throw "Non-fixture root refused: $rootName" }
++}
++if ($RunId -cne $FixtureState.RunId -or $EditionDate -cne $FixtureState.EditionDate) { throw 'Unexpected fixture run binding' }
++foreach ($boundary in @('Invoke-FixtureChildProcess','Invoke-FixtureGit')) {
++    if ((Get-Command $boundary -ErrorAction Stop).CommandType -ne 'Function') { throw 'Fixture boundary is not a function' }
++}
++
+ Set-StrictMode -Version 3.0
+ $ErrorActionPreference = "Stop"
+ 
+@@ -93,7 +107,7 @@
+     if ($ExpectedProtectedHead) { return $ExpectedProtectedHead }
+     Push-Location -LiteralPath $OperatorRoot
+     try {
+-        $remote = & git ls-remote origin ("refs/heads/{0}" -f $SourceBranch)
++        $remote = Invoke-FixtureGit ls-remote origin ("refs/heads/{0}" -f $SourceBranch)
+         if ($LASTEXITCODE -ne 0 -or -not $remote) { throw "Unable to resolve protected head for $SourceBranch" }
+         return ($remote -split "\s+")[0]
+     } finally {
+@@ -113,7 +127,7 @@
+     $stderr = Join-Path $ReceiptDir "$Name.stderr.log"
+     New-Item -ItemType Directory -Force -Path $ReceiptDir | Out-Null
+     $started = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+-    $process = Start-Process -FilePath $FilePath -ArgumentList $Arguments -WorkingDirectory $WorkingDirectory -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
++    $process = Invoke-FixtureChildProcess -FilePath $FilePath -ArgumentList $Arguments -WorkingDirectory $WorkingDirectory -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+     $completed = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+     $step = [ordered]@{
+         name = $Name
+@@ -261,4 +275,4 @@
+ } finally {
+     Write-Receipt -CompletedAt (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+ }
+-exit $ExitCode
++$FixtureState.ExitCode = [int]$ExitCode; return

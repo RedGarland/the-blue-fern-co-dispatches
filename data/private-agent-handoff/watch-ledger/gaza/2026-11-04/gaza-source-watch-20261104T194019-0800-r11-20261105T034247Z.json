@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T194019-0800-r11-20261105T034247Z",
+  "scheduled_for": "2026-11-04T19:40:19-08:00",
+  "started_at": "2026-11-04T19:40:19-08:00",
+  "completed_at": "2026-11-04T19:42:47.267-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T18:45:47-08:00",
+    "end": "2026-11-04T19:42:47.267-08:00",
+    "basis": "Since the most recently independently verified supplementary Gaza heartbeat; screen late-discovered prior events only if distinct and source-verifiable.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; the production daily publisher/collector is authoritative.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T184437-0800-r11-20261105T024547Z.json",
+    "prior_verified_completed_at": "2026-11-04T18:45:47-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Direct index accessible; latest listed 31 October 2026, covering 29 October. No new November 4 Gaza situation report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Main emergency hub accessible; no newly dated November 4-5 hospital, ambulance, fuel, medevac or service-capacity bulletin. WHO EMRO Palestine-in-focus direct endpoint returned access/internal error."
+      }
+    ],
+    "official_first_search_queries": [
+      "site:ochaopt.org Gaza humanitarian situation report November 4 2026 latest OCHA OPT",
+      "site:who.int Gaza November 4 2026 WHO health emergency medical evacuation hospital"
+    ],
+    "additional_targeted_search_queries": [
+      "Gaza November 5 2026 overnight November 4 2026 casualties strike civilians killed wounded ceasefire",
+      "site:english.wafa.ps Gaza \"November 5, 2026\" killed wounded displacement",
+      "Gaza November 4 2026 evening 19:00 20:00 Reuters AP civilian strikes Rafah",
+      "Gaza November 5 2026 medical evacuation Rafah crossing WHO patients suspended resumed",
+      "site:aljazeera.com/news/2026/11/5 Gaza aid hospital ceasefire military",
+      "site:un.org Gaza November 4 2026 night food aid water fuel humanitarian",
+      "site:aa.com.tr/en/middle-east/ \"04 November 2026\" Gaza killed Palestinian civilians crossing",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"November 4, 2026\" 19 20 21",
+      "site:reuters.com/world/middle-east/ Gaza November 4 2026 ceasefire hostage talks Rafah trucks",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"5 Nov 2026\" Gaza medical water",
+      "site:msf.org Gaza \"4 November 2026\" OR \"5 November 2026\" medical hospital",
+      "Gaza November 5 2026 02:00 GMT civilians aid trucks Rafah hostages ceasefire military negotiations"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/situation-reports",
+        "result": "Accessible; same latest Gaza report listed 31 October 2026."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; last November 4 evening items concerned West Bank locations, not Gaza."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest displayed news November 3; no new Gaza EMS/health service status."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/",
+        "result": "Accessible index; no separately verifiable new Gaza report in accessible current listing."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/occupied-palestine-infocus.html",
+        "result": "Inaccessible/internal error; recurring."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; recurring."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; recurring."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Fetch restricted; recurring."
+      }
+    ],
+    "categories_checked": [
+      "civilian deaths/injuries and military actions with civilian impacts",
+      "displacement, shelter and infrastructure damage",
+      "humanitarian aid, water/food, trucks, crossings, fuel and transportation",
+      "hospital/ambulance function, medical evacuation, rehabilitation and medical access",
+      "detention/hostages and ceasefire/negotiations"
+    ],
+    "excluded": [
+      {
+        "title": "November 3 Rafah suspension of travel and Egypt-origin aid trucks",
+        "reason": "Already recorded in earlier November 4 Gaza watch; no independently verified new operational status."
+      },
+      {
+        "title": "November 4 Euro-Med report on child amputations and rehabilitation access",
+        "reason": "Already recorded in earlier November 4 watch; cumulative earlier-period assessment."
+      },
+      {
+        "title": "Older October/November 1-3 strikes, humanitarian constraints and cumulative figures",
+        "reason": "No new independently sourced in-window events; duplicates or stale."
+      },
+      {
+        "title": "November 4 WAFA reports on Hebron, Jericho, Ramallah and Tulkarm",
+        "reason": "West Bank, outside Gaza geography."
+      },
+      {
+        "title": "Anadolu search-index teaser about a Gaza displacement-tent drone strike",
+        "reason": "A teaser appeared within an indexed category snippet, but full canonical article, precise publication/event date and supporting passage could not be verified in directly accessible publisher listing; held out of findings pending primary verification."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO direct-page internal error (historically HTTP 502)",
+        "WFP news HTTP 403",
+        "UNRWA newsroom HTTP 403",
+        "UN News restricted fetch"
+      ],
+      "alternative_coverage": "WHO main hub, OCHA OPT index, WAFA, PRCS and Anadolu direct indexes accessible; 12 bounded targeted searches completed."
+    },
+    "limitations": "No new confirmed Gaza event within the watch window; search coverage cannot prove the absence of events. No live crossing-status confirmation, authoritative newsroom feeds could be access-restricted, and source teaser could not be substantiated. No production candidate-state read or alteration.",
+    "notification_decision": "No notification: no newly verified distinct qualifying developments and no materially worsened watch coverage.",
+    "safeguards": "One private watch-ledger heartbeat only. No publishing, approval, schedule changes, disabling, or production modifications. Runtime launch timestamp used for scheduled_for because nominal schedule minute was later than the observed run start."
+  }
+}

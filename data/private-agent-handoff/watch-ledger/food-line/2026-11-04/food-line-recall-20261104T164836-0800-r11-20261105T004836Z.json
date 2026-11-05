@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T164836-0800-r11-20261105T004836Z",
+  "scheduled_for": "2026-11-04T16:45:54-08:00",
+  "started_at": "2026-11-04T16:48:36-08:00",
+  "completed_at": "2026-11-04T16:49:41-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T15:45:14.853-08:00",
+    "end_at": "2026-11-04T16:49:41-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior independently verified Food Line supplementary heartbeat completion through this observation. Search result publication on November 4 alone does not establish interval-new release.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; the nationwide production Food Line collector remains authoritative.",
+    "target_classes": [
+      "Loss/fire/closure of only, sole, last or community full-service grocery store",
+      "Emergency distribution canceled/suspended due to storm, flood, fire, power outage or facility damage",
+      "Abrupt pantry or food-bank service closure or major food-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T154350-0800-r11-20261104T234350Z.json",
+      "completed_at": "2026-11-04T15:45:14.853-08:00",
+      "commit_sha": "520bcbf1dcfce146464b970f25921d465d009c86",
+      "status": "DEGRADED"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 4 2026 community",
+      "\"last grocery store\" closing November 4 2026 town",
+      "\"sole grocery store\" November 4 2026 closure",
+      "\"full-service grocery\" fire closed November 4 2026",
+      "food bank pantry distribution canceled storm November 4 2026",
+      "food pantry closed flooding power outage November 4 2026",
+      "food distribution cancelled emergency weather November 4 2026",
+      "food bank abruptly closes November 4 2026 access",
+      "site:gov SNAP benefits interrupted EBT outage November 4 2026",
+      "site:gov WIC benefits disruption November 4 2026",
+      "food pantry closing today November 4 2026 emergency",
+      "SNAP EBT system unavailable November 4 2026 state announcement"
+    ],
+    "direct_page_checks": 2,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.wpr.org/news/food-bank-distribution-center-vandalism-in-madison",
+        "publisher": "Wisconsin Public Radio",
+        "published_at": "2026-11-04",
+        "observation": "Fire destroyed a refrigerated truck and vandals damaged a Second Harvest Foodbank distribution center in Madison, WI. Volunteer shifts mostly canceled on Wednesday and Thursday, but food deliveries reportedly continue; no verified canceled food distribution or major food-access reduction.",
+        "exact_supporting_passage": "The organization canceled most of its volunteer shifts on Wednesday and Thursday, but said that food deliveries were continuing.",
+        "exclusion_reason": "No demonstrated material food-access service reduction; volunteer shift cancellations alone fall outside specified miss classes."
+      },
+      {
+        "url": "https://www.cityofmadison.com/fire/daily-reports/2026-11-04/vehicle-fire-on-dairy-drive-under-investigation",
+        "publisher": "City of Madison Fire Department",
+        "published_at": "2026-11-04",
+        "observation": "Fire department confirms a refrigerated box truck fire on November 4 at 1:55 a.m. CST and a broken window; report does not establish food distribution cancellation.",
+        "exclusion_reason": "Incident corroboration, no consumer food-access interruption."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "publisher": "WGME",
+        "published_at": "2026-09-03",
+        "exclusion_reason": "Historical Maine sole grocery-store closure article outside current interval."
+      },
+      {
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "publisher": "The Salt Lake Tribune",
+        "published_at": "2026-11-02",
+        "exclusion_reason": "Older Utah pantry closure/reopening report already outside current interval."
+      },
+      {
+        "url": "https://pagosadailypost.com/2026/11/04/healthy-archuleta-food-resources-for-flood-recovery/",
+        "publisher": "Pagosa Daily Post",
+        "published_at": "2026-11-04",
+        "exclusion_reason": "Flood-recovery resource notice says pantries remain available, not closed."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.facebook.com/secondharvestsw/posts/pfbid02xaKv2p3pML9c8RJNNecWpCRdYhQYseEz48yfT3tuY5vmCTcKpciSKQHT6X72WELJl",
+        "failure": "Direct Facebook provider statement retrieval throttled",
+        "impact": "Non-material corroboration gap because WPR quoted statement and direct city fire report corroborates incident; WPR says deliveries continuing."
+      }
+    ],
+    "result": "No interval-new, nonduplicate qualifying food-access disruption verified. All 12 searches completed; one direct provider Facebook statement was inaccessible, so record DEGRADED instead of aborting.",
+    "limitations": "Search coverage bounded and not exhaustive. Prior Daniels WV store candidate also remains unverified as only/last grocery and is excluded as previously reviewed; new article source access not attempted this run.",
+    "action_limits": "No approval, public publication, production collection modification, schedule change or disabling."
+  }
+}

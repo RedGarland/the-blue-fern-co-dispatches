@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T224316-0800-recall12",
+  "scheduled_for": "2026-11-04T22:45:22-08:00",
+  "started_at": "2026-11-04T22:43:16-08:00",
+  "completed_at": "2026-11-04T22:45:25.805-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T21:45:47-08:00",
+    "end": "2026-11-04T22:45:25.805-08:00",
+    "basis": "Previous verified Care Line supplemental heartbeat completion through this run's observation cutoff; searches also screen recently indexed earlier reporting but exclude prior logged events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination notice",
+      "result": "Official CMS index checked first, then directly inspected; no newer notices dated November 3-4, 2026."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 4 2026 November 5 hospital closing emergency department unit patients United States",
+      "November 4 2026 November 5 labor delivery maternity unit hospital closing service women",
+      "November 4 2026 November 5 rural hospital emergency department service suspended loss",
+      "November 4 2026 November 5 behavioral health psychiatric inpatient unit shut closure patients",
+      "November 4 2026 November 5 dialysis center closure suspension patients",
+      "November 4 2026 November 5 cancer oncology infusion center service closing",
+      "November 4 2026 November 5 primary care clinic shutting practice closing patients",
+      "November 4 2026 November 5 ambulance EMS service closing stopping operation county",
+      "November 4 2026 November 5 air medical flight helicopter ambulance base closure service",
+      "November 4 2026 November 5 hospital emergency room reopening restored resumed services",
+      "November 4 2026 November 5 Puerto Rico Guam Virgin Islands American Samoa Northern Mariana hospital clinic closure emergency services",
+      "November 4 2026 hospital service cut closures medical centers official announcement Medicaid termination CLIA notice"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No newly verified qualifying healthcare access closure, suspension, emergency transport/base loss, CMS provider/CLIA action, or concrete reopening/restoration surfaced in the bounded recall.",
+    "reviewed_exclusions": [
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren, Ohio, labor-and-delivery discontinuation planned for December",
+        "reason": "Already recorded November 4 at 20:41 PST; duplicate."
+      },
+      {
+        "item": "MGH Downtown Associates, Boston, MA, December 18 primary-care closure",
+        "reason": "Previously recorded November 4 at 14:42 PST; duplicate."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County, AL, primary-care closure",
+        "reason": "Previously recorded November 4 at 15:48 PST; duplicate."
+      },
+      {
+        "item": "Watsonville Community Hospital potential maternity-service shutdown",
+        "reason": "October 21-22 reporting; only a proposed/possible change, without verified concrete service loss during current window."
+      },
+      {
+        "item": "Dennys River Ambulance Service, Dennysville, Maine, November 30 cessation",
+        "reason": "Announcement originally reported October 23, 2026; not a new or newly surfaced hourly development."
+      },
+      {
+        "item": "Older air-medical closures, financing proposals, and international or non-access news",
+        "reason": "Outside time/geography, not concrete verified service change, or already known."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct open remains inaccessible through retrieval; same longstanding Health First failure reported in previous runs. Other CMS and local-news searches succeeded."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Read and verified previous Care Line heartbeat ending 2026-11-04T21:45:47-08:00 on ops/watch-ledger; enumerated November 4 ledger and excluded earlier Care Line candidates.",
+    "limitations": "Bounded supplemental recall only. Search engines may not index late-breaking local notices; production collector remains authoritative. The prior Health First endpoint is still unavailable.",
+    "publication_actions": "None. No review approval, publication, schedule change or task disable."
+  }
+}

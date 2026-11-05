@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T164917-0800-recall12",
+  "scheduled_for": "2026-11-04T16:45:22-08:00",
+  "started_at": "2026-11-04T16:49:17-08:00",
+  "completed_at": "2026-11-05T00:50:28.475+00:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T15:50:14.561-08:00",
+    "end": "2026-11-05T00:50:28.475+00:00",
+    "basis": "Prior durable Care Line heartbeat completed_at through this run; older reports reviewed only as recall context. Search publication dates alone do not verify first appearance within this hour."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization termination notice",
+      "result": "Official current notice listing loaded before any targeted searches. No listing dated after November 2, hence no newly dated Medicare provider termination, rescission, CLIA limitation/suspension, or analogous notice within this hour."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 4 2026 hospital emergency department closing suspended services announced November 4",
+      "November 4 2026 hospital labor delivery maternity unit closure patients",
+      "November 4 2026 behavioral health psychiatric inpatient unit closes suspension US",
+      "November 4 2026 dialysis center closes cancer clinic oncology services suspended",
+      "November 4 2026 primary care medical clinic closing patients family medicine",
+      "November 4 2026 rural hospital emergency room closure service loss",
+      "November 4 2026 ambulance service shuts down air medical base closure",
+      "November 4 2026 hospital emergency department reopened resumed services after closure",
+      "\"Nov 4, 2026\" \"hospital\" \"closing\" \"emergency\" US",
+      "\"November 4, 2026\" \"clinic\" \"will close\" patients",
+      "November 4 2026 Puerto Rico Guam US Virgin Islands hospital services closed suspended emergency clinic",
+      "Nov 4 2026 ambulance EMS service suspended closed operations county"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No previously unrecorded, adequately supported newly announced or effective US/territory essential-care closure, suspension, or concrete reopening was identified. Search results were mostly old, foreign, broad policy, research, unrelated services, proposed changes, or duplicates.",
+    "reviewed_exclusions": [
+      {
+        "item": "MGH Downtown Associates, Boston, planned December 18 primary-care closure",
+        "source_url": "https://www.bostonglobe.com/2026/11/04/business/mass-general-brigham-downtown/",
+        "reason": "Already recorded in the 14:42 prior Care Line heartbeat; duplicate. Date-only source in prior watch."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County, reported primary-care closure",
+        "source_url": "https://tuscaloosathread.com/taylorville-family-medicine-closing-26-years/",
+        "reason": "Already recorded in immediately preceding Care Line heartbeat at 15:48; duplicate, earlier announcement."
+      },
+      {
+        "item": "Bruceton Community Ambulance, Preston County, WV, service suspended",
+        "source_url": "https://www.wvnews.com/prestoncountynews/preston-county-ems-crisis-deepens-as-bruceton-ambulance-service-suspends-operations-again/article_9c1166d2-8bb8-42f5-8e66-39f9c31e0351.html",
+        "reason": "Local report dated October 28; not newly effective or announced within current hourly interval."
+      },
+      {
+        "item": "Guam Regional Medical City storm outpatient suspension",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "Temporary closure from October 19, with planned restoration October 20, not current hour."
+      },
+      {
+        "item": "IRMC rural family-medicine residency expansion, Punxsutawney, PA",
+        "source_url": "https://www.wccsradio.com/2026/11/04/irmc-announces-residency-expansion/",
+        "reason": "Program expansion, not an effective reopening of a previously lost essential-care service."
+      },
+      {
+        "item": "General healthcare policy, commercial expansions, finance, foreign healthcare reports, and older care/EMS/air-medical losses",
+        "source_url": null,
+        "reason": "Out of scope or no verified interval-new essential-service change."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct fetch returned tool access error. Same known persistent Health First endpoint limitation from preceding runs; other official CMS and search coverage remained available."
+      }
+    ],
+    "material_new_degradation": false,
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "quality_limitations": "Bounded keyword-based recall cannot establish comprehensive national/territory coverage or rule out later publication of an interval event. News index timestamps generally date-only. No independent production-collector read performed.",
+    "controls": "No review approval, publication, production mutation, schedule change, or task disabling."
+  }
+}

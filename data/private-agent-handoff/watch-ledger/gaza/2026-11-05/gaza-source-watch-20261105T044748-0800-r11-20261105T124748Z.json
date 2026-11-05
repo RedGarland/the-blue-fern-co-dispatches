@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T044748-0800-r11-20261105T124748Z",
+  "scheduled_for": "2026-11-05T04:44:51-08:00",
+  "started_at": "2026-11-05T04:47:48-08:00",
+  "completed_at": "2026-11-05T04:50:18.786-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T03:49:22-08:00",
+    "end": "2026-11-05T04:50:18.786-08:00",
+    "basis": "Prior verified Gaza supplementary heartbeat completion through this run. New means newly documented or discovered in bounded coverage, not necessarily damage occurring during the past hour.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261105-unicef-water-under-fire-130km-sewage-lines-retrospective",
+      "canonical_source_url": "https://www.unicef.org/press-releases/reported-attacks-damaging-water-systems-conflict-triple-children-lose-access-safe",
+      "title": "Reported attacks damaging water systems in conflict triple as children lose access to safe water",
+      "publisher": "UNICEF",
+      "source_date": "2026-11-05",
+      "publication_date": null,
+      "publication_date_displayed": [
+        "2026-10-29 (page header)",
+        "2026-11-05 (press release dateline, stating the report was released that day)"
+      ],
+      "event_date": null,
+      "event_period": "Since October 2023, within retrospective assessment covering material through June 2026; no specific event date",
+      "location": "Gaza Strip",
+      "affected_population_system": "Sewage pipelines and wastewater disposal; Gaza residents exposed to compromised sanitation infrastructure",
+      "event_type": "infrastructure_damage_and_water_sanitation",
+      "summary": "A newly surfaced UNICEF Water Under Fire Volume 4 press release states more than 130,000 metres of sewage piping have been damaged in Gaza since October 2023 and untreated sewage has been discharged into the Mediterranean or temporary holding areas. This is retrospective infrastructure evidence, NOT damage newly occurring on November 5.",
+      "exact_supporting_passage": "In Gaza, since October 2023, more than 130,000 metres of sewage pipeline had been damaged",
+      "source_type": "Primary UN humanitarian agency press release, presenting a report-based assessment",
+      "classification": "follow-up",
+      "confidence": "high for UNICEF's published statement; medium for whether the specific quantitative assessment is entirely new to all prior reporting",
+      "independent_corroboration": null,
+      "bounded_discovery_context": {
+        "discovered_in": "Targeted UNICEF/UN News search number 12, then direct UNICEF release read",
+        "previous_watch_completed_at": "2026-11-05T03:49:22-08:00",
+        "duplicate_check": "Not present among the prior verified supplementary ledger's casualty, crossing, displacement and infrastructure entries. No claim of unique new physical damage; historical coverage period is explicit.",
+        "timeliness_caveat": "Press release header displays October 29, while its dateline and text describe November 5 release. Exact first-publication time not verified.",
+        "why_qualifying": "Distinct quantified primary-source sanitation-infrastructure finding newly surfaced during bounded watch, clearly identified as a follow-up assessment, not a fresh attack."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Gaza collector/publisher remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T034741-0800-r11-20261105T114922Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/",
+          "https://www.ochaopt.org/content/humanitarian-situation-report-29-october-2026"
+        ],
+        "result": "Available. Latest November 5 homepage item was retrospective September appeal monitoring; most recent Gaza situation report posted October 31 about October 19–25; no fresh incident in window."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.emro.who.int/opt/",
+          "https://www.who.int/news-room"
+        ],
+        "result": "WHO EMRO returned recurring HTTP 502. WHO global newsroom accessible; latest November 4 entries offered no new Gaza health-system event."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"Thursday\" \"November 5, 2026\" killed injured after 1 pm",
+      "site:aa.com.tr/en/world/ Gaza November 5 2026 \"Thursday\" killed wounded latest",
+      "site:reuters.com/world/middle-east/ Gaza November 5 2026 crossing aid ceasefire killed injured",
+      "site:apnews.com/article/ Gaza November 5 2026 ceasefire hospitals aid attack",
+      "site:ochaopt.org Gaza \"5 November 2026\" humanitarian water fuel hospitals",
+      "site:who.int Gaza \"5 November 2026\" medical evacuation health",
+      "site:english.wafa.ps/Pages/Details/17667 Gaza November 5 2026 killed injured ambulance",
+      "Gaza November 5 2026 14:00 15:00 local airstrike deaths wounded hospital",
+      "Gaza November 5 2026 Rafah crossing aid trucks WHO OCHA humanitarian food water update",
+      "Gaza November 5 2026 hospital ambulance medical evacuation fuel UNICEF MSF new incident",
+      "Gaza November 5 2026 ceasefire negotiations hostages detainees Israeli operations civilian displacement",
+      "site:news.un.org/en/ 2026/11 Gaza November 5 humanitarian OR site:unicef.org Gaza \"5 November 2026\""
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Homepage timed out in this run; articles surfaced through targeted search were older or already logged (including November 5 Al-Zawayda and Deir al-Balah)."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible. No distinct additional Gaza incident surfaced; November 5 Al-Zawayda strike already logged."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; most recent prominent update November 3; no new Gaza clinical response disruption."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/press-releases/reported-attacks-damaging-water-systems-conflict-triple-children-lose-access-safe",
+        "result": "Accessible; newly surfaced assessment of damaged Gaza sewage lines; conflicting displayed page header and dateline dates documented."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualties and military operations with documented civilian impact",
+      "Displacement and shelter infrastructure",
+      "Aid and crossing access, food, clean water and sanitation",
+      "Health services, hospitals, medical evacuation, ambulance transport and fuel",
+      "Ceasefire, hostages, detainees and negotiations"
+    ],
+    "exclusions": [
+      {
+        "item": "Al-Mawasi woman and Al-Bureij child killed, November 5 WAFA",
+        "reason": "Already recorded in immediately prior heartbeat."
+      },
+      {
+        "item": "Al-Zawayda displaced tent fatality, Deir al-Balah injuries, Al-Karama injury, Khan Younis gunfire injuries/demolitions",
+        "reason": "Previously logged supplementary findings, no verified new updates."
+      },
+      {
+        "item": "Rafah truck access suspension and Rafah flood control work withdrawal",
+        "reason": "Previously logged events, no verified new operational change."
+      },
+      {
+        "item": "Historic WHO and OCHA reports, older Reuters/AP stories, West Bank raids, global incidents",
+        "reason": "Outside time or Gaza geography, retrospective duplications or otherwise not new qualifying developments."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "ongoing": "WHO EMRO HTTP 502; prior WFP/UNRWA 403 and UN News robots restrictions unchanged where evidenced",
+      "this_run": "WAFA homepage request timed out; WAFA search-indexed articles and other established sources remained available.",
+      "status_reason": "DEGRADED due to partial source access failures with meaningful alternative research coverage intact."
+    },
+    "limitations": "New finding is newly discovered quantitative infrastructure evidence from a UNICEF report, not a November 5 physical incident. Exact initial publication time is uncertain because header (October 29) and dateline (November 5) differ. No new casualty or crossing incident was confirmed in this interval.",
+    "safeguards": "One heartbeat committed to ops/watch-ledger only. No approvals, production publication, deployments, schedules or task state altered."
+  }
+}

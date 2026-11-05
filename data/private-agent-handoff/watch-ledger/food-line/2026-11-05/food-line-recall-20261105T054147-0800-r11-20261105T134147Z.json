@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T054147-0800-r11-20261105T134147Z",
+  "scheduled_for": "2026-11-05T05:45:54-08:00",
+  "started_at": "2026-11-05T05:41:47-08:00",
+  "completed_at": "2026-11-05T05:44:14.125-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T04:50:36.386-08:00",
+    "end_at": "2026-11-05T05:44:14.125-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous verified Food Line watch heartbeat completion through current observation; new incident or notice evidence only; searched by event/publication date, not crawler freshness.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value miss classes; authoritative nationwide production collection unchanged.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, power outage or facility damage",
+      "Abrupt pantry/food bank closure or major service/access reduction",
+      "Official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T044908-0800-r11-20261105T124908Z.json",
+      "completed_at": "2026-11-05T04:50:36.386-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "only grocery store fire closure November 5 2026",
+      "last grocery store closing November 2026 town",
+      "sole grocery store closed fire November 2026",
+      "full-service grocery store closing November 2026 rural",
+      "food distribution canceled storm November 5 2026",
+      "food distribution suspended flooding outage November 2026",
+      "food pantry emergency closure November 5 2026",
+      "food bank operations suspended fire November 2026",
+      "site:gov SNAP outage November 5 2026 EBT",
+      "site:gov WIC service interruption November 2026",
+      "November 5 2026 EBT system outage card replacement",
+      "November 5 2026 food pantry canceled distribution closed storm fire"
+    ],
+    "direct_page_checks": 2,
+    "successful_direct_page_checks": 2,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://wscpantry.org/",
+        "source_published_at": null,
+        "exclusion_reason": "Provider announces a planned one-day Nov. 5 closure of its in-person market due to an arena parking-lot special event; online market remains open. No evidence of abruptness or a newly issued notice since 04:50 PST; closure had not yet taken effect at observation time. Excluded from this hourly new-event window, though it is a real scheduled in-person access reduction."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Already examined in previous heartbeat. Friday Hawaiʻi Foodbank Kauaʻi emergency distribution remains scheduled; no newly canceled food distribution."
+      },
+      {
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "source_published_at": "2026-11-02",
+        "exclusion_reason": "Previously reviewed Utah pantry closure/reopening, no new hourly disruption."
+      },
+      {
+        "url": "https://www.nbcpalmsprings.com/local-and-community/2026/09/02/well-in-the-desert-suspends-saturday-food-bank-after-palm-springs-move",
+        "source_published_at": "2026-09-02",
+        "exclusion_reason": "Historical Palm Springs Saturday distribution suspension, not new in hourly window."
+      },
+      {
+        "url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "source_published_at": "2026-08",
+        "exclusion_reason": "Historical Eastport only-grocery closure coverage, not new event."
+      }
+    ],
+    "source_failures": [],
+    "result": "No new, source-verifiable qualifying food-access disruptions since the prior hourly check across 12 focused searches. Searches primarily retrieved historical incidents, routine EBT benefit schedules, unrelated status-monitor pages and previously assessed Kauaʻi recovery updates.",
+    "limitations": "Publication-hour metadata is often missing; this bounded recall search is not exhaustive national coverage. Search indexing/crawling date does not establish newness. In-person pantry closure notice lacked posting time; excluded under strict new-since-last-hour criterion.",
+    "materiality": "No new qualifying signal and no material search/source failure.",
+    "run_timing_note": "Automation began before its nominal 05:45:54 PST schedule; scheduled_for reflects configured hourly schedule and observation is bounded by actual run completion.",
+    "action_limits": "No approval, publication, production collector edits, scheduling changes, or task disabling."
+  }
+}

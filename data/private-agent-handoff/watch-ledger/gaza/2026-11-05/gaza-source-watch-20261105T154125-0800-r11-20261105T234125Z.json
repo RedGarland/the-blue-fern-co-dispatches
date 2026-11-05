@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T154125-0800-r11-20261105T234125Z",
+  "scheduled_for": "2026-11-05T15:44:51-08:00",
+  "started_at": "2026-11-05T15:41:25-08:00",
+  "completed_at": "2026-11-05T15:43:00.987-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T14:45:52.915-08:00",
+    "end": "2026-11-05T15:43:00.987-08:00",
+    "basis": "Beginning with prior verified supplementary watch completion. Searches included Gaza-local Friday 6 November because Gaza is ten hours ahead of Pacific Standard Time; searched for newly available records, not assumed in-hour event timestamps.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Primary daily Gaza collection/publication remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T144402-0800-r11-20261105T224552Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. As of this check the latest entries were two items dated November 5: a retrospective 2025 disability-support story and September 2026 Flash Appeal monitoring. The latest Gaza humanitarian situation report remains dated October 29 and posted October 31. No in-window emergency development was substantiated."
+      },
+      {
+        "publisher": "World Health Organization",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/information-resources/index.html"
+        ],
+        "result": "WHO global emergency page accessible; latest displayed regional news dated August 19, 2026, and no new dated Gaza health-system disruption. Regional WHO EMRO endpoint returned HTTP 502 (recurring access issue)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"06/November/2026\" Gaza killed wounded shelter hospital",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 6, 2026\" casualties aid flood",
+      "site:reuters.com/world/middle-east/ Gaza November 5 2026 late Thursday ceasefire civilian aid crossing",
+      "site:apnews.com/article/ Gaza November 5 2026 late night ceasefire humanitarian",
+      "site:un.org OR site:news.un.org Gaza \"5 November 2026\" humanitarian food medical",
+      "site:palestinercs.org Gaza November 5 2026 ambulance hospital evacuation",
+      "site:english.wafa.ps November 6 2026 Gaza strip Friday killed injured civilians",
+      "Gaza Nov 6 2026 early hours strikes al shati nuseirat khan younis killing wounded late Thursday",
+      "Gaza November 5 2026 late evening November 6 humanitarian aid WFP UNICEF UNRWA fuel water food",
+      "Gaza November 5 2026 6 medical evacuation hospitals ambulances WHO health latest",
+      "Gaza November 5 2026 late ceasefire negotiations hostage bodies detainees international stabilization",
+      "site:aljazeera.com/news/2026/11/5/ Gaza latest Friday injured killed displacement aid"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible, with Friday 6 November Gaza-local date displayed, but latest article list remained November 5; latest Gaza fatality item is the already recorded 18:51 Gaza-local Al-Shati report. Later items were West Bank incidents."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible. Latest relevant Gaza casualty listing was the previously reviewed November 5 four deaths/11 injuries report, overlapping prior findings."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest news November 3, no newly dated emergency medical services or ambulance incident."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible; no distinctly new dated Gaza emergency development verified during targeted checks."
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible evergreen Palestine emergency overview; no newly dated in-window Gaza food-access change verified."
+      }
+    ],
+    "excluded": [
+      {
+        "item": "Al-Shati strike killing three; Nuseirat Al-Ishreen strike injuring five",
+        "reason": "Already recorded in earlier hourly watch heartbeats."
+      },
+      {
+        "item": "Khan Younis woman and Al-Bureij child killed; other November 5 aggregate fatality/injury coverage",
+        "reason": "Previously recorded, previously screened, or overlapping."
+      },
+      {
+        "item": "Gaza Civil Defense severe-weather warning; UNICEF sewage pipeline damage assessment",
+        "reason": "Previously recorded; no newly verified consequence during this observation period."
+      },
+      {
+        "item": "OCHA November 5 individual disability support and September 2026 Flash Appeal monitoring",
+        "reason": "Retrospective materials, not an in-window incident or functioning-capacity change."
+      },
+      {
+        "item": "Old Reuters/AP/WAFA/Al Jazeera results and archived or evergreen humanitarian background",
+        "reason": "Outside the bounded publication/event window or non-distinct."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualties and military operations with documented civilian impact",
+      "Displacement, storm exposure and shelters",
+      "Aid access, food, water, sewage, crossings and fuel",
+      "Hospital functioning, ambulances, health services, medical evacuations",
+      "Detention, hostages, ceasefire and negotiations"
+    ],
+    "degradation": {
+      "reason": "Recurring WHO EMRO HTTP 502 access failure; UN News search blocked by robots.txt. Global WHO, OCHA, WAFA, PRCS, UNICEF, WFP and other publisher checks remained available.",
+      "material_new_deterioration": false,
+      "coverage_sufficient_for_bounded_supplementary_watch": true
+    },
+    "outcome_note": "No new distinct, traceable qualifying development verified since preceding completed watch. No publication, approval, production mutation, permission, scheduling, or automation change."
+  }
+}

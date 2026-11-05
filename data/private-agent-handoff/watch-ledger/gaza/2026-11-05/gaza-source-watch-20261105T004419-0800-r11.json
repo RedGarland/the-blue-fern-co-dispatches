@@ -1,0 +1,248 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T004419-0800-r11",
+  "scheduled_for": "2026-11-05T00:44:51-08:00",
+  "started_at": "2026-11-05T00:44:19-08:00",
+  "completed_at": "2026-11-05T00:47:12.451-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-04T23:47:06-08:00",
+    "end": "2026-11-05T00:47:12.451-08:00",
+    "basis": "Start at previous verified ops/watch-ledger Gaza heartbeat completion. Distinguish newly discovered original reporting from incidents proven to occur within this hour; exact publication/update and incident hours unavailable.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-1-palestinian-wound-4-others-across-gaza/4112137",
+      "title": "Israeli attacks kill 1 Palestinian, wound 4 others across Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "source_updated_date": "2026-11-05",
+      "publication_time": null,
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "source_type": "Established international wire news agency, attributed reporting from local hospital medical sources or residents",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "finding_id": "gaza-20261105-al-karama-gaza-city-drone-apartment-injury-anadolu-4112137",
+      "location": "Al-Karama neighborhood, northwest Gaza City, Gaza Strip",
+      "affected_population": "One Palestinian reported moderately injured; identity and civilian/combatant status not independently established",
+      "affected_system": "Residential apartment building; reported injury and civilian shelter/protection",
+      "supporting_passage": "In northern Gaza, an Israeli drone struck an apartment in a residential building in the al-Karama neighborhood, northwest of Gaza City, moderately injuring a Palestinian, a medical source at Al-Shifa Hospital said.",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-05T00:47:12.451-08:00",
+        "discovery_method": "Direct Anadolu Middle East front-page article link; opened full updated original report; searched for corroboration within a bounded 12-search allocation",
+        "source_attribution": "Medical source at Al-Shifa Hospital, relayed by Anadolu",
+        "relationship_to_prior_watch": "Distinct injury not recorded in latest 23:47 PST heartbeat; earlier Anadolu report mentioned Gaza City drone activity without establishing injury",
+        "new_to_watch": true,
+        "incident_time_verified": false,
+        "independently_corroborated": false,
+        "precise_publication_or_update_hour_verified": false
+      }
+    },
+    {
+      "canonical_source_url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-1-palestinian-wound-4-others-across-gaza/4112137",
+      "title": "Israeli attacks kill 1 Palestinian, wound 4 others across Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "source_updated_date": "2026-11-05",
+      "publication_time": null,
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "source_type": "Established international wire news agency, attributed reporting from local hospital medical sources or residents",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "finding_id": "gaza-20261105-khan-younis-gunfire-two-injured-nasser-anadolu-4112137",
+      "location": "Areas north and east of Khan Younis, southern Gaza Strip",
+      "affected_population": "Two Palestinians, including a woman, reportedly injured by Israeli military vehicle gunfire; civilian/combatant identities not independently verified",
+      "affected_system": "Civilian protection / reported casualties from military gunfire",
+      "supporting_passage": "In southern Gaza, two Palestinians, including a woman, were injured by heavy gunfire from Israeli military vehicles in areas north and east of Khan Younis, a medical source at Nasser Hospital told Anadolu.",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-05T00:47:12.451-08:00",
+        "discovery_method": "Original Anadolu report verified; targeted search returned an AI-assisted local bulletin also describing two Nasser Hospital injuries, treated only as a nonindependent lead",
+        "source_attribution": "Medical source at Nasser Hospital, relayed by Anadolu",
+        "relationship_to_prior_watch": "Distinct from prior Deir al-Balah injured-group report and al-Zawayda displacement-tent strike",
+        "new_to_watch": true,
+        "incident_time_verified": false,
+        "independently_corroborated": false,
+        "precise_publication_or_update_hour_verified": false
+      }
+    },
+    {
+      "canonical_source_url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-1-palestinian-wound-4-others-across-gaza/4112137",
+      "title": "Israeli attacks kill 1 Palestinian, wound 4 others across Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "source_updated_date": "2026-11-05",
+      "publication_time": null,
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "source_type": "Established international wire news agency reporting local resident accounts",
+      "classification": "follow-up",
+      "confidence": "medium-low",
+      "finding_id": "gaza-20261105-east-khan-younis-two-civilian-structure-demolitions-anadolu-4112137",
+      "location": "East of Khan Younis, southern Gaza Strip, in areas under Israeli military control",
+      "affected_population": "Residents/owners of demolished civilian homes or structures; number of affected people and displacement unverified",
+      "affected_system": "Civilian homes and built infrastructure; two reported demolition operations",
+      "supporting_passage": "Separately, Israeli forces carried out two demolitions targeting homes and civilian structures in areas under their control east of Khan Younis, local residents said.",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-05T00:47:12.451-08:00",
+        "discovery_method": "Full updated Anadolu original report direct read; earlier article mentioned demolition without a verified extent; current text specifies two demolitions affecting homes and civilian structures",
+        "source_attribution": "Local residents, relayed by Anadolu",
+        "relationship_to_prior_watch": "Prior November 4 20:43 PST heartbeat explicitly excluded an earlier unspecified demolition due to lack of distinct civilian harm; current report adds a two-demolition count and identifies civilian homes/structures, so retained as a bounded follow-up, not independently established new-hour activity",
+        "new_to_watch": true,
+        "incident_time_verified": false,
+        "independently_corroborated": false,
+        "property_damage_extent_verified": false,
+        "displacement_verified": false
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; production Gaza collector/publisher is authoritative. No approvals, publication, production or schedule mutation.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T234332-0800-r11-20261105T0745Z.json",
+    "previous_verified_completed_at": "2026-11-04T23:47:06-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; a 5 Nov 2026 Flash Appeal Response Monitoring report covers September 2026 historical totals, not a new same-hour operational event. Latest humanitarian situation report shown dated 31 October."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/emergency-situation-in-the-occupied-palestinian-territory",
+          "https://www.emro.who.int/opt/information-resources/index.html",
+          "https://www.who.int/news-room"
+        ],
+        "result": "WHO global emergency URL 404, WHO EMRO direct information resources 502 (recurring), global WHO newsroom accessible and has no new 4-5 Nov Gaza health item on visible listing."
+      }
+    ],
+    "official_source_searches": [
+      "site:ochaopt.org Gaza November 5 2026 humanitarian situation update",
+      "site:who.int Gaza November 5 2026 health facilities evacuations",
+      "site:who.int/news Gaza \"November\" \"2026\" patient evacuation WHO 5 November"
+    ],
+    "additional_targeted_search_queries": [
+      "Gaza November 5 2026 casualties airstrike Deir al Balah Khan Younis 5 November latest",
+      "site:english.wafa.ps November 5 2026 Gaza injured killed strike displaced ambulance",
+      "site:aa.com.tr/en/middle-east Gaza Nov 5 2026 shelling drone casualties humanitarian",
+      "site:reuters.com November 5 2026 Gaza aid crossing ceasefire killed injured",
+      "\"5 November 2026\" Gaza killed injured civilians hospital aid crossing",
+      "\"Nov 5, 2026\" Gaza ceasefire Rafah humanitarian supplies",
+      "site:aljazeera.com/news/2026/11/5 Gaza killed injured aid",
+      "site:un.org \"Gaza\" \"5 November 2026\" humanitarian",
+      "\"al-Karama\" \"November 5, 2026\" drone apartment injured Gaza",
+      "\"Khan Younis\" \"November 5, 2026\" \"woman\" injured gunfire",
+      "\"Khan Younis\" \"5 November 2026\" demolitions homes civilian structures",
+      "\"Gaza\" \"5 November 2026\" \"Rafah\" aid medevac hospital negotiations"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Nov 5 08:35 local article repeats two previously logged distinct central-Gaza strikes: al-Zawayda fatality and Deir al-Balah injuries. No additional distinct Gaza event visible in latest listing."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-1-palestinian-wound-4-others-across-gaza/4112137",
+        "result": "Original 5 November article directly opened; newly documented Al-Karama apartment injury, two injuries near Khan Younis, and two civilian-structure demolition operations. Exact update time unknown."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/flash-appeal-response-monitoring-september-2026",
+        "result": "Published Nov 5; September 2026 response and funding monitoring, created Nov 3 draft, not a newly occurring humanitarian disruption."
+      },
+      {
+        "publisher": "WHO global newsroom",
+        "url": "https://www.who.int/news-room",
+        "result": "Accessible; no new same-window Gaza development on visible latest news listing."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest news Nov 3, no fresh Gaza emergency medical services update."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403; recurring."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403; recurring."
+      },
+      {
+        "publisher": "UN/unispal",
+        "url": "https://www.un.org/unispal/",
+        "result": "HTTP 403; direct check unavailable."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualties, attacks on displaced shelters, apartment building injuries and demolitions",
+      "Displacement, shelter and civilian infrastructure damage",
+      "Crossings, aid, food and water access",
+      "Health, hospital capacity, ambulances, fuel, medical evacuations",
+      "Ceasefire/negotiations, detention and hostages"
+    ],
+    "exclusions": [
+      {
+        "item": "November 5 Al-Zawayda tent strike killing Abdul Rahim Walid Matar and injuring another",
+        "reason": "Already recorded in Nov 4 20:43 PST heartbeat; updated Anadolu report repeats it."
+      },
+      {
+        "item": "November 5 Deir al-Balah separate strike injuring several",
+        "reason": "Already logged in prior 23:47 PST heartbeat."
+      },
+      {
+        "item": "November 3 Rafah crossing suspension",
+        "reason": "Previously logged; no verified status change."
+      },
+      {
+        "item": "November 4 Euro-Med Gaza child-amputation medical access assessment",
+        "reason": "Previously logged; historical cumulative injuries."
+      },
+      {
+        "item": "November 5 OCHA September response monitoring dashboard",
+        "reason": "Newly released historical September accounting, not a new distinct physical disruption during this observation window."
+      },
+      {
+        "item": "Nov 5 Nuseirat displacement-tent casualty teaser from gazanews.live",
+        "reason": "AI-assisted local-site report lacked independent source confirmation; cannot distinguish cleanly from contemporaneous recorded central-Gaza shelter strikes."
+      },
+      {
+        "item": "Nov 4 OCHA northern Rafah gunfire and NGO flood-control withdrawal claimed in third-party news summary",
+        "reason": "Underlying original OCHA November 4 report not located via accessible OCHA updates index; third-party site unavailable; no safe new finding."
+      },
+      {
+        "item": "Non-Gaza West Bank stories and historical 2025/earlier-2026 lookalikes",
+        "reason": "Out of geography or period."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News/un.org restricted access"
+      ],
+      "newly_observed": "WHO global situation-page URL returned 404, but global newsroom remained accessible; no material deterioration verified.",
+      "alternative_coverage": "OCHA original updates, WHO global newsroom, WAFA primary wire, Anadolu original wire, Palestinian Red Crescent"
+    },
+    "limitations": "Source/incident exact hour unverified; findings are distinct newly documented items from an updated original Anadolu article, not necessarily occurrences after 23:47 PST. No independent corroboration for injuries or two demolitions. Agency source quotations are attributed, not adjudicated; civilian combatant status, exact structure damage and displacement not independently established. Search indexes frequently returned historical lookalikes.",
+    "notification_decision": "Notify: three newly documented, distinct civilian-impact findings; recurring access restrictions are not a new material operational degradation.",
+    "safeguards": "Exactly one new heartbeat on ops/watch-ledger; no publication, production, approvals, permissions, schedule changes or task-disable actions."
+  }
+}

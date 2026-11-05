@@ -1,0 +1,200 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T014218-0800-r11-20261105T094359Z",
+  "scheduled_for": "2026-11-05T01:44:51-08:00",
+  "started_at": "2026-11-05T01:42:18-08:00",
+  "completed_at": "2026-11-05T01:43:59-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T00:47:12.451-08:00",
+    "end": "2026-11-05T01:43:59-08:00",
+    "basis": "Previous verified Gaza ops/watch-ledger heartbeat completion through the current bounded check. Newly established source traceability is distinguished from an incident dated November 3; no claim it occurred within this hour.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261103-northern-rafah-tents-gunfire-ngo-flood-control-withdrawal-unnews-1168740",
+      "canonical_source_url": "https://news.un.org/feed/view/en/story/2026/11/1168740",
+      "verified_republication_url": "https://www.globalissues.org/news/2026/11/04/44518",
+      "title": "Gunfire damages tents at Rafah displacement site in Gaza, as aid teams prepare for winter storms",
+      "publisher": "UN News (republished under UN News copyright by Global Issues)",
+      "source_date": "2026-11-04",
+      "publication_date": "2026-11-04",
+      "publication_time": null,
+      "event_date": "2026-11-03",
+      "event_time": null,
+      "location": "Northern Rafah region, Gaza Strip",
+      "affected_population": "Displaced Palestinians in tents reportedly damaged by gunfire; injuries reported but number, identities and severity unverified. A humanitarian partner withdrew.",
+      "affected_system": "Displacement shelters and humanitarian flood-control preparedness work ahead of winter rain; interrupted NGO access.",
+      "supporting_passage": "Gunfire hit and damaged multiple tents at a displacement site in Gaza’s northern Rafah region on Tuesday, reportedly causing injuries",
+      "source_type": "United Nations News report citing UN Office for the Coordination of Humanitarian Affairs (OCHA); original UN News URL linked by authorized syndication, original blocked by web access",
+      "classification": "follow-up",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-05T01:43:59-08:00",
+        "discovery_method": "Targeted search found a verbatim UN News item syndicated November 4 by Global Issues with an explicit original UN News source link. The original news.un.org URL returned restricted access; UN News origin and attributed OCHA statement are established by the licensed syndication. A second publisher carried the same UN News item and is not independent verification.",
+        "reason_new_to_watch": "Prior 00:47 heartbeat explicitly excluded a third-party summary of northern Rafah tent gunfire/NGO departure because original OCHA material was not located. The source is now traceable to UN News, resolving the source-provenance gap; the November 3 incident itself is not new.",
+        "source_attribution": "UN News citing OCHA's November 4 update",
+        "independently_corroborated": false,
+        "exact_incident_hour_verified": false,
+        "exact_publication_hour_verified": false,
+        "casualty_count_verified": false,
+        "notification_basis": "Newly traceable official UN reporting about injured displaced civilians and disruption of flood-control humanitarian operations."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only, not the authoritative production collector/publisher.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T004419-0800-r11.json",
+    "previous_verified_completed_at": "2026-11-05T00:47:12.451-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/updates"
+        ],
+        "result": "Accessible current updates index: Nov 5 September-response monitoring, latest humanitarian situation report dated Oct 29/published Oct 31; no same-hour operational update identified."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/news-room",
+          "https://www.emro.who.int/opt/information-resources/index.html"
+        ],
+        "result": "WHO global newsroom accessible, latest November 4 releases unrelated to Gaza; WHO EMRO resource page timed out (recurring source degradation)."
+      }
+    ],
+    "official_source_search_queries": [
+      "site:ochaopt.org Gaza Humanitarian Situation Report November 5 2026 OR November 4 2026",
+      "site:who.int Gaza November 5 2026 hospital medical evacuation WHO OR site:emro.who.int Gaza November 2026"
+    ],
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps 5 November 2026 Gaza casualties airstrikes ambulance hospital",
+      "site:aa.com.tr/en 5 November 2026 Gaza Israeli attacks killed wounded new",
+      "Gaza November 5 2026 latest Reuters AP ceasefire civilians aid Rafah crossing",
+      "site:aljazeera.com/news/2026/11/5 Gaza live attacks humanitarian",
+      "Gaza November 5, 2026 Rafah crossing aid restrictions WHO evacuation",
+      "Gaza 5 November 2026 hospital fuel ambulance medical evacuation WHO PRCS",
+      "site:english.wafa.ps/Pages/Details/ November 5, 2026 GAZA 2026",
+      "site:palestinercs.org November 5 2026 Gaza ambulance emergency medical",
+      "Gunfire damages tents at Rafah displacement site UN News November 4 2026",
+      "site:un.org/sg/en/content/sg/press-encounter/2026-11-04 Gaza Rafah gunfire humanitarian tent NGO",
+      "November 5 2026 Gaza aid food water trucks Rafah closure reopening humanitarian November 5",
+      "November 5 2026 Gaza hostage detainee ceasefire negotiations military civilian injuries new update"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible, no newer relevant operational update"
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/news-room",
+        "result": "Accessible, no new Gaza-specific item shown"
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "result": "Timed out; previous heartbeat recorded HTTP 502"
+      },
+      {
+        "publisher": "UN News via authorized syndicated copy",
+        "url": "https://www.globalissues.org/news/2026/11/04/44518",
+        "result": "Full UN News-branded article and explicit original link visible, described Tuesday Nov 3 incident and flood-control NGO departure"
+      },
+      {
+        "publisher": "UN News original",
+        "url": "https://news.un.org/feed/view/en/story/2026/11/1168740",
+        "result": "Restricted access; independently linked from UN News-syndicated copy"
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Visible latest Gaza article Nov 5 08:35 Gaza local repeats already logged central-Gaza Al-Zawayda and Deir al-Balah incidents"
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/world/-israeli-attacks-kill-1-palestinian-wound-4-others-across-gaza/4112137",
+        "result": "Search result present, direct web fetch unavailable; three Gaza City/Khan Younis findings already recorded in previous heartbeat"
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible, latest listed November 3, no new emergency service disruption"
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "403 Forbidden (recurring)"
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "403 Forbidden (recurring)"
+      }
+    ],
+    "categories_checked": [
+      "Civilian injuries and civilian shelter damage",
+      "Displacement site protection and humanitarian flood-preparedness access",
+      "Crossing movements, aid, food, water and fuel",
+      "Medical evacuation, hospital functioning and ambulances",
+      "Detention/hostages, ceasefire and negotiations"
+    ],
+    "exclusions": [
+      {
+        "item": "Nov 5 Al-Zawayda strike; Nov 5 Deir al-Balah injuries",
+        "reason": "Logged in earlier verified watch heartbeats"
+      },
+      {
+        "item": "Nov 5 Al-Karama apartment injury, Khan Younis two gunshot injuries and two east Khan Younis demolitions",
+        "reason": "All three logged in immediately previous 00:47 PST heartbeat"
+      },
+      {
+        "item": "Nov 3 Rafah border crossing suspension",
+        "reason": "Earlier watch recorded; no verified newly changed operational status"
+      },
+      {
+        "item": "Nov 4 Euro-Med Gaza amputee care access assessment",
+        "reason": "Previously logged"
+      },
+      {
+        "item": "Separate small-arms reports near UN-contracted Deir al-Balah facility and UN convoy in Rafah",
+        "reason": "UN News reports no injury to UN staff or damage; no specific additional civilian-impact or material aid-operation change verified"
+      },
+      {
+        "item": "More than 70 households aided after losing shelters last week of October",
+        "reason": "Retrospective, nonspecific incidents; does not establish distinct new reportable occurrence"
+      },
+      {
+        "item": "Nov 5 WHO-attributed Gaza prosthetic rehabilitation commentary",
+        "reason": "Not verified as new operational change; largely historical data and commentary"
+      },
+      {
+        "item": "Older years and West Bank-only results",
+        "reason": "Out of geography or observation-period scope"
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO timeouts/502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News original restricted access"
+      ],
+      "alternative_coverage": "OCHA OPT current updates, WHO global newsroom, WAFA primary local wire, UN News authorized syndication and Palestine Red Crescent Society",
+      "status_reason": "DEGRADED is retained for recurring source-access restrictions rather than aborting substantive coverage."
+    },
+    "limitations": "Verified UN News publication via exact original-source link and verbatim syndicated news copy; primary UN News page could not be fetched directly. Incident occurred two days before this observation window, and publication was November 4; it is newly traceable to an official UN source, not evidence of a new November 5 incident. Injury count, incident hour and perpetrator not established; no independent confirmation.",
+    "notification_decision": "Notify one newly qualified UN-attributed report; recurring access degradation is not materially new.",
+    "safeguards": "One durable JSON heartbeat on existing ops/watch-ledger. No approvals, publication, schedule modifications, task disable, or production mutations."
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T234448-0800-r11-20261105T074448Z",
+  "scheduled_for": "2026-11-04T23:45:54-08:00",
+  "started_at": "2026-11-04T23:44:48-08:00",
+  "completed_at": "2026-11-04T23:45:57-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T22:49:12-08:00",
+    "end_at": "2026-11-04T23:45:57-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "basis": "From previous independently verified supplementary heartbeat completion. New reporting was judged by explicit source date and whether event or announcement arose since this cutoff; date-only notices do not prove precise hourly novelty.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value misses only; primary Food Line production collector remains authoritative and unchanged.",
+    "target_classes": [
+      "Loss/fire/closure of only, sole, last or community's full-service grocery store",
+      "Weather/fire/outage/facility-damage cancellation or suspension of emergency food distributions",
+      "Abrupt pantry or food-bank service closure or material access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequence"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T224709-0800-r11-20261105T064709Z.json",
+      "completed_at": "2026-11-04T22:49:12-08:00",
+      "status": "DEGRADED",
+      "outcome": "findings",
+      "finding_id": "food-line-nj-unioncounty-elizabeth-ebt-card-replacement-system-error-20261104"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 4 2026 rural community",
+      "\"sole grocery store\" closing burned November 4 2026",
+      "\"last grocery store\" closure November 4 2026 food desert",
+      "food pantry \"closed\" fire flood \"November 4, 2026\"",
+      "food bank \"temporarily closed\" November 4 2026",
+      "food pantry \"suspend services\" November 4 2026",
+      "food distribution \"canceled\" \"storm\" November 4 2026",
+      "mobile food pantry \"cancelled\" \"November 5\" 2026 storm",
+      "\"food distribution\" \"cancelled\" \"November 4\" 2026",
+      "SNAP EBT \"outage\" November 4 2026 state agency notice",
+      "WIC services \"interrupted\" November 4 2026 health department",
+      "SNAP EBT replacement card service disruption November 4 2026 county announcement"
+    ],
+    "direct_page_checks": 3,
+    "reviewed_candidates": [
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Direct official notice confirmed, but the identical Union County EBT replacement-card service disruption was captured in the prior watch with finding_id food-line-nj-unioncounty-elizabeth-ebt-card-replacement-system-error-20261104; no new material update or timestamp observed."
+      },
+      {
+        "url": "https://indianriver.floridahealth.gov/event/food-pantry-closed-office-is-open-2026-09-02-e406fa01-6f1d-5557-8a97-f778c2a4bd57/",
+        "source_published_at": null,
+        "exclusion_reason": "November 4 closure event is already documented in earlier watch; no evidence of newly announced abrupt or major access reduction, emergency cause, or interval novelty."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17248782/99-ranch-market-closing-store-trader-joes-pleasanton-california/",
+        "source_published_at": "2026-11-03",
+        "exclusion_reason": "Earlier announced Dec 5 specialty supermarket closure with alternative stores in nearby Pleasanton/Dublin; not sole/last grocery loss or new hourly development."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "September 2026 sole-grocery fire already historical; not new."
+      },
+      {
+        "url": "https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert/",
+        "source_published_at": "2026-08-13",
+        "exclusion_reason": "August 2026 loss of area's last grocery store; not new within this hourly window."
+      },
+      {
+        "url": "https://health.utahcounty.gov/wic/",
+        "source_published_at": null,
+        "exclusion_reason": "Official site explicitly states WIC services are not interrupted."
+      }
+    ],
+    "source_failures": [],
+    "result": "No newly verified qualifying disruption since the prior heartbeat. The already-recorded Union County NJ EBT replacement-card disruption resurfaced unchanged; no new verified consequence, new official SNAP/WIC interruption, urgent pantry loss, sole-store loss, or disaster-linked canceled emergency distribution was found.",
+    "limitations": "Results emphasize older events and undated notices; precise hourly first-publication times for some Nov 4 notices are not established. This bounded supplementary search is not exhaustive national surveillance.",
+    "action_limits": "No approvals, publication, production changes, schedule modifications, or task disabling."
+  }
+}

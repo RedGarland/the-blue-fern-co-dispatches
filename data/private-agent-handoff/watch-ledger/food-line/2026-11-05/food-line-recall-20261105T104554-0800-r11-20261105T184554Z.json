@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T104554-0800-r11-20261105T184554Z",
+  "scheduled_for": "2026-11-05T10:45:54-08:00",
+  "started_at": "2026-11-05T10:46:06-08:00",
+  "completed_at": "2026-11-05T10:47:39.657-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T09:47:12.578-08:00",
+    "end_at": "2026-11-05T10:47:39.657-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "From previous verified durable Food Line watch heartbeat completion to current observation; source discovery, date-only page updates and index refreshes do not demonstrate same-hour event novelty.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only; authoritative nationwide Food Line production collection unchanged.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "Emergency food-distribution cancellations or suspensions due to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry or food-bank service closures or material reductions",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T094535-0800-r11-20261105T174535Z.json",
+      "completed_at": "2026-11-05T09:47:12.578-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire \"November 5, 2026\" town",
+      "\"sole grocery store\" closed November 5 2026 community",
+      "\"last grocery store\" fire closure \"Nov 5\" 2026",
+      "\"full service grocery\" closure fire November 5 2026",
+      "\"food distribution\" \"canceled\" storm \"November 5, 2026\"",
+      "\"food distribution\" \"cancelled\" power outage flood \"Nov 5\" 2026",
+      "\"food bank\" \"distribution suspended\" Thursday November 5 2026",
+      "\"food pantry\" \"closed\" \"November 5, 2026\" emergency",
+      "\"food bank\" abruptly closes or suspends services \"Nov 5 2026\"",
+      "site:gov \"November 5, 2026\" \"SNAP\" \"outage\" \"EBT\"",
+      "site:gov \"November 5, 2026\" \"WIC\" \"closed\" service interruption",
+      "SNAP benefits delay card issuance office shutdown November 5 2026 local agency"
+    ],
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 4,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.vdh.virginia.gov/lord-fairfax/",
+        "source_published_at": null,
+        "page_last_updated_date": "2026-11-05",
+        "related_program_page": "https://www.vdh.virginia.gov/lord-fairfax/wic/",
+        "exclusion_reason": "Official health-district site reports Shenandoah County office power outage and referral to Clarke County, and confirms Shenandoah WIC clinics normally operate Thursdays. However neither outage timing nor WIC-specific service cancellation/benefit interruption is confirmed. Date-only page update cannot establish event arose after the 09:47 previous hourly check; retained as an unverified lead, not a new qualifying hourly finding."
+      },
+      {
+        "url": "https://www.foodgatherers.org/foodresource/food-pantry-33/2026-11-05/",
+        "source_published_at": null,
+        "exclusion_reason": "Active scheduled November 5 pantry hours, with only routine Thanksgiving November 26 closure; not abrupt interruption."
+      },
+      {
+        "url": "https://www.gilacountyaz.gov/",
+        "source_published_at": null,
+        "exclusion_reason": "County landing page shows older news and no verified new WIC/food distribution interruption."
+      },
+      {
+        "url": "https://indianacapitalchronicle.com/2025/11/05/indiana-agency-says-reduced-snap-benefits-wont-arrive-for-at-least-a-week/",
+        "source_published_at": "2025-11-05",
+        "exclusion_reason": "One-year-old SNAP delay reporting, not a 2026 hourly incident."
+      },
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Known Union County NJ EBT card replacement-office delay already recorded in a prior watch; no verified new development."
+      }
+    ],
+    "source_failures": [],
+    "result": "No new independently verified incident meeting both the four targeted access-disruption classes and this strict hourly novelty window.",
+    "limitations": "Targeted web discovery is incomplete by design; older November 2025 articles, ordinary schedule notices and broad pages dominated results. A current Virginia public-health office outage is undated within November 5 and not confirmed as a WIC service suspension, so its hourly novelty cannot be established. No source access failure was encountered.",
+    "materiality": "No demonstrated material degradation.",
+    "action_limits": "No review approval, public publication, production collector change, schedule change or automation disabling."
+  }
+}

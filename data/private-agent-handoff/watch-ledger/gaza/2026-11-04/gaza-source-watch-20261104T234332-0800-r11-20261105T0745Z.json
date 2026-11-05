@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T234332-0800-r11-20261105T0745Z",
+  "scheduled_for": "2026-11-04T23:44:51-08:00",
+  "started_at": "2026-11-04T23:43:32-08:00",
+  "completed_at": "2026-11-04T23:47:06-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T22:42:15.608-08:00",
+    "end": "2026-11-04T23:47:06-08:00",
+    "basis": "From latest verified prior Gaza watch heartbeat on ops/watch-ledger to this execution; an independently distinct Gaza casualty development first traceably discovered in this check qualifies, even if publication or event preceded the preceding check because of delayed page visibility.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261105-deir-al-balah-separate-airstrike-multiple-injured-wafa-176663",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176663",
+      "title": "One Palestinian killed, several injured in Israeli airstrikes on central Gaza",
+      "publisher": "WAFA Palestinian News & Information Agency",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "publication_time": "08:35 (website local time; time zone unconfirmed)",
+      "source_updated_date": null,
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "location": "Deir al-Balah, central Gaza Strip",
+      "affected_population": "Several Palestinians reported injured in a distinct strike; exact number, names, and civilian/combatant statuses not independently verified",
+      "affected_system": "Civilian protection / military operation causing reported human injuries",
+      "supporting_passage": "while several others were injured in a separate strike targeting a group of Palestinians in Deir al-Balah.",
+      "source_type": "Established Palestinian news agency reporting attributed to local sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery_method": "Direct WAFA latest-news page inspection after the maximum 12 targeted web searches; opened canonical report and verified dated article text",
+        "first_verified_at": "2026-11-04T23:47:06-08:00",
+        "publisher_reported_publication": "05/November/2026 08:35 AM",
+        "publication_vs_previous_watch": "Publication may predate the prior check, but the distinct injury report was not in the preceding heartbeat; treated as newly discovered, not necessarily a new-hour event",
+        "independently_corroborated": false,
+        "relation_to_known_case": "WAFA's separate al-Zawaida fatality appears to describe the already recorded 5 November al-Zawayda displacement-tent strike, and is excluded from this finding; only the Deir al-Balah injuries are counted as distinct",
+        "severity_limits": "The original reporting says 'several' injured but no count; no claim of new deaths, identities, precise strike time, or independently established civilian status is made for Deir al-Balah",
+        "source_url": "https://english.wafa.ps/Pages/Details/176663"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; production Gaza collector/publisher remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T224013-0800-r11-20261105T0640Z.json",
+    "previous_verified_completed_at": "2026-11-04T22:42:15.608-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible, newest report listed 31 October 2026 (report dated 29 October); no new November 4-5 Gaza release visible."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Direct WHO EMRO OPT endpoint HTTP 502 (recurring); fallback https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt accessible with no November 4-5 Gaza-specific update."
+      }
+    ],
+    "official_first_search_queries": [
+      "site:ochaopt.org Gaza 5 November 2026 humanitarian situation report casualties food access crossings",
+      "site:who.int Gaza November 5 2026 WHO hospital medical evacuation health updates"
+    ],
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"05/11/2026\" Gaza hospital killed injured crossing",
+      "site:aa.com.tr/en/middle-east Gaza \"November 5, 2026\" killed injured civilians",
+      "site:reuters.com/world/middle-east/ Gaza November 5 2026 ceasefire airstrike civilians",
+      "site:apnews.com Gaza November 5 2026 casualties ceasefire Israeli strikes",
+      "site:unicef.org Gaza November 5 2026 children shelter water sanitation displacement",
+      "site:palestinercs.org Gaza 5 November 2026 ambulance health operation evacuation",
+      "Gaza \"5 November 2026\" \"killed\" \"injured\" hospital tent latest",
+      "Gaza November 5 2026 Rafah crossing aid trucks Egypt suspension resumed",
+      "Gaza November 5 2026 Nasser Al Shifa Al Aqsa hospital ambulances medical evacuation fuel",
+      "Gaza November 5 2026 ceasefire negotiations hostages prisoner exchange deal",
+      "site:msf.org OR site:icrc.org Gaza November 5 2026 medical health access displacement",
+      "site:unrwa.org OR site:wfp.org Gaza \"5 November 2026\" food distribution humanitarian access"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest Gaza item dated 5 Nov 08:35 identifies distinct injured persons in a Deir al-Balah strike, in the same article as already-recorded al-Zawaida killing."
+      },
+      {
+        "publisher": "WAFA canonical report",
+        "url": "https://english.wafa.ps/Pages/Details/176663",
+        "result": "Direct full article accessible; distinct Deir al-Balah injury report verified. Single-source, no numerical injury count."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest listed news 3 Nov 2026, no additional verified current-window EMS/health update."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 (recurring)."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 (recurring)."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Restricted fetch (recurring)."
+      },
+      {
+        "publisher": "Anadolu original known al-Zawaida strike",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-another-at-displacement-tent-in-gaza/4112137",
+        "result": "Direct URL inaccessible in this check; previously verified in earlier watch, treated as already recorded and not a new injury finding."
+      }
+    ],
+    "categories_checked": [
+      "civilian casualties, displacement and shelter strikes",
+      "Rafah and Kerem Shalom crossing status, aid and food/water",
+      "hospitals, ambulances, transport/fuel, medical evacuations and functioning capacity",
+      "civilian infrastructure damage",
+      "ceasefire/negotiations, detention and hostages"
+    ],
+    "excluded": [
+      {
+        "event": "5 November al-Zawaida displacement-tent fatality and injury",
+        "reason": "Previously logged in November 4 20:43 PST heartbeat; WAFA report repeats geographical/event details; no double counting."
+      },
+      {
+        "event": "3 November Rafah crossing suspension",
+        "reason": "Previously recorded; no independently verified material change this run."
+      },
+      {
+        "event": "4 November Euro-Med pediatric amputation assessment",
+        "reason": "Previously recorded follow-up; historical cumulative injuries, not a new incident."
+      },
+      {
+        "event": "Non-Gaza West Bank reports, 2025 lookalikes and older 2026 articles",
+        "reason": "Out of scope or dated before the check window."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA newsroom HTTP 403",
+        "UN News restricted fetch"
+      ],
+      "newly_observed_nonmaterial": "Known Anadolu canonical URL not fetched in this run; its earlier directly recorded event was not needed to verify the new WAFA Deir al-Balah claim.",
+      "alternative_coverage": "OCHA OPT, WHO global emergency page, WAFA original article, PRCS, UNICEF material and bounded targeted searches."
+    },
+    "limitations": "Single-source WAFA report attributes the separate Deir al-Balah injuries to local sources. No independently corroborating agency report or precise number/time of injuries was identified within the bounded search. Website publication time zone not explicitly verified. Search engine results skewed toward earlier years.",
+    "notification_decision": "Alert warranted because this run verifies one distinct newly documented Deir al-Balah casualty development; recurring restrictions are not a newly material operational degradation.",
+    "safeguards": "Created exactly one private handoff heartbeat on ops/watch-ledger; no production publishing, approvals, schedule changes or automation changes."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T184637-0800-recall12",
+  "scheduled_for": "2026-11-04T18:45:22-08:00",
+  "started_at": "2026-11-04T18:46:37-08:00",
+  "completed_at": "2026-11-04T18:48:03-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T17:43:03.583-08:00",
+    "end": "2026-11-04T18:48:03-08:00",
+    "basis": "Prior verified Care Line ops/watch-ledger heartbeat completed_at through current observation. Date-only news publication is not evidence that the event first occurred within the hourly window; candidates announced earlier are recall context and deduplicated."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), organ procurement organization, termination notice",
+      "result": "Checked official CMS Public Notices before additional targeted searches. No newly dated provider termination, rescission, CLIA certificate limitation/suspension, or comparable public notice appeared in the window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency room closed suspended services November 4 2026 US rural health",
+      "maternity labor delivery service closing suspended November 4 2026 hospital US",
+      "psychiatric behavioral health hospital unit closing service November 4 2026",
+      "dialysis kidney clinic oncology cancer center closure November 4 2026 patients",
+      "ambulance EMS service ceases operations air medical base closes November 4 2026",
+      "primary care family medicine clinic closure patients November 4 2026",
+      "\"Nov 4, 2026\" \"hospital\" \"closing\" \"emergency\" clinic",
+      "\"November 4, 2026\" \"suspend\" \"services\" \"hospital\" OR \"clinic\"",
+      "\"Nov 4, 2026\" \"ambulance\" \"operations\" \"suspended\" OR \"closed\"",
+      "\"November 4, 2026\" \"reopens\" OR \"resumes\" \"emergency\" \"hospital\" USA",
+      "site:beckershospitalreview.com 2026 11 04 closure hospital unit clinic emergency",
+      "Puerto Rico Guam Virgin Islands November 4 2026 hospital dialysis emergency clinic service closure suspension"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No new qualifying, non-duplicate U.S. or territory healthcare-access loss, termination/CLIA action, or concretely effective reopening independently confirmed within this window. Results primarily reflected older outages, funding/ownership news without service changes, foreign incidents, broad policy and research, or earlier documented events.",
+    "reviewed_exclusions": [
+      {
+        "item": "MGH Downtown Associates primary-care closure, Boston, MA, scheduled December 18, 2026",
+        "reason": "Previously recorded in 14:42 Care Line heartbeat; duplicate, not yet effective."
+      },
+      {
+        "item": "Taylorville Family Medicine closure, Tuscaloosa County, AL",
+        "reason": "Previously recorded in 15:48 Care Line heartbeat; duplicate; closure announcement reportedly November 2."
+      },
+      {
+        "item": "Mercy Primary Care Clinic at Alice L. Walton School of Medicine, Bentonville, AR",
+        "reason": "November 2 opening is a new service, not verified restoration of previously lost essential access; also predates current window."
+      },
+      {
+        "item": "Novant Health / Northern Regional Hospital, Mount Airy, NC",
+        "reason": "Acquisition/ownership change without a reported disruption or restored access."
+      },
+      {
+        "item": "Guam Memorial Hospital/GRMC temporary weather-related outpatient suspensions",
+        "reason": "October 2026 storm events, outside window."
+      },
+      {
+        "item": "V N Desai Hospital, Mumbai, India, planned inpatient suspension",
+        "reason": "Outside U.S. and territories and not yet effective."
+      },
+      {
+        "item": "General rural hospital funding, ballot measures, EMS commentary, old hospital/air-medical closures",
+        "reason": "No newly verified concrete local essential-care service loss or restoration."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct access failed; same previously documented persistent Health First alert endpoint limitation. Other public CMS and targeted search coverage available."
+      }
+    ],
+    "material_new_degradation": false,
+    "limitations": "Supplementary targeted recall is not exhaustive; no direct access to production collector deduplication state. Publication timestamps often date-only and cannot prove event first appeared in the hourly interval. Known Health First official endpoint remains inaccessible.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "No review approvals, public publication, schedule edits, or task disabling. One new durable heartbeat only on ops/watch-ledger."
+  }
+}

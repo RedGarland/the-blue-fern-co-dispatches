@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T144542-0800-recall12",
+  "scheduled_for": "2026-11-05T14:45:22-08:00",
+  "started_at": "2026-11-05T14:45:42-08:00",
+  "completed_at": "2026-11-05T14:47:17-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T13:51:24-08:00",
+    "end": "2026-11-05T14:47:17-08:00",
+    "basis": "Start equals the previous independently verified Care Line heartbeat completed_at. Current observation uses America/Los_Angeles. A November 3–5 indexing lookback was used to catch delayed reports; older or already-recorded events excluded. Supplementary watch only; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY) organ procurement organization termination, CCN 18P001",
+      "result": "Official CMS table checked and accessible through correct canonical URL; no newer provider termination, rescission, or CLIA action visible. Initial noncanonical CMS URL returned inaccessible; recovered via CMS indexed canonical page."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspension November 5 2026 rural US",
+      "hospital maternity labor delivery unit closing reopened November 5 2026",
+      "ambulance air medical helicopter base closing service suspended November 5 2026",
+      "dialysis center oncology cancer clinic shutdown closes November 5 2026 United States",
+      "site:beckershospitalreview.com 2026/11/05 hospital closes emergency department health clinic",
+      "\"November 5, 2026\" \"closing\" \"hospital\" \"emergency department\" United States",
+      "\"Nov 5, 2026\" \"maternity\" \"closes\" hospital",
+      "\"November 5, 2026\" \"ambulance\" \"service\" \"shutdown\" county",
+      "\"November 5, 2026\" \"behavioral health\" \"services\" \"closed\" hospital",
+      "\"November 5, 2026\" \"reopened\" \"emergency department\" hospital",
+      "\"November 2026\" \"Puerto Rico\" \"Guam\" \"Virgin Islands\" hospital clinic closure ambulance",
+      "\"November 5, 2026\" \"primary care\" \"clinic\" \"closure\" patients"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System ED and acute-care suspension, Sharon PA",
+        "url": "https://sharonregionalhealthsystem.org/",
+        "reason": "Already recorded pending_review in the 12:48/12:56 watch and excluded in prior 13:51 heartbeat; duplicate."
+      },
+      {
+        "item": "Lurie Children's Hospital Downers Grove approval, Illinois",
+        "url": "https://bancodeprofissionais.com/2026/11/05/lurie-childrens-downers-grove-approval/",
+        "reason": "Facility approved for future construction, no newly effective clinical access or closure; planned transfer from Westchester not yet implemented."
+      },
+      {
+        "item": "D.C. mental-health residential facility closures retrospective",
+        "url": "https://streetsensemedia.org/article/the-systems-broken-and-we-all-know-it-as-d-c-care-facilities-close-residents-fall-through-the-cracks/",
+        "reason": "November 5 article describes closures occurring months or unspecified time earlier; no named, dated, new in-window service event sufficiently supported."
+      },
+      {
+        "item": "Isla Community Health Kagman clinic, Northern Mariana Islands",
+        "url": "https://www.northernmarianaislandshealthnews.com/executive-report",
+        "reason": "Temporary closure due to typhoon and transfer to San Antonio already documented in October 31–November 1 summaries; no new effective change during this window. Aggregation source not treated as direct official confirmation."
+      },
+      {
+        "item": "Optum Madison Center partial clinic closure, Seattle, WA",
+        "url": "https://www.optum.com/en/care/providers/wa/george-lau-md-1215032313.html",
+        "reason": "Provider page carries undated partial-closure alert already crawled two weeks ago; cannot establish fresh event in recall window."
+      },
+      {
+        "item": "San Mateo Coastside Health Center proposed lab and insurance roadmap",
+        "url": "https://coastsidebuzz.com/san-mateo-county-supervisors-directs-county-health-to-develop-a-roadmap-to-accept-commercial-insurance-and-local-lab-services-at-the-coastside-clinic-within-90-days/",
+        "reason": "Roadmap directive, no active service restoration."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Previously documented Health First official alert endpoint remains inaccessible by direct open; known persistent coverage limitation, not newly material."
+      },
+      {
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "type": "obsolete_or_inaccessible_url",
+        "detail": "First CMS direct open failed. Correct official public notices URL found and read successfully, so CMS coverage was recovered."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "Hospital/ED, maternity, behavioral-health, oncology, dialysis, primary care, rural emergency, ambulance/air-medical, CMS provider and CLIA actions, effective service restorations, and territories. Twelve bounded targeted search queries in addition to first CMS check.",
+    "deduplication": "Previous 2026-11-05 13:51 verified watch heartbeat and preceding recorded Sharon Regional pending-review record used to exclude duplicates. Production ledger/deduplication not independently verified.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Search coverage is targeted and index dependent, not exhaustive. Recovered CMS canonical source; persistent Health First alert endpoint failure limits complete direct official alert coverage.",
+    "controls": "One heartbeat only on ops/watch-ledger; no approval, public publication, production collector change, schedule change, or task disabling."
+  }
+}

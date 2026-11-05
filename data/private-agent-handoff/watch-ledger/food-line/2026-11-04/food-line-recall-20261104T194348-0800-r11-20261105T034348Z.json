@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T194348-0800-r11-20261105T034348Z",
+  "scheduled_for": "2026-11-04T19:45:54-08:00",
+  "started_at": "2026-11-04T19:43:48-08:00",
+  "completed_at": "2026-11-04T19:44:43.571-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T18:47:46.617-08:00",
+    "end_at": "2026-11-04T19:44:43.571-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "basis": "Previous independently verified supplementary heartbeat completion through this observation; date-only reporting does not prove interval-new publication.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value missed-signal recall; nationwide production Food Line collection remains authoritative.",
+    "target_classes": [
+      "Sole/only/last community grocery or full-service supermarket loss, closure, fire or disaster",
+      "Emergency-food distribution canceled/suspended for flood, storm, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major consumer access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consumer access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T184509-0800-r11-20261105T024509Z.json",
+      "run_id": "food-line-recall-20261104T184509-0800-r11-20261105T024509Z",
+      "completed_at": "2026-11-04T18:47:46.617-08:00",
+      "status": "SUCCESS"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12,
+      "slow": 0
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closing OR fire \"November 4, 2026\"",
+      "\"last grocery store\" closing fire \"Nov 4\" \"2026\"",
+      "\"only supermarket\" closed burned \"November 2026\" rural",
+      "\"full-service grocery\" closing November 4 2026 town",
+      "\"food distribution\" canceled \"November 4, 2026\" storm flood",
+      "\"mobile food pantry\" cancelled November 4 2026 weather",
+      "\"food bank\" \"suspended distribution\" November 4 2026 fire power",
+      "\"food pantry\" \"closed\" \"November 4, 2026\" emergency damage",
+      "\"food bank\" \"operations suspended\" November 4 2026 outage",
+      "site:gov \"SNAP\" \"system outage\" \"November 4, 2026\"",
+      "site:gov \"WIC\" \"interruption\" \"November 4, 2026\"",
+      "\"SNAP benefits\" \"delayed\" \"November 4, 2026\" official state"
+    ],
+    "direct_page_checks": 3,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "publisher": "The U.S. Sun",
+        "source_published_at": "2026-11-04T14:19:00",
+        "exclusion_reason": "Previously evaluated Daniels, West Virginia Cornerstone IGA scheduled November 30 closure; no substantiation it is community's sole/last full-service store; published outside the current 18:47-19:44 PST interval. Source local time zone unspecified."
+      },
+      {
+        "url": "https://indianriver.floridahealth.gov/event/food-pantry-closed-office-is-open-2026-09-02-e406fa01-6f1d-5557-8a97-f778c2a4bd57/",
+        "publisher": "Florida Department of Health, Indian River County",
+        "source_published_at": null,
+        "exclusion_reason": "Earlier assessed Wabasso one-day November 4 pantry closure; no new announcement or major impact proven; already in earlier watch scope."
+      },
+      {
+        "url": "https://ebtcheckup.com/ebt-news/",
+        "publisher": "EBTCheckup (non-governmental index)",
+        "source_published_at": "2026-11-01",
+        "exclusion_reason": "Lists earlier October notices of SNAP stocking, eligibility or policy deadlines; no newly announced official SNAP/WIC interruption or immediate consumer denial in observation interval."
+      },
+      {
+        "url": "https://www.21alivenews.com/2026/05/06/butler-loses-only-full-service-grocery-store-after-more-than-six-decades/",
+        "publisher": "21Alive News",
+        "source_published_at": "2026-05-06",
+        "exclusion_reason": "Genuine sole full-service grocery loss but historical May 2026 report; not new."
+      },
+      {
+        "url": "https://www.stmarysfoodpantry.com/calendar/",
+        "publisher": "St Mary's Food Pantry",
+        "source_published_at": null,
+        "exclusion_reason": "January weather cancellation and routine November schedule; no November 4 interval disruption."
+      }
+    ],
+    "source_failures": [],
+    "result": "No new independently verifiable, interval-new, nonduplicative qualifying food-access disruption found in 12 targeted web searches and three direct source checks.",
+    "limitations": "Time-stamped local announcements may be indexed late; no exhaustive nationwide coverage is claimed. Search outputs were dominated by historical stories and standing schedules.",
+    "action_limits": "No publication, approval, schedule change, task disabling, or mutation of the production collector."
+  }
+}

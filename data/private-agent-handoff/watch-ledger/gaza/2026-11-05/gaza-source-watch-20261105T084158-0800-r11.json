@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T084158-0800-r11",
+  "scheduled_for": "2026-11-05T08:44:51-08:00",
+  "started_at": "2026-11-05T08:41:58-08:00",
+  "completed_at": "2026-11-05T08:44:41.574-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T07:44:35.295-08:00",
+    "end": "2026-11-05T08:44:41.574-08:00",
+    "basis": "From previous verified supplementary Gaza Source Watch completion through this execution; check newly issued or newly surfaced traceable developments, distinguish new warning from historical exposure data and exclude duplicate incident counts.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261105-civil-defense-storm-flood-warning-aa-4113199",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/gaza-civil-defense-warns-heavy-rains-strong-winds-threaten-nearly-950-000-displaced-palestinians/4113199",
+      "title": "Gaza civil defense warns heavy rains, strong winds threaten nearly 950,000 displaced Palestinians",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "publication_time_displayed": null,
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "forecast_date": "2026-11-06",
+      "location": "Gaza Strip; displacement tents, temporary shelters and structurally damaged buildings",
+      "affected_population_system": "Nearly 950,000 displaced Palestinians in moderate/high flood-risk sites (OCHA figures from 15 October, not a newly displaced count); over 400,000 in high flood-risk locations and approximately 44,000 in unsafe buildings. Actual newly affected count unknown.",
+      "event_type": "displacement_shelter_early_warning",
+      "source_type": "Established news agency reporting new statement by Gaza Civil Defense Directorate, with historical UN OCHA exposure data",
+      "classification": "new",
+      "confidence": "medium-high",
+      "independent_corroboration": false,
+      "summary": "On 5 November Gaza Civil Defense issued a specific warning for expected rain and strong winds Friday, 6 November, urging shelter precautions and safe relocation away from damaged structures. The warning is newly issued; the approximately 950,000 exposure estimate comes from OCHA's 15 October data. No new flood casualties, actual displacement, or infrastructure failure were reported.",
+      "exact_supporting_passage": "heavy rainfall and strong winds expected Friday could endanger displaced Palestinians living in tents and temporary shelters",
+      "bounded_discovery_context": {
+        "discovery_source": "Anadolu direct Middle East index; opened original dated 5 November article following first OCHA OPT and WHO checks and 12 additional targeted searches.",
+        "previous_watch_completed_at": "2026-11-05T07:44:35.295-08:00",
+        "uniqueness": "Previous verified watch did not record this 5 November Civil Defense advisory. Distinct from older OCHA 15 October population-at-risk statistic and prior Rafah flood-control mission interruption.",
+        "limitations": "No independent first-party Civil Defense statement was located in bounded checks; reported exposed-population numbers are historical, not new confirmed impacts; article displays date but no clock time.",
+        "publication_time_verified": false
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; authoritative daily production collector and publication unchanged.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T074047-0800-r11-20261105T154342514Z.json",
+    "previous_verified_completed_at": "2026-11-05T07:44:35.295-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/"
+        ],
+        "result": "Accessible; 5 Nov homepage showed retrospective wheelchair rehabilitation profile and September appeal monitoring. Latest posted situation report 29 October. No new verified operational change in this observation window."
+      },
+      {
+        "publisher": "World Health Organization",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/information-resources/gaza-health-emergency.html"
+        ],
+        "result": "WHO global Gaza emergency landing accessible; linked regional and general news pre-November. Regional EMRO Gaza emergency page inaccessible in this tool, a recurring limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ November 5 2026 Gaza Thursday 18:00 killed injured drone shelling",
+      "site:aa.com.tr/en/middle-east/ Gaza November 5 2026 Thursday latest killed injured attacks November 5",
+      "site:reuters.com/world/middle-east/ Gaza Israel November 5 2026 humanitarian ceasefire Rafah aid civilian Thursday",
+      "site:apnews.com/article/ Gaza Thursday Nov 5 2026 deaths injuries ceasefire aid crossing hospitals",
+      "site:ochaopt.org November 5 2026 Gaza 5 November water food displacement hospitals aid",
+      "site:who.int OR site:emro.who.int 5 November 2026 Gaza evacuation hospitals ambulances medicine fuel",
+      "site:unicef.org OR site:unrwa.org OR site:wfp.org Gaza 5 November 2026 winter shelter pipelines food aid",
+      "site:palestinercs.org 5 November 2026 Gaza ambulance emergency medical injured killed",
+      "Gaza Thursday November 5 2026 Rafah Kerem Shalom crossings evacuation trucks humanitarian suspended resumed",
+      "Gaza ceasefire negotiations November 5 2026 Hamas Israel detainees hostages new deal Reuters Anadolu",
+      "site:news.un.org/en/ 5 November 2026 Gaza health shelter food water airstrike UN",
+      "Gaza health ministry November 5 2026 74618 175925 killed 24 hours hospitals death toll"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Homepage reached; 5 Nov 17:24 publisher-local cumulative toll article read directly. No incident-specific new casualty could be separated from previously recorded Al-Mawasi and Al-Bureij fatalities or other previously logged injuries."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Dated 5 November article documents fresh Civil Defense storm/shelter warning for expected Friday 6 November weather; earlier same-day Gaza casualties already captured."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualty and documented military impact",
+      "Displacement, winter shelter and infrastructure risk",
+      "Humanitarian access, food/water, borders and fuel",
+      "Hospitals, ambulances, medical evacuation, healthcare capacity",
+      "Detention, hostages, ceasefire and talks"
+    ],
+    "exclusions": [
+      {
+        "item": "WAFA 5 November 17:24 article: 74,618 total deaths, 175,925 injuries, 5 hospital-received injured in last 24h",
+        "reason": "Aggregate follow-up with no identifiable distinct incident; may overlap existing recorded 5 November casualty reports. Not a verified new civilian-impact incident. Do not infer three new deaths from comparison with 3 November cumulative data."
+      },
+      {
+        "item": "Anadolu 5 November description of 950,000 flood-exposed displaced people, 400,000 high-risk, 44,000 in unsafe buildings",
+        "reason": "Underlying exposure statistics were already published by OCHA on 15 October; not separately counted as new finding. Only the dated Civil Defense weather warning is new."
+      },
+      {
+        "item": "WAFA Al-Mawasi woman and Al-Bureij child killings; central-Gaza tent strike; prior Khan Younis injuries and demolitions",
+        "reason": "Captured in earlier watch heartbeats; no independently verified new incident details."
+      },
+      {
+        "item": "Old 2025–2026 articles returned by Reuters, AP, WHO, UNRWA and other search results",
+        "reason": "Outside observation window or duplicate; excluded."
+      },
+      {
+        "item": "AI-assisted third-party Gaza crossings status claim",
+        "reason": "Not accepted without official corroboration; no verified status reversal in bounded period."
+      }
+    ],
+    "degradation": {
+      "status_reason": "Recurring WHO EMRO Gaza regional page failed via web access, and UN News targeted search was robots-blocked; WHO global, OCHA, WAFA, Anadolu and other source results were accessible.",
+      "material_new_degradation": false,
+      "recurring_access_restrictions": [
+        "WHO EMRO regional access",
+        "UN News search robots restriction"
+      ],
+      "limitations": "Older results polluted the targeted web search. Official Civil Defense original notice not directly located; the warning is documented by established Anadolu reporting. No new observed storm impact can be claimed."
+    },
+    "notification_decision": "Notify: a distinct 5 November Civil Defense warning for 6 November extreme-weather exposure in Gaza displacement sites was newly documented. No incident-level casualties newly confirmed.",
+    "safeguards": "Exactly one ops/watch-ledger heartbeat only; no approvals, production changes, publication, deployments, schedule changes or task disablement."
+  }
+}

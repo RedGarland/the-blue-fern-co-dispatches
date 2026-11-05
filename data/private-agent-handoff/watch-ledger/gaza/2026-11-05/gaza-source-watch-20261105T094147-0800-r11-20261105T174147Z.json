@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T094147-0800-r11-20261105T174147Z",
+  "scheduled_for": "2026-11-05T09:44:51-08:00",
+  "started_at": "2026-11-05T09:41:47-08:00",
+  "completed_at": "2026-11-05T09:43:42.270-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T08:44:41.574-08:00",
+    "end": "2026-11-05T09:43:42.270-08:00",
+    "basis": "From previous verified supplementary watch completion to this run; accept newly reported, traceable developments while excluding historical/recycled items and previously logged incidents.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261105-wafa-al-shati-airstrike-three-killed-176683",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176683",
+      "title": "Three Palestinians killed in Israeli airstrike on Gaza City",
+      "publisher": "Palestinian News and Information Agency (WAFA)",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "publication_time_displayed": "18:51 (publisher local time, Gaza/West Bank)",
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "location": "Near Martyrs Square, Al-Shati refugee camp, west of Gaza City, Gaza Strip",
+      "affected_population_system": "Three Palestinians reportedly killed and several injured; identities, individual civilian status, exact injury count and medical verification not established.",
+      "event_type": "reported_airstrike_casualties",
+      "exact_supporting_passage": "targeted a group of Palestinians near Martyrs Square in the camp, killing three people and injuring several others.",
+      "source_type": "Palestinian official news agency report attributed to local sources",
+      "classification": "new",
+      "confidence": "medium",
+      "independent_corroboration": false,
+      "summary": "WAFA reported on November 5 at 18:51 Gaza/West Bank local time that Israeli warplanes struck a group of people at Al-Shati refugee camp on Thursday evening, killing three and injuring several. No independently corroborating primary source located in this bounded watch; no individual civilian identities verified.",
+      "bounded_discovery_context": {
+        "direct_publisher_check": "WAFA English homepage and article /Pages/Details/176683; report timestamp 18:51 local, approximately 08:51 PST, after previous heartbeat end 08:44:41 PST.",
+        "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T084158-0800-r11.json",
+        "previous_completed_at": "2026-11-05T08:44:41.574-08:00",
+        "uniqueness": "Al-Shati/Martyrs Square Gaza City airstrike is separate by location and reported publication time from previously logged Al-Mawasi, Al-Bureij, Al-Zawayda, Deir al-Balah and Khan Younis events.",
+        "limitations": "WAFA relies on unnamed local sources; no casualty identities, corroborating hospital report, precise strike time or independent confirmation of all victims' civilian status."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Latest November 5 posts: retrospective disability-assistance profile and September 2026 Flash Appeal Response Monitoring; both already seen before 08:44 prior watch and did not establish a new in-window operational event."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/information-resources/gaza-health-emergency.html"
+        ],
+        "result": "WHO global emergency page accessible, no November 5 health service change; regional EMRO page inaccessible again. Two WHO-targeted source lookup queries returned older items; no fresh evidence."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"November 5, 2026\" Gaza Thursday evening killed injured drone shelling",
+      "site:aa.com.tr/en/middle-east/ Gaza 5 November 2026 Thursday evening killed injured civilians",
+      "site:reuters.com/world/middle-east/ Gaza Israel 5 November 2026 aid ceasefire civilian Thursday",
+      "site:apnews.com/article Gaza November 5 2026 airstrike aid hospital ceasefire",
+      "site:ochaopt.org Gaza \"5 November 2026\" health aid displacement 2026",
+      "site:who.int OR site:emro.who.int Gaza \"5 November 2026\" medical evacuation hospitals fuel",
+      "site:unicef.org Gaza November 5 2026 emergency cold rain water sanitation shelters",
+      "site:palestinercs.org Gaza November 5 2026 ambulance injured medical",
+      "Gaza November 5 2026 Al Shati refugee camp Martyrs Square three killed airstrike injuries",
+      "Gaza Rafah crossing Kerem Shalom aid medical evacuation November 5 2026 new decision",
+      "Gaza ceasefire hostage negotiation detention Israel Hamas November 5 2026 new statement",
+      "Gaza November 5 2026 hospital ambulance fuel water sewage food aid services update humanitarian"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "New November 5 18:51 local report of Al-Shati strike; original article read directly. Other November 5 reports at or before 17:24 local were already captured or outside this interval."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "November 5 displacement shelter storm warning previously logged in last heartbeat. No additional distinct in-window Gaza report found on index."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualties and documented military impact",
+      "Displacement and winter shelter",
+      "Aid, food, water, infrastructure and crossings",
+      "Hospital, ambulance, fuel, transport and medical evacuation",
+      "Ceasefire, hostages and detention"
+    ],
+    "exclusions": [
+      {
+        "item": "November 5 Civil Defense winter-storm warning",
+        "reason": "Already recorded by previous watch; not a new incident."
+      },
+      {
+        "item": "November 5 WAFA 17:24 Gaza cumulative casualty totals",
+        "reason": "Known aggregate; no new distinctly identifiable incident in this interval."
+      },
+      {
+        "item": "Earlier Al-Mawasi/Al-Bureij/Al-Zawayda/Deir al-Balah/Khan Younis casualty and demolition reports",
+        "reason": "Previously logged; excluded from findings."
+      },
+      {
+        "item": "OCHA November 5 September-response retrospective statistics",
+        "reason": "Published/seen by prior hourly check, and activity covered September; not newly discovered operational change."
+      },
+      {
+        "item": "Older 2023–2026 articles in general web search results, third-party aggregation",
+        "reason": "Historical, duplicates or untraceable; excluded."
+      }
+    ],
+    "degradation": {
+      "status_reason": "Known recurring WHO EMRO regional access failure; WHO global, OCHA, WAFA and Anadolu could be checked. News-search quality was limited by stale and noisy results.",
+      "material_new_degradation": false,
+      "limitations": "No independent confirmation for WAFA casualty claim; date and local publication time verified from first-party publisher page. No other new qualifying medical, crossings, aid, ceasefire or detention changes identified."
+    },
+    "notification_decision": "Notify: a distinct 18:51-local Al-Shati refugee camp airstrike with three reported killed and several injured appeared after previous watch.",
+    "safeguards": "Exactly one heartbeat written to ops/watch-ledger; no publication, approval, scheduling, disabling or production mutations."
+  }
+}

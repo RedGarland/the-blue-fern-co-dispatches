@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T234158-0800-recall12",
+  "scheduled_for": "2026-11-04T23:45:22-08:00",
+  "started_at": "2026-11-04T23:41:58-08:00",
+  "completed_at": "2026-11-04T23:43:54-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T22:45:25.805-08:00",
+    "end": "2026-11-04T23:43:54-08:00",
+    "basis": "Prior verified supplementary heartbeat completed 22:45:25.805 PST; bounded recall also screens newly indexed earlier reports while deduplicating previous candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination",
+      "result": "CMS public-notice index directly inspected, with no newly listed November 3-4 provider terminations, rescissions, or CLIA sanctions. Initial legacy CMS URL was inaccessible; canonical public-notice index found and verified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 4, 2026\" \"November 5, 2026\" hospital emergency department closes suspends patients",
+      "\"November 4, 2026\" maternity labor delivery unit closure hospital patients",
+      "\"November 4, 2026\" \"November 5\" rural hospital emergency services shutdown closure",
+      "\"November 4, 2026\" behavioral health psychiatric inpatient beds closing services",
+      "\"November 4, 2026\" dialysis clinic ceases operations patients transfer",
+      "\"November 4, 2026\" oncology cancer infusion center close stop treatments",
+      "November 4 2026 November 5 2026 primary care clinic closes patients announces",
+      "November 4 2026 November 5 2026 ambulance EMS service closure suspension county",
+      "November 4 2026 November 5 2026 air ambulance medical helicopter base closure suspended",
+      "November 4 2026 November 5 2026 hospital emergency room reopening restored resumes services after closure",
+      "November 4 2026 November 5 2026 Puerto Rico Guam Virgin Islands American Samoa Northern Mariana hospital clinic service suspension",
+      "site:beckershospitalreview.com/2026/11/04/ closure hospital department emergency maternity OR site:beckershospitalreview.com/2026/11/05/ closures"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No new verified qualifying service closure/suspension, rural emergency loss, ambulance or air-medical closure, official CMS notice, or effective restoration in bounded searches.",
+    "reviewed_exclusions": [
+      {
+        "item": "MGH Downtown Associates, Boston MA primary-care closure effective December 18",
+        "reason": "Recorded in prior Care Line watch November 4 14:42 PST; duplicate."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County AL practice closure",
+        "reason": "Recorded in prior Care Line watch November 4 15:48 PST; duplicate."
+      },
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren OH planned maternity service move",
+        "reason": "Recorded in prior Care Line watch November 4 20:41 PST; duplicate."
+      },
+      {
+        "item": "Adventist Health Bakersfield Advanced Care Pavilion opening",
+        "reason": "Ribbon-cutting October 8; later November 4 article is a retrospective, not an abrupt newly effective restoration."
+      },
+      {
+        "item": "Mackenzie and District Hospital emergency Code Orange response",
+        "reason": "Hospital is in British Columbia, Canada, outside U.S. and territory scope."
+      },
+      {
+        "item": "UK proposed Norfolk maternity changes; Maine Lincoln Hospital possible maternity closure",
+        "reason": "Foreign geography or proposals without new confirmed access effect."
+      },
+      {
+        "item": "Air Evac Decatur Illinois base closed September 16, 2026; previously reported events",
+        "reason": "Historical, not newly surfaced within current hourly recall."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct access failed again; previously documented persistent failure, while CMS and other targeted searches returned usable results."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Verified latest previous Care Line heartbeat care-line-watch-20261104T224316-0800-recall12 via GitHub ops/watch-ledger; compared branch to previous known commit and identified the 22:43 PST ledger.",
+    "limitations": "Supplemental bounded search is not exhaustive; indexed local notices may lag. No new meaningful issue detected beyond longstanding Health First endpoint inaccessibility. Production collector is authoritative; production deduplication not independently verified.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "One new heartbeat only. No approval, publication, schedule change, or task disabling."
+  }
+}

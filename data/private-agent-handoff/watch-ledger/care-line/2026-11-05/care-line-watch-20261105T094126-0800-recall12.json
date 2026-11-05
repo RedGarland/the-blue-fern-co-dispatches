@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T094126-0800-recall12",
+  "scheduled_for": "2026-11-05T09:41:26-08:00",
+  "started_at": "2026-11-05T09:41:26-08:00",
+  "completed_at": "2026-11-05T09:42:51-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T08:44:13-08:00",
+    "end": "2026-11-05T09:42:51-08:00",
+    "basis": "Start: completed_at in most recent verified Care Line heartbeat on ops/watch-ledger. End: current run's observation completion in PST. Additional multi-day discovery lookback used to identify delayed/indexed reports; only nonduplicate, qualifying access changes considered."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, Organ Procurement Organization, Termination Notice",
+      "result": "Direct CMS page checked; newest displayed entry remains November 2; no new Medicare termination/rescission/CLIA adverse notice in the hourly window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes shutdown service November 5 2026 local news United States",
+      "labor delivery maternity ward hospital closing announced November 5 2026",
+      "rural hospital cuts emergency services or closes November 2026 announced Thursday",
+      "ambulance company closes service suspends dispatch November 5 2026 county",
+      "air medical helicopter ambulance base closed November 5 2026 United States",
+      "dialysis center clinic closure November 2026 patients access",
+      "psychiatric behavioral health hospital inpatient unit closed cuts services November 5 2026",
+      "cancer treatment infusion oncology clinic closing November 2026 patients",
+      "primary care community health clinic shutting closing November 5 2026",
+      "hospital emergency room reopened restored service after closure November 5 2026 US",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa hospital clinic closure suspension emergency November 2026",
+      "site:gov \"November 5, 2026\" hospital emergency ambulance closure suspended health services notice"
+    ],
+    "targeted_search_recency_days": [
+      2,
+      2,
+      3,
+      2,
+      5,
+      4,
+      2,
+      5,
+      2,
+      3,
+      4,
+      2
+    ],
+    "result_summary": "No newly verified, qualifying, nonduplicate closure, suspension, rural/emergency loss, ambulance/air-medical base change, adverse CMS public notice, or effective restoration/reopening. Twelve targeted searches completed; freshness of search indexing remains an inherent limitation.",
+    "reviewed_exclusions": [
+      {
+        "item": "Oklahoma Children's OU Health Behavioral Health Center, Oklahoma City, OK",
+        "source_url": "https://www.kgou.org/health/2026-11-05/new-oklahoma-childrens-ou-health-center-to-expand-pediatric-behavioral-healthcare-in-state",
+        "reason": "Previously screened; grand opening November 4 but actual patient services expected December; not immediate reopening of lost essential care."
+      },
+      {
+        "item": "Benefis Health System, Great Falls, MT",
+        "source_url": "https://www.krtv.com/news/benefis-health-system-to-restructure-services-citing-financial-pressure",
+        "reason": "Already screened by earlier Care Line watches; service reductions not a new independent development."
+      },
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren, OH maternity discontinuation",
+        "source_url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move",
+        "reason": "Already captured on November 4 as pending-review finding in an earlier watch; avoid duplicate."
+      },
+      {
+        "item": "San Mateo County Coastside Health Center roadmap, Half Moon Bay, CA",
+        "source_url": "https://coastsidebuzz.com/san-mateo-county-supervisors-directs-county-health-to-develop-a-roadmap-to-accept-commercial-insurance-and-local-lab-services-at-the-coastside-clinic-within-90-days/",
+        "reason": "Roadmap to consider insurance acceptance and lab collection; source explicitly says no current service change."
+      },
+      {
+        "item": "Kula Hospital restoration plan, Maui, HI",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Construction planning announced November 2; emergency department remains closed; anticipated reopening in 2027 not immediate restoration."
+      },
+      {
+        "item": "Palm Beach Health Network and Centene negotiations, FL",
+        "source_url": "https://southfloridahospitalnews.com/2026/11/04/thousands-of-vulnerable-medicaid-and-aca-patients-stand-to-lose-access-to-healthcare-insurance-if-centene-continues-to-stall-on-in-network-renewal/",
+        "reason": "Potential January 2027 network loss depends on failed contract negotiations; no concrete current access effect."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct open returned inaccessible; recurring same issue previously recorded, with no evidence of a new material degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Read latest Care Line watch heartbeat on ops/watch-ledger, completed 2026-11-05T08:44:13-08:00. Known OH/MT/OK items cross-checked against previous review notes. Production collector state not independently read.",
+    "limitations": "Bounded supplementary recall is not exhaustive or authoritative. Relevant headlines may index late; some sources lack publication timestamps. Health First alert endpoint remains inaccessible.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one new JSON heartbeat on existing ops/watch-ledger; no editorial approval, public publication, PR/merge, schedule change, permission change, or task disabling."
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T174704-0800-r11-20261105T014704Z",
+  "scheduled_for": "2026-11-04T17:45:54-08:00",
+  "started_at": "2026-11-04T17:47:04-08:00",
+  "completed_at": "2026-11-04T17:48:14-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T16:49:41-08:00",
+    "end_at": "2026-11-04T17:48:14-08:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous independently verified Food Line watch heartbeat completion through this observation. Publication on November 4 alone does not prove release since 16:49:41 PST.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; the primary nationwide production Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last or community full-service grocery store closing, loss, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank closure or major food-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T164836-0800-r11-20261105T004836Z.json",
+      "completed_at": "2026-11-04T16:49:41-08:00",
+      "status": "DEGRADED",
+      "commit_sha": "29660d8c8e7b8c4c4b1cc2d4623ec9fd858c1f7b"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engine": "fast",
+    "bounded_query_context": [
+      "\"only grocery store\" closes fire November 4 2026 town",
+      "\"last grocery store\" closure November 4 2026 town",
+      "\"sole grocery\" store closure fire November 4 2026",
+      "\"full service grocery store\" fire closed November 4 2026",
+      "food bank distribution cancelled storm flooding fire November 4 2026 November 5",
+      "food pantry emergency distribution canceled due power outage November 4 2026",
+      "mobile food distribution cancelled weather November 4 2026 November 5",
+      "food pantry abruptly closes service suspended November 4 2026",
+      "food bank warehouse fire stops distributions November 4 2026",
+      "site:gov November 4 2026 SNAP EBT outage interrupted benefits",
+      "site:gov November 4 2026 WIC benefits unavailable outage interruption",
+      "SNAP food assistance benefits disrupted November 4 2026 official agency November 5"
+    ],
+    "direct_page_checks": 3,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.wpr.org/news/food-bank-distribution-center-vandalism-in-madison",
+        "publisher": "Wisconsin Public Radio",
+        "source_published_at": "2026-11-04",
+        "observation": "Madison Second Harvest refrigerated truck destroyed by fire; windows damaged, volunteer shifts canceled but food deliveries continued. Already covered in prior heartbeat.",
+        "exact_supporting_passage": "The organization canceled most of its volunteer shifts on Wednesday and Thursday, but said that food deliveries were continuing.",
+        "exclusion_reason": "Duplicate of prior watch and no verified food-access distribution interruption."
+      },
+      {
+        "url": "https://fox47.com/news/local/second-harvest-foodbanks-distribution-center-vandalized",
+        "publisher": "Fox 47",
+        "source_published_at": "2026-11-04T10:19:00-06:00",
+        "observation": "Local corroboration of existing Madison Second Harvest damage; no report of canceled food deliveries or consumer service disruption.",
+        "exclusion_reason": "Earlier than interval, duplicate incident; no demonstrated major consumer food-access loss."
+      },
+      {
+        "url": "https://www.wgmd.com/food-bank-of-delaware-to-hold-mass-drive-thru-distributions-in-november/",
+        "publisher": "WGMD",
+        "source_published_at": "2026-11-04",
+        "observation": "Upcoming Food Bank of Delaware distributions advertised for Nov. 16/18/20; no service cancellation.",
+        "exclusion_reason": "Routine program distribution promotion, not a disruption."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "publisher": "WGME",
+        "source_published_at": "2026-09-03",
+        "exclusion_reason": "Historical sole-grocery closure, outside interval."
+      },
+      {
+        "url": "https://www.mass.gov/info-details/november-2025-snap-updates",
+        "publisher": "Massachusetts DTA",
+        "source_published_at": null,
+        "exclusion_reason": "2025 funding and benefit update; no interval-new 2026 disruption."
+      }
+    ],
+    "source_failures": [],
+    "result": "No new, nonduplicative qualifying U.S. food-access disruption could be verified in the precise interval. All 12 targeted searches and three direct news page checks completed.",
+    "limitations": "Bounded search and indexing lag do not rule out unindexed local events. No independent verification that every site was published within the hourly interval; production collector remains authoritative.",
+    "action_limits": "No content approval, publication, production modification, task schedule change or disabling."
+  }
+}

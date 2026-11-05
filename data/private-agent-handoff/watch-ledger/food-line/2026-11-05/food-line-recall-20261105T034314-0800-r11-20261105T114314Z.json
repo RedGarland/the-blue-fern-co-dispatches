@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T034314-0800-r11-20261105T114314Z",
+  "scheduled_for": "2026-11-05T03:45:54-08:00",
+  "started_at": "2026-11-05T03:43:14-08:00",
+  "completed_at": "2026-11-05T03:45:26.448-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T02:48:29-08:00",
+    "end_at": "2026-11-05T03:45:26.448-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous verified supplementary Food Line heartbeat completion through this run completion; publication/event timing and duplicates checked separately from crawl freshness.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for audited high-value misses only; authoritative U.S. production Food Line collection is unchanged.",
+    "target_classes": [
+      "Only, sole, last or full-service grocery-store loss/closure/fire/disaster",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry or food-bank closure/material food-access reduction",
+      "New official SNAP/WIC/EBT/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T024718-0800-r11-20261105T104718Z.json",
+      "completed_at": "2026-11-05T02:48:29-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire town November 5 2026",
+      "\"last grocery store\" \"November 5, 2026\" closes",
+      "\"full-service grocery store\" closed fire \"November 2026\"",
+      "\"sole grocery\" fire closure November 5 2026",
+      "\"food distribution\" canceled storm flood power outage November 5 2026",
+      "\"emergency food distribution\" cancelled weather November 5 2026",
+      "\"food pantry\" \"temporarily closed\" fire flood November 5 2026",
+      "\"food bank\" services suspended closed November 5 2026",
+      "\"food pantry\" abruptly closed November 5 2026 families",
+      "site:gov SNAP EBT system outage service disruption November 5 2026",
+      "site:gov WIC benefits interrupted system down November 5 2026",
+      "site:gov SNAP benefits delays interrupted November 5 2026"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Kauaʻi Hurricane Lowell recovery update states a Friday mobile pantry distribution remains scheduled; no canceled/suspended emergency food distribution or new pantry-access interruption. Hurricane resource centers closed is not a documented closure of food distribution."
+      },
+      {
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14T17:37:00-04:00",
+        "exclusion_reason": "Previously checked September loss of only grocery store; old event with no newly evidenced hourly update."
+      },
+      {
+        "url": "https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102",
+        "source_published_at": "2026-01-27T07:56:00-08:00",
+        "exclusion_reason": "January 27, 2026 unexpected closure and temporary service interruption, outside hourly window; alternative food bank continued services."
+      }
+    ],
+    "source_failures": [],
+    "result": "No new qualifying U.S. sole/last/full-service grocery-store loss, disaster-canceled emergency food distribution, abrupt pantry/food-bank shutdown, or official immediate food-assistance interruption verified within this interval.",
+    "limitations": "Twelve targeted queries yielded mainly historical 2018/2020/2025/September 2026 events, routine support guides, and active rather than canceled food distributions. Search engine indexing is not comprehensive, and 'published today' is not proof a qualifying disruption arose during this hour.",
+    "materiality": "No source/search failure or new high-value signal was identified. Last heartbeat had a Guam timeout; this run did not reproduce that auxiliary direct-source check and does not independently certify recovery.",
+    "action_limits": "No approval, editorial review status change, publication, schedule modification, task disabling, or production collector changes."
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T075011-0800-recall12",
+  "scheduled_for": "2026-11-05T07:45:22-08:00",
+  "started_at": "2026-11-05T07:50:11-08:00",
+  "completed_at": "2026-11-05T07:52:26.153-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T06:44:38-08:00",
+    "end": "2026-11-05T07:52:26.153-08:00",
+    "basis": "Start is verified completed_at of most recent prior Care Line Watch heartbeat on ops/watch-ledger; bounded Nov 4–5 delayed-indexing lookback; prior ledger and reported candidates considered for duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), Organ Procurement Organization, termination notice",
+      "result": "Official CMS Public Notices checked first; no newly dated termination, rescission, or CLIA access notice visible since previous check."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended reopened services November 5 2026 local news",
+      "labor delivery maternity unit closure hospital November 5 2026 announcement",
+      "rural hospital emergency services ending closure November 2026 county patients",
+      "ambulance EMS provider service base closure November 5 2026 county",
+      "air medical helicopter ambulance base to close suspend service announced November 2026",
+      "dialysis center clinic discontinuing operations November 5 2026 patients",
+      "behavioral health inpatient psychiatric unit service closure announced November 5 2026",
+      "oncology chemotherapy infusion cancer center ending services November 5 2026",
+      "primary care clinic closing permanently service patients November 5 2026 announcement United States",
+      "emergency department hospital reopens services restored November 5 2026 patients",
+      "Guam Puerto Rico US Virgin Islands American Samoa CNMI hospital clinic shutdown reopening November 5 2026",
+      "site:gov 2026-11-05 clinic hospital emergency services closure suspension patients November"
+    ],
+    "targeted_search_recency_days": [
+      2,
+      2,
+      7,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "result_summary": "No new verified, nonduplicate healthcare service closure, suspension, emergency/rural service loss, ambulance/air-medical base closure, CMS access-risk notice, or concrete reopening in the bounded recall window. Search results were predominantly older closures, proposed changes, unrelated locations, or policy/business context.",
+    "reviewed_exclusions": [
+      {
+        "item": "Pelican Rapids / Otter Tail County, Minnesota, subordinate ambulance service district",
+        "source_url": "https://fergusnow.com/2026/11/05/county-board-approves-new-district-to-keep-ambulance-service-in-pelican-rapids-area/",
+        "reason": "November 5 local report covers November 3 district formation; story explicitly says ambulance services will not change right away and Ringdahl Ambulance is expected to serve until its license expires March 2027. Funding/governance action only, no concrete current service loss or restoration."
+      },
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren OH, labor and delivery discontinuation",
+        "source_url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move",
+        "reason": "Already registered as pending-review candidate in earlier November 4 care-line heartbeat; duplicate."
+      },
+      {
+        "item": "Benefis Health System, Great Falls MT, service reductions",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Previously screened in earlier November 4–5 Care Line watches; no new material change seen."
+      },
+      {
+        "item": "West Suburban/Weiss hospitals in Illinois and Henderson Hospital maternity/NICU",
+        "reason": "Historical March/September 2026 changes; not new."
+      },
+      {
+        "item": "Kula Hospital, Hawaii, restoration",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Future target reopening in 2027, no immediate restored service."
+      },
+      {
+        "item": "Mackenzie and District Hospital emergency department reopening",
+        "source_url": "https://www.myeastkootenaynow.com/59293/news/rcmp/update-highway-39-south-of-mackenzie-cleared-bc-highway-patrol-seeking-dash-cam-and-witnesses/",
+        "reason": "British Columbia, Canada, outside U.S. and territories."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Health First alert endpoint remains inaccessible via direct check; known recurring source issue; independently observed again in this run."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Independently listed seven November 5 ledger entries on ops/watch-ledger. Last verified ledger completed 06:44:38 PST. Used previous heartbeat exclusion list and current results; production collector deduplication not independently verified.",
+    "limitations": "Supplementary bounded keyword recall, not a comprehensive primary collector. Search engine indexing may lag source publication; time of source publication may be imprecise. CMS list could lag. Existing Health First endpoint remains unavailable.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one private heartbeat requested on existing ops/watch-ledger. No approval, publication, merge, permissions change, schedule change, or task disabling."
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T145019-0800-r11-20261105T225019Z",
+  "scheduled_for": "2026-11-05T14:45:54-08:00",
+  "started_at": "2026-11-05T14:50:19-08:00",
+  "completed_at": "2026-11-05T14:53:14-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T13:47:00-08:00",
+    "end_at": "2026-11-05T14:53:14-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Latest verified food-line heartbeat completion through this watch; incident or publication hour must be corroborated before treating index rediscovery as new.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value Food Line miss classes only; production nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service community grocery store closure/loss/fire/disaster",
+      "Emergency food distribution cancellation/suspension from storm, flood, fire, power outage or facility damage",
+      "Abrupt pantry/food bank service closure or major food-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T134533-0800-r11-20261105T214533Z.json",
+      "completed_at": "2026-11-05T13:47:00-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 5 2026 United States",
+      "\"last grocery store\" closes November 5 2026 town",
+      "\"sole grocery\" fire closed November 2026 community",
+      "\"full-service grocery store\" shut down Nov 5 2026 rural",
+      "\"food distribution\" \"cancelled\" storm \"Nov\" \"2026\"",
+      "\"food distribution\" \"canceled\" \"November 5, 2026\" weather",
+      "\"food bank\" \"distribution\" \"suspended\" outage flood Thursday November 5",
+      "\"mobile pantry\" \"canceled\" \"November 5\" 2026",
+      "\"food pantry\" \"temporarily closed\" \"November 5, 2026\"",
+      "\"food bank\" \"closed\" \"power outage\" \"November 5\" 2026",
+      "site:gov \"SNAP\" \"EBT\" \"outage\" \"November 5, 2026\"",
+      "site:gov \"WIC\" \"closed\" \"November 5, 2026\" outage"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://data.lcps.net/o/vla/live-feed",
+        "source_published_at": null,
+        "exclusion_reason": "Indexed Las Cruces Public Schools notice says November 5 monthly distribution canceled due to scheduled construction in front of Family Support Center and resumes December 3; search shows 2-3 days old, outside observation interval. Scheduled construction is not qualifying emergency weather/fire/outage/damage. Direct page open returned older August feed entries, so indexed notice could not be independently confirmed from current live feed.",
+        "direct_page_retrieval": "SUCCESS but stale indexed/direct page mismatch"
+      },
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "source_published_at": null,
+        "page_last_modified_at": "2026-11-03T15:53:17-05:00",
+        "exclusion_reason": "Provider site lists canceled November 4 Michigan mobile pantry distributions at Goodwill Integrated Solutions (Dearborn) and SEED–Van Buren (Detroit) with no cause stated. Prior day, no evidence of qualifying storm/fire/flood/outage/facility damage and outside latest hourly window."
+      },
+      {
+        "url": "https://www.vdh.virginia.gov/lord-fairfax/",
+        "source_published_at": null,
+        "page_last_updated_date": "2026-11-05",
+        "exclusion_reason": "Previously reviewed Shenandoah County health-district power outage remains posted; WIC-specific suspension, immediate benefit access impact and onset hour not verified."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Daniels, West Virginia IGA announces prospective November 30 closure; article predates latest hourly interval and store is not established as community's only/last/full-service grocery option."
+      },
+      {
+        "url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "source_published_at": "2026-08",
+        "exclusion_reason": "Eastport Maine sole grocery loss is historical (August/September 2026), not newly occurring in hourly observation window."
+      },
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Previously captured Union County New Jersey EBT replacement-card delay is a known existing finding, not a new event."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access interruption since 2026-11-05T13:47:00-08:00.",
+    "limitations": "Twelve indexed targeted searches cannot establish nationwide absence; indexed search snippets may be newer than direct-page cached content. One official feed surfaced an older page view, limiting confirmation of a preannounced construction-related distribution cancellation. No search failure or source network access error.",
+    "materiality": "No material watch degradation.",
+    "action_limits": "No approvals, publication, merging, production collector changes, schedule edits or task disabling."
+  }
+}

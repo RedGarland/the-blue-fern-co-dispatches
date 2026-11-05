@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T034343-0800-recall12",
+  "scheduled_for": "2026-11-05T03:45:22-08:00",
+  "started_at": "2026-11-05T03:43:43-08:00",
+  "completed_at": "2026-11-05T03:45:20.017-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T02:47:58.996-08:00",
+    "end": "2026-11-05T03:45:20.017-08:00",
+    "basis": "Prior independently verified care-line supplementary heartbeat 2026-11-05 02:44:06 PST completed at 02:47:58.996 PST; screen 2026-11-04/05 indexed notices for recall while excluding earlier candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY; Organ Procurement Organization (OPO) termination notice",
+      "result": "Official CMS listing was opened after an initial targeted lookup. No new provider termination, rescission, or CLIA limitation/suspension dated Nov 3–5 was visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 5 2026 hospital emergency department service closure suspension rural healthcare United States",
+      "November 5 2026 labor delivery maternity unit closing obstetrics service announced hospital",
+      "November 5 2026 behavioral health psychiatric inpatient facility closure suspended admission hospital",
+      "November 5 2026 dialysis clinic treatment center closure patient access",
+      "November 5 2026 oncology cancer clinic closing suspended treatments services",
+      "November 5 2026 primary care family medicine health clinic permanently closing patients",
+      "November 5 2026 ambulance service shutting down EMS closure county rural",
+      "November 5 2026 air medical helicopter air ambulance base closure grounding suspended",
+      "November 5 2026 rural hospital emergency service discontinued critical access facility notice",
+      "November 5 2026 hospital emergency department reopening restored service after closure",
+      "November 5 2026 Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic emergency service closure suspension",
+      "November 5 2026 state health department Medicare termination CLIA suspension provider patient access"
+    ],
+    "search_recency_days": 3,
+    "result_summary": "No newly verified or newly surfaced qualifying U.S. or territory hospital, emergency department, maternity, behavioral-health, dialysis, oncology, primary-care, ambulance/air-medical service closure/suspension, CMS access-risk notice, or concretely effective reopening within this bounded recall.",
+    "reviewed_exclusions": [
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren OH, maternity service exit",
+        "reason": "Previously logged Nov 4 20:41 PST; duplicate, announced before present window",
+        "source_url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move"
+      },
+      {
+        "item": "MGH Downtown Associates, Boston MA, primary care closure",
+        "reason": "Previously logged Nov 4 14:42 PST; duplicate"
+      },
+      {
+        "item": "Taylorville Family Medicine, Alabama, primary care closure",
+        "reason": "Previously logged Nov 4 15:48 PST; duplicate"
+      },
+      {
+        "item": "Coastside Health Center, San Mateo County CA, proposal for insurance and laboratory access",
+        "reason": "November 5 roadmap request only; no effective access change",
+        "source_url": "https://coastsidebuzz.com/san-mateo-county-supervisors-directs-county-health-to-develop-a-roadmap-to-accept-commercial-insurance-and-local-lab-services-at-the-coastside-clinic-within-90-days/"
+      },
+      {
+        "item": "Dennys River Volunteer Ambulance Service, Maine",
+        "reason": "October 13 closure story, outside this watch window",
+        "source_url": "https://www.bangordailynews.com/2026/10/13/down-east/downeast-police-courts/dennys-river-volunteer-ambulance-service-closing/"
+      },
+      {
+        "item": "Kula Hospital restoration, Maui HI",
+        "reason": "Nov 2 update names contractor and anticipates 2027 reopening; no effective restoration",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/"
+      },
+      {
+        "item": "Dialysis Returns to DRHC",
+        "reason": "Dauphin Regional Health Centre is in Manitoba, Canada, outside U.S. and territories",
+        "source_url": "https://730ckdm.com/news-now/34737-dialysis-returns-to-drhc"
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Health First official alert endpoint returned inaccessible. Persistent and previously documented, not a new material degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Read prior Nov 5 02:44:06 PST heartbeat from ops/watch-ledger; compared against prior Nov 4 recorded Boston, Alabama, and Ohio closures. Production deduplication not separately verified.",
+    "limitations": "This is a bounded supplemental search, not the national primary collector. Indexing may lag and official Health First alert endpoint remains inaccessible; CMS and targeted search coverage otherwise remained usable.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "One private heartbeat written on ops/watch-ledger; no editorial approval, publication, schedule change, or disablement."
+  }
+}

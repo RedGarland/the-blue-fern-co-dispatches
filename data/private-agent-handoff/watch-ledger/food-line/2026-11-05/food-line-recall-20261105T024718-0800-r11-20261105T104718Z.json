@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T024718-0800-r11-20261105T104718Z",
+  "scheduled_for": "2026-11-05T02:45:54-08:00",
+  "started_at": "2026-11-05T02:47:18-08:00",
+  "completed_at": "2026-11-05T02:48:29-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T01:46:09.402-08:00",
+    "end_at": "2026-11-05T02:48:29-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous verified Food Line supplementary watch completion through current observation. Page crawl freshness and source publication dates are distinguished from new developments.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line miss-class recall, not authoritative nationwide production collection.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting only, sole, last or full-service grocery store",
+      "Canceled/suspended emergency food distribution due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/EBT/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T014432-0800-r11-20261105T094432Z.json",
+      "completed_at": "2026-11-05T01:46:09.402-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings",
+      "commit_sha": "3435263d424c2a6582748f3dce191be0433cb2f7"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 5 2026 town",
+      "\"last grocery store\" closure November 2026 community",
+      "\"only full-service grocery\" fire closed November 2026",
+      "\"food distribution\" cancelled storm November 5 2026",
+      "\"food pantry\" distribution canceled flooding November 2026",
+      "\"food bank\" \"distribution\" suspended fire power outage November 5 2026",
+      "\"food pantry\" unexpectedly closed November 5 2026",
+      "\"food bank\" \"temporarily closed\" November 5 2026",
+      "\"pantry\" \"services suspended\" November 2026 food",
+      "site:gov \"SNAP\" \"interruption\" \"November 5\" 2026",
+      "site:gov \"WIC\" \"service disruption\" November 2026",
+      "\"EBT\" \"system outage\" \"November 5, 2026\" benefits"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 2,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.wbng.com/video/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14T17:37:00-04:00",
+        "exclusion_reason": "Sole grocery store fire is a genuine target class but September 14 report is historical and was reviewed in the preceding heartbeat; no new interval development."
+      },
+      {
+        "url": "https://dekalbcountyga.gov/news/2025-10-31/dekalb-county-strengthens-safety-net-and-builds-continuum-care-snap-funding-faces",
+        "source_published_at": "2025-10-31T15:26:00",
+        "exclusion_reason": "Old October 2025 notice about potential November 2025 SNAP funding suspension; not November 2026 current interruption."
+      },
+      {
+        "url": "https://dphss.guam.gov/",
+        "source_published_at": null,
+        "exclusion_reason": "Official site search snippet lists an October 27 water-related DPHSS office closure and routine November 28 WIC clinic closure; no new immediate food-assistance disruption was confirmed. Direct source fetch timed out."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://dphss.guam.gov/",
+        "type": "direct_source_timeout",
+        "detail": "Direct open of official Guam Department of Public Health and Social Services homepage failed with timeout. Search-index excerpt remained available; no new qualifying SNAP/WIC interruption was verified."
+      }
+    ],
+    "result": "No newly verified sole/last/full-service grocery loss, emergency-food distribution cancellation, abrupt pantry/food-bank service reduction, or official immediate SNAP/WIC/EBT interruption in bounded hourly interval.",
+    "limitations": "Fresh search results were dominated by older September 2026 sole-store loss, January 2026 and earlier grocery losses, 2025 SNAP materials, and unrelated announcements. A single auxiliary official Guam source timed out, so conservatively DEGRADED rather than SUCCESS; meaningful broad coverage remained. This is not exhaustive national monitoring.",
+    "materiality": "The single timeout did not materially compromise the four-class recall coverage or reveal a new event; no new qualifying signal and no notification-level operational failure verified.",
+    "action_limits": "No approvals, publication, scheduling changes, automation disabling or modifications to production collector."
+  }
+}

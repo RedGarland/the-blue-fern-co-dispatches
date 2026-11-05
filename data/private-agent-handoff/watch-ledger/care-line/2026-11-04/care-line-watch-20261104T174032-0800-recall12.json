@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T174032-0800-recall12",
+  "scheduled_for": "2026-11-04T17:45:22-08:00",
+  "started_at": "2026-11-04T17:40:32-08:00",
+  "completed_at": "2026-11-04T17:43:03.583-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T15:50:14.561-08:00",
+    "end": "2026-11-04T17:43:03.583-08:00",
+    "basis": "Last independently accessible Care Line ledger heartbeat completion to this recall. Earlier 16:45 ledger coverage could not be independently enumerated; interval may overlap another watch. Date-only publication is not proof of occurrence within the interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), termination notice, organ procurement organization",
+      "result": "Official CMS public notices opened and inspected prior to the 12 targeted searches; no notice newly dated in this window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department temporarily closed suspended November 4 2026 US",
+      "rural hospital emergency maternity service closing November 4 2026 United States",
+      "hospital behavioral health psychiatric unit closing November 4 2026",
+      "dialysis center clinic closure November 4 2026 patients",
+      "ambulance service suspension air ambulance base closure November 4 2026",
+      "primary care family medicine clinic closure announced November 4 2026 local",
+      "site:beckershospitalreview.com \"Nov 4, 2026\" closing services hospital",
+      "site:healthcaredive.com \"Nov 4, 2026\" hospital closure emergency",
+      "site:apnews.com \"November 4, 2026\" hospital closing clinic",
+      "site:*.gov \"Nov 4, 2026\" \"suspend\" \"emergency\" hospital services",
+      "\"November 4, 2026\" \"oncology\" \"closing\" clinic United States",
+      "\"November 4, 2026\" \"reopened\" \"emergency department\" OR \"maternity\" OR \"dialysis\" US"
+    ],
+    "search_recency": "First six searches filtered to 1-2 recent days; final six were site- and date-specific.",
+    "result_summary": "No independently verified new qualifying US/territory closure, suspension, loss of emergency/rural/ambulance/air-medical service, official CMS provider/CLIA action, or concretely effective essential-service restoration was identified. Search hits were mostly older, overseas, business/ownership, policy speculation, or unrelated care topics.",
+    "reviewed_exclusions": [
+      {
+        "item": "MGH Downtown Associates, Boston, primary-care scheduled December 18 closure",
+        "reason": "Already recorded in prior 14:44-15:48 hourly recall heartbeat; duplicate. Future closure is not yet effective."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County, AL, reported closure",
+        "reason": "Already recorded in prior 15:48 recall heartbeat; announcement reportedly 2026-11-02; duplicate."
+      },
+      {
+        "item": "OPKO/BioReference proposed laboratory business sale to Labcorp",
+        "reason": "Ownership/transaction only; no confirmed service closure or service loss."
+      },
+      {
+        "item": "Novi DaVita dialysis reopening coverage",
+        "reason": "June/July 2026 incident, outside the temporal recall window."
+      },
+      {
+        "item": "V N Desai Hospital partial suspension",
+        "reason": "India; outside United States and territories."
+      },
+      {
+        "item": "US local closure and restoration searches",
+        "reason": "No sufficiently supported additional interval-new concrete access change found."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct endpoint open failed. This is a previously documented persistent Health First source failure, not newly introduced in this run."
+      }
+    ],
+    "material_new_degradation": false,
+    "limitations": "Supplementary search is not exhaustive and search result snippets lack reliable first-publication times. Prior 16:45 ledger inventory was not accessible through connector's file enumeration; used last independently verified 15:50 heartbeat. Official Health First endpoint inaccessible while CMS and other search sources remained available.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "No approval, publication, protected-branch change, schedule edit, or task disabling. Exactly one new heartbeat file intended for ops/watch-ledger."
+  }
+}

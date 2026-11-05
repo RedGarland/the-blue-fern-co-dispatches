@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T064139-0800-recall12",
+  "scheduled_for": "2026-11-05T06:45:22-08:00",
+  "started_at": "2026-11-05T06:41:39-08:00",
+  "completed_at": "2026-11-05T06:44:38.000-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T05:45:41-08:00",
+    "end": "2026-11-05T06:44:38.000-08:00",
+    "basis": "Starts at completed_at of verified previous Care Line Watch heartbeat (05:44:41 start/05:45:41 completion PST); bounded Nov 4–5 lookback used for delayed indexing, with prior-watch ledger deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, Organ Procurement Organization, Termination Notice",
+      "result": "Direct CMS official listing checked first. No newer-dated notice through November 5 visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 5, 2026\" hospital emergency department closing reopening services",
+      "\"November 5, 2026\" maternity labor delivery closing hospital",
+      "\"November 5, 2026\" rural hospital service closing emergency",
+      "\"November 5, 2026\" \"ambulance\" \"service\" closing suspension",
+      "hospital \"closing\" \"November 5, 2026\" patients services local news",
+      "dialysis clinic \"closing\" \"November 2026\" patients 4 5",
+      "cancer oncology infusion center \"closing\" \"November 2026\" patients",
+      "primary care clinic \"closure\" \"November 5, 2026\" patients",
+      "Benefis Health System closing northwest clinic December 19 2026 ending behavioral health rehabilitation Great Falls November 2026",
+      "\"November 5, 2026\" behavioral health clinic closes psychiatry hospital",
+      "\"November 5, 2026\" air ambulance helicopter base closure service",
+      "Puerto Rico Guam US Virgin Islands November 5 2026 hospital clinic service closure suspension reopened"
+    ],
+    "search_recency_context": "Current local date November 5, 2026; indexed November 3–5 coverage including official and strong local reporting. Some index hits may lack exact publication time.",
+    "result_summary": "No newly qualifying, nonduplicate US/territory change verified since prior hourly check; historical items, business/proposal items without current access effect, prospective items previously reviewed, and unrelated mentions excluded.",
+    "reviewed_exclusions": [
+      {
+        "item": "Benefis Health System Northwest Clinic/inpatient rehabilitation/outpatient behavioral health, Great Falls MT",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Firm service discontinuation announced November 3; independently confirmed in Montana Free Press and local reporting, but already identified and screened in November 4 00:44–08:49 Care Line watch heartbeats. No newer service change in this observation window; not a fresh finding."
+      },
+      {
+        "item": "Providence Mission Hospital Laguna Beach emergency department micro-hospital replacement proposal",
+        "source_url": "https://www.archyde.com/providence-drops-laguna-beach-micro-hospital-plan-with-24-7-er/",
+        "reason": "November 3 decision not to build replacement micro-hospital; cited ER shutdown is planned for January 1, 2030, not a new effective access loss this hour; secondary source only."
+      },
+      {
+        "item": "Optum Madison Center, Seattle WA temporary partial clinic closure banner",
+        "source_url": "https://www.optum.com/en/care/providers/wa/george-lau-md-1215032313.html",
+        "reason": "A search-index snippet showed an undated facility-issue partial closure banner, but it was not present on the directly opened provider page; announcement/effective timing and current effect cannot be verified."
+      },
+      {
+        "item": "Mass General Brigham Downtown Crossing primary care, Boston MA; Taylorville Family Medicine, AL; Mercy Health St. Joseph labor-delivery, Warren OH",
+        "reason": "Earlier watch heartbeat positives on November 4; duplicates."
+      },
+      {
+        "item": "PCHC Adult Wellness Center, Bangor ME",
+        "source_url": "https://pchc.com/updates/",
+        "reason": "November 6 anticipated closure originally announced September 2026; not a newly announced or effective event in this window."
+      },
+      {
+        "item": "Guam GRMC storm-related outpatient closures/reopenings",
+        "source_url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/",
+        "reason": "October 19 restoration; historical, not new."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct Health First official alert endpoint remains inaccessible; recurring known issue, not newly degraded."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Read Nov 5 05:44:41 heartbeat, independently enumerated all six Nov 5 care-line ledger files and 24 Nov 4 files and checked previous findings and Benefis mentions. Production collector deduplication not independently verified.",
+    "limitations": "Bounded supplementary keyword recall, not comprehensive primary collector. CMS official listing may lag; source indexing may lag publication. An existing Health First endpoint remains unavailable. Time-of-posting unresolved for index snippets. No pending-review positive findings.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one private heartbeat committed on existing ops/watch-ledger branch; no approval, publication, protected branch mutation, schedule changes or task disabling."
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T084238-0800-r11-20261105T164238Z",
+  "scheduled_for": "2026-11-05T08:42:25-08:00",
+  "started_at": "2026-11-05T08:42:38-08:00",
+  "completed_at": "2026-11-05T08:43:14-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T07:51:54.583-08:00",
+    "end_at": "2026-11-05T08:43:14-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Prior independently verified watch heartbeat completion to this observation; dates-only news items or re-dated mirrors do not establish new publication or occurrence within the interval.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall, not the authoritative national production collector.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery-store loss, closure, fire or disaster",
+      "Storm/flood/fire/outage/damage-caused emergency food distribution cancellation or suspension",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T074827-0800-r11-20261105T154827Z.json",
+      "completed_at": "2026-11-05T07:51:54.583-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engine": "fast",
+    "bounded_query_context": [
+      "\"only grocery store\" \"November 5, 2026\" closed fire",
+      "\"last grocery store\" \"Nov 5 2026\" closing",
+      "\"sole grocery store\" fire closure \"November 2026\"",
+      "\"full-service grocery store\" closed \"November 5\" 2026",
+      "\"food distribution\" canceled storm outage \"November 5 2026\"",
+      "\"food bank\" \"distribution canceled\" \"Nov 5 2026\"",
+      "\"food pantry\" \"closed\" \"November 5 2026\" flood fire outage",
+      "SNAP EBT WIC service disruption outage November 5 2026 official state agency",
+      "November 5 2026 food pantry food bank abrupt shutdown service interruption local news",
+      "November 5 2026 emergency food distribution \"cancelled\" OR \"canceled\" county",
+      "November 5 2026 only supermarket closing town rural local news",
+      "November 5 2026 EBT outage benefits replacement cards delayed SNAP WIC county state notice"
+    ],
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Previously recorded Union County, New Jersey replacement EBT-card delay, with no new verified update during current window."
+      },
+      {
+        "url": "https://utah.news/article/92fa7889-9984-491e-8021-d81dc4732585",
+        "source_published_at": "2026-11-03",
+        "exclusion_reason": "Provo/Utah County food-bank temporary closure effective November 1 and already reviewed by prior watch."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/08/grand-union-supermarket-cortland-close-by-end-2026/",
+        "source_published_at": "2026-09-08",
+        "exclusion_reason": "Older announcement of future December 5 closure; explicitly not the only major grocery store in the area."
+      },
+      {
+        "url": "https://www.diningandcooking.com/us/78170/",
+        "source_published_at": null,
+        "exclusion_reason": "Search-indexed as November 5 but narrative describes an Erie, Kansas closure expected by end of August; apparent historical/republished content. Direct mirror failed and no new November 5 event established."
+      },
+      {
+        "url": "https://saltlakejournal.com/article/provo-food-bank-closes-after-raising-100-000-in-emergency-fund/",
+        "source_published_at": "2026-11-01",
+        "exclusion_reason": "Earlier notice of the same Provo service closure, not a new hourly development."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17248782/99-ranch-market-closing-store-trader-joes-pleasanton-california/",
+        "source_published_at": "2026-11-03",
+        "exclusion_reason": "Older announced December closure, alternative stores nearby; not sole/full-service community grocery loss."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.diningandcooking.com/us/78170/",
+        "error": "Direct open returned DisabledError; search index snippet available. Low-value reprint candidate, no new incident confirmed.",
+        "material": false
+      }
+    ],
+    "result": "No new, independently verified qualifying U.S. food-access disruption since prior 07:51:54 PST heartbeat. Search hits were prior EBT interruption, previously reviewed pantry closures, historical grocery closures or routine/irrelevant items.",
+    "limitations": "One low-value repost page was inaccessible, yielding DEGRADED per source-failure policy; remaining 12 searches and 3 source checks yielded useful coverage. Local web indexing and date-only timestamps limit exact-hour ascertainment; supplementary watch is not exhaustive.",
+    "materiality": "No new qualifying signal and no material loss of coverage; one minor auxiliary source failure.",
+    "action_limits": "No approval, publication, production-collector edits, schedule changes, or task disabling. The scheduler remains enabled.",
+    "scheduled_for_note": "This execution's supplied invocation timestamp (08:42:25 PST) was used as scheduled_for because no separate nominal occurrence timestamp was exposed; it preceded the next expected :45:54 boundary."
+  }
+}

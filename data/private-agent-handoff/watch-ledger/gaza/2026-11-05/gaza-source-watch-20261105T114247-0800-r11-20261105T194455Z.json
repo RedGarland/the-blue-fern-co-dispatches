@@ -1,0 +1,146 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T114247-0800-r11-20261105T194455Z",
+  "scheduled_for": "2026-11-05T11:44:51-08:00",
+  "started_at": "2026-11-05T11:42:47-08:00",
+  "completed_at": "2026-11-05T11:44:55-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T10:46:55-08:00",
+    "end": "2026-11-05T11:44:55-08:00",
+    "basis": "Previous verified supplementary Gaza heartbeat completion to this run; newly encountered dated reports tested for distinctness, not assumed to describe incidents within the hourly window.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261105-nuseirat-al-ishreen-five-injured-aa-4113367",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-4-palestinians-wound-11-others-across-gaza/4113367",
+      "title": "Israeli attacks kill 4 Palestinians, wound 11 others across Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "location": "Al-Ishreen Street, Nuseirat refugee camp, central Gaza Strip",
+      "affected_population_or_system": "Five Palestinians reported injured in an Israeli drone strike on a group of people",
+      "exact_supporting_passage": "Also in central Gaza, five Palestinians were injured when an Israeli drone struck civilians on Al-Ishreen Street in the Nuseirat refugee camp",
+      "source_type": "Established news agency report citing a medical source",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_in": "November 5 targeted searches and fresh Anadolu Middle East index; source read directly",
+        "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T104531-0800-r11-20261105T184655Z.json",
+        "duplication_check": "Location and five-person casualty cluster absent from three most recent fetched heartbeat findings and exclusion notes; distinguished from previously captured Al-Shati, Al-Zawayda, Al-Mawasi, Al-Bureij, Deir al-Balah and Khan Younis incidents.",
+        "publication_time_verified": false,
+        "event_time_verified": false,
+        "corroboration": "Medical-source attribution in Anadolu; no separate independent corroboration located within bounded search.",
+        "caveat": "Newly surfaced distinct report; exact time of incident and initial publication are unavailable, so not asserted to have occurred during this hourly observation window."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative production collector/publisher unchanged.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T104531-0800-r11-20261105T184655Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible; home index still led with Nov 5 disability profile and September Flash Appeal response monitoring, previously seen; no new independently identifiable in-window operation."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html"
+        ],
+        "result": "WHO global emergency page accessible with no Nov 5 dated health update; regional WHO EMRO situation-report endpoint returned HTTP 502 (recurring restriction)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza November 5 2026 21:00 22:00 killed injured evening",
+      "site:aa.com.tr/en/middle-east Gaza November 5 2026 20:00 21:00 ceasefire deaths aid",
+      "site:reuters.com/world/middle-east/ Gaza November 5 2026 Thursday night ceasefire airstrikes hostage",
+      "site:apnews.com/article Gaza Nov 5 2026 Thursday evening killed injured ceasefire",
+      "site:ochaopt.org Gaza November 5 2026 response flood fuel crossings medical",
+      "site:who.int OR site:emro.who.int Gaza November 5 2026 hospitals medical evacuations",
+      "Gaza November 5 2026 Israeli airstrike al shati Gaza City evening 9 pm Thursday new killed",
+      "Gaza November 5 2026 Thursday 19:00 20:00 21:00 WAFA injured shelling",
+      "Gaza November 5 2026 latest food water aid crossings Rafah Kerem Shalom UN humanitarian",
+      "Gaza November 5 2026 Palestinian Red Crescent ambulance hospital evacuation fuel health",
+      "Gaza November 5 2026 ceasefire negotiations detained hostages prisoners November latest",
+      "site:aljazeera.com/news/2026/11/5 Gaza new casualties Palestine force civilian"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; newer 5 November roundup with distinct five injured at Nuseirat identified."
+      },
+      {
+        "publisher": "WAFA English",
+        "urls": [
+          "https://english.wafa.ps/",
+          "https://english.wafa.ps/Pages/Details/176683"
+        ],
+        "result": "Homepage timed out, but prior November 5 Al-Shati casualty article directly accessible; no newer distinct Gaza incident verified."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest displayed notice November 3, with no newly listed Gaza service or ambulance event."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/5/four-people-including-a-child-killed-in-israeli-attacks-on-gaza",
+        "result": "Accessible 5 November report; reviewed against prior findings, with no additional confidently distinct incident to log."
+      }
+    ],
+    "exclusions": [
+      {
+        "item": "Anadolu's Al-Shati one-killed and two-injured description",
+        "reason": "Same location as WAFA previously logged three-killed strike; counts differ, not counted as another incident or reconciled without independent evidence."
+      },
+      {
+        "item": "Al-Zawayda, Al-Mawasi, Al-Bureij, Al-Karama, Khan Younis incidents and demolitions",
+        "reason": "Already captured in earlier watch ledgers; avoided double counting."
+      },
+      {
+        "item": "Al-Maghazi mosque-area gunfire/drone device",
+        "reason": "No documented injuries or damage in available reporting; no distinct verified civilian impact."
+      },
+      {
+        "item": "Al Jazeera mention of critically wounded man at Al-Mawasi and Deir al-Balah injuries",
+        "reason": "Overlap with earlier gunfire/injury reports could not be ruled out."
+      },
+      {
+        "item": "Civil Defense storm/flood warning and UNICEF sewage damage assessment",
+        "reason": "Previously captured; no verified newly occurring flooding or damage."
+      },
+      {
+        "item": "Historical Reuters/AP/other search results",
+        "reason": "Older than the observation interval or recycled; excluded."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualties and military operations with civilian impact",
+      "Displacement and emergency shelters",
+      "Aid/food/water access and infrastructure",
+      "Hospitals, ambulance/transport, fuel and medical evacuation",
+      "Crossings",
+      "Detention/hostages and ceasefire/negotiation changes"
+    ],
+    "degradation": {
+      "reason": "WHO EMRO regional situation report HTTP 502, recurring; WAFA English homepage timed out, though a direct article was accessible.",
+      "material_new_deterioration": false,
+      "coverage_sufficient_for_bounded_supplementary_watch": true
+    },
+    "outcome_note": "One distinct newly discovered medical-source-attributed Nuseirat injury report. Incident hour and initial publication time unverified; no inference that the injuries occurred in the watch hour. No approvals, publishing, social posting, production runner, schedule or task-state changes."
+  }
+}

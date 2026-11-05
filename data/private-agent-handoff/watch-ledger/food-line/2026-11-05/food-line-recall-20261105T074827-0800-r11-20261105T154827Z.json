@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T074827-0800-r11-20261105T154827Z",
+  "scheduled_for": "2026-11-05T07:45:54-08:00",
+  "started_at": "2026-11-05T07:48:27.577-08:00",
+  "completed_at": "2026-11-05T07:51:54.583-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T06:48:47-08:00",
+    "end_at": "2026-11-05T07:51:54.583-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous independently verified Food Line watch heartbeat completion to current observation. A fresh search hit alone does not establish a new publication or event in this interval.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value Food Line misses only; nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster affecting a community's only, sole, last or full-service grocery store",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank closure or major service/access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T064800-0800-r11-20261105T144800Z.json",
+      "completed_at": "2026-11-05T06:48:47-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 12
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" OR \"closing\" November 5 2026 community",
+      "\"last grocery store\" fire OR closure November 2026 town",
+      "\"sole grocery store\" \"November 5, 2026\" OR \"Nov. 4, 2026\"",
+      "\"full service grocery store\" closure November 5 2026 town",
+      "food pantry \"closed today\" fire flood power outage November 5 2026",
+      "food bank \"suspended\" \"distribution\" storm November 5 2026",
+      "\"food distribution\" \"canceled\" flooding OR power November 5 2026",
+      "SNAP EBT interruption outage benefits November 5 2026 site:gov",
+      "Nov 5 2026 Hawaii hurricane Lowell food distribution cancellation pantry closed Kauai",
+      "November 5 2026 food pantry temporarily closing \"damage\" United States",
+      "November 5 2026 SNAP WIC \"system down\" \"EBT\" agency",
+      "November 5 2026 grocery store fire only store rural food access local news"
+    ],
+    "direct_page_checks": 2,
+    "successful_direct_page_checks": 2,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Already reviewed in preceding hourly watches; explicitly says Hawaiʻi Foodbank Kauaʻi's Friday mobile emergency-food distribution remains scheduled. No new cancellation."
+      },
+      {
+        "url": "https://afcitizen.com/2026/11/03/provo-food-bank-announces-temporary-closure-due-to-financial-issues/",
+        "source_published_at": "2026-11-03",
+        "exclusion_reason": "Community Action Services and Food Bank closure effective November 1 and reported November 3, prior to the 06:48–07:5x PST November 5 search window; no newly verified November 5 update."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Sole grocery-store loss in Spencer, New York is historical, previously reviewed."
+      },
+      {
+        "url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "source_published_at": "2026-08",
+        "exclusion_reason": "Historic Eastport, Maine sole-grocery closure story; no new interval development."
+      },
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Previously ledgered Union County, NJ replacement-EBT-card delay; no new hourly update surfaced."
+      }
+    ],
+    "source_failures": [],
+    "result": "No newly verified qualifying disruption found since the previous 06:48:47 PST heartbeat. Search results largely surfaced older sole-grocery losses, prior food-bank closures, an active (not canceled) Hawaiʻi emergency distribution, and 2025 SNAP notices.",
+    "limitations": "Date-only publication metadata and local search indexing do not establish the exact release hour; this is a bounded supplementary watch, not exhaustive nationwide surveillance.",
+    "materiality": "No new qualifying signal or material watch degradation.",
+    "action_limits": "No approvals, publication, production collection changes, schedule changes, or task disabling."
+  }
+}

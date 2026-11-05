@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T154808-0800-r11-20261105T234808Z",
+  "scheduled_for": "2026-11-05T15:45:54-08:00",
+  "started_at": "2026-11-05T15:48:08-08:00",
+  "completed_at": "2026-11-05T15:48:55-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T14:53:14-08:00",
+    "end_at": "2026-11-05T15:48:55-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous independently verified Food Line supplementary heartbeat completion through this run; rediscovery of prior-day or undated records is not treated as new evidence.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; authoritative nationwide production Food Line collection remains unchanged.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery-store loss/closure/fire/disaster",
+      "Cancellation of emergency food distribution caused by storm/flood/fire/outage/facility damage",
+      "Abrupt food pantry/food bank closure or major service reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access effect"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T145019-0800-r11-20261105T225019Z.json",
+      "completed_at": "2026-11-05T14:53:14-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed OR closing OR fire \"November 5\" 2026",
+      "\"last grocery store\" OR \"sole grocery store\" fire closed \"Nov 5, 2026\"",
+      "\"only full-service grocery\" closure fire November 2026 town",
+      "\"food distribution\" cancelled OR canceled storm flood power outage \"November 5\" 2026",
+      "\"emergency food distribution\" canceled OR postponed weather November 5 2026",
+      "food pantry distribution canceled storm power outage fire Nov 5 2026",
+      "\"food pantry\" \"closed\" \"November 5, 2026\" emergency",
+      "\"food bank\" operations suspended closure outage Nov 5 2026",
+      "\"pantry\" \"temporarily closed\" November 5 2026",
+      "site:gov \"SNAP\" \"system outage\" November 5 2026 benefits",
+      "site:gov \"WIC\" \"closed\" OR \"interrupted\" November 5 2026",
+      "\"EBT\" \"outage\" \"November 5, 2026\" state"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "source_published_at": null,
+        "page_last_modified_at": "2026-11-03T15:53:17-05:00",
+        "exclusion_reason": "Provider lists two November 4 canceled Metro Detroit mobile food pantries, already covered in preceding heartbeat. No causal storm/fire/flood/outage/damage confirmation and outside hourly window. November 5 mobile pantry list shows scheduled sites, not canceled ones. 'Home delivery applications are closed' has no verifiable onset in current window."
+      },
+      {
+        "url": "https://www.vdh.virginia.gov/lord-fairfax/",
+        "source_published_at": null,
+        "exclusion_reason": "Existing Shenandoah County health office power-outage notice; no verification of new occurrence or specific WIC/benefit access interruption, previously reviewed."
+      },
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Union County NJ replacement EBT card issuance delays from state system error previously recorded; not new."
+      },
+      {
+        "url": "https://www.cbsnews.com/chicago/news/hyde-park-produce-closed-illinois-department-of-revenue/",
+        "source_published_at": "2026-02-27",
+        "exclusion_reason": "Historical grocery closure rediscovered by search, no qualifying new development."
+      },
+      {
+        "url": "https://www.civilbeat.org/2026/08/hawaii-storm-update-forecast-schools-closures-2/",
+        "source_published_at": "2026-08",
+        "exclusion_reason": "August 2026 storm updates, not a new distribution cancellation in observation window."
+      },
+      {
+        "url": "https://www.federalregister.gov/documents/2026/10/23/2026-21658/supplemental-nutrition-assistance-program-electronic-benefits-transfer-card-security-measures",
+        "source_published_at": "2026-10-23",
+        "exclusion_reason": "Regulatory notice about EBT security requirements, not new immediate benefits service interruption."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access disruption published or occurring since 2026-11-05T14:53:14-08:00 in bounded searches and direct checks.",
+    "limitations": "Targeted indexed searches returned many historical, out-of-scope or mismatched-date items; no results meeting new-event timing and direct-source support. Limited 12-query recall cannot establish nationwide absence. Date-only/undated official notices cannot be assumed to originate during this hourly window.",
+    "materiality": "No material search or retrieval failure detected.",
+    "action_limits": "No approval, publication, merge, schedule modifications, credential changes or task disabling; production collection authoritative."
+  }
+}

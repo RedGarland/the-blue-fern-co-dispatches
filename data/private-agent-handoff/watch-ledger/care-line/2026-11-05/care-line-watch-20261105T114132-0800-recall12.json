@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T114132-0800-recall12",
+  "scheduled_for": "2026-11-05T11:41:32-08:00",
+  "started_at": "2026-11-05T11:41:32-08:00",
+  "completed_at": "2026-11-05T11:43:00.843-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T10:48:20.528-08:00",
+    "end": "2026-11-05T11:43:00.843-08:00",
+    "basis": "Start: completed_at of latest verified Care Line heartbeat on ops/watch-ledger. End: this run's PST observation. Targeted search uses a November 4–5 lookback for late-indexed announcements, with known previously assessed findings excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky; Organ Procurement Organization termination; CCN 18P001.",
+      "observation": "Official CMS listing successfully checked first, using CMS-only discovery after an outdated CMS path failed. No newer public Medicare provider termination, rescission, CLIA adverse notice, or similar action displayed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency room closure suspension announced November 5 2026 USA",
+      "hospital \"labor and delivery\" closure \"November 5, 2026\" patients",
+      "rural hospital emergency department suspended closing \"November 2026\" US",
+      "ambulance EMS coverage ending service closure \"November 5, 2026\" town county",
+      "air ambulance helicopter medical flight base \"closing\" \"November 2026\" U.S.",
+      "dialysis center closed patients Nov 5 2026 United States",
+      "behavioral health hospital unit closed services November 5 2026 United States",
+      "oncology cancer infusion clinic stopping services November 5 2026 USA",
+      "primary care clinic hospital outpatient center closing effective November 5 2026 patients USA",
+      "hospital emergency department reopens restored after closure November 5 2026 USA",
+      "Puerto Rico Guam US Virgin Islands CNMI American Samoa hospital clinic health services closed November 5 2026",
+      "site:gov hospital emergency maternity ambulance \"November 5, 2026\" \"suspend\" OR \"close\" services"
+    ],
+    "targeted_search_recency_days": [
+      2,
+      2,
+      3,
+      2,
+      7,
+      3,
+      3,
+      3,
+      3,
+      3,
+      5,
+      2
+    ],
+    "result_summary": "Twelve additional targeted searches completed without a newly verified, qualifying and nonduplicate access-loss or effective essential-service restoration. Global/non-US hits, old developments, proposed future changes and unrelated operational stories excluded. Absence of discovered results is not proof that no events occurred.",
+    "reviewed_exclusions": [
+      {
+        "item": "Mercy Health St. Joseph Hospital Warren OH maternity withdrawal",
+        "source_url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move",
+        "reason": "Already captured in prior November 4 Care Line watch as pending review; duplicate."
+      },
+      {
+        "item": "Benefis Health System Great Falls MT outpatient/behavioral service reductions",
+        "source_url": "https://montanafreepress.org/2026/11/03/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/",
+        "reason": "Prior Care Line watch screened this November 3 announcement."
+      },
+      {
+        "item": "Oklahoma Children's OU Health Behavioral Health Center Oklahoma City OK",
+        "source_url": "https://www.kgou.org/health/2026-11-05/new-oklahoma-childrens-ou-health-center-to-expand-pediatric-behavioral-healthcare-in-state",
+        "reason": "Grand opening November 4, 2026; patient services anticipated in December, not an immediate effective restoration of previously lost service."
+      },
+      {
+        "item": "Kula Hospital and emergency department Maui HI",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Facility remains closed; future restoration projected late summer 2027, not an effective reopening."
+      },
+      {
+        "item": "Novi MI DaVita dialysis center",
+        "source_url": "https://www.clickondetroit.com/news/local/2026/06/24/davita-dialysis-center-in-novi-closes-amid-death-investigation-illness-reports/",
+        "reason": "June 2026 closure; outside recent discovery window."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/medicare-general-information/medicare-provider-supplier-enrollment/public-notices",
+        "type": "outdated_url_inaccessible",
+        "detail": "Initial CMS URL did not resolve; official current CMS Public Notices page successfully retrieved immediately afterward."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Repeated Health First alert endpoint inaccessible; existing documented coverage gap, not newly material."
+      }
+    ],
+    "material_new_degradation": false,
+    "deduplication": "Read and compared three latest November 5 ops/watch-ledger Care Line heartbeats, including the prior run completed 10:48:20.528 PST. Production collector state and authoritative dedupe not independently inspected.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Supplementary bounded recall only, not exhaustive national or territory collection. Search indexing and publication timestamps can lag. CMS may update after check; Health First official alert endpoint remains inaccessible.",
+    "controls": "One private watch-ledger heartbeat only. No editorial approval, publication, schedule change, permission change, branch merge, or task disabling."
+  }
+}

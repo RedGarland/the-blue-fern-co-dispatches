@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T084413-0800-recall12",
+  "scheduled_for": "2026-11-05T08:42:48-08:00",
+  "started_at": "2026-11-05T08:42:48-08:00",
+  "completed_at": "2026-11-05T08:44:13-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T07:52:26.153-08:00",
+    "end": "2026-11-05T08:44:13-08:00",
+    "basis": "Start: completed_at in latest independently verified Care Line heartbeat on ops/watch-ledger (07:50 run). Current execution time from automation context; short Nov 4–5 discovery lookback for late-indexed reports. Dates/times use PST."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), Organ Procurement Organization, Termination Notice",
+      "result": "Direct official CMS page checked successfully; no new notice dated after Nov 2, 2026."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"hospital\" \"emergency department\" \"closure\" \"November 5, 2026\"",
+      "\"labor and delivery\" \"closing\" hospital \"November 5, 2026\"",
+      "\"rural hospital\" \"services\" \"closing\" \"November 2026\"",
+      "ambulance service suspended closes county \"November 5\" \"2026\"",
+      "air ambulance helicopter base closure \"November 2026\" United States",
+      "dialysis clinic closing patients November 2026 USA",
+      "psychiatric behavioral health hospital inpatient unit closure November 5 2026",
+      "oncology cancer infusion center service closure November 2026",
+      "primary care clinic shut down closing November 5 2026 patients",
+      "hospital emergency department reopened restored November 5 2026 United States",
+      "Puerto Rico Guam USVI CNMI American Samoa hospital emergency clinic closure November 2026",
+      "site:gov \"November 5, 2026\" health clinic ambulance emergency hospital services closed"
+    ],
+    "targeted_search_recency_days": [
+      2,
+      2,
+      7,
+      2,
+      7,
+      7,
+      3,
+      7,
+      2,
+      3,
+      7,
+      2
+    ],
+    "result_summary": "No new verified, nonduplicate U.S. or territory closure/suspension, emergency/rural service loss, ambulance/air medical closure, CMS adverse notice, or immediate previously lost essential service restoration surfaced since prior hourly check. Search results include older reports and changes with no current effective access impact.",
+    "reviewed_exclusions": [
+      {
+        "item": "Oklahoma Children's OU Health Behavioral Health Center, Oklahoma City OK",
+        "source_url": "https://www.kgou.org/health/2026-11-05/new-oklahoma-childrens-ou-health-center-to-expand-pediatric-behavioral-healthcare-in-state",
+        "reason": "November 5 report of Nov 4 grand opening, but patient services begin in December; expansion rather than immediate restoration of previously lost essential service."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Airport base, Illinois",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "Closure effective September 16, 2026; historical, outside bounded recall."
+      },
+      {
+        "item": "Mercy Health St. Joseph Hospital Warren, Ohio maternity discontinuation",
+        "source_url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move",
+        "reason": "Already recorded as pending-review finding in earlier Nov 4 Care Line watch; duplicate."
+      },
+      {
+        "item": "Benefis Health System Great Falls, Montana reductions",
+        "source_url": "https://theelectricgf.com/2026/11/03/benefis-discontinuing-some-local-services-in-financial-restructure/",
+        "reason": "Already reviewed by previous watch; duplicate."
+      },
+      {
+        "item": "MaineHealth Miles Memorial labor and delivery",
+        "source_url": "https://www.penbaypilot.com/article/mainehealth-sued-over-potential-closure-labor-and-delivery-unit/273156",
+        "reason": "August litigation about potential closure, not new concrete effect."
+      },
+      {
+        "item": "Canada Mackenzie hospital/paramedics",
+        "reason": "British Columbia outside geographic scope."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct URL inaccessible again; known recurring issue in previous heartbeats, not newly material."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Listed eight November 5 entries from ops/watch-ledger; last prior run completed 07:52:26.153 PST. Prior watch's exclusion list also reviewed. Production collector deduplication not independently verified.",
+    "limitations": "Bounded 12-query recall, not authoritative national collection. Search engine freshness/relevance uneven; publication timestamps sometimes not available. CMS page listing may lag. Health First official endpoint inaccessible again.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "One heartbeat on existing ops/watch-ledger only; no approval, publication, merge, schedule change, permissions change, or task disabling."
+  }
+}

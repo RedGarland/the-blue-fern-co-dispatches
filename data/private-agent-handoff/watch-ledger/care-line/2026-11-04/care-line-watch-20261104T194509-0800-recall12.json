@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T194509-0800-recall12",
+  "scheduled_for": "2026-11-04T19:45:22-08:00",
+  "started_at": "2026-11-04T19:45:09-08:00",
+  "completed_at": "2026-11-04T19:46:24-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T18:48:03-08:00",
+    "end": "2026-11-04T19:46:24-08:00",
+    "basis": "Previous independently fetched and verified Care Line heartbeat completed_at through current observation; publication date alone does not establish first publication within this hour."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), organ procurement organization termination notice",
+      "result": "Official listing checked before the 12 additional searches. No notice newer than November 2 or new notice within this observation window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 4, 2026\" hospital emergency department closes suspended services United States",
+      "\"November 4, 2026\" labor delivery maternity services closure hospital",
+      "\"November 4, 2026\" psychiatric mental behavioral health hospital closes unit services",
+      "\"November 4, 2026\" dialysis center cancer oncology clinic closes patients",
+      "ambulance EMS 911 service air medical base closure suspended November 4 2026 United States",
+      "family medicine primary care practice hospital clinic closure November 4 2026 patients",
+      "emergency department rural hospital service stop accepting patients November 4 2026",
+      "hospital clinic reopen resumed emergency services November 4 2026 after closure",
+      "site:beckershospitalreview.com \"Nov 4, 2026\" hospital closure emergency department maternity dialysis",
+      "\"November 4, 2026\" ambulance base shuts down air ambulance suspended operations",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands \"November 4, 2026\" hospital emergency clinic services suspended",
+      "\"November 4, 2026\" care facility closure patient notice official state health department"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No new non-duplicate, confirmed U.S. or territory essential healthcare-access closure/suspension, CMS action, air-medical/EMS loss, or effective restoration identified in the window. CMS listing unchanged. Search results mostly older events, prospective projects, funding or business news, general healthcare analysis, foreign reports, and already-recorded closures.",
+    "reviewed_exclusions": [
+      {
+        "item": "MGH Downtown Associates, Boston, MA, announced closure effective December 18, 2026",
+        "reason": "Already captured in an earlier November 4 Care Line heartbeat; duplicate.",
+        "source_url": "https://www.bostonglobe.com/2026/11/04/business/mass-general-brigham-downtown/"
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield, IL",
+        "reason": "Published November 3; residential programs expected to stop by end of December contingent on transfers, with no newly confirmed access change during current hour.",
+        "source_url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/"
+      },
+      {
+        "item": "Santaquin Fire/EMS Utah County ambulance provider selection/re-licensure",
+        "reason": "Nonofficial meeting synthesis of a prospective designation; no evidence of new closure, suspension, or concretely effective restoration.",
+        "source_url": "https://utahrecord.org/utahcounty/issues/ambulance-service-west-of-santaquin"
+      },
+      {
+        "item": "Mercy primary-care clinic, Bentonville, AR, opening",
+        "reason": "November 2 new facility opening, not documented restoration after an essential service loss.",
+        "source_url": "https://www.mercy.net/newsroom/2026-11-02/Mercy_Opens_Primary_Care_Clinic_at_AWSOM/"
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County, AL",
+        "reason": "Previously captured in November 4 15:48 Care Line heartbeat; duplicate."
+      },
+      {
+        "item": "Biscayne Bay helicopter crash, FL",
+        "reason": "No evidence it was an air-medical aircraft/base or that EMS service capacity was closed or suspended."
+      },
+      {
+        "item": "U.S. rural hospital grant/funding coverage, general hospital policy/ownership, old closures, and non-U.S. legislative proposals",
+        "reason": "No verified concrete new clinical service access loss or restoration within window."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct opening failed; this was already documented in earlier hourly checks. Other official and local reporting remained accessible."
+      }
+    ],
+    "material_new_degradation": false,
+    "limitations": "Bounded supplementary recall is not exhaustive; production collector and its full deduplication state were not accessed. Searches can surface undated/date-only content and do not demonstrate hourly first publication. Persistent inaccessible Health First alert endpoint.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "No review approval, public publication, schedule modification, or task disabling. Exactly one new durable heartbeat requested on ops/watch-ledger."
+  }
+}

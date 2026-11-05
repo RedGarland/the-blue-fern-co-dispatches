@@ -1,0 +1,128 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T074047-0800-r11-20261105T154342514Z",
+  "scheduled_for": "2026-11-05T07:44:51-08:00",
+  "started_at": "2026-11-05T07:40:47-08:00",
+  "completed_at": "2026-11-05T15:43:42.514-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T06:46:24-08:00",
+    "end": "2026-11-05T15:43:42.514-08:00",
+    "basis": "Immediately previous verified supplementary Gaza Source Watch heartbeat completion to this run. Search for distinct, traceable newly documented developments, excluding recycled or earlier-ledgered items; event time may precede publication time.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production Gaza daily collector/publisher remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T064527-0800-r11-20261105T144624Z.json",
+    "previous_verified_completed_at": "2026-11-05T06:46:24-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Accessible. Homepage 5 November featured a retrospective three-siblings wheelchair rehabilitation profile and September 2026 Flash Appeal monitoring, with 29 October Gaza humanitarian situation report as the latest situation report; no new time-window qualifying incident, service-capacity change or access restriction."
+      },
+      {
+        "publisher": "World Health Organization",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/information-resources/gaza-health-emergency.html"
+        ],
+        "result": "WHO global emergency landing page accessible; latest linked regional update and health news remain pre-November. WHO EMRO Gaza regional page inaccessible via web tool (recurring restriction); no newly verified medical evacuation/hospital/fuel/ambulance change."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"November 5, 2026\" Gaza 17:00 18:00 killed injured",
+      "site:aa.com.tr/en/middle-east/ \"Nov 5, 2026\" Gaza killed injured latest Thursday",
+      "site:reuters.com/world/middle-east/ Gaza November 5 2026 Thursday ceasefire aid strikes killed",
+      "site:apnews.com/article/ Gaza November 5 2026 civilian killed strikes aid hospital",
+      "site:ochaopt.org Gaza November 5 2026 humanitarian update 5 Nov latest crossings",
+      "site:who.int OR site:emro.who.int Gaza November 5 2026 hospital medical evacuation fuel health",
+      "site:unicef.org OR site:unrwa.org OR site:wfp.org Gaza November 5 2026 shelter water food access",
+      "site:palestinercs.org Gaza November 5 2026 ambulance emergency rescue medical wounded",
+      "Gaza November 5 2026 16:00 18:00 Palestinian health ministry new casualties attacks Khan Younis Bureij",
+      "Gaza November 5 2026 Rafah Kerem Shalom crossing humanitarian trucks fuel evacuation latest",
+      "Gaza November 5 2026 hostages detention negotiations ceasefire Israel Hamas Reuters AP latest",
+      "site:news.un.org/en OR site:reliefweb.int/report/occupied-palestinian-territory 5 November 2026 Gaza UN aid shelter health water humanitarian"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest displayed article 5 November 16:50 Gaza-local time was a general diplomatic/political item; most recent Gaza-specific casualty item on homepage was the 13:00 Al-Mawasi woman and Al-Bureij child fatalities, already recorded in prior ledger."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible. News index populated with regional and West Bank stories, no independently distinct new Gaza civilian-impact or access development."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible. Latest prominent 3 November news item concerns operational/logistical support; no new Gaza ambulance/medical service disruption."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/press-releases",
+        "result": "Accessible press listing. No new qualifying Gaza operational change in bounded search. November 5/October 29 sewage damage assessment of more than 130 km already logged in previous watch."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualties and military operations with documented civilian impact",
+      "Displacement, shelter and infrastructure damage",
+      "Humanitarian access, food/water/sanitation and border crossings",
+      "Hospitals, ambulance and emergency medical care, fuel, transport, evacuation, functioning capacity",
+      "Detention, hostages, ceasefire and negotiations"
+    ],
+    "exclusions": [
+      {
+        "item": "WAFA 5 November report on woman killed in Al-Mawasi and child killed in Al-Bureij",
+        "reason": "Previously captured in 03:49 PST heartbeat; no independently verifiable new incident-level details."
+      },
+      {
+        "item": "Al-Zawayda tent fatality, Deir al-Balah injuries, Al-Karama injury, Khan Younis gunfire injuries and demolitions, November 3 northern Rafah tent gunfire",
+        "reason": "Previously recorded watch findings, no novel developments verified."
+      },
+      {
+        "item": "UNICEF more than 130 km of sewage pipe damage",
+        "reason": "Retrospective November 5/October 29 assessment already included in 04:50 PST heartbeat."
+      },
+      {
+        "item": "4 November Rafah-crossing suspension",
+        "reason": "Previously recorded restriction; no confirmed fresh resumption or expansion."
+      },
+      {
+        "item": "November 5 WAFA West Bank injuries, detentions and demolitions",
+        "reason": "Outside Gaza geographic scope."
+      },
+      {
+        "item": "Reuters/AP/UNRWA and other search returns from 2025 and earlier 2026",
+        "reason": "Out of window, stale or duplicate. No use of date-confused reports."
+      },
+      {
+        "item": "OCHA September appeal monitoring and wheelchair-profile reports",
+        "reason": "Retrospective or individual profile, not a new high-value operational/civilian-impact development."
+      }
+    ],
+    "degradation": {
+      "status_reason": "DEGRADED: WHO regional Gaza emergency page inaccessible and UN News targeted search blocked by robots.txt; useful OCHA, WHO global, WAFA, PRCS, Anadolu and UNICEF coverage remained available.",
+      "material_new_degradation": false,
+      "recurring_access_restrictions": [
+        "WHO EMRO regional access",
+        "UN News robots-blocked targeted search"
+      ],
+      "other_prior_not_retested": "WFP and UNRWA 403 issues were reported in earlier heartbeats; not confirmed as failed by a fresh direct access attempt this run.",
+      "limitations": "Targeted web search results were heavily contaminated by older 2025–2026 material. No verified new qualifying development surfaced; absence of findings is not proof of absence of events on the ground."
+    },
+    "notification_decision": "Suppress: no new qualifying findings and no newly material degradation beyond known restrictions.",
+    "safeguards": "Created exactly one private watch heartbeat in ops/watch-ledger; did not approve, publish, deploy, modify production, alter schedules, or disable watch.",
+    "timing_note": "Automation runtime reported invocation at 07:40:47 PST, before the nominal hourly :44:51 scheduled_for timestamp; timestamps preserved without inferring a schedule change."
+  }
+}

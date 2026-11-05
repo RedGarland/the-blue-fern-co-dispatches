@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T054441-0800-recall12",
+  "scheduled_for": "2026-11-05T05:45:22-08:00",
+  "started_at": "2026-11-05T05:44:41-08:00",
+  "completed_at": "2026-11-05T05:45:41-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T04:44:41.504-08:00",
+    "end": "2026-11-05T05:45:41-08:00",
+    "basis": "From verified Nov 5 04:42:56 PST watch heartbeat completed 04:44:41.504 PST to this execution. Targeted queries also searched Nov 4–5 indexed material to detect delayed reports, deduplicating prior watch findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky — Organ Procurement Organization — Termination Notice",
+      "result": "Official CMS listing directly checked; no new dated notice for Nov 3–5 visible, including provider termination/rescission or CLIA restriction/suspension."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspended ER November 4 5 2026 local news",
+      "rural hospital emergency service shutdown November 4 5 2026 county",
+      "hospital labor delivery maternity unit closure November 4 5 2026",
+      "behavioral health psychiatric hospital residential service closing November 4 5 2026",
+      "dialysis center closing patients November 4 5 2026",
+      "oncology cancer center infusion treatments clinic closure November 4 5 2026",
+      "primary care family medicine clinic closing announces November 4 5 2026",
+      "ambulance EMS service closing ending operations November 4 5 2026",
+      "air ambulance helicopter medical base closing November 4 5 2026",
+      "hospital emergency room maternity reopened restored services November 4 5 2026",
+      "Puerto Rico Guam Virgin Islands hospital healthcare clinic closure suspension noviembre 4 5 2026",
+      "site:gov \"November 5, 2026\" hospital suspension termination provider license"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No new verified qualifying U.S./territory essential-healthcare closure, suspension, ambulance/base loss, CMS action or effective service restoration surfaced in this bounded supplementary recall. Search hits were historical, prospective/nonqualifying or duplicates.",
+    "reviewed_exclusions": [
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield IL",
+        "reason": "November 3 report of planned residential-services winding down pending client transfer; previously assessed and excluded by prior watch; no new concrete in-window change.",
+        "source_url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/"
+      },
+      {
+        "item": "MGH Downtown Associates, Boston MA",
+        "reason": "Nov 4 primary-care closure previously logged; duplicate."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County AL",
+        "reason": "Nov 4 closure previously logged; duplicate."
+      },
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren OH",
+        "reason": "Nov 4 labor-and-delivery discontinuation previously logged; duplicate."
+      },
+      {
+        "item": "Henderson Hospital, Nevada maternity/NICU",
+        "reason": "September 29 article; historical."
+      },
+      {
+        "item": "Tehama County air ambulance base, California",
+        "reason": "September 17 report; historical.",
+        "source_url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times"
+      },
+      {
+        "item": "Older dialysis closures in Michigan, Georgia and Virginia",
+        "reason": "Articles dated March–June 2026; no novel event in observation window."
+      },
+      {
+        "item": "Kennewick VA clinic groundbreaking; cancer screening schedules and residency expansions",
+        "reason": "Planned construction or routine new services, not restoration of a previously lost essential service."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct Health First official alert endpoint still inaccessible; same persistent source-specific failure as previous checks."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Independently enumerated Nov 5 ops/watch-ledger files and read latest Nov 5 04:42 heartbeat. Previous Boston, Alabama and Ohio positives known from Nov 4 watch history. Production collector deduplication not verified.",
+    "limitations": "Supplementary, not comprehensive national collector. Search index freshness may lag source publication and a persistent Health First official alert source is not reachable. CMS visible page may lag notice issuance. No pending findings selected.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one private heartbeat on existing ops/watch-ledger branch. No editorial approval, publication, schedule change or task disabling."
+  }
+}

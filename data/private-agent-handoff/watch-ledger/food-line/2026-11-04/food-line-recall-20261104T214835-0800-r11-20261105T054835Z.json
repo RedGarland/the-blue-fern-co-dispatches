@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T214835-0800-r11-20261105T054835Z",
+  "scheduled_for": "2026-11-04T21:45:54-08:00",
+  "started_at": "2026-11-04T21:48:35-08:00",
+  "completed_at": "2026-11-04T21:49:59.113-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-04T20:47:37-08:00",
+    "end_at": "2026-11-04T21:49:59.113-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "basis": "Since verified prior supplementary heartbeat completion. Date-only reporting and indexed older pages cannot be assumed new to this interval.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value misses. Primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Only/last/sole or full-service grocery store loss, closure, fire or disaster",
+      "Emergency food distribution canceled/suspended by storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official new SNAP/WIC/food assistance interruption with immediate access impact"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T204655-0800-r11-20261105T044655Z.json",
+      "run_id": "food-line-recall-20261104T204655-0800-r11-20261105T044655Z",
+      "completed_at": "2026-11-04T20:47:37-08:00",
+      "status": "SUCCESS"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 10,
+      "slow": 2
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 4 2026 town",
+      "\"last grocery store\" closing rural November 4 2026",
+      "\"sole grocery store\" closure fire November 5 2026",
+      "\"food distribution\" canceled storm flooding November 4 2026",
+      "\"mobile food pantry\" cancelled weather November 5 2026",
+      "\"food bank\" operations suspended fire outage November 4 2026",
+      "\"food pantry\" unexpectedly closed November 4 2026",
+      "site:gov SNAP EBT benefits outage disruption November 4 2026",
+      "site:gov WIC benefit interruption November 4 2026",
+      "food assistance site closed flood November 5 2026 pantry",
+      "November 4 2026 \"food pantry\" \"closed\" emergency storm distribution",
+      "November 4 2026 \"SNAP\" \"system\" \"down\" EBT benefits state"
+    ],
+    "search_recency_days": 2,
+    "direct_page_checks": 3,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "publisher": "The Salt Lake Tribune",
+        "source_published_at": "2026-11-02T06:00:00",
+        "exclusion_reason": "Historical Washington County, Utah pantry closure is followed by a November 2 reopening at a new St. George location; neither new interval reporting nor a current abrupt loss."
+      },
+      {
+        "url": "https://kauainownews.com/2026/10/29/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kaua‘i Now",
+        "source_published_at": "2026-10-29",
+        "exclusion_reason": "Hurricane recovery article confirms an emergency mobile food distribution remained scheduled; no cancellation and publication predates current window."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "source_published_at": null,
+        "exclusion_reason": "Agency alerts landing page reviewed; no dated, current SNAP/WIC benefit interruption verified in the observed interval."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "publisher": "WVII / WGME",
+        "source_published_at": "2026-09-03T07:30:00",
+        "exclusion_reason": "Sole grocery store closure story from September, not newly reported during the current watch interval."
+      },
+      {
+        "url": "https://www.pa.gov/agencies/dhs/newsroom/due-to-federal-shutdown--november-snap-payments-will-not-be-made",
+        "publisher": "Pennsylvania Department of Human Services",
+        "source_published_at": "2025-10-20",
+        "exclusion_reason": "SNAP payment interruption notice concerns 2025 shutdown, not November 2026."
+      }
+    ],
+    "source_failures": [],
+    "result": "No newly verified, qualifying, nonduplicative U.S. food-access disruption in 12 bounded targeted searches and three direct page checks.",
+    "limitations": "Search indexes were dominated by older incidents, 2025 SNAP shutdown notices, resource listings, and undated agency pages. A newly announced local interruption may be indexed after this check; this is not exhaustive national coverage.",
+    "action_limits": "No approval, publication, schedule modification, task disabling, or production collector changes."
+  }
+}

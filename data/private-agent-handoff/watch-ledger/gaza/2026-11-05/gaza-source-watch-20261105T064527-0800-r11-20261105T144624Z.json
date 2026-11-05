@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T064527-0800-r11-20261105T144624Z",
+  "scheduled_for": "2026-11-05T06:44:51-08:00",
+  "started_at": "2026-11-05T06:45:27-08:00",
+  "completed_at": "2026-11-05T06:46:24-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T05:48:30.862-08:00",
+    "end": "2026-11-05T06:46:24-08:00",
+    "basis": "Previous verified hourly Gaza Source Watch heartbeat completion to this run; look for newly published or documented distinct Gaza developments, not merely historical events published later.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; primary daily Gaza publisher/collector is authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T054559-0800-r11.json",
+    "previous_verified_completed_at": "2026-11-05T05:48:30.862-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/",
+          "https://www.ochaopt.org/content/first-time-my-wheelchair-supports-me-story-three-siblings-gaza"
+        ],
+        "result": "Accessible. Latest OCHA homepage item dated 5 November 2026 is an individual adaptive-wheelchair/education profile referencing services provided in 2025; not a new system-level healthcare disruption or other incident. A same-date September 2026 flash appeal monitoring post is retrospective. Latest Gaza humanitarian situation report shown was dated 29 October."
+      },
+      {
+        "publisher": "World Health Organization",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/information-resources/gaza-health-emergency.html"
+        ],
+        "result": "WHO global Gaza emergency page accessible, latest displayed regional health update from August 2026 or earlier; no new 5 November hospital, medical evacuation, ambulance, transport, fuel or functioning-capacity development. Regional WHO EMRO Gaza emergency link inaccessible via web tool (recurring restriction)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza November 5 2026 16:00 17:00 killed injured Israeli fire Gaza",
+      "site:aa.com.tr/en/world Gaza November 5 2026 16:00 latest Israeli attack wounded killed",
+      "site:reuters.com/world/middle-east/ November 5 2026 Gaza ceasefire strike aid crossing humanitarian",
+      "site:apnews.com/article/ Gaza Nov 5 2026 afternoon hospital ceasefire attacks civilian",
+      "site:ochaopt.org 5 November 2026 Gaza humanitarian access casualties crossing aid latest",
+      "site:who.int OR site:emro.who.int Gaza November 5 2026 medical evacuations hospital capacity ambulance fuel",
+      "site:unicef.org OR site:unrwa.org OR site:wfp.org Gaza 5 November 2026 water shelter food aid disruption",
+      "site:palestinercs.org Gaza November 5 2026 injured ambulance deaths new report",
+      "Gaza 5 November 2026 15:00 17:00 medical sources casualties Khan Younis Bureij Deir al Balah",
+      "Gaza Rafah Kerem Shalom Erez crossing trucks aid medical evacuation November 5 2026 update",
+      "Gaza November 5 2026 ceasefire negotiations hostage detention release civilian impact",
+      "site:news.un.org/en/ OR site:reliefweb.int/report/occupied-palestinian-territory Gaza 5 November 2026 humanitarian latest access hospital"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible. Latest homepage story at 15:40 local Gaza, political and non-Gaza geographic scope. Latest Gaza fatality story at 13:00 local reported Al-Mawasi woman and Al-Bureij child; already in previous heartbeat."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible index. No distinct new Gaza civilian-impact report; listed prominent November 5 stories concerned West Bank, Yemen, and regional affairs."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest prominent news November 3. No new Gaza medical/ambulance service disruption."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/press-releases",
+        "result": "Accessible press-release listing; no qualifying new Gaza system change surfaced in bounded search."
+      }
+    ],
+    "categories_checked": [
+      "Civilian casualties and military operations with documented civilian impact",
+      "Displacement and shelter/infrastructure damage",
+      "Aid access, food/water/sanitation and crossings",
+      "Hospitals, ambulances, fuel, medical evacuation, health system functioning",
+      "Detention/hostages and ceasefire/negotiations"
+    ],
+    "exclusions": [
+      {
+        "item": "Al-Mawasi woman and Al-Bureij child killed (WAFA, 5 November 13:00 Gaza local)",
+        "reason": "Previously verified in the 03:49 PST heartbeat; no new event-level details."
+      },
+      {
+        "item": "Al-Zawayda tent fatality, Deir al-Balah injuries, Al-Karama injury, Khan Younis gunfire injuries and eastern Khan Younis demolitions",
+        "reason": "Previously logged watch findings without verified distinct development."
+      },
+      {
+        "item": "UNICEF more than 130 km of damaged Gaza sewage lines",
+        "reason": "Prior 04:50 PST heartbeat logged retrospective report; no new damage or change."
+      },
+      {
+        "item": "OCHA November 5 first-person adaptive wheelchair story for three siblings",
+        "reason": "Primarily a retrospective 2025 rehabilitation support profile, not a new high-value operational shift in healthcare functioning."
+      },
+      {
+        "item": "OCHA September appeal monitoring, 29 October situation report and historic Reuters/AP search matches",
+        "reason": "Retrospective or outside novelty window."
+      },
+      {
+        "item": "WAFA and Anadolu November 5 West Bank/Yemen stories",
+        "reason": "Outside Gaza geographic scope."
+      }
+    ],
+    "degradation": {
+      "status_reason": "DEGRADED because a regional WHO EMRO page was inaccessible and UN News targeted search returned a known robots access block; substantial alternative official coverage was available.",
+      "material_new_degradation": false,
+      "recurring": "WHO EMRO access trouble and UN News robots block previously recorded. No newly observed outage of OCHA, WHO global site, WAFA, PRCS, Anadolu or UNICEF."
+    },
+    "limitations": "Broad web indexes were stale/noisy (many 2023–2025 Reuters/AP hits). No verified new incident or operational change in the bounded window; not proof of no developments on the ground.",
+    "notification_decision": "No distinct qualifying new finding and no material newly failed/degraded component; suppress notification.",
+    "safeguards": "One private ledger heartbeat on ops/watch-ledger only; no approvals, public release, production publication, schedule or task state changes."
+  }
+}

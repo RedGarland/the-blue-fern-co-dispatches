@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T044256-0800-recall12",
+  "scheduled_for": "2026-11-05T04:45:22-08:00",
+  "started_at": "2026-11-05T04:42:56-08:00",
+  "completed_at": "2026-11-05T04:44:41.504-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T03:45:20.017-08:00",
+    "end": "2026-11-05T04:44:41.504-08:00",
+    "basis": "From latest independently verified care-line watch heartbeat (03:43:43 PST run, completed 03:45:20.017 PST). Supplementary recall also screened indexed Nov 3–5 reports for previously missed high-value changes, with duplication checks against prior watch ledger."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, OPO termination notice",
+      "result": "Official CMS listing checked first; no newly dated Nov 3–5 termination, rescission, CLIA restriction/suspension, or analogous access-risk notice listed.",
+      "note": "A noncanonical legacy URL failed; canonical CMS page loaded successfully."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing suspended services November 5 2026 United States",
+      "hospital labor delivery maternity closing announcement November 4 5 2026 county",
+      "rural hospital closes emergency services November 2026 announced November 4 5",
+      "behavioral health psychiatric hospital program shuts down November 4 2026",
+      "dialysis center closes patients November 4 5 2026",
+      "cancer oncology clinic treatment center closing November 2026 announced November 4",
+      "family medicine primary care clinic shutting down November 4 5 2026 patients",
+      "ambulance service shutting down suspends operations November 4 5 2026",
+      "air ambulance helicopter base closing suspend operations November 2026 November 4",
+      "hospital emergency room reopens services restored November 4 5 2026",
+      "Puerto Rico Guam Virgin Islands hospital clinic closures November 4 2026 healthcare",
+      "state health department notice hospital license suspension provider termination November 4 5 2026"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No new verified or newly surfaced qualifying U.S./territory healthcare-access closure, suspension, ambulance/base loss, CMS notice, or concretely effective reopening during bounded supplementary recall.",
+    "reviewed_exclusions": [
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield IL",
+        "reason": "Nov 3 report; residential-service winding down conditional on transferring all current clients, not a new in-window firm service termination; previously reviewed and excluded in Nov 4 watch.",
+        "source_url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/"
+      },
+      {
+        "item": "MGH Downtown Associates, Boston MA primary care closure",
+        "reason": "Already logged Nov 4; duplicate."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County AL primary care closure",
+        "reason": "Already logged Nov 4; duplicate."
+      },
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren OH labor/delivery relocation",
+        "reason": "Already logged Nov 4; duplicate."
+      },
+      {
+        "item": "Henderson Hospital, Nevada maternity and NICU changes",
+        "reason": "September 29 story; historical, not new.",
+        "source_url": "https://www.fox5vegas.com/2026/09/29/henderson-hospital-closing-maternity-nicu-services-expand-medical-surgical-beds/"
+      },
+      {
+        "item": "Rural hospital funding proposals and broad ambulance-desert reporting",
+        "reason": "No newly verified specific service shutdown or effective reopening in this observation window."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct Health First official alert endpoint again returned an error. Previously documented persistent source gap; no newly material degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Independently enumerated Nov 3–5 watch-ledger files and read latest Nov 5 01:41, 02:44, and 03:43 watch entries and Nov 4 20:41 positive watch. No new verified unrecorded item in the bounded current searches. Production deduplication was not verified.",
+    "limitations": "Bounded supplementary search, not comprehensive national primary collection. Search index freshness can lag and persistent Health First direct-source access failure reduces coverage in that source only. Observed start preceded nominal scheduled slot; actual timestamps retained.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Exactly one private heartbeat requested on ops/watch-ledger. No editorial approval, public publishing, schedule change, or disabling."
+  }
+}

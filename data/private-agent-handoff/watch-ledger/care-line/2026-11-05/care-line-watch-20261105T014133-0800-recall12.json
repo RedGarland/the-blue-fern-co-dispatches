@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T014133-0800-recall12",
+  "scheduled_for": "2026-11-05T01:45:22-08:00",
+  "started_at": "2026-11-05T01:41:33-08:00",
+  "completed_at": "2026-11-05T01:43:25-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T00:47:56-08:00",
+    "end": "2026-11-05T01:43:25-08:00",
+    "basis": "From latest independently verified supplementary ledger completion, Nov 5 00:47:56 PST. Bounded recall also screened recently indexed earlier reports for missed changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination notice",
+      "result": "Direct CMS index checked. No new dated Nov 3-5 termination, rescission, CLIA restriction/suspension or other notice visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspending operations November 4 November 5 2026 United States",
+      "hospital maternity labor delivery obstetrics closure announced November 4 2026",
+      "rural hospital emergency services shutdown November 4 2026 patients",
+      "behavioral mental health psychiatric facility closure November 4 2026",
+      "November 4 2026 dialysis center closing patients appointments US",
+      "November 4 2026 oncology infusion cancer clinic closed services patients",
+      "November 4 2026 family practice primary care clinic permanently closing patients",
+      "November 4 2026 ambulance service EMS closure suspended station coverage",
+      "November 4 2026 air medical helicopter ambulance base shuts down suspended emergency transport United States",
+      "November 4 2026 hospital emergency maternity dialysis service reopening restored operations after shutdown",
+      "Puerto Rico Guam Virgin Islands American Samoa November 4 2026 hospital emergency dialysis ambulance service closed suspended",
+      "November 5 2026 US hospital clinic closure emergency department ambulance maternity announces"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No new verified, qualifying U.S. or territory facility/service closure or suspension, emergency/EMS or air-medical access loss, CMS notice, or concrete reopening/restoration discovered in this bounded recall.",
+    "reviewed_exclusions": [
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren OH maternity unit",
+        "reason": "Previously recorded as pending review in Nov 4 20:41 PST ledger; duplicate."
+      },
+      {
+        "item": "MGH Downtown Associates, Boston MA primary care",
+        "reason": "Previously recorded as pending review in Nov 4 14:42 PST ledger; duplicate."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County AL",
+        "reason": "Previously recorded as pending review in Nov 4 15:48 PST ledger; duplicate."
+      },
+      {
+        "item": "Guam Memorial Hospital weather-related outpatient suspension",
+        "source_url": "https://ghs.guam.gov/jic-release-no-3-gmha-announces-expectant-mother-intake-plans-and-service-suspensions-uscg-sets-port",
+        "reason": "October 16 tropical storm notice, historical and not a newly observed Nov 5 service change."
+      },
+      {
+        "item": "Kula Hospital in Maui, HI",
+        "source_url": "https://www.aha.org/tellingthehospitalstory/stories/hawaii-hospital-set-comeback-after-storm-damage-closure",
+        "reason": "Reconstruction and reopening plans only; no concrete effective restoration date or current reopened service."
+      },
+      {
+        "item": "Novi DaVita dialysis site, Michigan",
+        "source_url": "https://www.clickondetroit.com/news/local/2026/06/24/davita-dialysis-center-in-novi-closes-amid-death-investigation-illness-reports/",
+        "reason": "June 2026 historic report, outside new recall interval."
+      },
+      {
+        "item": "Bermuda-to-Boston medevac aircraft crash",
+        "source_url": "https://abcnews.com/US/medical-transport-airplane-missing-off-massachusetts-coast-coast/story?id=136969608",
+        "reason": "October 2026 overseas transport incident, no newly announced US/territory ambulance/base service closure."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct page access remains unavailable; longstanding known limitation, not new degradation. CMS and targeted searches remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Fetched and verified last Nov 5 00:46:07 PST heartbeat on ops/watch-ledger, ending at 00:47:56 PST; checked prior known Boston, Alabama, and Ohio findings from earlier ledger/history.",
+    "limitations": "Bounded supplementary recall is not the national collector. Fresh local reporting and CMS indexing may lag. Production collector candidate state was not directly verified. Run began before nominal 01:45:22 PST slot; that slot is retained as scheduled_for for traceability.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "One private heartbeat only, no approval, publishing, schedule modification or task disabling."
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T124852-0800-recall12",
+  "scheduled_for": "2026-11-05T12:45:22-08:00",
+  "started_at": "2026-11-05T12:48:52-08:00",
+  "completed_at": "2026-11-05T12:56:57-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T11:43:00.843-08:00",
+    "end": "2026-11-05T12:56:57-08:00",
+    "basis": "Starts at completed_at of prior verified Care Line watch ledger. Searches use a November 4–5 late-indexing lookback; previously assessed events excluded. Sharon Regional's official announcement and effective service loss predate the strict hourly window but were newly discovered by this supplementary recall and did not appear in reviewed prior watch heartbeats."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-pa-sharon-regional-hospital-ed-suspension-2026-11-04",
+      "canonical_source_url": "https://sharonregionalhealthsystem.org/",
+      "title": "Sharon Regional Health System suspends hospital services; emergency department unavailable from November 4",
+      "publisher": "Sharon Regional Health System (Tenor Health Foundation)",
+      "exact_supporting_passage": "emergency department services will not be available to the public as of November 4, 2026 at 7:00 p.m.",
+      "source_published_date": null,
+      "state": "PA",
+      "city": "Sharon",
+      "county": "Mercer",
+      "territory": null,
+      "event_type": "hospital_and_emergency_department_suspension",
+      "service_line": "Emergency department; hospital acute care and outpatient operations; inpatient services previously paused October 29",
+      "access_consequences": "Sharon Regional states its emergency department became unavailable to the public at 7:00 p.m. Eastern on November 4, 2026. Hospital acute-care and outpatient operations are being suspended. Patients requiring inpatient care will be stabilized and transferred to an appropriate facility. Other reporting says remaining hospital operations close to the public by 8 a.m. Eastern on November 6; the official website's directly confirmed ED effective time is prioritized.",
+      "affected_population": "Emergency and hospital-care patients in Sharon, Mercer County, and the Shenango Valley, Pennsylvania; number affected not established",
+      "effective_date": "2026-11-04",
+      "announcement_date": "2026-11-04",
+      "confidence": "high",
+      "source_role": "primary_provider_official_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination, CCN 18P001",
+      "result": "No new notices later than November 2 visible during check."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closure suspension November 5 2026 United States announcement",
+      "maternity labor delivery unit stop deliveries closure November 5 2026 hospital",
+      "rural hospital ER shutting down service November 5 2026 rural health",
+      "ambulance EMS service ending operations November 5 2026 town county",
+      "Sharon Regional Medical Center Health System suspend operations November 5 2026 Tenor Health Foundation emergency department",
+      "Sharon Regional hospital November 5 2026 closed patient transfer health system suspension Mercer County",
+      "air medical helicopter ambulance base closing suspension November 2026 USA service",
+      "dialysis kidney center abruptly closed service suspended Nov 5 2026 United States",
+      "behavioral psychiatric inpatient hospital substance mental health service close November 5 2026 United States",
+      "oncology cancer infusion center clinic suspended closing November 5 2026 US",
+      "primary care health clinic announced closure November 5 2026 patients United States",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital emergency room closure reopening November 2026"
+    ],
+    "search_recency_days": [
+      2,
+      2,
+      3,
+      2,
+      null,
+      null,
+      5,
+      3,
+      3,
+      3,
+      2,
+      5
+    ],
+    "source_verification": {
+      "primary_url": "https://sharonregionalhealthsystem.org/",
+      "primary_note": "The hospital's current official website states immediate service suspension and ED unavailability beginning November 4 at 7:00 p.m.; page carries no explicit publication date.",
+      "corroborating_reports": [
+        {
+          "publisher": "Pittsburgh Business Times",
+          "url": "https://www.bizjournals.com/pittsburgh/news/2026/11/05/sharon-regional-hospital-suspension.html",
+          "published_date": "2026-11-05"
+        },
+        {
+          "publisher": "Becker's Hospital Review",
+          "url": "https://www.beckershospitalreview.com/finance/pennsylvania-hospital-to-suspend-all-services/",
+          "published_date": "2026-11-04"
+        }
+      ],
+      "discrepancy": "Becker's reports acute/outpatient/ED public closure beginning November 6 at 8 a.m.; the hospital's currently displayed official notice sets ED unavailability on November 4 at 7 p.m. Direct primary notice controls the ED effective date. A staggered broader shutdown may explain the difference, but that is not independently resolved."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Otter Tail County Pelican Rapids ambulance service district",
+        "url": "https://fergusnow.com/2026/11/05/county-board-approves-new-district-to-keep-ambulance-service-in-pelican-rapids-area/",
+        "reason": "Financing district approved, but incumbent ambulance service continues; no immediate service loss or newly effective restoration."
+      },
+      {
+        "item": "Metro Healthy Communities Port Richey health center",
+        "url": "https://www.wboc.com/online_features/press_releases/metro-healthy-communities-to-open-10th-tampa-bay-location-in-port-richey/article_9d3cfd15-e180-5cc7-b648-e51eaea20a66.html",
+        "reason": "New site opening rather than proven restoration of previously lost essential service; no effective opening verified."
+      },
+      {
+        "item": "Previously reported Mercy Health St. Joseph Hospital maternity withdrawal",
+        "url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move",
+        "reason": "Captured by November 4 prior watch, duplicate."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, Illinois base",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "September 16, 2026 effective closure, not a new November 4–5 finding."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/policy-memos-states-and-regions/public-notices",
+        "type": "obsolete_or_inaccessible_cms_url",
+        "detail": "Initial path unavailable; correct official CMS Public Notices table successfully inspected after source-only CMS discovery."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Previously documented Health First alert endpoint still inaccessible; not newly degraded."
+      }
+    ],
+    "material_new_degradation": false,
+    "deduplication": "Read prior completed heartbeat and 11 additional November 4–5 watch heartbeats; none mentioned Sharon Regional. This does not independently verify production's authoritative deduplication or all earlier historical records.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Supplementary bounded recall is not exhaustive national/territory surveillance. Some sources have delayed indexing and publication-time ambiguity; one known endpoint remains inaccessible. Source was newly found in this watch, though the actual event and notice predate the strict hourly window.",
+    "controls": "One private ops/watch-ledger heartbeat only; finding pending_review; no approval, publication, branch merge, schedule change or disabling."
+  }
+}

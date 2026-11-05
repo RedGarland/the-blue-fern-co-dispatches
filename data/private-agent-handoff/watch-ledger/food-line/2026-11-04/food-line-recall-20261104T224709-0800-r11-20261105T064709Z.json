@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261104T224709-0800-r11-20261105T064709Z",
+  "scheduled_for": "2026-11-04T22:45:54-08:00",
+  "started_at": "2026-11-04T22:47:09-08:00",
+  "completed_at": "2026-11-04T22:49:12-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-11-04T21:49:59.113-08:00",
+    "end_at": "2026-11-04T22:49:12-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "basis": "Since last independently verified supplementary watch heartbeat. Direct-source publication on this date does not establish publication within the precise hour when time-of-day is unavailable.",
+    "targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-nj-unioncounty-elizabeth-ebt-card-replacement-system-error-20261104",
+      "canonical_source_url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+      "source_url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+      "publisher": "Union County, New Jersey",
+      "source_published_at": "2026-11-04",
+      "title": "Important Notice Regarding EBT Services",
+      "exact_supporting_passage": "Union County is aware of the long lines and increased wait times at the Elizabeth Social Services office due to a State system error.",
+      "summary": "Union County reports that a state system error caused long lines and increased waiting times at its Elizabeth Social Services office; residents seeking replacement EBT cards face delayed in-person assistance. The notice does not say retail EBT transactions failed or that benefits themselves stopped. Notice is dated November 4 but does not expose an hour, so first publication within this watch interval is not established; newly surfaced to this supplementary watch and requires editorial deduplication and timing review.",
+      "location": "Elizabeth, Union County",
+      "state": "New Jersey",
+      "scope": "Union County Elizabeth Social Services office; possible state system origin, geographic reach beyond office unverified",
+      "affected_groups": [
+        "EBT beneficiaries seeking replacement cards",
+        "Residents requiring in-person Social Services assistance"
+      ],
+      "pressure_type": "official_ebt_replacement_card_service_disruption",
+      "confidence": "moderate",
+      "source_role": "official_county_agency_notice",
+      "evidence_level": "primary_official_direct",
+      "bounded_query_context": {
+        "query": "\"November 4, 2026\" EBT outage benefits delayed SNAP WIC agency",
+        "search_engine": "slow",
+        "search_recency_days": 2,
+        "first_seen_during_this_run": true,
+        "source_publication_time_known": false,
+        "exact_interval_novelty": "unverified"
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall; authoritative primary Food Line production collection remains separate and unchanged.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss/closure/fire/disaster",
+      "Weather/disaster/outage-caused emergency food distribution cancellation",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruptions with immediate access impact"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-04/food-line-recall-20261104T214835-0800-r11-20261105T054835Z.json",
+      "completed_at": "2026-11-04T21:49:59.113-08:00",
+      "status": "SUCCESS"
+    },
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "search_engines": {
+      "fast": 9,
+      "slow": 3
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 4 2026 United States",
+      "\"last grocery store\" closes November 4 2026 community",
+      "\"full-service grocery store\" closure November 4 2026 rural",
+      "\"food distribution\" canceled storm November 4 2026 food bank",
+      "food pantry distribution canceled flood fire power outage November 4 2026",
+      "food bank pantry closed abruptly November 4 2026 service suspended",
+      "November 4 2026 SNAP EBT outage state agency benefits interrupted",
+      "November 4 2026 WIC benefits disruption system outage official",
+      "November 4 2026 emergency food distribution postponed weather November 5 2026",
+      "\"November 4, 2026\" \"food pantry\" \"closed\" storm fire county",
+      "\"November 4, 2026\" \"food distribution\" \"canceled\" weather",
+      "\"November 4, 2026\" EBT outage benefits delayed SNAP WIC agency"
+    ],
+    "direct_page_checks": 2,
+    "reviewed_candidates": [
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "source_published_at": "2026-09-03",
+        "exclusion_reason": "Known September sole-grocery closure; not new in interval."
+      },
+      {
+        "url": "https://pagosadailypost.com/2026/11/04/healthy-archuleta-food-resources-for-flood-recovery/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Food support remains available after flooding; no documented canceled distribution."
+      },
+      {
+        "url": "https://www.svdpindy.org/event-category/closings/",
+        "source_published_at": null,
+        "exclusion_reason": "Routine upcoming race/holiday pantry closures, not an abrupt qualifying disruption."
+      },
+      {
+        "url": "https://idahonews.com/news/local/idaho-instructed-to-delay-food-stamps-snap-benefits-may-not-be-funded-for-november",
+        "source_published_at": "2025-10-21",
+        "exclusion_reason": "November 2025 SNAP interruption, not new in 2026."
+      },
+      {
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "source_published_at": "2026-11-02",
+        "exclusion_reason": "Earlier reported pantry reopening, previously evaluated by the watch."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://ucnj.org/wp-json/wp/v2/search?search=Important%20Notice%20Regarding%20EBT%20Services",
+        "error": "Metadata endpoint inaccessible via retrieval tool; publication hour not established.",
+        "materiality": "secondary_metadata_only"
+      },
+      {
+        "url": "https://ucnj.org/feed/",
+        "error": "RSS feed retrieval refused unsupported application/rss+xml content-type.",
+        "materiality": "secondary_metadata_only"
+      }
+    ],
+    "result": "One first-surfaced official EBT replacement-card service disruption submitted for pending review; date-only source timestamp prevents confirming it was first announced within the precise prior-hour interval. No other qualifying signals verified.",
+    "limitations": "Indexes dominated by historical closures, 2025 SNAP shutdown reports, generic program information and undated notices. This is not exhaustive national coverage. Auxiliary official-site metadata endpoints were inaccessible, so marked DEGRADED even though the underlying notice was read directly.",
+    "action_limits": "No approvals, publications, schedule changes, task disabling, or production collection modifications."
+  }
+}

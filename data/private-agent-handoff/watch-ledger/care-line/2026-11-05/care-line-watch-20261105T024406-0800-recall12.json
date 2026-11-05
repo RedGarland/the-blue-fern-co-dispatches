@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T024406-0800-recall12",
+  "scheduled_for": "2026-11-05T02:45:22-08:00",
+  "started_at": "2026-11-05T02:44:06-08:00",
+  "completed_at": "2026-11-05T02:47:58.996-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T01:43:25-08:00",
+    "end": "2026-11-05T02:47:58.996-08:00",
+    "basis": "Prior independently verified Care Line supplementary heartbeat (2026-11-05 01:41:33 PST run) completed 01:43:25 PST. Bounded recall screened recent indexed Nov 4–5 reports, excluding earlier recorded candidates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY; Organ Procurement Organization termination notice",
+      "result": "Canonical CMS Public Notices listing inspected; no newly listed Nov 3–5 provider termination, rescission, CLIA limitation/suspension or related notice.",
+      "note": "A legacy CMS URL initially failed to resolve. The canonical CMS Public Notices page was found and opened successfully."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 5 2026 hospital emergency department closes suspends service rural US",
+      "November 4 2026 labor delivery maternity unit closing December 2026 hospitals",
+      "November 4 2026 ambulance service air medical base closing suspended rural",
+      "November 4 2026 dialysis center closing patients treatment access",
+      "November 4 2026 behavioral health psychiatric hospital inpatient unit closure suspended",
+      "November 5 2026 primary care family medicine clinic closes patients",
+      "November 4 2026 cancer center closing OR suspending oncology hospital patients",
+      "November 4 2026 emergency department close OR suspend hospital county",
+      "November 4 2026 reopened emergency department OR hospital after shutdown",
+      "November 4 2026 Puerto Rico Guam Virgin Islands hospital clinic closure medical service",
+      "November 5 2026 ambulance closing OR shutting down OR suspending service county",
+      "November 4 2026 health department emergency suspension hospital dialysis clinic license closure"
+    ],
+    "search_recency_days": 3,
+    "result_summary": "No previously unrecorded, verified qualifying U.S. or territory facility or service closure, suspension, EMS/air-medical loss, CMS enforcement notice, or concretely effective restoration found.",
+    "reviewed_exclusions": [
+      {
+        "item": "Mercy Health St. Joseph Hospital, Warren OH, maternity closure planned December 2026",
+        "reason": "Already recorded in Nov 4 20:41 PST Care Line watch; duplicate",
+        "source_url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move"
+      },
+      {
+        "item": "MGH Downtown Associates, Boston MA, primary-care practice closure scheduled Dec 18",
+        "reason": "Already recorded in Nov 4 14:42 PST Care Line watch; duplicate"
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County AL, practice closure",
+        "reason": "Already recorded in Nov 4 15:48 PST Care Line watch; duplicate"
+      },
+      {
+        "item": "Kula Hospital and its ED, Maui HI",
+        "reason": "Closure from March 2026 storms; Nov 2 2026 update announced reconstruction contractor and projected late-summer 2027 reopening, not effective restoration",
+        "source_url": "https://www.mauihealth.org/important-community-updates/kula-hospital-facility-and-operations-updates/"
+      },
+      {
+        "item": "San Mateo County, CA, proposed Coastside Health Center commercial insurance/lab expansion",
+        "reason": "Nov 5 roadmap request, no currently effective service restoration",
+        "source_url": "https://coastsidebuzz.com/san-mateo-county-supervisors-directs-county-health-to-develop-a-roadmap-to-accept-commercial-insurance-and-local-lab-services-at-the-coastside-clinic-within-90-days/"
+      },
+      {
+        "item": "Vantive-Rockwell hemodialysis assets transaction",
+        "reason": "Corporate transaction without an identified patient service discontinuation or location closure"
+      },
+      {
+        "item": "Historic maternity and dialysis closures in Nevada, Georgia, Maine",
+        "reason": "Pre-existing announcements outside observation interval; not new or newly missed changes"
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct official Health First alert endpoint remains inaccessible. This is a persistent previously reported limitation, not newly material degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Compared current search returns against earlier recorded Boston, Alabama, and Ohio candidates and fetched the 2026-11-05 01:41:33 PST heartbeat directly from ops/watch-ledger.",
+    "limitations": "Supplementary bounded recall is not a comprehensive primary collector. Local news indexing may lag, and production collector deduplication was not independently verified. Direct source endpoint remains inaccessible, but usable CMS and targeted-search coverage continued.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "One private heartbeat written. No editorial approval, publication, task disabling, or schedule modification."
+  }
+}

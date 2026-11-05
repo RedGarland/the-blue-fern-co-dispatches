@@ -1,0 +1,185 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T034741-0800-r11-20261105T114922Z",
+  "scheduled_for": "2026-11-05T03:44:51-08:00",
+  "started_at": "2026-11-05T03:47:41-08:00",
+  "completed_at": "2026-11-05T03:49:22-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T02:48:45.905-08:00",
+    "end": "2026-11-05T03:49:22-08:00",
+    "basis": "Previous verified Gaza supplementary heartbeat completion through the end of this watch; newly published and newly discovered distinct developments included, not necessarily incidents timed within the search hour.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176671",
+      "title": "Palestinian woman, child killed by Israeli forces in Gaza",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "publication_time_displayed": "01:00 PM (publisher page local clock; timezone not independently confirmed)",
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "source_type": "Established Palestinian news agency; reporting attributed to unnamed medical sources",
+      "classification": "new",
+      "confidence": "medium",
+      "independent_corroboration": false,
+      "finding_id": "gaza-20261105-al-mawasi-khan-younis-woman-shot-wafa-176671",
+      "location": "Al-Mawasi, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Palestinian woman; one reported fatality",
+      "event_type": "civilian_casualty",
+      "summary": "WAFA reported, citing medical sources, that Israeli forces shot and killed a Palestinian woman in al-Mawasi, Khan Younis, on November 5. Identity and precise event time were not provided.",
+      "exact_supporting_passage": "a woman was shot dead by Israeli forces in the al-Mawasi area",
+      "bounded_discovery_context": {
+        "source_check": "New WAFA homepage headline at 13:00 site local time, directly opened and compared against earlier watch's exclusion and finding list.",
+        "previous_watch_completed_at": "2026-11-05T02:48:45.905-08:00",
+        "duplicate_check": "Distinct from previously recorded al-Zawayda tent death, Khan Younis gunfire injuries, and eastern Khan Younis demolitions.",
+        "corroboration": "No independent corroboration located in bounded checks; medical sources unnamed.",
+        "published_in_window": true
+      }
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176671",
+      "title": "Palestinian woman, child killed by Israeli forces in Gaza",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "publication_time_displayed": "01:00 PM (publisher page local clock; timezone not independently confirmed)",
+      "event_date": "2026-11-05",
+      "event_time": null,
+      "source_type": "Established Palestinian news agency; reporting attributed to unnamed medical sources",
+      "classification": "new",
+      "confidence": "medium",
+      "independent_corroboration": false,
+      "finding_id": "gaza-20261105-al-bureij-child-shot-wafa-176671",
+      "location": "Al-Bureij refugee camp, central Gaza Strip",
+      "affected_population_system": "Palestinian child; one reported fatality",
+      "event_type": "civilian_casualty",
+      "summary": "WAFA reported, citing medical sources, that Israeli army fire killed a child in al-Bureij refugee camp on November 5. Identity and precise event time were not provided.",
+      "exact_supporting_passage": "a child was killed by Israeli army fire",
+      "bounded_discovery_context": {
+        "source_check": "Second distinct incident in WAFA 13:00 site-local article, directly verified against earlier recorded Gaza incidents.",
+        "previous_watch_completed_at": "2026-11-05T02:48:45.905-08:00",
+        "duplicate_check": "Distinct from previously recorded al-Zawayda death, al-Karama injury, Deir al-Balah injuries, and Rafah gunfire.",
+        "corroboration": "No independent corroboration located in bounded checks; medical sources unnamed.",
+        "published_in_window": true
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; production remains authoritative and this record does not approve or publish anything.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T024603-0800-r11-20261105T104845905Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA occupied Palestinian territory",
+        "urls": [
+          "https://www.ochaopt.org/",
+          "https://www.ochaopt.org/content/flash-appeal-response-monitoring-september-2026"
+        ],
+        "result": "Accessible. Latest November 5 entry concerned retrospective September 2026 flash-appeal response monitoring; report marked draft for review, created November 3, seen by prior watch. Latest Gaza humanitarian situation report shown as October 29. No new incident or operational change found."
+      },
+      {
+        "publisher": "World Health Organization",
+        "urls": [
+          "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+          "https://www.emro.who.int/opt/",
+          "https://www.who.int/news-room"
+        ],
+        "result": "WHO EMRO Gaza/OPT pages HTTP 502 (recurring). WHO global newsroom accessible; November 4 items did not contain a newly verified Gaza-specific hospital or ambulance change. A legacy WHO conflict URL returned 404."
+      }
+    ],
+    "additional_targeted_search_queries": [
+      "Gaza November 5 2026 latest killed injured drone airstrike after 11:00 Gaza time",
+      "site:english.wafa.ps \"November 5, 2026\" Gaza attack civilians injured killed",
+      "site:aa.com.tr/en/world/ Gaza \"November 5, 2026\" strike wounded November",
+      "site:reuters.com/world/middle-east/ Gaza November 5 2026 humanitarian aid ceasefire killed",
+      "site:ochaopt.org Gaza \"05 Nov 2026\" situation humanitarian crossings",
+      "site:who.int Gaza November 5 2026 hospital medical evacuations WHO",
+      "\"al-Mawasi\" woman \"al-Bureij\" child November 5 2026 shot",
+      "site:aa.com.tr/en/world/ \"Nov. 5, 2026\" \"woman\" \"Gaza\" shot child",
+      "Gaza November 5 2026 after noon water humanitarian aid Rafah crossing trucks restrictions Egypt",
+      "Gaza 5 November 2026 hospital ambulances fuel medical evacuation patients WHO MSF",
+      "Gaza November 5 2026 ceasefire hostage detainee negotiation developments today",
+      "site:unicef.org \"Gaza\" \"November 5, 2026\" displacement food water children"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Home page had newly posted 13:00 November 5 item involving two separate fatalities in Gaza; exact article directly read."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176671",
+        "result": "Reports separate woman fatality in al-Mawasi and child fatality in al-Bureij attributed to medical sources. Unnamed sources and no independent confirmation; both entered as medium confidence newly discovered findings."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest displayed news November 3, with no new Gaza operational event."
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 (recurring)."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 (recurring)."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/",
+        "result": "Robots restriction (recurring)."
+      }
+    ],
+    "categories_checked": [
+      "civilian casualties; military operations with documented civilian impact",
+      "displacement and infrastructure damage",
+      "aid access; food, water, fuel and crossings",
+      "healthcare; hospital functioning, ambulances, transport and medical evacuations",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "exclusions": [
+      {
+        "item": "al-Zawayda tent death and Deir al-Balah civilian injuries",
+        "reason": "Previously recorded; repeated by WAFA's 08:35 article."
+      },
+      {
+        "item": "Gaza City al-Karama injury, earlier Khan Younis gunfire injuries, eastern Khan Younis demolitions",
+        "reason": "Already in 00:47 PST supplementary ledger, no newly verified change."
+      },
+      {
+        "item": "Rafah crossing restrictions and northern Rafah tent gunfire with flood-work withdrawal",
+        "reason": "Previously logged findings; no independently verified change in this window."
+      },
+      {
+        "item": "OCHA September appeal reporting, older reports, West Bank incidents and opinion",
+        "reason": "Retrospective, duplicate, outside geography or not an eligible newly verified incident."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO HTTP 502",
+        "WFP HTTP 403",
+        "UNRWA HTTP 403",
+        "UN News robots restriction"
+      ],
+      "alternative_coverage": "OCHA, WHO global news, WAFA direct reports, PRCS and targeted established-source searches remained available.",
+      "status_reason": "DEGRADED due to repeated inaccessible humanitarian source endpoints, but useful coverage was retained."
+    },
+    "limitations": "Two distinct newly published WAFA casualty reports were traceable to an established news agency citing unnamed medical sources; no independent corroboration or precise event times were verified. Inclusion means newly discovered in this supplementary watch, not proof that the incidents occurred in the past hour.",
+    "notification_decision": "Notify for two new qualifying, separately located fatalities. Recurring degradation was not materially new.",
+    "safeguards": "Exactly one heartbeat committed on ops/watch-ledger; no production publication, approvals, task schedule or status changes."
+  }
+}

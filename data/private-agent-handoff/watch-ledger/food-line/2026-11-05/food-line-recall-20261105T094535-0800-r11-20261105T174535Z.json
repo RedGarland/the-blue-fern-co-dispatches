@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T094535-0800-r11-20261105T174535Z",
+  "scheduled_for": "2026-11-05T09:45:35-08:00",
+  "started_at": "2026-11-05T09:45:35-08:00",
+  "completed_at": "2026-11-05T09:47:12.578-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T08:43:14-08:00",
+    "end_at": "2026-11-05T09:47:12.578-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous verified durable hourly Food Line heartbeat completion through current observation. Event occurrence/publication must be new in this interval; index refreshes and date-only publication evidence do not establish same-hour novelty.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; authoritative production collector not replaced or changed.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery-store loss or closure (including fire/disaster)",
+      "Emergency food distribution cancellation or suspension from storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food bank closure or material reduction in access",
+      "New official SNAP/WIC/food-assistance service interruption causing immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T084238-0800-r11-20261105T164238Z.json",
+      "completed_at": "2026-11-05T08:43:14-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 5 2026 town",
+      "\"last grocery store\" closes fire November 2026 town",
+      "\"only full-service grocery\" closure November 2026",
+      "food bank \"distribution canceled\" storm November 5 2026",
+      "food pantry distribution canceled flooding outage Nov 5 2026",
+      "food bank pantry \"closed\" \"Nov. 5, 2026\" storm",
+      "food pantry abruptly shut down November 5 2026 service",
+      "SNAP EBT benefits outage delayed Nov 5 2026 agency official",
+      "site:gov \"November 5, 2026\" \"SNAP\" \"delay\" \"EBT\" outage",
+      "site:gov \"Nov. 5, 2026\" \"WIC\" service interruption clinic closure",
+      "\"food distribution\" \"cancelled\" \"November 5, 2026\"",
+      "\"food pantry\" \"closed\" \"November 5, 2026\" emergency"
+    ],
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://ucnj.org/press-releases/plain-alert/2026/11/04/important-notice-regarding-ebt-services/",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Previously recorded official Union County NJ EBT replacement-card office delay; no new verified development in this hourly interval."
+      },
+      {
+        "url": "https://wkvi.com/2026/11/starke-county-food-pantry-seeks-donations-for-renovations/",
+        "source_published_at": null,
+        "exclusion_reason": "November 4/5 index item seeking pantry renovations donations; no confirmed closure, service interruption or major access reduction. Direct page unavailable."
+      },
+      {
+        "url": "https://www.hhs.nd.gov/",
+        "source_published_at": null,
+        "exclusion_reason": "Official state SNAP purchase-category waiver effective November 1, announced October 30; not new hourly SNAP/WIC benefit or service interruption."
+      },
+      {
+        "url": "https://www.foodgatherers.org/foodresource/food-pantry-33/2026-11-05/",
+        "source_published_at": null,
+        "exclusion_reason": "Scheduled operating hours November 5 and routine future Thanksgiving holiday closure, not unplanned disruption."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Older Spencer NY sole grocery-store fire already far outside new hourly observation window."
+      },
+      {
+        "url": "https://www.thecooldown.com/green-business/eastport-maine-grocery-store-closure-impact/",
+        "source_published_at": "2026-09-07",
+        "exclusion_reason": "Historical report on Eastport ME grocery closure, not an event or official update in current hourly window."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://wkvi.com/2026/11/starke-county-food-pantry-seeks-donations-for-renovations/",
+        "error": "Direct source open returned DisabledError; search-result snippet remained available.",
+        "material": false
+      }
+    ],
+    "result": "No new independently verified qualifying U.S. food-access disruption found between 08:43:14 and the current morning observation. Results were older grocery losses, already-recorded EBT disruption, routine notices, pantry fundraising/renovation coverage, or scheduled holiday closures.",
+    "limitations": "One local-news article direct page inaccessible; 12 successful searches and three other direct checks provided useful coverage. Time-only attribution may be unknown for date-stamped releases. Not an exhaustive national collector.",
+    "materiality": "Nonmaterial single source-access failure; usable targeted coverage remained. DEGRADED chosen in accordance with any-source-failure policy.",
+    "action_limits": "No approvals, publication, schedule changes, collector changes, or disabling."
+  }
+}

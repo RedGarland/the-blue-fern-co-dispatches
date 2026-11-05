@@ -5,14 +5,14 @@
   "run_id": "gaza-source-watch-20261105T074047-0800-r11-20261105T154342514Z",
   "scheduled_for": "2026-11-05T07:44:51-08:00",
   "started_at": "2026-11-05T07:40:47-08:00",
-  "completed_at": "2026-11-05T15:43:42.514-08:00",
+  "completed_at": "2026-11-05T07:44:35.295-08:00",
   "status": "DEGRADED",
   "outcome": "no_findings",
   "search_window": {
     "timezone": "America/Los_Angeles",
     "observation_date": "2026-11-05",
     "start": "2026-11-05T06:46:24-08:00",
-    "end": "2026-11-05T15:43:42.514-08:00",
+    "end": "2026-11-05T07:44:35.295-08:00",
     "basis": "Immediately previous verified supplementary Gaza Source Watch heartbeat completion to this run. Search for distinct, traceable newly documented developments, excluding recycled or earlier-ledgered items; event time may precede publication time.",
     "official_first_checks_count": 2,
     "additional_targeted_search_count": 12

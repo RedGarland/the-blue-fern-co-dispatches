@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T104508-0800-recall11",
+  "scheduled_for": "2026-11-05T10:45:08-08:00",
+  "started_at": "2026-11-05T10:45:08-08:00",
+  "completed_at": "2026-11-05T10:48:20.528-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T09:42:51-08:00",
+    "end": "2026-11-05T10:48:20.528-08:00",
+    "basis": "Start is completed_at from most recent verified Care Line watch heartbeat, 09:41 run, ops/watch-ledger. Bounded multi-day local-news discovery lookback considered for delayed indexing; no older source was treated as new without a new verified access event."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), Organ Procurement Organization, Termination Notice",
+      "result": "Official CMS public-notice listing retrieved and reviewed. No new provider termination, rescission, CLIA limitation/suspension, or comparable notice later than November 2."
+    },
+    "cms_discovery_searches": 1,
+    "additional_targeted_searches": 11,
+    "targeted_queries": [
+      "\"hospital\" \"emergency department\" \"closing\" \"November 5, 2026\"",
+      "\"labor and delivery\" \"closing\" \"Nov 5, 2026\" hospital",
+      "rural hospital service suspended emergency room November 5 2026",
+      "ambulance service permanently closed suspended county November 2026 United States",
+      "air ambulance base closure November 2026 medical helicopter",
+      "dialysis center abrupt closure Nov 5 2026 patients",
+      "behavioral health psychiatric hospital closes services November 2026 local",
+      "oncology infusion cancer care clinic closing November 2026 United States",
+      "primary care clinics closed patients November 5 2026",
+      "emergency room reopens service restored November 5 2026 town hospital",
+      "Puerto Rico Guam US Virgin Islands American Samoa CNMI hospital clinic emergency service closure November 2026"
+    ],
+    "targeted_search_recency_days": [
+      2,
+      2,
+      2,
+      3,
+      5,
+      3,
+      3,
+      3,
+      2,
+      3,
+      4
+    ],
+    "search_results": "CMS checked successfully; 11 additional targeted searches returned no verified, nonduplicate in-window hospital/ED/maternity/behavioral/dialysis/oncology/primary-care loss, rural/emergency loss, ambulance/air-medical closure, or concrete immediate restoration. Publication timestamp precision and search indexing limit national coverage.",
+    "reviewed_exclusions": [
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield, Illinois",
+        "source_url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/",
+        "source_published_date": "2026-11-03",
+        "reason": "Conditional end-of-December residential program wind-down subject to client transfers; had already been reviewed and excluded in multiple Nov 4–5 watch heartbeats; not a new in-window verified loss."
+      },
+      {
+        "item": "Benefis Health System Great Falls, Montana family/urgent-care clinic and behavioral-health changes",
+        "source_url": "https://montanafreepress.org/2026/11/03/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/",
+        "reason": "November 3 announcement already screened in prior Care Line watch heartbeats; duplicate, no new independent change."
+      },
+      {
+        "item": "Kula Hospital and emergency department, Maui, Hawaii",
+        "source_url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Reopening only projected for late summer 2027; ED remains closed. Construction update is not abrupt effective restoration."
+      },
+      {
+        "item": "Laurel Ridge Treatment Center, San Antonio, Texas",
+        "source_url": "https://www.ksat.com/news/local/2026/04/30/medicare-medicaid-privileges-officially-end-at-laurel-ridge-treatment-center/",
+        "reason": "April 2026 CMS coverage loss, historical outside recall window."
+      },
+      {
+        "item": "Mercy Health St Joseph, Warren, Ohio maternity withdrawal",
+        "source_url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move",
+        "reason": "Already captured as pending-review finding in Nov 4 watch; duplicate."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct opening remained inaccessible in this run; known recurring issue from previous heartbeats; no evidence of newly material degradation."
+      },
+      {
+        "source_url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertemergprep/public-notices",
+        "type": "obsolete_cms_url_inaccessible",
+        "detail": "Initial outdated CMS path inaccessible; official live CMS Public Notices page was discovered and successfully checked."
+      }
+    ],
+    "material_new_degradation": false,
+    "deduplication": "Compared 15 Care Line watch heartbeat files added since Nov 4 18:48 PST and read latest 09:41 run; Memorial West Lake previously excluded, Benefis and Mercy/St Joseph previously assessed. Production-level deduplication not independently verified.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Supplementary 11-query recall only, not exhaustive or primary national collector. CMS list may lag source updates; late indexing possible. Health First alert endpoint still inaccessible, but no new material service issue established.",
+    "controls": "Exactly one new JSON heartbeat on existing ops/watch-ledger only. No editorial review approval, publication, merge, production workflow intervention, permissions or schedule change, or task disabling."
+  }
+}

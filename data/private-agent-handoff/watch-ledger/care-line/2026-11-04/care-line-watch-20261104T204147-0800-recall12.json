@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261104T204147-0800-recall12",
+  "scheduled_for": "2026-11-04T20:45:22-08:00",
+  "started_at": "2026-11-04T20:41:47-08:00",
+  "completed_at": "2026-11-04T20:44:06-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T19:46:24-08:00",
+    "end": "2026-11-04T20:44:06-08:00",
+    "basis": "Previous independently verified Care Line ledger completion through current observation. Recall includes a confirmed newly surfaced November 4 item published earlier in the day; original publication was outside the hourly window and is not represented as a new announcement in that hour."
+  },
+  "findings": [
+    {
+      "finding_id": "careline-20261104-oh-warren-st-joseph-labor-delivery-relocation",
+      "canonical_source_url": "https://www.ideastream.org/health/2026-11-04/trumbull-county-will-have-no-hospital-labor-and-delivery-unit-after-st-joseph-move",
+      "title": "Trumbull County will have no hospital labor and delivery unit after St. Joseph move",
+      "publisher": "Ideastream Public Media",
+      "exact_supporting_passage": "Labor and delivery will move out of St. Joseph by early December and will be replaced by a 25-bed inpatient unit.",
+      "source_published_date": "2026-11-04",
+      "state": "Ohio",
+      "city": "Warren",
+      "county": "Trumbull",
+      "territory": null,
+      "event_type": "announced_maternity_service_closure_and_relocation",
+      "service_line": "labor and delivery",
+      "access_consequences": "Mercy Health plans to end deliveries at St. Joseph Hospital by early December 2026 and direct them to St. Elizabeth Boardman Hospital in Youngstown. Ideastream reports Trumbull County would have no hospital labor-and-delivery unit. A nurses' association representative cited roughly 27 miles between hospitals; exact patient travel impact requires review.",
+      "affected_population": "Pregnant patients and families seeking hospital-based labor and delivery in Trumbull County, including rural residents; exact affected count unverified.",
+      "effective_date": null,
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "strong_local_reporting_citing_health_system_press_release",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "timing_qualification": "Newly surfaced high-value recall candidate, not newly published within this hourly window: the source explicitly timestamps November 4, 2026 at 1:05 p.m. EST (10:05 a.m. PST). Not found in the enumerated November 4 supplementary Care Line ledger files; production deduplication not verified."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky OPO termination notice",
+      "result": "Official listing checked before 12 subsequent targeted searches. No new listing dated November 3 or 4; latest remains November 2."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 4, 2026\" hospital \"emergency department\" closure service suspended patients",
+      "\"November 4, 2026\" \"labor and delivery\" maternity unit closes stops births",
+      "\"November 4, 2026\" psychiatric mental behavioral health facility closes inpatient patients",
+      "\"November 4, 2026\" dialysis center oncology cancer clinic closing services",
+      "\"November 4, 2026\" \"ambulance\" \"close\" \"service\" county EMS",
+      "\"November 4, 2026\" \"air ambulance\" \"base\" closure suspended",
+      "\"November 4, 2026\" \"primary care\" \"clinic\" \"closing\" patients",
+      "\"November 4, 2026\" \"rural hospital\" \"emergency\" closure services",
+      "\"November 4, 2026\" \"reopened\" \"emergency department\" hospital services after closure",
+      "\"November 4, 2026\" \"resumed\" \"ambulance\" \"hospital\" care services after suspension",
+      "Puerto Rico Guam Virgin Islands Northern Mariana Samoa hospital emergency maternity clinic ambulance closure November 4 2026",
+      "site:beckershospitalreview.com 2026 11 04 closure closed hospital ER maternity ambulance primary care"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "One previously unrecorded supplementary watch recall candidate: the definite early-December maternity-unit closure and relocation at Mercy Health St. Joseph Hospital in Warren, Ohio, leaving Trumbull County without local hospital labor and delivery. Its 10:05 a.m. PST source publication predates this hourly window; recorded as newly surfaced in recall, not represented as an in-hour announcement. No other new qualifying closure, CMS action, EMS/base loss, or effective restoration found in the targeted searches.",
+    "reviewed_exclusions": [
+      {
+        "item": "MGH Downtown Associates, Boston, MA, primary-care closure scheduled December 18",
+        "reason": "Captured in previous November 4 supplementary heartbeat; duplicate."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County, AL",
+        "reason": "Captured in previous November 4 supplementary heartbeat; duplicate."
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield, IL",
+        "reason": "Reported November 3; winding down is contingent on transfers; not new during this window."
+      },
+      {
+        "item": "Guam Memorial Hospital / Guam Regional Medical City typhoon-related outpatient suspensions",
+        "reason": "Official notices dated October 2026, outside current observation window."
+      },
+      {
+        "item": "Acadia Healthcare earnings release, CVS corporate restructuring, other funding/ownership/news",
+        "reason": "No newly established specific essential clinical service closure or restoration."
+      },
+      {
+        "item": "Clearwater emergency department reopening",
+        "reason": "Canada, out of geographic scope."
+      },
+      {
+        "item": "Martin General Hospital proposed North Carolina emergency services reopening",
+        "reason": "Funding and plan from July 2026, not an effective new restoration."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct opening failed again; previously known persistent failure. Other strong official and local evidence remained available."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Independently read November 4 supplementary watch heartbeats from 09:47 through 19:45 PST (including 16:49); no prior Trumbull County/St. Joseph maternity finding detected.",
+    "limitations": "Supplementary search is bounded, not exhaustive. Source first appeared at 10:05 a.m. PST outside current hourly window, but was newly surfaced in this recall; exact original press-release timestamp, effective closure date, patient count and production collector dedupe remain unverified. Health First official endpoint inaccessible.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "No editorial approval, public publication, schedule modification, or task disabling. One heartbeat file only created on ops/watch-ledger."
+  }
+}

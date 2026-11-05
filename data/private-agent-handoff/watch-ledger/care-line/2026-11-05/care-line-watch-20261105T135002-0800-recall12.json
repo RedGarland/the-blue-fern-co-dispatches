@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T135002-0800-recall12",
+  "scheduled_for": "2026-11-05T13:45:22-08:00",
+  "started_at": "2026-11-05T13:50:02-08:00",
+  "completed_at": "2026-11-05T13:51:24-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T12:56:57-08:00",
+    "end": "2026-11-05T13:51:24-08:00",
+    "basis": "Starts at prior verified Care Line heartbeat completed_at. Targeted searches used November 3–5 indexed lookback to catch late-arriving reports. Reported events outside strict window were excluded unless new and unreviewed; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination, CCN 18P001",
+      "result": "No new CMS termination, rescission, suspension, or CLIA notice after November 2 visible on the public notices table."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital closure emergency department services suspended November 5 2026 US local news",
+      "emergency room temporarily closing November 5 2026 hospital ambulance diversion",
+      "labor delivery maternity unit closing November 5 2026 hospital",
+      "behavioral health psychiatric dialysis center closing November 5 2026 healthcare services",
+      "rural hospital emergency services shut down November 5 2026",
+      "ambulance service shutdown suspended November 5 2026 county EMS",
+      "air ambulance helicopter medical base closing November 2026 United States",
+      "oncology cancer clinic radiation treatments closing November 5 2026",
+      "primary care health clinic abruptly closed patients November 5 2026",
+      "hospital emergency department reopened restored services November 5 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital clinic health services closure November 2026",
+      "CMS CLIA suspension termination rescission notice November 5 2026"
+    ],
+    "search_recency_days": [
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      7,
+      3,
+      3,
+      3,
+      5,
+      4
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System, Sharon, Pennsylvania emergency department and hospital suspension",
+        "url": "https://sharonregionalhealthsystem.org/",
+        "reason": "Already recorded as pending-review finding in immediately preceding Care Line heartbeat, 2026-11-05T12:56:57-08:00; not new."
+      },
+      {
+        "item": "Greenbrier Valley Medical Center, Lewisburg, West Virginia maternity/labor-and-delivery reopening announcement",
+        "url": "https://governor.wv.gov/article/governor-morrisey-announces-reopening-labor-and-delivery-services-greenbrier-valley-medical",
+        "reason": "November 5 official announcement is a proposed future reopening via non-final letter of intent; phased implementation begins July 1, 2027 subject to approvals, so no concrete effective restoration as of this run."
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago, Illinois maternity closure and bankruptcy",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-files-bankruptcy-days-closing-maternity-ward-chicagos-south-side/20018238/",
+        "reason": "Bankruptcy report says maternity closure occurred days earlier; no newly effective in-window service change. The article timestamp 7:49 p.m. Chicago time is later than current observation, so it cannot support a fresh in-window finding; no expansion from bankruptcy (report states care continues)."
+      },
+      {
+        "item": "Kula Hospital emergency department reopening planning, Maui, Hawaii",
+        "url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "Projected 2027 reopening, no currently effective restoration."
+      },
+      {
+        "item": "Doylestown Hospital ED water damage, Doylestown, Pennsylvania",
+        "url": "https://centralbucksnews.com/news/public-safety/doylestown-health-responds-to-emergency-department-incident/",
+        "reason": "October 23 report of prior temporary closure, not newly reported or effective in recall window."
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://westvirginiawatch.com/2026/11/05/vandalia-health-osteopathic-school-to-reopen-labor-delivery-services-at-greenbrier-medical-center/",
+        "type": "secondary_article_fetch_denied",
+        "detail": "Open returned DisabledError; official West Virginia governor notice was accessible and sufficient to classify future plans as excluded."
+      },
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Previously recorded Health First alerts endpoint still inaccessible in this run; no new material degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "deduplication": "Compared 2026-11-05 12:48 watch heartbeat finding and earlier 10:45 watch exclusions; no new validated nonduplicate access event detected. Production deduplication not independently verified.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Targeted recall is bounded, not exhaustive. Search index may lag and some articles publish later than current observation. One secondary news page could not be opened, compensated by official source. Known Health First alerts endpoint remains inaccessible.",
+    "controls": "Exactly one private heartbeat on ops/watch-ledger; no approval, public release, publication, schedule modification, or disabling."
+  }
+}

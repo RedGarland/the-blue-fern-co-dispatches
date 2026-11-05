@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T004607-0800-recall12",
+  "scheduled_for": "2026-11-05T00:45:22-08:00",
+  "started_at": "2026-11-05T00:46:07-08:00",
+  "completed_at": "2026-11-05T00:47:56-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-04T23:43:54-08:00",
+    "end": "2026-11-05T00:47:56-08:00",
+    "basis": "From the prior verified supplementary heartbeat completion; newly indexed earlier reports screened as recall candidates with ledger deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination",
+      "result": "Canonical CMS public-notice index directly inspected first. No notice dated November 3-5 was visible; no new termination, rescission, or CLIA notice found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 4, 2026\" hospital emergency department closing suspended service rural",
+      "\"November 4, 2026\" hospital maternity labor delivery unit closing December",
+      "\"November 4, 2026\" mental health psychiatric behavioral health hospital closes unit beds",
+      "\"November 4, 2026\" dialysis clinic closure patients displaced",
+      "\"November 4, 2026\" cancer oncology infusion clinic closing services",
+      "\"November 4, 2026\" primary care clinic closes healthcare patients",
+      "\"November 4, 2026\" ambulance EMS service closing ceasing operations November",
+      "\"November 4, 2026\" air ambulance helicopter base closure operations",
+      "\"November 4, 2026\" hospital emergency department reopening services restored",
+      "\"November 5, 2026\" hospital closure maternity emergency ambulance access",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices November 5 2026 termination CLIA",
+      "Puerto Rico Guam US Virgin Islands American Samoa November 4 2026 hospital dialysis emergency medical services closure"
+    ],
+    "search_recency_days": 2,
+    "result_summary": "No new qualifying U.S./territory closure, suspension, emergency/rural or ambulance service loss, CMS access-risk notice, or effective reopening was verified during the bounded recall.",
+    "reviewed_exclusions": [
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield, Illinois",
+        "source": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/",
+        "reason": "November 3 report describes conditional end-of-December closure of crisis and supervised residential programs; previously reviewed and excluded in November 3 supplementary ledger, so no new in-window access withdrawal."
+      },
+      {
+        "item": "MGH Downtown Associates, Boston, Massachusetts",
+        "source": "https://www.bostonglobe.com/2026/11/04/business/mass-general-brigham-downtown/",
+        "reason": "Previously surfaced and recorded in November 4 14:42 PST ledger; duplicate."
+      },
+      {
+        "item": "Mercy Health St. Joseph Hospital maternity unit, Warren, Ohio",
+        "reason": "Previously recorded November 4 20:41 PST; duplicate."
+      },
+      {
+        "item": "Taylorville Family Medicine, Tuscaloosa County, Alabama",
+        "reason": "Previously recorded November 4 15:48 PST; duplicate."
+      },
+      {
+        "item": "Mackenzie and District Hospital emergency response, British Columbia",
+        "reason": "Canadian facility, outside U.S./territory scope."
+      },
+      {
+        "item": "Martin General Hospital proposed rural emergency hospital reopening, North Carolina",
+        "reason": "July 2026 funding/proposal, no concrete effective restored service."
+      },
+      {
+        "item": "LifeStar Ambulance suspension dispute, Illinois",
+        "reason": "May 2026 historical story rather than a new access change."
+      }
+    ],
+    "source_failures": [
+      {
+        "source_url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct source access failed again; longstanding known limitation. CMS and other search coverage remained usable."
+      }
+    ],
+    "material_new_degradation": false,
+    "prior_ledger_deduplication": "Read and verified November 4 23:41:58-23:43:54 PST heartbeat on ops/watch-ledger. Compared November 3 23:50 ledger's explicit West Lake exclusion and prior November 4 known candidates.",
+    "limitations": "Bounded supplementary web recall is not exhaustive; local reporting and indexed notices may lag. Production national collector remains authoritative and its candidate state was not independently inspected.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "controls": "Created one private heartbeat only; no editorial approval, publication, task schedule change, or disabling."
+  }
+}

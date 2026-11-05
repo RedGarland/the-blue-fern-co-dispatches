@@ -1,0 +1,166 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261104T204352-0800-r11-20261105T0444Z",
+  "scheduled_for": "2026-11-04T20:43:36-08:00",
+  "started_at": "2026-11-04T20:43:52-08:00",
+  "completed_at": "2026-11-04T20:45:30.045-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-04",
+    "start": "2026-11-04T19:42:47.267-08:00",
+    "end": "2026-11-04T20:45:30.045-08:00",
+    "basis": "Since last independently verified supplementary Gaza heartbeat; include newly evidenced prior teaser only if verified and distinct.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261105-alzawayda-displacement-tent-drone-strike-anadolu-4112137",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-another-at-displacement-tent-in-gaza/4112137",
+      "title": "Israeli drone strike kills Palestinian, wounds another at displacement tent in Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-05",
+      "event_date": "2026-11-05",
+      "publication_time": null,
+      "event_time": null,
+      "source_updated_date": "2026-11-05",
+      "location": "West of Al-Zawayda (Az-Zawayda), central Gaza Strip",
+      "affected_population": "Displaced Palestinians sheltering in a tent; reported one killed and one injured",
+      "affected_system": "Civilian shelter and protection; military operation with reported civilian casualties",
+      "supporting_passage": "An Israeli drone strike killed one Palestinian and wounded another early Thursday",
+      "source_type": "Established news agency original reporting citing Al-Aqsa Martyrs Hospital medical sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "first_verified_in_watch": "2026-11-04 evening America/Los_Angeles",
+        "discovery_query": "site:aa.com.tr/en/middle-east/ Gaza displaced tent drone November 4 2026 killed",
+        "verification_method": "Full canonical Anadolu report opened and directly read; publication/event calendar dates verified; exact hours not supplied",
+        "primary_source_in_story": "Medical sources at Al-Aqsa Martyrs Hospital",
+        "independent_corroboration": "Not obtained within this bounded watch",
+        "prior_watch_relation": "Earlier heartbeat held an unverified Anadolu search-index teaser; this run verified canonical report and details for the first time",
+        "distinctness": "Separate from previously logged November 3 Rafah suspension, November 4 child-amputation assessment, and earlier casualty reports",
+        "limits": "Publisher describes an early Thursday attack but exact incident and publication hours are unavailable; do not add related shelling without documented civilian impact."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production daily Gaza collection and publication remain authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-04/gaza-source-watch-20261104T194019-0800-r11-20261105T034247Z.json",
+    "previous_verified_completed_at": "2026-11-04T19:42:47.267-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "result": "Accessible; most recent listed report 29 October, published 31 October 2026; no newer Gaza bulletin visible."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Main emergency hub accessible; no November 4/5 new health bulletin visible; WHO EMRO OPT in-focus endpoint inaccessible (recurring internal error)."
+      }
+    ],
+    "official_first_search_queries": [
+      "site:ochaopt.org Gaza November 4 2026 humanitarian situation report flash update civilian deaths displacement aid crossing",
+      "site:who.int Gaza November 4 2026 health hospitals medical evacuation WHO occupied Palestinian territory"
+    ],
+    "additional_targeted_search_queries": [
+      "Gaza November 5 2026 overnight Nov 4 civilians killed wounded attacks displacement tent ceasefire",
+      "site:english.wafa.ps Gaza November 5 2026 killed wounded airstrike shelling dawn",
+      "site:reuters.com/world/middle-east/ Gaza November 4 November 5 2026 ceasefire strikes civilian",
+      "site:apnews.com Gaza November 4 November 5 2026 humanitarian casualties crossing",
+      "Gaza Rafah crossing status November 5 2026 Egyptian trucks reopened suspended medical evacuations",
+      "site:aa.com.tr/en/middle-east/ Gaza displaced tent drone November 4 2026 killed",
+      "site:un.org OR site:unicef.org OR site:wfp.org Gaza \"5 November 2026\" aid water fuel food",
+      "site:msf.org OR site:icrc.org Gaza November 5 2026 ambulance hospital medicine medical evacuation",
+      "site:english.wafa.ps/Pages/Details/ \"November 5, 2026\" \"Gaza\" tent killed",
+      "Gaza November 5 2026 Israel Hamas hostage ceasefire negotiations mediation crossing",
+      "Gaza November 5 2026 displaced shelters infrastructure fire flood drinking water hospital capacity",
+      "Gaza Al-Zawayda November 5 2026 Abd Walid Matar tent drone Al Aqsa another killed"
+    ],
+    "additional_targeted_search_count": 12,
+    "direct_checks": [
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-another-at-displacement-tent-in-gaza/4112137",
+        "result": "Accessible complete original report with Nov 5, 2026 publication/update date; unnamed hospital medical sources report new civilian fatality and injury."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest visible items concerning West Bank geography, not new Gaza incident."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest listed news Nov 3, no newer medical/ambulance disruption."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/occupied-palestine-infocus.html",
+        "result": "Inaccessible/internal error (recurring)."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403 (recurring)."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "HTTP 403 (recurring)."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "Robots/fetch restricted (recurring)."
+      }
+    ],
+    "categories_checked": [
+      "civilian casualties and strikes at displacement sites",
+      "aid, crossings, trucks, fuel, food and drinking water",
+      "hospital/ambulance operations and medical evacuation",
+      "displacement, shelter, infrastructure and demolitions",
+      "hostages, detention, ceasefire and negotiations"
+    ],
+    "excluded": [
+      {
+        "title": "November 3 Rafah suspension",
+        "reason": "Already logged; no independently verified crossing-status change in this search window."
+      },
+      {
+        "title": "November 4 Euro-Med child-amputation report",
+        "reason": "Already logged; cumulative healthcare follow-up."
+      },
+      {
+        "title": "November 5 UNICEF global water systems report",
+        "reason": "Multi-country historical assessment with inconsistent published metadata (29 Oct versus report release dated Nov 5 in New York) and no verified newly occurring Gaza event in this window."
+      },
+      {
+        "title": "Anadolu mentions east Gaza City shelling, naval fire, Khan Younis demolition",
+        "reason": "No distinct documented civilian casualties, displacement or infrastructure function impact established in accessible report, not split into separate findings."
+      },
+      {
+        "title": "Earlier October and November 1-3 casualties and West Bank WAFA reports",
+        "reason": "Recycled, duplicate, outside this watch window or Gaza geography."
+      }
+    ],
+    "degradation": {
+      "material_new_degradation": false,
+      "recurring": [
+        "WHO EMRO OPT direct page internal error",
+        "WFP 403",
+        "UNRWA newsroom 403",
+        "UN News robots/fetch restriction"
+      ],
+      "alternative_coverage": "WHO main hub, OCHA OPT, WAFA, PRCS, Anadolu full canonical reporting, and 12 targeted web searches accessible."
+    },
+    "limitations": "One newly verified report from Anadolu citing hospital sources, without independent corroboration in bounded searches; source date and event date verified as November 5 in Gaza, precise times unknown. Other late breaking events may have delayed indexing.",
+    "notification_decision": "Notify: at least one new, traceable Gaza civilian-casualty incident verified from full canonical news-agency report.",
+    "safeguards": "Exactly one private watch-ledger heartbeat for this run. No production approval, publication, deployment, posting, schedule change, disable, or source-state mutation."
+  }
+}

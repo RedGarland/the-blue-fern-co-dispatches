@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T084225-0800-recall12",
+  "scheduled_for": "2026-11-06T08:45:22-08:00",
+  "started_at": "2026-11-06T08:42:25-08:00",
+  "completed_at": "2026-11-06T08:46:11.961-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T07:49:17-08:00",
+    "end": "2026-11-06T08:46:11.961-08:00",
+    "basis": "Since previous verified supplementary Care Line heartbeat completion, with bounded November 5-6 publication-lag recall. New-to-watch findings can have earlier announcements; production collector is authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-nh-winchester-dhcc-family-medicine-closure-20261106",
+      "canonical_source_url": "https://www.cheshiremed.org/family-medicine",
+      "title": "Dartmouth Hitchcock Clinics Cheshire permanently closes Winchester Family Medicine location on November 6",
+      "publisher": "Cheshire Medical Center / Dartmouth Health",
+      "exact_supporting_passage": "This clinic will be closing on November 6, 2026.",
+      "source_published_date": null,
+      "state": "New Hampshire",
+      "city": "Winchester",
+      "county": "Cheshire County",
+      "territory": null,
+      "event_type": "permanent_primary_care_clinic_closure",
+      "service_line": "Primary care / family medicine",
+      "access_consequences": "Winchester primary-care practice location permanently closes as its sole provider departs. Existing patients must transition to another primary care provider; Dartmouth Hitchcock Clinics Cheshire says it will propose replacements and notify patients. Other family-medicine locations are listed in Keene and Walpole.",
+      "affected_population": "Existing patients of Dartmouth Hitchcock Clinics Cheshire Winchester Family Medicine; patient count not stated.",
+      "effective_date": "2026-11-06",
+      "announcement_date": "2026-10-14",
+      "confidence": "HIGH",
+      "source_role": "official_provider_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "evidence_notes": "Provider's page does not disclose its own publication date. October 14 is the date of the initial patient notification letter, not a verified web publication date. Exact hour of clinic closure is unspecified. Newly found by supplementary recall; no direct production record check."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, termination notice, CCN 18P001",
+      "result": "No newly posted November 3-6 termination, rescission or CLIA limitation/suspension in the visible list. Initially attempted outdated CMS URL, then located and directly opened correct official page before other targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital closed emergency department suspended services November 6 2026 United States",
+      "rural hospital emergency room closure November 5 6 2026 local news",
+      "labor delivery maternity unit closes stops deliveries November 6 2026 hospital",
+      "behavioral health psychiatric hospital inpatient unit closes suspension November 6 2026",
+      "dialysis center closure patients November 6 2026",
+      "cancer oncology infusion center clinic closure November 6 2026 patients",
+      "\"November 6, 2026\" \"primary care\" \"closing\" clinic patients",
+      "\"November 6, 2026\" ambulance service station base closes shuts down",
+      "\"November 5, 2026\" air ambulance helicopter medical base suspends operations",
+      "hospital emergency department maternity reopened resumed services November 5 6 2026",
+      "Sharon Regional Medical Center Pennsylvania license revoked November 6 2026 department of health",
+      "Puerto Rico Guam US Virgin Islands health clinic hospital services closed suspended November 6 2026"
+    ],
+    "positive_candidate": {
+      "newly_recovered": true,
+      "announcement_predates_hourly_window": true,
+      "effective_date_in_observation_day": true,
+      "duplicate_check": "Checked all 2026-11-05 and 2026-11-06 supplementary Care Line heartbeat JSON files existing before this run: no mention of Winchester, Cheshire Medical Center, or Lisa Moulton. Production collector not directly queried; pending review."
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Sharon PA",
+        "reason": "November 4 ED closure and November 6 hospital-wide suspension already recorded by watch; repeat coverage is not a new access development.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Separate Pennsylvania license-revocation/admissions-ban assertion for Sharon Regional",
+        "reason": "Previously flagged but remains unverified by an accessible official state order or strong original local reporting; not promoted.",
+        "source_url": null
+      },
+      {
+        "item": "Georgian Bay General Hospital obstetric disruptions, Ontario Canada",
+        "reason": "Outside US and territories.",
+        "source_url": "https://www.midlandtoday.ca/local-news/gbgh-obstetrical-closures-continue-as-staffing-challenges-persist-12985861"
+      },
+      {
+        "item": "Kula Hospital planned 2027 restoration, Maui HI",
+        "reason": "Hospital emergency department remains closed; future reopening plans do not represent a completed service restoration.",
+        "source_url": "https://www.mauihealth.org/news/releases/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/"
+      },
+      {
+        "item": "Guam GRMC and VA storm service changes",
+        "reason": "Historical April-July/October 2026 suspensions and restorations; no newly effective November 6 change.",
+        "source_url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      }
+    ],
+    "source_failures": [],
+    "limitations": [
+      "Targeted watch only, not comprehensive national/territorial collection.",
+      "Clinic official notice has no web publication timestamp and no exact service-cessation hour.",
+      "Direct production deduplication unavailable; compare against 32 prior supplementary heartbeats dated November 5-6 only.",
+      "Already known temporarily inaccessible Health First alert endpoint not retested this run; no new material source degradation.",
+      "No approval, publication, production mutation, schedule modification, or task disabling."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

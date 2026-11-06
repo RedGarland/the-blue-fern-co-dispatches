@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T074753-0800-recall12",
+  "scheduled_for": "2026-11-06T07:45:22-08:00",
+  "started_at": "2026-11-06T07:47:53-08:00",
+  "completed_at": "2026-11-06T07:49:17-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T06:51:32-08:00",
+    "end": "2026-11-06T07:49:17-08:00",
+    "basis": "Since previous verified supplementary Care Line heartbeat completion; bounded targeted publication-lag recall November 5–6, 2026. Production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization, termination, CCN 18P001",
+      "result": "No new notice dated November 3–6 among visible CMS notices; no new termination, rescission, CLIA limitation/suspension detected."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended services November 6 2026 rural hospital",
+      "hospital labor delivery maternity unit shut down closure November 5 6 2026",
+      "rural health clinic primary care closure patients November 6 2026",
+      "ambulance EMS service ceased operations closed base November 6 2026",
+      "air ambulance medical helicopter base permanently closed November 5 6 2026",
+      "behavioral health psychiatric hospital closed admissions November 6 2026",
+      "dialysis center treatment facility closure patients November 6 2026 USA",
+      "oncology infusion cancer center clinic services suspended November 5 6 2026",
+      "hospital emergency department reopens restored services November 6 2026 America",
+      "Sharon Regional hospital license revoked Pennsylvania Department of Health November 6 2026 admission ban",
+      "Puerto Rico Guam US Virgin Islands American Samoa hospital emergency services suspended November 2026",
+      "hospital closures medical clinic shutdown November 6 2026 local news patients 911"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center (Sharon, PA)",
+        "reason": "ED closure November 4 and hospital-wide service suspension effective November 6 at 8 a.m. ET were already recorded in earlier watch. Repeated November 5 reporting is not a new distinct access development.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Sharon Regional separate state license revocation/admissions ban",
+        "reason": "Previously flagged secondary claim; no accessible official state order or strong original report verified a new distinct regulatory action.",
+        "source_url": null
+      },
+      {
+        "item": "Watsonville Community Hospital maternity services, California",
+        "reason": "Possible future closure, not a confirmed concrete access change.",
+        "source_url": "https://lookout.co/watsonville-community-hospital-may-close-maternity-services-to-avoid-shutting-down/story"
+      },
+      {
+        "item": "TidalHealth Primary Care, Federalsburg, Maryland",
+        "reason": "November 15 closure previously recorded by supplementary watch; duplicate.",
+        "source_url": null
+      },
+      {
+        "item": "Stuart Community Hospital, Virginia",
+        "reason": "Emergency/inpatient reopening occurred January 5, 2026, outside current observation window.",
+        "source_url": "https://cardinalnews.org/2026/01/06/stuart-community-hospital-opens-for-emergency-and-inpatient-care/"
+      },
+      {
+        "item": "AdventHealth Rockmart Clinic, Georgia",
+        "reason": "Reported new cardiology/extended hours, not confirmed restoration of previously lost essential service; outside priority miss classes.",
+        "source_url": "https://coosavalleynews.com/2026/11/adventhealth-rockmart-clinic-expands-services-extends-hours-and-adds-cardiology-care/"
+      },
+      {
+        "item": "Guam Naval Hospital typhoon emergency-only status",
+        "reason": "Official notice dates to April 2026, not a new change November 6.",
+        "source_url": "https://ghs.guam.gov/node/4161"
+      }
+    ],
+    "source_failures": [],
+    "limitations": [
+      "Search results were largely historical or repeated prior reported closures; no new verified nonduplicate event found.",
+      "This watch is targeted and not exhaustive; publication/indexing lag may hide new service changes.",
+      "No direct production database deduplication; prior watch heartbeat and conversation outcomes used to suppress repeats.",
+      "Previously inaccessible Health First endpoint was not retested; no new source failure detected.",
+      "No approval, public publication, production change, schedule modification, or task disabling."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T095019-0800-recall12",
+  "scheduled_for": "2026-11-06T09:45:22-08:00",
+  "started_at": "2026-11-06T09:50:19-08:00",
+  "completed_at": "2026-11-06T09:51:59.063-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T08:46:11.961-08:00",
+    "end": "2026-11-06T09:51:59.063-08:00",
+    "basis": "Since previous verified supplementary Care Line watch completion; 2-day publication-lag recall included to recover unverified high-value access-risk developments. Production national collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-pa-sharon-regional-state-license-revocation-20261105",
+      "canonical_source_url": "https://www.aol.com/articles/sharon-regional-medical-center-suspends-212841000.html",
+      "title": "Pennsylvania Department of Health revokes Sharon Regional Medical Center license and directs cessation of patient admissions / orderly closure",
+      "publisher": "WKBN First News / Nexstar Media (syndicated on AOL)",
+      "exact_supporting_passage": "issued an order revoking SRMC’s license to operate, ordering them to stop seeing patients and begin an orderly closure.",
+      "source_published_date": "2026-11-05",
+      "state": "Pennsylvania",
+      "city": "Sharon",
+      "county": "Mercer County",
+      "territory": null,
+      "event_type": "state_hospital_license_revocation_and_cessation_order",
+      "service_line": "Hospital acute care; emergency department; inpatient and outpatient services",
+      "access_consequences": "The Pennsylvania Department of Health revoked Sharon Regional Medical Center's license and directed the facility to stop seeing patients and conduct an orderly closure. Sharon Regional had already halted emergency operations on November 4 and announced suspension of broader hospital services by November 6, so this finding is the newly corroborated regulatory action, not a second hospital closure. Patients must obtain emergency and other hospital services elsewhere; regional alternatives cited include UPMC facilities in Farrell, Greenville, and New Castle.",
+      "affected_population": "Patients served by Sharon Regional Medical Center and the surrounding Shenango Valley / Mercer County area; number affected not verified.",
+      "effective_date": null,
+      "announcement_date": "2026-11-05",
+      "confidence": "HIGH",
+      "source_role": "local_original_reporting_syndicated_with_attributed_governor_office_statement",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "evidence_notes": "WKBN's original reporting, republished verbatim by AOL, quotes Gov. Josh Shapiro's office confirming a Pennsylvania Department of Health license-revocation order. The original WKBN webpage was robots-blocked, but the syndication was accessible. A secondary aggregation asserts a November 17 license effective date and a November 4 admissions ban, but the original written state order was not retrieved; effective_date intentionally null. Earlier supplementary heartbeats covered the hospital closure and flagged the license action as unverified; this run adds direct state-office confirmation via local reporting. Compare with production collector before promoting; do not duplicate the previously recorded closure."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, Termination Notice, CCN 18P001",
+      "result": "No November 3-6 addition visible in CMS notice table. Pennsylvania state license order is separate from CMS federal provider-termination list."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes suspends November 6 2026 patients United States",
+      "rural hospital emergency room service loss November 6 2026 November 5 local",
+      "labor delivery maternity unit closes suspended November 6 2026 hospital USA",
+      "psychiatric behavioral health inpatient hospital unit shutdown November 6 2026",
+      "dialysis clinic patients closing suspended November 6 2026 USA",
+      "oncology infusion cancer treatment center closure November 5 6 2026",
+      "primary care clinic practice closes November 6 2026 patients doctor",
+      "ambulance EMS service closure air medical base November 6 2026 November 5 US",
+      "hospital emergency labor delivery clinic reopens resumes services November 6 2026 United States",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana hospital clinic services closure suspension November 6 2026",
+      "Sharon Regional Medical Center \"license\" \"revoked\" \"November\" 2026 Pennsylvania Department of Health",
+      "site:news.google.com hospital clinic closing November 6 2026 emergency dialysis rural healthcare"
+    ],
+    "positive_candidate": {
+      "newly_verified_regulatory_development": true,
+      "underlying_hospital_suspension_previously_recorded": true,
+      "governor_office_state_order_confirmation": true,
+      "direct_written_order_obtained": false,
+      "original_report_host_accessible": false,
+      "syndicated_full_article_accessible": true,
+      "production_dedupe_verified": false,
+      "review_status": "pending_review"
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional emergency department / hospital operational suspension",
+        "reason": "Already recorded in prior supplementary watch; not a new duplicate operational closure."
+      },
+      {
+        "item": "Winchester Family Medicine, Winchester NH",
+        "reason": "Already recorded in preceding 08:42 supplementary heartbeat."
+      },
+      {
+        "item": "Crystal Run Healthcare, Hudson Valley NY",
+        "reason": "Two patients report possible psychiatry and orthopedic service reductions; Optum has not verified closure or effective date, and no confirmed concrete change was established.",
+        "source_url": "https://hudsonvalley.news12.com/2026/11/06/crystal-run-patients-raise-concerns-over-doctor-departures-and-possible-cuts-to-specialty-services/4jRud72xLaAO69stRbTdex"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center labor and delivery",
+        "reason": "Nov. 6 announcement of intended reopening, not confirmed effective or operating.",
+        "source_url": "https://www.wsaz.com/video/2026/11/06/labor-delivery-services-return-greenbrier-valley-medical-center/"
+      },
+      {
+        "item": "Roseland Community Hospital maternity ward, Chicago IL",
+        "reason": "October 28 report described weekend closure; outside bounded Nov. 4-6 recall, no new distinct development verified.",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/"
+      },
+      {
+        "item": "Guam Typhoon Champi service adjustments",
+        "reason": "October storm disruption and restoration, not a new November 6 access change.",
+        "source_url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "Original WKBN local article",
+        "error": "Direct WKBN host blocked by robots.txt; original reporting available in full via AOL syndication.",
+        "materiality": "Partial source access restriction; does not block direct government-spokesperson quotation."
+      },
+      {
+        "source": "Gongs Media republication of WFMJ/21 News",
+        "error": "Direct fetch disabled; its Nov. 17 effective-date assertion was not used as confirmed."
+      }
+    ],
+    "limitations": [
+      "Targeted supplemental national-and-territorial recall, not comprehensive coverage.",
+      "No access to original Pennsylvania Department of Health written order or verified date on which revocation formally takes effect.",
+      "Direct production deduplication unavailable; distinguish state license action from prior hospital closure.",
+      "No user approval, publication, production mutation, schedule modification or task disabling."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

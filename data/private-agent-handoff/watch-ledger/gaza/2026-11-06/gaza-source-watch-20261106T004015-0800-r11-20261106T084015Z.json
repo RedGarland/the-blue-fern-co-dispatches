@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T004015-0800-r11-20261106T084015Z",
+  "scheduled_for": "2026-11-06T00:44:51-08:00",
+  "started_at": "2026-11-06T00:40:15-08:00",
+  "completed_at": "2026-11-06T00:43:19.355-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-05T23:44:16-08:00",
+    "end": "2026-11-06T00:43:19.355-08:00",
+    "basis": "After the last verified supplementary Gaza watch heartbeat, not the incident time. In Gaza local time the window begins 6 November about 09:44. Delayed indexing of reports published slightly earlier is eligible only when not previously captured.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-wafa-20261106-al-shati-two-earlier-strike-injury-deaths",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176691",
+      "title": "Two Palestinians succumb to wounds sustained in earlier Israeli airstrikes on Gaza",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-06",
+      "publication_date": "2026-11-06",
+      "publication_time_local": "09:28",
+      "event_date": "2026-11-06",
+      "event_time": null,
+      "location": "Gaza City, Gaza Strip: Al-Shati refugee camp (Al-Balakhiyah), with earlier injury at Islamic University campus",
+      "affected_population_system": "Two Palestinians who died from prior strike injuries: Sara Abu Jiyab, an Islamic University medical student, and Nabil Hamad",
+      "exact_supporting_passage": "Two Palestinians died on Friday from wounds sustained in separate Israeli airstrikes targeting Gaza City, according to medical sources.",
+      "source_type": "Established Palestinian news agency citing hospital and medical sources; Arabic edition from same publisher is not independent corroboration",
+      "classification": "follow-up",
+      "confidence": "medium-high for reported deaths; exact death times and independent corroboration unavailable",
+      "bounded_discovery_context": {
+        "discovered_via": "WAFA English latest news direct publisher check and article; targeted name search located same-publisher Arabic report",
+        "prior_comparison": "Latest verified preceding 2026-11-05 23:44 PST ledger had no record of these named subsequent deaths; previous WAFA list read ended at 09:11 Gaza time even though Arabic/English report later appeared dated 09:21/09:28 Gaza time.",
+        "distinction": "Newly identified reported deaths from older attacks; not new airstrikes and not established as occurring within the last hour.",
+        "original_attack_dates": "Approximately one week earlier for Islamic University and several days earlier for Al-Balakhiyah, per WAFA; exact dates unknown",
+        "independent_corroboration": null,
+        "alternate_same_publisher_source_url": "https://wafa.ps/news/2026/11/6/%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%85%D8%AA%D8%A3%D8%AB%D8%B1%D9%8A%D9%86-%D8%A8%D8%A5%D8%B5%D8%A7%D8%A8%D8%AA%D9%87%D9%85%D8%A7-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84",
+        "notes": "WAFA aggregate total rises from 74,618 on 5 Nov to 74,620 on 6 Nov; no assertion that aggregate change independently confirms the individual names."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value missed-item recall; Gaza production remains authoritative. No merge, approval, publication, posting, permissions, credential, or schedule change.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T234154-0800-r11-20261106T074154Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest updates on 5 November were rehabilitation feature and September appeal retrospective; latest situation report 29 October. No new time-bounded aid or services change."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.emro.who.int/opt/",
+          "https://www.emro.who.int/opt/information-resources/updates.html",
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt"
+        ],
+        "result": "WHO EMRO OPT fetch failed (502/inaccessible); WHO global crisis overview accessible and shows no 6 Nov report. An initial incorrect WHO global URL returned 404 before the correct URL was checked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza Friday November 6 2026 killed injured civilians November 6 morning",
+      "site:aa.com.tr/en/middle-east Gaza Nov 6 2026 strike casualties injured",
+      "site:aljazeera.com/news/2026/11/6/ Gaza latest civilians killed displaced November 6",
+      "site:reuters.com Gaza November 6 2026 ceasefire civilians attacks morning",
+      "site:apnews.com Gaza November 6 2026 aid strike hospital",
+      "site:unrwa.org OR site:unicef.org Gaza November 6 2026 displaced shelter water aid supplies",
+      "\"Sara Abu Jiyab\" \"Nabil Hamad\" Gaza November 6 2026",
+      "site:wafa.ps 6 تشرين الثاني 2026 سارة أبو جياب نبيل حمد الشاطئ",
+      "site:who.int OR site:emro.who.int Gaza 6 November 2026 medical evacuation ambulance hospital",
+      "site:ochaopt.org Gaza 6 November 2026 humanitarian situation food water crossings displacement",
+      "Gaza 6 November 2026 Rafah Kerem Shalom crossing aid fuel trucks medical evacuations restrictions",
+      "Gaza 6 November 2026 morning winter rain tents flood displacement airstrikes civilians"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Newly visible Nov 6 09:28 local headline of two later injury deaths from Gaza attacks; article opened and reviewed."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "result": "Search results expose same-publisher 09:21 local report; direct opening blocked, so not counted as independent corroboration."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Latest Gaza feature is 5 November four killed/11 wounded, already covered."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Nov 6 Palestine feed dominated by West Bank items and Gaza seawall/turbine features; no newly confirmed distinct in-window damage or casualties."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Featured news dated 3 Nov; no new in-window emergency ambulance disruption."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "No distinct new dated in-window food-delivery interruption confirmed."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and strikes with civilian impact",
+      "displacement, winter storm and shelter/infrastructure damage",
+      "food, water, aid/crossing access and fuel",
+      "hospital, ambulance, transport, medical evacuation and healthcare capacity",
+      "detention and hostages, ceasefire negotiations"
+    ],
+    "excluded": [
+      {
+        "item": "Nov 5 Al-Shati airstrike fatalities and Nuseirat injuries",
+        "reason": "Already documented in prior watches, distinct from new reported deaths of formerly injured persons."
+      },
+      {
+        "item": "Nov 6 Gaza improvised seawalls/wind turbines",
+        "reason": "Coping and seasonal risk features without newly established in-window disruption."
+      },
+      {
+        "item": "Older WHO, OCHA and WFP metrics or AP/Reuters results",
+        "reason": "Outside observation period or retrospective."
+      },
+      {
+        "item": "Nov 6 West Bank incidents in WAFA and Al Jazeera",
+        "reason": "Outside Gaza geographic scope."
+      }
+    ],
+    "degradation": {
+      "reason": "WHO EMRO OPT direct resource failures recurring; same-publisher WAFA Arabic article unavailable for full-text opening. Primary OCHA and WHO global plus WAFA English, WFP, PRCS, Anadolu and Al Jazeera remained accessible.",
+      "material_new_deterioration": false,
+      "coverage_sufficient_for_bounded_supplementary_watch": true
+    },
+    "outcome_note": "One previously unrecorded follow-up reporting two deaths of earlier strike casualties; medical source attribution, not independently confirmed. This report predates the prior watch's end but was not visible in its earlier index snapshot; date of newly reported deaths Nov 6 without exact hour."
+  }
+}

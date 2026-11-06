@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T194604-0800-r11-20261106T034604Z",
+  "scheduled_for": "2026-11-05T19:45:54-08:00",
+  "started_at": "2026-11-05T19:46:04-08:00",
+  "completed_at": "2026-11-05T19:47:59-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T18:46:18-08:00",
+    "end_at": "2026-11-05T19:47:59-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "From the prior verified supplementary heartbeat completion through this run. Date-only publication and page update times are not treated as new event timestamps without proof.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for four high-value food-access miss classes only; authoritative Food Line production collection remains unchanged.",
+    "target_classes": [
+      "Sole/only/last/full-service grocery loss, closure, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry or food-bank service closure or major access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T184546-0800-r11-20261106T024546Z.json",
+      "completed_at": "2026-11-05T18:46:18-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "November 5 2026 only grocery store closed fire today town community",
+      "November 5 2026 sole grocery store disaster shut down rural town",
+      "Nov 5 2026 full service grocery store last one closure community",
+      "November 5 2026 food distribution canceled storm flood power outage food bank",
+      "November 5 2026 emergency food pantry distribution postponed canceled hurricane",
+      "November 5 2026 mobile food bank distributions suspended facility damage",
+      "November 5 2026 food pantry unexpectedly closed temporary fire power outage",
+      "November 5 2026 food bank closes suddenly serving clients",
+      "site:gov \"November 5, 2026\" SNAP EBT outage interruption",
+      "site:gov \"November 5, 2026\" WIC closed outage services",
+      "November 5 2026 SNAP benefits card system outage not working today state",
+      "November 5 2026 WIC office closed storm interrupted services today"
+    ],
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 4,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kutv.com/news/local/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "publisher": "KUTV",
+        "source_published_at": "2026-11-05T14:45:00-07:00",
+        "source_updated_at": "2026-11-05T18:09:00-07:00",
+        "exclusion_reason": "Reports the previously known Community Action Services and Food Bank temporary closure announced days earlier; financial and board updates do not establish a new food access interruption since prior heartbeat."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Already covered before the window; Nov. 6 Hawaiʻi Foodbank Kauaʻi emergency mobile distribution remains scheduled rather than canceled."
+      },
+      {
+        "url": "https://yubanet.com/featured/now/",
+        "publisher": "YubaNet",
+        "source_published_at": null,
+        "exclusion_reason": "Nov. 5 live entries up to 18:30 describe controlled burn pile/smoke checks and other incidents; no documented grocery, pantry, distribution or SNAP/WIC disruption."
+      },
+      {
+        "url": "https://theshelbyreport.com/2026/11/05/widdis-food-market-opens-in-staten-islands-rossville-community/",
+        "publisher": "The Shelby Report",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Store opening (Oct. 30), not a loss or closure of full-service grocery access."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Historical sole-grocery fire, already reviewed and outside the hourly observation window."
+      },
+      {
+        "url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-lone-star-card-how-to-help/",
+        "publisher": "Texas Tribune",
+        "source_published_at": "2025-10-28",
+        "exclusion_reason": "2025 SNAP interruption resurfaced by search, not a fresh 2026 official benefit interruption."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access disruption between the previous 18:46:18 PST heartbeat and this run.",
+    "limitations": "Search-index freshness is not evidence of event freshness. Twelve bounded queries do not establish nationwide absence; the primary collector remains authoritative.",
+    "materiality": "All searches and four direct source-page inspections succeeded; no material degradation.",
+    "action_limits": "No approval, publication, merge, schedule change, task disabling, credential or production action."
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T154936-0800-r11-20261106T234936Z",
+  "scheduled_for": "2026-11-06T15:45:54-08:00",
+  "started_at": "2026-11-06T15:49:36-08:00",
+  "completed_at": "2026-11-06T15:50:50-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T14:51:14.029-08:00",
+    "end_at": "2026-11-06T15:50:50-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Prior independently read-back verified Food Line heartbeat completion; screen publication time and underlying event/effective dates, rather than treating later retrospective articles as newly occurring disruptions.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall watch only; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting only/sole/last/full-service community grocery store",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage, facility damage",
+      "Abrupt pantry/food-bank service closure or major food access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T144922-0800-r11-20261106T224922Z.json",
+      "completed_at": "2026-11-06T14:51:14.029-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 6 2026 community",
+      "\"last grocery store\" closing November 6 2026 town",
+      "\"sole grocery store\" fire closed Nov 6 2026",
+      "\"full-service grocery store\" closes November 6 2026",
+      "\"food distribution\" cancelled storm November 6 2026 food bank",
+      "\"emergency food distribution\" canceled OR suspended November 6 2026",
+      "\"food pantry\" \"closed\" \"November 6, 2026\" emergency",
+      "\"food bank\" \"suspended services\" November 6 2026",
+      "SNAP benefits interruption November 6 2026 EBT outage state official",
+      "WIC benefits suspended office closure November 6 2026 storm fire",
+      "November 6 2026 food bank pantry services closed today hurricane flood power local",
+      "November 6 2026 state SNAP WIC program outage benefits inaccessible official alert"
+    ],
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "direct_page_checks": 5,
+    "successful_direct_page_checks": 4,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "publisher": "Beacon: Kansas City",
+        "published_at": "2026-11-06",
+        "exclusion_reason": "New article reports Blue Parkway Sun Fresh closure effective October 25, outside this interval; no newly reported current-hour sole/only store loss."
+      },
+      {
+        "url": "https://treasurecoast.today/articles/2026-11-06-st-lucie-county-residents-affected-by-flooding-can-call-for-food-assistance.html",
+        "publisher": "Treasure Coast Today",
+        "published_at": "2026-11-06T14:50:00-05:00",
+        "exclusion_reason": "Report timestamp is 11:50 a.m. PT, predating this watch; describes additional food assistance after flooding, not a canceled distribution, pantry shutdown, or benefits interruption. Direct article fetch DisabledError; indexed text only."
+      },
+      {
+        "url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "published_at": null,
+        "exclusion_reason": "Official direct page continues to list Friday Nov 6 Hale Līhuʻe distribution 4–5 p.m. Hawaii local time. No cancellation detected; listing does not establish completed delivery."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Official Nov 6 Middlesex office closure for previously planned festival and Nov 5 Lynchburg maintenance closure; no newly documented SNAP/WIC-specific interruption since last heartbeat."
+      },
+      {
+        "url": "https://www.fmpfoodbank.org/find_food/",
+        "publisher": "Feed My People Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Food-location page checked; no independently dated new hourly service loss. Prior Eau Claire pop-up distribution cancellations began Nov 3, previously excluded."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Official distribution list continues to show Nov 7 and later sessions; no new weather cancellation documented on this page."
+      },
+      {
+        "url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "publisher": "The Maine Wire",
+        "published_at": "2026-08",
+        "exclusion_reason": "Eastport sole-store loss announcement is from August 2026; not newly first reported/effective within this hour."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access disruption was first reported or newly effective in the bounded interval.",
+    "limitations": "Recall searches are not exhaustive nationwide surveillance. One direct article retrieval (Treasure Coast Today) failed with DisabledError; indexed material was still available and the case was nonqualifying. All 12 search requests and four other direct-page checks succeeded. Official food-distribution calendars are evidence of current listing, not proof that distributions occurred. Primary production collector and its dedupe state were not inspected.",
+    "materiality": "DEGRADED due to one blocked nonqualifying retrospective direct-page check; limited coverage loss is nonmaterial to identification of current-hour qualifying signals. No signal alert warranted.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one heartbeat in watch-ledger; no approvals, publication, merges, schedule changes, credentials changes, or disabling."
+  }
+}

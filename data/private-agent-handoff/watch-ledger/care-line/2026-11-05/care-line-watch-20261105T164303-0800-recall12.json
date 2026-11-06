@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T164303-0800-recall12",
+  "scheduled_for": "2026-11-05T16:45:22-08:00",
+  "started_at": "2026-11-05T16:43:03-08:00",
+  "completed_at": "2026-11-05T16:44:56-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T15:43:32-08:00",
+    "end": "2026-11-05T16:44:56-08:00",
+    "basis": "Previous verified Care Line heartbeat completed_at to this observation. November 5 targeted recall searches may surface lagged coverage; exclude already recorded events and changes lacking new concrete access effect. Supplementary watch only; production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky organ procurement organization, termination notice, CCN 18P001",
+      "result": "Official CMS list retrieved and opened before other targeted searches; no newer entry visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 5 2026 hospital emergency room closure suspended services November 5 2026 community",
+      "November 5 2026 rural hospital emergency department closure service loss local news",
+      "November 5 2026 labor delivery maternity obstetrics hospital unit closure suspension",
+      "November 5 2026 behavioral health psychiatric hospital inpatient services suspension closure",
+      "November 5 2026 dialysis clinic treatment center closed suspension patients",
+      "November 5 2026 oncology cancer treatment infusion clinic closed suspension",
+      "November 5 2026 primary care family medicine clinic closes immediately patients",
+      "November 5 2026 ambulance EMS emergency medical service base closure suspension town",
+      "November 5 2026 air ambulance helicopter medevac base closure discontinued flights",
+      "November 5 2026 reopened restored hospital emergency room labor delivery dialysis services after closure",
+      "November 5 2026 Puerto Rico Guam US Virgin Islands American Samoa hospital emergency clinic suspension closure",
+      "site:gov \"Nov 5, 2026\" \"emergency department\" suspended OR closure OR reopened"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System, Sharon, Mercer County, PA",
+        "reason": "ED and acute-care suspension previously recorded in November 5 12:48 watch; November 5 business follow-up is duplicate.",
+        "url": "https://www.bizjournals.com/pittsburgh/news/2026/11/05/sharon-regional-hospital-suspension.html"
+      },
+      {
+        "item": "Roseland Community Hospital maternity unit, Chicago, IL",
+        "reason": "October 1 reporting announced planned closure by end of October. A newly indexed November 5 article references prior closure but is dated 7:49 p.m. Central (5:49 p.m. Pacific), later than this run's observation; cannot treat as new in-window published evidence. No verified new change during this hourly interval.",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/"
+      },
+      {
+        "item": "Make You Well acquisition of First Physicians, Odessa, TX",
+        "reason": "Ownership transition with clinics retaining providers, locations and hours; no loss or abrupt restoration of essential access.",
+        "url": "https://www.einnews.com/pr_news/954818386/make-you-well-expands-to-the-permian-basin-with-acquisition-of-first-physicians-in-odessa"
+      },
+      {
+        "item": "Guam Regional Medical City and Guam Memorial Hospital weather-related service suspensions",
+        "reason": "Older October typhoon-related suspensions and restorations, not new during November 5 hourly observation.",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct endpoint open again failed; already documented in prior hourly watches. Bounded alternative search coverage succeeded; no new material degradation."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "United States and territories, acute/ED/rural, maternity, behavioral health, dialysis, oncology, primary care, EMS, air medical, CMS/CLIA public notices, actual reopening/restoration.",
+    "deduplication": "Prior independently verified November 5 15:43:32 heartbeat inspected; Sharon Regional previously found at 12:48 and excluded. Production deduplication not independently inspected.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "A targeted 12-search supplementary recall is non-exhaustive and subject to publication/index lag; persistent Health First official alert endpoint inaccessible. A future-timestamped page was not accepted as current-window evidence.",
+    "controls": "Exactly one private watch heartbeat on ops/watch-ledger; no approval, publication, schedule modification, production mutation, or task disabling."
+  }
+}

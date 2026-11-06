@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T214821-0800-recall12",
+  "scheduled_for": "2026-11-05T21:45:22-08:00",
+  "started_at": "2026-11-05T21:48:21-08:00",
+  "completed_at": "2026-11-05T21:49:53-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T20:44:34-08:00",
+    "end": "2026-11-05T21:49:53-08:00",
+    "basis": "Previous verified care-line ops/watch-ledger heartbeat completed_at through this observation. Includes narrow lagged-recall for Nov 5/early Nov 6 reports. Production national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization, termination notice, CCN 18P001",
+      "result": "Official CMS listing checked before targeted searches. No notice dated November 5 or later appeared; no newly visible CMS termination, rescission, or CLIA limitation/suspension relevant to the search window."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 5 2026 November 6 hospital emergency department suddenly closing suspending care local patients diverted",
+      "November 5 2026 maternity obstetric labor delivery unit shut down ceased services hospital new closure",
+      "November 5 2026 inpatient mental health psychiatric behavioral health unit closure stopped admissions",
+      "November 5 2026 dialysis center closure shutdown patients transferred kidney clinic",
+      "November 5 2026 oncology infusion cancer clinic suspends treatment closes access",
+      "November 5 2026 primary care family medicine clinic sudden closure patient access",
+      "November 5 2026 rural hospital closes emergency care service suspension emergency department",
+      "November 5 2026 Nov 6 county ambulance EMS service ceases operations no coverage",
+      "November 5 2026 air ambulance helicopter medical base shuts down service rural",
+      "November 5 2026 hospital ER labor maternity clinic reopened resumed service after closure",
+      "November 5 2026 \"CMS\" provider termination rescission CLIA suspended limitation notice health care",
+      "November 5 2026 Puerto Rico Guam U.S. Virgin Islands CNMI American Samoa hospital ED clinic closure suspension ambulance"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System ER suspension and planned hospital service suspension, Mercer County, PA",
+        "reason": "ER interruption occurred Nov 4 and already recorded in Nov 5 12:48 PST positive recall; follow-up report Nov 5 20:59 EST duplicates same service event. Further general shutdown scheduled Nov 6 08:00 EST, outside this window.",
+        "url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center labor/delivery, West Virginia",
+        "reason": "Restoration announced November 5 with phased implementation targeted 2027; service not operationally restored during search window.",
+        "url": "https://governor.wv.gov/article/governor-morrisey-announces-reopening-labor-and-delivery-services-greenbrier-valley-medical"
+      },
+      {
+        "item": "Pearl Youth Residence, Tacoma, WA",
+        "reason": "September 28 report describes future November closure without a newly verified exact effective service loss during this observation period.",
+        "url": "https://www.nwpb.org/local/2026-09-28/in-tacoma-a-state-funded-inpatient-treatment-center-for-children-is-set-to-close"
+      },
+      {
+        "item": "Dennys River Volunteer Ambulance, Washington County, ME",
+        "reason": "October 13 report describes future end of operations near November 30 rather than a new completed suspension in this window.",
+        "url": "https://www.bangordailynews.com/2026/10/13/down-east/downeast-police-courts/dennys-river-volunteer-ambulance-service-closing/"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Official Health First alert endpoint again inaccessible through research browser; limitation already recorded in multiple prior watches, with no newly material deterioration."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "U.S. 50 states, DC and territories; hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care and rural losses; EMS/air medical bases; official CMS provider and CLIA notices; concrete effective essential-service restoration.",
+    "deduplication": "Read prior ops/watch-ledger care-line heartbeat completed Nov 5 20:44:34 PST and previous known Sharon positive; no independent production-collector dedupe verification.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Bounded, non-exhaustive supplementary recall, 12 targeted searches; search indexing lag may hide late local reporting. Persistent Health First access limitation; no new material degradation.",
+    "controls": "Exactly one heartbeat written on ops/watch-ledger; no approval, publishing, merge, schedule change, credential action, or task disable."
+  }
+}

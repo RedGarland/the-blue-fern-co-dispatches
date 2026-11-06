@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T014343-0800-recall12",
+  "scheduled_for": "2026-11-06T01:45:22-08:00",
+  "started_at": "2026-11-06T01:43:43-08:00",
+  "completed_at": "2026-11-06T01:46:12-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T23:47:22-08:00",
+    "end": "2026-11-06T01:46:12-08:00",
+    "basis": "From last directly verified prior ops/watch-ledger Care Line watch heartbeat (2026-11-05 23:47:22 PST) through this observation. Queries primarily sought Nov 5–6 developments and publication-lag discoveries. This supplementary search does not replace or establish production collector state."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO CCN 18P001, termination notice",
+      "result": "Official public notices checked first. No newer dated notice visible as of this observation."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes services suspended November 5 2026 November 6 2026 patients diverted",
+      "hospital labor delivery maternity unit closing suspends births November 5 2026 November 6",
+      "rural hospital emergency care loss closure Nov 5 2026 Nov 6 2026",
+      "psychiatric behavioral health inpatient facility closing admissions suspension Nov 5 November 6 2026",
+      "November 5 2026 dialysis clinic center shut down patients access suspended United States",
+      "November 5 2026 oncology infusion cancer treatment clinic closed suspended service",
+      "November 5 2026 primary care clinic closure announced November 6 2026 rural",
+      "November 5 November 6 2026 ambulance EMS station base service suspended closure county",
+      "air ambulance helicopter base closing or suspended November 5 2026 November 6 2026 United States",
+      "emergency department hospital maternity clinic reopened resumed services effective November 5 2026 November 6",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Samoa hospital clinic health service closure November 5 2026",
+      "November 5 2026 Georgia Tennessee floods hospital clinic ambulance emergency services suspended closed McCaysville Blue Ridge"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System, Sharon, PA ED shutdown and broader suspension",
+        "reason": "ED closed Nov 4 and captured in prior watch. Broader hospital services shutdown already announced for Nov 6 08:00 EST (05:00 PST), after this observation; not newly reported as effective during window.",
+        "url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "TidalHealth Primary Care, Federalsburg, MD",
+        "reason": "Nov 15 announced closure already recorded by previous watch heartbeat (finding_id care-line-md-federalsburg-tidalhealth-primarycare-20261115-closure).",
+        "url": "https://www.wmdt.com/2026/11/1tidalhealth-to-close-rural-primary-care-center/"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center, Lewisburg, WV maternity reopening",
+        "reason": "Nov 5 governmental announcement is agreement and proposed phased implementation beginning July 1 2027; not an effective restoration.",
+        "url": "https://governor.wv.gov/article/governor-morrisey-announces-reopening-labor-and-delivery-services-greenbrier-valley-medical"
+      },
+      {
+        "item": "Georgian Bay General Hospital, Midland, Ontario temporary obstetrical closure",
+        "reason": "Canadian hospital; outside United States and territories.",
+        "url": "https://www.midlandtoday.ca/local-news/georgian-bay-general-hospital-to-temporarily-close-obstetrical-services-nov-57-12971381"
+      },
+      {
+        "item": "McCaysville GA / Copperhill TN flash flooding",
+        "reason": "Official and wire reporting verifies flooding, rescue and infrastructure disruptions, but no specific hospital, clinic, EMS or air-medical service suspension verified by this watch.",
+        "url": "https://apnews.com/article/6e0a283ff54238cba9677602f5e0878e"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur IL helicopter base closure",
+        "reason": "Historical effective date September 16 2026, not new in window.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Guam GRMC storm service changes",
+        "reason": "Historic October 2026 and April 2026 notices; no fresh Nov 5–6 change.",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/"
+      }
+    ],
+    "source_failures": [],
+    "limitations": [
+      "Bounded web recall, not exhaustive national collection; search index and publication lag may omit developments.",
+      "Previously documented inaccessible Health First alert endpoint was not needed or retried in this run; its availability has not been reverified.",
+      "Production deduplication and authoritative production collection were not inspected or altered."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false
+  }
+}

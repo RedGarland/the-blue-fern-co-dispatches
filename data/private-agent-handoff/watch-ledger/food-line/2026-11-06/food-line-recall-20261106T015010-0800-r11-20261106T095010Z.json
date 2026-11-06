@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T015010-0800-r11-20261106T095010Z",
+  "scheduled_for": "2026-11-06T01:45:54-08:00",
+  "started_at": "2026-11-06T01:50:10-08:00",
+  "completed_at": "2026-11-06T01:52:13-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T00:50:04.531-08:00",
+    "end_at": "2026-11-06T01:52:13-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "From the completed_at of the previous directly verified supplementary Food Line heartbeat to this execution; bounded targeted queries with publication-lag lookback. Date-only reporting is not evidence of a new event within the hourly interval.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded high-value supplementary recall only; national Food Line production collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store closure, fire, or disaster affecting community access",
+      "Canceled/suspended emergency food distributions after storm/flood/fire/outage/facility damage",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T004713-0800-r11-20261106T084713Z.json",
+      "completed_at": "2026-11-06T00:50:04.531-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "November 6 2026 only grocery store closed fire small town community United States",
+      "November 5 2026 last grocery store closed fire rural community",
+      "food pantry closed abruptly November 5 2026 food bank service suspended",
+      "food bank distribution canceled storm November 5 2026",
+      "food pantry distribution cancelled flood fire November 6 2026",
+      "site:facebook.com \"food distribution\" \"cancelled\" \"November 6\" 2026",
+      "site:gov SNAP EBT outage benefits unavailable November 5 2026",
+      "site:gov WIC office closed power outage November 5 2026",
+      "site:gov \"SNAP\" \"interruption\" \"November 6, 2026\"",
+      "site:org \"food pantry\" \"closed\" \"November 5, 2026\"",
+      "food distribution suspended after storm flooding November 5 2026 local",
+      "only grocery store fire closure November 2026 food desert"
+    ],
+    "direct_page_checks": 2,
+    "successful_direct_page_checks": 1,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://nghd.org/news/media-releases/fannin-health-facilities-closed",
+        "publisher": "North Georgia Health District",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Official page confirms Fannin County WIC closure on Thursday Nov 5 due to weather but page was created and last updated Nov 5, with no evidence that closure continued into Nov 6 or was first reported after previous 00:50 PST heartbeat. Previously evaluated, not a fresh qualifying finding."
+      },
+      {
+        "url": "https://dphss.guam.gov/",
+        "publisher": "Guam Department of Public Health and Social Services",
+        "source_published_at": "2026-11-05T13:03:00+10:00",
+        "exclusion_reason": "Official homepage search-index snippet shows 'End of Temporary Guam WIC Waivers' notice published Nov 5 13:03 Guam time, before the watch window; it does not establish an immediate WIC benefits interruption. Direct retrieval timed out, so content not independently verified."
+      },
+      {
+        "url": "https://13wham.com/news/local/new-grocery-store-opens-in-ovid-ny-after-big-m-fire-providing-some-relief-in-a-food-desert-main-street-village-block-destroyed-seneca-county-finger-lakes",
+        "publisher": "13 WHAM",
+        "source_published_at": "2026-05-05",
+        "exclusion_reason": "Historical report of grocery replacement after earlier fire, not a newly disrupted community grocery."
+      }
+    ],
+    "result": "No new, source-verifiable qualifying U.S. food-access disruption identified after Nov 6 00:50 PST.",
+    "limitations": "Search engines returned substantial historical and off-topic material; a bounded recall cannot establish comprehensive nationwide absence. Guam DPHSS official homepage timed out on direct open; its indexed snippet was not treated as independently confirmed source content.",
+    "materiality": "DEGRADED due to one failed direct-page retrieval. Coverage remains useful: 12/12 targeted searches returned results and the official Georgia page was directly verified; Guam notice predates the watch interval and was not evidence of interrupted WIC benefit access. The retrieval failure is nonmaterial to substantive result.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One new private watch-ledger JSON only; no public publication, approval, merge, production mutation, credentials, schedule, permissions, or task disable."
+  }
+}

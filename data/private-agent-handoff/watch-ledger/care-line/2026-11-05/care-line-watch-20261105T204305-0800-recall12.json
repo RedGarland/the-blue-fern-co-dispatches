@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T204305-0800-recall12",
+  "scheduled_for": "2026-11-05T20:45:22-08:00",
+  "started_at": "2026-11-05T20:43:05-08:00",
+  "completed_at": "2026-11-05T20:44:34-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T19:46:01-08:00",
+    "end": "2026-11-05T20:44:34-08:00",
+    "basis": "Previous verified Care Line watch completed_at through this run's latest observation. Limited lagged-recall checks of Nov 5 reporting; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY) — organ procurement organization, Medicare termination notice, CCN 18P001.",
+      "result": "Opened official CMS Public Notices first; no newly dated notice or new in-window CMS/CLIA action visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended November 5 2026 patients diverted US",
+      "November 5 2026 rural hospital emergency services closure ambulance suspension",
+      "November 5 2026 maternity labor delivery ward closing suspended hospital",
+      "November 5 2026 dialysis center closing services patients transferred",
+      "November 5 2026 psychiatric behavioral health hospital inpatient service closure",
+      "November 5 2026 oncology cancer treatment clinic closing service access",
+      "November 5 2026 ambulance company closes service ends county EMS coverage",
+      "November 5 2026 air medical helicopter base shuts down access",
+      "November 5 2026 primary care clinic closes effective patients reassigned rural",
+      "November 5 2026 hospital emergency room reopens restored service after closure",
+      "November 5 2026 Puerto Rico Guam Virgin Islands hospital clinic suspension closure",
+      "November 5 2026 site:gov \"hospital\" \"closure\" \"emergency\" healthcare services notice"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System emergency department and broader suspension, Mercer County, Pennsylvania",
+        "reason": "Confirmed Nov 4 and recorded in Nov 5 12:48 PST positive watch; subsequent Nov 5 reporting duplicates it.",
+        "url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center labor/delivery restoration, Ronceverte, West Virginia",
+        "reason": "November 5 agreement/announcement with phases beginning July 1, 2027; no actual resumed maternity service during this window.",
+        "url": "https://westvirginiawatch.com/2026/11/05/vandalia-health-osteopathic-school-to-reopen-labor-delivery-services-at-greenbrier-medical-center/"
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake campus, Springfield, Illinois",
+        "reason": "November 3 report updated November 5 describes projected residential-program wind-down by end of December, contingent on client transfers; no newly effective suspension.",
+        "url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/"
+      },
+      {
+        "item": "Roseland Community Hospital maternity ward, Chicago, Illinois",
+        "reason": "Prior October 1 notice already planned closure by end of October; newly surfaced follow-up bankruptcy article displays future Nov 6 publication time relative to this observation and is not admissible as newly verified in-window change.",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/"
+      },
+      {
+        "item": "Dennys River Volunteer Ambulance, Maine",
+        "reason": "October announcement targets Nov 30 closure, not newly effective in current observation window.",
+        "url": "https://www.bangordailynews.com/2026/10/13/down-east/downeast-police-courts/dennys-river-volunteer-ambulance-service-closing/"
+      },
+      {
+        "item": "Kula Hospital restoration, Maui, Hawaii",
+        "reason": "November 2 construction announcement targets late summer 2027 reopening; no service restored during window.",
+        "url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct open failed through research browser again; persistent known limitation across prior watches, no newly material worsening."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "US states, DC and territories: hospital and ED/maternity/behavioral-health/dialysis/oncology/primary-care losses, rural emergencies, EMS/air medical, CMS provider termination and CLIA action, concrete effective reopening.",
+    "deduplication": "Prior watch heartbeat on ops/watch-ledger (completed_at 2026-11-05T19:46:01-08:00) read and considered. Production deduplication independently unavailable; no approval or publication.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Supplementary non-exhaustive, capped at 12 targeted searches. Indexing lag may obscure events; persistent Health First endpoint browser access failure. No newly material degradation.",
+    "controls": "One private watch-ledger heartbeat only; no production change, approval, publishing, merge, schedule modification, credentials or task disable."
+  }
+}

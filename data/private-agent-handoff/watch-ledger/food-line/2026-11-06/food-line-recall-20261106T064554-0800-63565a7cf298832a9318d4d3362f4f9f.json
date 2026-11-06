@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T064554-0800-63565a7cf298832a9318d4d3362f4f9f",
+  "scheduled_for": "2026-11-06T06:45:54-08:00",
+  "started_at": "2026-11-06T06:47:12.012-08:00",
+  "completed_at": "2026-11-06T06:50:09.970-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T05:44:20.722817-08:00",
+    "end_at": "2026-11-06T06:50:09.970-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Conservative overlap from the previous recorded hourly task start (05:44:20 PST); the prior heartbeat completion was not retrievable by directory listing. Fresh 1–2 day indexed candidates screened for events actually new to this window.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value Food Line miss classes; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Storm/flood/fire/outage/facility-damage cancellation of emergency food distributions",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_recorded_task_start_at": "2026-11-06T05:44:20.722817-08:00",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T034449-0800-r11-20261106T114449Z.json",
+      "completed_at": "2026-11-06T03:45:36-08:00",
+      "status": "SUCCESS",
+      "note": "Earlier verified heartbeat used to check repeated candidate exclusions, not claimed as immediate predecessor."
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 6 2026 community",
+      "\"last grocery store\" closing November 5 6 2026",
+      "\"sole grocery store\" fire November 2026 town",
+      "\"full service grocery\" shuttered fire November 6 2026",
+      "\"food distribution\" canceled storm November 6 2026 food bank",
+      "\"food distribution\" suspended flood power outage November 6 2026",
+      "\"food pantry\" \"closed\" \"November 6, 2026\" emergency",
+      "\"food bank\" \"suspended services\" November 2026",
+      "site:gov \"SNAP\" \"interruption\" \"November 6, 2026\"",
+      "site:gov \"WIC\" \"closed\" \"November 6, 2026\" weather",
+      "site:gov \"EBT\" \"outage\" \"November 6, 2026\"",
+      "\"food pantry\" \"temporarily closed\" \"November 5\" 2026 storm"
+    ],
+    "direct_page_checks": 2,
+    "successful_direct_page_checks": 1,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "The sole grocery store was lost in September, outside this hour, and appeared in an earlier heartbeat."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Direct page confirms Hawaiʻi Foodbank Kauaʻi emergency distribution remains scheduled November 6, 4–5 PM, not canceled."
+      },
+      {
+        "url": "https://dphss.guam.gov/",
+        "publisher": "Guam Department of Public Health and Social Services",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Search-indexed official site lists Nov 5 PR27-014 end of temporary Guam WIC waivers; the announcement predates the hourly window and direct page timed out. No new interruption with immediate access consequences was confirmed."
+      },
+      {
+        "url": "https://communityactionprovo.org/",
+        "publisher": "Community Action Services and Food Bank",
+        "source_published_at": null,
+        "exclusion_reason": "Previously confirmed Provo service closure effective November 1; no evidence of a new service change in this window."
+      },
+      {
+        "url": "https://gilroydispatch.com/food-lines-grow-as-feds-suspend-food-assistance/",
+        "publisher": "Gilroy Dispatch",
+        "source_published_at": "2025-11-06",
+        "exclusion_reason": "2025 news surfaced through date collision; not a current 2026 official assistance interruption."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access disruption discovered within the bounded 05:44–06:49 PST recall period.",
+    "limitations": "Targeted web recall is not exhaustive national surveillance; results heavily contained old closures/date collisions. Guam DPHSS direct source failed to load (timeout), though its indexed announcement was visible and older than the window. Prior immediate heartbeat file could not be listed via available GitHub file-reading action. Production collection and dedupe not independently inspected.",
+    "materiality": "DEGRADED nonmaterial: one official source direct open timed out, but 12 targeted searches completed and relevant independent direct news verification remained available.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One heartbeat only on ops/watch-ledger. No approval, publication, merge, production mutation, credentials, permissions, schedule modification or disabling."
+  }
+}

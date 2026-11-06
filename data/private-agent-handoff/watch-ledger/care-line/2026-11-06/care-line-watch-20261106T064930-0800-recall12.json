@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T064930-0800-recall12",
+  "scheduled_for": "2026-11-06T06:45:22-08:00",
+  "started_at": "2026-11-06T06:49:30-08:00",
+  "completed_at": "2026-11-06T06:51:32-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T05:50:11-08:00",
+    "end": "2026-11-06T06:51:32-08:00",
+    "basis": "Since previous verified supplementary Care Line heartbeat completion, including publication-lag recall for Nov 5–6; production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO, termination notice, CCN 18P001",
+      "result": "No newly dated Nov 3–6 CMS terminations, rescissions, CLIA changes or other actions visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department abruptly closed Nov 6 2026 rural United States",
+      "labor delivery maternity unit services closed suspended November 5 6 2026 hospital",
+      "rural hospital inpatient emergency department service suspended closure November 6 2026",
+      "ambulance EMS service suspension closure base November 5 6 2026",
+      "air ambulance medical helicopter base closure suspension November 2026 USA",
+      "behavioral health psychiatric hospital inpatient service shut down November 5 6 2026",
+      "dialysis center oncology cancer clinic infusion canceled services closure \"November 6, 2026\"",
+      "primary care clinic announces closure \"November 6, 2026\" patients",
+      "hospital emergency department reopen services restored \"November 6, 2026\" United States",
+      "Sharon Regional Pennsylvania Department Health revocation license admissions ban November 2026 Friday",
+      "Puerto Rico Guam Virgin Islands emergency hospital services suspended November 2026",
+      "local news hospital service closure ambulance clinic November 6 2026 Friday patients"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania, ED and hospital-wide suspension",
+        "reason": "Previously recorded Nov 4 ED closure and Nov 6 08:00 ET broader suspension. November 5 retrospective reporting does not introduce a new access change; duplicate.",
+        "url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Sharon Regional Pennsylvania license-revocation/admissions-ban claim",
+        "reason": "Unverified prior lead; no accessible official order or strong original report confirmed an incremental regulatory action in this watch.",
+        "url": null
+      },
+      {
+        "item": "Watsonville Community Hospital maternity proposal, California",
+        "reason": "October 22 report describes possible future closure, not an effective or confirmed service change.",
+        "url": "https://lookout.co/watsonville-community-hospital-may-close-maternity-services-to-avoid-shutting-down/story"
+      },
+      {
+        "item": "Older air-medical closure at Decatur Airport",
+        "reason": "Older September 2026 action without new effect in hourly window.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Aspirus Chippewa Falls Hospital and Clinic opening",
+        "reason": "Confirmed restoration/opening effective Sept 22, 2026, outside current window.",
+        "url": "https://www.aspirus.org/chippewafalls"
+      },
+      {
+        "item": "TidalHealth Primary Care, Federalsburg, Maryland",
+        "reason": "Nov 15 future closure already captured in prior supplementary run; duplicate.",
+        "url": null
+      },
+      {
+        "item": "Crystal Run Healthcare possible specialty-service changes, New York",
+        "reason": "Previously reviewed, no confirmed concrete loss of care, effective date or independently verified update this run.",
+        "url": "https://hudsonvalley.news12.com/2026/11/06/crystal-run-patients-raise-concerns-over-doctor-departures-and-possible-cuts-to-specialty-services/4jRud72xLaAO69stRbTdex"
+      }
+    ],
+    "source_failures": [],
+    "limitations": [
+      "Twelve targeted web searches executed; indexed results favored older context and did not independently confirm a new concrete event.",
+      "Coverage is bounded, not exhaustive, and subject to publication and indexing delays.",
+      "Production database deduplication was not accessed; prior verified watch ledger and surfaced prior outcomes used for repeat suppression.",
+      "Previously documented inaccessible Health First alert endpoint was not retested in this run.",
+      "No approval, publication, schedule modification or task disabling."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

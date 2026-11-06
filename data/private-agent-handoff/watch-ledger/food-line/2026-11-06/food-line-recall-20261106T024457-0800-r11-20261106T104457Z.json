@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T024457-0800-r11-20261106T104457Z",
+  "scheduled_for": "2026-11-06T02:45:54-08:00",
+  "started_at": "2026-11-06T02:44:57-08:00",
+  "completed_at": "2026-11-06T02:47:30.860-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T01:52:13-08:00",
+    "end_at": "2026-11-06T02:47:30.860-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Previous directly verified Food Line supplementary heartbeat completion through current execution; bounded two-day publication-lag query lookback. Historical event or undated indexed content is not evidence of a new interruption within this window.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for high-value Food Line miss classes, not nationwide production collection. Production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery closure, fire or disaster",
+      "Weather/disaster/outage/facility-damage cancellation of emergency food distributions",
+      "Abrupt food pantry or food bank closure/major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T015010-0800-r11-20261106T095010Z.json",
+      "completed_at": "2026-11-06T01:52:13-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 5 2026 OR November 6 2026",
+      "\"last grocery store\" closes fire 2026 November rural town",
+      "\"only full-service grocery store\" closed November 2026",
+      "\"food pantry\" closed unexpectedly November 6 2026",
+      "\"food bank\" services suspended storm flooding November 6 2026",
+      "\"food distribution\" canceled November 6 2026 storm flood power",
+      "site:gov \"WIC\" \"closed\" \"November 6, 2026\" storm outage",
+      "site:gov SNAP EBT unavailable system outage November 6 2026",
+      "November 6 2026 community action services food bank Provo closure reopening pantry service",
+      "November 6 2026 emergency food distribution canceled closed storm outage local pantry",
+      "November 5 2026 food bank pantry suspended operations suddenly closure local news",
+      "November 6 2026 state SNAP WIC EBT service interruption notice closed 2026"
+    ],
+    "direct_page_checks": 7,
+    "successful_direct_page_checks": 7,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://communityactionprovo.org/",
+        "publisher": "Community Action Services and Food Bank",
+        "source_published_at": null,
+        "exclusion_reason": "Provider confirms temporary closure effective November 1, 2026, several days before this hourly window. Newly surfaced through supplemental search, but no verified new change after November 6 01:52 PST. Historical incident rather than new hourly finding."
+      },
+      {
+        "url": "https://kutv.com/news/local/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "publisher": "KUTV",
+        "source_published_at": "2026-11-05T14:45:00-07:00",
+        "exclusion_reason": "Follow-up financial reporting on the pre-existing November 1 Provo closure; article published and updated before current hourly window. No newly announced impact within window."
+      },
+      {
+        "url": "https://communityactionprovo.org/get-to-know-us/update.html",
+        "publisher": "Community Action Services and Food Bank",
+        "source_published_at": "2026-10-27T13:00:00-06:00",
+        "exclusion_reason": "Older provider update said food pantries remained open, while newer homepage announced Nov 1 closure. Outdated update was not allowed to override newer provider statement or counted as a new interruption."
+      },
+      {
+        "url": "https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+        "publisher": "KSL",
+        "source_published_at": "2026-10-26T18:48:00-06:00",
+        "exclusion_reason": "Heber City closure and Provo reduction of approximately 200 weekly household appointments were announced October 26, outside this hourly interval."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Hawaiʻi Foodbank Kauaʻi emergency mobile pantry remains scheduled for Friday November 6; report does not indicate cancellation or service reduction."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "source_published_at": null,
+        "exclusion_reason": "General official alert index offered no verified newly effective SNAP/WIC food-benefit interruption in observation window."
+      }
+    ],
+    "result": "No verified newly occurring or newly announced qualifying food-access disruption since November 6 01:52:13 PST.",
+    "limitations": "Search results skewed toward historical grocery closures, year-old SNAP shutdown coverage, and general resource listings; a bounded recall watch cannot establish nationwide absence. The newly surfaced Provo service loss is real, but dated November 1, not a new hourly event. Independent production ingestion/dedupe was not inspected.",
+    "materiality": "SUCCESS: All targeted searches and direct page checks returned useful information. No material search/retrieval failure during this execution.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Created only this private watch-ledger heartbeat; no approval, merge, public publication, production data mutation, schedule/credential/permission change or task disable."
+  }
+}

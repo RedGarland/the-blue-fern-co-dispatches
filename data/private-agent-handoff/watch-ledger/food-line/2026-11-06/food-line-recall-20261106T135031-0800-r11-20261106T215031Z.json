@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T135031-0800-r11-20261106T215031Z",
+  "scheduled_for": "2026-11-06T13:45:54-08:00",
+  "started_at": "2026-11-06T13:50:31-08:00",
+  "completed_at": "2026-11-06T13:51:49-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T12:51:12-08:00",
+    "end_at": "2026-11-06T13:51:49-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Previous independently fetched and verified food-line watch-ledger heartbeat completion through this run; assess source publication and underlying incident/effective dates independently.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value misses; production collection remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting a community's only, sole, last or full-service grocery store",
+      "Weather/disaster/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry or food-bank closure or major food-access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T125018-0800-r11-20261106T205018Z.json",
+      "completed_at": "2026-11-06T12:51:12-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 6 2026 town USA",
+      "\"last grocery store\" closing November 2026 community food desert",
+      "\"sole grocery store\" fire closed November 6 2026",
+      "\"full service grocery store\" shutdown November 6 2026 rural",
+      "food distribution canceled storm flood November 6 2026 food bank",
+      "emergency food distribution suspended power outage November 6 2026",
+      "food pantry closed indefinitely fire November 6 2026",
+      "food bank services suspended November 6 2026 facility damage",
+      "SNAP benefits outage Friday November 6 2026 EBT state official",
+      "WIC benefits interruption office closure November 6 2026 state",
+      "food assistance halted November 6 2026 social services official notice",
+      "food pantry abrupt closure services suspended November 6 2026 local news"
+    ],
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "published_at": null,
+        "exclusion_reason": "Provider continues to list Friday November 6 Hale Līhuʻe emergency food distribution at 4–5 p.m., with no cancellation notice on checked page."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Middlesex County Nov 6 festival closure and Lynchburg Nov 5 maintenance closure were listed; no new SNAP/WIC-specific interruption or current-window change established."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Provider distribution calendar continues to show Nov 7 and subsequent food distributions; no new verified event cancellation."
+      },
+      {
+        "url": "https://dphss.guam.gov/homepage",
+        "publisher": "Guam Department of Public Health and Social Services",
+        "published_at": null,
+        "exclusion_reason": "Official direct page timed out; no new, separately corroborated food-assistance interruption in search results. Not treated as evidence of absence."
+      },
+      {
+        "url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "publisher": "The Maine Wire",
+        "published_at": "2026-08",
+        "exclusion_reason": "Only-grocery-store loss reported months earlier; outside hourly recall window."
+      },
+      {
+        "url": "https://kmyu.tv/news/eye-on-your-money/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "publisher": "KUTV/KMYU",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "Report on previously known Provo Community Action Services and Food Bank closure; not a new current-hour disruption."
+      },
+      {
+        "url": "https://www.fastcompany.com/91591192/grocery-outlet-closing-stores-2026-list-of-shuttered-locations",
+        "publisher": "Fast Company",
+        "published_at": "2026-08-17",
+        "exclusion_reason": "Historical chain closure roundup, not a newly verified community sole-store loss."
+      }
+    ],
+    "result": "No new verified in-scope U.S. food-access disruption first reported or effective between 2026-11-06T12:51:12-08:00 and 2026-11-06T13:51:49-08:00.",
+    "limitations": "12 targeted searches are supplementary, not exhaustive. Search indexing favors older coverage; recurring Guam DPHSS direct official site timeout prevents fresh direct verification there. No production collection/dedupe inspection.",
+    "materiality": "DEGRADED for one Guam official-site timeout while 12 targeted searches and three other direct-page checks succeeded; isolated recurring source access issue does not materially compromise this bounded watch overall.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one private watch-ledger heartbeat; no approval, publication, merge, posting, permission, schedule, credential or task disabling."
+  }
+}

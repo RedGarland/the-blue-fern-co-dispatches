@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T215009-0800-r11-20261106T055009Z",
+  "scheduled_for": "2026-11-05T21:45:54-08:00",
+  "started_at": "2026-11-05T21:50:09-08:00",
+  "completed_at": "2026-11-06T05:51:18.503Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T20:43:54-08:00",
+    "end_at": "2026-11-05T21:51:18.503-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Since last read-back-verified hourly supplemental heartbeat completion; date-only publications and historical changes excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Loss/fire/closure of only, sole, last, or full-service grocery",
+      "Emergency food distribution cancellation or suspension due to disaster, storm, outage or facility damage",
+      "Abrupt food pantry/food bank closure or material service reduction",
+      "Official new SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T204246-0800-r11-20261106T044246Z.json",
+      "completed_at": "2026-11-05T20:43:54-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"November 5, 2026\" \"only grocery store\" fire closed town",
+      "\"November 5, 2026\" \"sole grocery store\" closing community",
+      "\"Nov 5, 2026\" \"last grocery store\" \"closed\" supermarket",
+      "\"November 5, 2026\" \"food distribution\" cancelled storm outage",
+      "\"Nov 5 2026\" \"mobile pantry\" canceled due weather",
+      "\"Nov 5, 2026\" \"food bank\" distribution suspended flood power",
+      "\"November 5, 2026\" \"food pantry\" \"closed\" emergency",
+      "\"Nov 5 2026\" \"food bank\" \"temporarily closed\" service",
+      "\"November 5 2026\" pantry \"cancelled\" \"damage\" food",
+      "site:gov \"November 5, 2026\" SNAP EBT outage benefits interrupted",
+      "site:gov \"November 5, 2026\" WIC office closed power outage",
+      "\"November 5 2026\" EBT system down SNAP WIC service disruption state"
+    ],
+    "direct_page_checks": 1,
+    "successful_direct_page_checks": 1,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Direct article explicitly lists Friday Nov. 6 Hawaiʻi Foodbank Kauaʻi mobile-pantry distribution as still scheduled; no new food-distribution cancellation. Disaster recovery context does not itself qualify. Previously observed in earlier hourly checks."
+      },
+      {
+        "url": "https://www.hhs.nd.gov/home",
+        "publisher": "North Dakota Health and Human Services",
+        "source_published_at": "2026-10-30",
+        "exclusion_reason": "The Oct. 30 notice describes food purchase eligibility changes beginning Nov. 1, not a new benefit interruption during this hourly window."
+      },
+      {
+        "url": "https://news.delaware.gov/2026/06/09/dhss-urges-snap-recipients-to-take-action-to-protect-ebt-benefits-from-theft/",
+        "publisher": "Delaware Health and Social Services",
+        "source_published_at": "2026-06-09",
+        "exclusion_reason": "Historical card-skimming prevention notice, not newly documented interruption."
+      }
+    ],
+    "result": "No new U.S. food-access disruptions satisfying the four specified high-value miss classes verified between 20:43:54 and the end of this check on November 5, 2026 PST.",
+    "limitations": "This bounded 12-query search is not exhaustive national monitoring. Search results included many unrelated or historical sources; no qualifying time-bounded direct report surfaced.",
+    "materiality": "All 12 targeted searches and the Kauaʻi direct source check returned usable content. No material failure, status SUCCESS.",
+    "action_limits": "No story approvals, publication, merges, scheduling changes, task disabling, credentials or production actions."
+  }
+}

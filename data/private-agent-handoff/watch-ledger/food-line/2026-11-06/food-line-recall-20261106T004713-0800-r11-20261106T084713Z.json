@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T004713-0800-r11-20261106T084713Z",
+  "scheduled_for": "2026-11-06T00:45:54-08:00",
+  "started_at": "2026-11-06T00:47:13-08:00",
+  "completed_at": "2026-11-06T00:50:04.531-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T23:51:16.701-08:00",
+    "end_at": "2026-11-06T00:50:04.531-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Starts at completion of latest directly read-back-verified supplementary Food Line watch, with publication-lag lookback in targeted searches. Date-only reporting cannot establish a new event within this hourly interval.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded high-value supplemental recall only; production nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Sole/only/last/full-service grocery loss, closure, fire, or disaster",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T234958-0800-r11-20261106T074958Z.json",
+      "completed_at": "2026-11-06T07:51:16.701Z",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 5 2026 town",
+      "\"last grocery store\" closing fire November 2026 food desert",
+      "\"sole grocery store\" fire closed November 2026 community",
+      "\"full-service grocery store\" closing November 2026 rural",
+      "\"food distribution\" canceled storm flooding November 5 2026 food bank",
+      "\"food pantry\" closed flooding power outage November 5 2026",
+      "\"food bank\" \"temporarily closed\" November 5 2026",
+      "SNAP EBT system outage benefits unavailable November 5 2026 state agency",
+      "WIC clinic \"closed\" \"November 5\" 2026 outage",
+      "November 5 2026 emergency food distribution cancelled storm food assistance",
+      "site:nghd.org \"November 6, 2026\" WIC Fannin closed flooding",
+      "\"Nov 6, 2026\" \"food pantry\" closed OR cancelled OR WIC OR EBT"
+    ],
+    "direct_page_checks": 2,
+    "successful_direct_page_checks": 2,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://nghd.org/news/media-releases/fannin-health-facilities-closed",
+        "publisher": "North Georgia Health District",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Official notice verifies that Fannin County, GA WIC services were closed for weather on Thursday November 5. Notice is date-only, was created Nov 5, and provides no source timestamp establishing announcement or a continuing interruption after latest 23:51 PST heartbeat. Cannot classify as a new disruption in the current Nov 6 hourly window; retained as retrospective lead, not positive finding."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "publisher": "The U.S. Sun (citing WVNS and grocer Facebook notice)",
+        "source_published_at": "2026-11-04",
+        "exclusion_reason": "Daniels, WV Cornerstone IGA closure announced Nov 4, future effective Nov 30; no evidence it is the community's sole/last grocery. Outside window and grocery threshold not established."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Only grocery store burned September 11; historical and already reviewed."
+      }
+    ],
+    "result": "No independently verified newly occurring or newly reported qualifying U.S. food-access interruption since 2026-11-05 23:51:16.701 PST.",
+    "limitations": "Twelve bounded queries do not prove nationwide absence. A Fannin County WIC closure was verified for Nov 5 but had no hour-level publication timing or evidence of persistence into this latest observation window. Historical 2025 SNAP stories recirculated in results; do not mistake indexing/crawl time for event time.",
+    "materiality": "All twelve targeted searches completed and the two selected direct source pages loaded. No material search failure/degradation.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only one new private watch-ledger JSON heartbeat; no approval, publication, production mutation, merge, schedule changes, credential/permission changes or task disabling."
+  }
+}

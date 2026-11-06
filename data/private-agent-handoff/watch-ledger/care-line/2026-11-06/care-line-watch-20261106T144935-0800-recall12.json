@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T144935-0800-recall12",
+  "scheduled_for": "2026-11-06T14:45:22-08:00",
+  "started_at": "2026-11-06T14:49:35-08:00",
+  "completed_at": "2026-11-06T14:51:04-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T13:51:10-08:00",
+    "end": "2026-11-06T14:51:04-08:00",
+    "basis": "Since prior completed hourly supplementary Care Line check; bounded recall of not-yet-recorded actionable developments. Production collector remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-wi-manitowoc-planned-parenthood-closure-20261124",
+      "canonical_source_url": "https://www.seehafernews.com/2026/11/06/manitowoc-planned-parenthood-joins-growing-list-of-closures/",
+      "title": "Manitowoc Planned Parenthood Joins Growing List of Closures",
+      "publisher": "Seehafer News",
+      "exact_supporting_passage": "The final day of patient care will be on November 24th.",
+      "source_published_date": "2026-11-06",
+      "state": "WI",
+      "city": "Manitowoc",
+      "county": "Manitowoc County",
+      "territory": null,
+      "event_type": "outpatient_health_center_permanent_closure",
+      "service_line": "Planned Parenthood outpatient sexual/reproductive health and family-planning care; individual services not enumerated in the report",
+      "access_consequences": "Manitowoc Planned Parenthood location permanently closes; final day of patient care Nov 24, 2026. Patients directed to Sheboygan (South Taylor Drive) or Green Bay (Oneida Street) facilities.",
+      "affected_population": "Patients currently receiving care at Manitowoc Planned Parenthood; count not supplied",
+      "effective_date": "2026-11-24",
+      "announcement_date": null,
+      "confidence": "medium-high",
+      "source_role": "local_reporting_citing_provider_email_shared_by_reader",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, termination notice (CCN 18P001)",
+      "result": "No newer posted CMS termination, rescission, CLIA limitation or suspension notice identified."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 6, 2026\" hospital closes emergency department suspension services",
+      "\"November 6, 2026\" maternity labor delivery unit closure hospital",
+      "\"November 6, 2026\" rural hospital emergency services closing",
+      "\"November 6, 2026\" psychiatric behavioral health unit closing hospital",
+      "dialysis clinic closure suspension \"November 6\" \"2026\"",
+      "cancer center oncology clinic closure suspends services \"November 2026\"",
+      "primary care clinic closes permanently November 2026 patients",
+      "ambulance EMS service closure ceases operations November 2026",
+      "air ambulance helicopter medical base closing November 2026",
+      "hospital emergency department reopens restores service November 6 2026",
+      "state health department hospital license revoked suspended November 6 2026",
+      "Puerto Rico Guam Virgin Islands hospital clinic closure services November 2026"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania: license revocation and closure",
+        "reason": "Already recorded in prior supplementary watch; new Nov 6 coverage restates the known event."
+      },
+      {
+        "item": "Winchester Family Medicine, New Hampshire: closure effective Nov 6",
+        "reason": "Previously recorded at 08:42 PST watch."
+      },
+      {
+        "item": "Benefis Health System, Montana: outpatient behavioral health service losses",
+        "reason": "Previously recorded at 10:43 PST watch."
+      },
+      {
+        "item": "Sea Pines Rehabilitation Hospital, Florida: flood-related closure",
+        "reason": "Previously recorded at 12:49 PST watch."
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital/Miles maternity potential closure",
+        "reason": "Earlier July–August deliberation/coverage, not a distinct confirmed new November 6 service change."
+      },
+      {
+        "item": "Los Angeles County public-health clinics",
+        "reason": "February 2026 reductions, well outside bounded recall."
+      },
+      {
+        "item": "Dennys River Ambulance, Maine",
+        "reason": "Previously reported October 2026 shutdown announcement; no new development confirmed."
+      }
+    ],
+    "coverage_limitations": [
+      "One source URL attempt used a noncanonical CMS path and failed; corrected official CMS Public Notices page was then accessed and verified.",
+      "Manitowoc closure reported from a provider email furnished to a local radio newsroom, not from a directly accessible first-party provider announcement. Exact original announcement date and affected patient count not established.",
+      "The Manitowoc item is newly recovered from November 6 coverage, not a claim that its announcement occurred within this exact one-hour window.",
+      "Service line is an outpatient reproductive/family-planning clinic; on-site service inventory was not verified; human review should confirm the high-value inclusion rule.",
+      "Production collection/deduplication not verified. This watch is a bounded 12-query supplementary recall only."
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "reason": "Noncanonical CMS path inaccessible; resolved by official certification-compliance/public-notices page"
+      }
+    ],
+    "sources_checked": [
+      "CMS Public Notices (official)",
+      "Seehafer News, November 6, Manitowoc Planned Parenthood closure",
+      "WVIA News, November 6, Sharon Regional prior-event coverage"
+    ],
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

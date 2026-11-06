@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T004615-0800-recall12",
+  "scheduled_for": "2026-11-06T00:45:22-08:00",
+  "started_at": "2026-11-06T00:46:15-08:00",
+  "completed_at": "2026-11-06T00:47:16-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T23:47:22-08:00",
+    "end": "2026-11-06T00:47:16-08:00",
+    "basis": "From completed_at of previous verified ops/watch-ledger Care Line heartbeat to current observation. November 5-6 reporting with limited publication-lag lookback. Bounded supplementary recall, not primary collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), OPO CCN 18P001, Termination Notice",
+      "result": "Official CMS Public Notices checked before all 12 topical targeted searches. No additional notices dated after Nov 2; no new CMS termination, rescission, CLIA limitation/suspension or access-risk notice verified. A legacy CMS URL failed, but the canonical current page loaded successfully."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department shutdown closure November 5 2026 November 6 2026 patients redirected",
+      "hospital maternity labor delivery unit closed suspended November 5 2026 November 6 2026",
+      "behavioral health psychiatric hospital inpatient unit closed services November 5 2026 November 6 2026",
+      "rural hospital emergency services closing November 5 2026 November 6 2026",
+      "dialysis treatment center closing patients transfer November 5 2026 November 6 2026",
+      "oncology infusion cancer center hospital services suspended closing November 5 2026 November 6 2026",
+      "primary care medical clinic closing patients November 5 2026 November 6 2026",
+      "ambulance paramedic EMS service station suspension closure November 5 2026 November 6 2026",
+      "air ambulance helicopter medical base closing November 2026 November 5 6",
+      "hospital emergency department reopened resumed services November 5 2026 November 6 2026",
+      "hospital clinic closure emergency services Puerto Rico Guam Virgin Islands Mariana Samoa November 5 6 2026",
+      "site:gov hospital closure clinic ambulance suspension effective November 5 2026 healthcare access rural"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "TidalHealth Primary Care, Federalsburg, MD",
+        "reason": "Nov 15 confirmed future closure captured as positive finding in immediately preceding Nov 5 23:44 PST recall; not a new finding in this watch.",
+        "url": "https://www.wmdt.com/2026/11/1tidalhealth-to-close-rural-primary-care-center/"
+      },
+      {
+        "item": "Sharon Regional Health System ED and acute/outpatient shutdown, Sharon, PA",
+        "reason": "ED closure on Nov 4 previously recorded. No fresh independently confirmed incremental access change in this window."
+      },
+      {
+        "item": "Oklahoma Children's OU Health Behavioral Health Center, Oklahoma City, OK",
+        "reason": "Nov 5 report describes Nov 4 grand opening and expansion, not restoration of a previously lost essential service; not one of the targeted recall classes.",
+        "url": "https://www.kgou.org/health/2026-11-05/new-oklahoma-childrens-ou-health-center-to-expand-pediatric-behavioral-healthcare-in-state"
+      },
+      {
+        "item": "Santa Clara Valley Medical Center Behavioral Health Pavilion, CA",
+        "reason": "Oct 26 reporting describes intended Nov 3 opening of a new psychiatric facility; outside this observation window, and not abrupt restoration of a previously lost essential service.",
+        "url": "https://sanjosespotlight.com/santa-clara-county-long-overdue-youth-psychiatric-hospital/"
+      },
+      {
+        "item": "McCaysville GA/Copperhill TN floods",
+        "reason": "Nov 5 emergency closures and impaired roads verified, but no specific hospital/EMS/base/service-line suspension or restoration verified; general disaster impacts alone insufficient.",
+        "url": "https://abcnews.com/US/catastrophic-flooding-leads-closure-cities-georgia-tennessee/story?id=137881801"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Health First official alert endpoint returned access failure again; same known restriction as prior watches, not a new material degradation."
+      },
+      {
+        "url": "https://www.cms.gov/medicare/medicare-general-information/medicareapprovedfacilitie/public-notices",
+        "type": "obsolete_url_inaccessible",
+        "detail": "Legacy/incorrect CMS Public Notices path failed; verified official canonical public notices page instead."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "All US states, DC, Puerto Rico, Guam, USVI, Northern Mariana Islands, American Samoa. High-value misses: hospital, ED, maternity, behavioral, dialysis, oncology, primary care; rural emergency care; EMS/air-medical; CMS provider/CLIA actions; effective restorations.",
+    "deduplication": "Reviewed latest verified Nov 5 23:44 PST heartbeat, including TidalHealth Federalsburg positive finding and Sharon Regional historical positive. No nonduplicate candidates identified in this bounded watch. Full production dedupe not performed.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "12 supplemental targeted searches, not exhaustive national surveillance. Search results included older reports, outside-US sites, a new psychiatric service opening, and broad flooding, but no verified qualifying new change. Persistent inaccessible Health First alert endpoint creates degraded coverage; no new material degradation.",
+    "controls": "Exactly one new JSON heartbeat on ops/watch-ledger only; no editorial approval, publishing, merge, credentials/permissions, schedule changes, or task disabling."
+  }
+}

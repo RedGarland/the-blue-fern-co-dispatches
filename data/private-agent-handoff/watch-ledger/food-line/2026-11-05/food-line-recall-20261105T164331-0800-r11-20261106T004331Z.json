@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T164331-0800-r11-20261106T004331Z",
+  "scheduled_for": "2026-11-05T16:45:54-08:00",
+  "started_at": "2026-11-05T16:43:31-08:00",
+  "completed_at": "2026-11-05T16:44:25-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T15:48:55-08:00",
+    "end_at": "2026-11-05T16:44:25-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Previous independently verified supplementary Food Line heartbeat completion through current run; date-only and undated records are not presumed new.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded high-value supplementary recall; production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery-store loss, closure, fire or disaster",
+      "Storm, flood, fire, power-outage or facility-damage cancellation of emergency food distributions",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official SNAP, WIC or other food-assistance service interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T154808-0800-r11-20261105T234808Z.json",
+      "completed_at": "2026-11-05T15:48:55-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire destroyed \"November 5\" \"2026\"",
+      "\"sole grocery store\" OR \"last grocery store\" closes fire \"Nov 5 2026\"",
+      "\"full service grocery store\" closed unexpectedly town November 5 2026",
+      "\"grocery store\" \"only\" closed fire November 2026 food desert local news",
+      "\"food distribution\" canceled OR cancelled storm flood outage November 5 2026",
+      "\"emergency food distribution\" canceled weather Nov 5 2026",
+      "\"mobile food pantry\" \"cancelled\" OR \"canceled\" power Nov 5 2026",
+      "\"food bank\" \"suspended operations\" OR \"closed\" Nov 5 2026",
+      "\"food pantry\" \"temporarily closed\" November 5 2026",
+      "site:gov \"SNAP\" \"outage\" OR \"interruption\" \"November 5\" 2026",
+      "site:gov \"WIC\" office closed power outage November 5 2026",
+      "\"EBT\" \"system outage\" OR \"benefits unavailable\" November 5 2026"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Article confirms Hawaiʻi Foodbank Kauaʻi emergency mobile food distribution remains scheduled for Friday November 6; no new food-distribution cancellation. Other hurricane closures are unrelated to the narrowly scoped food access miss classes."
+      },
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "publisher": "Forgotten Harvest",
+        "source_published_at": null,
+        "page_last_modified_at": "2026-11-03T15:53:17-05:00",
+        "exclusion_reason": "Two canceled Detroit-area November 4 mobile pantry events previously reviewed and outside window, with qualifying weather/damage cause not established. November 5 entries show scheduled distribution. Conflicting home-delivery application wording lacks dated onset and is not a new verified disruption."
+      },
+      {
+        "url": "https://www.vdh.virginia.gov/lord-fairfax/",
+        "publisher": "Virginia Department of Health",
+        "source_published_at": null,
+        "page_last_updated": "2026-11-05",
+        "exclusion_reason": "Previously reviewed Shenandoah County power-outage notice no longer shown on district landing page. No demonstrated in-window WIC service suspension or interruption; current notice only addresses upcoming November 11 holiday closure."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access interruption in the bounded supplementary recall period.",
+    "limitations": "Limited twelve-query search with highly variable indexing and poor time discrimination is not a nationwide absence claim; some older items continue to be indexed as fresh. Undated or date-only mentions cannot be assigned an exact hour without corroboration.",
+    "materiality": "All targeted web queries returned normally and all direct source pages were accessible; no material degradation.",
+    "action_limits": "No approval, publication, merge, schedule change, credential change or task disabling. Production collector remains authoritative."
+  }
+}

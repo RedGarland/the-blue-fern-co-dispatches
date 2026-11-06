@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T074633-0800-13d8f97d60124a5e9911fee7f362ceed",
+  "scheduled_for": "2026-11-06T07:45:54-08:00",
+  "started_at": "2026-11-06T07:46:33-08:00",
+  "completed_at": "2026-11-06T07:48:30.321-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T06:50:09.970-08:00",
+    "end_at": "2026-11-06T07:48:30.321-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Previous independently read-back verified Food Line heartbeat completed at 06:50:09.970 PST; event/new-publication screening through this run, with newer-indexed stories explicitly checked for stale underlying event dates.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded high-value supplementary Food Line miss-class recall; the primary nationwide production collector is authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery store loss or disaster",
+      "Emergency food distribution cancellation/suspension due to storm/flood/fire/outage/damage",
+      "Abrupt food pantry or food bank closure or major service reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequence"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T064554-0800-63565a7cf298832a9318d4d3362f4f9f.json",
+      "completed_at": "2026-11-06T06:50:09.970-08:00",
+      "status": "DEGRADED"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 6 2026 town",
+      "\"last grocery store\" closure fire November 6 2026",
+      "\"sole grocery store\" burned shut November 2026",
+      "\"full-service grocery store\" shut down November 6 2026 rural",
+      "\"food distribution\" canceled November 6 2026 storm flood",
+      "\"food bank\" \"distribution\" \"cancelled\" November 6 2026",
+      "\"emergency food distribution\" suspended power outage November 2026",
+      "\"food pantry\" temporarily closed November 6 2026 emergency",
+      "\"food bank\" \"services suspended\" November 6 2026",
+      "site:gov \"SNAP\" benefits delayed interruption November 6 2026",
+      "site:gov \"WIC\" \"closed\" \"November 6, 2026\" storm",
+      "\"EBT\" system down benefits unavailable November 6 2026 official"
+    ],
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "Direct Nov. 5 recovery article says Hawaiʻi Foodbank Kauaʻi mobile emergency food distribution is still scheduled for Nov. 6 4–5 PM; no confirmed cancellation."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Official notice of Middlesex DSS office closure from Nov. 6 08:00 to Nov. 9 08:00 for Urbanna Oyster Festival. Notice posting time is unknown; no food-assistance-specific interruption or new-in-window change established. Older Nov. 5 Lynchburg maintenance closure likewise not new."
+      },
+      {
+        "url": "https://pagosadailypost.com/2026/11/06/flood-recovery-resources-disaster-assistance-center-opens/",
+        "publisher": "Pagosa Daily Post",
+        "published_at": "2026-11-06",
+        "exclusion_reason": "Archuleta County flood recovery assistance center opened Nov. 5. Article advises that flooding may affect pantry operating hours but does not confirm an actual pantry closure, emergency distribution cancellation, or new interruption."
+      },
+      {
+        "url": "https://dphss.guam.gov/",
+        "publisher": "Guam Department of Public Health and Social Services",
+        "published_at": null,
+        "exclusion_reason": "Direct check timed out, repeating previously recorded Guam access limitation. Prior indexed official temporary WIC waiver change was announced Nov. 5, outside the interval; no new confirmed immediate food-assistance interruption."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "publisher": "WBNG",
+        "published_at": "2026-09-14",
+        "exclusion_reason": "Town of Spencer's only-grocery-store fire is a September event, previously reviewed; not new in this hourly window."
+      },
+      {
+        "url": "https://www.sltrib.com/news/2026/11/02/st-george-salvation-army-food/",
+        "publisher": "Salt Lake Tribune",
+        "published_at": "2026-11-02",
+        "exclusion_reason": "Older pantry closure/reopening story, before this window."
+      },
+      {
+        "url": "https://apnews.com/article/snap-food-government-shutdown-trump-a807e9f0c0a7213e203c074553dc1f9b",
+        "publisher": "Associated Press",
+        "published_at": "2025-11-07",
+        "exclusion_reason": "2025 SNAP government-shutdown story surfaced through matching month/day; unrelated to current 2026 hourly window."
+      }
+    ],
+    "result": "No newly verified qualifying food-access disruption in the 06:50–07:47 PST interval; indexed search largely returned historical grocery closures and 2025 SNAP date collisions.",
+    "limitations": "Supplementary 12-query recall is not exhaustive. Guam DPHSS primary webpage timed out; earlier indexed information alone insufficient to claim a new interruption. The Virginia local DSS closure notice has no verified posting time or food-program-specific outage evidence. Primary production collection and its deduplication were not accessed.",
+    "materiality": "DEGRADED, nonmaterial: one official Guam site failed direct retrieval, while all 12 searches and 3 other direct-page checks succeeded and no positive signal depended on that source.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One isolated watch-ledger heartbeat only; no publication, approval, merge, schedule change, credential or task alteration."
+  }
+}

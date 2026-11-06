@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T094150-0800-r11",
+  "scheduled_for": "2026-11-06T09:41:50-08:00",
+  "started_at": "2026-11-06T09:41:50-08:00",
+  "completed_at": "2026-11-06T09:45:37-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T08:43:12-08:00",
+    "end": "2026-11-06T09:45:37-08:00",
+    "basis": "Previous verified durable supplementary Gaza heartbeat completion (08:43:12 PST) through current execution; prior-day material screened only for distinct documented omissions. Publication dates versus event dates considered separately.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza production collector and publisher remain authoritative. No approval, publication, schedule, or production modification.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T084115-0800-r11-20261106T164115Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/updates",
+          "https://www.ochaopt.org/publications/humanitarian-situation-update"
+        ],
+        "result": "Accessible. Latest OCHA OPT updates index dated November 5 (wheelchair story; September Flash Appeal monitoring), with latest Gaza humanitarian situation report dated October 29; no newly dated acute Gaza change."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+          "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html"
+        ],
+        "result": "WHO global Gaza emergency overview accessible; no new dated Gaza health-system or evacuation development on its latest-news list. WHO EMRO OPT pages returned HTTP 502 (known persistent issue)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"06/11/2026\" 18:00 19:00 killed injured",
+      "site:aa.com.tr/en/middle-east/ Gaza November 6 2026 17:00 killed ceasefire displaced",
+      "Gaza Friday November 6 2026 Reuters AP ceasefire civilian deaths aid update",
+      "site:aljazeera.com/news/2026/11/6 Gaza Palestinian casualties Israeli attacks aid crossings November 6",
+      "site:unicef.org OR site:unrwa.org OR site:reliefweb.int Gaza November 6 2026 shelter water food supplies displacement",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza November 6 2026 medical evacuation hospital ambulance attacks",
+      "Gaza November 6 2026 Rafah Kerem Shalom border crossings humanitarian trucks fuel water access",
+      "Gaza November 6 2026 detainees hostages ceasefire negotiations Israeli military civilian harm",
+      "November 6 2026 Gaza health ministry casualties injured 18:00 19:00 Friday latest",
+      "site:news.un.org Gaza November 6 2026 humanitarian Friday water shelter hospital",
+      "site:english.wafa.ps/Pages/Details/ \"06/11/2026\" \"Gaza\" 07:00 PM OR 06:00 PM OR 05:00 PM",
+      "site:middleeasteye.net/news Gaza November 6 2026 Israeli army ceasefire casualties crossings"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Current November 6 feed inspected through 18:26 Palestine time. Gaza child fatality article at 16:40 and birth-anomaly assessment at 16:14 were already in 06:46 PST watch; newer items were outside Gaza scope."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "result": "Current November 6 feed inspected through 19:14 Palestine time. Gaza child shooting report at 16:30 and congenital-anomaly report at 15:57 already recorded; subsequent items focused on West Bank, Jerusalem and Lebanon."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Current Middle East index showed November 6 Gaza congenital anomalies reporting already logged, and November 5 Gaza fatalities (prior to window). No newly sourced distinct Gaza operational change."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest homepage news item dated November 3, no new Gaza ambulance or hospital operations incident."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403, recurring source restriction; secondary official OCHA coverage available."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "robots.txt access denial, recurring; official OCHA coverage available."
+      }
+    ],
+    "covered_classes": [
+      "civilian deaths and injuries",
+      "civilian-impact military operations",
+      "displacement and shelter",
+      "food and water access",
+      "aid deliveries and crossings",
+      "healthcare functioning, hospitals, ambulances, fuel, rehabilitation and medical evacuations",
+      "infrastructure damage",
+      "detention, hostages and ceasefire negotiations"
+    ],
+    "excluded": [
+      {
+        "item": "November 6 Mohammed Nidal Barbakh child fatality, and Gaza Health Ministry congenital anomalies assessment",
+        "reason": "Already preserved in November 6 06:46 PST supplementary watch heartbeat; same underlying events, not new."
+      },
+      {
+        "item": "November 6 Gaza City earlier-wound deaths, Al-Mawasi tent gunfire, UNRWA shelter/water estimates, Environment Quality Authority infrastructure figures and rehabilitation assessment",
+        "reason": "Existing November 6 watch ledger findings; duplicate or cumulative older assessment."
+      },
+      {
+        "item": "November 5 casualty summaries and older Reuters/AP and Al Jazeera accounts",
+        "reason": "Earlier publication and/or event date, not a newly substantiated change since prior heartbeat."
+      },
+      {
+        "item": "Secondary Gaza crossing/truck-count claims and rolling UN food-need summaries",
+        "reason": "No newly authenticated primary reporting with distinct date and change; previously excluded by 07:47 and 08:43 PST watch ledgers."
+      },
+      {
+        "item": "West Bank, Lebanon, Syria and unrelated regional reports",
+        "reason": "Outside Gaza event scope."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "error": "HTTP 403 Forbidden",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "error": "robots.txt fetch denied",
+        "material_new_deterioration": false
+      }
+    ],
+    "limitations": "Search indexing was sparse for date-specific Gaza reports. English and Arabic direct publisher feeds checked as a compensating method. WHO EMRO, UNRWA and UN News could not be directly accessed; alternative official sources were available. Zero new independently traceable qualifying changes, not proof none occurred.",
+    "notification_criteria": "No qualifying findings and no newly material watch degradation; routine known access restrictions persisted."
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T054400-0800-r11-20261106T134632Z",
+  "scheduled_for": "2026-11-06T05:44:51-08:00",
+  "started_at": "2026-11-06T05:44:00.000-08:00",
+  "completed_at": "2026-11-06T05:46:32.603-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T04:47:20.147-08:00",
+    "end": "2026-11-06T05:46:32.603-08:00",
+    "basis": "Previous verified supplementary heartbeat completion through this run; older material assessed only for distinct high-value misses and not treated as a new event.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not production collection; production remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T044402-0800-r11-20261106T124720Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest listed entries Nov 5 feature on wheelchair support, Nov 5 September flash-appeal response monitoring, and Oct 29 situation report (published Oct 31); no new acute Gaza update identified during observation window."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.who.int/news",
+          "https://www.emro.who.int/opt/",
+          "https://www.emro.who.int/opt/news/index.html"
+        ],
+        "result": "WHO global emergency and news pages accessible with no new dated Gaza health operations change. WHO EMRO OPT endpoints returned HTTP 502 (continuing source-access degradation)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza Friday November 6 2026 killed injured hospital",
+      "site:wafa.ps/news/2026/11/6/ غزة اليوم الجمعة مساء شهداء قصف مواصي",
+      "site:aa.com.tr/en/middle-east/ \"Nov 6, 2026\" Gaza casualties ambulance humanitarian",
+      "site:reuters.com/world/middle-east/ \"November 6, 2026\" Gaza Israel ceasefire aid",
+      "site:apnews.com/article/ Gaza November 6 2026 strikes aid crossings ceasefire",
+      "site:aljazeera.com/news/2026/11/6/ Gaza aid water hospital displaced killed",
+      "site:unrwa.org OR site:unicef.org Gaza November 6 2026 humanitarian shelter water access",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza November 6 2026 hospital medical evacuation ambulance",
+      "site:news.un.org OR site:un.org Gaza November 6 2026 humanitarian aid displaced",
+      "Gaza Friday November 6 2026 Rafah Kerem Shalom crossings truck aid food fuel",
+      "Gaza 6 November 2026 hostages detainees negotiations ceasefire civilian impacts",
+      "Gaza November 6 2026 medical evacuation hospital capacity water sewage infrastructure latest"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English and Arabic",
+        "urls": [
+          "https://english.wafa.ps/Pages/LastNews",
+          "https://www.wafa.ps/Pages/LastNews"
+        ],
+        "result": "Nov 6 feeds checked through roughly 15:02 local Palestine time. Newer headlines concerned the West Bank; Gaza reports of two people dying of earlier wounds had been logged in a preceding watch."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Gaza environment authority rubble/water damage report and two earlier-injury deaths already logged in preceding watches; Nov 5 civil-defense heavy rain/displacement warning was prior context, not fresh development."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest main-page item Nov 3, no newly dated Gaza ambulance, medical evacuation or service interruption item."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties",
+      "displacement and shelter",
+      "humanitarian aid/crossings",
+      "food and water",
+      "hospital, ambulance, medical evacuation and functioning capacity",
+      "fuel, infrastructure damage",
+      "detainees/hostages and negotiations/ceasefire",
+      "military operations with civilian impact"
+    ],
+    "excluded": [
+      {
+        "item": "Nov 6 WAFA/Anadolu two deaths from previous airstrikes",
+        "reason": "Previously recorded as follow-up in Nov 6 00:40 PST heartbeat."
+      },
+      {
+        "item": "Nov 6 rubble, water/sewage damage estimates and Al-Mawasi tents gunfire",
+        "reason": "Previously recorded in Nov 6 03:46 PST heartbeat."
+      },
+      {
+        "item": "Nov 4 Euro-Med child amputees rehabilitation and medical evacuation barriers",
+        "reason": "Previously recorded as recovered assessment in immediately preceding Nov 6 04:47 PST heartbeat."
+      },
+      {
+        "item": "Nov 5 Crossings Authority truck counts from Gaza Herald/Sawa",
+        "reason": "Previously assessed and excluded for absence of verified primary source or independent operational confirmation."
+      },
+      {
+        "item": "Nov 5 Gaza Civil Defense flooding/wind hazard warning and earlier Gaza casualty totals",
+        "reason": "Previously known, not a distinct newly verified event in this hourly window."
+      },
+      {
+        "item": "Older October/earlier November reporting in search results",
+        "reason": "Not a new or qualifying missed development; avoid duplicate and retrospective inflation."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway; recurring from prior hours",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/",
+        "error": "Search access blocked by robots.txt; longstanding restriction/alternative official channels checked",
+        "material_new_deterioration": false
+      }
+    ],
+    "conclusion": "No distinct, traceable qualifying new development found in this bounded observation window. Search status DEGRADED for ongoing external-source restrictions, but no material new watch failure; authoritative alternatives accessible.",
+    "safeguards": "No publication, approval, social post, merge, schedule, credential or permission change."
+  }
+}

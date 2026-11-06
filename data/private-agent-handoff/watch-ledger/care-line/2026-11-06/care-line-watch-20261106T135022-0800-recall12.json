@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T135022-0800-recall12",
+  "scheduled_for": "2026-11-06T13:45:22-08:00",
+  "started_at": "2026-11-06T13:50:22-08:00",
+  "completed_at": "2026-11-06T13:51:10-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T12:52:41-08:00",
+    "end": "2026-11-06T13:51:10-08:00",
+    "basis": "Since the previous completed supplementary Care Line watch, with bounded recall for recent actionable service loss or restoration. The production collector is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, termination notice (CCN 18P001)",
+      "result": "No newly posted November 3–6 Medicare provider termination, rescission, or CLIA limitation/suspension found."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 6, 2026\" hospital \"closing\" \"patients\" emergency department",
+      "\"November 6, 2026\" \"labor and delivery\" \"closure\" hospital",
+      "\"November 6, 2026\" psychiatric behavioral health clinic \"closing\" services",
+      "\"November 6, 2026\" dialysis center closing or oncology clinic service suspended",
+      "\"November 6, 2026\" medical office primary care clinic \"closes\" patients",
+      "\"November 6, 2026\" ambulance service \"cease operations\" or shutting down",
+      "\"November 6, 2026\" air medical helicopter base \"closed\" or \"suspended\"",
+      "November 6 2026 hospital emergency room reopening service reopened rural healthcare",
+      "November 6 2026 \"maternity services\" resumed reopened births hospital",
+      "November 6 2026 hospital medical center closure suspend services rural county",
+      "November 6 2026 Puerto Rico US Virgin Islands Guam hospital emergency room clinic closure",
+      "November 5 2026 state health department \"hospital\" \"license\" closed suspension service"
+    ],
+    "scoped_classes": [
+      "Hospital, ED, maternity, behavioral-health, dialysis, oncology, primary-care closure/suspension",
+      "Emergency/rural service loss",
+      "Ambulance and air-medical base service closure/suspension",
+      "CMS Medicare termination/rescission and CLIA restrictions",
+      "Concrete/effective restoration of previously lost essential services"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Watsonville Community Hospital, Watsonville, California; maternity/NICU risk and 120-day public-notice process (Nov 6)",
+        "reason": "Explicitly no board vote to close any service; current event is a public-notice process and funding contingency, not a concrete essential-service reduction.",
+        "source_url": "https://pajaronian.com/hard-choices-new-hope-our-plan-to-keep-watsonville-community-hospital-open/"
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania, state license revocation and clinical suspension",
+        "reason": "Previously confirmed and already recorded in 09:50 supplementary watch; no independent new access change observed."
+      },
+      {
+        "item": "Winchester Family Medicine, New Hampshire, primary-care closure Nov 6",
+        "reason": "Previously recorded at 08:42 supplementary watch; avoid duplicate."
+      },
+      {
+        "item": "Benefis Health System, Montana, outpatient behavioral-health and inpatient rehab changes",
+        "reason": "Previously recorded at 10:43 supplementary watch; avoid duplicate."
+      },
+      {
+        "item": "Sea Pines Rehabilitation Hospital, Melbourne, Florida, indefinite flood-related closure",
+        "reason": "Previously recorded at 12:49 supplementary watch; avoid duplicate."
+      },
+      {
+        "item": "Lincoln Hospital Miles maternity, Maine, closure lawsuits and deliberations",
+        "reason": "Returned reports date from July–August 2026 and do not establish a new November 6 concrete change."
+      },
+      {
+        "item": "Stuart Community Hospital, Virginia, ER and inpatient opening",
+        "reason": "Effective January 2026; outside current bounded recall."
+      }
+    ],
+    "coverage_limitations": [
+      "Search results were sparse for contemporary concrete changes and included older or foreign events; no new qualifying U.S./territory access change was established.",
+      "No fresh, qualifying official CMS public notice was visible at the time of inspection.",
+      "This is a bounded 12-query supplementary web recall, not exhaustive facility surveillance or production deduplication.",
+      "Production collection and review remain authoritative; no publication or approval performed."
+    ],
+    "sources_checked": [
+      "CMS Public Notices (official)",
+      "Pajaronian November 6 Watsonville board column (exclusion: proposal only)"
+    ],
+    "source_failures": [],
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T224733-0800-r11-20261106T064733Z",
+  "scheduled_for": "2026-11-05T22:45:54-08:00",
+  "started_at": "2026-11-05T22:47:33.984-08:00",
+  "completed_at": "2026-11-06T06:48:57.369Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T21:51:18.503-08:00",
+    "end_at": "2026-11-05T22:48:57.369-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Since prior read-back-verified hourly supplementary heartbeat completion; date-only stories without incident/notice times not assumed new.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting only, sole, last, or full-service grocery",
+      "Canceled or suspended emergency food distribution from storm/flood/fire/outage/damage",
+      "Abrupt pantry/food-bank closure or major service reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T215009-0800-r11-20261106T055009Z.json",
+      "completed_at": "2026-11-06T05:51:18.503Z",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"Nov 5, 2026\" \"only grocery store\" closed OR fire OR shutdown",
+      "\"Nov 5, 2026\" \"sole grocery store\" closing OR destroyed",
+      "\"Nov 6, 2026\" \"last grocery store\" OR \"only full-service grocery\" closing",
+      "\"Nov 5, 2026\" \"food distribution\" canceled OR cancelled storm OR power outage",
+      "\"Nov 5, 2026\" \"mobile pantry\" canceled hurricane OR weather",
+      "\"Nov 6, 2026\" \"emergency food distribution\" suspended OR cancelled flood",
+      "\"Nov 5 2026\" \"food pantry\" \"temporarily closed\" OR suspended fire OR flood",
+      "\"Nov 5 2026\" \"food bank\" closed distribution \"power\" OR \"storm\"",
+      "\"Nov 6 2026\" \"food pantry\" shut down \"emergency\" OR \"damage\"",
+      "site:gov \"November 5, 2026\" \"SNAP\" \"outage\" OR \"suspended\" OR \"interrupted\"",
+      "site:gov \"November 5, 2026\" \"WIC\" \"office closed\" OR \"power outage\" OR \"service disruption\"",
+      "\"November 6 2026\" \"EBT\" \"not working\" OR \"SNAP benefits delayed\" state agency"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.kait8.com/2026/11/06/black-rock-sales-tax-issue-fails/",
+        "publisher": "KAIT",
+        "source_published_at": "2026-11-05T19:10:00-06:00",
+        "exclusion_reason": "Nov. 5 reporting on an Arkansas tax vote references the town having lost its only grocery store, but does not establish when that grocery closure occurred; article published 17:10 PST, before this run's 21:51 PST start. Historical/contextual, not a verified new grocery loss."
+      },
+      {
+        "url": "https://fresnoeoc.org/food-distributions/",
+        "publisher": "Fresno Economic Opportunities Commission",
+        "source_published_at": null,
+        "exclusion_reason": "Provider calendar lists Nov. 5 Biola and Nov. 6 Parlier food distributions as planned, with no documented cancellation or suspension. Routine schedule excluded."
+      },
+      {
+        "url": "https://panhandlestorm.com/updates",
+        "publisher": "Panhandle Storm Help (agency-source aggregator)",
+        "source_published_at": null,
+        "exclusion_reason": "Nov. 5 posts include planned Nov. 21 food distribution and storm recovery information, but no verified cancellation or food access interruption since prior check; downstream updates predate observation window."
+      }
+    ],
+    "result": "No newly verified qualifying high-value U.S. food-access disruption since 21:51:18 PST heartbeat; no positive signal preserved for review.",
+    "limitations": "Bounded 12-query recall check is not proof of comprehensive national absence. Results included routine schedules, older incidents and off-target closure notices; date-only indexing was not treated as a new event.",
+    "materiality": "All 12 targeted search requests returned usable results. Three relevant direct source pages checked successfully; no material degradation.",
+    "action_limits": "No approval, publication, merge, schedule change, task disabling, permission change, or production collection mutation."
+  }
+}

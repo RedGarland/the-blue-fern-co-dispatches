@@ -1,0 +1,174 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T034258-0800-r11-20261106T114630Z",
+  "scheduled_for": "2026-11-06T03:44:51-08:00",
+  "started_at": "2026-11-06T03:42:58-08:00",
+  "completed_at": "2026-11-06T03:46:30.270-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T02:51:29.147-08:00",
+    "end": "2026-11-06T03:46:30.270-08:00",
+    "basis": "Previous verified supplementary Gaza heartbeat completion to current observed completion. Older published developments eligible only if distinctly missed and newly traced. Publication dates do not imply events occurred in this window.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261106-env-authority-rubble-wastewater-84pct-water-infrastructure",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/6/%D8%B3%D9%84%D8%B7%D8%A9-%D8%AC%D9%88%D8%AF%D8%A9-%D8%A7%D9%84%D8%A8%D9%8A%D8%A6%D8%A9-760-%D8%A7%D8%B9%D8%AA%D8%AF%D8%A7%D8%A1-%D8%A8%D9%8A%D8%A6%D9%8A%D8%A7-%D9%81%D9%8A-%D8%A7%D9%84%D8%B6%D9%81%D8%A9",
+      "corroborating_source_url": "https://www.aa.com.tr/en/middle-east/68m-tons-of-rubble-pose-environmental-humanitarian-disaster-in-gaza-palestinian-authority/4113887",
+      "title": "Palestinian Environment Quality Authority warns of vast Gaza hazardous rubble and wastewater contamination",
+      "publisher": "WAFA (reporting 6 November Environment Quality Authority statement); Anadolu Agency independently reported the statement",
+      "source_date": "2026-11-06",
+      "publication_date": "2026-11-06",
+      "publication_time_local": "08:42 Asia/Gaza per WAFA",
+      "event_date": null,
+      "location": "Gaza Strip (territory-wide estimate; no individual site identified)",
+      "affected_population_system": "Water and sewage infrastructure (reported 84% destroyed), sanitation and environmental health (reported 120,000 m³/day untreated wastewater), 61–68 million tonnes of demolition rubble including about 4 million tonnes hazardous waste and at least 50,000 tonnes asbestos, farmland and civilians exposed to environmental hazards",
+      "exact_supporting_passage": "الحرب دمرت 84% من البنية التحتية للمياه والصرف الصحي",
+      "source_type": "Official Palestinian Environment Quality Authority statement as directly reproduced by WAFA, corroborated by Anadolu; underlying survey methodology not independently checked",
+      "classification": "follow-up",
+      "confidence": "medium-high for statement issuance and attribution; underlying figures unverified independently and could be older cumulative estimates",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct Anadolu Middle East publisher page following 2 OCHA/WHO first checks and 12 targeted searches; cross-checked against dated WAFA Arabic article.",
+        "previous_comparison": "Nov 6 02:51 PST prior verified heartbeat recorded distinct UNRWA shelter/water assessment but not the Palestinian Environment Quality Authority hazardous rubble/wastewater release. This WAFA 08:42 Gaza-local article predates that heartbeat; it is a newly discovered missed source, not a new incident in this hour.",
+        "attribution_and_timing": "Environment Authority statement was published Nov 6 (WAFA local 08:42; 22:42 Nov 5 PST). Assessment/survey period and exact measurement date not given.",
+        "verification_limit": "No primary methodology or independent field verification of debris, infrastructure destruction or wastewater estimates. Do not describe figures as newly incurred damage.",
+        "useful_follow_up": "Editorial team may compare with historic UNDP/OCHA baseline and obtain the authority's underlying methodology; no publication or approval implied."
+      }
+    },
+    {
+      "finding_id": "gaza-20261106-al-mawasi-rafah-tents-struck-by-bullets-witnesses",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-2-more-palestinians-in-gaza-including-medical-student/4113819",
+      "title": "Anadolu witnesses report Israeli heavy fire reaching displacement tents near Al-Mawasi, northwest of Rafah",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-06",
+      "publication_date": "2026-11-06",
+      "publication_time_local": null,
+      "event_date": "2026-11-06",
+      "location": "Al-Mawasi area northwest of Rafah, southern Gaza Strip",
+      "affected_population_system": "Displaced Palestinians sheltering in tents; witnesses said some bullets reached tents; no reported casualties or damage count in this article",
+      "exact_supporting_passage": "with some bullets reaching tents sheltering displaced Palestinians, according to witnesses.",
+      "source_type": "Established news agency directly attributing account to witnesses (not independently corroborated)",
+      "classification": "new",
+      "confidence": "medium-low; one named established outlet reports anonymous eyewitnesses; injuries and exact time not independently verified",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct Anadolu publisher Middle East index and linked full article after bounded searches, alongside a previously logged casualty follow-up.",
+        "previous_comparison": "Sara Abu Jiyab/Nabil Hamad deaths in this article are exact duplicates of prior 00:40 PST heartbeat and excluded; reported separate al-Mawasi gunfire affecting tents was not present in the immediate preceding or 01:44 PST watch notes.",
+        "timing_caveat": "Article dated Nov 6 and says Friday; publication time and actual incident hour unknown, so no claim this happened since 02:51 PST. No injury is claimed.",
+        "next_editorial_step": "Seek independent PRCS/OCHA or local verification before promotion; keep attributed as witness report."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza high-value miss recall. Authoritative Gaza production collector/publisher unchanged. No approval, merge, public publication, social posting, task scheduling or credential/permission change.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T024829-0800-r11-20261106T105129Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible; 05 Nov rehabilitation human-interest update, 05 Nov retrospective September appeal; latest situation report released 31 Oct for 29 Oct. No new Gaza operational report in interval."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/",
+          "https://www.emro.who.int/opt/information-resources/updates.html"
+        ],
+        "result": "WHO global conflict overview accessible, no dated 6 Nov Gaza service or evacuation operational update. EMRO OPT page returned HTTP 502; EMRO updates inaccessible (known recurring degradation)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"06/November/2026\" Gaza Friday killed wounded rescue",
+      "site:wafa.ps/news/2026/11/6/ غزة غزة اليوم 6 تشرين الثاني شهداء قصف مصابين",
+      "site:aa.com.tr/en/middle-east/ Gaza November 6 2026 civilians killed injured strikes Friday",
+      "site:reuters.com/world/middle-east/ November 6 2026 Gaza aid ceasefire civilians",
+      "site:apnews.com/article/ Gaza November 6 2026 injuries airstrikes ceasefire",
+      "site:aljazeera.com/news/2026/11/6/ Gaza casualties war ceasefire displaced",
+      "site:unrwa.org OR site:unicef.org Gaza November 6 2026 shelter water food displaced children November 5",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza 6 November 2026 hospital ambulance medical evacuation fuel",
+      "site:un.org OR site:news.un.org Gaza 6 November 2026 humanitarian crossings access displaced water",
+      "Gaza 6 November 2026 Friday Rafah Kerem Shalom aid trucks crossing medical evacuation fuel latest",
+      "Gaza 6 November 2026 ceasefire negotiations hostage detainees civilian impact Israel Hamas",
+      "Gaza 6 November 2026 Gaza City Nuseirat Khan Younis Deir al Balah displaced tents damaged civilians rain"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English/Arabic",
+        "urls": [
+          "https://english.wafa.ps/Pages/LastNews",
+          "https://www.wafa.ps/Pages/LastNews"
+        ],
+        "result": "No new distinct Nov 6 Gaza casualty item beyond previously logged deaths; Arabic 08:42 November 6 Environment Authority Gaza rubble/water/wastewater assessment recovered via article and corroborated."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "New on indexed Nov 6 articles: Environment Authority statement with Gaza rubble/water impacts and distinct witness statement about gunfire reaching al-Mawasi tents; two previously logged deaths excluded."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Nov 6 entries largely West Bank or human-interest reconstruction adaptations; Nov 5 Gaza casualty report already known."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest homepage news 3 Nov; no fresh ambulance or EMS incident."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible general emergency page; no date-verified changed food access this hour."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403; recurring source access restriction."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and military operations with civilian impact",
+      "displacement and shelter impacts",
+      "aid access and crossings",
+      "food and water access; wastewater and infrastructure damage",
+      "hospitals, medical evacuation, ambulance, transport/fuel and healthcare functioning",
+      "detention/hostage and ceasefire negotiations"
+    ],
+    "excluded": [
+      {
+        "item": "WAFA/Anadolu reports deaths of Sara Abu Jiyab and Nabil Hamad",
+        "reason": "Exact duplicate of prior 00:40 PST verified heartbeat; later reporting adds no distinct verified death."
+      },
+      {
+        "item": "WAFA Nov 5 cumulative Gaza fatality tally (74,618)",
+        "reason": "Published Nov 5; not an in-window new incident. Cumulative totals alone do not establish new distinct casualties."
+      },
+      {
+        "item": "Al Jazeera Nov 5 Gaza killings and storm warnings; Nov 6 Gaza seawall and wind-turbine videos",
+        "reason": "Previously recorded casualty events, flood risks, or non-acute features."
+      },
+      {
+        "item": "WAFA/Al Jazeera Nov 6 settlers and West Bank reports",
+        "reason": "Outside Gaza geographic scope."
+      },
+      {
+        "item": "Older Reuters/AP/WHO/OCHA/UN analyses and undated aggregator claims",
+        "reason": "Retrospective or not sufficiently newly sourced and bounded."
+      }
+    ],
+    "degradation": {
+      "reason": "Recurring WHO EMRO OPT 502, EMRO updates unavailable, UNRWA 403 and UN News blocked by robots policy on the targeted query; enough alternative OCHA, WHO global, WAFA, Anadolu, PRCS, WFP, Al Jazeera coverage to complete bounded supplementary watch.",
+      "material_new_deterioration": false,
+      "coverage_sufficient_for_bounded_supplementary_watch": true
+    },
+    "outcome_note": "Two traceable new-to-watch developments: one previously missed Nov 6 official environmental/infrastructure statement containing retrospective estimates, and a separately witnessed Nov 6 shooting report affecting displacement tents with no confirmed injuries. Neither establishes a new casualty in this hourly window."
+  }
+}

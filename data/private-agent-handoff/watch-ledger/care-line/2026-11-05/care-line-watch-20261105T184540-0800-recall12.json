@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T184540-0800-recall12",
+  "scheduled_for": "2026-11-05T18:45:22-08:00",
+  "started_at": "2026-11-05T18:45:40-08:00",
+  "completed_at": "2026-11-05T18:47:02-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T17:43:20.988-08:00",
+    "end": "2026-11-05T18:47:02-08:00",
+    "basis": "Previous verified supplementary Care Line heartbeat completed_at to this run's observation. Nov 5 indexed reporting checked for lag; deduplicated previous findings and excluded future proposed changes. This is supplementary recall, not authoritative production collection."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope; Kentucky organ procurement organization; termination notice; CCN 18P001",
+      "result": "Retrieved official CMS public notice listing before other searches. No later notice or new in-window CMS provider/CLIA action visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closed suspended November 5 2026 November 6 2026 local news",
+      "hospital labor delivery maternity unit closed suspended November 5 2026 Thursday",
+      "rural hospital emergency room services closure shutdown November 5 2026",
+      "psychiatric inpatient behavioral health hospital unit services closed November 5 2026",
+      "dialysis center shut down patients treatments November 5 2026",
+      "cancer treatment oncology infusion clinic closure patients November 5 2026",
+      "primary care clinic permanently closed suddenly patients November 5 2026 US",
+      "ambulance service suspended shut down November 5 2026 town county EMS",
+      "air ambulance helicopter medical base closes suspends November 5 2026",
+      "emergency department reopens services restored November 5 2026 hospital USA",
+      "site:gov \"November 5, 2026\" CLIA suspension termination provider license healthcare services",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital clinic emergency closure reopening November 5 2026"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System emergency department and hospital acute-care suspension, Mercer County, PA",
+        "reason": "Previously recorded positive finding in 2026-11-05 12:48 watch; subsequent November 5 articles duplicate.",
+        "url": "https://sharonregionalhealthsystem.org/"
+      },
+      {
+        "item": "Roseland Community Hospital maternity unit closure and bankruptcy filing, Chicago, IL",
+        "reason": "Maternity closure already known from earlier reporting; November 5 bankruptcy filing explicitly states ongoing hospital operations unaffected. Later article was timed after this observation and does not establish new access loss.",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-files-bankruptcy-days-closing-maternity-ward-chicagos-south-side/20018238/"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center labor and delivery restoration, Lewisburg, WV",
+        "reason": "Official November 5 announcement describes plans to reopen, with care not yet effective; excluded as proposed restoration.",
+        "url": "https://governor.wv.gov/article/governor-morrisey-announces-reopening-labor-and-delivery-services-greenbrier-valley-medical"
+      },
+      {
+        "item": "Memorial Behavioral Health West Lake residential/crisis services, Springfield, IL",
+        "reason": "November 3 report says expected to wind down by end of December subject to client transfers; no currently effective closure in observation window.",
+        "url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/"
+      },
+      {
+        "item": "Oklahoma Children's OU Health Behavioral Health Center",
+        "reason": "New-site opening announcement, with patient care previously reported to begin in December; not restoration of previously lost service currently effective.",
+        "url": "https://www.kgou.org/health/2026-11-05/new-oklahoma-childrens-ou-health-center-to-expand-pediatric-behavioral-healthcare-in-state"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, IL base closure",
+        "reason": "September 2026 historical action, already evaluated in previous supplementary watches.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct endpoint open again returned inaccessible. Persistent known source gap from previous hourly watches; other research and CMS access succeeded. Not newly material."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "US states, DC and territories; hospitals/ED, maternity, rural, behavioral health, dialysis, oncology, primary care, ambulance/air-medical, CMS/CLIA and actual effective reopening or restoration.",
+    "deduplication": "Read 2026-11-05 17:41 heartbeat (completed 17:43), earlier 16:43 heartbeat and 12:48 positive Sharon Regional finding; production records not independently queried.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Non-exhaustive 12-search supplementary recall, subject to source/indexing lags. Health First official alert URL remains inaccessible; this is an ongoing rather than newly material degradation. No qualifying nonduplicate effective healthcare-access changes verified in window.",
+    "controls": "Exactly one private heartbeat on ops/watch-ledger; no approval, publication, merge, schedule changes, credentials, task disabling or production mutation."
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T104342-0800-recall12",
+  "scheduled_for": "2026-11-06T10:45:22-08:00",
+  "started_at": "2026-11-06T10:43:42-08:00",
+  "completed_at": "2026-11-06T10:45:52.290-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T09:51:59.063-08:00",
+    "end": "2026-11-06T10:45:52.290-08:00",
+    "basis": "Since preceding supplementary watch completed, with bounded 2-day publication-lag recall for missed concrete access changes. Production collection is authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-mt-benefis-great-falls-outpatient-behavioral-health-cessation-20261104",
+      "canonical_source_url": "https://www.krtv.com/news/benefis-health-system-to-restructure-services-citing-financial-pressure",
+      "title": "Benefis Health System announces discontinuation of outpatient counseling, psychiatry and psychology in Great Falls",
+      "publisher": "KRTV / Montana Television Network (Quentin Shores)",
+      "exact_supporting_passage": "Benefis says it will discontinue offering outpatient counseling, psychiatry and psychology services and instead work with partner organizations",
+      "source_published_date": "2026-11-04",
+      "state": "Montana",
+      "city": "Great Falls",
+      "county": "Cascade County",
+      "territory": null,
+      "event_type": "announced_behavioral_health_service_cessation",
+      "service_line": "Outpatient counseling, psychiatry and psychology; associated restructuring of 20-bed inpatient rehabilitation facility and Northwest Clinic location",
+      "access_consequences": "Benefis has decided to discontinue its own outpatient counseling, psychiatry, and psychology services and direct patients to outside partners, including Center for Mental Health and Shodair Children's Hospital. The separately announced 20-bed West Campus inpatient rehabilitation facility will discontinue services, with swing-bed and transitional care offered as alternatives. Northwest Clinic services will consolidate on East Campus. These are stated service changes, not merely an ownership or financing story. Full loss of behavioral health care is NOT claimed; other levels of care were not announced closed.",
+      "affected_population": "Great Falls and surrounding Cascade County patients using outpatient mental-health treatment and 20-bed inpatient rehabilitation; total number affected not disclosed.",
+      "effective_date": null,
+      "announcement_date": "2026-11-04",
+      "confidence": "HIGH",
+      "source_role": "strong_local_reporting_quoting_provider_employee_communication",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "evidence_notes": "Newly recovered in this supplemental recall, not first announced within this hour. The reported restructuring begins December 19, 2026 and continues into 2027; the precise discontinuation date for each service is not specified, so effective_date is null. Local reporting quotes Benefis email to employees and media. Provider's existing service webpage still advertises outpatient offerings; should not be interpreted as proof the announced termination was withdrawn. Verify production deduplication before advancement."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, termination notice, CCN 18P001",
+      "result": "No November 3–6 new notice was visible on the CMS table at check time."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing suspended November 6 2026 rural United States",
+      "labor delivery maternity unit closing November 6 2026 hospital state",
+      "behavioral health psychiatry inpatient unit closure services November 6 2026",
+      "dialysis cancer oncology clinic services closure November 6 2026",
+      "November 6 2026 ambulance service closing station base EMS county United States",
+      "air medical helicopter base closure suspension November 2026 United States",
+      "November 6 2026 rural primary care clinic closing patients new health",
+      "November 6 2026 hospital emergency room reopened restored care service after closure",
+      "\"November 6, 2026\" \"hospital\" \"close\" \"services\" emergency",
+      "\"November 5, 2026\" \"clinic\" \"closing\" \"patients\" primary care",
+      "\"November 6, 2026\" \"hospital\" \"discontinue\" \"services\" maternity behavioral",
+      "\"November 6, 2026\" \"ambulance\" \"service\" \"shut down\" rural"
+    ],
+    "candidate_details": {
+      "provider_announcement_quoted_by_local_reporting": true,
+      "planned_change_concrete": true,
+      "change_effective_now": false,
+      "restructuring_commences": "2026-12-19",
+      "specific_service_stop_date_confirmed": false,
+      "production_dedupe_verified": false,
+      "source_reference_url": "https://www.benefis.org/medical-services/behavioral-mental-health/"
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, PA: state license revocation and hospital/ED closure",
+        "reason": "Existing 09:50 supplementary heartbeat and preceding operational closure records; not newly reportable here."
+      },
+      {
+        "item": "Winchester Family Medicine, NH",
+        "reason": "Already recorded in 08:42 supplementary heartbeat."
+      },
+      {
+        "item": "Benefis Helena oncology/infusion service closure",
+        "reason": "Reported separately as already closed in preceding week, outside this bounded two-day recall period; distinct from Great Falls restructuring.",
+        "source_url": "https://www.ktvh.com/news/helena-patients-face-uncertainty-after-benefis-closes-infusion-services"
+      },
+      {
+        "item": "Laguna Beach micro-hospital alternative",
+        "reason": "Canceled future proposal; no immediate new essential-service loss.",
+        "source_url": "https://occlipper.com/laguna-beach-will-not-get-mini-hospital-with-emergency-room-hospital-officials-say/"
+      },
+      {
+        "item": "Tampa General/Lifepoint planned Spring Hill rehab facility",
+        "reason": "New proposed facility only, not concrete effective reopening of previously lost service."
+      },
+      {
+        "item": "AdventHealth Rockmart clinic service expansion",
+        "reason": "General expansion not restoration of previously lost essential service."
+      }
+    ],
+    "source_failures": [],
+    "limitations": [
+      "Bounded supplemental search only; not exhaustive national or territory coverage; no dedicated targeted territory query this run.",
+      "Source published November 4, not a new publication within the observation hour; it is newly recovered by the recall pass.",
+      "Exact dates of individual outpatient behavioral health and rehabilitation service cessations not published; December 19 is the start of the overall restructuring.",
+      "Production deduplication unavailable; review_status pending_review.",
+      "No approval, publication, production change, schedule modification, or task disabling."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

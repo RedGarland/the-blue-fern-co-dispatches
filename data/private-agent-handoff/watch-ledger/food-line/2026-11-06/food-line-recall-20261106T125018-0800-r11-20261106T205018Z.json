@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T125018-0800-r11-20261106T205018Z",
+  "scheduled_for": "2026-11-06T12:45:54-08:00",
+  "started_at": "2026-11-06T12:50:18-08:00",
+  "completed_at": "2026-11-06T12:51:12-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T11:43:37-08:00",
+    "end_at": "2026-11-06T12:51:12-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Latest independently fetched ops/watch-ledger food-line heartbeat completion through this observation; source publication and underlying incident/effective dates checked separately.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall of high-value miss classes, not authoritative nationwide production collection.",
+    "target_classes": [
+      "Sole/only/last/full-service grocery store loss, closure, fire, or disaster",
+      "Emergency food-distribution cancellation or suspension caused by severe weather, fire, flood, outage or facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T114123-0800-r11-20261106T194123Z.json",
+      "completed_at": "2026-11-06T11:43:37-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed town November 6 2026",
+      "\"last grocery store\" closing rural community November 2026",
+      "\"sole grocery store\" destroyed fire flooding November 2026",
+      "\"full service grocery store\" closure town Friday Nov 6 2026",
+      "\"emergency food distribution\" canceled November 6 2026 storm",
+      "\"mobile food distribution\" cancelled canceled weather \"November 6\" 2026",
+      "\"food bank\" distribution suspended Friday November 6 2026 flood outage",
+      "\"food pantry\" closed suddenly \"November 6\" 2026 services",
+      "site:gov \"SNAP\" \"November 6, 2026\" \"closed\" OR \"interruption\" OR \"outage\" OR \"delay\"",
+      "site:gov \"WIC\" \"November 6, 2026\" clinic closed OR system down OR outage",
+      "\"food bank\" \"closed\" OR \"suspended\" \"Nov 6, 2026\" services",
+      "\"pantry\" \"closure\" OR \"unable to serve\" November 6 2026 flood fire power"
+    ],
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "published_at": null,
+        "exclusion_reason": "Direct provider page still lists Friday November 6 emergency food distribution at Hale Līhuʻe 4–5 p.m.; no cancellation or suspension established."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Official alerts checked; no new SNAP-specific disruption established during this window; previous local office closures already reviewed before 11:43."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Provider lists next November 7 and onward distributions; no current-window weather/disaster suspension detected."
+      },
+      {
+        "url": "https://dphss.guam.gov/homepage",
+        "publisher": "Guam Department of Public Health and Social Services",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "Search-indexed official announcements show Nov 5 end of temporary Guam WIC waivers and future Nov 28 WIC clinic closure, both outside current-hour publication window; direct official homepage fetch timed out."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "publisher": "WBNG",
+        "published_at": "2026-09-11",
+        "exclusion_reason": "Spencer, NY only-grocery fire occurred September 11, well before observation window."
+      },
+      {
+        "url": "https://kutv.com/news/local/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "publisher": "KUTV",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "Story discusses preexisting Community Action Services and Food Bank closure in Provo, UT; published and incident occurred before prior heartbeat."
+      },
+      {
+        "url": "https://www.diningandcooking.com/us/79310/",
+        "publisher": "DiningAndCooking.com",
+        "published_at": null,
+        "exclusion_reason": "Page labeled Nov 6 but recycled historical Carrollton, OH grocery-closure narrative with event described as 'last January'; not a new current-hour incident."
+      },
+      {
+        "url": "https://www.health.mn.gov/people/wic/localagency/infosystem/thescoop.html",
+        "publisher": "Minnesota Department of Health",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "Nov 5 WIC newsletter contains planned November holiday closures and administrative updates, not an immediate program interruption."
+      }
+    ],
+    "result": "No newly verified in-scope U.S. food-access disruption first reported or effective between 2026-11-06 11:43:37 and 12:51:12 PST.",
+    "limitations": "Targeted recall cannot guarantee nationwide completeness; indexed results include dated or republished historical closures. Recurring direct-page timeout at Guam DPHSS prevents live-site corroboration of indexed notices. Authoritative production collector and dedupe state were not inspected.",
+    "materiality": "DEGRADED due to one failed Guam official direct-page fetch; all 12 targeted searches and 3 other direct-source checks succeeded. This recurring isolated error is not considered a material loss of overall bounded coverage.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One private watch-ledger heartbeat only; no editorial approval, publication, social posting, merges, credential changes, schedule change or task disabling."
+  }
+}

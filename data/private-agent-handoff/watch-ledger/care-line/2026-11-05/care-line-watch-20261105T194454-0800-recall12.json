@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T194454-0800-recall12",
+  "scheduled_for": "2026-11-05T19:45:22-08:00",
+  "started_at": "2026-11-05T19:44:54-08:00",
+  "completed_at": "2026-11-05T19:46:01-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T18:47:02-08:00",
+    "end": "2026-11-05T19:46:01-08:00",
+    "basis": "Previous verified Care Line supplementary heartbeat completed_at through current observation. Also checked lagged Nov 5 reporting for prior-hour recalls; production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky organ procurement organization; termination notice; CCN 18P001",
+      "result": "Official CMS listing opened before the 12 supplementary searches. No newly posted November 5 notice or other new in-window CMS action visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closing closed overnight November 5 2026 US local news",
+      "hospital maternity labor delivery services halted closure November 5 2026 Nov 6",
+      "rural hospital emergency room service loss November 5 2026 announced",
+      "behavioral health inpatient psychiatric treatment hospital closing November 5 2026",
+      "dialysis center patients unable treatments closed Nov 5 2026 United States",
+      "oncology cancer infusion treatment center suspends operations Nov 5 2026 US",
+      "family medicine primary care clinic closing suddenly patients November 5 2026",
+      "ambulance EMS county service ceases stops operations November 5 2026",
+      "air medical helicopter ambulance base shut down closed November 5 2026",
+      "emergency room hospital maternity service reopened resumed November 5 2026 US",
+      "site:gov \"November 5, 2026\" \"CLIA\" suspension limitation \"Medicare\" termination",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital clinic emergency service closure November 5 2026"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System, PA",
+        "reason": "Previously recorded positive in the 12:48 Nov 5 watch; follow-on Nov 5 reporting duplicate.",
+        "url": "https://sharonregionalhealthsystem.org/"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center labor and delivery restoration, WV",
+        "reason": "Official November 5 announcement is a letter of intent with phased implementation starting July 1, 2027; service not restored at observation.",
+        "url": "https://governor.wv.gov/article/governor-morrisey-announces-reopening-labor-and-delivery-services-greenbrier-valley-medical"
+      },
+      {
+        "item": "Memorial West Lake behavioral health campus, IL",
+        "reason": "Nov 3 announcement describes expected future wind-down by December, not newly effective closure during this window.",
+        "url": "https://www.illinoistimes.com/news/memorials-west-lake-campus-to-close/"
+      },
+      {
+        "item": "District of Columbia mental health community residence closures",
+        "reason": "Nov 5 report aggregates closures through 2026 with no named, newly effective facility loss in the observation window.",
+        "url": "https://streetsensemedia.org/article/the-systems-broken-and-we-all-know-it-as-d-c-care-facilities-close-residents-fall-through-the-cracks/"
+      },
+      {
+        "item": "McCaysville, GA and Copperhill, TN flood disruptions",
+        "reason": "November 5 reporting documents bridges and city access disrupted but does not verify named healthcare provider or EMS service closure/suspension in the observation window.",
+        "url": "https://abcnews.com/US/catastrophic-flooding-leads-closure-cities-georgia-tennessee/story?id=137881801"
+      },
+      {
+        "item": "Dennys River Ambulance Service, ME",
+        "reason": "Oct 23 report describes future Nov 30 cessation, not newly effective in current window.",
+        "url": "https://www.wabi.tv/2026/10/23/longtime-emts-retirement-ends-maines-only-all-volunteer-ambulance-service/"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct official alert endpoint still inaccessible via research browser. Persistent limitation documented in prior watches, not newly material."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "United States, DC and territories; hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure, emergency and rural service loss, EMS/air-medical base closure, CMS provider and CLIA notices, effective reopening.",
+    "deduplication": "Verified most recent private heartbeat (completed Nov 5 at 18:47:02 PST) and used previously recorded Sharon positive and other exclusion history; independent production deduplication not available.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Non-exhaustive supplementary recall capped at 12 targeted searches, with possible local-report indexing delay; known Health First endpoint remains inaccessible; no new material search degradation found.",
+    "controls": "Exactly one durable watch heartbeat committed to ops/watch-ledger. No production mutation, approval, publishing, merge, schedule modification, credential change or task disable."
+  }
+}

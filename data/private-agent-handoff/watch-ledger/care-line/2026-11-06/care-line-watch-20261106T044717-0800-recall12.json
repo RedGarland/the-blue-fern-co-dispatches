@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T044717-0800-recall12",
+  "scheduled_for": "2026-11-06T04:45:22-08:00",
+  "started_at": "2026-11-06T04:47:17-08:00",
+  "completed_at": "2026-11-06T04:48:56-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T03:42:21-08:00",
+    "end": "2026-11-06T04:48:56-08:00",
+    "basis": "Since previous verified supplementary Care Line heartbeat completion, with Nov 5–6 publication-lag coverage. Production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), termination notice, CCN 18P001",
+      "result": "Official public-notices page inspected; no new notice dated Nov 3–6 visible.",
+      "citation": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "site:pa.gov \"Sharon Regional\" \"license\" \"November\" \"2026\"",
+      "\"Sharon Regional\" \"revoked\" \"admissions\" November 17 2026",
+      "hospital emergency department permanently closing suspended Friday November 6 2026 United States",
+      "hospital labor delivery maternity ward closure suspension November 6 2026",
+      "rural hospital emergency room hours reduced closed November 5 November 6 2026",
+      "ambulance EMS emergency medical service shutting down November 6 2026 county",
+      "air ambulance helicopter medical base closing suspended November 2026",
+      "primary care clinic closing patients November 6 2026 healthcare",
+      "dialysis oncology infusion service suspended patients November 5 6 2026",
+      "psychiatric behavioral inpatient hospital unit closing November 6 2026",
+      "hospital emergency department reopening resumed services November 6 2026",
+      "Puerto Rico Guam Virgin Islands Alaska hospital emergency ambulance clinic closure November 6 2026"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Sharon, Pennsylvania",
+        "reason": "Nov 4 ED closure and Nov 6 08:00 announced broader suspension previously documented by earlier watches; no newly verified incremental service-access event.",
+        "url": "https://www.post-gazette.com/business/healthcare-business/2026/11/04/sharon-regional-medical-center-suspends-operations-nov-6/stories/202611040058"
+      },
+      {
+        "item": "Sharon Regional license-revocation/admissions-ban claim",
+        "reason": "Prior unverified regulatory lead; targeted search did not yield a Pennsylvania Department of Health order or corroborated primary local report. Not promoted to finding.",
+        "url": null
+      },
+      {
+        "item": "TidalHealth Primary Care, Federalsburg, Maryland",
+        "reason": "Nov 15 planned closure already captured as Nov 5 supplemental finding; excluded duplicate.",
+        "url": null
+      },
+      {
+        "item": "Keokuk Area Hospital, Iowa",
+        "reason": "Announced financing/planned reopening, without completed restoration; excluded proposal.",
+        "url": "https://www.wgem.com/2026/11/05/plans-reopen-keokuk-area-hospital-making-progress-825k-federal-funding-secured/"
+      }
+    ],
+    "source_failures": [],
+    "navigation_notes": [
+      "An obsolete CMS URL failed to open; the current official CMS Public Notices page was retrieved successfully before all 12 additional targeted searches."
+    ],
+    "limitations": [
+      "Search results were sparse for the requested hourly window and cannot establish exhaustive absence of events.",
+      "Official CMS list is dated through Nov 2; absence of a new posted notice is not evidence that no unposted enforcement action exists.",
+      "Production deduplication not independently checked; prior watch ledger used for supplementary duplicate screening.",
+      "No approval, public publication, schedule edit, or disabling executed."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

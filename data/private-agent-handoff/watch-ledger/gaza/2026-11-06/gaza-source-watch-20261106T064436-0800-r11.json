@@ -1,0 +1,184 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T064436-0800-r11",
+  "scheduled_for": "2026-11-06T06:44:51-08:00",
+  "started_at": "2026-11-06T06:44:36-08:00",
+  "completed_at": "2026-11-06T06:46:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T05:46:32.603-08:00",
+    "end": "2026-11-06T06:46:38-08:00",
+    "basis": "From completion of the immediately preceding verified supplementary Gaza heartbeat to this run. Older items considered only as distinct, traceable omissions.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261106-almawasi-mohammed-nidal-barbakh-fatal-shooting",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176699",
+      "title": "Palestinian child killed by Israeli gunfire in southern Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-06",
+      "publication_date": "2026-11-06T16:40:00+02:00",
+      "event_date": "2026-11-06",
+      "location": "Bir 19 area, Al-Mawasi, west of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One reported child fatality: Mohammed Nidal Barbakh, 15, allegedly shot by Israeli forces",
+      "exact_supporting_passage": "Mohammed Nidal Barbakh was shot by Israeli forces in the Bir 19 area of al-Mawasi and later succumbed to his injuries.",
+      "source_type": "Local news agency field report citing medical sources; Arabic and English WAFA versions",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "first_identified_in_watch": "2026-11-06T06:44:36-08:00",
+        "matched_search_window": true,
+        "publication_time_basis": "WAFA English November 6 16:40 Palestine time, corresponding to 06:40 PST; Arabic report 16:30 Palestine time",
+        "corroboration": "Arabic and English reports from same WAFA organization, not independent confirmations",
+        "additional_url": "https://www.wafa.ps/news/2026/11/6/استشهاد-طفل-برصاص-الاحتلال-في-مواصي-خان-يونس",
+        "caveat": "Exact shooting and death times not independently verified. This is separate from the earlier recorded gunfire reaching Al-Mawasi tents; do not automatically conflate incidents."
+      }
+    },
+    {
+      "finding_id": "gaza-20261106-newborn-congenital-anomalies-ministry-assessment",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176698",
+      "title": "Gaza records 260 birth defect cases in first nine months of 2026",
+      "publisher": "WAFA; separate reporting by Anadolu",
+      "source_date": "2026-11-06",
+      "publication_date": "2026-11-06T16:14:00+02:00",
+      "event_date": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Newborns and maternal/neonatal healthcare; 260 congenital anomaly cases reported January–September 2026 vs. 184 over all of 2022 and 322 during 2025",
+      "exact_supporting_passage": "260 cases of congenital anomalies were recorded among newborns during the first nine months of 2026",
+      "source_type": "Gaza Health Ministry figures reported by WAFA, with attributed ministry statement and name of director-general in Anadolu",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "first_identified_in_watch": "2026-11-06T06:44:36-08:00",
+        "matched_search_window": true,
+        "reporting_period": "2026-01-01 to 2026-09-30",
+        "publication_time_basis": "WAFA English 16:14 and Arabic 15:57 local Palestine time, both after previous hourly completion",
+        "corroboration_url": "https://www.aa.com.tr/en/middle-east/gaza-records-260-congenital-anomaly-cases-in-9-months-exceeding-2022-total-health-ministry/4114358",
+        "caveat": "WAFA and Anadolu report the same underlying Health Ministry claim, not independent case audits. Different period lengths and absent live-birth denominators prevent direct prevalence comparisons; no causal attribution established. Treat as a newly published medical assessment, not a change that occurred within this hour."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary production Gaza collection and publication remain authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T054400-0800-r11-20261106T134632Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible and current crawl. Latest entries remained November 5 wheelchair support and September flash-appeal monitoring; no newly dated November 6 Gaza humanitarian situation item."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.who.int/news",
+          "https://www.emro.who.int/opt/"
+        ],
+        "result": "WHO global emergency and news pages accessible without new Gaza-specific health operations update; WHO EMRO OPT direct page returned HTTP 502, recurring restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"06/11/2026\" \"Gaza\" killed injured",
+      "site:wafa.ps 6 نوفمبر 2026 غزة شهداء اليوم الجمعة إصابات خيام",
+      "site:aa.com.tr/en/middle-east/ \"Nov 6, 2026\" Gaza civilians aid humanitarian",
+      "site:reuters.com/world/middle-east/ November 6 2026 Gaza ceasefire killed hostage",
+      "\"Mohammed Nidal Barbakh\" \"Nov 6\" Gaza al Mawasi 2026",
+      "Gaza 260 congenital anomalies newborns 2026 November 6 ministry health baseline births",
+      "site:apnews.com/article/ Gaza November 6 2026 killed aid hospital",
+      "site:aljazeera.com/news/2026/11/6/ Gaza Israeli gunfire killed child displacement aid",
+      "site:unicef.org OR site:unrwa.org Gaza November 6 2026 shelter water children humanitarian access",
+      "site:msf.org OR site:icrc.org Gaza November 6 2026 hospital ambulance evacuation fuel",
+      "Gaza November 6 2026 Rafah Kerem Shalom crossing aid trucks water food fuel UN OCHA",
+      "Gaza November 6 2026 ceasefire negotiations hostages detainees Israeli military civilians November latest"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English/Arabic",
+        "urls": [
+          "https://english.wafa.ps/Pages/LastNews",
+          "https://www.wafa.ps/Pages/LastNews"
+        ],
+        "result": "Direct latest-news lists identified the new child fatality and newly published congenital anomaly assessment; Arabic articles inspected for date and matching identity/figures."
+      },
+      {
+        "publisher": "Anadolu",
+        "urls": [
+          "https://www.aa.com.tr/en/middle-east",
+          "https://www.aa.com.tr/en/middle-east/gaza-records-260-congenital-anomaly-cases-in-9-months-exceeding-2022-total-health-ministry/4114358"
+        ],
+        "result": "The current Middle East index and searchable article text corroborated an attributable Health Ministry statement. Direct article fetch timed out."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible general emergency page, no newly dated acute change."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest published homepage update November 3; no novel dated emergency medical operational item."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and military operations with civilian impact",
+      "displacement/shelter",
+      "aid and crossings",
+      "food and water",
+      "maternal/neonatal healthcare, hospitals, ambulances, medical evacuations",
+      "fuel and infrastructure",
+      "detainees/hostages and ceasefire negotiations"
+    ],
+    "excluded": [
+      {
+        "item": "November 6 two fatalities from wounds in earlier Gaza City strikes",
+        "reason": "Previously recorded in November 6 00:40 PST watch."
+      },
+      {
+        "item": "November 6 Al-Mawasi gunfire into displaced tents, environment authority water/sewage/rubble totals",
+        "reason": "Previously recorded in November 6 03:46 PST watch; distinct from new named shooting fatality unless later linked."
+      },
+      {
+        "item": "November 6 UNRWA shelter/water assessment",
+        "reason": "Previously recorded in November 6 02:51 PST watch."
+      },
+      {
+        "item": "November 4 child amputee/prosthetic rehabilitation analysis",
+        "reason": "Previously recorded in November 6 04:47 PST watch."
+      },
+      {
+        "item": "Earlier Gaza casualty, crossing and ceasefire stories, November 5 hospital/attack reports",
+        "reason": "Earlier publications, no distinct newly verified operational change identified in this window."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "error": "HTTP 403 Forbidden",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/gaza-records-260-congenital-anomaly-cases-in-9-months-exceeding-2022-total-health-ministry/4114358",
+        "error": "Direct article fetch timeout; article search text and site homepage available",
+        "material_new_deterioration": false
+      }
+    ],
+    "conclusion": "Two traceable qualifying items: one new named child casualty reported after the prior check, and one newly issued maternal/newborn healthcare assessment that describes older records. External source access remains degraded, but independent direct publisher coverage is useful.",
+    "safeguards": "No approvals, publication, merge, post, schedule/permission/credential changes, or production modifications."
+  }
+}

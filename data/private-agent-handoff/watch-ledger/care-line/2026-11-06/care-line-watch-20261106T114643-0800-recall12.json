@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T114643-0800-recall12",
+  "scheduled_for": "2026-11-06T11:45:22-08:00",
+  "started_at": "2026-11-06T11:46:43-08:00",
+  "completed_at": "2026-11-06T11:48:18-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T10:45:52.290-08:00",
+    "end": "2026-11-06T11:48:18-08:00",
+    "basis": "Since prior completed supplementary watch; check lagged local reporting in a bounded 2-day recall where potentially missed. Production collector is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY) termination notice, CCN 18P001",
+      "result": "No later notice visible on official CMS public-notices table."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 6 2026 hospital closing emergency department suspension rural health news",
+      "November 6 2026 labor delivery maternity unit closure hospital patients",
+      "November 6 2026 behavioral health psychiatric unit closing treatment facility service",
+      "November 6 2026 dialysis oncology chemotherapy clinic closing discontinued service",
+      "November 6 2026 primary care family medicine rural clinic closure last doctor",
+      "November 6 2026 ambulance EMS service closing shutting down county rural",
+      "November 5 6 2026 air ambulance helicopter medical base closure suspended service US",
+      "November 6 2026 emergency department reopens after closing hospital services restored",
+      "November 6 2026 Medicaid Medicare hospital license revoked terminated CLIA suspension state health department",
+      "November 6 2026 Puerto Rico Guam Virgin Islands hospital clinic emergency ambulance closure notice",
+      "\"Nov 6, 2026\" hospital \"close\" \"clinic\" \"patients\" local",
+      "\"Nov 5, 2026\" \"shutting down\" \"health clinic\" \"hospital\" \"service\""
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Sharon, PA; emergency department and all hospital operations suspended effective 2026-11-06",
+        "reason": "Previously recorded in supplementary watch, including license-revocation regulatory development at 09:50; later summaries add no independent new access change.",
+        "source_url": "https://www.post-gazette.com/business/healthcare-business/2026/11/04/sharon-regional-medical-center-suspends-operations-nov-6/stories/202611040058"
+      },
+      {
+        "item": "Benefis Health System, Great Falls, MT outpatient behavioral-health discontinuation",
+        "reason": "Previously recorded in 10:43 preceding heartbeat; no newly verified material change."
+      },
+      {
+        "item": "Winchester Family Medicine, NH and TidalHealth Primary Care Federalsburg, MD",
+        "reason": "Already recorded in prior watch heartbeats."
+      },
+      {
+        "item": "AdventHealth Rockmart, GA",
+        "reason": "Extended urgent-care hours and additional cardiology capacity effective Nov 5; general expansion, not reopening/restoration of previously lost essential service.",
+        "source_url": "https://www.wlaq1410.com/2026/11/06/adventhealth-rockmart-expands-services-extends-hours-and-adds-cardiology-care/"
+      },
+      {
+        "item": "Kula Hospital, Maui, HI",
+        "reason": "Future restoration construction funded, but emergency department remains closed and no effective reopening date reported.",
+        "source_url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/"
+      },
+      {
+        "item": "Air Evac Decatur, IL helicopter base",
+        "reason": "Base closure effective Sep 16, 2026; outside current bounded recall.",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Guam emergency service storm suspensions",
+        "reason": "Search returned April 2026 announcements; no November new service disruption confirmed."
+      }
+    ],
+    "source_failures": [],
+    "limitations": [
+      "Bounded supplementary review is not exhaustive national or territory coverage.",
+      "No newly verified nonduplicate high-value access change in this observation window or immediate publication-lag recall.",
+      "Production collection and production deduplication remain authoritative; no primary-production check performed.",
+      "Searches used 2-day recency targeting but results may include stale indexed items; screened dates and access effect."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

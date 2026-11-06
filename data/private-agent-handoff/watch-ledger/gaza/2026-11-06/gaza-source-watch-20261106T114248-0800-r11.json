@@ -1,0 +1,235 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T114248-0800-r11",
+  "scheduled_for": "2026-11-06T11:44:51-08:00",
+  "started_at": "2026-11-06T11:42:48-08:00",
+  "completed_at": "2026-11-06T11:44:49-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T10:50:25-08:00",
+    "end": "2026-11-06T11:44:49-08:00",
+    "basis": "Previous verified Gaza supplementary heartbeat completion through this watch. OCHA document newly published/listed November 6, but individual impacts/measurements are from earlier periods; distinguish new source from new events.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 10
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026",
+      "title": "Humanitarian Situation Report | 5 November 2026",
+      "publisher": "UN OCHA, occupied Palestinian territory",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-06",
+      "source_type": "official humanitarian situation report / sector-partner data",
+      "classification": "follow-up",
+      "confidence": "high for documented UN reporting; not independent incident verification",
+      "discovery_context": "Newly listed on OCHA OPT publications page in this run, absent from the previous 10:50 PST heartbeat's checked publication listings. Report's Gaza reference period is primarily 27 October–2 November; publication clock time unverified. These are new-to-watch primary-source updates, not events proven to have happened during this watch hour.",
+      "finding_id": "gaza-ocha-20261106-egypt-shipments-food-meals",
+      "location": "Gaza Strip; shipments from Egypt through Israeli-controlled entry procedures",
+      "affected_population_system": "Humanitarian food distribution, cooked-meal recipients and subsidized bread production",
+      "event_date": "2026-11-01",
+      "event_date_context": "Israeli notification on November 1 of suspension of humanitarian and commercial shipments from Egypt, with exceptions; projected impact reported November 6.",
+      "exact_supporting_passage": "from approximately 600,000 to 330,000",
+      "finding_summary": "OCHA reports that continued suspension of supplies from Egypt could cut free cooked-meal distribution from about 600,000 to 330,000 meals per day (about 45%); bread output could fall from 280 to 259 tonnes daily. Conditional Food Security Sector forecast, not a measured reduction.",
+      "section": "Gaza Strip, paragraphs on Egypt shipments and Food Security Sector",
+      "evidence_basis": "OCHA Gaza section, lines 98-99; report highlights lines 17-20."
+    },
+    {
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026",
+      "title": "Humanitarian Situation Report | 5 November 2026",
+      "publisher": "UN OCHA, occupied Palestinian territory",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-06",
+      "source_type": "official humanitarian situation report / sector-partner data",
+      "classification": "follow-up",
+      "confidence": "high for documented UN reporting; not independent incident verification",
+      "discovery_context": "Newly listed on OCHA OPT publications page in this run, absent from the previous 10:50 PST heartbeat's checked publication listings. Report's Gaza reference period is primarily 27 October–2 November; publication clock time unverified. These are new-to-watch primary-source updates, not events proven to have happened during this watch hour.",
+      "finding_id": "gaza-ocha-20261106-maternal-neonatal-capacity",
+      "location": "Gaza Strip",
+      "affected_population_system": "Pregnant women, neonates, neonatal and special-care baby units",
+      "event_date": null,
+      "event_date_context": "Indicators refer to September 2026; no single incident/event date or count denominator given.",
+      "exact_supporting_passage": "neonatal unit occupancy reached 151 per cent",
+      "finding_summary": "Health Cluster figures published by OCHA: September neonatal occupancy 151%, special-care baby unit occupancy 199%; nearly 63% of deliveries classified high-risk; 123–179 additional neonatal beds needed during Q4. Retrospective capacity assessment.",
+      "section": "Stretched maternal services",
+      "evidence_basis": "OCHA report lines 117-120."
+    },
+    {
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026",
+      "title": "Humanitarian Situation Report | 5 November 2026",
+      "publisher": "UN OCHA, occupied Palestinian territory",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-06",
+      "source_type": "official humanitarian situation report / sector-partner data",
+      "classification": "follow-up",
+      "confidence": "high for documented UN reporting; not independent incident verification",
+      "discovery_context": "Newly listed on OCHA OPT publications page in this run, absent from the previous 10:50 PST heartbeat's checked publication listings. Report's Gaza reference period is primarily 27 October–2 November; publication clock time unverified. These are new-to-watch primary-source updates, not events proven to have happened during this watch hour.",
+      "finding_id": "gaza-ocha-20261106-pumps-failing-engine-oil",
+      "location": "Gaza Strip",
+      "affected_population_system": "Water, sewage and floodwater pumping systems; generator-dependent health equipment and ambulance logistics at risk",
+      "event_date": "2026-11-01",
+      "event_date_context": "Coastal Municipalities Water Utility warned of cascading system failures November 1; report describes existing pump failures and other health/transport systems as at risk.",
+      "exact_supporting_passage": "are already failing",
+      "finding_summary": "OCHA says floodwater and sewage pumps are already failing amid restrictions and shortages of engine oil, lubricants, spare parts and generator supplies. Neonatal/adult ventilators, cold chain and ambulances face potential disruption; these latter interruptions are risks, not verified outages.",
+      "section": "Shortages of engine oil threaten critical services",
+      "evidence_basis": "OCHA report lines 100-106."
+    },
+    {
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026",
+      "title": "Humanitarian Situation Report | 5 November 2026",
+      "publisher": "UN OCHA, occupied Palestinian territory",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-06",
+      "source_type": "official humanitarian situation report / sector-partner data",
+      "classification": "follow-up",
+      "confidence": "high for documented UN reporting; not independent incident verification",
+      "discovery_context": "Newly listed on OCHA OPT publications page in this run, absent from the previous 10:50 PST heartbeat's checked publication listings. Report's Gaza reference period is primarily 27 October–2 November; publication clock time unverified. These are new-to-watch primary-source updates, not events proven to have happened during this watch hour.",
+      "finding_id": "gaza-ocha-20261106-medical-evacuations-107",
+      "location": "Gaza Strip; Rafah and Kerem Shalom exit routes to Egypt and Jordan",
+      "affected_population_system": "Patients requiring external medical care and their accompanying caregivers",
+      "event_date": null,
+      "event_date_context": "OCHA Gaza humanitarian response reporting period 27 October–2 November 2026 unless otherwise noted; evacuation dates individually unspecified.",
+      "exact_supporting_passage": "107 patients, including 38 children",
+      "finding_summary": "OCHA reports humanitarian partners supported the evacuation of 107 patients, including 38 children, and 119 companions through Rafah and Kerem Shalom to Egypt and Jordan during the reporting period. Positive access activity, not an assertion of unrestricted evacuations.",
+      "section": "Humanitarian response activities at a glance – Gaza Strip / Health",
+      "evidence_basis": "OCHA report lines 121-130."
+    },
+    {
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026",
+      "title": "Humanitarian Situation Report | 5 November 2026",
+      "publisher": "UN OCHA, occupied Palestinian territory",
+      "source_date": "2026-11-05",
+      "publication_date": "2026-11-06",
+      "source_type": "official humanitarian situation report / sector-partner data",
+      "classification": "follow-up",
+      "confidence": "high for documented UN reporting; not independent incident verification",
+      "discovery_context": "Newly listed on OCHA OPT publications page in this run, absent from the previous 10:50 PST heartbeat's checked publication listings. Report's Gaza reference period is primarily 27 October–2 November; publication clock time unverified. These are new-to-watch primary-source updates, not events proven to have happened during this watch hour.",
+      "finding_id": "gaza-ocha-20261106-winter-shelter-deficit",
+      "location": "Gaza Strip",
+      "affected_population_system": "Displaced families needing weatherproof shelter and bedding",
+      "event_date": "2026-11-01",
+      "event_date_context": "Shelter Cluster needs and in-Gaza stocks as of November 1, newly published by OCHA November 6.",
+      "exact_supporting_passage": "approximately 121,000 tents",
+      "finding_summary": "Shelter Cluster estimates approximately 121,000 tents, 561,000 tarpaulins, 57,000 emergency shelter kits and 1.7 million mattresses needed for winter; in-Gaza stocks approximately 2,800 tents and 4,993 mattresses with no emergency shelter kits. These are stock/need assessments, not new displacement totals.",
+      "section": "Critical supply gaps undermine preparations for the cold and rainy season",
+      "evidence_basis": "OCHA report lines 107-114."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production collector/publisher and editorial gates remain authoritative. No publication, approval, schedule change or production changes.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T104912-0800-r11-20261106T185025Z.json",
+    "first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/publications",
+          "https://www.ochaopt.org/"
+        ],
+        "result": "Publication index newly lists Humanitarian Situation Report | 5 November 2026, published 6 November 2026. Homepage news feed still shows older items. Full report fetched and reviewed.",
+        "state": "accessible"
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.emro.who.int/opt/",
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt"
+        ],
+        "result": "WHO EMRO OPT direct route HTTP 502. WHO global crisis page accessible but no newly dated November 6 Gaza health update shown.",
+        "state": "partially inaccessible"
+      }
+    ],
+    "additional_targeted_search_count": 10,
+    "additional_targeted_search_queries": [
+      "Gaza November 6 2026 Israel ceasefire killed injured November 6 evening latest",
+      "site:english.wafa.ps/Pages/Details/ Gaza 6 November 2026 evening killed injured",
+      "site:aa.com.tr/en/middle-east Gaza Friday November 6 2026 latest gunfire aid casualties",
+      "Reuters AP Gaza November 6 2026 aid crossing Egypt closure meals 45 percent",
+      "site:unicef.org Gaza 6 November 2026 neonatal maternity hospitals medicines",
+      "site:msf.org OR site:icrc.org November 6 2026 Gaza medical evacuation hospital ambulances",
+      "site:reliefweb.int Gaza 6 Nov 2026 humanitarian situation food fuel shelters",
+      "غزة 6 نوفمبر 2026 الساعة التاسعة مساءً شهداء استهداف خيام مساعدات",
+      "Gaza November 6 2026 hostages detention ceasefire negotiations Rafah crossing latest",
+      "site:ochaopt.org Gaza humanitarian situation report 5 November 2026 medical evacuations oil tents meals"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Listings through 21:04 Palestine local time; no new Gaza item after 16:40 child shooting and 16:14 congenital anomalies, both already recorded."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "result": "Listings through 20:54 Palestine local time; more recent items focus on West Bank, diplomacy or non-Gaza activity."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "November 6 congenital-anomalies report already recorded, no new distinct Gaza event confirmed."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest displayed news 3 November; no new dated Gaza ambulance/medical interruption."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403 Forbidden; recurring."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and force affecting aid sites",
+      "displacement and shelter",
+      "aid and crossings",
+      "food, water and sewage",
+      "hospital capacity and maternal/newborn services",
+      "medical evacuations",
+      "fuel/transport and infrastructure risk",
+      "detention and hostages",
+      "ceasefire and negotiations"
+    ],
+    "excluded": [
+      {
+        "item": "WAFA November 6 child death in Khan Younis and congenital-anomalies health assessment",
+        "reason": "Already in previous Gaza watch heartbeats."
+      },
+      {
+        "item": "Gaza City wound-death cases, earlier tent gunfire, UNRWA water/shelter warnings, environmental damage, rehabilitation assessment",
+        "reason": "Already preserved in earlier November 6 watches, or retrospective with no new source evidence."
+      },
+      {
+        "item": "OCHA November 3 gunfire hitting Rafah tents and near UN humanitarian convoy",
+        "reason": "Potentially overlaps previous Rafah tent-gunfire finding; no independent proof of distinct incident. Preserve in source context, do not double-count."
+      },
+      {
+        "item": "OCHA November 6 report's 36 killed, 145 injured October 27–November 2; cumulative totals",
+        "reason": "Retrospective reporting and not a separately validated hourly casualty incident."
+      },
+      {
+        "item": "West Bank and unrelated Lebanon/Iran reports surfaced in searches",
+        "reason": "Outside Gaza scope."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "error": "HTTP 403 Forbidden",
+        "material_new_deterioration": false
+      }
+    ],
+    "limitations": "Search engine misses time-sensitive items; publication time of OCHA November 6 document not supplied, so unable to establish if posted strictly after 10:50 PST. Identified updates are newly recovered official reporting with earlier observation periods, not newly occurring hourly incidents. No independent verification of each sector-reported numeric estimate. WHO global, OCHA, WAFA, Anadolu and PRCS remained accessible.",
+    "notification_criteria": "Notify: new, traceable authoritative OCHA report with previously unrecorded high-value food access, medical capacity/evacuation, sewage/pump and shelter details. Known WHO/UNRWA failures persist without evidence of material new source degradation."
+  }
+}

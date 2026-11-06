@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T144922-0800-r11-20261106T224922Z",
+  "scheduled_for": "2026-11-06T14:45:54-08:00",
+  "started_at": "2026-11-06T14:49:22-08:00",
+  "completed_at": "2026-11-06T14:51:14.029-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T13:51:49-08:00",
+    "end_at": "2026-11-06T14:51:14.029-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Previous independently fetched ops/watch-ledger Food Line heartbeat completion through this observation. Screen both reporting and actual event/effective dates; do not promote older events by republishing or page update time.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall watch, not the primary nationwide production collector.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery store closed, lost, burned, or disaster-hit",
+      "Emergency food distributions canceled/suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food bank service closure or major food-access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T135031-0800-r11-20261106T215031Z.json",
+      "completed_at": "2026-11-06T13:51:49-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "bounded_query_context": [
+      "November 6 2026 \"only grocery store\" closed fire town",
+      "Nov 6 2026 sole grocery store shut down community food desert",
+      "November 6 2026 grocery store fire \"only\" \"town\"",
+      "Nov 6 2026 food pantry closed suddenly emergency",
+      "November 6 2026 food bank canceled distribution storm flood",
+      "Nov 6 2026 emergency food distribution cancelled power outage",
+      "site:gov November 6 2026 SNAP benefits interruption outage office closed",
+      "site:gov \"November 6, 2026\" \"WIC\" \"closed\" \"services\"",
+      "site:gov \"Nov. 6, 2026\" SNAP \"delayed\" OR \"suspended\"",
+      "November 6 2026 \"food bank\" \"closed\" storm flood",
+      "Nov 6 2026 \"food distribution\" \"canceled\" OR \"cancelled\" OR \"postponed\"",
+      "November 6 2026 pantry closure \"food\" emergency access"
+    ],
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "direct_page_checks": 6,
+    "successful_direct_page_checks": 5,
+    "failed_direct_page_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "publisher": "WEAU",
+        "published_at": "2026-11-03",
+        "exclusion_reason": "Eau Claire, Wisconsin pop-up cancellations for the remainder of 2026 were first announced November 3; article updated today without a newly identified cancellation in the current hourly interval. Already historical for this recall window."
+      },
+      {
+        "url": "https://www.fmpfoodbank.org/find_food/",
+        "publisher": "Feed My People Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Direct provider food-location page checked; no independently dated new current-hour service loss. Historical Eau Claire pop-up change is not a new hourly finding."
+      },
+      {
+        "url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "published_at": null,
+        "exclusion_reason": "Official direct page still lists Friday November 6 Līhuʻe emergency distribution at Hale Līhuʻe 4–5 p.m.; no cancellation identified. Scheduled event does not establish actual completion."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Nov 6 Middlesex office closure for previously scheduled festival and Nov 5 Lynchburg maintenance closure remain listed. No newly established SNAP/WIC-specific interruption since previous heartbeat."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Published schedule still shows November 7 and later food distributions; no current-window disaster cancellation indicated."
+      },
+      {
+        "url": "https://provo.com/news/utah-county-warming-center-community-action-closure-november-2026/",
+        "publisher": "Provo.com",
+        "published_at": "2026-11-06",
+        "exclusion_reason": "Nov 6 retrospective on Provo warming-center transfer after Community Action Services and Food Bank closure before Nov 1; not new food service interruption since prior check. Direct page could not be fetched (DisabledError); search-indexed summary only."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "publisher": "The U.S. Sun",
+        "published_at": "2026-11-04",
+        "exclusion_reason": "Daniels, WV Cornerstone IGA future Nov 30 closure announced before window, and status as the community's only grocery store was not established."
+      },
+      {
+        "url": "https://www.health.mn.gov/people/wic/localagency/infosystem/thescoop.html",
+        "publisher": "Minnesota Department of Health",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "Routine WIC system newsletter identifies planned holiday office/help-desk changes, not an immediate food-assistance interruption."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "publisher": "WBNG",
+        "published_at": "2026-09-11",
+        "exclusion_reason": "Spencer, NY sole grocery store fire occurred September 11, outside current window."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access disruption first reported or effective from 2026-11-06T13:51:49-08:00 to 2026-11-06T14:51:14.029-08:00.",
+    "limitations": "Twelve bounded web searches are recall-oriented, not exhaustive nationwide surveillance. One retrospective Provo.com direct fetch returned DisabledError, while five other direct checks and all searches completed. Search results contain older events and promotional/holiday listings. Production source intake and duplicate state were not independently inspected.",
+    "materiality": "DEGRADED because one direct source fetch was blocked. This one retrospective and non-qualifying Utah page did not materially reduce coverage for this hourly window; no alert warranted absent a qualifying new signal.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Created exactly one watch-ledger heartbeat. No editorial approvals, public publication, scheduling changes, credential changes, merges, or task disabling."
+  }
+}

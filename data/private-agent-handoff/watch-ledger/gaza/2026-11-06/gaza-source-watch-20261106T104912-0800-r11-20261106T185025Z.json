@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T104912-0800-r11-20261106T185025Z",
+  "scheduled_for": "2026-11-06T10:44:51-08:00",
+  "started_at": "2026-11-06T10:49:12-08:00",
+  "completed_at": "2026-11-06T10:50:25-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T09:45:37-08:00",
+    "end": "2026-11-06T10:50:25-08:00",
+    "basis": "Last verified Gaza supplementary watch heartbeat completion (09:45:37 PST) through this run; report publication date and event date distinguished and retrospective material excluded unless truly missed.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; primary daily Gaza production collector/publisher authoritative. No publication, approval, schedule or production modification.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T094150-0800-r11.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/",
+          "https://www.ochaopt.org/publications"
+        ],
+        "result": "Accessible. Home news current through Nov 5 (wheelchair story, September appeal monitoring); last Gaza humanitarian situation report listed Oct 29. No new independently dated acute change since previous check."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.emro.who.int/opt/",
+          "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt"
+        ],
+        "result": "WHO EMRO OPT returned HTTP 502 on both routes; alternate WHO global emergency overview accessible, latest Gaza-specific listed materials historical, no Nov 6 new system/evacuation update."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 6 2026 Friday latest 20:00 Jerusalem time Israeli fire killed injured civilians",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"06/11/2026\" killed wounded 08:00 PM",
+      "site:aa.com.tr/en/middle-east/ Gaza Nov 6 2026 latest Israeli strikes ceasefire casualties",
+      "Gaza Friday November 6 2026 Reuters AP newest violence ceasefire aid 18:00 UTC",
+      "site:ochaopt.org Gaza November 6 2026 medical water shelter evacuation new update",
+      "site:who.int Gaza November 6 2026 medical evacuation hospital emergency fuel",
+      "غزة 6 نوفمبر 2026 الساعة الثامنة مساءً قصف شهداء إصابات",
+      "غزة 6 تشرين الثاني 2026 20:00 21:00 قصف مستشفى مساعدات معابر",
+      "Gaza 6 November 2026 19:00 20:00 Palestine time water aid crossing trucks evacuation",
+      "site:unicef.org OR site:unrwa.org OR site:reliefweb.int Gaza 6 November 2026 displacement water food shelter humanitarian",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza 6 November 2026 hospital ambulance fuel medical evacuation",
+      "site:aljazeera.com/news/2026/11/6 OR site:middleeasteye.net Gaza Friday November 6 2026 latest Israel casualties ceasefire"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Checked Nov 6 feed through 20:37 Palestine time; entries later than prior check concern West Bank, Jerusalem, and diplomacy. Gaza child fatality (16:40) and anomalies report (16:14) already in earlier watch."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "result": "Checked Nov 6 feed through 20:05 Palestine time; post-16:30 entries West Bank, Jerusalem and other regions, no new Gaza development."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Checked index; most recent distinct Gaza casualty story listed Nov 5 and is pre-window; no newly dated operational development."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest listed news Nov 3. No new documented Gaza ambulance/health change."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Accessible Gaza emergency overview; displayed news most recently Oct 16 and background impacts, not a new hourly development."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403 Forbidden; recurring restriction."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "result": "robots.txt fetch denied; recurring restriction."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/gaza",
+        "result": "URL inaccessible by this reader; search did not yield verified new dated Gaza treatment capacity incident."
+      }
+    ],
+    "covered_classes": [
+      "civilian deaths and injuries",
+      "military operations with documented civilian impact",
+      "displacement and shelter",
+      "aid access",
+      "food and water",
+      "healthcare facilities, ambulances, transport, fuel and medical evacuations",
+      "infrastructure damage",
+      "crossings",
+      "detention and hostages",
+      "ceasefire and negotiations"
+    ],
+    "excluded": [
+      {
+        "item": "Nov 6 child shooting death in Khan Younis and Gaza congenital-anomalies assessment",
+        "reason": "Previously preserved in Nov 6 06:46 PST supplementary heartbeat; no independently documented change this hour."
+      },
+      {
+        "item": "Earlier wound deaths in Gaza City; UNRWA shelter/water estimates; water/sewage damage; tent gunfire and prosthetics assessments",
+        "reason": "Documented in earlier Nov 6 watches; duplicate or retrospective."
+      },
+      {
+        "item": "Nov 5 Gaza fatalities and Nov 1-3 Reuters/Al Jazeera incident reports",
+        "reason": "Predate previous watch and represent already-reported events."
+      },
+      {
+        "item": "Newer Nov 6 WAFA feed reports involving West Bank, Jerusalem, Lebanon",
+        "reason": "Outside Gaza watch scope."
+      },
+      {
+        "item": "Generic humanitarian needs on WHO and UNICEF pages; older OCHA and news items; unsupported crossing/aid claims",
+        "reason": "No new dated, traceable operational change established within window."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "error": "HTTP 403 Forbidden",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "error": "robots.txt fetch denied",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "MSF route",
+        "url": "https://www.msf.org/gaza",
+        "error": "URL inaccessible to reader",
+        "material_new_deterioration": false
+      }
+    ],
+    "limitations": "Hourly index coverage and publication latency limit completeness; sparse targeted-search hits. WHO EMRO, UNRWA, UN News and one MSF route unavailable, while OCHA, WHO global, UNICEF and established publisher feeds remained usable. No new verified qualifying development found, not proof none occurred.",
+    "notification_criteria": "No new qualifying development and only known recurring partial source restrictions, without new material watch failure; no user notification."
+  }
+}

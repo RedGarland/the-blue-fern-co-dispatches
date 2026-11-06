@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T024801-0800-recall12",
+  "scheduled_for": "2026-11-06T02:45:22-08:00",
+  "started_at": "2026-11-06T02:48:01-08:00",
+  "completed_at": "2026-11-06T02:51:16-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T01:46:12-08:00",
+    "end": "2026-11-06T02:51:16-08:00",
+    "basis": "Last independently verified Care Line heartbeat completed_at through this observation. Queries target Nov 5-6 coverage and publication-lag discoveries. Not the authoritative production collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY; OPO; termination notice CCN 18P001",
+      "result": "No public notice dated after Nov 2 was visible during this check. An initial legacy CMS URL was inaccessible, then the correct official Public Notices page was successfully opened."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "hospital emergency department closes diverts patients Friday November 6 2026 United States",
+      "maternity labor delivery unit closed suspended November 6 2026 hospital United States",
+      "rural hospital services closure emergency care November 5 2026 November 6 2026",
+      "mental health inpatient psychiatric behavioral hospital suspension closing November 5 2026",
+      "dialysis center clinic closed treatments moved November 5 2026 November 6 2026 United States",
+      "cancer oncology infusion clinic suspends closes November 5 2026 US",
+      "primary care rural clinic closing November 5 2026 November 6 2026 patients",
+      "ambulance EMS county base closure suspended service November 5 2026 November 6 2026",
+      "air ambulance helicopter medical transport base closing suspended November 5 2026 November 6 2026",
+      "hospital emergency department reopened resumed service November 5 2026 November 6 2026",
+      "Puerto Rico Guam US Virgin Islands Samoa hospital clinic ambulance service suspended November 5 2026 November 6 2026",
+      "Sharon Regional hospital emergency department November 6 2026 closure 8 am status Pennsylvania"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System, Sharon, Mercer County, PA: ED Nov 4 closure and general suspension",
+        "reason": "Previously recorded emergency-department closure (Nov 4, 7 p.m. EST) and general service suspension. Official hospital homepage now confirms the emergency department was inaccessible as of Nov 4; no independently confirmed new incremental access change during this hourly interval.",
+        "url": "https://sharonregionalhealthsystem.org/"
+      },
+      {
+        "item": "TidalHealth Primary Care, Federalsburg, MD",
+        "reason": "Nov 15 announced closure already captured in Nov 5 23:44 PST heartbeat; not a new finding."
+      },
+      {
+        "item": "Roseland Community Hospital maternity-unit closure, Chicago, IL",
+        "reason": "October 1 report about October closure; outside current new-development window.",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/"
+      },
+      {
+        "item": "Dr RN Cooper Hospital blood center closure",
+        "reason": "Mumbai, India; outside U.S. and territories.",
+        "url": "https://www.freepressjournal.in/mumbai/maharashtra-suspends-licences-of-40-blood-banks-mumbais-cooper-hospital-blood-centre-among-those-facing-action"
+      }
+    ],
+    "unresolved_high_priority_lead": {
+      "item": "Possible Pennsylvania Department of Health revocation of Sharon Regional Medical Center hospital license",
+      "reported_effect": "A Nov 6 syndicated/translated secondary report attributed to local 21 News says state licensure is revoked effective Nov 17, with a Nov 4 admission ban and suspension of ED care. Licensure action would be a materially distinct regulatory fact from previously logged service closure if verified.",
+      "url": "https://www.gongsmedia.com/archives/43502",
+      "primary_evidence_status": "Not verified: linked secondary article could not be opened; the local primary outlet www.wfmj.com was inaccessible and the state health newsroom did not surface the order. The search index excerpt alone is insufficient to elevate this as a qualifying verified finding.",
+      "disposition": "Hold for next authoritative document/local primary reporting verification; do not add as finding or approve."
+    },
+    "source_failures": [
+      {
+        "source": "Legacy CMS URL",
+        "issue": "Inaccessible on initial attempt; recovered with correct Public Notices page; official notices checked."
+      },
+      {
+        "source": "Gongs Media mirrored article",
+        "issue": "Web fetch disabled; search index excerpt only."
+      },
+      {
+        "source": "WFMJ/21 News",
+        "issue": "Direct site fetch restricted; primary local report could not be independently reviewed."
+      }
+    ],
+    "limitations": [
+      "Bounded web recall is neither exhaustive national collection nor production deduplication.",
+      "CMS latest visible 2026-11-02; older terminations/CLIA actions do not qualify as new.",
+      "The unverified regulatory action may have high impact; verification gap makes this run degraded.",
+      "Existing Health First alert endpoint was not retested; this run makes no claim of its restoration.",
+      "No approval, publication, schedule modification, or task disabling occurred."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261105T234416-0800-recall12",
+  "scheduled_for": "2026-11-05T23:45:22-08:00",
+  "started_at": "2026-11-05T23:44:16-08:00",
+  "completed_at": "2026-11-05T23:47:22-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-05T22:49:27.491-08:00",
+    "end": "2026-11-05T23:47:22-08:00",
+    "basis": "Previous verified care-line ops/watch-ledger heartbeat completed_at to this observation. Targeted November 5–6 reporting with limited publication-lag lookback. Supplemental recall only; primary production collector authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-md-federalsburg-tidalhealth-primarycare-20261115-closure",
+      "canonical_source_url": "https://www.wmdt.com/2026/11/1tidalhealth-to-close-rural-primary-care-center/",
+      "title": "TidalHealth to close rural Primary Care Center in Federalsburg",
+      "publisher": "47abc / WMDT",
+      "exact_supporting_passage": "On Sunday, November 15th, the clinic will shut their doors in Federalsburg for good.",
+      "source_published_date": "2026-11-02",
+      "state": "MD",
+      "city": "Federalsburg",
+      "county": "Caroline County",
+      "territory": null,
+      "event_type": "confirmed_primary_care_clinic_closure",
+      "service_line": "primary care",
+      "access_consequences": "TidalHealth Primary Care in Federalsburg has a confirmed November 15 closure; patients are being connected to alternate TidalHealth primary care sites in Bridgeville, Seaford, Delmar, and Georgetown. Local reporting notes increased travel burden and limited transportation for some residents. Closure not yet effective at observation.",
+      "affected_population": "Primary-care patients in Federalsburg and surrounding Caroline/North Dorchester county communities, particularly residents with limited transportation.",
+      "effective_date": "2026-11-15",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "strong_local_reporting_including_provider_statement",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "corroborating_source_url": "https://www.beckershospitalreview.com/finance/tidalhealth-shutters-rural-primary-care-clinic/",
+      "discovery_note": "Published Nov 2 and newly surfaced in this hourly recall, NOT newly announced/implemented in the 22:49–23:46 PST interval. Three recent prior verified heartbeat exclusion lists did not reference this closure. Production deduplication not independently verified; pending editorial/dedupe review."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), OPO CCN 18P001, termination notice",
+      "result": "Directly checked official CMS Public Notices before other targeted searches; no new notices after Nov 2 and no previously unseen recent CMS/CLIA action confirmed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "November 5 2026 November 6 hospital emergency department closure suspended services patients diverted",
+      "November 5 2026 November 6 labor delivery maternity hospital announced suspension services deliveries",
+      "November 5 2026 November 6 behavioral health psychiatric inpatient admissions facility closing",
+      "November 5 2026 November 6 rural hospital ER closing emergency services ambulance diversion",
+      "November 5 2026 November 6 dialysis center clinic closure patients moved treatment county",
+      "November 5 2026 November 6 cancer oncology infusion center service closed suspended hospital",
+      "November 5 2026 November 6 primary care family medicine clinic immediate closure announced patients",
+      "November 5 2026 November 6 ambulance service EMS paramedics station base closing suspension county",
+      "November 5 2026 November 6 air medical helicopter air ambulance base closure suspended flights service",
+      "November 5 2026 November 6 hospital emergency department maternity clinic reopened resumed care effective",
+      "November 5 2026 November 6 Puerto Rico Guam Virgin Islands American Samoa Northern Mariana Islands hospital clinic health services closed",
+      "TidalHealth Federalsburg primary care closes November 15 2026 announcement official November 5"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional ED and hospital acute/outpatient service shutdown, PA",
+        "reason": "ER closure Nov 4 previously captured in Nov 5 12:48 PST positive recall; announced general shutdown planned for Nov 6 08:00 EST (Nov 6 05:00 PST) and not effective in this window.",
+        "url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Benefis Great Falls northwest clinic and behavioral health/inpatient rehabilitation changes, MT",
+        "reason": "Nov 3–4 reports describe future Dec 19 clinic phase-out and later service transition; outside current window, with no newly verified immediate suspension.",
+        "url": "https://healthcarepropulsion.com/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/"
+      },
+      {
+        "item": "Kula Hospital, HI",
+        "reason": "Nov 2 announcement targets late summer 2027 restoration; hospital and ED remain closed, reopening not yet effective.",
+        "url": "https://www.hawaiinewsnow.com/2026/11/03/kula-hospital-targets-late-summer-2027-reopening-after-storm-damage/"
+      },
+      {
+        "item": "Guam Regional Medical City outpatient storm closure/restoration",
+        "reason": "Oct 17–20 historic disruption and resumption, not new in window.",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, IL base closure",
+        "reason": "September 16, 2026 historical closure; not new in window.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      }
+    ],
+    "source_failures": [
+      {
+        "url": "https://hf.org/alert",
+        "type": "official_endpoint_inaccessible",
+        "detail": "Direct official Health First alert endpoint still inaccessible in research browser, consistent with previous watches."
+      }
+    ],
+    "material_new_degradation": false,
+    "search_scope": "United States, DC, Puerto Rico, Guam, USVI, CNMI, American Samoa; emergency and rural service interruptions; hospital, ED, maternity, behavioral health, dialysis, oncology and primary care; EMS/air-medical bases; CMS provider/CLIA actions and effective restorations.",
+    "deduplication": "Checked preceding verified Nov 5 22:48 heartbeat and the 21:48, 19:44, and 18:45 heartbeat exclusion lists; no mention of Federalsburg. A default-branch GitHub code search did not find Federalsburg. Earlier production collection and full historical ops/watch-ledger not comprehensively searched.",
+    "production_collector_authoritative": true,
+    "production_collector_dedupe_verified": false,
+    "limitations": "Bounded 12-search supplementary recall, not exhaustive; Federalsburg is confirmed as a definite future closure but has announcement/reporting from Nov 2, so positive result is newly discovered to this watch, not a newly occurring change during the hourly interval. Index lag and production duplicate possibility remain. Health First endpoint access persistent.",
+    "controls": "One new heartbeat on ops/watch-ledger only; no approval, publication, merge, schedule/permissions/credentials changes or disabling of task."
+  }
+}

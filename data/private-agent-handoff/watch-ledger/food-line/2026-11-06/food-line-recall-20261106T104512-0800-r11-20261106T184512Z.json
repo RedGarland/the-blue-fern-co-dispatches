@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T104512-0800-r11-20261106T184512Z",
+  "scheduled_for": "2026-11-06T10:45:54-08:00",
+  "started_at": "2026-11-06T10:45:12-08:00",
+  "completed_at": "2026-11-06T10:46:16-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T09:49:15.016-08:00",
+    "end_at": "2026-11-06T10:46:16-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Prior independently verified heartbeat completed_at through this run's observation, screening both new reports and effective dates; events that clearly predate window excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall watch. Separate production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery store loss, closure, fire or disaster",
+      "Weather/disaster/outage/facility-damage cancellation or suspension of emergency food distributions",
+      "Abrupt food pantry or food bank service closure or major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T094748-0800-17ec8675b1a04589bef7051ab205d681.json",
+      "completed_at": "2026-11-06T09:49:15.016-08:00",
+      "status": "DEGRADED"
+    },
+    "search_engine": "fast",
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire November 6 2026 community",
+      "\"last grocery store\" closing November 2026 rural town",
+      "\"sole grocery store\" fire closure \"November\" \"2026\"",
+      "\"full service grocery\" closure fire Nov 6 2026",
+      "\"food distribution\" canceled storm November 6 2026 food bank",
+      "\"food distribution\" suspended flood power outage November 6 2026",
+      "\"food pantry\" \"closed\" \"November 6, 2026\" emergency",
+      "\"food bank\" suspended services November 6 2026 fire flood",
+      "SNAP benefits interrupted EBT outage November 6 2026 state official",
+      "WIC office closed weather November 6 2026 county health",
+      "site:gov \"SNAP\" \"November 6, 2026\" benefits delay shutdown",
+      "Guam Puerto Rico American Samoa WIC SNAP emergency closure November 6 2026"
+    ],
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "direct_page_checks": 6,
+    "successful_direct_page_checks": 6,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "November 5 recovery article lists a planned November 6 emergency mobile distribution at Hale Līhuʻe 4–5 p.m.; no fresh cancellation or suspension evidenced."
+      },
+      {
+        "url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "published_at": null,
+        "exclusion_reason": "Direct provider page displays dated October 20 and October 23 distribution details, not an updated November 6 interruption; page is stale for contemporaneous cancellation confirmation."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Middlesex County DSS scheduled closure November 6–9 due to Urbanna Oyster Festival and Lynchburg DSS maintenance closure from November 5 were already present in prior heartbeat; no new SNAP/WIC-specific disruption shown."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Prior Nov 5 Market closure and Nov 6 planned reopening unchanged; other November distribution dates listed, with no new disaster-related suspension."
+      },
+      {
+        "url": "https://www.hhs.nd.gov/",
+        "publisher": "North Dakota Health and Human Services",
+        "published_at": null,
+        "exclusion_reason": "Official SNAP purchase restrictions announced for November 1 effective date, predating watch window; no new benefits outage or suspension seen."
+      },
+      {
+        "url": "https://cnycentral.com/news/local/ghost-town-rebuilding-vital-parts-of-ovid-continues-year-after-massive-fire",
+        "publisher": "CNY Central",
+        "published_at": "2026-01-21",
+        "exclusion_reason": "Retrospective coverage of January 2025 Ovid Main Street grocery fire, not an incident during this hourly window."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access disruption between 09:49:15 and 10:46:16 PST on November 6, 2026. Results chiefly returned old grocery closures, out-of-country incidents, 2025 SNAP shutdown stories, scheduled service notices and older benefit rule changes.",
+    "limitations": "Targeted 12-search recall does not prove absence nationwide. Search index favored historical incidents despite recent date queries. Official Guam DPHSS website was not reattempted this run following repeated earlier timeouts; targeted search found no qualifying Guam interruption, but that does not independently establish Guam service status. Official Kauaʻi foodbank page has older dates. Production collector/deduplication state was not accessed.",
+    "materiality": "No search or direct-page retrieval failed this run; no current-window, independently verified high-value miss. SUCCESS/no_findings despite known recall limitations.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only this one private watch-ledger heartbeat created. No approval, publication, social posting, merge, permission/credential/schedule change or task disable."
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T044926-0800-r11-20261106T124926Z",
+  "scheduled_for": "2026-11-06T04:45:54-08:00",
+  "started_at": "2026-11-06T04:49:26-08:00",
+  "completed_at": "2026-11-06T04:50:04-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T03:45:36-08:00",
+    "end_at": "2026-11-06T04:50:04-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Previous verified Food Line heartbeat completion through bounded current check; a 2-3 day search-recency lookback was used for discovery only, with older/duplicate events excluded.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall, not the authoritative nationwide production collector.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Storm/flood/fire/outage/facility-damage cancellation of emergency food distributions",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T034449-0800-r11-20261106T114449Z.json",
+      "completed_at": "2026-11-06T03:45:36-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed November 6 2026 community",
+      "\"sole grocery store\" closing Nov 5 Nov 6 2026 town",
+      "\"last grocery store\" closure fire flood November 2026",
+      "\"full service grocery store\" closed flooding hurricane November 6 2026",
+      "\"food distribution\" canceled storm November 6 2026",
+      "\"mobile pantry\" canceled postponed November 6 2026 weather",
+      "\"food bank\" closed temporarily fire flooding November 6 2026",
+      "\"food pantry\" abrupt closure suspended service November 6 2026",
+      "site:gov \"WIC\" office closed \"November 6, 2026\"",
+      "site:gov \"SNAP\" \"November 6, 2026\" benefits delayed outage",
+      "EBT outage food assistance access suspended November 6 2026 state",
+      "Hawaii hurricane Lowell \"food distribution\" \"canceled\" November 6 2026"
+    ],
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 4,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Direct article continues to list Hawaiʻi Foodbank Kauaʻi mobile emergency pantry at Hale Līhuʻe 4–5 PM on Friday Nov 6 as scheduled; no newly reported cancellation."
+      },
+      {
+        "url": "https://www.vdh.virginia.gov/norfolk/",
+        "publisher": "Norfolk Health Department (Virginia Department of Health)",
+        "source_published_at": null,
+        "exclusion_reason": "Current notice concerns delayed opening of Vital Records Office on Nov 6, not WIC or food assistance; no qualifying access interruption substantiated."
+      },
+      {
+        "url": "https://www.hhs.nd.gov/",
+        "publisher": "North Dakota Health and Human Services",
+        "source_published_at": null,
+        "exclusion_reason": "Homepage describes previously announced SNAP eligible-item changes effective Nov 1; no newly announced Nov 6 processing, payment, or access interruption."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Spencer, NY only-grocery-store fire and access loss happened in September; historical duplicate outside current observation window."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access disruption identified in 2026-11-06 03:45:36–04:50:04 PST.",
+    "limitations": "Targeted web retrieval is bounded and can lag local or official postings; many indexed results were historical (including 2025 federal SNAP shutdown reports) or non-US. Absence of findings does not establish nationwide absence. Production collection and dedupe were not inspected.",
+    "materiality": "SUCCESS: All 12 targeted search requests returned usable response coverage and four direct pages loaded. No material access/search failure.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one ops/watch-ledger heartbeat created; no approval, publication, merge, production data mutation, permission/credential/schedule change or task disable."
+  }
+}

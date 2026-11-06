@@ -1,0 +1,80 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T234958-0800-r11-20261106T074958Z",
+  "scheduled_for": "2026-11-05T23:45:54-08:00",
+  "started_at": "2026-11-05T23:49:58-08:00",
+  "completed_at": "2026-11-06T07:51:16.701Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T22:48:57.369-08:00",
+    "end_at": "2026-11-06T07:51:16.701Z",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "Since prior read-back-verified supplementary heartbeat completion; publication date or a retrospective historical statement alone does not establish a newly occurring or newly reported interruption.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall; production Food Line nationwide collection remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting only, sole, last or full-service grocery in community",
+      "Canceled or suspended emergency food distributions due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food bank closure/major reduction",
+      "Official new SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T224733-0800-r11-20261106T064733Z.json",
+      "completed_at": "2026-11-06T06:48:57.369Z",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "November 5 2026 late night \"only grocery store\" closed destroyed fire small town",
+      "November 6 2026 \"sole grocery store\" closes fire community",
+      "November 6 2026 \"last grocery store\" closing food desert",
+      "November 5 2026 \"food distribution\" cancelled storm flooding emergency",
+      "November 6 2026 \"food distribution\" canceled power outage severe weather",
+      "November 6 2026 \"mobile food pantry\" cancellation weather storm",
+      "November 5 2026 \"food pantry\" suddenly closed storm fire no longer serving",
+      "November 6 2026 \"food bank\" temporarily closed emergency repairs outage",
+      "November 6 2026 \"food pantry\" suspended operations flooding facility damage",
+      "site:gov \"November 6, 2026\" \"SNAP\" \"system outage\" benefits",
+      "site:gov \"November 5, 2026\" \"WIC\" \"closed\" \"outage\"",
+      "November 6 2026 state agency EBT benefits interrupted not working SNAP outage"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Nov. 5 article explicitly lists Hawaiʻi Foodbank Kauaʻi's Friday emergency mobile pantry as still scheduled; not a cancellation or suspension. Article predates late-night observation window."
+      },
+      {
+        "url": "https://fresnoeoc.org/food-distributions/",
+        "publisher": "Fresno Economic Opportunities Commission",
+        "source_published_at": null,
+        "exclusion_reason": "Official provider event calendar lists November 5 and 6 2026 distributions without reporting cancellation or suspension. Routine schedule excluded."
+      },
+      {
+        "url": "https://www.kauai.gov/Government/Departments-Agencies/Emergency-Management-Agency",
+        "publisher": "County of Kauaʻi Emergency Management Agency",
+        "source_published_at": null,
+        "exclusion_reason": "County recovery/alert page contains historical hurricane response, no new food distribution suspension or food assistance access interruption established in window."
+      }
+    ],
+    "result": "No new, independently verified qualifying signal since 2026-11-05 22:48:57.369 PST; no positive findings.",
+    "limitations": "Twelve targeted web queries are supplementary recall, not an exhaustive audit. Search results were largely unrelated or historical, and date-only mentions cannot establish an incident within this narrow hourly window. Search result recency and page publication times are not equivalent to event time.",
+    "materiality": "All twelve targeted web searches returned usable responses. Three direct source pages were reachable. No material degradation.",
+    "action_limits": "No approval, publication, merge, production collection mutation, permissions or schedule change, or task disabling."
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261105T194224-0800-r11-20261106T034359Z",
+  "scheduled_for": "2026-11-05T19:44:51-08:00",
+  "started_at": "2026-11-05T19:42:24-08:00",
+  "completed_at": "2026-11-05T19:43:59-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "start": "2026-11-05T18:49:51-08:00",
+    "end": "2026-11-05T19:43:59-08:00",
+    "basis": "From latest verified supplementary Gaza watch completion through bounded current check. Gaza-local Nov 6 and U.S. Pacific Nov 5 were both considered. Newly discovered older reports are not equated with newly occurred events.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; primary daily Gaza production collector/publisher remains authoritative. No public publication, approval, scheduling, credential, permission or production mutations.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-05/gaza-source-watch-20261105T184829-0800-r11-20261106T024951Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/updates"
+        ],
+        "result": "Accessible. Most recent visible updates are 5 Nov 2026 disability-support story and September 2026 retrospective response-monitoring report. Latest Gaza situation report visible is 29 Oct, posted 31 Oct. No new qualifying development during the window."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.emro.who.int/opt/",
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt"
+        ],
+        "result": "WHO EMRO occupied Palestinian territory direct page returned HTTP 502 again. WHO global oPt Gaza overview accessible, but no verified newly dated in-window hospital, ambulance, functioning capacity, fuel or medical-evacuation development."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 6 2026 early morning Friday 6am airstrike casualties injuries 2026",
+      "site:english.wafa.ps/Pages/Details/ \"06/November/2026\" Gaza killed injured ambulance",
+      "site:aa.com.tr/en/middle-east \"Nov 6, 2026\" Gaza strikes killed wounded displaced",
+      "site:aljazeera.com/news/2026/11/6/ Gaza Friday November 6 casualties storm",
+      "site:unrwa.org \"6 November 2026\" Gaza shelters displaced flooding",
+      "site:unicef.org \"6 November 2026\" Gaza water sewage children",
+      "site:wfp.org \"6 November 2026\" Gaza food supplies crossings",
+      "site:palestinercs.org Gaza \"6 November 2026\" ambulance hospital evacuation",
+      "Gaza November 6 2026 dawn rainfall flooding tents wind civil defense displaced",
+      "November 6 2026 Gaza Rafah Kerem Shalom humanitarian aid trucks medical evacuation crossing changes",
+      "Gaza November 6 2026 ceasefire negotiation hostages detention exchange latest midnight",
+      "site:reuters.com/world/middle-east/ \"November 6, 2026\" Gaza civilians casualties medical food"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest displayed Gaza incident remains Al-Shati refugee camp strike of 5 Nov at 18:51 Gaza local time, already captured in earlier watch. Other listed newer headlines concern West Bank. Gaza cumulative casualty toll not a new distinct incident."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible. Latest displayed Middle East headlines do not establish a new Gaza civilian-impact or humanitarian incident in this Pacific-hour window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible. Most recent featured release dated 3 Nov 2026; no distinct new Gaza ambulance or health-service status verified."
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; no verified new food-access development dated in the bounded window."
+      },
+      {
+        "publisher": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible. Nov 6 short video on Gaza makeshift seawalls reiterates Nov 5 winter shelter feature; not a verified new flood or displacement consequence. Nov 5 Gaza casualties match preceding watch. Nov 4 child-amputee medical-access story predates interval."
+      }
+    ],
+    "high_value_classes_checked": [
+      "Civilian deaths, injuries, displacement and civilian-impact military operations",
+      "Humanitarian aid access, food, drinking water, damaged infrastructure and crossings",
+      "Hospital functioning capacity, healthcare disruption, ambulances, medical transport, fuel and patient evacuations",
+      "Detention, hostages, ceasefire and negotiation shifts",
+      "Weather-related shelter and flood risk for displaced families"
+    ],
+    "excluded": [
+      {
+        "item": "5 Nov Al-Shati Gaza City deaths; Nuseirat Al-Ishreen Street injuries; other 5 Nov Gaza deaths and Ministry of Health cumulative tallies",
+        "reason": "Already checked/captured in prior watches or cumulative, without new unique in-window detail."
+      },
+      {
+        "item": "5 Nov Civil Defense forecast warning for approximately 950,000 at risk of flooding; 6 Nov makeshift seawall video; 5 Nov Al Jazeera winter shelter feature",
+        "reason": "Previously recorded warning or story continuing the same circumstance; no newly evidenced flooding or harm."
+      },
+      {
+        "item": "4 Nov child amputee medical evacuation restrictions; older WHO/UNICEF/WFP reporting and OCHA retrospective releases",
+        "reason": "Predates previous watch or not a distinct new event in interval."
+      },
+      {
+        "item": "West Bank olive grove, displacement and detention headlines; unrelated search results",
+        "reason": "Outside Gaza geographic scope."
+      }
+    ],
+    "degradation": {
+      "reason": "WHO EMRO oPt regional route returned 502, as in prior successive checks, limiting direct regional medical coverage. Global WHO, OCHA, PRCS, WAFA and other established-source routes remained accessible.",
+      "material_new_deterioration": false,
+      "coverage_sufficient_for_bounded_supplementary_watch": true
+    },
+    "outcome_note": "No new distinct, traceable qualifying Gaza developments verified since prior hourly watch. Persistent known access degradation unchanged; no substantive need for user notification. Production and recurring watch unchanged."
+  }
+}

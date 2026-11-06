@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T034106-0800-recall12",
+  "scheduled_for": "2026-11-06T03:41:06-08:00",
+  "started_at": "2026-11-06T03:41:06-08:00",
+  "completed_at": "2026-11-06T03:42:21-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T02:51:16-08:00",
+    "end": "2026-11-06T03:42:21-08:00",
+    "basis": "Since the prior verified Care Line heartbeat completed_at. Searches included Nov 5-6 publication-lag coverage; a supplementary recall, not the authoritative production collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), OPO termination notice, CCN 18P001",
+      "result": "Official CMS page opened successfully; no notice dated Nov 3-6 visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "Sharon Regional medical center Pennsylvania Department of Health license revoked November 17 2026 admissions November 4 2026",
+      "hospital emergency department closure suspended service November 6 2026 announcement",
+      "hospital labor delivery maternity unit closing service November 6 2026",
+      "county ambulance EMS service suspended closed November 6 2026 rural",
+      "November 6 2026 primary care medical clinic permanently closing patients notice",
+      "psychiatric behavioral health hospital inpatient unit closes November 5 6 2026",
+      "site:pa.gov Sharon Regional November 2026 license revoked",
+      "Sharon Regional license November 17 2026",
+      "air ambulance base closes suspends operations November 5 2026 November 6 2026 United States",
+      "dialysis center oncology infusion treatments suspended November 5 November 6 2026 US",
+      "hospital emergency department rural reopened resumed service November 6 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa clinic hospital ambulance suspension November 5 6 2026"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Health System, Sharon, PA — emergency department closure and broader suspension",
+        "reason": "Hospital first announced closure effective Nov 4 at 7 p.m. EST and broader service suspension; already documented in earlier hourly watches. No new independently verified incremental effect within this window.",
+        "url": "https://sharonregionalhealthsystem.org/"
+      },
+      {
+        "item": "Keokuk Area Hospital, Keokuk, IA — proposed rural emergency hospital reopening",
+        "reason": "Nov 5 local report covers $825,000 in funding and plans; construction/state approvals expected in 2027, with no actual care restoration yet.",
+        "url": "https://www.wgem.com/2026/11/05/plans-reopen-keokuk-area-hospital-making-progress-825k-federal-funding-secured/"
+      },
+      {
+        "item": "TidalHealth Primary Care, Federalsburg, MD — Nov 15 future clinic closure",
+        "reason": "Already logged as a new recall finding in the Nov 5 23:44 PST watch; not a duplicate finding."
+      },
+      {
+        "item": "Kula Hospital, Maui, HI — planned post-storm restoration",
+        "reason": "Still closed; Nov 2 local reporting targets late summer 2027, not an effective reopening.",
+        "url": "https://www.hawaiinewsnow.com/2026/11/03/kula-hospital-targets-late-summer-2027-reopening-after-storm-damage/"
+      },
+      {
+        "item": "Air Evac Lifeteam, Decatur, IL — September air base closure",
+        "reason": "September 16, 2026 effective closure, outside current hourly window.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      }
+    ],
+    "unresolved_prior_lead": {
+      "item": "Potential Pennsylvania Department of Health license revocation/admissions ban at Sharon Regional",
+      "reason": "Previously raised as an unverified possible distinct regulatory action. Targeted searches for state documentation and the alleged Nov 17 date did not produce a verifiable order or primary local report; retain as unverified, not as a finding.",
+      "disposition": "Do not approve, publish, or claim as verified; prioritize primary documentation in a subsequent watch if available."
+    },
+    "source_failures": [],
+    "limitations": [
+      "Only 12 additional targeted searches plus the official CMS Public Notices check; results are not exhaustive.",
+      "Production deduplication and authoritative collection remain outside this supplementary watch.",
+      "No newly verified qualifying service-access changes were identified.",
+      "Previously inaccessible Health First endpoint was not retested; no claim of recovery.",
+      "No approvals, publication, schedule changes, or disabling."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

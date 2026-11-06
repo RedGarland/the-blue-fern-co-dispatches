@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T034449-0800-r11-20261106T114449Z",
+  "scheduled_for": "2026-11-06T03:45:54-08:00",
+  "started_at": "2026-11-06T03:44:49-08:00",
+  "completed_at": "2026-11-06T03:45:36-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T02:47:30.860-08:00",
+    "end_at": "2026-11-06T03:45:36-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Last verified Food Line watch-ledger heartbeat completion to current bounded check; 1-2 day index/publication lag lookback was used only to surface candidates, not to classify historical events as newly occurring.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall, not the authoritative nationwide production collector.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Storm/flood/fire/outage/facility-damage cancellation of emergency food distributions",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T024457-0800-r11-20261106T104457Z.json",
+      "completed_at": "2026-11-06T02:47:30.860-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" fire closed November 6 2026 town",
+      "\"sole grocery store\" closing November 6 2026 community",
+      "\"last grocery store\" fire closure November 5 2026 November 6",
+      "\"full service grocery\" closed storm flood November 6 2026",
+      "\"food pantry\" closed suddenly \"November 6\" 2026",
+      "\"food bank\" suspended operations \"November 6\" 2026",
+      "\"food distribution\" cancelled storm flood November 6 2026",
+      "\"mobile pantry\" cancellation \"November 6\" 2026 power",
+      "site:gov \"WIC\" \"office\" \"closed\" \"November 6, 2026\" weather",
+      "site:gov \"SNAP\" \"interruption\" \"November 6, 2026\" EBT",
+      "Nov 6 2026 state EBT SNAP benefits outage unavailable official notice",
+      "Nov 6 2026 food pantry closes emergency flooding hurricane Lowell canceled Hawaii"
+    ],
+    "direct_page_checks": 3,
+    "successful_direct_page_checks": 3,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "publisher": "WBNG",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Spencer, New York sole-grocery fire and loss occurred in September 2026, well before the current hourly window."
+      },
+      {
+        "url": "https://communityactionprovo.org/",
+        "publisher": "Community Action Services and Food Bank",
+        "source_published_at": null,
+        "exclusion_reason": "Provider confirms temporary closure effective November 1, 2026; known from previous heartbeat; no new announcement/change during this hour."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Nov 5 report expressly lists Hawaiʻi Foodbank Kauaʻi emergency mobile pantry as still scheduled for Friday Nov 6, 4-5 PM; no cancellation."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "source_published_at": null,
+        "exclusion_reason": "Official alert index did not substantiate a newly effective SNAP/EBT access interruption during this hourly window."
+      },
+      {
+        "url": "https://ctmirror.org/2025/11/06/ct-snap-suspended-food-pantries/",
+        "publisher": "CT Mirror",
+        "source_published_at": "2025-11-06",
+        "exclusion_reason": "Date collision: 2025 reporting, not November 2026."
+      }
+    ],
+    "result": "No newly verified qualifying U.S. food-access disruption found for 2026-11-06 02:47:30.860–03:45:36 PST.",
+    "limitations": "Search results contained historical closures, 2025 SNAP news and unrelated official pages; targeted recall does not prove nationwide absence. Direct checks supported known historical exclusions. The production collection/dedupe was not independently inspected.",
+    "materiality": "SUCCESS: All 12 targeted searches returned usable coverage and three direct checks loaded. No materially failed source/search.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one private ops/watch-ledger heartbeat created; no approval, publication, merge, production mutation, permission/credential/schedule change or task disable."
+  }
+}

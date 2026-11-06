@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261105T204246-0800-r11-20261106T044246Z",
+  "scheduled_for": "2026-11-05T20:45:54-08:00",
+  "started_at": "2026-11-05T20:42:46-08:00",
+  "completed_at": "2026-11-05T20:43:54-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-05T19:47:59-08:00",
+    "end_at": "2026-11-05T20:43:54-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-05",
+    "basis": "From the previous verified supplementary heartbeat completion to this bounded check. Distinguish date-only or indexed content from incident/new notice timestamps.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall focused only on four high-value food-access miss classes; Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Sole/only/last/full-service grocery loss, closure, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-05/food-line-recall-20261105T194604-0800-r11-20261106T034604Z.json",
+      "completed_at": "2026-11-05T19:47:59-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "November 5 2026 last only grocery store closed fire community rural",
+      "November 5 2026 sole grocery store shut down town fire outage",
+      "Nov 5 2026 full service grocery last supermarket closed residents",
+      "November 5 2026 canceled emergency food distribution storm flooding power outage",
+      "November 5 2026 food bank mobile pantry distribution cancelled weather hurricane storm",
+      "November 5 2026 emergency food distribution suspended facility damage closure",
+      "November 5 2026 food pantry abrupt closing food bank service suspended",
+      "November 5 2026 community food bank temporary closure clients unable service",
+      "November 5 2026 food pantry cancelled service hours emergency fire flood",
+      "site:gov \"November 5, 2026\" \"SNAP\" outage disruption EBT benefits",
+      "site:gov \"November 5, 2026\" \"WIC\" closed outage appointments",
+      "November 5 2026 state SNAP EBT card system outage WIC suspended benefits"
+    ],
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 4,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.slocounty.ca.gov/departments/slo-health/public-health/all-public-health-services/health-promotion",
+        "publisher": "San Luis Obispo County Department of Public Health",
+        "source_published_at": null,
+        "exclusion_reason": "Search excerpt claimed routine Nov. 5 14:30–16:00 meeting closure, but direct official page currently displays a Sep. 7 holiday closure; no verified new urgent WIC interruption within the 19:47:59–20:43:54 PST window. Inconsistent indexed/direct content."
+      },
+      {
+        "url": "https://wic.sbcounty.gov/event/newborn-feeding-secrets/2026-11-05/",
+        "publisher": "San Bernardino County WIC",
+        "source_published_at": null,
+        "exclusion_reason": "Official page redirects to older class; sitewide Rancho Cucamonga WIC office closure effective Oct. 16 with nearby alternatives, outside observation window."
+      },
+      {
+        "url": "https://ebtday.com/shutdown/",
+        "publisher": "EBT Day (independent, non-government)",
+        "source_published_at": "2026-10-30",
+        "exclusion_reason": "Status last reviewed Oct. 30, not a new state or federal official SNAP notice; 2025 shutdown details in page are historical."
+      },
+      {
+        "url": "https://www.the-independent.com/news/world/americas/rubys-pantry-closure-food-bank-minnesota-north-dakota-b2951335.html",
+        "publisher": "The Independent",
+        "source_published_at": "2026-04-03",
+        "exclusion_reason": "Ruby's Pantry abrupt multi-state service loss occurred in early April 2026, not new in this hourly window."
+      },
+      {
+        "url": "https://www.wcvb.com/article/crews-battle-large-3-alarm-fire-at-rockport-business-town-water-supply-affected/73811000",
+        "publisher": "WCVB",
+        "source_published_at": "2026-09-20",
+        "exclusion_reason": "Fire destroyed building that historically held the town's only grocery store; no documented current grocery loss and outside time window."
+      },
+      {
+        "url": "https://www.aol.com/articles/village-spencer-loses-only-grocery-223930000.html",
+        "publisher": "WETM via AOL",
+        "source_published_at": "2026-09-14",
+        "exclusion_reason": "Village of Spencer sole-grocery fire was on Sep. 11 and previously reviewed; duplicate/historical."
+      }
+    ],
+    "result": "No new qualifying U.S. food-access disruption verified since previous 19:47:59 PST heartbeat.",
+    "limitations": "Twelve targeted searches provide a bounded recall check, not proof of national absence; one official WIC indexed snippet differed from directly retrieved page; 2025 SNAP news and historic pantry closures recirculate in results.",
+    "materiality": "All 12 searches and four direct source inspections returned usable content. Indexed/direct discrepancy excluded as unverified, with no material source outage; SUCCESS.",
+    "schedule_note": "The run was invoked at 20:42:46 PST, ahead of nominal 20:45:54 scheduled clock slot; no schedule was changed.",
+    "action_limits": "No approval, publication, merge, schedule change, task disabling, credential change or production action."
+  }
+}

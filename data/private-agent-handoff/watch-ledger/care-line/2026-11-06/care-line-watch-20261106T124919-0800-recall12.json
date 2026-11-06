@@ -1,0 +1,127 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T124919-0800-recall12",
+  "scheduled_for": "2026-11-06T12:45:22-08:00",
+  "started_at": "2026-11-06T12:49:19-08:00",
+  "completed_at": "2026-11-06T12:52:41-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T11:48:18-08:00",
+    "end": "2026-11-06T12:52:41-08:00",
+    "basis": "Since prior completed supplementary watch; with a bounded two-day recall for concrete service losses missed in the previous hourly search. Production collection remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-fl-melbourne-sea-pines-rehabilitation-hospital-indefinite-closure-20261106",
+      "canonical_source_url": "https://www.sec.gov/Archives/edgar/data/785161/000078516126000242/november2026pressrelease.htm",
+      "title": "Encompass Health announces indefinite closure of 90-bed Sea Pines Rehabilitation Hospital after flood evacuation",
+      "publisher": "Encompass Health Corporation (official press release, SEC Form 8-K Exhibit 99.1)",
+      "exact_supporting_passage": "The flooding resulted in substantial damage to Sea Pines, and the hospital remains closed indefinitely.",
+      "source_published_date": "2026-11-06",
+      "state": "Florida",
+      "city": "Melbourne",
+      "county": "Brevard County",
+      "territory": null,
+      "event_type": "indefinite_inpatient_rehabilitation_hospital_closure",
+      "service_line": "Inpatient rehabilitation hospital; 90 licensed beds per company release",
+      "access_consequences": "Storm flooding Nov. 1–2 caused evacuation and closure; the rehabilitation hospital remains closed indefinitely. Patients were transferred to other appropriate facilities or discharged home. The partners are evaluating repairs or replacement, with no effective reopening date. Local inpatient rehabilitation capacity is reduced; the release does not establish that other hospitals or emergency departments are closed.",
+      "affected_population": "Sea Pines inpatients and greater Melbourne/Brevard County patients needing inpatient rehabilitation; exact patient count not reported; 90 beds is hospital capacity, not a count of displaced patients.",
+      "effective_date": null,
+      "announcement_date": "2026-11-06",
+      "confidence": "HIGH",
+      "source_role": "first_party_press_release_in_SEC_EDGAR_exhibit_99_1",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "evidence_notes": "The physical closure occurred during November 1–2, 2026 storms, with exact closing date not separately stated; event effective_date therefore null. Formal first-party press release filed with SEC November 6, available prior to this hourly window but not recorded in the preceding 11:46 supplementary heartbeat. Newly recalled, not newly occurred within this hour. Production deduplication is not verified; do not advance without that check."
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY; termination notice, CCN 18P001",
+      "result": "No new November 3–6 termination, rescission, CLIA limitation/suspension, or similar notice was visible."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_queries": [
+      "\"November 6, 2026\" hospital emergency department closing closing patients services",
+      "\"November 6, 2026\" \"maternity\" \"labor and delivery\" closure hospital",
+      "November 6 2026 behavioral health psychiatric hospital facility closure program patients",
+      "November 6 2026 dialysis oncology infusion cancer center closing clinic",
+      "\"Sea Pines Rehabilitation Hospital\" \"November 6, 2026\" Encompass Health release flood closure",
+      "November 6 2026 ambulance EMS service shutting down closes station rural county",
+      "November 6 2026 air ambulance helicopter medical base closing suspension",
+      "November 6 2026 primary care rural medical clinic closed closure physician practices",
+      "November 6 2026 emergency department reopened after closing hospital rural service restored",
+      "November 6 2026 hospital maternity ward reopens births services restarted now",
+      "Puerto Rico Guam Virgin Islands November 6 2026 hospital emergency clinic closure services suspension",
+      "November 5 6 2026 county health department closes clinic rural emergency medical services loss"
+    ],
+    "verification": {
+      "first_party_source": "SEC EDGAR Encompass Health Exhibit 99.1 filed November 6, 2026",
+      "additional_confirmation": "PR Newswire-issued Encompass Health press release syndicated by Yahoo Finance, 2026-11-06 07:30 EST",
+      "sec_filing_url": "https://www.sec.gov/Archives/edgar/data/785161/000078516126000242/ehc-20261106.htm",
+      "syndication_url": "https://finance.yahoo.com/healthcare/articles/encompass-health-announces-indefinite-closure-123000654.html",
+      "prior_heartbeat_reviewed": "care-line-watch-20261106T114643-0800-recall12",
+      "production_dedupe_verified": false
+    },
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, PA, hospital operations and state license revocation",
+        "reason": "Already recorded in previous supplementary watch, not a new independent access change."
+      },
+      {
+        "item": "Benefis Health System, Great Falls, MT, outpatient behavioral health and rehabilitation changes",
+        "reason": "Recorded in 10:43 watch; repeated November 3–4 reporting."
+      },
+      {
+        "item": "Greenbrier Valley Medical Center, WV, maternity-service reopening",
+        "reason": "Governor announced plan and agreements, but no concrete effective reopening date or verified in-service delivery."
+      },
+      {
+        "item": "Kula Hospital, Maui, HI, proposed restoration",
+        "reason": "Hospital and ED remain closed; future 2027 target not effective restoration."
+      },
+      {
+        "item": "Hocking Valley Community Hospital, OH, emergency physician group change",
+        "reason": "Administrative management change; 24/7 emergency service remains open."
+      },
+      {
+        "item": "University Hospitals, OH, cyber-related online portal outage",
+        "reason": "Digital disruptions since October 22; hospitals and in-person services remain operational, outside focused essential-service shutdown categories."
+      },
+      {
+        "item": "Guam/Marianas storm-related hospital/clinic suspensions",
+        "reason": "Returned April/July/October notices, not new November access change."
+      },
+      {
+        "item": "Air Evac Decatur, IL, medical helicopter base closure",
+        "reason": "September 2026 event, outside bounded recall."
+      }
+    ],
+    "source_failures": [
+      {
+        "source": "CMS legacy/incorrect public-notices URL",
+        "detail": "Direct open failed; current official CMS Public Notices URL was accessed successfully first and fully checked. No CMS information gap."
+      },
+      {
+        "source": "PR Newswire direct wire-page URL",
+        "detail": "Direct open failed; identical issuer release was verified in SEC EDGAR Exhibit 99.1 and in Yahoo's PRNewswire syndication. Original direct page remains inaccessible."
+      }
+    ],
+    "limitations": [
+      "Bounded supplementary recall, not an exhaustive national or territory collector.",
+      "One confirmed item published earlier on November 6, missed by previous supplementary watch; physical closure dates Nov 1–2 and exact effective day unconfirmed.",
+      "Production deduplication not checked; positive record remains pending_review.",
+      "Direct links to one incorrect CMS endpoint and PR Newswire did not load; official replacement CMS and SEC sources did load, so the watch is marked DEGRADED rather than aborted."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

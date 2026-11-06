@@ -1,0 +1,156 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T024829-0800-r11-20261106T105129Z",
+  "scheduled_for": "2026-11-06T02:44:51-08:00",
+  "started_at": "2026-11-06T02:48:29-08:00",
+  "completed_at": "2026-11-06T02:51:29.147-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T01:44:49.431-08:00",
+    "end": "2026-11-06T02:51:29.147-08:00",
+    "basis": "Last verified supplementary Gaza heartbeat through this execution. Older publication is eligible only if newly discovered and previously missed; publication, survey and event dates are distinguished.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-unrwa-20261106-winter-shelter-water-needs-18-unsafe-sites",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/6/%D8%A7%D9%84%D8%A3%D9%88%D9%86%D8%B1%D9%88%D8%A7-%D9%86%D8%AD%D9%88-%D9%85%D9%84%D9%8A%D9%88%D9%86%D9%8A-%D8%B4%D8%AE%D8%B5-%D9%81%D9%8A-%D9%82%D8%B7%D8%A7%D8%B9-%D8%BA%D8%B2%D8%A9-%D8%A8%D8%AD%D8%A7%D8%AC%D8%A9",
+      "title": "UNRWA: Nearly two million in Gaza urgently need shelter support; 18 unsafe emergency shelters identified",
+      "publisher": "WAFA (Palestine News and Information Agency), attributing figures to UNRWA",
+      "source_date": "2026-11-06",
+      "publication_date": "2026-11-06",
+      "publication_time_local": "08:33 Asia/Gaza per WAFA Arabic edition",
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip; winter shelter assessment at 113 displacement sites, specific sites not named",
+      "affected_population_system": "1.98 million people (reported 94% of Gaza) requiring urgent shelter and non-food assistance; 58% with critical/catastrophic shelter needs; 18 unsafe emergency shelters (4 very high collapse risk, 6 high, 8 medium); 84% experiencing irregular safe-water access and 89% of households inadequate basic hygiene supplies",
+      "exact_supporting_passage": "وذكرت \"الأونروا\" على موقعها الرسمي اليوم الجمعة، أن 58% من سكان القطاع يواجهون احتياجات حرجة أو كارثية في مجال الإيواء، مشيرة إلى أن تقييم احتياجات الشتاء شمل 113 موقعا للنازحين، وكشف عن وجود 18 مركز إيواء طارئ غير آمن، بينها أربعة معرضة لخطر انهيار مرتفع للغاية، وستة معرضة لخطر مرتفع، وثمانية معرضة لخطر متوسط. وأضافت الوكالة الأممية، أن 84% من سكان القطاع يعانون انقطاعات متكررة وغير منتظمة في الحصول على مياه آمنة ونظيفة، فيما أبلغت 89% من الأسر عن عدم كفاية حصولها على مستلزمات النظافة الأساسية.",
+      "source_type": "Established Palestinian news agency report attributing statistics to an official UNRWA website assessment; original primary update could not be fetched (UNRWA website 403)",
+      "classification": "follow-up",
+      "confidence": "medium: WAFA direct full text verified, original UNRWA update and survey/event dates inaccessible; not independent primary corroboration",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct Arabic WAFA latest-news page check after official OCHA/WHO checks and 12 targeted searches; article full text opened",
+        "prior_comparison": "Compared with last 2026-11-06 01:44:49 PST heartbeat and 24 Gaza watch ledgers from Nov 5; no 1.98m / 18 unsafe shelters / 84% water interruption specifics previously recorded in those heartbeat files.",
+        "timing_caveat": "WAFA published at 08:33 Gaza local on Nov 6 (22:33 PST Nov 5), before previous watch completed. This is a newly uncovered previously missed humanitarian assessment, not an event confirmed within the current hourly observation window.",
+        "original_assessment_date": null,
+        "original_unrwa_url": null,
+        "new_or_follow_up_reason": "Distinct quantification and collapse-risk severity from UNRWA-attributed winter shelter/water assessment, rather than a new displacement incident.",
+        "independently_corrobated_by_primary_source": false,
+        "next_editorial_step": "Validate against UNRWA source when accessible and check whether source figures reflect a new assessment versus a republished baseline; do not treat as publication approval."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Gaza recall only. Production Gaza collector and publisher remain authoritative. No approval, publication, merge, posting, scheduling, permissions or credentials changes.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T014231-0800-r11-20261106T094449Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible. Latest dated 5 Nov human-interest rehab story and retrospective September appeal; latest situation report 29 Oct. No newly dated distinct operational update in observation window."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/",
+          "https://www.emro.who.int/opt/information-resources/updates.html"
+        ],
+        "result": "WHO global conflict overview accessible without new 6 Nov Gaza health-service incident. WHO EMRO OPT main endpoint 502, updates endpoint inaccessible; prior known recurring source degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"06/November/2026\" Gaza killed injured Friday 12:00",
+      "site:aa.com.tr/en/middle-east Gaza November 6 2026 killed wounded Friday noon",
+      "site:aljazeera.com/news/2026/11/6/ Gaza strikes casualties displaced November 6",
+      "site:reuters.com November 6 2026 Gaza civilians killed injured aid ceasefire",
+      "site:apnews.com November 6 2026 Gaza Israeli strikes humanitarian aid latest",
+      "site:unicef.org OR site:unrwa.org Gaza November 6 2026 water shelter displaced food",
+      "site:wafa.ps/news/2026/11/6/ غزة اليوم الجمعة 6 تشرين الثاني 2026 شهداء إصابات قصف",
+      "site:un.org OR site:news.un.org Gaza November 6 2026 OCHA UN aid access water hospitals",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza November 6 2026 ambulance hospital medical evacuation",
+      "Gaza November 6 2026 Rafah Kerem Shalom crossing aid truck fuel medical evacuation Friday",
+      "Gaza November 6 2026 ceasefire Hamas Israel negotiations detainees hostages latest Friday",
+      "Gaza November 6 2026 rain flooded tents displaced families water sewage hospital damage midday"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest news up to 11:21 Gaza local Nov 6, with earlier Gaza report of two deaths on 6 Nov 09:28 already documented in preceding heartbeat."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "result": "Latest at 12:30 Gaza local mostly West Bank; located Nov 6 08:33 UNRWA-attributed Gaza winter shelter/water assessment not present in preceding ledgers; article read."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Nov 5 storm/winter shelter risk and earlier casualty reports, no distinct fresh incident in current window."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Nov 6 videos on improvised seawalls and wind turbines; Gaza casualty story dated Nov 5 already known. No new incident."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest homepage news 3 Nov, no new confirmed ambulance or hospital disruption."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "No new time-verified food distribution change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "403 Forbidden; cannot verify original UNRWA assessment directly."
+      }
+    ],
+    "high_value_classes_checked": [
+      "civilian casualties and strikes with civilian impact",
+      "displacement, unsafe winter shelters and infrastructure",
+      "aid, food, water, sanitation, fuel and crossings",
+      "hospitals, medical evacuation, EMS/ambulances and functional capacity",
+      "ceasefire/negotiations, detention and hostages"
+    ],
+    "excluded": [
+      {
+        "item": "WAFA Nov 6 deaths of Sara Abu Jiyab and Nabil Hamad from earlier attacks",
+        "reason": "Exact duplicate of immediate preceding verified heartbeat."
+      },
+      {
+        "item": "Nov 5 Gaza killings, Nuseirat injuries, civilian damage and storm warnings",
+        "reason": "Previously documented incidents and risk reports; no unique new changes."
+      },
+      {
+        "item": "GazaNews.live Nov 6 09:26 weekly crossings/trucks tally, attributed to Crossings Authority",
+        "reason": "AI-assisted secondary aggregator and no primary report located; not sufficiently independently traceable for positive finding."
+      },
+      {
+        "item": "OCHA September appeal; older WHO/WFP, Reuters/AP materials; Gaza wind-turbine/seawall features",
+        "reason": "Retrospective/background or no acute new human impact."
+      },
+      {
+        "item": "WAFA/Al Jazeera Nov 6 West Bank/Jerusalem reports",
+        "reason": "Outside Gaza scope."
+      }
+    ],
+    "degradation": {
+      "reason": "Recurring WHO EMRO main-page 502 and OPT updates inaccessible; UNRWA home 403, UN News robots restriction and one secondary source disabled. Alternative accessible WHO global, OCHA, WAFA Arabic/English, PRCS, WFP, Al Jazeera and Anadolu coverage available.",
+      "material_new_deterioration": false,
+      "coverage_sufficient_for_bounded_supplementary_watch": true
+    },
+    "outcome_note": "One newly uncovered high-value UNRWA-attributed winter shelter/water assessment published Nov 6 but predating the current watch window; treat as follow-up and verify original before editorial promotion. No new acute in-window casualty, crossing, healthcare or ceasefire incident established."
+  }
+}

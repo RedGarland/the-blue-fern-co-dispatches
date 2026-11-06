@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T054133-0800-r11-20261106T134133Z",
+  "scheduled_for": "2026-11-06T05:45:54-08:00",
+  "started_at": "2026-11-06T05:41:33-08:00",
+  "completed_at": "2026-11-06T05:43:56-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T04:50:04-08:00",
+    "end_at": "2026-11-06T05:43:56-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Prior verified watch-ledger heartbeat completion through this bounded run; short recency lookback for discovery only, not to recategorize older events.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value missed-signal recall only; production Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Storm/flood/fire/outage/facility-damage cancellation of emergency food distributions",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T044926-0800-r11-20261106T124926Z.json",
+      "completed_at": "2026-11-06T04:50:04-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" \"Nov 6 2026\" fire community",
+      "\"sole grocery store\" \"November 6\" 2026 fire shut",
+      "\"last grocery store\" loss fire closing November 2026 town",
+      "\"full-service grocery store\" fire flood closed November 6 2026 town",
+      "\"emergency food distribution\" canceled storm November 6 2026",
+      "\"food distribution\" canceled postponed \"November 6\" 2026 flooding power",
+      "\"mobile food pantry\" canceled weather Friday November 6 2026",
+      "\"food bank\" closed service suspended November 6 2026 flood fire",
+      "\"food pantry\" abruptly closed November 6 2026 water damage",
+      "site:gov \"WIC\" \"closed\" \"November 6, 2026\" storm",
+      "site:gov \"SNAP\" \"November 6, 2026\" \"outage\" \"delayed\"",
+      "November 6 2026 EBT outage SNAP food benefits system unavailable state notice"
+    ],
+    "direct_page_checks": 4,
+    "successful_direct_page_checks": 4,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "source_published_at": "2026-11-05",
+        "exclusion_reason": "Source explicitly still lists Hawaiʻi Foodbank Kauaʻi emergency mobile pantry for Nov 6 at Hale Līhuʻe as scheduled; no cancellation in this window."
+      },
+      {
+        "url": "https://communityactionprovo.org/",
+        "publisher": "Community Action Services and Food Bank",
+        "source_published_at": null,
+        "exclusion_reason": "Direct official provider page confirms temporary closure effective Nov 1, 2026; previously reviewed historical event, no newly announced change this hour."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "source_published_at": null,
+        "exclusion_reason": "Direct official alerts page did not substantiate a new immediate SNAP or EBT access interruption in this observation window."
+      },
+      {
+        "url": "https://www.hhs.nd.gov/",
+        "publisher": "North Dakota Health and Human Services",
+        "source_published_at": null,
+        "exclusion_reason": "Official homepage references SNAP Healthy Choice Waiver item restrictions with Nov 1 target date, not newly reported processing or card outage in this hour."
+      },
+      {
+        "url": "https://stpeterising.com/home/madeira-beachs-longtime-winn-dixie-will-reopen-as-an-aldi-this-week",
+        "publisher": "St. Pete Rising",
+        "source_published_at": "2026-09-22",
+        "exclusion_reason": "September reopening, not a new sole/full-service grocery loss."
+      },
+      {
+        "url": "https://apnews.com/article/snap-food-government-shutdown-trump-a807e9f0c0a7213e203c074553dc1f9b",
+        "publisher": "Associated Press",
+        "source_published_at": "2025",
+        "exclusion_reason": "2025 SNAP funding lawsuit, not November 2026 event."
+      }
+    ],
+    "result": "No newly verified U.S. food-access disruption qualifying under the four high-value classes during 2026-11-06 04:50:04 to 2026-11-06T05:43:56-08:00 PST.",
+    "limitations": "Search responses were sparse and largely historical or unrelated, with date-collision results from 2025. Bounded recall cannot establish nationwide absence; production collection and dedupe not inspected.",
+    "materiality": "SUCCESS: all twelve targeted web searches and four direct-page checks returned usable results, without material source failures.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One append-only private ops/watch-ledger heartbeat; no approval, publication, merge, production mutation, credential/permission/schedule change, or task disable."
+  }
+}

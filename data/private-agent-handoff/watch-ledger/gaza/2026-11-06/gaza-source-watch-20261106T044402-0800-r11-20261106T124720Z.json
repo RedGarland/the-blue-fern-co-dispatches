@@ -1,0 +1,153 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T044402-0800-r11-20261106T124720Z",
+  "scheduled_for": "2026-11-06T04:44:51-08:00",
+  "started_at": "2026-11-06T04:44:02-08:00",
+  "completed_at": "2026-11-06T12:47:20.147+00:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T03:46:30.270-08:00",
+    "end": "2026-11-06T04:47:20.147-08:00",
+    "basis": "Prior verified supplementary Gaza heartbeat completion to current observation. Older reports eligible as bounded newly recovered high-value misses, but not reported as incident occurring this hour.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-euromed-20261104-child-amputees-evacuation-rehabilitation-recall-20261106",
+      "canonical_source_url": "https://euromedmonitor.org/en/article/7126/Gaza:-Israel-denies-treatment-and-dignity-to-children-left-amputees-by-its-genocide",
+      "title": "Euro-Med Monitor documents barriers to care, prosthetics and medical evacuation for children with amputations in Gaza",
+      "publisher": "Euro-Med Human Rights Monitor",
+      "source_date": "2026-11-04",
+      "publication_date": "2026-11-04",
+      "event_date": null,
+      "reported_data_as_of": "2026-10-09 (1,134 children with amputations; cited snapshot, not incident date)",
+      "location": "Gaza Strip; individual testimonies from Rafah, Al-Mawasi in Khan Younis and Beit Lahia",
+      "affected_population_system": "Children with amputations, rehabilitation services, medical evacuation pathways and prosthetic provision. Euro-Med cites 1,134 children with amputations as of Oct 9, 2026, WHO May 2026 findings of only 500 permanent prosthetics among 2,300 assessed amputees (all ages), and Humanity & Inclusion's Oct 27 statement of eight certified prosthetics/orthotics professionals in Gaza.",
+      "exact_supporting_passage": "Israel’s restrictions on patient travel and obstruction of medical evacuations further limit children’s access to specialised treatment unavailable inside the Gaza Strip.",
+      "source_type": "Primary dated human-rights monitoring organization release containing direct field testimonies, with attributed WHO May and Humanity & Inclusion Oct 27 figures",
+      "classification": "follow-up",
+      "confidence": "high that Euro-Med published this Nov 4 primary report and documented direct testimony; medium for independent verification of underlying aggregated counts, restrictions and incident details",
+      "bounded_discovery_context": {
+        "discovered_via": "12 bounded targeted searches and subsequent direct source review: Gaza Herald Nov 5 derivative led to Euro-Med Monitor primary homepage and Nov 4 article.",
+        "previous_comparison": "Not present among the findings in the immediately preceding Nov 6 03:46 PST and 02:51 PST verified heartbeat JSONs. Wider historical watch and authoritative production deduplication not exhaustively verified.",
+        "timing_caveat": "Published Nov 4, recovered Nov 6; this is an older newly recovered assessment of ongoing healthcare-access barriers, not an incident occurring during 03:46–04:46 PST or proof the restrictions worsened in that hour.",
+        "attribution": "Amputation count dated Oct 9; WHO prosthetic metric dated May 2026; staffing metric cited to Humanity & Inclusion Oct 27; family field testimony details cannot be independently confirmed here.",
+        "publication_safeguard": "Supplementary recall only; verify production and historical dedupe before any editorial use, without approval or publication."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall; primary production collector remains authoritative. No publishing, approval, merge, posting, schedule or permissions changes.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T034258-0800-r11-20261106T114630Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Accessible, latest update Nov 5 (feature story and September response retrospective); latest dated humanitarian situation report Oct 29, published Oct 31. No new incident or operational bulletin detected."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/",
+          "https://www.emro.who.int/opt/information-resources/updates.html"
+        ],
+        "result": "WHO global emergency page accessible, no Nov 6 acute Gaza situation change. EMRO OPT timed out and EMRO updates inaccessible; ongoing known availability degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"06/November/2026\" killed injured displaced",
+      "site:wafa.ps/news/2026/11/6/ غزة صباح الجمعة 6 نوفمبر قصف إصابة شهداء",
+      "site:aa.com.tr/en/middle-east/ gaza Friday November 6 2026 hospital civilian ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza Nov 6 2026 aid truce civilian",
+      "site:apnews.com/article/ gaza november 6 2026 aid ceasefire fatalities",
+      "site:aljazeera.com/news/2026/11/6/ Gaza civilians aid ceasefire",
+      "site:unrwa.org OR site:unicef.org Gaza November 6 2026 shelter water aid displaced",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza 6 November 2026 hospital evacuation ambulance fuel",
+      "site:un.org OR site:news.un.org Gaza 6 November 2026 humanitarian access crossings casualties",
+      "Gaza 6 November 2026 Rafah Kerem Shalom aid trucks crossing evacuation fuel latest",
+      "Gaza November 6 2026 ceasefire negotiations hostage detainees release Israeli Hamas civilian",
+      "Gaza 6 November 2026 Friday Gaza City Nuseirat Khan Younis Deir al Balah displaced tents injured gunfire"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English and Arabic",
+        "urls": [
+          "https://english.wafa.ps/Pages/LastNews",
+          "https://www.wafa.ps/Pages/LastNews"
+        ],
+        "result": "No new distinct Nov 6 Gaza casualty events; Nov 6 deaths from previous strikes already logged, other breaking stories were West Bank."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Nov 6 Environment Authority infrastructure assessment and tent gunfire accounts already logged at 03:46 PST; Nov 6 two deaths logged earlier."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "No new Nov 6 Gaza ambulance/health operations item; latest prominent news Nov 3."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "No verified new Gaza food service-status change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403; recurring access restriction."
+      },
+      {
+        "publisher": "Euro-Med Monitor",
+        "url": "https://euromedmonitor.org/en",
+        "result": "Direct dated Nov 4 primary children-amputee care and evacuation analysis recovered, with firsthand testimony and cited WHO/Humanity & Inclusion service-capacity figures. Nov 5 winter shelter analysis mostly reiterates older risks."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties",
+      "displacement and shelter",
+      "aid and crossings",
+      "food/water access",
+      "health, rehabilitation, patient transport, fuel and medical evacuation",
+      "infrastructure damage",
+      "detainees/hostages and ceasefire",
+      "military operations affecting civilians"
+    ],
+    "excluded": [
+      {
+        "item": "Nov 6 WAFA two deaths from earlier strikes, Nov 6 Anadolu Al-Mawasi gunfire, Nov 6 Environment Quality Authority damage assessment",
+        "reason": "Already logged in earlier Nov 6 watch heartbeats; avoid duplicates."
+      },
+      {
+        "item": "Nov 5 Crossings Authority report of 237 Kerem Shalom trucks with 29 aid and 12 fuel; Zikim and Kissufim reportedly closed",
+        "reason": "Earlier Nov 6 02:51 watch explicitly excluded related crossings totals for lack of primary report. Gaza Herald and AI-translated Sawa repeat authority attribution, but no linked primary document or independent operational validation; retained as unqualified."
+      },
+      {
+        "item": "Nov 5 Sawa summary of Nov 5 Al-Shati deaths and central Gaza injuries",
+        "reason": "Older casualty reporting not sufficiently distinct from previously noted Nov 5 events; English version explicitly AI-translated."
+      },
+      {
+        "item": "Euro-Med Nov 5 winter shelter and flood risks",
+        "reason": "Largely Nov 1 and older measurements and previously logged UNRWA shelter deficits; no independently established new flood or displacement event this hour."
+      },
+      {
+        "item": "West Bank reports, undated opinion, retrospective Reuters/AP/UN analyses",
+        "reason": "Outside Gaza, duplicates, unverified or no new operational development."
+      }
+    ],
+    "degradation": {
+      "reason": "WHO EMRO unavailable (timeout or access failure), UNRWA 403, UN News blocked by robots policy. These match previously known recurring restrictions; OCHA, WHO global, WAFA, Anadolu, PRCS, WFP and Euro-Med primary pages remained available.",
+      "material_new_deterioration": false,
+      "coverage_sufficient_for_bounded_supplementary_watch": true
+    },
+    "outcome_note": "One traceable previously missed Nov 4 first-party child-amputee medical rehabilitation and evacuation assessment; no independent confirmation of an acute new incident in the current hourly observation window."
+  }
+}

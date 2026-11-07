@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T064655-0800-r11-20261107T144655Z",
+  "scheduled_for": "2026-11-07T06:45:54-08:00",
+  "started_at": "2026-11-07T06:46:55-08:00",
+  "completed_at": "2026-11-07T06:48:53.655-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T05:47:50.805-08:00",
+    "end_at": "2026-11-07T06:48:53.655-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since last independently verified Food Line watch heartbeat, with three-day recall for reporting/indexing delays and explicit prior-signal deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall of high-value missed access disruptions. Nationwide production collection is authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss/disaster",
+      "Storm, flood, fire, outage or damage-related emergency food distribution cancellations",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "Official SNAP/WIC/EBT immediate food-assistance interruption"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T054613-0800-r11-20261107T134613Z.json",
+      "completed_at": "2026-11-07T05:47:50.805-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": 3,
+    "search_queries": [
+      "\"only grocery store\" closes fire flood storm November 7 2026 United States",
+      "\"last grocery store\" \"November 7, 2026\" closure community",
+      "\"town's only grocery\" storm damage November 2026 -McCaysville",
+      "\"only supermarket\" destroyed closed flooding November 6 7 2026",
+      "\"emergency food distribution\" canceled suspended November 7 2026 storm",
+      "\"food distribution\" canceled due to flooding hurricane November 6 2026",
+      "\"food pantry\" canceled distribution power outage fire November 7 2026",
+      "\"food bank\" closed due to flood power outage November 2026",
+      "\"food pantry\" suddenly closed indefinitely November 7 2026",
+      "\"food bank\" services suspended facility damage November 6 2026",
+      "site:gov \"SNAP\" \"outage\" \"November 7, 2026\"",
+      "site:gov \"WIC\" OR \"EBT\" \"interruption\" November 7 2026"
+    ],
+    "search_query_errors_observed": 0,
+    "search_results_note": "All 12 targeted searches returned without tool failure. Results were predominantly historical, overseas, general policy, unrelated notices, or duplicate disruptions; no newly verifiable qualifying U.S. food-access interruption surfaced. Search indexing may lag.",
+    "direct_source_checks": {
+      "count": 7,
+      "successful": 7,
+      "failed": 0,
+      "urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://kutv.com/news/local/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "https://www.federalregister.gov/documents/2026/11/06/2026-22679/special-supplemental-nutrition-program-for-women-infants-and-children-wic-online-ordering-and",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://www.health.mn.gov/people/wic/localagency/infosystem/thescoop.html",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "November 6 McCaysville flood destroyed town's only grocery, captured by November 6 watch as pending_review; duplicate of known signal."
+      },
+      {
+        "publisher": "KUTV",
+        "source_url": "https://kutv.com/news/local/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "reason": "Provo Community Action Services and Food Bank temporary closure was reported Nov 5 and reviewed in prior watches; no newly documented Nov 7 access change."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Hawaiʻi Foodbank Kauaʻi emergency distribution was scheduled for Nov 6 at Hale Līhuʻe; not a cancellation; hurricane resource-center closures lack evidence of a new food distribution suspension."
+      },
+      {
+        "publisher": "Food and Nutrition Administration, Federal Register",
+        "source_url": "https://www.federalregister.gov/documents/2026/11/06/2026-22679/special-supplemental-nutrition-program-for-women-infants-and-children-wic-online-ordering-and",
+        "reason": "Nov 6 WIC modernization final rule is an expansion of online purchasing rather than a current interruption; effective Dec 7."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly verified SNAP/EBT benefit access outage identified on state alerts."
+      },
+      {
+        "publisher": "Minnesota Department of Health WIC",
+        "source_url": "https://www.health.mn.gov/people/wic/localagency/infosystem/thescoop.html",
+        "reason": "Older WIC operations bulletin/maintenance context, no new immediate participant access interruption."
+      },
+      {
+        "publisher": "California WIC",
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "Sep 3 notice states WIC remains open and benefits usable; not a current interruption."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No new distinct, verifiable U.S. high-value food-access disruption was identified between the prior verified 05:47 PST heartbeat and this run's completion; continuing three-day recall did not surface a novel missed event.",
+    "material_degradation": false,
+    "limitations": "Bounded searching cannot guarantee nationwide completeness; short-window local news, social-only emergency notices, or agency outages may not yet be indexed. Production collector and its deduplication were not independently inspected.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one private watch-ledger heartbeat committed for this run; no approval, publication, merge, schedule changes or disabling."
+  }
+}

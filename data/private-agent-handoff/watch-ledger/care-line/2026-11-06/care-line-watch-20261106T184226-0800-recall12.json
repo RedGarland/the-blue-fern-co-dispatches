@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T184226-0800-recall12",
+  "scheduled_for": "2026-11-06T18:45:22-08:00",
+  "started_at": "2026-11-06T18:42:26-08:00",
+  "completed_at": "2026-11-06T18:43:53.316-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T17:49:48-08:00",
+    "end": "2026-11-06T18:43:53.316-08:00",
+    "basis": "Since previous verified supplementary Care Line watch completion. Prior publicly documented developments used only for duplicate exclusion; bounded recall, not the primary collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), organ procurement organization termination notice, CCN 18P001",
+      "new_relevant_notices": 0,
+      "access": "The initially attempted legacy/noncanonical CMS URL returned inaccessible; official canonical CMS page then opened successfully and current date-ordered public notices were verified."
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital emergency department closure/suspension",
+      "Rural emergency room or essential service suspension",
+      "Maternity/labor-and-delivery closure",
+      "Behavioral health/psychiatric service closure",
+      "Dialysis center closure",
+      "Oncology/infusion service shutdown",
+      "Primary-care clinic closure",
+      "Ground ambulance/EMS service loss",
+      "Air-medical helicopter base closure",
+      "Essential service reopening/restoration",
+      "Community health center shutdown",
+      "US territories essential healthcare access interruption"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center, Pennsylvania: previously captured emergency department and whole-hospital access suspension; no incremental new service effect confirmed.",
+      "AdventHealth Rockmart Clinic, Georgia: November 5 extension of urgent-care hours and addition of cardiology reported November 6; this is an expansion, not a confirmed abrupt restoration of a previously lost essential service.",
+      "University Hospitals Seidman Cancer Center, Geneva, Ohio: previously announced future November 13 closure; September 2026 reporting, not a new event since the prior check.",
+      "Air Evac Lifeteam Decatur, Illinois: September 16 base closure, already historical; no new event.",
+      "Guam Regional Medical City: October 19 temporary outpatient closure related to Typhoon Champi, with stated plan to resume October 20; no new November service disruption identified.",
+      "Older, overseas, prospective-policy, nonclinical ownership and irrelevant search results excluded."
+    ],
+    "source_failures": [
+      {
+        "url": "https://www.cms.gov/medicare/quality/safety-oversight-general-information/public-notices",
+        "type": "initial_noncanonical_CMS_URL_inaccessible",
+        "recovered": true,
+        "recovery_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      }
+    ],
+    "coverage_limitations": [
+      "Degraded status reflects one inaccessible initial CMS URL, fully recovered via official canonical CMS page; no unresolved CMS coverage gap.",
+      "Targeted retrieval returned sparse matching fresh local reporting; supplementary coverage cannot establish exhaustive national absence.",
+      "Production national collection remains authoritative; no production deduplication check performed."
+    ],
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

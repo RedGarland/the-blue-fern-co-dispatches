@@ -1,0 +1,61 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T174851-0800-recall12",
+  "scheduled_for": "2026-11-06T17:45:22-08:00",
+  "started_at": "2026-11-06T17:48:51-08:00",
+  "completed_at": "2026-11-06T17:49:48-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T16:48:00.938-08:00",
+    "end": "2026-11-06T17:49:48-08:00",
+    "basis": "Since previous verified supplementary Care Line watch completion; older newly recovered developments considered only if concrete, independently supported, and not already recorded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO termination notice, CCN 18P001",
+      "new_relevant_notices": 0,
+      "access": "Official CMS Public Notices page discovered before other searches, opened directly, date-ordered table checked against previous run."
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital emergency department suspension or closure",
+      "Rural hospital emergency service loss",
+      "Obstetrics/maternity/labor and delivery service loss",
+      "Behavioral health/inpatient psychiatric service changes",
+      "Dialysis clinic closure",
+      "Oncology/infusion service loss",
+      "Primary care practice closure",
+      "Ground ambulance/EMS suspension",
+      "Air-medical base closure",
+      "Emergency department/maternity/dialysis restoration",
+      "Community health center closure",
+      "US territory healthcare service interruption"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center, PA: November 4 ED closure and November 6 all-service suspension already recorded by prior supplementary watches; no newly supported incremental access change.",
+      "Roseland Community Hospital, IL: October 28 labor-and-delivery unit closure advocacy reported, no new concrete closure action verified for this window.",
+      "PHI Air Medical Red Bluff, CA: September 14 base closure, older than this recall window and no new action evidenced.",
+      "Guam Memorial Hospital, Guam: October 16 temporary non-emergency service suspensions ahead of Tropical Storm Champi; no fresh November access change verified.",
+      "National rural-hospital funding risk and Medicaid policy stories: no actual facility-specific service loss or effective restoration verified.",
+      "Non-US service changes and unrelated business/workforce reports excluded."
+    ],
+    "source_failures": [],
+    "coverage_limitations": [
+      "Supplementary bounded recall, not a comprehensive nationwide inventory; search results sparse and several irrelevant or older items.",
+      "Production national collector remains authoritative. No direct production-pipeline deduplication check occurred.",
+      "No new qualifying US or territory development was verified during this search."
+    ],
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

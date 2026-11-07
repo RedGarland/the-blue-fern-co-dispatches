@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T214127-0800-r11-20261107T054127Z",
+  "scheduled_for": "2026-11-06T21:41:27-08:00",
+  "started_at": "2026-11-06T21:41:27-08:00",
+  "completed_at": "2026-11-06T21:42:27.007-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T20:51:28.302-08:00",
+    "end_at": "2026-11-06T21:42:27.007-08:00",
+    "observation_date": "2026-11-06",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since independently verified previous Food Line Source Watch heartbeat (20:51:28 PST); 12 targeted web queries constrained to Nov 6 reports, cross-checked against direct sources. Publication timestamp and underlying incident date screened separately; only new, independently substantiated qualifying events retained."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch for high-value food-access interruptions, not nationwide production collection.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery closure, fire, or disaster loss",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T205018-0800-r11-20261107T045018Z.json",
+      "completed_at": "2026-11-06T20:51:28.302-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "search_recency_days": 1,
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "November 6 2026 9 pm only grocery store closed flood fire town US",
+      "November 6 2026 late Friday sole grocery store disaster closed residents",
+      "November 6 2026 only supermarket village town flooded power outage shut",
+      "November 6 2026 last grocery store community shuts down tonight",
+      "November 6 2026 food bank emergency distribution canceled Friday flooding storm",
+      "November 6 2026 food pantry distribution suspended hurricane wildfire power outage",
+      "November 6 2026 mobile food pantry canceled today due to weather damage",
+      "November 6 2026 food bank suddenly closes emergency repairs lost access",
+      "November 6 2026 abrupt pantry closure food bank service interruption",
+      "November 6 2026 state agency SNAP EBT outage benefits suspended official notice",
+      "November 6 2026 WIC clinics benefit system interruption outage state health",
+      "November 6 2026 SNAP food assistance emergency disaster closure territory official"
+    ],
+    "direct_page_checks": {
+      "count": 7,
+      "successful": 7,
+      "failed": 0,
+      "successful_urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://cbs12.com/news/local/st-lucie-county-offers-food-assistance-to-flood-affected-residents-treasure-coast-flooding-meal-resources-treasure-coast-food-bank-emergency-operations-center-meals-food-",
+        "https://salarmyeds.org/index.php/2026/11/06/the-salvation-army-of-georgia-mobilizes-resources-to-support-flood-recovery-efforts-in-north-georgia/",
+        "https://kutv.com/news/local/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "https://www.aol.com/articles/grocery-chain-permanently-closes-two-230108000.html",
+        "https://kauai.hawaiifoodbank.org/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight"
+      ],
+      "failures": []
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "Nov 6 McCaysville sole grocery flooding was already recorded as pending_review in 19:48 PST heartbeat and rechecked at 20:51 PST; not new in this observation interval."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov 6 emergency food distribution at Hale Līhuʻe was listed scheduled for 4–5 p.m.; no cancellation established."
+      },
+      {
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "url": "https://kauai.hawaiifoodbank.org/",
+        "reason": "Provider homepage checked; no new provider-confirmed canceled emergency distribution established."
+      },
+      {
+        "publisher": "CBS12",
+        "url": "https://cbs12.com/news/local/st-lucie-county-offers-food-assistance-to-flood-affected-residents-treasure-coast-flooding-meal-resources-treasure-coast-food-bank-emergency-operations-center-meals-food-",
+        "reason": "Nov 6 St. Lucie County notice documents food assistance provision for flood-affected residents, not suspension or closure; published earlier in day."
+      },
+      {
+        "publisher": "Salvation Army Emergency Disaster Services",
+        "url": "https://salarmyeds.org/index.php/2026/11/06/the-salvation-army-of-georgia-mobilizes-resources-to-support-flood-recovery-efforts-in-north-georgia/",
+        "reason": "Nov 6 Georgia deployment provides meal kits and emergency food support; not a food-access reduction or canceled distribution."
+      },
+      {
+        "publisher": "KUTV",
+        "url": "https://kutv.com/news/local/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "reason": "Nov 5 Provo service closure retrospective; earlier event, outside this hourly observation window."
+      },
+      {
+        "publisher": "KSNW via AOL",
+        "url": "https://www.aol.com/articles/grocery-chain-permanently-closes-two-230108000.html",
+        "reason": "Nov 5 GreenAcres Market closures in Wichita/Oklahoma City are not shown as sole/last/full-service stores or disaster driven; previously reviewed."
+      }
+    ],
+    "assessment": "No new independently substantiated qualifying sole grocery loss, canceled emergency distribution, abrupt food-bank/pantry loss, or official SNAP/WIC benefits interruption found during this bounded watch. Existing McCaysville, Georgia sole grocery incident is a previously captured duplicate, not a new finding.",
+    "source_or_search_failures": [],
+    "material_degradation": false,
+    "limitations": "Search-index latency and narrow hourly queries may miss unindexed or delayed official notices; no comprehensive agency sweep and no production-ledger deduplication. Results are a recall check, not an assertion that no disruptions occurred nationwide.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Private ops/watch-ledger heartbeat only. No review approval, publication, merge, change in schedule, or task disable."
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T194621-0800-r11-20261107T034621Z",
+  "scheduled_for": "2026-11-06T19:45:54-08:00",
+  "started_at": "2026-11-06T19:46:21-08:00",
+  "completed_at": "2026-11-06T19:48:34.597-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-11-06T18:48:19.580-08:00",
+    "end_at": "2026-11-06T19:48:34.597-08:00",
+    "observation_date": "2026-11-06",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since latest independently verified prior Food Line Source Watch heartbeat. Search intentionally included same-day retrospective results to recover high-value misses; signal may have occurred or been published before window."
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-ga-mccaysville-sole-grocery-flood-20261106",
+      "canonical_source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+      "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+      "publisher": "Georgia Public Broadcasting (GPB News)",
+      "source_published_at": "2026-11-06T15:54:00-05:00",
+      "title": "'Devastating': Cleanup efforts are underway in McCaysville after deadly overnight flooding",
+      "exact_supporting_passage": "At the only grocery store in town, now completely covered in mud, volunteers haul out destroyed food in shopping carts.",
+      "summary": "GPB reporter observed destruction of food stock and flood mud at McCaysville's only grocery store during November 6 cleanup after November 4-5 catastrophic river flooding. The mayor reported no grocery store left in town as of Friday. This is an ongoing community food-access loss, but it is a newly discovered missed signal, NOT an event or report first arising since the previous hourly check.",
+      "location": "McCaysville, Fannin County, Georgia",
+      "state": "GA",
+      "scope": "municipal/community; only grocery store in town",
+      "affected_groups": [
+        "McCaysville residents",
+        "local households and grocery shoppers",
+        "evacuated and power/water-disrupted households"
+      ],
+      "pressure_type": "sole_community_grocery_loss_due_to_flood",
+      "confidence": "high",
+      "source_role": "on_scene_local_primary_news_reporting",
+      "evidence_level": "direct_reporter_observation_and_named_mayor_confirmation",
+      "bounded_query_context": {
+        "query": "November 6 2026 only grocery store closing burned community food desert local news",
+        "searched_at_window": "2026-11-06T19:46:21-08:00 to 2026-11-06T19:48:34.597-08:00",
+        "event_time": "2026-11-04 to 2026-11-06",
+        "freshness_note": "GPB report published at 15:54 Eastern Nov 6 (12:54 Pacific), before previous watch completion at 18:48 Pacific; not a newly occurring event. Newly identified by this supplementary miss-recall; prior watch recorded no findings.",
+        "corroboration_url": "https://www.gpb.org/news/2026/11/05/heavy-rains-cause-flash-flooding-water-rescues-on-georgia-tennessee-border"
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded high-value miss recall only; production Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery lost or shut down",
+      "Emergency distribution cancelled by flood, storm, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance service interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T184616-0800-r11-20261107T024616Z.json",
+      "completed_at": "2026-11-06T18:48:19.580-08:00",
+      "outcome": "no_findings",
+      "status": "SUCCESS"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "November 6 2026 only grocery store closing burned community food desert local news",
+      "\"Nov 6, 2026\" \"only grocery store\" closed",
+      "November 6 2026 \"last grocery store\" closure fire",
+      "2026-11-06 sole supermarket closed storm fire food access",
+      "November 6 2026 food bank distribution canceled storm November 6",
+      "November 6 2026 emergency food distribution cancelled flooding outage fire",
+      "November 6 2026 food pantry closed unexpectedly November 6 2026",
+      "November 6 2026 food bank closes location temporarily distribution canceled",
+      "November 6 2026 SNAP EBT outage benefits interrupted state agency",
+      "November 6 2026 WIC clinic closure benefits outage official",
+      "site:gov \"November 6, 2026\" \"SNAP\" \"interruption\" benefits",
+      "November 6 2026 grocery stores closing rural food access US local report"
+    ],
+    "direct_page_checks": {
+      "count": 4,
+      "successful": 4,
+      "failed": 0,
+      "urls": [
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.gpb.org/news/2026/11/05/heavy-rains-cause-flash-flooding-water-rescues-on-georgia-tennessee-border",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "WEAU",
+        "url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire pop-up distribution cancellations publicly reported November 3; previously reviewed and not new in this hourly interval."
+      },
+      {
+        "publisher": "The U.S. Sun",
+        "url": "https://www.the-sun.com/money/17257337/cornerstone-iga-daniels-west-virginia-closure-kroger-rival/",
+        "reason": "Daniels, WV IGA announced November 4 for future November 30 closure; not established to be only grocery in community, and pre-existing."
+      },
+      {
+        "publisher": "Aurora Area Interfaith Food Pantry",
+        "url": "https://aurorafoodpantry.org/calendar/",
+        "reason": "Current calendar shows regular distributions; no unscheduled cancellation evident."
+      },
+      {
+        "publisher": "South Hall Community Food Pantry",
+        "url": "https://shcfp.org/we-will-be-closed-on-thanksgiving-day/",
+        "reason": "Routine advance Thanksgiving closure; excluded."
+      },
+      {
+        "publisher": "The U.S. Sun",
+        "url": "https://www.the-sun.com/money/17266924/convenience-stores-snap-food-categories-rule/",
+        "reason": "SNAP retailer stocking policy report, no verified immediate interruption of benefits or redemption at a specific retailer/community."
+      }
+    ],
+    "assessment": "One late-discovered, high-confidence sole-community-grocery flood loss; report predates prior watch interval, so not represented as a fresh event. Pending editorial review and production deduplication; other returned items nonqualifying or older.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "source_or_search_failures": [],
+    "limitations": "Same-day report was published before the previous hourly check and found in this run; strictly new occurrence/posting since the prior check was not established. Search engine freshness is not comprehensive. No production dedupe or public publishing action was performed.",
+    "action_limits": "Private ops/watch-ledger heartbeat only. No publication, approval, merge, schedule change, or task disabling."
+  }
+}

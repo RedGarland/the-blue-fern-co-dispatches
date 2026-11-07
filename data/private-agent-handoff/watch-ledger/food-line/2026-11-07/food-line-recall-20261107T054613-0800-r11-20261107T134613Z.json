@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T054613-0800-r11-20261107T134613Z",
+  "scheduled_for": "2026-11-07T05:45:54-08:00",
+  "started_at": "2026-11-07T05:46:13-08:00",
+  "completed_at": "2026-11-07T05:47:50.805-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T04:49:29.596-08:00",
+    "end_at": "2026-11-07T05:47:50.805-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since previous independently verified hourly watch heartbeat, with narrow indexing-lag lookback; previously seen events are excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value food-access miss classes. Production collector is authoritative.",
+    "target_classes": [
+      "Community only/sole/last/full-service grocery-store loss, disaster, or closure",
+      "Storm/flood/fire/outage/damage cancellation or suspension of emergency food distribution",
+      "Abrupt food pantry or food bank closure or material access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate food-access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T044736-0800-r11-20261107T124736Z.json",
+      "completed_at": "2026-11-07T04:49:29.596-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": 2,
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 2026",
+      "\"last grocery store\" closes November 2026 local community",
+      "\"only supermarket\" closed storm flood November 2026",
+      "\"food pantry\" \"closed\" storm power outage November 7 2026",
+      "\"food bank\" \"suspended\" distribution storm November 2026",
+      "\"food distribution\" canceled November 7 2026 flooding power",
+      "site:gov \"SNAP\" \"outage\" \"November 7, 2026\" benefits",
+      "site:gov \"WIC\" \"closed\" \"November 7\" 2026 offices",
+      "\"EBT\" \"not available\" \"Nov 7, 2026\" state",
+      "\"food pantry\" \"temporarily closed\" \"Nov 6\" 2026",
+      "\"food distribution\" \"cancelled\" \"November 7\" 2026 storm",
+      "\"only grocery store\" \"November 7, 2026\" closure"
+    ],
+    "search_query_errors_observed": 0,
+    "search_results_note": "The 12 targeted queries found no newly verifiable disruption within the requested classes since 04:49 PST. Results were mostly older events, international events, reopening stories, routine services, and nonqualifying coverage. Search index is not exhaustive or necessarily real-time.",
+    "direct_source_checks": {
+      "count": 5,
+      "successful": 5,
+      "failed": 0,
+      "success_urls": [
+        "https://www.health.mn.gov/people/wic/localagency/infosystem/thescoop.html",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.kcur.org/news/2026-11-07/a-kansas-city-grocery-store-thrives-where-others-closed-now-the-model-is-expanding",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight"
+      ],
+      "failed_urls": []
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville, Georgia, only grocery flooded; the Nov 6 report was already captured as pending_review in an earlier watch; duplicate, not new in current interval."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Reports a Friday Nov 6 emergency food distribution still scheduled 4–5 p.m. at Hale Līhuʻe; not a cancellation or suspension."
+      },
+      {
+        "publisher": "KCUR / The Beacon",
+        "url": "https://www.kcur.org/news/2026-11-07/a-kansas-city-grocery-store-thrives-where-others-closed-now-the-model-is-expanding",
+        "reason": "Nov 7 article discusses a Kansas City Sun Fresh closure on Oct 25 and grocery openings, not a newly interrupted only/last/full-service market since prior check."
+      },
+      {
+        "publisher": "Minnesota Department of Health",
+        "url": "https://www.health.mn.gov/people/wic/localagency/infosystem/thescoop.html",
+        "reason": "WIC agency newsletter lists routine operations/maintenance; no confirmed new immediate SNAP/WIC benefits access interruption in this interval."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No new verified SNAP/EBT benefits-access disruption identified."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No new qualifying verified U.S. food-access disruption found in bounded 12-query recall since the previous heartbeat.",
+    "material_degradation": false,
+    "limitations": "Short-window local reporting and non-indexed agency notices may be missed. Production collection and deduplication not inspected; they remain authoritative.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only this single private heartbeat written. No editorial approval, public publication, merge, schedule changes or disablement."
+  }
+}

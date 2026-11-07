@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T104654-0800-r11-20261107T184654Z",
+  "scheduled_for": "2026-11-07T10:45:54-08:00",
+  "started_at": "2026-11-07T10:46:54-08:00",
+  "completed_at": "2026-11-07T10:48:28-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T09:43:06-08:00",
+    "end_at": "2026-11-07T10:48:28-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since previous independently read-back verified heartbeat; 2–3-day local-news/agency recall for indexing delays, with event-level exclusion of known earlier incidents."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall only; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery store lost/closed after fire, flooding or disaster",
+      "Emergency food distributions canceled or suspended due to weather, outage or facility damage",
+      "Abrupt food pantry/food-bank closure or major service-access reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate access loss"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T094150-0800-r11-20261107T174150Z.json",
+      "completed_at": "2026-11-07T09:43:06-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": "2–3",
+    "search_queries": [
+      "\"only grocery store\" closed burned flooded \"November\" 2026 -McCaysville",
+      "\"sole grocery store\" fire closure storm 2026 November",
+      "\"last grocery store\" closed fire November 2026",
+      "\"full service grocery store\" destroyed flooding fire Nov 2026",
+      "\"food distribution\" canceled storm \"November 7\" 2026",
+      "\"food distribution\" cancelled power outage flood November 2026",
+      "\"emergency food distribution\" postponed hurricane November 2026",
+      "\"food pantry\" \"closed\" \"November 7\" 2026 storm flood fire",
+      "\"food bank\" \"temporarily closed\" November 2026 -Provo",
+      "\"food pantry\" suspended services damaged November 2026",
+      "site:gov \"SNAP\" \"EBT\" \"outage\" \"November 7\" \"2026\"",
+      "site:gov WIC benefits card outage November 2026 unable purchase"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 6,
+      "failed": 0,
+      "urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://kauainownews.com/category/lowell-recovery/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville's only grocery-store loss was recorded in an earlier watch and is not a new distinct event."
+      },
+      {
+        "publisher": "KSL",
+        "source_url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Provo Community Action Services and Food Bank closure effective November 1, reported October 31; already noted in previous watches."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Hawaiʻi Foodbank Kauaʻi mobile food distribution was listed as scheduled for Friday November 6; separate hurricane-resource-center closures do not verify a canceled food distribution."
+      },
+      {
+        "publisher": "Hawaiʻi Department of Human Services",
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "General SNAP call-center and renewal-processing delays; no new dated official immediate benefit-use interruption established."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No verified new SNAP/WIC/EBT immediate-access outage during watch window."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No distinct new qualifying U.S. food-access disruption verified since the prior 09:43:06 PST heartbeat. Returned relevant indexed pages were previously reviewed incidents or lacked the specified interruption; many search hits were non-U.S. or stale.",
+    "material_degradation": false,
+    "limitations": "Bounded web indexing may miss very recent/unindexed local notices and social-only provider alerts. No production queue, publication or production deduplication examined.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only one append-only heartbeat on ops/watch-ledger; no approval, publication, schedule modification or disabling."
+  }
+}

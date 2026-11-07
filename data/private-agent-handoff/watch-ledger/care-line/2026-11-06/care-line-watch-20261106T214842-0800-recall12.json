@@ -1,0 +1,59 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T214842-0800-recall12",
+  "scheduled_for": "2026-11-06T21:45:22-08:00",
+  "started_at": "2026-11-06T21:48:42-08:00",
+  "completed_at": "2026-11-06T21:49:38-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T20:46:41-08:00",
+    "end": "2026-11-06T21:49:38-08:00",
+    "basis": "Since the prior independently verified supplementary Care Line recall watch completion (2026-11-06T20:46:41-08:00); not the authoritative national production collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope; Kentucky; organ procurement organization; Termination Notice; CCN 18P001",
+      "new_relevant_notices": 0,
+      "access": "Official CMS index retrieved and reviewed; no newer notice than 2026-11-02 visible."
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital / emergency department closure or suspension",
+      "Maternity or labor and delivery closure",
+      "Behavioral health / psychiatric service closure",
+      "Dialysis service shutdown",
+      "Oncology / infusion shutdown",
+      "Ground ambulance suspension",
+      "Rural hospital emergency service loss",
+      "Air ambulance base shutdown",
+      "Primary care clinic closure",
+      "Emergency service reopening",
+      "Official state hospital access suspension",
+      "U.S. territory hospital emergency service suspension"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center (Sharon, Pennsylvania): November 6 state-ordered closure already recorded during earlier watches; November 6 WVIA story adds financial/contextual discussion but no new distinct patient service change (https://www.wvia.org/news/local/2026-11-06/state-shuts-struggling-western-pa-hospital-rescued-by-tenor-health-but-officials-say-its-nepa-hospitals-arent-affected).",
+      "Vista Medical Center East (Waukegan, Illinois): November 6 report details a payroll delay but no new patient-service suspension; inpatient dialysis paused in early October, anesthesia suspended October 22, trauma designation removed October 24, all outside this hourly window (https://www.lakemchenryscanner.com/2026/11/06/vista-medical-center-east-employees-told-pay-is-delayed-again-2-weeks-after-waukegan-hospital-lost-trauma-designation/).",
+      "R. Anthony Marcson youth crisis stabilization center (Bowling Green, Ohio): ribbon-cutting November 5; service provision awaits state certification and is a new expansion rather than restoration of a lost service (https://bgindependentmedia.org/new-youth-crisis-center-honors-vision-of-childrens-resource-center-founder-r-anthony-marcson/).",
+      "Bitterroot Valley (Montana) unmet mental health needs: discussion of existing service gaps, no newly effective closure or reopening (https://bitterrootstar.com/2026/11/local-health-care-providers-discuss-gaps-in-bitterroot-valley-services/).",
+      "Older hospital and maternity losses, Canadian emergency/ED coverage, and unrelated incidents were out of scope by date or jurisdiction."
+    ],
+    "source_failures": [],
+    "coverage_limitations": [
+      "All 12 targeted searches conducted with November 6, 2026 focus and recent-results preference; sparse relevant same-window coverage, many older/out-of-geography results. This is bounded supplementary recall, not exhaustive coverage.",
+      "No proof of production collector state or authoritative deduplication was obtained; production collection remains authoritative."
+    ],
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

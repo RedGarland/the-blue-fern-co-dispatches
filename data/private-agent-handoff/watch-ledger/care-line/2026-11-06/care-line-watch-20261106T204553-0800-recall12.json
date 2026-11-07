@@ -1,0 +1,59 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T204553-0800-recall12",
+  "scheduled_for": "2026-11-06T20:45:22-08:00",
+  "started_at": "2026-11-06T20:45:53-08:00",
+  "completed_at": "2026-11-06T20:46:41-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T19:41:29.708-08:00",
+    "end": "2026-11-06T20:46:41-08:00",
+    "basis": "Since the prior verified supplementary Care Line recall watch completion; bounded recall only, not the authoritative production national collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, OPO termination, CCN 18P001",
+      "new_relevant_notices": 0,
+      "access": "Official index retrieved and reviewed; no notice newer than 2026-11-02 was visible."
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital and ED closure/suspension",
+      "Maternity and labor-delivery closure",
+      "Rural emergency service interruption",
+      "Ambulance and air-medical base closures",
+      "Dialysis closure",
+      "Behavioral-health and psychiatric facility closure",
+      "Oncology and infusion clinic closure",
+      "Primary care clinic shutdown",
+      "Emergency department reopening/restoration",
+      "Ground ambulance suspension",
+      "U.S. territory healthcare service loss",
+      "Official state health department hospital service suspension"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center (Pennsylvania): November 4 ER closure, November 6 service suspension, and later regulatory findings were previously captured; no new incremental change.",
+      "University Hospitals Seidman Cancer Center (Geneva, Ohio): previously reported November 13 planned closure; no new event in window.",
+      "Watsonville Community Hospital maternity services (California): public review process only, no implemented change.",
+      "Older maternity, air-medical and dialysis closures and Canadian/Indian hospital reporting: outside observation window or geography.",
+      "Hospital redevelopment, funding and ownership-related stories without a newly effective access change: excluded."
+    ],
+    "source_failures": [],
+    "coverage_limitations": [
+      "Targeted recent searches surfaced sparse timely results and many older or irrelevant articles. Absence of new findings is only within this bounded supplementary search.",
+      "Production collection and deduplication remain authoritative; production state not independently verified."
+    ],
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

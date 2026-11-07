@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T104139-0800-recall12",
+  "scheduled_for": "2026-11-07T10:45:22-08:00",
+  "started_at": "2026-11-07T10:41:39-08:00",
+  "completed_at": "2026-11-07T10:43:27.167-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T09:50:58-08:00",
+    "end": "2026-11-07T10:43:27.167-08:00",
+    "basis": "Since latest independently fetched Care Line watch-ledger completed_at. Bounded targeted search can surface late-indexed older events but does not imply a new event in this window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky — OPO termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department ambulance diversion closed suspended United States",
+      "November 7 2026 hospital maternity labor delivery unit closure suspended rural",
+      "November 7 2026 emergency medical services ambulance station base closure coverage",
+      "November 7 2026 air ambulance medical helicopter base closing suspended United States",
+      "November 7 2026 dialysis center patients closure treatment suspended",
+      "November 7 2026 oncology cancer center clinic shutdown closed services",
+      "November 7 2026 primary care clinic closes suddenly patients redirected",
+      "November 7 2026 behavioral health psychiatric hospital beds closing suspended admissions",
+      "November 7 2026 rural hospital emergency services suspended temporarily closure",
+      "November 7 2026 hospital emergency department reopened restored services ambulances",
+      "November 7 2026 hospital healthcare clinic closure Puerto Rico Guam Virgin Islands American Samoa",
+      "November 7 2026 state department health ordered ambulance diversion hospital emergency closure"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois — IDPH ambulance bypass effective 2026-11-07",
+        "reason": "Duplicate: exact source and finding ID already in preceding 09:48 Care Line heartbeat."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania — Nov 4 ED closure and Nov 6 services suspension",
+        "reason": "Already documented in Care Line watch history; November 5 publication restates prior closure."
+      },
+      {
+        "item": "Haywood/Barren-Metcalfe EMS ambulance station, Kentucky — planned ribbon cutting/new station",
+        "reason": "Announcement describes a future station not yet fully operational; no qualifying closure, suspension, or effective restoration."
+      },
+      {
+        "item": "Roseland Community Hospital maternity service closure, Illinois",
+        "reason": "November 2 reporting describes previously recorded November 1 loss, not new this interval."
+      },
+      {
+        "item": "Blue Nile dialysis center shutdown",
+        "reason": "Sudan; outside U.S. states and territories."
+      },
+      {
+        "item": "Other older or proposed service disruptions and unrelated healthcare expansions",
+        "reason": "No newly verified concrete access change in scope."
+      }
+    ],
+    "source_access_errors": [
+      {
+        "url": "https://glasgownews1.com/2026/11/07/ribbon-cutting-set-for-new-haywood-ambulance-station/",
+        "error": "Failed to fetch (DisabledError) on article open; search result itself identified a proposed, not-yet-operational ambulance station. No qualifying lost/restored service verified from this item."
+      }
+    ],
+    "result_summary": "No new qualifying, nonduplicate U.S. or territory access change identified. The only fresh concrete emergency-care restriction in returned results was the Vista EMS bypass, already captured by prior heartbeat. No newer CMS public notice.",
+    "status_reason": "DEGRADED because one local source article could not be opened after search result discovery. CMS and all twelve targeted searches returned useful coverage; the failed article's search summary did not indicate a qualifying event.",
+    "material_coverage_loss": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T094842-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T09:50:58-08:00",
+    "coverage_limitations": [
+      "This twelve-search supplementary watch is not a substitute for the national production collector and is not exhaustive.",
+      "Search recency filters can surface older or off-jurisdiction results; event dates and source publication dates were independently screened.",
+      "A planned Kentucky EMS station article was not fetchable, but its available search summary describes a plan rather than verified operational service restoration.",
+      "Nominal scheduled_for was derived from the hourly :45:22 local schedule; observed run start preceded the nominal tick."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T144701-0800-r11-20261107T224701Z",
+  "scheduled_for": "2026-11-07T14:45:54-08:00",
+  "started_at": "2026-11-07T14:47:01-08:00",
+  "completed_at": "2026-11-07T14:49:47.181-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T13:47:57.444-08:00",
+    "end_at": "2026-11-07T14:49:47.181-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since latest verified 13:47:57 PST Food Line heartbeat. Targeted web searches limited to 12, with 2-3 day recency to account for delayed indexing; qualifying events limited to new and nonduplicate developments in the observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. Food Line recall watch; authoritative primary nationwide collector not accessed or changed.",
+    "target_classes": [
+      "Loss of only/sole/last/full-service grocery via fire, flooding, closure or other disaster",
+      "Cancelled/suspended emergency food distribution due to weather, fire, outage or facility damage",
+      "Abrupt food bank or food pantry closure or substantial service reduction",
+      "New official SNAP/WIC/food-assistance benefit outage or interruption with immediate access impact"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T134638-0800-r11-20261107T214638Z.json",
+      "completed_at": "2026-11-07T13:47:57.444-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": "2–3",
+    "search_queries": [
+      "\"only grocery store\" closed OR destroyed flood fire November 7 2026 -McCaysville",
+      "\"sole grocery store\" lost closed storm flood fire November 2026 -McCaysville",
+      "\"last grocery store\" closing \"November\" \"2026\" rural town",
+      "\"full-service grocery store\" fire closed November 2026 community",
+      "\"food distribution\" canceled OR cancelled storm flood \"November 7\" 2026",
+      "\"emergency food distribution\" postponed OR suspended power outage hurricane November 2026",
+      "\"food pantry\" closed \"November 7, 2026\" storm fire flood",
+      "\"food bank\" \"temporarily closed\" November 2026 -Provo -fundraiser",
+      "\"food pantry\" \"suspended services\" November 2026 damage outage",
+      "site:gov \"SNAP\" \"outage\" \"November 7, 2026\" EBT",
+      "site:gov \"WIC\" \"interruption\" November 2026 benefits access",
+      "\"SNAP\" \"benefits\" delayed unavailable November 7 2026 state agency EBT"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 5,
+      "successful": 5,
+      "failed": 0,
+      "urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville, Georgia's sole grocery store flood loss occurred earlier in November and was recorded in previous watch heartbeats; no new separate loss."
+      },
+      {
+        "publisher": "KSL",
+        "source_url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Provo, Utah Community Action Services and Food Bank closure was announced October 31 and effective November 1, already recorded; not new this hour."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "November 6 hurricane-recovery article explicitly lists the Hale Līhuʻe mobile pantry distribution as scheduled. Closure applies to hurricane resource centers, not this food distribution."
+      },
+      {
+        "publisher": "Hawaiʻi Department of Human Services",
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Previously known, undated SNAP interview and phone processing delays; no new official benefits interruption with immediate access effect."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "November 5–6 offices closed for maintenance/festival, and October 30 network outage expired; no new November 7 SNAP/EBT interruption."
+      },
+      {
+        "publisher": "Federal Register",
+        "source_url": "https://www.federalregister.gov/documents/2026/11/06/2026-22679/special-supplemental-nutrition-program-for-women-infants-and-children-wic-online-ordering-and",
+        "reason": "November 6 WIC transaction/online-ordering rule is modernization, not an acute loss of food-assistance access."
+      },
+      {
+        "publisher": "Multiple historic reporting outlets",
+        "source_url": null,
+        "reason": "November 2025 SNAP government-shutdown stories, older grocery closures, Canadian news, donation/promotional stories are stale or outside scope."
+      }
+    ],
+    "source_or_search_failures": [],
+    "other_tool_limitations": [
+      "GitHub public HTML directory view was unavailable through web browsing; current branch changes were checked with authenticated GitHub compare_commits and previous heartbeat fetched through GitHub connector instead."
+    ],
+    "assessment": "No newly verifiable, nonduplicate U.S. disruption in the four high-value miss classes was found since 13:47:57 PST. Twelve targeted web searches yielded older/unrelated and already-reviewed incidents; five direct source checks established no new immediate interruption.",
+    "material_degradation": false,
+    "limitations": "This bounded supplementary indexed-web review may miss hyperlocal same-hour notices, unindexed provider social updates or delays in search indexing. Production collection and production deduplication were not inspected; production remains authoritative.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Append-only single heartbeat on ops/watch-ledger; no publication, approval, schedule changes or disabling."
+  }
+}

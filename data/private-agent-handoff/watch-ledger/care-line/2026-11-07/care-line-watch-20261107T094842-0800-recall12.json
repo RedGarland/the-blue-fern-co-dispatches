@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T094842-0800-recall12",
+  "scheduled_for": "2026-11-07T09:45:22-08:00",
+  "started_at": "2026-11-07T09:48:42-08:00",
+  "completed_at": "2026-11-07T09:50:58-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T08:44:49.109-08:00",
+    "end": "2026-11-07T09:50:58-08:00",
+    "basis": "Latest verified Care Line watch-ledger heartbeat completed_at to this observation. Searches also retrieved late-indexed or missed developments; those are marked as recall rather than falsely described as first announced within this interval."
+  },
+  "findings": [
+    {
+      "finding_id": "care-20261107-il-vista-medical-center-east-ambulance-bypass",
+      "canonical_source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+      "title": "State tells ambulances to stop taking patients to Vista Medical Center East in Waukegan until further notice",
+      "publisher": "Lake and McHenry County Scanner",
+      "exact_supporting_passage": "Vista Medical Center East went on EMS bypass at 7 a.m. Saturday and will remain on bypass until further notice",
+      "source_published_date": "2026-11-07",
+      "state": "Illinois",
+      "city": "Waukegan",
+      "county": "Lake",
+      "territory": null,
+      "event_type": "emergency_department_ambulance_bypass",
+      "service_line": "Emergency department / ambulance-received emergency care",
+      "access_consequences": "Illinois Department of Public Health directed EMS systems to stop ambulance transports to Vista Medical Center East beginning 7:00 a.m. local time November 7, 2026 until further notice. Ambulances instead divert to other hospitals, including more distant Lake Forest Hospital and Advocate Condell. Walk-in emergency patients remain accepted; this is not a full ED closure.",
+      "affected_population": "Ambulance-transported emergency patients in Waukegan, northern Lake County, and Region 10 EMS catchment; EMS response and transport resources affected by longer runs.",
+      "effective_date": "2026-11-07",
+      "announcement_date": "2026-11-07",
+      "confidence": "high",
+      "source_role": "local_reporting_citing_official_Illinois_Department_of_Public_Health_EMS_memo",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky — OPO termination notice, CCN 18P001",
+      "new_notices_since_previous_verified_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closure suspension November 7 2026 United States",
+      "maternity labor delivery unit closes suspends November 6 2026 hospital",
+      "rural hospital emergency services shutdown temporary closure November 6 2026",
+      "behavioral health psychiatric hospital clinic closed patients November 6 2026",
+      "dialysis facility center closes suspends operations November 6 2026",
+      "oncology cancer infusion center closes suspends treatment November 6 2026",
+      "primary care clinic closing patients November 6 2026 USA",
+      "ambulance EMS station closure suspended service November 6 2026",
+      "air ambulance medical helicopter base closure grounding November 6 2026 USA",
+      "hospital ER maternity reopen restored service November 6 2026",
+      "CMS Medicare termination CLIA limitation suspension November 7 2026 facility",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital clinic emergency service closed November 2026"
+    ],
+    "search_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3
+    ],
+    "result_summary": "One high-value missed emergency-access change recovered: November 7 statewide EMS bypass at Vista Medical Center East, Waukegan, Illinois. Prior 07:46 and 08:44 Care Line heartbeats had no findings and did not identify this event. Other results were older, proposed, not U.S. or territory, or lacked concrete access consequences.",
+    "recall_qualification": "The source was first recovered in this run, but the event began at 7:00 a.m. Central on November 7 and may predate the prior watch completion. This is a missed-development recall, not proof the announcement first occurred in the present hourly interval. The source's displayed publication timestamp has no explicit timezone.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania — emergency department and hospital-wide service suspension",
+        "reason": "Already documented in earlier Care Line watch history; Nov 5 article recounts Nov 4/6 changes."
+      },
+      {
+        "item": "Greenbrier Valley Medical Center, West Virginia — proposed maternity ward reopening",
+        "reason": "Not yet an effective essential-service restoration."
+      },
+      {
+        "item": "Mercy Medical Center, Massachusetts — maternity suspension",
+        "reason": "Nov 6 article is from 2025, not November 2026."
+      },
+      {
+        "item": "Blue Nile dialysis shutdown",
+        "reason": "In Sudan, outside United States and territories."
+      },
+      {
+        "item": "Rural hospital funding/closure risk stories",
+        "reason": "No newly concrete operational service loss."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T084303-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T08:44:49.109-08:00",
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+    ],
+    "access_errors": [],
+    "coverage_limitations": [
+      "A bounded 12-search supplement cannot replace the primary national collector or guarantee complete capture.",
+      "The newspaper quotes a specific IDPH EMS memo but the original memo was not independently retrieved.",
+      "Production deduplication and ingestion state were not independently inspected; this finding remains pending_review."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

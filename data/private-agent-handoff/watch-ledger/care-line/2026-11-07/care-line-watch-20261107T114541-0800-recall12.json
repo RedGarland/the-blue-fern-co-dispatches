@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T114541-0800-recall12",
+  "scheduled_for": "2026-11-07T11:45:22-08:00",
+  "started_at": "2026-11-07T11:45:41-08:00",
+  "completed_at": "2026-11-07T11:47:25-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T10:43:27-08:00",
+    "end": "2026-11-07T11:47:25-08:00",
+    "basis": "From completed_at of latest file verified in watch ledger before this run. Search queries targeted developments newly reported November 7, 2026 (recency filter 2 days); late-indexed older stories screened by actual event and publication dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky — OPO termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department abruptly closed ambulance diversion service suspended US",
+      "November 7 2026 hospital labor delivery maternity unit closure suspended emergency rural",
+      "November 7 2026 hospital rural emergency services closure suspension access patients",
+      "November 7 2026 ambulance EMS station base closes coverage suspended county",
+      "November 7 2026 air medical helicopter base closing suspended ambulance service",
+      "November 7 2026 dialysis clinic center closing treatment interruption patients",
+      "November 7 2026 oncology cancer center care closure clinic suspended services",
+      "November 7 2026 primary care doctor clinic permanently closing patients redirected",
+      "November 7 2026 behavioral health psychiatric inpatient unit suspends admissions closes",
+      "November 7 2026 hospital emergency department reopens ambulance diversion ended services restored",
+      "November 7 2026 hospital clinic emergency closure Puerto Rico Guam Virgin Islands American Samoa Northern Mariana",
+      "November 7 2026 state health department hospital provider license termination rescission lab CLIA suspended access"
+    ],
+    "search_recency_days": 2,
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois — ambulance bypass starting 2026-11-07",
+        "reason": "Already recorded as qualifying finding by prior 09:48 Care Line watch. Not a new development this window."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania — emergency department closed 2026-11-04 and all services suspended 2026-11-06",
+        "reason": "Prior watch covered the event; later republishing or commentary is duplicate."
+      },
+      {
+        "item": "Roseland Community Hospital, Illinois — maternity unit stopped deliveries November 1",
+        "reason": "November 2 reporting of an older previously reviewed service loss."
+      },
+      {
+        "item": "Decatur, Illinois — Air Evac Lifeteam air ambulance base closed in September 2026",
+        "reason": "Historical access change outside the observation window."
+      },
+      {
+        "item": "Peace River Center crisis-stabilization unit in Florida — admissions moratorium",
+        "reason": "News returned from several months before the window, not a newly effective change."
+      },
+      {
+        "item": "Proposed EMS stations, reopening plans, hospital financial-risk commentary and unrelated expansions",
+        "reason": "No verified concrete new access-loss or restoration in period."
+      }
+    ],
+    "result_summary": "CMS Public Notices showed no notice newer than November 2, 2026. The 12 targeted web searches did not establish a new nonduplicate effective U.S. or territory healthcare-access loss or restoration since the previous verified heartbeat. Returned material was largely old, already captured, prospective, or outside the specified class.",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T104139-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T10:43:27.167-08:00",
+    "coverage_limitations": [
+      "A bounded supplementary 12-search web recall is not the primary national collector or an exhaustive census of U.S. and territory changes.",
+      "Search engines return late-indexed, older and non-U.S. results; source publication dates and concrete access effects were screened.",
+      "This heartbeat records web recall only; it does not demonstrate production ingestion or production deduplication."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

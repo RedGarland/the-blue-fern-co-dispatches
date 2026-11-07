@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T084303-0800-recall12",
+  "scheduled_for": "2026-11-07T08:45:22-08:00",
+  "started_at": "2026-11-07T08:43:03-08:00",
+  "completed_at": "2026-11-07T08:44:49.109-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T06:42:11.348-08:00",
+    "end": "2026-11-07T08:44:49.109-08:00",
+    "basis": "Latest directly verified prior Care Line heartbeat completed_at to this run's observation; November 5–7 late-indexed reporting was also reviewed. A possibly later interim heartbeat could not be independently listed with the connected GitHub tools, so the earlier verified start is deliberately inclusive."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky — OPO termination notice; CCN 18P001",
+      "new_notices_since_previous_verified_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department closure suspension services United States",
+      "November 6 2026 rural hospital emergency room closing medical services local news",
+      "November 7 2026 maternity labor delivery unit closure suspension hospital US",
+      "November 7 2026 mental health psychiatric behavioral hospital unit closing services",
+      "November 7 2026 dialysis clinic closure suspended service patients",
+      "November 7 2026 cancer oncology treatment center closure patients November",
+      "November 7 2026 primary care rural health clinic permanently closing patients",
+      "November 7 2026 ambulance EMS station base closing suspension emergency response",
+      "November 7 2026 medical helicopter air ambulance base closure suspension",
+      "November 7 2026 hospital emergency department maternity service reopened restored",
+      "November 7 2026 site:cms.gov provider termination suspension CLIA notice",
+      "November 7 2026 Puerto Rico Guam US Virgin Islands hospital emergency ambulance clinic closure services"
+    ],
+    "search_recency_days": [
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3
+    ],
+    "result_summary": "No new, well-supported nonduplicate closure, suspension, provider sanction, or already-effective essential-service restoration verified. Search results were predominantly previously documented developments, older articles, non-service-change stories and proposed future restorations.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania, emergency department and hospital-wide suspension",
+        "source": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+        "reason": "Already recorded in earlier Care Line watches; Nov 5 article recounts Nov 4/Nov 6 changes, no new effective change within observation window."
+      },
+      {
+        "item": "Roseland Community Hospital maternity-ward shutdown, Chicago",
+        "source": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "WTTW article dated Nov 2 describes Nov 1 closure; no new hourly development evidenced and production prior capture not independently verified."
+      },
+      {
+        "item": "Greenbrier Valley Medical Center maternity reopening, West Virginia",
+        "source": "https://www.wdbj7.com/2026/11/05/greenbrier-valley-medical-center-reopening-maternity-ward-wv-governor-announces/",
+        "reason": "Nov 5 announcement concerns a letter of intent and phased future implementation contingent on agreements and approvals; not an effective service restoration."
+      },
+      {
+        "item": "TidalHealth Primary Care Federalsburg, Maryland",
+        "reason": "Previously recorded Nov 6 as pending review; no additional new change evidenced."
+      },
+      {
+        "item": "Rural health funding and provider business reporting",
+        "reason": "No concrete newly effective access change."
+      }
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T064031-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T06:42:11.348-08:00",
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+      "https://www.wdbj7.com/2026/11/05/greenbrier-valley-medical-center-reopening-maternity-ward-wv-governor-announces/"
+    ],
+    "access_errors": [],
+    "coverage_limitations": [
+      "Twelve targeted searches are bounded, not exhaustive; index recency often surfaced older reports.",
+      "Production collector state and completeness were not inspected; production remains authoritative.",
+      "The exact most recent hourly predecessor could not be independently enumerated from GitHub, so the last verified prior completed_at was used as a conservative inclusive window."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

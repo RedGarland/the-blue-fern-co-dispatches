@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T134638-0800-r11-20261107T214638Z",
+  "scheduled_for": "2026-11-07T13:45:54-08:00",
+  "started_at": "2026-11-07T13:46:38-08:00",
+  "completed_at": "2026-11-07T13:47:57.444-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T12:49:10-08:00",
+    "end_at": "2026-11-07T13:47:57.444-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior verified 12:49:10 PST heartbeat; search recency extended 2–3 days to accommodate late indexing; older previously recorded events excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value miss classes; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Loss of sole/only/last/full-service grocery in a community through closure, fire, flood or disaster",
+      "Cancellation/suspension of emergency food distribution due to storm, flood, fire, outage or facility damage",
+      "Abrupt closure or substantial service reduction of food bank/pantry",
+      "New official SNAP/WIC/food-assistance outage/interruption with immediate access impact"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T124751-0800-r11-20261107T204751Z.json",
+      "completed_at": "2026-11-07T12:49:10-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": "2–3",
+    "search_queries": [
+      "\"only grocery store\" closed destroyed flooded fire November 7 2026 -McCaysville",
+      "\"sole grocery store\" closure storm fire November 2026",
+      "\"last grocery store\" shut down November 2026 food desert",
+      "\"full-service grocery store\" closes fire flood November 2026",
+      "\"food distribution\" canceled storm flood Saturday November 7 2026",
+      "\"food distribution\" suspended hurricane Lowell November 2026 Hawaii",
+      "\"emergency food\" \"distribution\" postponed canceled outage November 2026",
+      "\"food pantry\" shut down fire flood November 7 2026",
+      "\"food bank\" closed abruptly temporarily November 2026 -Provo",
+      "\"food pantry\" services suspended November 7 2026",
+      "site:gov \"SNAP\" \"EBT\" \"outage\" \"November 7\" \"2026\"",
+      "site:gov WIC benefits interruption suspended November 2026"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 6,
+      "failed": 0,
+      "urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "https://dailydodge.com/waupun-fire-and-rescue-to-host-food-drive-smoke-alarm-checks-saturday/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville, GA only-grocery flood damage from Nov 4 is already in prior watches; no distinct new incident."
+      },
+      {
+        "publisher": "KSL",
+        "source_url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Provo, UT Community Action Services and Food Bank closure announced Oct 31 effective Nov 1; already recorded."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Foodbank mobile distribution remains explicitly scheduled; closure refers to hurricane resource centers, not a distribution cancellation."
+      },
+      {
+        "publisher": "Hawaiʻi Department of Human Services",
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing undated SNAP call-center/telephone processing delays; no newly dated immediate benefits interruption."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Previously announced Nov 5–6 office closures and expired Oct 30 network outage; no new immediate SNAP/WIC interruption."
+      },
+      {
+        "publisher": "Daily Dodge",
+        "source_url": "https://dailydodge.com/waupun-fire-and-rescue-to-host-food-drive-smoke-alarm-checks-saturday/",
+        "reason": "Nov 7 donation drive is expressly outside watch scope."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No newly verified qualifying U.S. disruption between 12:49:10 and heartbeat completion. Bounded searches mostly surfaced stale/non-U.S./promotional stories or previously recorded cases, and direct-source checks revealed no new immediate program stoppage.",
+    "material_degradation": false,
+    "limitations": "Same-hour hyperlocal developments and unindexed first-party notices can be missed. No read of authoritative production collector or deduplication state; exclusions were based on prior verified heartbeat context and previous watch history.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Append-only heartbeat only; no publication, editorial approval, schedule modification, or task disable."
+  }
+}

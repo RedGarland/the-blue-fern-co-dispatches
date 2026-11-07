@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T034843-0800-r11-20261107T114843Z",
+  "scheduled_for": "2026-11-07T03:45:54-08:00",
+  "started_at": "2026-11-07T03:48:43-08:00",
+  "completed_at": "2026-11-07T03:50:42.954-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T02:44:43.889-08:00",
+    "end_at": "2026-11-07T03:50:42.954-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since last independently verified Food Line heartbeat, with a targeted three-day recall for source indexing delays; known prior incidents excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall; nationwide production collection and deduplication remain authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss or disaster",
+      "Canceled or suspended emergency food distribution due to weather, outage, fire or damage",
+      "Abrupt pantry or food-bank closure/major access loss",
+      "New official SNAP/WIC/EBT food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T024324-0800-r11-20261107T104324Z.json",
+      "completed_at": "2026-11-07T02:44:43.889-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": 3,
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 6 2026 town",
+      "\"last grocery store\" \"November 7, 2026\" closure",
+      "\"only supermarket\" destroyed flooding November 2026 town",
+      "\"food distribution\" canceled storm flood November 7 2026",
+      "\"food pantry\" distribution canceled power outage November 6 2026",
+      "\"food bank\" distribution suspended flood damage November 2026",
+      "\"food pantry\" closing suddenly November 6 2026",
+      "\"food bank\" abruptly closed service November 7 2026",
+      "\"food pantry\" temporarily closed emergency November 6 2026",
+      "site:gov \"SNAP\" \"outage\" November 7 2026",
+      "site:gov \"WIC\" \"interruption\" November 6 2026",
+      "site:gov \"EBT\" \"service interruption\" November 2026"
+    ],
+    "search_query_errors_observed": 0,
+    "search_results_note": "Twelve targeted queries returned a sparse set of mostly older/irrelevant indexed results; no novel qualifying interruption surfaced. No claim of exhaustive nationwide coverage.",
+    "direct_source_checks": {
+      "count": 5,
+      "successful": 3,
+      "failed": 2,
+      "success_urls": [
+        "https://www.dss.virginia.gov/alerts/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight"
+      ],
+      "failed_urls": [
+        "https://dphss.guam.gov/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville only-grocery flood disruption is a previously captured pending-review finding from November 6, not a new signal in this interval."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "November 5-6 local agency-office closures due to planned festival/maintenance precede interval; no newly confirmed immediate food benefits interruption."
+      },
+      {
+        "publisher": "California WIC",
+        "url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "September federal-budget notice confirms WIC continues services and enrollment, not a new disruption."
+      },
+      {
+        "publisher": "Guam Department of Public Health and Social Services",
+        "url": "https://dphss.guam.gov/",
+        "reason": "Indexed November 5 announcement refers to end of temporary WIC waivers; predates interval and direct page timed out; no newly verified interruption."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Previously checked as scheduled rather than canceled; this run could not fetch the page independently."
+      },
+      {
+        "publisher": "Arizona Health Care Cost Containment System",
+        "url": "https://www.azahcccs.gov/Shared/News.html",
+        "reason": "Search result references June 2026 HEAplus outage with restoration; historical, not a new SNAP interruption."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://dphss.guam.gov/",
+        "reason": "Direct open timed out; search index still supplied dated notice list."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Direct open inaccessible in this run; prior verified check already excluded cancellation."
+      }
+    ],
+    "assessment": "No novel, verifiable qualifying U.S. food-access disruption was identified since the 02:44 PST prior heartbeat. Earlier McCaysville grocery loss remains a duplicate.",
+    "material_degradation": false,
+    "limitations": "Two direct-page checks failed, warranting DEGRADED status; surviving official/local sources and search-index coverage allow a bounded no-findings determination, not nationwide assurance. Query returns were sparse and may lag. Production collector and deduplication were not inspected.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one private watch-ledger heartbeat written; no publication, approval, merge, schedule change or disablement."
+  }
+}

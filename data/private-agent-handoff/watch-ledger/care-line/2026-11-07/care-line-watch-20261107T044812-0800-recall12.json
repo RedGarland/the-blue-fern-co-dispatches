@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T044812-0800-recall12",
+  "scheduled_for": "2026-11-07T04:45:22-08:00",
+  "started_at": "2026-11-07T04:48:12-08:00",
+  "completed_at": "2026-11-07T04:50:08-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T03:51:07-08:00",
+    "end": "2026-11-07T04:50:08-08:00",
+    "basis": "Previous successfully verified Care Line Watch heartbeat completed_at through this run's research completion; retrospective search hits excluded unless representing an independent newly surfaced qualifying access change."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY; CCN 18P001), organ procurement organization Medicare termination notice",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "Official CMS Public Notices current table successfully opened and checked before all additional searches.",
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department closed temporarily suspended United States",
+      "November 6 2026 maternity labor delivery unit closure announced hospital",
+      "November 6 7 2026 rural hospital emergency services shut down closure local news",
+      "November 6 7 2026 psychiatric behavioral health inpatient facility closure suspended services",
+      "November 6 7 2026 dialysis center closure patients transfer treatments",
+      "November 6 7 2026 cancer oncology treatment center clinic closes suspends service",
+      "November 6 7 2026 family medicine primary care clinic closure rural patients",
+      "November 6 7 2026 ambulance service EMS stopped operating suspension closure",
+      "November 6 7 2026 air ambulance helicopter medical base closing shutdown",
+      "November 6 7 2026 emergency department hospital maternity reopened resumed services after closure",
+      "November 6 7 2026 site:cms.gov \"Termination Notice\" \"CLIA\" \"Rescission\" provider",
+      "November 6 7 2026 Guam Puerto Rico USVI CNMI American Samoa hospital clinic ambulance service closure suspension"
+    ],
+    "search_result_notes": "12 targeted searches were submitted. Aggregated search results were unusually sparse and largely surfaced the existing CMS listing and previously covered Sharon Regional suspension; no new independently corroborated event met the qualifying threshold.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Sharon, Pennsylvania; emergency department closure November 4 and all-service suspension November 6",
+        "source": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+        "reason": "Previously recorded and reviewed in preceding Care Line Watch executions; no independent new loss or restoration in this hourly observation window."
+      },
+      {
+        "item": "TidalHealth Primary Care, Federalsburg, Maryland; closure effective November 15",
+        "reason": "Recovered as a pending-review finding by the November 6, 22:49 PST Care Line Watch run; not a new finding for this check."
+      }
+    ],
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+    ],
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T034706-0800-recall12.json",
+    "prior_heartbeat_confirmed_completed_at": "2026-11-07T03:51:07-08:00",
+    "access_errors": [],
+    "coverage_limitations": [
+      "Search provider aggregated 12 targeted queries into very sparse relevant results; this is a bounded supplementary recall, not an exhaustive national survey.",
+      "No direct verification against authoritative production ingest/deduplication. Production collector remains authoritative."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

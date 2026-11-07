@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T005048-0800-r11-20261107T085048Z",
+  "scheduled_for": "2026-11-07T00:45:54-08:00",
+  "started_at": "2026-11-07T00:50:48-08:00",
+  "completed_at": "2026-11-07T00:51:50-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T23:47:41-08:00",
+    "end_at": "2026-11-07T00:51:50-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since the prior independently verified 2026-11-06 23:47:41 PST watch heartbeat; exclude older incidents and already-recorded prior-watch findings, even when indexed or updated during this period."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value missed U.S. food-access disruptions. The production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service community grocery loss or closure following disaster/fire",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major service reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access impact"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T234613-0800-r11-20261107T074613Z.json",
+      "completed_at": "2026-11-06T23:47:41-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "8 fast, 4 slow",
+    "search_recency_days": 2,
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire flooded November 6 2026 United States",
+      "\"last grocery store\" closed November 7 2026 OR November 6 2026",
+      "\"sole grocery store\" storm fire flooded closed Nov 2026",
+      "\"food distribution\" canceled storm flooding November 6 2026 OR November 7 2026",
+      "\"food bank\" \"distribution canceled\" weather November 2026",
+      "\"food pantry\" \"closed\" \"November 6\" 2026 flood OR fire OR emergency",
+      "SNAP benefits interruption outage November 6 2026 state agency EBT",
+      "WIC benefits outage suspended November 6 2026 state health department",
+      "November 7 2026 November 6 2026 food pantry suddenly shut down service interruption disaster U.S.",
+      "November 7 2026 emergency food distribution cancelled due to storm power outage flood United States",
+      "November 7 2026 only grocery store closed flood fire town local news",
+      "November 7 2026 SNAP WIC EBT interruption outage official state benefits"
+    ],
+    "direct_page_checks": {
+      "count": 5,
+      "successful": 4,
+      "failed": 1,
+      "successful_urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://provo.com/news/utah-county-warming-center-community-action-closure-november-2026/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.sltrib.com/news/2026/11/01/provo-food-bank-announces/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.diningandcooking.com/us/80720/",
+          "error": "DisabledError on direct open; search result described Nov. 7 opening of a Food Lion store in Hilton Head, not a closure or access-loss candidate.",
+          "material": false
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville GA sole grocery loss from Nov. 4–5 flooding already recorded pending_review in Nov. 6 19:48 PST watch; duplicate."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov. 6 Hawaiʻi Foodbank Kauaʻi Hale Līhuʻe emergency mobile distribution explicitly remained scheduled (4–5 PM); no verified cancellation."
+      },
+      {
+        "publisher": "Provo.com / Fox 13 / Salt Lake Tribune",
+        "url": "https://provo.com/news/utah-county-warming-center-community-action-closure-november-2026/",
+        "reason": "Nov. 6 follow-up recounts Provo Community Action Services and Food Bank's Nov. 1 closure; previously reviewed, not a new shutdown in window."
+      },
+      {
+        "publisher": "WBNG",
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer NY only-grocery fire predates window by weeks."
+      },
+      {
+        "publisher": "State SNAP/WIC results",
+        "url": "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/2025/11/06/mdhhs-november-snap-update",
+        "reason": "Apparent November 6 benefit announcements relate to November 2025, not November 2026; no qualifying new official interruption verified."
+      }
+    ],
+    "assessment": "Twelve targeted searches returned no newly verified qualifying U.S. food-access disruptions in the watch interval. Previously flagged McCaysville flooding, historic Provo closure, and older SNAP shutdown reports were filtered. One unrelated retail-opening page did not permit direct access, so record DEGRADED with no material coverage loss.",
+    "source_or_search_failures": [
+      {
+        "type": "direct_page",
+        "url": "https://www.diningandcooking.com/us/80720/",
+        "error": "DisabledError",
+        "material": false
+      }
+    ],
+    "material_degradation": false,
+    "limitations": "Search-index delays and the narrow recall scope can miss local/off-index provider posts; no independent verification of production collector coverage or production dedupe. The failed source concerns a retail opening and has no evidence of a food-access disruption.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Private watch-ledger heartbeat only. No approval, merge, production publishing, schedule change or disabling."
+  }
+}

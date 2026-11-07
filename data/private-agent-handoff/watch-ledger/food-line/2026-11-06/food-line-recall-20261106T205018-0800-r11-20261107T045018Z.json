@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T205018-0800-r11-20261107T045018Z",
+  "scheduled_for": "2026-11-06T20:45:54-08:00",
+  "started_at": "2026-11-06T20:50:18-08:00",
+  "completed_at": "2026-11-06T20:51:28.302-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T19:48:34.597-08:00",
+    "end_at": "2026-11-06T20:51:28.302-08:00",
+    "observation_date": "2026-11-06",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior independently verified Food Line watch heartbeat. Targeted Nov 6 fresh-news searches; some older items returned and explicitly excluded. This supplementary recall is not the production collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for unusually high-impact missed disruptions; production Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery destroyed, closed, or disabled",
+      "Emergency food distribution cancelled/suspended due to storm, flood, fire, power outage, or facility damage",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T194621-0800-r11-20261107T034621Z.json",
+      "completed_at": "2026-11-06T19:48:34.597-08:00",
+      "status": "SUCCESS",
+      "outcome": "findings",
+      "prior_finding_id": "food-line-ga-mccaysville-sole-grocery-flood-20261106"
+    },
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "November 6 2026 only grocery store community closed fire flood storm latest",
+      "November 6 2026 last grocery store town closes after disaster United States",
+      "November 6 2026 sole grocery store destroyed flood power outage news",
+      "November 6 2026 town only supermarket shut down after fire latest",
+      "November 6 2026 food bank distribution cancelled due to storm floods outage today",
+      "November 6 2026 emergency food distribution suspended canceled weather facility damage",
+      "November 6 2026 food pantry unexpectedly closed emergency repairs no distribution",
+      "November 6 2026 food bank abruptly closes pantry site access interruption local",
+      "November 6 2026 SNAP benefits outage interrupted EBT card official state agency",
+      "November 6 2026 WIC system outage clinic closed benefit redemption official",
+      "site:gov November 6 2026 SNAP benefits suspended outage access notice",
+      "November 6 2026 food assistance emergency closure county SNAP WIC office Friday"
+    ],
+    "direct_page_checks": {
+      "count": 7,
+      "successful": 6,
+      "failed": 1,
+      "successful_urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.aol.com/articles/grocery-chain-permanently-closes-two-230108000.html",
+        "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "https://www.news4jax.com/news/national/2026/11/06/storms-that-caused-1-in-1000-year-flood-event-in-tennessee-and-georgia-move-up-atlantic-coast/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://kauai.hawaiifoodbank.org/"
+      ],
+      "failures": [
+        {
+          "url": "https://kauairecovers.org/",
+          "error": "Direct URL could not be accessed by web retrieval; linked general recovery resource, not evidence of a cancelled food distribution.",
+          "material_to_classification": false
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "Same sole-grocery flood loss already recorded in previous 19:48 heartbeat as pending review; duplicate, no new status verified."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov 6 Hawaiʻi Foodbank Kauaʻi mobile pantry at Hale Līhuʻe (4-5 pm) reported scheduled, not cancelled; recovery resource centers closing is not an abrupt foodbank/pantry interruption."
+      },
+      {
+        "publisher": "KSNW via AOL",
+        "url": "https://www.aol.com/articles/grocery-chain-permanently-closes-two-230108000.html",
+        "reason": "Nov 5-6 GreenAcres Market closures in Wichita and Oklahoma City; no evidence either was the community's sole/last/full-service grocer or disaster driven."
+      },
+      {
+        "publisher": "The Beacon: Kansas City",
+        "url": "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "reason": "November 6 feature examines earlier Kansas City grocery closures and a new store opening; no newly qualifying loss in the watch interval."
+      },
+      {
+        "publisher": "Associated Press via News4JAX",
+        "url": "https://www.news4jax.com/news/national/2026/11/06/storms-that-caused-1-in-1000-year-flood-event-in-tennessee-and-georgia-move-up-atlantic-coast/",
+        "reason": "Flood coverage corroborates previously captured McCaysville disruption but does not identify a distinct new qualifying grocery/distribution loss."
+      }
+    ],
+    "assessment": "No new, independently substantiated qualifying signal since 19:48 Pacific. Prior McCaysville, GA only-grocery flood loss remains pending_review and was not duplicated. No new provider/agency SNAP, WIC, pantry closure or emergency distribution cancellation verified.",
+    "source_or_search_failures": [
+      {
+        "type": "direct_page_fetch",
+        "url": "https://kauairecovers.org/",
+        "description": "Nonessential recovery-resource website inaccessible; alternative reporting and provider homepage accessible; not a material high-value recall miss."
+      }
+    ],
+    "limitations": "Search results provide bounded recall, not comprehensive nationwide surveillance. One general recovery site inaccessible, thus DEGRADED per failure rule despite successful targeted queries; no production deduplication/access or publishing performed.",
+    "material_degradation": false,
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Private heartbeat only; no approval, publication, merge, schedule changes, or disabling."
+  }
+}

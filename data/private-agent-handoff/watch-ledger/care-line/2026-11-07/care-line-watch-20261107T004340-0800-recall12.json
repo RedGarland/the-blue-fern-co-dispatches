@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T004340-0800-recall12",
+  "scheduled_for": "2026-11-07T00:45:22-08:00",
+  "started_at": "2026-11-07T00:43:40-08:00",
+  "completed_at": "2026-11-07T00:45:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T23:48:52-08:00",
+    "end": "2026-11-07T00:45:38-08:00",
+    "basis": "Since completed_at of the preceding independently verified Care Line Watch heartbeat on ops/watch-ledger. Recall queries also consider recently discovered earlier announcements, but omit previously recorded events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), Organ Procurement Organization termination notice, CCN 18P001",
+      "new_notices_since_previous_heartbeat": 0
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital/emergency department closure or suspension",
+      "Maternity/labor and delivery closure",
+      "Behavioral health inpatient closure",
+      "Dialysis center closure",
+      "Oncology or infusion service closure",
+      "Rural primary-care clinic closure",
+      "Rural hospital or emergency-service loss",
+      "Ground ambulance or EMS base service closure",
+      "Air-medical helicopter base closure",
+      "Reopening/restoration of previously lost essential services",
+      "U.S. territory hospital/clinic service suspension",
+      "Latest concrete hospital/clinic service closure announcements"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center (PA): Nov 4 emergency department and Nov 6 service suspensions previously recorded; not a new development.",
+      "TidalHealth Federalsburg (MD): primary-care clinic Nov 15 future closure recorded in Nov 6 prior watch; duplicate.",
+      "Geneva Cancer Center (OH): November 13 closure announced in September; previously recorded.",
+      "Watsonville Community Hospital (CA): future hospital/maternity closure concern without concrete newly enacted service loss.",
+      "Oklahoma Children's OU Health behavioral-health opening: new service, not restoration of a previously lost essential service.",
+      "Douglas County / Children's Hospital Colorado mental health expansion Nov 6: expansion, not restoration of previously lost essential service.",
+      "Fresenius Eastman dialysis (GA) and Air Evac Decatur (IL): prior-month service losses, not new reports.",
+      "Mackenzie and District Hospital (British Columbia) emergency department restoration: Canada, outside U.S. and territories.",
+      "Guam storm-related dialysis/clinic limitations reported April 2026: historical, not new.",
+      "Business dealmaking, proposed or potential closures, older service loss reports, and unsupported/no-date results."
+    ],
+    "access_errors": [
+      {
+        "stage": "CMS Public Notices initial direct navigation",
+        "attempted_url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "result": "Inaccessible outdated/noncanonical URL. Located and successfully fetched canonical CMS Public Notices page, with latest visible notice Nov 2.",
+        "impact": "No remaining CMS notice coverage gap. Classified DEGRADED conservatively because an attempted source URL failed."
+      }
+    ],
+    "coverage_limitations": [
+      "Search results sparse and heavily weighted toward older articles. Twelve targeted searches do not ensure nationwide recall coverage.",
+      "Production collector deduplication was not independently verified; the production collector remains authoritative.",
+      "No new qualifying, nonduplicate verified access change discovered during this bounded supplementary recall."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

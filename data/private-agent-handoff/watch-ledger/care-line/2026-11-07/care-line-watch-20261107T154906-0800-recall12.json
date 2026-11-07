@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T154906-0800-recall12",
+  "scheduled_for": "2026-11-07T15:45:22-08:00",
+  "started_at": "2026-11-07T15:49:06-08:00",
+  "completed_at": "2026-11-07T15:50:10.406-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T14:46:14-08:00",
+    "end": "2026-11-07T15:50:10.406-08:00",
+    "basis": "From latest independently verified Care Line heartbeat completed_at through this run; searches targeted November 7 with two-day recency and were evaluated for genuinely new events, including lagged reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, Organ Procurement Organization termination notice (CCN 18P001)",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department ambulance diversion new closure service suspension United States",
+      "November 7 2026 hospital maternity labor delivery unit shutdown suspension patients",
+      "November 7 2026 rural hospital emergency room closure temporary suspension urgent care",
+      "November 7 2026 ambulance EMS station base closure service suspended county",
+      "November 7 2026 air ambulance medical helicopter base closure flight suspension",
+      "November 7 2026 dialysis treatment center abrupt closure patients appointments",
+      "November 7 2026 psychiatric behavioral health inpatient unit closed stopped admissions hospital",
+      "November 7 2026 oncology chemotherapy cancer infusion center closure treatment suspended",
+      "November 7 2026 primary care clinic urgent care abrupt closure notice patients",
+      "November 7 2026 emergency department reopened ambulance diversion lifted hospital essential service resumed",
+      "November 7 2026 Puerto Rico Guam CNMI US Virgin Islands American Samoa hospital emergency ambulance clinic services closed reopened",
+      "November 7 2026 Medicare CMS termination rescission CLIA certificate suspension laboratory health department notice"
+    ],
+    "search_recency_days": 2,
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL, Illinois-directed EMS bypass since 2026-11-07 07:00 CST",
+        "reason": "Already captured in Nov 7 09:48 PST positive watch heartbeat; current reporting repeats the same access event."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon PA, ER closure Nov 4 and other services suspended Nov 6",
+        "reason": "Previously recorded service interruption; not a new change this observation window."
+      },
+      {
+        "item": "Roseland Community Hospital maternity-unit closure Chicago IL",
+        "reason": "Late-October access change, not new this hour."
+      },
+      {
+        "item": "Air Evac Lifeteam base at Decatur, IL",
+        "reason": "Base closure effective 2026-09-16, historical event."
+      },
+      {
+        "item": "Guam Memorial Hospital tropical storm Champi service restrictions",
+        "reason": "Official Guam notice dated October 16; not a new November 7 change."
+      },
+      {
+        "item": "General service proposals, federal policy analysis, foreign mental-health/dialysis reports and other older material",
+        "reason": "No verified new effective U.S. or territory healthcare-access change."
+      }
+    ],
+    "result_summary": "Official CMS Public Notices was checked first, most recent entry dated Nov 2; then 12 targeted, two-day-recency searches covering hospital and emergency care, obstetrics, rural care, EMS, air medical, dialysis, behavioral health, oncology, primary care, essential service restoration, territories, and CMS/CLIA notices. No new qualifying, nonduplicate development found for the current window.",
+    "source_examples": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+      "https://ghs.guam.gov/node/4352"
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T144539-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T14:46:14-08:00",
+    "coverage_limitations": [
+      "Bounded supplemental searches are not exhaustive and delayed local publication or indexing can hide changes.",
+      "Production ingestion and deduplication were not verified."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

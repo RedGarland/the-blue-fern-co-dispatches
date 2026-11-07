@@ -1,0 +1,67 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T024429-0800-recall12",
+  "scheduled_for": "2026-11-07T02:45:22-08:00",
+  "started_at": "2026-11-07T02:44:29-08:00",
+  "completed_at": "2026-11-07T02:45:20-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T01:51:36-08:00",
+    "end": "2026-11-07T02:45:20-08:00",
+    "basis": "Previous verified hourly Care Line Watch heartbeat completed_at through current recall completion, in America/Los_Angeles. Recent older announcements also screened for missed qualifying events; announcement/effective dates distinguished from date discovered."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination notice (CCN 18P001)",
+      "new_notices_since_previous_heartbeat": 0,
+      "source_status": "Canonical CMS Public Notices successfully read directly before all 12 additional targeted searches.",
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital/emergency department closure and suspension",
+      "Maternity/labor-and-delivery service loss",
+      "Rural hospital and emergency service loss",
+      "Behavioral health/psychiatric clinic closure",
+      "Dialysis closure",
+      "Oncology/cancer center service suspension",
+      "Primary-care clinic closure",
+      "Ambulance service and EMS suspension",
+      "Air-medical helicopter/base closure",
+      "Concrete emergency department/hospital reopening or service restoration",
+      "CMS provider termination or limitation recent updates",
+      "Guam, Puerto Rico, U.S. Virgin Islands and territory hospital/clinic/EMS closure"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center, Pennsylvania: Nov 4 ED closure and Nov 6 broader suspension previously captured; search produced older Nov 5 reporting, not a new development.",
+      "TidalHealth Federalsburg, Maryland primary-care closure effective Nov 15: previously recovered in Nov 6 heartbeat; not repeated.",
+      "Prior maternity-closure proposals, historical rural-care reports, general healthcare access/funding discussion and workforce or exposure reports with no new service-loss/restoration event.",
+      "International/UK health news, including NHS updates; outside the U.S. and territory scope."
+    ],
+    "sources_reviewed": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "12 fresh targeted web searches with 2- to 7-day recency filters",
+      "2026-11-07T01:51:36-08:00 prior heartbeat for event-level duplicate control"
+    ],
+    "access_errors": [],
+    "coverage_limitations": [
+      "Search results were sparse and included historical results despite recency filters; supplementary recall only, not exhaustive national surveillance.",
+      "Primary national production collection and its event-level deduplication were not directly checked; production collection remains authoritative.",
+      "No qualifying new, nonduplicate concrete access change was verified in this bounded search."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

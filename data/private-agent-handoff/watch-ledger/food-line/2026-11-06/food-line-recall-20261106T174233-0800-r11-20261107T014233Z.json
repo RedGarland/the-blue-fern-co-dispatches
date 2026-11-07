@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T174233-0800-r11-20261107T014233Z",
+  "scheduled_for": "2026-11-06T16:45:54-08:00",
+  "started_at": "2026-11-06T17:42:33-08:00",
+  "completed_at": "2026-11-06T17:44:18.120-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T15:50:50-08:00",
+    "end_at": "2026-11-06T17:44:18.120-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Conservative overlapping window from last independently verified Food Line watch heartbeat, as latest prior hourly run could not be enumerated with available repository read actions. Event/effective dates were assessed separately from article publication dates; late reporting of old closures is not treated as a new disruption.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall for high-value food-access miss classes; primary national production collector remains authoritative.",
+    "scheduled_for_basis": "Most recent scheduled :45:54 hourly slot before invocation, inferred from recurrence (not independently verified execution timestamp).",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery store closed, lost, damaged or destroyed",
+      "Emergency food distribution canceled/suspended by storm, flooding, fire, outages or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T154936-0800-r11-20261106T234936Z.json",
+      "completed_at": "2026-11-06T15:50:50-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" \"closed\" \"November 6, 2026\" fire town",
+      "\"last grocery store\" closes November 6 2026 rural",
+      "\"sole grocery store\" destroyed fire November 6 2026",
+      "\"full-service grocery\" \"closure\" November 6 2026 community",
+      "\"food distribution\" \"cancelled\" storm November 6 2026 food bank",
+      "\"emergency food distribution\" \"canceled\" \"November 6\" 2026",
+      "\"food pantry\" \"closed\" \"November 6, 2026\" services storm",
+      "\"food bank\" \"suspended\" \"November 6\" 2026 distribution",
+      "November 6 2026 \"SNAP\" \"outage\" \"benefits\" state agency notice",
+      "November 6 2026 \"WIC\" \"closed\" \"services\" state agency storm",
+      "November 6 2026 \"food bank\" \"closing\" \"today\" service interruption local",
+      "November 6 2026 \"food distribution\" postponed canceled power outage flooding local"
+    ],
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "direct_food_source_checks": 7,
+    "successful_direct_food_source_checks": 6,
+    "failed_direct_food_source_checks": 1,
+    "reviewed_candidates": [
+      {
+        "url": "https://www.kpcw.org/summit-county/2026-11-06/coalville-oakley-rush-to-meet-need-after-food-banks-close-before-holidays",
+        "publisher": "KPCW",
+        "published_at": "2026-11-06T10:01:00-07:00",
+        "exclusion_reason": "Report published 09:01 PST, before the watch window; Heber, Coalville and Oakley food-bank closures occurred at end of October, not within this interval."
+      },
+      {
+        "url": "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "publisher": "Beacon: Kansas City",
+        "published_at": "2026-11-06",
+        "exclusion_reason": "Previously reviewed article reports October 25 grocery closure and older historical food access losses."
+      },
+      {
+        "url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "published_at": null,
+        "exclusion_reason": "Official page still lists Friday Nov 6 4-5 p.m. local Hale Līhuʻe emergency food distribution; no cancellation shown, listing is not proof it occurred."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Middlesex November 6-9 office closure for a festival, Lynchburg Nov 5 maintenance closure; no newly documented SNAP/WIC-specific service interruption within the window."
+      },
+      {
+        "url": "https://www.health.state.mn.us/people/wic/localagency/infosystem/thescoop.html",
+        "publisher": "Minnesota Department of Health",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "Indexed Nov 5 WIC operations newsletter concerns routine upcoming holiday closures; no Nov 6 interruption. Direct page returned HTTP 403."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Official calendar still lists November 7 and later distributions; no newly announced cancellation."
+      },
+      {
+        "url": "https://www.fmpfoodbank.org/find_food/",
+        "publisher": "Feed My People Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Official food locator checked; no fresh-dated service shutdown. Previously reported Eau Claire cancellations preceded the interval."
+      },
+      {
+        "url": "https://www.nj.gov/foodsecurity/news/",
+        "publisher": "New Jersey Office of the Food Security Advocate",
+        "published_at": null,
+        "exclusion_reason": "Official general update page contains no new Nov 6 SNAP/WIC access interruption."
+      }
+    ],
+    "result": "No qualifying, newly reported or newly effective U.S. food-access disruption verified in bounded search window.",
+    "limitations": "A targeted official Minnesota WIC direct-page check was blocked (403) although indexed newsletter text was available, so run marked DEGRADED. Cannot enumerate the most recent hourly heartbeat on branch with available repository read actions; overlap back to 15:50 ensures conservative recall but authoritative production dedupe was not inspected. Web searches are bounded recall, not nationwide completeness. No confirmation that listed food distributions took place.",
+    "materiality": "Limited, nonmaterial source-fetch degradation; 12 of 12 targeted searches and 6 of 7 direct food-source checks succeeded. No verified qualifying signal requiring notification.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only this one heartbeat was added to ops/watch-ledger; no approvals, public publication, merges, task changes, disabling, or new credentials."
+  }
+}

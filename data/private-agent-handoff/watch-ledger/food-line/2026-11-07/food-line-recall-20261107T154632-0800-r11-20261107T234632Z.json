@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T154632-0800-r11-20261107T234632Z",
+  "scheduled_for": "2026-11-07T15:45:54-08:00",
+  "started_at": "2026-11-07T15:46:32-08:00",
+  "completed_at": "2026-11-07T15:47:36.560-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T14:49:47.181-08:00",
+    "end_at": "2026-11-07T15:47:36.560-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since latest branch-verified Food Line hourly heartbeat; 2–3 day source discovery recency was used for delayed indexing but qualifying developments limited to the hourly window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. Food Line recall watch; production nationwide collector remains authoritative and was not modified.",
+    "target_classes": [
+      "Disaster/fire/closure loss of only, sole, last, or full-service grocery",
+      "Storm/flood/fire/outage/damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption affecting immediate access"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T144701-0800-r11-20261107T224701Z.json",
+      "completed_at": "2026-11-07T14:49:47.181-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": "2–3",
+    "search_queries": [
+      "\"only grocery store\" closed fire November 7 2026 food access",
+      "\"sole grocery store\" fire closed this week November 2026",
+      "\"last full service grocery\" closing November 2026 town",
+      "food distribution cancelled storm November 7 2026 pantry",
+      "emergency food distribution canceled weather flooding Saturday November 7 2026",
+      "food bank distribution suspended power outage storm November 2026",
+      "food pantry closed abruptly Saturday November 7 2026 residents",
+      "food bank location shut down temporarily November 7 2026 damage",
+      "food pantry suspends services November 2026 access",
+      "SNAP benefits system outage November 7 2026 state agency",
+      "WIC benefits interrupted EBT outage November 2026 official",
+      "SNAP assistance payments delayed suspended November 7 2026 agency notice"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 5,
+      "successful": 5,
+      "failed": 0,
+      "urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville, GA only-grocery flood loss reported November 6 and already reviewed by prior checks; not new this hour."
+      },
+      {
+        "publisher": "KSL",
+        "source_url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Provo, UT food-bank closure reported October 31, effective November 1; already reviewed."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "November 6 article listed Friday mobile pantry as scheduled; closed hurricane resource centers are not a newly canceled food distribution."
+      },
+      {
+        "publisher": "Hawaiʻi Department of Human Services",
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Undated existing SNAP phone/interview processing delays; no new same-hour official acute benefits interruption established."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Existing November 5–6 office closures through November 9 and expired October 30 network outage; no new November 7 SNAP/EBT access interruption."
+      },
+      {
+        "publisher": "Prodisee Pantry / local television",
+        "source_url": "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-saturday-food-distribution-stockton-ahead-isaias/",
+        "reason": "Weather-related food distribution cancellation occurred October 7, outside hourly window."
+      },
+      {
+        "publisher": "Other indexed results",
+        "source_url": null,
+        "reason": "Older rural grocery closures, food-bank promotions/donations, generic food programs, and nonqualifying items excluded."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No newly verifiable, nonduplicate qualifying disruption in four high-value miss classes was identified since the previous 14:49:47 PST heartbeat. All 12 targeted searches and five direct-source checks returned usable responses.",
+    "material_degradation": false,
+    "limitations": "Same-hour hyperlocal reports, uncrawled provider social notices, and search indexing delays may be missed. Production collection and deduplication were not inspected; this is not an exhaustive national audit.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Single append-only heartbeat on ops/watch-ledger. No approval, publication, schedule change, or disabling."
+  }
+}

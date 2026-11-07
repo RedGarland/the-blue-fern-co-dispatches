@@ -1,0 +1,138 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T174357-0800-r11",
+  "scheduled_for": "2026-11-06T17:44:51-08:00",
+  "started_at": "2026-11-06T17:43:57-08:00",
+  "completed_at": "2026-11-06T17:45:17.625-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T16:47:51.225-08:00",
+    "end": "2026-11-06T17:45:17.625-08:00",
+    "basis": "Prior most recent verified Gaza watch-ledger heartbeat completion on ops/watch-ledger. Includes retrospective checks for newly indexed source reports, with known findings deduplicated.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall, not authoritative production collection, publication, editorial approval or scheduler control. None of those were changed.",
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-06/gaza-source-watch-20261106T164629-0800-r11.json",
+      "completed_at": "2026-11-06T16:47:51.225-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/",
+          "https://www.ochaopt.org/updates",
+          "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026"
+        ],
+        "state": "accessible",
+        "result": "Latest listed report remains Humanitarian Situation Report | 5 November 2026, published 6 November; five food/neonatal/sanitation/evacuation/shelter assessments in this report already captured at 11:44 PST. No subsequent distinct OCHA Gaza update listed."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/"
+        ],
+        "state": "partially accessible",
+        "result": "WHO global conflict overview accessible; latest listed regional news is older, with no Gaza-specific 6 November health update. WHO EMRO regional OPT endpoint returned HTTP 502, a repeat of the known access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 7 2026 Saturday early morning Gaza City Khan Younis Rafah killed wounded Israeli troops civilians",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"November 7, 2026\" killed wounded",
+      "site:wafa.ps 7-11-2026 غزة فجر السبت إصابات شهيد قصف",
+      "site:aa.com.tr/en/middle-east Gaza November 7 2026 killed wounded ceasefire",
+      "Gaza 6 November 2026 Friday late night hospital ambulance neonatal medical evacuation patients WHO",
+      "Gaza 7 November 2026 Rafah Kerem Shalom crossings aid entry food water fuel restrictions",
+      "site:reuters.com/world/middle-east Gaza November 6 2026 November 7 ceasefire military operations civilian deaths",
+      "site:unicef.org OR site:un.org Gaza 6 November 2026 child hospital water displacement aid",
+      "site:msf.org OR site:icrc.org Gaza 6 November 2026 Friday ambulance medical care hospital",
+      "site:aljazeera.com/news/2026/11/6/ Gaza Israel civilians killed aid late Friday",
+      "Gaza ceasefire prisoner hostage bodies detainees exchange November 7 2026 negotiation",
+      "site:reliefweb.int/report/occupied-palestinian-territory/ \"6 Nov 2026\" humanitarian Gaza"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "No new Gaza item after the previously recorded 6 November 16:40 Palestine-time Khan Younis child fatality; latest visible stories focus on West Bank and diplomacy."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "result": "Latest 6 November 23:40 Palestine-time roundup remains previously checked; its three Gaza deaths repeat prior recorded child fatality and two earlier-wound deaths, not a new event."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Latest visible Gaza-specific report records 260 congenital anomaly cases already logged in earlier watch; no distinct later Gaza item found."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest visible news dated 3 November, no newly documented EMS or ambulance disruption."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403; previously recorded restriction, no materially worsened failure."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and military operations with civilian impact",
+      "displacement and winter shelter",
+      "aid and crossing access",
+      "food, water and wastewater",
+      "healthcare capacity, ambulances, medical evacuation, transport and fuel",
+      "infrastructure damage",
+      "detention, hostages and ceasefire negotiations"
+    ],
+    "excluded": [
+      {
+        "item": "OCHA 5 November situation report published 6 November",
+        "reason": "Five high-value items were recorded in 11:44 PST watch; duplicates."
+      },
+      {
+        "item": "6 November Khan Younis child death, two earlier-wound deaths, three-fatality roundup",
+        "reason": "Already recorded in 06:46 and earlier watch entries; summary adds no distinct incident."
+      },
+      {
+        "item": "Gaza neonatal congenital anomaly assessment",
+        "reason": "Recorded in 06:46 watch; no new period or distinct event."
+      },
+      {
+        "item": "October/early November strike reports and generic ceasefire articles",
+        "reason": "Published before the watch or no verified new civilian-impact event."
+      },
+      {
+        "item": "Search returns of older events or different regions",
+        "reason": "Out of scope or not current."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO",
+        "failure": "HTTP 502",
+        "impact": "Direct regional updates remain unavailable; WHO global and OCHA accessible; unchanged from prior runs."
+      },
+      {
+        "publisher": "UNRWA",
+        "failure": "HTTP 403",
+        "impact": "Direct portal remains restricted; OCHA and established reporting available; unchanged from prior runs."
+      }
+    ],
+    "limitations": "Search engine freshness and bounded queries limit exhaustiveness; absence of qualifying results does not prove no event occurred. WHO EMRO and UNRWA direct access remain recurrently degraded rather than materially worsened.",
+    "notification_basis": "No newly verified distinct qualifying development and no material new or worsened watch failure; retain DEGRADED no_findings heartbeat without notifying."
+  }
+}

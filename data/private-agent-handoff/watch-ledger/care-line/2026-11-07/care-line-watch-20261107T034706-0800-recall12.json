@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T034706-0800-recall12",
+  "scheduled_for": "2026-11-07T03:45:22-08:00",
+  "started_at": "2026-11-07T03:47:06-08:00",
+  "completed_at": "2026-11-07T03:51:07-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T02:45:20-08:00",
+    "end": "2026-11-07T03:51:07-08:00",
+    "basis": "Previous confirmed Care Line Watch ops/watch-ledger heartbeat completed_at through this execution's completion. Older reports were screened as bounded recall; announcement date, effective date and current observation window remain distinct."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY; CCN 18P001), organ procurement organization termination notice",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "Official CMS table retrieved and inspected before targeted web searches; all notices newer than November 2 absent in current table.",
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "US hospital/ED closure or suspension reported Nov 6-7",
+      "Maternity and labor-and-delivery closures",
+      "Rural hospital and emergency service loss",
+      "Behavioral health/psychiatric treatment service closures",
+      "Dialysis facility treatment closures",
+      "Oncology/cancer center treatment suspensions",
+      "Primary-care/family medicine clinic closures",
+      "Ambulance/EMS service shutdowns",
+      "Air-medical helicopter/base service closures",
+      "Concrete reopened hospital or emergency service restorations",
+      "Recent CMS termination, rescission, CLIA notices",
+      "US territories including Guam, Puerto Rico, USVI, CNMI, American Samoa closures"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Benefis Health System northwest family/urgent care clinic consolidation and inpatient rehabilitation/behavioral-health service discontinuations, Great Falls, Montana",
+        "source": "https://montanafreepress.org/2026/11/03/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/",
+        "reason": "Announced November 3; already explicitly reviewed and excluded in 2026-11-03T23:50 Care Line heartbeat (transition begins December 19 and extends into 2027). Not a newly established access change in this hourly window."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania: ER closure Nov 4 and broader suspension Nov 6",
+        "source": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+        "reason": "Previously recorded; Nov 5 article does not add a new closure or reopening during this run's window."
+      },
+      {
+        "item": "Bruceton Community Ambulance Service, Preston County, West Virginia",
+        "source": "https://www.wvnews.com/prestoncountynews/preston-county-ems-crisis-deepens-as-bruceton-ambulance-service-suspends-operations-again/article_9c1166d2-8bb8-42f5-8e66-39f9c31e0351.html",
+        "reason": "October 28 suspension and previously recorded in Nov 3 watch; no new independently verified development."
+      },
+      {
+        "item": "D.C. behavioral health residential facility losses",
+        "source": "https://streetsensemedia.org/article/the-systems-broken-and-we-all-know-it-as-d-c-care-facilities-close-residents-fall-through-the-cracks/",
+        "reason": "Nov 5 reporting summarizes 2025 and earlier 2026 closures and October 15 testimony, not an individually dated new closure since prior check."
+      },
+      {
+        "item": "Kula Hospital, Maui, Hawaii",
+        "source": "https://www.hawaiinewsnow.com/2026/11/03/kula-hospital-targets-late-summer-2027-reopening-after-storm-damage/",
+        "reason": "Tentative future reopening in summer 2027; service still closed and no effective restoration."
+      },
+      {
+        "item": "Guam tropical-storm hospital service suspensions",
+        "source": "https://ghs.guam.gov/node/4352",
+        "reason": "October 16 storm-related service changes, old and not new to current window."
+      }
+    ],
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://montanafreepress.org/2026/11/03/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/",
+      "https://streetsensemedia.org/article/the-systems-broken-and-we-all-know-it-as-d-c-care-facilities-close-residents-fall-through-the-cracks/",
+      "https://www.wvnews.com/prestoncountynews/preston-county-ems-crisis-deepens-as-bruceton-ambulance-service-suspends-operations-again/article_9c1166d2-8bb8-42f5-8e66-39f9c31e0351.html"
+    ],
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T024429-0800-recall12.json",
+    "prior_heartbeat_confirmed_completed_at": "2026-11-07T02:45:20-08:00",
+    "access_errors": [],
+    "coverage_limitations": [
+      "Search engine returned multiple older or unrelated items despite 2- to 7-day recency constraints; targeted recall is bounded and not an exhaustive nationwide or territory survey.",
+      "Production collection and production-level deduplication not directly verified; production collection remains authoritative.",
+      "No newly verified qualifying development in the specified window; historical items excluded, including previously reviewed future closures."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

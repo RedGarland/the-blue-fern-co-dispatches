@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T234613-0800-r11-20261107T074613Z",
+  "scheduled_for": "2026-11-06T23:45:54-08:00",
+  "started_at": "2026-11-06T23:46:13-08:00",
+  "completed_at": "2026-11-06T23:47:41-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T22:48:57-08:00",
+    "end_at": "2026-11-06T23:47:41-08:00",
+    "observation_date": "2026-11-06",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior independently verified hourly Food Line Source Watch heartbeat (22:48:57 PST). Candidate incident timing distinguished from news publication, update and crawl timestamps."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value missed-event recall; production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery closure, fire or disaster loss",
+      "Emergency food distribution cancellation/suspension following storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank shutdown or major food access reduction",
+      "New official SNAP, WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T224752-0800-r11-20261107T064752Z.json",
+      "completed_at": "2026-11-06T22:48:57-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "search_recency_days": 1,
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire flood November 6 2026 town",
+      "\"last grocery store\" OR \"sole grocery store\" closed November 6 2026",
+      "food bank distribution canceled storm outage flood November 6 2026",
+      "food pantry closed suddenly November 6 2026 services",
+      "November 6 2026 SNAP EBT benefits outage suspension delay state agency official",
+      "November 6 2026 WIC eWIC cards failure system outage benefits state notice",
+      "November 6 2026 storm canceled food bank distributions flood Washington Georgia Hawaii",
+      "November 6 2026 food pantry closed due to damage water power fire sudden interruption",
+      "November 6 2026 \"food bank\" \"closed\" \"today\" service",
+      "November 6 2026 \"food distribution\" \"cancelled\" OR \"canceled\" storm",
+      "November 6 2026 \"grocery store\" \"only\" \"closed\" flooding",
+      "November 6 2026 \"SNAP\" \"delayed\" OR \"suspended\" official benefits"
+    ],
+    "direct_page_checks": {
+      "count": 4,
+      "successful": 4,
+      "failed": 0,
+      "successful_urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.atlantanewsfirst.com/2026/11/06/mccaysville-continues-clean-up-after-catastrophic-flooding/",
+        "https://www.communityfoodbank.org/locations/tucson-gabrielle-giffords-resource-center/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight"
+      ],
+      "failures": []
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting / Atlanta News First",
+        "url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville, Georgia, only-grocery flood loss occurred November 4–5 and was already recorded as pending_review during November 6 19:48 PST watch; later coverage/update reiterates same event, not a new independent food-access signal."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "November 6 recovery bulletin lists Hawaii Foodbank Kauaʻi emergency mobile food distribution at Hale Līhuʻe 4–5 PM as scheduled, with no cancellation notice."
+      },
+      {
+        "publisher": "Community Food Bank of Southern Arizona",
+        "url": "https://www.communityfoodbank.org/locations/tucson-gabrielle-giffords-resource-center/",
+        "reason": "Provider calendar lists November 6 Tucson food distribution; November 11 Veterans Day closure is a routine planned holiday closure and excluded."
+      },
+      {
+        "publisher": "KUTV",
+        "url": "https://kutv.com/news/local/reeling-provo-anti-poverty-center-had-salary-growth-amid-red-ink",
+        "reason": "Provo Community Action Services and Food Bank closure arose around November 1 and was already reviewed in prior watch periods."
+      },
+      {
+        "publisher": "U.S. state agencies and local results",
+        "url": "https://www.ncdhhs.gov/news/press-releases/2025/11/08/ncdhhs-pauses-full-snap-payments-after-court-decision-remains-ready-process-benefits-when-authorized",
+        "reason": "Prominent SNAP interruption search hits concern November 2025 or general 2026 program changes, not a new November 6 2026 official interruption."
+      }
+    ],
+    "assessment": "No independently verified new qualifying food-access disruption was found between 22:48:57 and this run's completion. McCaysville repeated coverage was deduplicated; no emergency distribution cancellation, abrupt pantry closure, or new official benefit outage was confirmed.",
+    "source_or_search_failures": [],
+    "material_degradation": false,
+    "limitations": "Targeted recall is not exhaustive nationwide coverage. Index freshness and article updates may skew apparent recency. Search results include unrelated and historical material; production deduplication was not accessed or verified.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "This private ledger heartbeat only; no approval, public publication, merge, schedule change or disabling."
+  }
+}

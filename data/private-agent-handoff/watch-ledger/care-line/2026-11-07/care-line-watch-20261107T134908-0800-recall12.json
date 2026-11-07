@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T134908-0800-recall12",
+  "scheduled_for": "2026-11-07T13:45:22-08:00",
+  "started_at": "2026-11-07T13:49:08-08:00",
+  "completed_at": "2026-11-07T13:51:00-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T12:49:48-08:00",
+    "end": "2026-11-07T13:51:00-08:00",
+    "basis": "Completed_at of latest verified previous Care Line heartbeat (12:45 scheduled run) through this execution. Targeted searches used recency of 2 days and were screened by publication/event timing and known duplicate events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — Kentucky — organ procurement organization termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department closed ambulance diversion Nov 7 United States",
+      "November 7 2026 maternity labor delivery unit closure hospital suddenly suspended service",
+      "November 7 2026 rural hospital emergency department closure urgent suspension",
+      "November 7 2026 ambulance service station base EMS closure ceased operation county",
+      "November 7 2026 air ambulance helicopter medical base closed suspended service",
+      "November 7 2026 dialysis center clinic closure abruptly patients treatments",
+      "November 7 2026 psychiatric behavioral health unit hospital admissions suspended closure crisis stabilization US",
+      "November 7 2026 cancer oncology chemotherapy clinic closes patients services interrupted",
+      "November 7 2026 primary care medical clinic closes permanently patients directed elsewhere",
+      "November 7 2026 emergency department reopens restored hospital ambulance bypass lifted service",
+      "November 7 2026 Guam Puerto Rico US Virgin Islands American Samoa Northern Mariana healthcare hospital ambulance closure reopening",
+      "November 7 2026 health department CMS Medicare termination CLIA certification suspension revocation rescission provider"
+    ],
+    "search_recency_days": 2,
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL — ambulance bypass effective 2026-11-07 at 7 a.m. CST",
+        "reason": "Already recorded as a positive finding in 09:48 Care Line heartbeat; no newly verified change in this watch."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon PA — ED closed November 4, full suspension November 6",
+        "reason": "Previously documented service loss; newer article recapped those events rather than reporting a new effective change."
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago IL — maternity closure effective November 1",
+        "reason": "Previously reviewed and outside observation window."
+      },
+      {
+        "item": "Air Evac Lifeteam, Decatur IL base closed September 16",
+        "reason": "Historical confirmed closure, not newly observed in current watch."
+      },
+      {
+        "item": "Kula Hospital, Maui HI — restoration plans",
+        "reason": "Announced restoration funding and plans, without a confirmed effective reopening; ED remains closed."
+      },
+      {
+        "item": "Guam Memorial Hospital storm-related elective service suspensions",
+        "reason": "October 16 notices; outside observation window."
+      },
+      {
+        "item": "Jefferson Health Lehigh Valley Hospital–Dickson City reopened February 13",
+        "reason": "Historical restoration outside observation window."
+      },
+      {
+        "item": "General articles about hospital funding, 2025 and older maternity service changes, CMS laboratory policy",
+        "reason": "No concrete newly effective change in essential care access within this observation period."
+      }
+    ],
+    "result_summary": "CMS Public Notices was accessed first and showed no notice newer than November 2, 2026. Twelve further targeted web searches focused on closures, emergency and rural service loss, EMS/air-medical bases, dialysis, behavioral health, oncology, primary care, essential-service restoration, territories, and CLIA/provider action. Retrieved items were previously recorded, historical, proposed, contextual, or did not verify any newly effective service change. No new qualifying nonduplicate healthcare-access development verified.",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T124831-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T12:49:48-08:00",
+    "coverage_limitations": [
+      "Bounded supplementary web recall, not exhaustive national collection.",
+      "Index freshness and ranking may miss same-hour local reporting, official state bulletins or delayed CMS notices.",
+      "Production ingestion and deduplication were not checked; production collection remains authoritative."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

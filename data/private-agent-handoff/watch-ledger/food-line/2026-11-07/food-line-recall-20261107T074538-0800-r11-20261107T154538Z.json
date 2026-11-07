@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T074538-0800-r11-20261107T154538Z",
+  "scheduled_for": "2026-11-07T07:45:54-08:00",
+  "started_at": "2026-11-07T07:45:38-08:00",
+  "completed_at": "2026-11-07T07:47:40.630-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T06:48:53.655-08:00",
+    "end_at": "2026-11-07T07:47:40.630-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since last independently verified Food Line watch heartbeat, with three-day recall for local-news reporting/indexing delays, and explicit deduplication of prior events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall of high-value food-access disruptions; nationwide production collection is authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss/closure/disaster",
+      "Weather, fire, power or facility damage-related emergency food distribution cancellation/suspension",
+      "Abrupt pantry or food-bank closure/major access reduction",
+      "New official SNAP/WIC/EBT immediate benefits interruption"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T064655-0800-r11-20261107T144655Z.json",
+      "completed_at": "2026-11-07T06:48:53.655-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": "2-3",
+    "search_queries": [
+      "\"only grocery store\" closed fire flood storm November 7 2026 US",
+      "\"sole grocery store\" damaged flood November 2026 -McCaysville",
+      "\"last grocery store\" closure Saturday November 7 2026 community",
+      "\"full service grocery store\" closed storm flood November 2026",
+      "\"food distribution\" canceled November 7 2026 storm flood",
+      "\"food distribution\" suspended November 7 2026 fire power outage",
+      "\"emergency food distribution\" cancelled November 2026 hurricane",
+      "\"food pantry\" closed flooding storm November 7 2026",
+      "\"food bank\" \"temporarily closed\" November 7 2026",
+      "\"pantry\" \"closed until further notice\" November 2026 fire",
+      "site:gov SNAP EBT outage November 7 2026 benefits unavailable",
+      "site:gov WIC benefits interrupted November 7 2026 outage"
+    ],
+    "search_query_errors_observed": 0,
+    "search_results_note": "All 12 targeted searches returned usable results. Freshly indexed items were older events, duplicate incidents, normal/ongoing scheduled food services or general assistance resources, not new qualifying immediate disruptions. Results had considerable irrelevant older results; current-source checks were used to verify.",
+    "direct_source_checks": {
+      "count": 9,
+      "successful": 9,
+      "failed": 0,
+      "urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://afcitizen.com/2026/11/03/provo-food-bank-announces-temporary-closure-due-to-financial-issues/",
+        "https://oklahoma.gov/okdhs/ebt.html",
+        "https://dhs.georgia.gov/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "November 6 McCaysville flood damage to only grocery already recorded in prior Food Line watch as pending_review; no verified new event."
+      },
+      {
+        "publisher": "American Fork Citizen",
+        "source_url": "https://afcitizen.com/2026/11/03/provo-food-bank-announces-temporary-closure-due-to-financial-issues/",
+        "reason": "Provo Community Action Services and Food Bank closure effective November 1 and reported November 3 already reviewed in prior watches."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "November 6 Hawaiʻi Foodbank Kauaʻi distribution is specifically listed as scheduled at Hale Līhuʻe, not canceled; hurricane resource-center closures do not document a food-distribution suspension."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "November 5–6 county social-service office closures listed for maintenance and local event are not new benefit interruptions since previous heartbeat; no active SNAP/EBT outage indicated."
+      },
+      {
+        "publisher": "Oklahoma Department of Human Services",
+        "source_url": "https://oklahoma.gov/okdhs/ebt.html",
+        "reason": "November 2 EBT support telephone-system update describes service improvements, not a newly announced current interruption."
+      },
+      {
+        "publisher": "Georgia Division of Family and Children Services",
+        "source_url": "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "reason": "Notice describes EBT customer-support phone line restored, not new food-benefit transaction interruption; undated notice not attributable to current window."
+      },
+      {
+        "publisher": "Hawaiʻi Department of Human Services",
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "General existing call-center delays and SNAP application processing guidance; not a newly documented immediate benefit cutoff."
+      },
+      {
+        "publisher": "California WIC",
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "September 3 page explicitly indicates WIC benefits remain usable; not a new interruption."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No distinct new, verifiable U.S. high-value food-access disruption identified after November 7 06:48:53 PST through completion of this watch.",
+    "material_degradation": false,
+    "limitations": "Search results do not establish nationwide completeness; short-lived local cancellations, agency social posts and very recent reporting might not be indexed. Production collector and production deduplication not independently inspected.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One append-only watch-ledger heartbeat for this run; no approvals, publications, merges, schedule modifications or task disabling."
+  }
+}

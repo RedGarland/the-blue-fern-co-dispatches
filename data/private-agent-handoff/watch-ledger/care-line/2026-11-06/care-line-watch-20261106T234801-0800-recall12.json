@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T234801-0800-recall12",
+  "scheduled_for": "2026-11-06T23:45:22-08:00",
+  "started_at": "2026-11-06T23:48:01-08:00",
+  "completed_at": "2026-11-06T23:48:52-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T22:51:09-08:00",
+    "end": "2026-11-06T23:48:52-08:00",
+    "basis": "Since completed_at of the preceding verified Care Line Watch heartbeat on ops/watch-ledger. Retrieval may surface older newly discovered events for review, but only verified nonduplicate qualifying changes count."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), OPO termination (18P001)",
+      "new_notices": 0
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital emergency department closure or suspension",
+      "Maternity/labor and delivery losses",
+      "Behavioral health inpatient closure",
+      "Dialysis center closure",
+      "Oncology/infusion service suspension",
+      "Rural primary care practice closure",
+      "Rural hospital/emergency service loss",
+      "Ground ambulance/EMS base closure",
+      "Air-medical helicopter base loss",
+      "Actual restoration or reopening of lost essential services",
+      "U.S. territory essential-service changes",
+      "Recent hospital/clinic closure trade reporting"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center (PA): November 4 ER closure and November 6 suspension previously recorded in earlier recall runs; no new development verified.",
+      "TidalHealth Federalsburg (MD): November 15 planned primary-care closure already recorded in immediately preceding heartbeat; not repeated.",
+      "Watsonville Community Hospital (CA) maternity: possible future loss, without enacted closure.",
+      "New Bowling Green, OH youth crisis stabilization center: new service opening, not restoration of a previously lost essential service.",
+      "AdventHealth Rockmart (GA): expanded services/hours, not restoration of prior essential-service loss.",
+      "Kula Hospital (HI): proposed restoration without confirmed effective reopening.",
+      "Older dialysis, maternity, and ambulance/air medical changes; historical Guam storm-related clinic suspensions; foreign results."
+    ],
+    "access_errors": [
+      {
+        "stage": "initial CMS navigation",
+        "attempted_url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+        "result": "Inaccessible noncanonical URL; immediately corrected via official CMS search result and verified canonical CMS Public Notices page.",
+        "impact": "No remaining CMS public notice coverage gap; conservatively classified DEGRADED because a source-access attempt failed."
+      }
+    ],
+    "coverage_limitations": [
+      "Targeted result sets were sparse and often surfaced dated reporting; bounded supplementary recall is not exhaustive.",
+      "Results have not been crosschecked against the production national collector; production remains authoritative.",
+      "No qualifying nonduplicate concrete change verified in the observation window."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

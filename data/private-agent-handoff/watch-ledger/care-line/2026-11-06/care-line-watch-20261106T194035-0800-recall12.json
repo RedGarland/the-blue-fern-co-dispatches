@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T194035-0800-recall12",
+  "scheduled_for": "2026-11-06T19:45:22-08:00",
+  "started_at": "2026-11-06T19:40:35-08:00",
+  "completed_at": "2026-11-06T19:41:29.708-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T18:43:53.316-08:00",
+    "end": "2026-11-06T19:41:29.708-08:00",
+    "basis": "Since the prior independently verified supplementary Care Line watch completion. Bounded targeted recall; not an exhaustive national scan or the authoritative production collector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), OPO termination, CCN 18P001",
+      "new_relevant_notices": 0,
+      "access": "Official current notices index retrieved successfully; no subsequent public notice observed in the checked page."
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital/ED closure or abrupt suspension",
+      "Maternity/obstetric unit closure",
+      "Behavioral health/psychiatric inpatient/outpatient shutdown",
+      "Dialysis center closure",
+      "Oncology/infusion service loss",
+      "Rural hospital emergency service suspension",
+      "Primary care/family medicine closure",
+      "Ground ambulance/EMS shutdown",
+      "Air ambulance base closure",
+      "Hospital/ED reopening or restoration",
+      "Community health center/FQHC service closure",
+      "Puerto Rico/Guam/US Virgin Islands essential-service interruption or restoration"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center, Sharon, Pennsylvania: November 4 ER closure and November 6 8 a.m. all-service suspension already captured in previous Care Line watches; no incremental event verified.",
+      "University Hospitals Seidman Cancer Center, Geneva, Ohio: announced September 2026 future November 13 closure, already documented; no new incremental change.",
+      "AdventHealth Rockmart Clinic, Georgia: extension of urgent-care hours and addition of cardiology, not a restoration of a previously lost essential service.",
+      "Older rural maternity closures, historical air-ambulance changes, outdated or non-US reporting, proposed policy changes, and ownership-only stories excluded."
+    ],
+    "source_failures": [],
+    "coverage_limitations": [
+      "Relevant recent results were sparse and included older stories despite date-constrained terms. No qualifying nonduplicate development was verified within the bounded search set.",
+      "Production national collector remains authoritative; production deduplication was not independently checked."
+    ],
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

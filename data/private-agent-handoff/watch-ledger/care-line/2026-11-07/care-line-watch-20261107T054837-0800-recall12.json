@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T054837-0800-recall12",
+  "scheduled_for": "2026-11-07T05:45:22-08:00",
+  "started_at": "2026-11-07T05:48:37-08:00",
+  "completed_at": "2026-11-07T05:49:19-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T04:50:08-08:00",
+    "end": "2026-11-07T05:49:19-08:00",
+    "basis": "Previous verified Care Line Watch heartbeat completed_at through this run's research completion. Search targets included November 6-7 notices to catch newly indexed late reports; preexisting items excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY; CCN 18P001), OPO Medicare termination notice",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "Successfully opened official CMS notice table first; no new notices through observation.",
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department closed shut down suspended services local news",
+      "November 6 7 2026 maternity obstetrics labor delivery unit closes hospital",
+      "November 6 7 2026 rural hospital emergency room closure ambulance diversion",
+      "November 6 7 2026 psychiatric behavioral mental health inpatient clinic closure announced",
+      "November 6 7 2026 dialysis center suspended treatment closed patients relocate",
+      "November 6 7 2026 oncology cancer treatment center closure services suspended",
+      "November 7 2026 primary care family clinic closes patients community health center",
+      "November 6 7 2026 ambulance EMS service closure suspended overnight local news",
+      "November 6 7 2026 air ambulance medical helicopter base shuts down operations",
+      "November 6 7 2026 hospital emergency department reopened after closure restored services",
+      "November 6 7 2026 CMS provider termination rescission CLIA limitation notice",
+      "November 6 7 2026 Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic ambulance emergency suspended reopened"
+    ],
+    "result_summary": "12 targeted searches returned largely historical or unrelated materials and prior known service losses. No new independently verifiable qualifying U.S. or territory development since prior heartbeat.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, PA emergency department closure Nov 4 and all-service suspension Nov 6, 2026",
+        "reason": "Previously captured by preceding Care Line watches; no independent newly confirmed service change in window.",
+        "source": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "TidalHealth Primary Care Federalsburg MD, scheduled Nov 15 closure",
+        "reason": "Recovered as pending-review finding in Nov 6 22:49 PST watch; duplicate."
+      },
+      {
+        "item": "National Park Medical Center Hot Springs AR labor/delivery closure",
+        "reason": "Published July 2026; older change."
+      },
+      {
+        "item": "Decatur IL Air Evac Lifeteam base closure",
+        "reason": "September 2026 event; older change."
+      },
+      {
+        "item": "Prior emergency service reopenings and other service changes",
+        "reason": "Existing historical reports do not establish new restoration in current observation window."
+      },
+      {
+        "item": "California Proposition 44 clinics coverage",
+        "reason": "Policy/election result without documented actual access change."
+      }
+    ],
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "https://katv.com/news/local/national-park-medical-center-closes-labor-and-delivery-program-clinic-obgyn-pregnancies-womens-health-doctor-isolation-support-hospitals-doctors"
+    ],
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T044812-0800-recall12.json",
+    "prior_heartbeat_confirmed_completed_at": "2026-11-07T04:50:08-08:00",
+    "access_errors": [],
+    "coverage_limitations": [
+      "Search result indexing limited; targeted search evidence is bounded and not exhaustive for every county or territory.",
+      "No direct comparison with authoritative production ingestion/deduplication; prior watch ledger was verified and production remains authoritative."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

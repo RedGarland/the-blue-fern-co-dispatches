@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T184616-0800-r11-20261107T024616Z",
+  "scheduled_for": "2026-11-06T18:45:54-08:00",
+  "started_at": "2026-11-06T18:46:16-08:00",
+  "completed_at": "2026-11-07T02:48:19.580+00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T17:44:18.120-08:00",
+    "end_at": "2026-11-07T02:48:19.580+00:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Start at completed_at of last branch-verified Food Line heartbeat; bounded fresh-publication/event check. Previously reported closures and ongoing recovery were not treated as new events.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall of high-value missed U.S. food-access disruptions only; production nationwide collector remains authoritative.",
+    "scheduled_for_basis": "Hourly schedule at :45:54 America/Los_Angeles; current run slot.",
+    "target_classes": [
+      "Sole/only/last/full-service community grocery loss or shutdown",
+      "Emergency food distributions suspended/canceled due to storm/flood/fire/outage/damage",
+      "Abrupt pantry or food-bank closure or major loss of access",
+      "Official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T174233-0800-r11-20261107T014233Z.json",
+      "completed_at": "2026-11-06T17:44:18.120-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "bounded_query_context": [
+      "\"only grocery store\" (closes OR closed OR fire OR destroyed) November 6 2026 town",
+      "\"last grocery store\" closed November 6 2026 town",
+      "\"sole grocery store\" (fire OR closes OR closure) November 2026",
+      "\"full-service grocery store\" \"closed\" \"November 6\" 2026",
+      "\"food distribution\" (canceled OR cancelled OR suspended) storm flood power November 6 2026",
+      "\"emergency food distribution\" (canceled OR postponed) November 6 2026",
+      "\"food pantry\" (\"closed\" OR \"temporarily closed\") November 6 2026 flood storm fire",
+      "\"food bank\" (closure OR suspend OR interrupted) \"November 6\" 2026",
+      "site:gov \"SNAP\" (\"interruption\" OR \"unavailable\" OR \"delayed\" OR \"suspended\") \"November 6, 2026\"",
+      "site:gov \"WIC\" (\"closed\" OR \"outage\" OR \"interrupted\") \"November 6, 2026\"",
+      "\"food bank\" \"distribution canceled\" \"Nov. 6, 2026\" storm outage",
+      "\"food pantry\" \"temporarily closed\" \"November 6, 2026\" service"
+    ],
+    "search_engine": "fast",
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "direct_food_source_checks": 5,
+    "successful_direct_food_source_checks": 5,
+    "failed_direct_food_source_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "published_at": null,
+        "exclusion_reason": "Provider page still lists Friday November 6, Hale Līhuʻe emergency distribution at 4-5 p.m. HST; no cancellation reported. Listing does not establish completion."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "published_at": "2026-11-06",
+        "exclusion_reason": "Recovery digest reiterates November 6 emergency distribution as scheduled; no new cancellation, and storm recovery is ongoing from September."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Middlesex November 6-9 general office festival closure, Lynchburg November 5 maintenance closure; neither constitutes newly reported SNAP/WIC-specific benefits interruption in this watch interval."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Official page lists November 7 and later food distributions; no newly published cancellation or service shutdown observed. Cancellation alerts may also be text/Facebook-only."
+      },
+      {
+        "url": "https://www.fmpfoodbank.org/find_food/",
+        "publisher": "Feed My People Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Provider's food locator and hours display no new dated closure; previously reported Eau Claire interruptions predate watch interval."
+      },
+      {
+        "url": "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "publisher": "Beacon: Kansas City",
+        "published_at": "2026-11-06",
+        "exclusion_reason": "Previously reviewed report of Blue Parkway Sun Fresh closure effective October 25, 2026; no new disruption since prior hourly check."
+      }
+    ],
+    "result": "No newly verified qualifying disruption within 2026-11-06 17:44:18-18:47 PST bounded window.",
+    "limitations": "Search index freshness and selected direct-source checks do not establish exhaustive nationwide recall. Provider calendars do not certify actual distribution completion. Official benefit outage data may not be indexed immediately. Production collector dedupe was not assessed.",
+    "materiality": "No source or search failure. No qualifying new signal or material degradation; do not send alert.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only one private ops/watch-ledger heartbeat added; no approval, public publishing, schedule changes, or task disabling."
+  }
+}

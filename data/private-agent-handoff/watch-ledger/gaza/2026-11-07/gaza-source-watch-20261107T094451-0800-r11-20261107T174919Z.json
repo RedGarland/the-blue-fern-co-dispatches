@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261107T094451-0800-r11-20261107T174919Z",
+  "scheduled_for": "2026-11-07T09:44:51-08:00",
+  "started_at": "2026-11-07T09:49:19-08:00",
+  "completed_at": "2026-11-07T09:51:43.108-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-07",
+    "start": "2026-11-07T08:51:36.674-08:00",
+    "end": "2026-11-07T09:51:43.108-08:00",
+    "basis": "Since latest verified Gaza Source Watch heartbeat end at 08:51:36.674 PST. Screened reports for genuinely new or newly verified substantive operational developments; publication time was not assumed to be event time.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Gaza collector and publisher remain authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-07/gaza-source-watch-20261107T084451-0800-r11-20261107T165136674Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "accessible",
+        "result": "Latest listed written situation report dated 6 November covering situation through 5 November; nothing new issued for 7 November within observation window. Reviewed Gaza storm, health, aid, water and fuel background."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global conflict page accessible; no dated 7 November new hospital, health capacity, or evacuation bulletin verified. EMRO regional page returned recurring 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps November 7 2026 Gaza latest Saturday afternoon deaths killed wounded medical shelling",
+      "site:aa.com.tr/en/ November 7 2026 Gaza 17:00 UTC storm injured ceasefire killed displaced",
+      "site:reuters.com Gaza November 7 2026 latest news Saturday aid flooding ceasefire",
+      "site:apnews.com November 7 2026 Gaza Saturday latest shelter storm strikes aid civilians",
+      "site:aljazeera.com/news/2026/11/7 Gaza November 7 2026 afternoon evening latest",
+      "site:un.org OR site:ochaopt.org November 7 2026 Gaza flooding displaced shelters fuel humanitarian update",
+      "site:who.int OR site:emro.who.int Gaza 7 Nov 2026 emergency hospital medical evacuation ambulance fuel",
+      "site:unicef.org OR site:wfp.org November 7 2026 Gaza water food aid winter shelter supplies",
+      "site:english.wafa.ps/Pages/Details/ Gaza Nov 7 2026 Israeli forces Saturday afternoon Gaza strip latest 7 November",
+      "site:aa.com.tr/en/middle-east November 7 2026 Gaza Saturday 17:00 18:00 attacks hospitals injured shelters",
+      "November 7 2026 Gaza Kerem Shalom Rafah crossings Israeli aid trucks medical evacuation negotiations hostages latest",
+      "site:palestinercs.org/en OR site:unrwa.org Gaza November 7 2026 ambulance flooding emergency aid Saturday"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "November 7 16:49 Palestinian-local Health Minister warning of disease risk contained no confirmed new outbreak. November 7 19:14 Palestinian-local Foreign Ministry appeal contained attributed estimates of 270,000 displacement tents/sites, 60-85 percent worn/unfit, more than 400,000 displaced people in flooding/coastal exposure, but no documented new operational incident or dated change; classified background assessment, not a qualifying hourly development."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/",
+        "status": "accessible",
+        "result": "Top Gaza coverage repeats five storm injuries, 2,166 distress calls/218 responses and prior OCHA stock-warning report already recorded at 08:51 PST."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/environment/heavy-rain-floods-tents-housing-gaza-displaced-people-aid-shortages-hamper-2026-11-07/",
+        "status": "accessible",
+        "result": "Article published 12:56 UTC (04:56 PST), preceding latest heartbeat, repeats flooding, 1,500 calls and fuel/equipment shortages; not new."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Latest visible story dated November 3; no newly verified ambulance or medical transport change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring access restriction; no material worsening from prior hour."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties",
+      "displacement and shelter flooding",
+      "aid access and emergency response",
+      "food and safe water",
+      "health care, hospital/ambulance capacity and medical evacuation",
+      "infrastructure and crossings",
+      "detention/hostages and ceasefire talks",
+      "military operations with reported civilian impact"
+    ],
+    "duplicate_exclusions": [
+      "Previously recorded November 7 Ministry of Health 48-hour cumulative update (10 deaths, 22 injured, 12 retrospectively registered deaths).",
+      "Previously recorded November 7 rain-related five injuries, four collapsed buildings, 2,166 distress calls/218 responses, Al-Shifa emergency department flooding, and OCHA winter emergency stock shortage.",
+      "Reuters 12:56 UTC rain/flooding story and previously known fuel/shelter restrictions."
+    ],
+    "nonqualifying_new_material": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176718",
+        "reason": "Health Minister warns about potential future respiratory and waterborne disease amid ongoing shelter and sanitation vulnerabilities; no observed new outbreak or measured capacity change; published earlier than prior watch end."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176720",
+        "reason": "Foreign Ministry evening appeal quotes broad estimated shelter-condition and flood-exposure figures but no methodology, time comparison, specific new displacement incident, confirmed supply-flow change, or implementation; logged as context only."
+      }
+    ],
+    "known_gaps": [
+      "WHO EMRO HTTP 502 and UNRWA HTTP 403, recurring source restrictions; alternate official/global humanitarian and established reporting remained accessible.",
+      "Search results have uneven recency and time precision; exact occurrence times of already reported storm events not established.",
+      "Twelve targeted searches are bounded recall, not exhaustive."
+    ],
+    "assessment": "No new distinct qualifying development verified after prior 08:51 PST heartbeat. Recurring WHO regional/UNRWA source restrictions justify DEGRADED with no material new degradation. No production, publishing, authorization, or schedule changes."
+  }
+}

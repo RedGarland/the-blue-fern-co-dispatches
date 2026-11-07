@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T014736-0800-r11-20261107T094736Z",
+  "scheduled_for": "2026-11-07T01:45:54-08:00",
+  "started_at": "2026-11-07T01:47:36-08:00",
+  "completed_at": "2026-11-07T01:49:16.585-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T00:51:50-08:00",
+    "end_at": "2026-11-07T01:49:16.585-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since the preceding independently verified 2026-11-07 00:51:50 PST heartbeat. Searches used a two-day recall lookback to catch indexing lag, with old incidents and previously recorded findings excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall of four high-value U.S. food-access miss classes; production nationwide Food Line collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss, fire, closure or disaster",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate practical access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T005048-0800-r11-20261107T085048Z.json",
+      "completed_at": "2026-11-07T00:51:50-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "8 fast, 4 slow",
+    "search_recency_days": 2,
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire flooding November 7 2026 town",
+      "\"only grocery store\" \"November 6, 2026\" fire flood damaged closed",
+      "\"last grocery store\" closed fire November 2026 town",
+      "\"food distribution\" canceled flooding storm November 7 2026",
+      "\"food bank\" \"distribution cancelled\" storm outage November 6 2026",
+      "\"food pantry\" \"closed\" emergency November 7 2026",
+      "SNAP EBT outage benefits suspended November 7 2026 official state",
+      "WIC benefits suspended outage November 7 2026 state health department",
+      "November 7 2026 \"only grocery\" closed flood fire community United States",
+      "November 7 2026 \"food pantry\" closed indefinitely emergency shutdown",
+      "November 7 2026 \"food distribution\" canceled weather OR outage OR flooding",
+      "November 7 2026 SNAP WIC outage benefits delayed state official notice"
+    ],
+    "direct_page_checks": {
+      "count": 4,
+      "successful": 4,
+      "failed": 0,
+      "successful_urls": [
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://provo.com/news/utah-county-warming-center-community-action-closure-november-2026/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville, GA, sole-grocery flooding occurred Nov. 4-5; source published Nov. 6 15:54 ET and finding was recorded in prior Nov. 6 watch. No separately new interruption established."
+      },
+      {
+        "publisher": "Provo.com",
+        "url": "https://provo.com/news/utah-county-warming-center-community-action-closure-november-2026/",
+        "reason": "Nov. 6 follow-up to Community Action Services and Food Bank closure announced around Nov. 1; historical and previously reviewed, not a fresh closure during this hour."
+      },
+      {
+        "publisher": "Kauaʻi Now",
+        "url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov. 6 Kauaʻi emergency food distribution at Hale Līhuʻe was expressly still scheduled 4-5 PM; article does not report cancellation. Closure of hurricane resource centers is not verified as food distribution cessation."
+      },
+      {
+        "publisher": "California WIC (official)",
+        "url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "Official notice dated Sep. 3, 2026 says WIC services and benefits continue; no new interruption."
+      },
+      {
+        "publisher": "Older search results on 2025 SNAP funding lapse",
+        "url": "https://www.kqed.org/news/12060770/snap-calfresh-food-stamps-government-shutdown-november-payments-ebt",
+        "reason": "Article was updated Nov. 7, 2025, not Nov. 7, 2026; excluded year-confused stale results."
+      },
+      {
+        "publisher": "KVIA",
+        "url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "El Paso food-bank storm closure dated Sep. 25, 2026; outside window."
+      }
+    ],
+    "assessment": "Twelve targeted searches and four direct source checks found no independently verified, newly occurring or newly reported qualifying U.S. food-access disruption since the preceding watch. Most seemingly current SNAP reports are from Nov. 2025; McCaysville and Provo were duplicates.",
+    "source_or_search_failures": [],
+    "material_degradation": false,
+    "limitations": "Search-index latency and limited local/provider indexing may miss events. This supplementary search is not an exhaustive nationwide collector and production deduplication was not independently checked.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Private watch-ledger heartbeat only; no approval, publication, merge, schedule change or task disablement."
+  }
+}

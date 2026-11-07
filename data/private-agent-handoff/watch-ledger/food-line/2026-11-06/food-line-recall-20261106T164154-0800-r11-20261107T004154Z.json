@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261106T164154-0800-r11-20261107T004154Z",
+  "scheduled_for": "2026-11-06T16:45:54-08:00",
+  "started_at": "2026-11-06T16:41:54-08:00",
+  "completed_at": "2026-11-06T16:43:13.899-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-06T15:50:50-08:00",
+    "end_at": "2026-11-06T16:43:13.899-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "basis": "Prior read-back verified hourly heartbeat completed 15:50:50 PST. Screen newly reported or newly effective qualifying disruptions; do not reclassify older events based on today's publication dates.",
+    "targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall watch; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service community grocery-store loss/closure/fire/disaster",
+      "Emergency food distribution canceled/suspended because of storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank service closure or major food-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-06/food-line-recall-20261106T154936-0800-r11-20261106T234936Z.json",
+      "completed_at": "2026-11-06T15:50:50-08:00",
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "search_engine": "fast",
+    "bounded_query_context": [
+      "\"only grocery store\" closed fire \"November 6\" \"2026\"",
+      "\"last grocery store\" closing \"Nov 6, 2026\" community",
+      "\"sole grocery store\" \"fire\" November 2026 town closed",
+      "\"full-service grocery store\" closure Nov 6 2026 town",
+      "\"food bank\" \"distribution canceled\" \"November 6, 2026\" storm",
+      "\"emergency food distribution\" cancelled suspended November 6 2026 storm flood outage",
+      "\"food pantry\" abruptly closed today November 6 2026 damage",
+      "\"food bank\" services suspended November 6 2026 power outage flood",
+      "SNAP outage EBT card benefits inaccessible November 6 2026 state agency",
+      "WIC service interruption November 6 2026 closed office weather official",
+      "\"pantry\" \"closed until further notice\" \"Nov 6\" \"2026\"",
+      "site:gov \"November 6, 2026\" SNAP WIC outage benefits delay suspension"
+    ],
+    "targeted_searches": 12,
+    "successful_searches": 12,
+    "failed_searches": 0,
+    "direct_page_checks": 5,
+    "successful_direct_page_checks": 5,
+    "failed_direct_page_checks": 0,
+    "reviewed_candidates": [
+      {
+        "url": "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "publisher": "Beacon: Kansas City",
+        "published_at": "2026-11-06",
+        "exclusion_reason": "Repeat result from prior hour; Blue Parkway Sun Fresh closed October 25, 2026, and no newly effective qualifying sole/last store loss."
+      },
+      {
+        "url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "publisher": "The Maine Wire",
+        "published_at": "2026-08",
+        "exclusion_reason": "Eastport's announced only-grocery-store loss dates to August 2026, not new in this hour."
+      },
+      {
+        "url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "publisher": "Hawaiʻi Foodbank Kauaʻi",
+        "published_at": null,
+        "exclusion_reason": "Direct official page continues to list Friday November 6 Hale Līhuʻe 4–5 p.m. Hawaiʻi time; no cancellation or suspension documented. Listing does not prove event completion."
+      },
+      {
+        "url": "https://kauainownews.com/2026/11/05/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "publisher": "Kauaʻi Now",
+        "published_at": "2026-11-05",
+        "exclusion_reason": "Previous-day recovery resource summary likewise lists the November 6 emergency distribution as scheduled, not cancelled."
+      },
+      {
+        "url": "https://www.dss.virginia.gov/alerts/",
+        "publisher": "Virginia Department of Social Services",
+        "published_at": null,
+        "exclusion_reason": "Nov 6 Middlesex DSS closure for Urbanna Oyster Festival and Nov 5 Lynchburg closure for maintenance are previously known; no newly documented SNAP/WIC-specific interruption within this window."
+      },
+      {
+        "url": "https://www.fmpfoodbank.org/find_food/",
+        "publisher": "Feed My People Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Direct provider food-location page checked; no dated new major service closure; earlier Eau Claire pop-up cancellations predate the window."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "published_at": null,
+        "exclusion_reason": "Direct November 7 onward distribution schedule listed with no new weather cancellation on the page. Direct provider page refers cancellation details to phone/Facebook."
+      }
+    ],
+    "result": "No newly verified qualifying food-access disruption first reported or newly effective during the bounded interval.",
+    "limitations": "Targeted search-engine recall cannot establish exhaustive nationwide negative coverage; some local social/media or unindexed provider updates may not surface. Five direct pages loaded; calendar listings do not prove a distribution took place. Primary collector and its dedupe ledger were not inspected.",
+    "materiality": "No search or direct page failed, and no newly evidenced qualifying event surfaced. No alert warranted.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "timing_note": "Automation began before the nominal scheduled minute; scheduled_for preserves the nominal hourly run timestamp, while started_at and completed_at preserve observed execution times.",
+    "action_limits": "Exactly one heartbeat JSON only; no approvals, publication, branch merges, schedule or permissions changes, task disabling, or credentials changes."
+  }
+}

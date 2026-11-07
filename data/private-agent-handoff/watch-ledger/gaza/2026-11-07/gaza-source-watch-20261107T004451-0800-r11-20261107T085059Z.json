@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261107T004451-0800-r11-20261107T085059Z",
+  "scheduled_for": "2026-11-07T00:44:51-08:00",
+  "started_at": "2026-11-07T00:48:51-08:00",
+  "completed_at": "2026-11-07T00:50:59-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-07",
+    "start": "2026-11-06T23:45:03-08:00",
+    "end": "2026-11-07T00:50:59-08:00",
+    "basis": "Incremental recall from latest verified durable Gaza heartbeat end at 2026-11-06 23:45:03 PST. Gaza-local 7 November reports and timestamps were compared against the previous logged storm incidents; publication time alone does not imply new events.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall only; daily production collection and publication remain authoritative. No approvals, publishing, schedule changes or task disabling.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/",
+          "https://www.ochaopt.org/updates"
+        ],
+        "state": "accessible",
+        "result": "Newest visible item remains 5 November Humanitarian Situation Report, posted 6 November 2026, already recovered and recorded in prior watches. No later OCHA OPT report on index."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html"
+        ],
+        "state": "partially accessible",
+        "result": "WHO global Gaza and occupied Palestinian territory emergency overview accessible; no newly dated Gaza health development there. WHO EMRO situation reports direct page returned HTTP 502; recurring restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 7 2026 overnight rain flood displacement tents casualties latest updates",
+      "site:english.wafa.ps/Pages/Details 7 November 2026 Gaza killed injured Saturday",
+      "Gaza November 7 2026 08:00 09:00 ambulance hospital wounded Gaza medical sources",
+      "Gaza November 7 2026 ceasefire hostages negotiations crossings aid access Reuters AP",
+      "site:aa.com.tr/en/middle-east/ \"7 November 2026\" Gaza rainfall injured killed Saturday",
+      "site:english.wafa.ps \"November 7, 2026\" \"GAZA\"",
+      "site:unicef.org OR site:unrwa.org OR site:who.int \"7 November 2026\" Gaza aid health water tents",
+      "site:palestinercs.org \"7 November 2026\" Gaza ambulances flooding",
+      "Gaza November 7 2026 Israeli fire artillery drone civilians casualties Saturday November 7",
+      "Gaza 7 November 2026 Rafah Kerem Shalom crossing trucks aid food water patients evacuation",
+      "site:aljazeera.com/news/2026/11/7 Gaza displaced rain aid killed injured ceasefire",
+      "site:reuters.com/world/middle-east/2026/11/07 Gaza Palestinian aid killed"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176712",
+        "result": "7 November 09:35 Palestine-local report by WAFA correspondents confirms two injuries in rain-induced collapse of previously bombarded wall in northern Gaza and thousands of tents flooded; same distinct findings already logged in preceding 23:45 PST heartbeat. Additional estimated 270,000 tents and more than 400,000 people exposed to flooding/sea-related risk are background stock/risk estimates, not distinct newly occurring events."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/2-palestinians-wounded-as-rain-causes-collapse-of-wall-in-israeli-damaged-building-in-gaza/4114898",
+        "result": "Same November 7 rain-related building collapse with two reported injuries and tent flooding; already captured in prior heartbeat."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest visible news item dated 3 November; no newer emergency medical transport or ambulance event."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403, recurring access restriction; did not prevent checking alternative OCHA, WHO global, WAFA and established news agency pages."
+      }
+    ],
+    "covered_classes": [
+      "civilian deaths and injuries",
+      "displacement, flood exposure, shelter",
+      "food, water, aid access and crossings",
+      "health facilities, ambulance transport, fuel, evacuations and capacity",
+      "infrastructure damage",
+      "detention/hostages and ceasefire/negotiations",
+      "military operations with civilian impact"
+    ],
+    "excluded": [
+      {
+        "item": "WAFA November 7 tent-flooding and northern Gaza building-collapse report",
+        "reason": "Same incident pair already durably logged on the immediately previous watch, prior to this hour; useful corroboration but not a new development. No new casualties or escalation in WAFA article."
+      },
+      {
+        "item": "OCHA November 5 humanitarian situation report (published Nov 6)",
+        "reason": "Earlier watch recorded humanitarian capacity, meals, water, medical evacuation, and shelter figures; no new version on index."
+      },
+      {
+        "item": "Reuters and AP winter storms, Gaza casualties and humanitarian articles from January through early November",
+        "reason": "Out of window or already captured; dated search did not verify a distinct new Nov 7 Gaza incident."
+      },
+      {
+        "item": "General UNRWA funding support statement published 7 November by WAFA",
+        "reason": "No evidenced new operational change in access, food, shelter or health delivery."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO",
+        "failure": "HTTP 502 Bad Gateway",
+        "impact": "Detailed regional emergency reports inaccessible; recurring restriction, not a newly worsened outage. WHO global overview and OCHA available."
+      },
+      {
+        "publisher": "UNRWA",
+        "failure": "HTTP 403 Forbidden",
+        "impact": "Direct updates blocked; recurring and unchanged, with alternative OCHA and established reporting."
+      }
+    ],
+    "limitations": "Exactly 12 additional targeted web searches after official-first OCHA and WHO check, plus direct page examinations. Indexing delays, undated article updates and absent health-system detail can limit recall; search window is Pacific local rather than Gaza local. No direct production collector/publisher state was changed or asserted.",
+    "notification_basis": "Zero distinct qualifying new developments after deduplication. WHO EMRO 502 and UNRWA 403 are recurring unchanged limitations and do not constitute a material new watch failure."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261106T224909-0800-recall12",
+  "scheduled_for": "2026-11-06T22:45:22-08:00",
+  "started_at": "2026-11-06T22:49:09-08:00",
+  "completed_at": "2026-11-06T22:51:09-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-06T21:50:03-08:00",
+    "end": "2026-11-06T22:51:09-08:00",
+    "basis": "Since the prior hourly Care Line Watch run timestamp (21:50 PST); supplementary newly recovered recall, not primary production collection. Last independently verified heartbeat in conversation completed 20:46:41 PST."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-tidalhealth-federalsburg-primary-care-2026-11-15",
+      "canonical_source_url": "https://www.beckershospitalreview.com/finance/tidalhealth-shutters-rural-primary-care-clinic/",
+      "title": "TidalHealth shutters rural primary care clinic",
+      "publisher": "Becker's Hospital Review",
+      "exact_supporting_passage": "After careful consideration, TidalHealth Primary Care in Federalsburg will close effective Nov. 15, 2026",
+      "source_published_date": null,
+      "state": "Maryland",
+      "city": "Federalsburg",
+      "county": "Caroline County",
+      "territory": null,
+      "event_type": "announced_permanent_service_closure",
+      "service_line": "primary_care",
+      "access_consequences": "TidalHealth Primary Care location in Federalsburg scheduled to close Nov. 15, 2026; patients being redirected to TidalHealth practices in Bridgeville, Seaford, Delmar and Georgetown. Impacted patient count and transit burden not established.",
+      "affected_population": "Patients served by TidalHealth Primary Care in Federalsburg and the surrounding rural community; number unknown.",
+      "effective_date": "2026-11-15",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "healthcare_trade_reporting_quoting_health_system_spokesperson",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "temporal_qualification": "Newly recovered source report during this recall watch, not an announcement or effective closure verified to have occurred during the one-hour observation window. Exact source publication date not available from relative page timestamp.",
+      "production_dedupe_verified": false
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO termination, CCN 18P001",
+      "new_relevant_notices": 0
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital/ED closure or suspension",
+      "Labor and delivery/maternity service loss",
+      "Rural emergency care shutdown",
+      "Behavioral health closure",
+      "Dialysis clinic closure",
+      "Oncology closure",
+      "Ground ambulance/base loss",
+      "Air-medical base loss",
+      "Rural primary care shutdown",
+      "Emergency/essential-service restoration",
+      "U.S. territories essential healthcare suspension",
+      "Latest acute hospital/service loss in U.S."
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional (PA) November 4-6 shutdown previously documented; no new change.",
+      "Older maternity, dialysis, EMS, and air-medical closures outside observation window.",
+      "Guam and CNMI typhoon-related clinic suspensions/restorations from April, July and October; no new November change.",
+      "Kula Hospital Maui restoration remains a future plan, not an effective reopening.",
+      "Georgian Bay General Hospital obstetrical suspension reporting excluded: Ontario, Canada.",
+      "Future proposed or general expansions without concrete lost-service restoration excluded."
+    ],
+    "source_failures": [],
+    "coverage_limitations": [
+      "Searches mainly surfaced older reports; this is bounded recall rather than exhaustive national collection.",
+      "The TidalHealth closure was newly recovered in this run; the trade report shows a relative publication timestamp, so exact publication date and novelty against the latest unseen 21:50 heartbeat are not verified.",
+      "Production collection and deduplication are authoritative and were not independently verified.",
+      "Only review candidate captured; no editorial approval, publication, or deployment."
+    ],
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

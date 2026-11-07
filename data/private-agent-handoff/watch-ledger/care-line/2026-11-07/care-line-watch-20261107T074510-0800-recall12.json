@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T074510-0800-recall12",
+  "scheduled_for": "2026-11-07T07:45:22-08:00",
+  "started_at": "2026-11-07T07:45:10-08:00",
+  "completed_at": "2026-11-07T07:46:57.888-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T06:42:11.348-08:00",
+    "end": "2026-11-07T07:46:57.888-08:00",
+    "basis": "Prior verified hourly heartbeat completed_at through this bounded search completion; queries examined November 6–7 material for indexing delays, excluded already documented and non-new developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — termination notice, organ procurement organization, Kentucky (CCN 18P001)",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "Official CMS notice table directly loaded and verified; no later dated notice visible.",
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital closes emergency department temporarily November 7 2026 US service suspended",
+      "maternity labor delivery unit closure announced November 6 7 2026 hospital",
+      "rural hospital emergency room service halted November 7 2026 United States",
+      "behavioral health psychiatric hospital inpatient unit closing November 6 7 2026",
+      "dialysis center oncology cancer treatment clinic closure November 6 7 2026",
+      "ambulance EMS air medical base closure suspension November 6 7 2026",
+      "site:gov \"Nov. 7, 2026\" \"hospital\" \"closed\" emergency services",
+      "site:gov \"November 6, 2026\" \"ambulance\" \"suspended\" OR \"closed\"",
+      "\"Nov 7, 2026\" \"hospital\" \"reopened\" \"emergency\"",
+      "\"November 6, 2026\" \"primary care\" \"closing\" OR \"permanently closed\"",
+      "\"November 7, 2026\" \"dialysis\" \"closed\" OR \"service suspended\"",
+      "\"November 7, 2026\" \"clinic\" \"closed\" \"Puerto Rico\" OR \"Guam\" OR \"Virgin Islands\""
+    ],
+    "search_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "result_summary": "No verified new nonduplicate U.S. or territory healthcare access closure, suspension, CMS enforcement action, or concrete essential-service restoration in the observation window. Search output skewed toward older results, future holiday hours, Canadian services and known Sharon Regional closure.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, PA — Nov. 4 ER closure and Nov. 6 service suspension",
+        "reason": "Already documented in prior Care Line watches; follow-up published Nov. 6 adds no new qualifying access change.",
+        "source": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Georgian Bay General Hospital obstetrics suspension Nov. 11–13",
+        "reason": "Canada, outside United States and territories.",
+        "source": "https://www.midlandtoday.ca/local-news/gbgh-obstetrical-closures-continue-as-staffing-challenges-persist-12985861"
+      },
+      {
+        "item": "Blanchfield Army Community Hospital Veterans Day holiday hours",
+        "reason": "Planned holiday scheduling, no evidenced abrupt loss or restoration of essential service.",
+        "source": "https://www.clarksvilleonline.com/2026/11/07/bach-announces-holiday-hours-for-veterans-day-and-fort-campbell-donsa/"
+      },
+      {
+        "item": "TidalHealth Primary Care Federalsburg, MD",
+        "reason": "November 15 scheduled closure already recovered in Nov. 6 prior watch; duplicate.",
+        "source": null
+      },
+      {
+        "item": "Historical 2026 hospital/behavioral-health/maternity closures and proposed service changes",
+        "reason": "Outside current window or unconfirmed actual access effect.",
+        "source": null
+      }
+    ],
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T064031-0800-recall12.json",
+    "prior_heartbeat_confirmed_completed_at": "2026-11-07T06:42:11.348-08:00",
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "https://www.midlandtoday.ca/local-news/gbgh-obstetrical-closures-continue-as-staffing-challenges-persist-12985861",
+      "https://www.clarksvilleonline.com/2026/11/07/bach-announces-holiday-hours-for-veterans-day-and-fort-campbell-donsa/"
+    ],
+    "access_errors": [],
+    "coverage_limitations": [
+      "Bounded targeted searches are supplementary, not exhaustive; recency filters yielded many stale search hits.",
+      "Production collection and its deduplication were not accessed; production remains authoritative."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

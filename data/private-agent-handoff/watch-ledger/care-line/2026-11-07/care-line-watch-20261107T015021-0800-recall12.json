@@ -1,0 +1,69 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T015021-0800-recall12",
+  "scheduled_for": "2026-11-07T01:45:22-08:00",
+  "started_at": "2026-11-07T01:50:21-08:00",
+  "completed_at": "2026-11-07T01:51:36-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T00:45:38-08:00",
+    "end": "2026-11-07T01:51:36-08:00",
+    "basis": "Since completed_at of the preceding verified hourly Care Line Watch heartbeat on ops/watch-ledger. Supplementary search also assessed recent prior announcements for missed but not previously recorded qualifying access changes; publication and service-change dates were distinguished."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, Organ Procurement Organization termination notice, CCN 18P001",
+      "new_notices_since_previous_heartbeat": 0,
+      "source_status": "Successfully accessed canonical CMS Public Notices page before the 12 targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "search_classes": [
+      "Hospital and emergency department closure or service suspension",
+      "Labor and delivery/maternity closure",
+      "Behavioral health inpatient/psychiatric care suspension",
+      "Dialysis clinic closure",
+      "Oncology/cancer infusion service closure",
+      "Rural primary-care clinic closure",
+      "Rural hospital/emergency service loss",
+      "Ground ambulance/EMS base closure",
+      "Air ambulance/medical helicopter base closure",
+      "Concrete reopening/restoration of previously lost essential services",
+      "U.S. territory hospital/clinic/emergency-service disruption",
+      "Recent U.S. hospital/clinic closure or suspension announcements"
+    ],
+    "reviewed_exclusions": [
+      "Sharon Regional Medical Center, Pennsylvania: Nov 4 emergency department closure and Nov 6 service suspension already covered by prior Care Line watch; no new event identified.",
+      "TidalHealth Federalsburg primary-care clinic, Maryland: planned Nov 15 closure captured in Nov 6 prior watch; duplicate.",
+      "MaineHealth Lincoln Hospital maternity closure announcement from August 2026 and Brattleboro Memorial Hospital birth center decision from September 2026: historic, not new.",
+      "Appomattox dialysis clinic, Virginia and Novi DaVita dialysis facility, Michigan: historic spring/summer 2026 reports.",
+      "Christ Hospital emergency department, New Jersey: earlier 2026 reporting; no newly verified effective closure in this window.",
+      "Los Angeles County public-health clinic reductions: February 2026 event, not new.",
+      "United Kingdom, Canada, Ghana, and other non-U.S. healthcare reporting: out of scope.",
+      "Funding proposals, business/ownership developments, opinion, unverified claims, and generic access or workforce stories without newly confirmed service changes."
+    ],
+    "sources_reviewed": [
+      "CMS canonical Public Notices, current page",
+      "Search results within 12 targeted categories with freshness filters",
+      "Prior 2026-11-07 00:45 PST Care Line heartbeat for duplicate control"
+    ],
+    "access_errors": [],
+    "coverage_limitations": [
+      "Targeted web results were sparse, often surfacing historical reporting despite recency filters; the result is bounded recall, not exhaustive national coverage.",
+      "Independent deduplication against the primary national production collector was not performed. Production remains authoritative.",
+      "No new qualifying nonduplicate U.S./territory essential-healthcare access change was verifiable during this run."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

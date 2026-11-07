@@ -1,0 +1,166 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261106T234353-0800-r11-20261107T074503Z",
+  "scheduled_for": "2026-11-06T23:44:51-08:00",
+  "started_at": "2026-11-06T23:43:53-08:00",
+  "completed_at": "2026-11-06T23:45:03-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-06",
+    "start": "2026-11-06T22:46:28-08:00",
+    "end": "2026-11-06T23:45:03-08:00",
+    "basis": "Incremental source-recall watch since the previous verified 22:46:28 PST heartbeat. November 7 Gaza-local publication dates were evaluated against the November 6 Pacific observation date. Exact article posting times not supplied, so findings are new-to-watch as discovered in this interval, not proven to have occurred or first appeared inside the hour.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261107-northern-gaza-war-damaged-wall-collapse-two-injured",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/2-palestinians-wounded-as-rain-causes-collapse-of-wall-in-israeli-damaged-building-in-gaza/4114898",
+      "title": "Two Palestinians wounded as rain causes collapse of wall in Israeli-damaged building in Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-07",
+      "publication_date": "2026-11-07",
+      "event_date": "2026-11-07",
+      "location": "Northern Gaza Strip; exact location of the collapsed wall not provided",
+      "affected_population_system": "Two injured Palestinians; structurally damaged housing/building safety under rainfall",
+      "exact_supporting_passage": "Two Palestinians were injured in northern Gaza on Saturday",
+      "source_type": "established news agency, citing medical source",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_in": "Anadolu Agency Middle East section direct headline inspection; article first seen during this run",
+        "source_reporting_detail": "A medical source told Anadolu that rain caused the wall of a building previously damaged by Israeli shelling to collapse, injuring two people.",
+        "limitations": "Medical source unnamed; injury severity and precise street/building unverified. No independent confirmation found in remaining bounded searches. The historical shelling and rainfall are context, not evidence of a new strike.",
+        "deduplication": "Not present in the prior verified heartbeat or known earlier watch findings. Earlier weather forecasts/winterization concerns are not this specific reported collapse.",
+        "temporal_note": "Article dated 7 November in Gaza; exact publication and event hour unavailable. Newly surfaced since previous watch, not certified to have occurred within Pacific-hour window."
+      }
+    },
+    {
+      "finding_id": "gaza-20261107-rain-floods-displacement-tents-multiple-sites",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/2-palestinians-wounded-as-rain-causes-collapse-of-wall-in-israeli-damaged-building-in-gaza/4114898",
+      "title": "Heavy rain floods displacement tents across Gaza, including Gaza City and central/northern camps",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-07",
+      "publication_date": "2026-11-07",
+      "event_date": "2026-11-07",
+      "location": "Near Gaza City port; west of Deir al-Balah; north of Nuseirat refugee camp; Jabalia and Beit Lahia, Gaza Strip",
+      "affected_population_system": "Displaced Palestinian families sheltering in tents; shelter, bedding, exposure and flood protection",
+      "exact_supporting_passage": "Eyewitnesses said heavy rain flooded thousands of displacement tents",
+      "source_type": "established news agency, eyewitness reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_in": "Same 7 November Anadolu article, surfaced through direct publisher index during this hourly check",
+        "source_reporting_detail": "Eyewitnesses described widespread rainwater flooding of displacement tents in named Gaza locations.",
+        "limitations": "The 'thousands' count is eyewitness-reported, not independently quantified or verified by an aid agency; no confirmed deaths or specific displacement count. Some further small-outlet coverage was excluded from corroboration because its source chain was unclear.",
+        "deduplication": "Distinct realized weather/flooding impact, versus the OCHA 5 November pre-storm shelter vulnerability assessment recorded earlier. Do not duplicate this finding solely as a forecast.",
+        "temporal_note": "Article dated 7 November in Gaza. Exact incident hour and initial posting time unavailable."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary source recall only; production Gaza collection/publication is authoritative and was not changed or approved.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "urls": [
+          "https://www.ochaopt.org/",
+          "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026"
+        ],
+        "state": "accessible",
+        "result": "Homepage newest report was still Humanitarian Situation Report dated 5 November, published 6 November. Previously recorded food, water, hospital capacity, evacuation and shelter assessments excluded as duplicates."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+          "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html"
+        ],
+        "state": "partially accessible",
+        "result": "Global conflict overview accessible and listed no newer dated Gaza emergency update. WHO EMRO emergency situation reports returned HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 7 2026 Saturday deaths wounded airstrike shooting civilians WAFA Reuters AP",
+      "Gaza Nov 7 2026 hospital medical evacuations fuel ambulances WHO health services",
+      "Gaza Nov 7 2026 aid food water crossing humanitarian access WFP UNICEF UNRWA",
+      "Gaza November 7 2026 ceasefire negotiations hostages detainees civilian impact",
+      "site:english.wafa.ps Saturday November 7 2026 Gaza killed wounded",
+      "site:aa.com.tr/en/middle-east/ 07.11.2026 Gaza killed aid",
+      "site:aljazeera.com/news/2026/11/7/ gaza Israeli strikes aid",
+      "site:reuters.com/world/middle-east/ November 7 2026 Gaza",
+      "7 November 2026 Gaza rain tents wounded collapse",
+      "site:english.wafa.ps November 7 2026 rain Gaza tents flooding injuries",
+      "site:unicef.org OR site:reliefweb.int Gaza 7 November 2026 flooding displacement shelter",
+      "site:reuters.com OR site:apnews.com Gaza 7 November 2026 rain casualties ceasefire"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "7 November report of rain-caused collapse with two wounded and flooding of displacement tents; logged two distinct aspects of same weather development."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews?pageNumber=1",
+        "result": "Latest visible list appeared stale (6 November West Bank items and 5 November Gaza reports); no verified new Gaza development from this page."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest posted news dated 3 November; no new Gaza ambulance or hospital incident."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403, recurring direct-access restriction."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and injuries",
+      "displacement, flood exposure and shelter safety",
+      "aid and food/water access and crossings",
+      "healthcare and medical evacuation",
+      "detention, ceasefire and negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "excluded": [
+      {
+        "item": "OCHA 5 November humanitarian report published 6 November",
+        "reason": "Prior watch already recorded assessment and figures; no new revision found."
+      },
+      {
+        "item": "6 November Khan Younis teenager fatality and maternal newborn anomaly data",
+        "reason": "Previously logged in earlier source watches."
+      },
+      {
+        "item": "Older Reuters/AP/WAFA/Al Jazeera stories returned by dated searches",
+        "reason": "Out-of-window or already reported."
+      },
+      {
+        "item": "Small-site 7 November rain and gunfire updates",
+        "reason": "Not treated as separate findings without independently traceable evidence; overlap with Anadolu storm reporting or earlier tent gunfire."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO",
+        "failure": "HTTP 502 Bad Gateway",
+        "impact": "Regional detailed health report inaccessible, unchanged from earlier runs; WHO global overview and OCHA accessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "failure": "HTTP 403 Forbidden",
+        "impact": "Direct updates inaccessible, unchanged from earlier runs; OCHA and other humanitarian sources available."
+      }
+    ],
+    "limitations": "Bounded 12 additional searches; indexing and article-posting times may lag, and production publisher state was not inspected or changed. Two findings are distinct sub-events of one weather system, not two separately confirmed storms. The report relies on an unnamed medical source and eyewitnesses and still merits editorial verification.",
+    "notification_basis": "At least one new qualifying development identified: two people reportedly injured in rain-caused collapse of a war-damaged building wall, with multiple displacement sites flooded. Recurring restrictions cause DEGRADED, but did not materially worsen."
+  }
+}

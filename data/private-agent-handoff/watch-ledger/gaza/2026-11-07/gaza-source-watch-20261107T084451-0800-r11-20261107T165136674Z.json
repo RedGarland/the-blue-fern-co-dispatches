@@ -1,0 +1,205 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261107T084451-0800-r11-20261107T165136674Z",
+  "scheduled_for": "2026-11-07T08:44:51-08:00",
+  "started_at": "2026-11-07T08:49:27-08:00",
+  "completed_at": "2026-11-07T08:51:36.674-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-07",
+    "start": "2026-11-07T07:47:35.279-08:00",
+    "end": "2026-11-07T08:51:36.674-08:00",
+    "basis": "Since latest verified prior Gaza Source Watch heartbeat, ended 07:47:35.279 PST; newly recovered reports differentiated from event time and predecessor duplicates.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261107-storm-5-injuries-aa-4114898",
+      "canonical_source_url": "https://www.aa.com.tr/en/world/5-palestinians-injured-in-storm-related-collapses-as-heavy-rains-batter-gaza-displacement-tents/4114898",
+      "title": "5 Palestinians injured in storm-related collapses as heavy rains batter Gaza displacement tents",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-07",
+      "publication_date": "2026-11-07",
+      "event_date": "2026-11-07",
+      "event_time": null,
+      "location": "Northern and central Gaza Strip",
+      "affected_population_system": "Five injured Palestinians, including two women, in wall and corrugated-metal collapses",
+      "exact_supporting_passage": "Medical sources told Anadolu that five Palestinians, including two women, were injured in separate incidents involving the collapse of two walls and the fall of a sheet of corrugated metal in northern and central Gaza.",
+      "source_type": "Established news report citing Gaza medical sources; direct interview with Civil Defence spokesperson",
+      "classification": "follow-up",
+      "confidence": "high_attributed_not_independently_verified",
+      "bounded_discovery_context": {
+        "discovered_during": "2026-11-07 08:49-08:51 PST",
+        "previously_logged": "Two rain-related injuries in a northern Gaza wall collapse; prior Gaza Source Watch heartbeat 07:44 PST",
+        "distinct_increment": "Five injured now reported; at least a higher attributed total, but overlap and exact extra incident times unverified",
+        "exact_hourly_event_timing": "unknown",
+        "search_method": "targeted search followed by direct Anadolu Middle East index and linked article"
+      }
+    },
+    {
+      "finding_id": "gaza-20261107-civil-defence-2166-calls-218-responses-aa-4114898",
+      "canonical_source_url": "https://www.aa.com.tr/en/world/5-palestinians-injured-in-storm-related-collapses-as-heavy-rains-batter-gaza-displacement-tents/4114898",
+      "title": "Gaza Civil Defence reports 2,166 storm distress calls, 218 responses and four storm-related damaged-home collapses",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-07",
+      "publication_date": "2026-11-07",
+      "event_date": "2026-11-07",
+      "event_time": null,
+      "location": "Gaza Strip; identified responses at Nuseirat, Bureij and central Gaza City",
+      "affected_population_system": "Displaced civilians, flood emergency response system, residents of damaged buildings",
+      "exact_supporting_passage": "Separately, Gaza’s Civil Defense said it had received 2,166 distress calls since the storm began Friday evening. Crews were able to respond to only 218 as rainwater flooded dozens of displacement camps and shelters, as well as entire residential areas.",
+      "source_type": "Established news reporting direct Gaza Civil Defence operational figures",
+      "classification": "follow-up",
+      "confidence": "high_attributed_not_independently_verified",
+      "bounded_discovery_context": {
+        "discovered_during": "2026-11-07 08:49-08:51 PST",
+        "previously_logged": "1,500 distress calls in 10 hours; Nuseirat evacuation and flood response in 04:44 predecessor; earlier Reuters noted three abandoned home collapses",
+        "distinct_increment": "Updated cumulative volume 2,166 calls, 218 attended; named Bureij roof and Gaza City court-district building collapses are additional detail, may overlap earlier collapses",
+        "exact_hourly_event_timing": "unknown",
+        "search_method": "Anadolu publisher index/direct report"
+      }
+    },
+    {
+      "finding_id": "gaza-20261107-al-shifa-emergency-department-flooding-aj",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/7/rains-flood-thousands-of-tents-in-gaza",
+      "title": "Al-Shifa emergency department flooded and temporarily out of service",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-07",
+      "publication_date": "2026-11-07",
+      "event_date": "2026-11-07",
+      "event_time": null,
+      "location": "Al-Shifa Medical Complex, Gaza City",
+      "affected_population_system": "Hospital emergency care / treatment capacity",
+      "exact_supporting_passage": "Mohammed Abu Salmiya, director of al-Shifa Medical Complex in Gaza City, told Al Jazeera that the hospital’s emergency department flooded and was out of service for about four hours.",
+      "source_type": "Established news report directly attributing account to hospital director",
+      "classification": "new",
+      "confidence": "high_attributed_not_independently_verified",
+      "bounded_discovery_context": {
+        "discovered_during": "2026-11-07 08:49-08:51 PST",
+        "previously_logged": "Flooded tents, evacuation and emergency services recorded earlier; no al-Shifa emergency-department disruption in latest watch heartbeat",
+        "distinct_increment": "Specific reported temporary hospital-functioning interruption; recovery after the four-hour interruption not independently verified",
+        "exact_hourly_event_timing": "unknown",
+        "search_method": "targeted Al Jazeera November 7 search and direct original article"
+      }
+    },
+    {
+      "finding_id": "gaza-20261107-ocha-winter-emergency-stocks-insufficient-aa-4115188",
+      "canonical_source_url": "https://www.aa.com.tr/en/world/heavy-rains-flood-gaza-shelters-putting-displaced-families-at-immediate-risk-ocha/4115188",
+      "title": "OCHA warns Gaza emergency winter stocks insufficient as responders mobilize",
+      "publisher": "Anadolu Agency (reporting OCHA statement)",
+      "source_date": "2026-11-07",
+      "publication_date": "2026-11-07",
+      "event_date": "2026-11-07",
+      "event_time": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Displaced families in flooded shelters; humanitarian stocks, vehicles and generators",
+      "exact_supporting_passage": "Humanitarian organizations have mobilized to distribute emergency supplies and assist affected families, but available stocks remain \"insufficient,\" OCHA warned.",
+      "source_type": "Established reporting of attributable official OCHA humanitarian statement",
+      "classification": "follow-up",
+      "confidence": "medium_high_attributed_official_statement_not_independently_verified",
+      "bounded_discovery_context": {
+        "discovered_during": "2026-11-07 08:49-08:51 PST",
+        "previously_logged": "Storm flooding and pre-existing shelter-material restrictions known, but November 7 OCHA response and current insufficient emergency supplies not in latest watch heartbeat",
+        "distinct_increment": "Operational response and supply sufficiency statement, not an independently quantified new aid disruption",
+        "exact_hourly_event_timing": "unknown",
+        "search_method": "direct Anadolu publisher index linked article; OCHA OPT site has no November 7 written situation report"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary source-recall monitoring only; daily production Gaza collector/publisher remains authoritative.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-07/gaza-source-watch-20261107T074451-0800-r11-20261107T154735279Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "accessible",
+        "result": "Latest visible publication 6 November report for situation as of 5 November; no November 7 written situation report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global situation page accessible; no November 7 item. WHO EMRO regional request gave recurring HTTP 502. Two initial incorrect WHO URL aliases returned 404; correct global URL accessed."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps November 7 2026 Gaza Saturday 17:00 18:00 shelling casualties hospitals",
+      "site:reuters.com Gaza November 7 2026 latest Saturday rain civilian deaths injured aid 15:00 UTC",
+      "site:apnews.com Gaza November 7 2026 Saturday humanitarian ceasefire flooding strikes",
+      "site:aa.com.tr/en/middle-east 7 November 2026 Gaza Saturday latest 16:00 17:00 UTC",
+      "site:aljazeera.com/news/2026/11/7 Gaza November 7 2026 latest injured aid storm ceasefire",
+      "site:un.org OR site:ochaopt.org November 7 2026 Gaza civilian casualties aid crossing shelters updated",
+      "site:who.int OR site:emro.who.int Gaza hospital evacuation ambulance fuel November 7 2026 new update",
+      "site:unicef.org OR site:wfp.org Gaza November 7 2026 food water distribution shelter rain supply interruption",
+      "site:palestinercs.org 7 November 2026 Gaza emergency medical ambulance flooding PRCS",
+      "Gaza Rafah Kerem Shalom Erez crossing November 7 2026 aid trucks fuel medical evacuation update Saturday",
+      "November 7 2026 Gaza ceasefire talks hostages detention Israeli military operation civilian casualties late Saturday",
+      "site:aa.com.tr/en/middle-east/ Heavy rains flood Gaza shelters OCHA Nov 7 2026 OR site:ochaopt.org Gaza storm Nov 7 2026 shelters"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/index.aspx",
+        "status": "accessible_chronology_inconsistent",
+        "result": "Live homepage returned mostly November 6 news and one November 7 West Bank report, older Gaza casualty item already recorded; no additional independent same-window event confirmed."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/",
+        "status": "accessible",
+        "result": "Found November 7 medical-source and Civil Defence follow-up, and OCHA statement."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/7/rains-flood-thousands-of-tents-in-gaza",
+        "status": "accessible",
+        "result": "Confirmed separate hospital emergency-department flooding/direct hospital director attribution."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Latest visible item November 3; no newly verified November 7 ambulance update."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Repeated source access restriction, not material new degradation."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties",
+      "displacement and damaged buildings",
+      "aid and emergency response capacity",
+      "food and water",
+      "hospital capacity and medical evacuation",
+      "crossings and fuel",
+      "detention and hostages",
+      "ceasefire negotiations",
+      "military operations with civilian impact"
+    ],
+    "duplicate_exclusions": [
+      "Previously logged November 7 48-hour Ministry of Health summary (10 fatalities, 22 injuries, 12 retrospective death registrations)",
+      "Previously logged two weather-related injuries and broad displacement-tent flooding",
+      "Previously logged 1,500 emergency calls, Nuseirat evacuation, 30-40 cm floodwater, Reuters report and OCHA November 6 report"
+    ],
+    "known_gaps": [
+      "WHO EMRO returned HTTP 502 and UNRWA HTTP 403, recurring restrictions; alternative official/global and established reporting remained available.",
+      "Search indexes did not consistently present chronologically newest WAFA items.",
+      "Anadolu and Al Jazeera reports display November 7 publication date without precise time; individual event times cannot be placed within the exact hourly observation window.",
+      "OCHA warning was accessed as attributed coverage via Anadolu; no separate November 7 OCHA written report appeared on OCHA OPT.",
+      "Five-injury count, Civil Defence call count, and four-hour al-Shifa interruption are attributed reports, not independently verified incident-by-incident.",
+      "12 targeted searches bounded recall, not exhaustive."
+    ],
+    "assessment": "Four differentiated new-to-watch/follow-up developments: five injury total versus prior two; increased emergency calls/response bottleneck and named building collapses; al-Shifa ED temporarily out of service; OCHA insufficient emergency relief stocks/active response. All reported November 7, exact occurrence times unknown. DEGRADED reflects recurring WHO regional and UNRWA access gaps; no new material degradation. Production/publication/approval/schedule unchanged."
+  }
+}

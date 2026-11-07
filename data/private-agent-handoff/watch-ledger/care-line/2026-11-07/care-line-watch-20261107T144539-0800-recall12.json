@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T144539-0800-recall12",
+  "scheduled_for": "2026-11-07T14:45:22-08:00",
+  "started_at": "2026-11-07T14:45:39-08:00",
+  "completed_at": "2026-11-07T14:46:14-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T13:51:00-08:00",
+    "end": "2026-11-07T14:46:14-08:00",
+    "basis": "Last verified Care Line watch heartbeat completed_at through this execution, with targeted two-day search recency and evaluation of source dates and already recorded events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination (CCN 18P001)",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department diversion ambulance bypass closed this afternoon United States",
+      "November 7 2026 maternity labor delivery unit hospital suspended closed this afternoon",
+      "November 7 2026 rural hospital emergency department closed sudden loss of service",
+      "November 7 2026 ambulance EMS service base closure emergency suspension",
+      "Nov 7 2026 air ambulance base suspended closed medical helicopter service USA",
+      "Nov 7 2026 dialysis clinic center abruptly closed patients service interrupted",
+      "Nov 7 2026 inpatient psychiatric behavioral mental health hospital unit closing suspension admissions",
+      "Nov 7 2026 oncology chemotherapy cancer center closing treatment appointments interrupted",
+      "November 7 2026 primary care family clinic sudden closure suspended patients provider USA",
+      "November 7 2026 emergency department reopened ambulances receiving again maternity dialysis restored service hospital",
+      "November 7 2026 Guam Puerto Rico US Virgin Islands American Samoa Northern Mariana hospital health clinic ambulance emergency closure reopen",
+      "November 7 2026 health department CMS Medicare termination notice CLIA certification suspension limitation rescinded provider"
+    ],
+    "search_recency_days": 2,
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL; EMS bypass began 2026-11-07 07:00 CST",
+        "reason": "Already captured as positive in 09:48 PST watch heartbeat. November 7 article and EMS-system reassignment were not newly effective in current observation window."
+      },
+      {
+        "item": "Benefis Health System behavioral health discontinuation, Great Falls MT",
+        "reason": "November 3 reporting; phased changes continue into 2027, not a newly effective access change during this hour."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur IL base closure",
+        "reason": "Effective September 16, 2026; historical and previously reviewed."
+      },
+      {
+        "item": "Sharon Regional, Roseland, Henderson, Sturgis and other hospital service changes",
+        "reason": "Older reports or previously recorded events without new verified access effect in this hour."
+      },
+      {
+        "item": "Kula Hospital Maui HI comeback announcement",
+        "reason": "Future restoration plan only; ED not yet confirmed reopened."
+      },
+      {
+        "item": "Guam / CNMI typhoon-related hospital service suspensions and federal emergency declarations",
+        "reason": "April, July or October 2026 developments; no new November 7 change."
+      },
+      {
+        "item": "CMS Public Notices listing",
+        "reason": "No entries more recent than November 2, 2026."
+      },
+      {
+        "item": "Unrelated foreign health stories, childcare closures, runway maintenance and generic hospital funding stories",
+        "reason": "Outside scope, historical, or no concrete healthcare-access change."
+      }
+    ],
+    "result_summary": "Official CMS Public Notices checked first; most recent visible notice dated November 2. Twelve additional targeted searches covered hospital/ED, obstetrics, rural care, EMS, air medical, dialysis, behavioral health, oncology, primary care, essential-service restorations, territories and CMS/CLIA actions. No new qualifying, nonduplicate U.S. or territory healthcare-access development established for the observation window.",
+    "source_examples": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+      "https://montanafreepress.org/2026/11/03/benefis-to-close-clinic-in-great-falls-end-behavioral-health-services/"
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T134908-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T13:51:00-08:00",
+    "coverage_limitations": [
+      "Bounded supplementary targeted search; not an exhaustive national or territory collector.",
+      "Same-hour local reports, delayed indexing and unpublished state notices may be missed.",
+      "Production pipeline ingestion and deduplication not verified."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

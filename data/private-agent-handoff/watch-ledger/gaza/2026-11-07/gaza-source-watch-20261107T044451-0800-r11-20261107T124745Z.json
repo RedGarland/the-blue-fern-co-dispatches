@@ -1,0 +1,184 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261107T044451-0800-r11-20261107T124745Z",
+  "scheduled_for": "2026-11-07T04:44:51-08:00",
+  "started_at": "2026-11-07T04:47:45-08:00",
+  "completed_at": "2026-11-07T04:51:07.297-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-07",
+    "start": "2026-11-07T03:44:57.807-08:00",
+    "end": "2026-11-07T04:51:07.297-08:00",
+    "basis": "Incremental recall since latest verified heartbeat; newly discovered stories can predate observation window; distinguish publication and event times.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261107-storm-civil-defence-1500-calls-nuseirat-evacuation",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/7/rains-flood-thousands-of-tents-in-gaza",
+      "corroborating_source_urls": [
+        "https://www.aljazeera.net/news/2026/11/7/%D8%B9%D8%A7%D8%AC%D9%84-%D9%85%D8%B1%D8%A7%D8%B3%D9%84-%D8%A7%D9%84%D8%AC%D8%B2%D9%8A%D8%B1%D8%A9-%D8%BA%D8%B1%D9%82-%D9%85%D8%A6%D8%A7%D8%AA-%D8%AE%D9%8A%D8%A7%D9%85",
+        "https://kuwaittimes.com/article/53161/world/gaza-civil-defense-warns-of-humanitarian-disaster-as-storm-floods-camps/"
+      ],
+      "title": "Gaza Civil Defence reports roughly 1,500 storm distress calls in 10 hours, rescues residents from partially collapsed Nuseirat building and warns of insufficient shelter and rescue resources",
+      "publisher": "Al Jazeera, reporting direct statements by Gaza Civil Defence; 1,500-call total also reported by Kuwait Times/KUNA",
+      "source_date": "2026-11-07",
+      "publication_date": "2026-11-07",
+      "source_publication_time": null,
+      "event_date": "2026-11-07",
+      "event_period": "10 hours after storm began early Saturday 7 November 2026; exact beginning/end hours not verified",
+      "location": "Gaza Strip, including Nuseirat refugee camp in central Gaza, displacement shelters across multiple Gaza governorates",
+      "affected_population_system": "Displaced Palestinian families, emergency callers, occupants of a partially collapsed building and Gaza Civil Defence emergency response/shelter capacity",
+      "exact_supporting_passage": "Gaza’s civil defence agency said its crews received about 1,500 distress calls in just 10 hours",
+      "passage_language": "en",
+      "source_type": "established_reporting_with_direct_civil_defence_official_statements",
+      "classification": "follow-up",
+      "new_to_watch": true,
+      "confidence": "high_for_attributed_civil_defence_reporting_medium_for_independent_verification",
+      "confidence_basis": "Al Jazeera directly quotes spokesperson Mahmoud Basal and Gaza Civil Defence leadership; independent Al Jazeera Arabic report carries same 1,500-call number and Nuseirat evacuation; media accounts rely substantially on the same Civil Defence statements, so not independent incident verification.",
+      "quantified_reporting": {
+        "distress_calls_approx": 1500,
+        "call_period_hours": 10,
+        "reported_water_depth_cm_min": 30,
+        "reported_water_depth_cm_max": 40
+      },
+      "response_events": {
+        "nuseirat_partial_building_collapse_residents_evacuated": true,
+        "all_affected_residents_count": null,
+        "emergency_shelter_resources_reported_absent": true
+      },
+      "bounded_discovery_context": "The prior verified Gaza heartbeat already recorded November 7 flooding and two northern Gaza wall-collapse injuries as duplicates; this watch adds a traceable Civil Defence emergency-response burden, reported 30–40cm inundation at some shelters, new Nuseirat building-evacuation account and its stated inability to provide replacement shelter. Al Jazeera article dated Nov 7, with a syndication/index timestamp potentially before this observation window; discovery is new-to-watch, not proof all calls/evacuations occurred during this hour. No independent count verification. Excludes uncorroborated 70,000-flooded-tents estimate.",
+      "watch_action": "For primary collector review and dedupe against storm incident series. No approval, publication, or production mutation."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production collector/publisher remains authoritative. No approval, publishing, scheduling, or task disablement.",
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-07/gaza-source-watch-20261107T034451-0800-r11-20261107T114201Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "state": "accessible",
+        "result": "Latest homepage Gaza situation report dated Nov 5 and posted Nov 6. No new dated Gaza operational publication visible."
+      },
+      {
+        "publisher": "WHO",
+        "urls": [
+          "https://www.emro.who.int/pse/palestine-news/",
+          "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory"
+        ],
+        "state": "inaccessible_to_current_requested_endpoints",
+        "result": "EMRO Palestine news direct endpoint HTTP 502 (persistent); global emergency URL returned HTTP 404, likely retired path; prior known WHO global conflict landing path remains available in earlier heartbeat. Primary WHO Nov 7 report not found in targeted WHO search."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 7 2026 latest Palestinian killed wounded rain displaced shelters 7 November 2026",
+      "site:english.wafa.ps/Pages/Details/ \"Saturday\" \"November 7, 2026\" Gaza killed injured",
+      "site:aa.com.tr/en/middle-east/ Gaza November 7 2026 Gaza humanitarian aid hospitals",
+      "site:reuters.com/world/middle-east/ Gaza November 7 2026 Israel Hamas ceasefire aid killed",
+      "site:apnews.com/article/ Gaza Nov 7 2026 civilians ceasefire aid",
+      "site:aljazeera.com/news/2026/11/7 Gaza latest casualties displaced aid Israeli shelling",
+      "site:who.int OR site:healthcluster.who.int Gaza November 7 2026 hospitals medical evacuation health fuel",
+      "site:unicef.org OR site:wfp.org Gaza November 7 2026 aid flood food water shelter",
+      "Gaza crossings Rafah Kerem Shalom 7 November 2026 humanitarian aid fuel deliveries restrictions",
+      "Gaza November 7 2026 hostage detainees ceasefire negotiations civilian operations latest UN",
+      "Gaza Civil Defense \"1,500\" distress calls \"10 hours\" November 7 2026 floods",
+      "November 7 2026 Gaza civil defense flood camp water depth 30 40 cm emergency rescues shelters"
+    ],
+    "additional_direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Gaza casualty update 74,640 dead and 175,947 injured published at 12:34 PM on Nov 7, previously logged; earlier 09:35 AM flooding/two injuries already logged; excluded as duplicates."
+      },
+      {
+        "publisher": "Al Jazeera English",
+        "url": "https://www.aljazeera.com/news/2026/11/7/rains-flood-thousands-of-tents-in-gaza",
+        "result": "Civil Defence distress-call count, Nuseirat evacuation, deep water in shelters, and direct statement re inability to provide shelter; recorded as follow-up."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/11/7/%D8%B9%D8%A7%D8%AC%D9%84-%D9%85%D8%B1%D8%A7%D8%B3%D9%84-%D8%A7%D9%84%D8%AC%D8%B2%D9%8A%D8%B1%D8%A9-%D8%BA%D8%B1%D9%82-%D9%85%D8%A6%D8%A7%D8%AA-%D8%AE%D9%8A%D8%A7%D9%85",
+        "result": "Direct Civil Defence attributed 1,500 calls and Nuseirat evacuation; report includes other unverified figures withheld."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Landing page broad region; search returned storm impact already logged, no independently verified new incident."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest homepage dated Nov 3; no new ambulance status."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "HTTP 403, persistent access restriction."
+      },
+      {
+        "publisher": "Kuwait Times/KUNA",
+        "url": "https://kuwaittimes.com/article/53161/world/gaza-civil-defense-warns-of-humanitarian-disaster-as-storm-floods-camps/",
+        "result": "Search index provides Civil Defence 1,500-call corroboration and operational resource limitation; full article direct open disabled, so no quote extracted."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties",
+      "displacement and storm damaged shelter",
+      "aid food water and sanitation",
+      "healthcare and medical evacuation",
+      "ambulance fuel and response capacity",
+      "crossings and infrastructure",
+      "hostages detention and ceasefire negotiations",
+      "military operations with reported civilian impact"
+    ],
+    "exclusions": [
+      {
+        "item": "November 7 Gaza Health Ministry hospital arrivals: 10 deaths/22 injured, retrospective 12-case registration",
+        "reason": "Already recorded in immediately prior verified heartbeat."
+      },
+      {
+        "item": "November 7 flooding of thousands of tents and two injuries from northern Gaza wall collapse",
+        "reason": "Already logged; the NEW quantified Civil Defence response and Nuseirat evacuation are recorded only as follow-up, not a repeat incident."
+      },
+      {
+        "item": "70,000 tents flooded and millions of dollars damage",
+        "reason": "Single attributed Gaza government media office claim; independently verified count unavailable."
+      },
+      {
+        "item": "Older OCHA report/UN estimates and Reuters Nov 2 strikes",
+        "reason": "Outside incremental observation and previously known or recycled."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "publisher": "WHO EMRO",
+        "failure": "HTTP 502",
+        "impact": "Cannot directly review Palestine regional news. Persistent established limitation."
+      },
+      {
+        "publisher": "UNRWA",
+        "failure": "HTTP 403",
+        "impact": "Cannot directly review new UNRWA updates. Persistent established limitation."
+      },
+      {
+        "publisher": "WHO global emergency path",
+        "failure": "HTTP 404",
+        "impact": "Requested URL likely retired; WHO source-specific targeted searches checked with no new report returned."
+      },
+      {
+        "publisher": "Kuwait Times",
+        "failure": "Direct article fetch disabled",
+        "impact": "Search excerpt obtainable; supplementary corroboration limited to index summary."
+      }
+    ],
+    "limitations": "Timestamp of Al Jazeera report not independently validated to the minute; new-to-watch recovery includes reporting that may have been released shortly before the Pacific observation window. No claim of an event occurring exactly in the hourly interval. Only 12 searches beyond OCHA/WHO first checks. Reported Civil Defence figures are attributed, not independently audited.",
+    "notification_basis": "Distinct newly recovered, traceable emergency-response and Nuseirat evacuation details within previously tracked storm event. Known WHO/UNRWA restrictions persist with no demonstrated new deterioration."
+  }
+}

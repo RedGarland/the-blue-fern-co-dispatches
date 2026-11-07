@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T064031-0800-recall12",
+  "scheduled_for": "2026-11-07T06:45:22-08:00",
+  "started_at": "2026-11-07T06:40:31-08:00",
+  "completed_at": "2026-11-07T06:42:11.348-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T05:49:19-08:00",
+    "end": "2026-11-07T06:42:11.348-08:00",
+    "basis": "Previous verified Care Line heartbeat completed_at through this run's search completion; targeted November 6-7 indexed reporting to catch late-indexed changes, with duplicates and older events excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky; CCN 18P001) — OPO termination notice",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "Official CMS notice table accessible; no newer dated notices visible.",
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department permanently closes suspends services November 6 7 2026 United States",
+      "rural hospital emergency care suspends closes November 2026 county",
+      "maternity labor delivery unit closed suspension November 6 2026 hospital",
+      "behavioral health psychiatric inpatient facility closes suspends November 2026",
+      "dialysis center service stops closes November 2026 patients",
+      "cancer oncology clinic infusion closes patients November 2026",
+      "primary care health clinic closure November 6 7 2026 patients",
+      "ambulance EMS service shuts down closes base November 2026",
+      "air medical helicopter medevac base closes suspends November 2026",
+      "hospital emergency department reopens restored services November 6 7 2026",
+      "state health department license emergency suspension hospital closure November 2026",
+      "Guam Puerto Rico US Virgin Islands American Samoa Northern Mariana healthcare clinic hospital service closure reopening November 2026"
+    ],
+    "search_recency_days": [
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      2,
+      3,
+      3,
+      2,
+      3,
+      3
+    ],
+    "result_summary": "No independently supported new nonduplicate U.S. or territory healthcare-access closure, suspension, official CMS action, or concrete essential-service restoration identified. Results were predominantly older reports, policy stories without implemented access impact, or already-tracked events.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center (Pennsylvania) emergency department closure and hospital service suspension",
+        "reason": "Previously documented in prior Care Line watches; Nov 6 follow-up article provided no fresh qualifying service change in observation window.",
+        "source": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "TidalHealth Primary Care Federalsburg (Maryland) closure effective November 15",
+        "reason": "Already recovered and submitted pending review in November 6 watch; duplicate."
+      },
+      {
+        "item": "Christ Hospital (Jersey City) ER closure reporting",
+        "reason": "Months-old report; no evidenced new closure or restoration."
+      },
+      {
+        "item": "Peace River Center crisis-unit admissions moratorium",
+        "reason": "Older report; no new effective action identified."
+      },
+      {
+        "item": "California Proposition 44 clinic-funding coverage",
+        "reason": "Policy/election reporting without verified actual clinic access change."
+      },
+      {
+        "item": "CrossRidge oncology expansion and OhioHealth oncology award",
+        "reason": "No closure or concrete restoration of previously lost essential services."
+      },
+      {
+        "item": "Historical ambulance, dialysis, maternity closures in returned results",
+        "reason": "Outside current window and no new effective access change."
+      }
+    ],
+    "prior_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T054837-0800-recall12.json",
+    "prior_heartbeat_confirmed_completed_at": "2026-11-07T05:49:19-08:00",
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+    ],
+    "access_errors": [],
+    "coverage_limitations": [
+      "Bounded targeted web searches are not exhaustive and search result indexing surfaced many stale articles despite recency filtering.",
+      "Production collector ingestion and deduplication were not independently inspected; production remains authoritative."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

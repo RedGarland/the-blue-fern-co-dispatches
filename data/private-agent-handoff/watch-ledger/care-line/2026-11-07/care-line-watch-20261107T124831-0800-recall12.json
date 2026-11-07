@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T124831-0800-recall12",
+  "scheduled_for": "2026-11-07T12:45:22-08:00",
+  "started_at": "2026-11-07T12:48:31-08:00",
+  "completed_at": "2026-11-07T12:49:48-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T11:47:25-08:00",
+    "end": "2026-11-07T12:49:48-08:00",
+    "basis": "Completed_at of immediately preceding verified Care Line watch ledger (11:45 run) through this run; targeted news search recency 2 days, screened for event date and previous ledger duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope — KY — Organ Procurement Organization termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 hospital emergency department closed suspended ambulance diversion new today US",
+      "November 7 2026 maternity labor and delivery service suddenly closed hospital suspension local news",
+      "November 7 2026 rural hospital emergency room closure service reduction abrupt report",
+      "November 7 2026 ambulance EMS station base closure coverage suspended township county",
+      "November 7 2026 air ambulance helicopter base shuts down service interrupted",
+      "November 7 2026 dialysis clinic abruptly shut down patients access treatment",
+      "November 7 2026 psychiatric behavioral health crisis stabilization unit suspends admissions closed patients",
+      "November 7 2026 oncology cancer center chemotherapy clinic closes care interrupted patients",
+      "November 7 2026 primary care clinic permanently closes physician practice patients redirected",
+      "November 7 2026 emergency department hospital resumes reopens ambulance bypass lifted restoration",
+      "November 7 2026 hospital health center clinic ambulance closure Guam Puerto Rico US Virgin Islands American Samoa Northern Mariana Islands",
+      "November 7 2026 health department issued notice suspension medical provider license CLIA laboratory hospital Medicare access"
+    ],
+    "search_recency_days": 2,
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, PA — ED closure November 4 and full service suspension November 6",
+        "reason": "Already recorded in previous Care Line watches; follow-on November 6 reporting is duplicate."
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago — maternity unit closed November 1",
+        "reason": "Previously reviewed historical service loss; later November 2 report is not newly observed this window."
+      },
+      {
+        "item": "Vista Medical Center East, Waukegan — November 7 ambulance bypass",
+        "reason": "Already logged as a qualifying finding in prior November 7 09:48 watch."
+      },
+      {
+        "item": "Peace River Center, FL crisis stabilization unit new-admission moratorium",
+        "reason": "Report dates several months before this hourly window."
+      },
+      {
+        "item": "Tehama County, CA air-ambulance base closure",
+        "reason": "September 17, 2026 event; not newly observed this window."
+      },
+      {
+        "item": "Kula Hospital, Maui — proposed storm-damage reopening",
+        "reason": "Reopening remained planned, without confirmed restoration or effective service date."
+      },
+      {
+        "item": "Guam Regional Medical City and Guam Memorial Hospital — typhoon-related outpatient service limits",
+        "reason": "October 2026 events; older than observation period."
+      },
+      {
+        "item": "Maharashtra, India blood-bank license suspension",
+        "reason": "Outside the United States and territories."
+      },
+      {
+        "item": "Proposed service expansions, policy and medical research articles",
+        "reason": "No concrete newly effective essential-service loss or restoration."
+      }
+    ],
+    "result_summary": "The official CMS Public Notices page was accessed before searching; no notice newer than November 2, 2026 appeared. Twelve additional targeted web queries returned mainly earlier closures, historical interruptions, reports outside the requested geography, proposed reopenings, or unrelated healthcare research. No qualifying, nonduplicate US or territory healthcare-access change was verified since the preceding completed watch.",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T114541-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T11:47:25-08:00",
+    "coverage_limitations": [
+      "Bounded supplementary web recall, not exhaustive national collection.",
+      "Search-index ranking can omit same-hour local news or late-indexed notices.",
+      "This does not establish whether production already ingested or deduplicated a reported item."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

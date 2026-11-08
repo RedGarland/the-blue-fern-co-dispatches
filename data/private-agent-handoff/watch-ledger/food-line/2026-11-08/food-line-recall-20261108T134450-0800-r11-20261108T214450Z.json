@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T134450-0800-r11-20261108T214450Z",
+  "scheduled_for": "2026-11-08T13:45:54-08:00",
+  "started_at": "2026-11-08T13:44:50-08:00",
+  "completed_at": "2026-11-08T13:47:00-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T12:51:20.353-08:00",
+    "end_at": "2026-11-08T13:47:00-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Independently retrieved preceding 12:51:20.353 PST ledger checkpoint on ops/watch-ledger, plus a bounded newly indexed backfill review for November 6–8.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T124936-0800-r11-20261108T204936Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of high-value misses only; the production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting a community's sole, only, last or full-service grocery store",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distributions",
+      "Abrupt food pantry or food bank service closure or major access reduction",
+      "New official SNAP/WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 8 2026 US",
+      "\"last grocery store\" shuts down fire November 2026 town",
+      "\"sole grocery store\" closed storm 2026 November",
+      "\"only full-service grocery store\" closing November 2026",
+      "\"food pantry\" \"closed\" \"November 8, 2026\" emergency",
+      "\"food bank\" \"suspend\" \"distribution\" storm November 8 2026",
+      "\"food distribution\" canceled November 8 2026 flood power",
+      "\"food pantry\" \"temporarily closed\" \"November 8, 2026\"",
+      "site:gov \"SNAP\" \"November 8, 2026\" \"interruption\" benefits",
+      "site:gov \"WIC\" \"November 8, 2026\" suspended outage",
+      "\"SNAP\" \"EBT\" outage November 8 2026 benefits state",
+      "\"food bank\" \"closed\" \"November 8\" 2026 fire"
+    ],
+    "search_recency": "All 12 searches used 2- or 7-day recency settings plus terms referencing November 2026. Newly indexed material from before the precise hourly boundary was reviewed as backfill, not automatically counted as a new signal.",
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 9,
+      "successful": 6,
+      "failed": 3,
+      "urls": [
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "https://211palmbeach.org/news/flood-resources-2026",
+        "https://www.atlantanewsfirst.com/2026/11/08/mccaysville-cleans-up-flood-ravaged-community-leans-prayer-after-deadly-disaster/",
+        "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "https://www.dss.virginia.gov/benefit/snap.cgi",
+        "https://www.fns.usda.gov/snap/state-directory"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "reason": "County notice published Nov 6 documents the Friday Nov 6 Hawaiʻi Foodbank Kauaʻi emergency distribution as planned, not canceled; no new in-window interruption."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Local recovery guide repeats the scheduled Nov 6 mobile pantry event and is not evidence of a later cancellation."
+      },
+      {
+        "source_url": "https://211palmbeach.org/news/flood-resources-2026",
+        "reason": "Provider disaster resource page last updated Nov 6, two days before this run; no new abrupt food-service loss identified."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing SNAP application/telephone wait-time guidance, no fresh confirmed benefits interruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated official acute SNAP/WIC interruption visible."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/benefit/snap.cgi",
+        "reason": "Redirected to a general Virginia benefits overview; no acute food-assistance service interruption."
+      },
+      {
+        "source_url": "https://www.atlantanewsfirst.com/2026/11/08/mccaysville-cleans-up-flood-ravaged-community-leans-prayer-after-deadly-disaster/",
+        "reason": "Known McCaysville GA flooding already documented in prior heartbeat; this direct URL was inaccessible in this run, so no fresh change could be verified."
+      },
+      {
+        "source_url": null,
+        "reason": "Search matches were predominantly old 2026 grocery closures, non-US grocery incidents, November 2025 SNAP shutdown coverage, routine benefit guidance, or unrelated food coverage; excluded as stale, nonqualifying or prior-known."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.atlantanewsfirst.com/2026/11/08/mccaysville-cleans-up-flood-ravaged-community-leans-prayer-after-deadly-disaster/",
+        "type": "direct_source_access",
+        "result": "Source open returned internal error / inaccessible",
+        "mitigation": "McCaysville incident was already present in prior review notes; no new fact inferred."
+      },
+      {
+        "url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "type": "direct_source_access",
+        "result": "DisabledError when opening",
+        "mitigation": "Original incident remained previously reviewed; this check was not used to assert a new change."
+      },
+      {
+        "url": "https://www.fns.usda.gov/snap/state-directory",
+        "type": "direct_source_access",
+        "result": "HTTP 403 Forbidden",
+        "mitigation": "Direct state agency SNAP pages and alerts remained accessible."
+      }
+    ],
+    "assessment": "No new qualifying food-access disruption was verified in the defined four classes during this bounded recall. Zero findings; prior incidents not re-emitted.",
+    "limitations": "Three of nine direct source checks failed or were access-restricted. Remaining six checks, including a county official recovery notice and two state agency sources, supplied usable coverage. Mark DEGRADED per partial-access rule; no material loss of the core four-class sampling was demonstrated. Search ranking/index delays make this intentionally non-exhaustive, not a substitute for production.",
+    "material_degradation": false,
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One private watch-ledger heartbeat only. No editorial approval, production ingestion, publication, merge, schedule change, disablement or task alteration."
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T154616-0800-recall12",
+  "scheduled_for": "2026-11-08T15:45:22-08:00",
+  "started_at": "2026-11-08T15:46:16-08:00",
+  "completed_at": "2026-11-08T15:47:12-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T14:50:45-08:00",
+    "end": "2026-11-08T15:47:12-08:00",
+    "basis": "From the previous verified durable Care Line watch heartbeat completion to this run's search completion.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, OPO termination notice (CCN 18P001)",
+      "new_notices_since_prior_heartbeat": 0,
+      "checked_via": "Direct official CMS Public Notices table, before targeted search queries."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed suspended services November 8 2026 United States",
+      "maternity labor and delivery unit closure suspended November 7 8 2026 hospital",
+      "psychiatric behavioral health inpatient hospital closes services November 8 2026",
+      "dialysis center oncology cancer treatment clinic closing November 2026 November 8",
+      "rural hospital emergency room closure November 8 2026 service loss",
+      "ambulance EMS air ambulance medical helicopter base closure suspended November 8 2026",
+      "hospital emergency department reopened restored service following closure November 8 2026 US",
+      "primary care community health clinic abruptly shut doors patients November 8 2026 US",
+      "CMS Medicare provider termination CLIA suspension November 7 8 2026 state health department",
+      "Puerto Rico Guam American Samoa Northern Mariana Virgin Islands hospital emergency clinic EMS services closed suspended November 2026",
+      "hospital healthcare clinic emergency suspended operations storm fire November 8 2026 local",
+      "November 8 2026 hospital labor delivery dialysis EMS ambulance closures latest news"
+    ],
+    "search_recency_filter_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL — November 8 payroll/state criticism report",
+        "reason": "Reporting found on November 8 concerns missed payroll and criticism of facility ownership, without a newly confirmed service-line suspension or restoration in this observation window. Full source could not be fetched independently.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/"
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania — emergency department and other suspended services",
+        "reason": "Reported November 4–6 and already included/excluded in previous watches; no independently confirmed new change during current window.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago — maternity closure",
+        "reason": "Closure was implemented before this window; no new service change.",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "LifeFlight of Maine air-ambulance profile on November 8",
+        "reason": "Operational staffing/practice story; no concrete newly effective base closure or reopening.",
+        "source_url": "https://www.wbur.org/npr/nx-s1-6017801/air-ambulance-service-rural-healthcare-staffing"
+      },
+      {
+        "item": "Guam Regional Medical City typhoon outpatient suspension and Guam Memorial Hospital service suspension",
+        "reason": "October 16–20 2026 storm events; outside current observation period.",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/"
+      },
+      {
+        "item": "Kula Hospital, Maui HI — announced future reopening plan",
+        "reason": "No effective emergency department or hospital reopening; detailed timeline not yet confirmed.",
+        "source_url": "https://www.aha.org/tellingthehospitalstory/stories/hawaii-hospital-set-comeback-after-storm-damage-closure"
+      },
+      {
+        "item": "Other targeted-search results",
+        "reason": "Older closures, prospective plans, business or policy reporting without a new effective access change, and out-of-scope non-US incidents."
+      }
+    ],
+    "source_access_errors": [
+      {
+        "url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/",
+        "error": "Direct article open returned DisabledError; search result showed headline and publication metadata only.",
+        "consequence": "Unable to independently inspect the full Vista article. No qualifying change inferred from partial evidence."
+      }
+    ],
+    "material_coverage_loss": false,
+    "result_summary": "Official CMS table latest notice November 2. Twelve bounded targeted searches across hospital/ED, maternity, behavioral health, dialysis, oncology, rural care, primary care, EMS/air medical, restoration and U.S. territories revealed no verified new nonduplicate qualifying healthcare-access change in the observation window.",
+    "coverage_limitations": [
+      "Single secondary local article could not be opened; marked degraded rather than treating unsupported details as a finding.",
+      "Sunday local reporting and search indexing latency may delay discovery of recent events.",
+      "Supplementary recall only; production collection remains authoritative.",
+      "Production-level deduplication was not independently verified."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T144935-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T14:50:45-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

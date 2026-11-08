@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T144935-0800-recall12",
+  "scheduled_for": "2026-11-08T14:45:22-08:00",
+  "started_at": "2026-11-08T14:49:35-08:00",
+  "completed_at": "2026-11-08T14:50:45-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T12:44:48-08:00",
+    "end": "2026-11-08T14:50:45-08:00",
+    "basis": "From last precisely verified durable Care Line watch heartbeat through this check; conservatively includes potential overlap with intervening hourly task because no newer exact heartbeat file was identified.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky) termination notice, organ procurement organization, CCN 18P001",
+      "new_notices_since_prior_verified_heartbeat": 0,
+      "checked_via": "Directly opened and read the official CMS Public Notices table before running additional targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department suddenly closed diverting ambulances November 8 2026 US",
+      "hospital labor delivery maternity unit suspended closed reopened November 8 2026",
+      "rural hospital emergency service shutdown suspension November 8 2026",
+      "behavioral health psychiatric hospital patient intake suspended closed November 8 2026 United States",
+      "dialysis center treatments stopped clinic shutdown November 8 2026",
+      "cancer oncology chemotherapy infusion center closure suspension November 8 2026",
+      "community health primary care clinic suddenly closed patients November 8 2026",
+      "ambulance EMS station service shut down suspended county November 8 2026",
+      "air ambulance helicopter base closed grounded services November 8 2026",
+      "hospital emergency department reopening services restored November 8 2026 after shutdown",
+      "Puerto Rico Guam Virgin Islands American Samoa CNMI medical hospital clinic ambulance closure November 2026",
+      "site:gov OR site:org healthcare hospital emergency medical closure service suspension notice November 8 2026"
+    ],
+    "search_recency_filter_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center (PA) emergency department and service suspensions",
+        "reason": "Verified November 4-6 disruption already recorded by earlier Care Line watches; no new change in this search window.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "North Quadra Urgent and Primary Care Centre (British Columbia)",
+        "reason": "Official November 8 in-person visit closure due to planned hydro outage, but in Canada, outside U.S. and territories.",
+        "source_url": "https://www.islandhealth.ca/locations/hospitals-health-centre-locations/north-quadra-urgent-and-primary-care-centre"
+      },
+      {
+        "item": "English NHS midwifery-led birth-centre closures",
+        "reason": "UK jurisdictions and historical changes, outside geographic remit.",
+        "source_url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights"
+      },
+      {
+        "item": "Kula Hospital (Hawaii) reconstruction/reopening plans",
+        "reason": "No confirmed immediate effective reopening; still planning and reopening timeline pending.",
+        "source_url": "https://www.aha.org/tellingthehospitalstory/stories/hawaii-hospital-set-comeback-after-storm-damage-closure"
+      },
+      {
+        "item": "Guam Regional Medical City tropical storm service suspension",
+        "reason": "Official report pertains to April 13-15, 2026, not November 8.",
+        "source_url": "https://www.grmc.gu/2026/04/10/grmc-announces-suspension-of-visitations-and-clinic-operations-rehabilitation-and-or-services-monday-to-wednesday-due-to-tropical-storm-sinlaku/"
+      },
+      {
+        "item": "Other search returns",
+        "reason": "Older incidents, health policy/business stories without a newly effective access interruption or restoration, and general unrelated reports."
+      }
+    ],
+    "result_summary": "CMS Public Notices latest visible notice dated November 2, 2026. Twelve additional targeted searches covering hospital/ED, maternity, rural, psychiatric, dialysis, oncology, primary care, ambulance/air medical, service restoration and territories found no verifiable new, nonduplicate qualifying change within observation window.",
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Supplementary search only, not the authoritative national production collector.",
+      "Recent Sunday local events may be unreported or unindexed at search time.",
+      "Search window conservatively overlaps intervening hour because the most recently verified exact heartbeat was completed 12:44:48 PST.",
+      "Production-level deduplication could not be independently verified."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T124250-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T12:44:48-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

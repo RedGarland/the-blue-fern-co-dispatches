@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T024451-0800-r11-20261108T104245Z",
+  "scheduled_for": "2026-11-08T02:44:51-08:00",
+  "started_at": "2026-11-08T02:40:15-08:00",
+  "completed_at": "2026-11-08T02:42:45.598-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T01:47:42.000-08:00",
+    "end": "2026-11-08T02:42:45.598-08:00",
+    "basis": "From verified completed_at of immediately preceding 2026-11-08 Gaza watch heartbeat through current bounded assessment. New-to-watch publication dated November 8 lacks exact publication clock time; event onset inside the hourly window is NOT asserted.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261108-civil-defence-2000-buildings-300000-tents-shelter-gap",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/8/floods-in-gaza-leave-tens-of-thousands-without-shelter",
+      "title": "Floods in Gaza leave tens of thousands without shelter",
+      "publisher": "Al Jazeera English",
+      "source_date": "2026-11-08",
+      "publication_date": "2026-11-08",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip (specific building locations not enumerated)",
+      "affected_population_system": "Displaced Palestinian households living in tents and damaged shelters; structurally unsafe buildings and emergency-shelter supply capacity.",
+      "summary": "A November 8 report, citing Gaza Civil Defence, states that more than 2,000 buildings are at risk of collapse and at least 300,000 tents are needed for affected displaced people. The quantified structural-risk and shelter-requirement estimates were absent from the immediately preceding verified supplementary heartbeat and are recorded as one new-to-watch operational-risk follow-up to the already documented storm, not as a new flooding incident. Timing of original assessment and publication within the exact observation hour is unknown.",
+      "exact_supporting_passage": "more than 2,000 buildings are at risk of collapse and that at least 300,000 tents are needed",
+      "source_type": "Established news outlet reporting attributed Gaza Civil Defence estimates",
+      "classification": "follow-up",
+      "new_follow_up_classification": "follow-up",
+      "confidence": "medium",
+      "discovery_context": {
+        "detected_via": "Targeted site:aljazeera.com/news/2026/11/8 Gaza search, followed by direct article verification",
+        "first_verified_in_this_watch": true,
+        "compared_prior_heartbeat": "gaza-source-watch-20261108T014451-0800-r11-20261108T094742Z",
+        "difference_from_prior": "Prior heartbeat covered 270 camps exposed, Gaza City drainage operating near 20%, 250 municipal calls and previously logged Civil Defence response totals; it did not record 2,000 at-risk buildings or a quantified requirement for 300,000 tents.",
+        "temporal_limit": "Source date is 8 November 2026 but not a verifiable hour. Estimates may have been assembled earlier during the storm that began on 6 November; do not represent a newly occurring collapse or prove the estimates first emerged in this exact hour.",
+        "corroboration": "Civil Defence is specifically attributed by Al Jazeera; no direct original dated Civil Defence bulletin or independent timestamped confirmation identified.",
+        "exclusions": "Do not count previously logged 70,000 flooded tents, 2,166 distress calls, Al-Shifa interruption, 20% drainage capacity, five storm injuries, or November 8 09:05 WAFA shooting as fresh events."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only. Production daily Gaza collector/editorial review is authoritative and was neither inspected nor modified.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T014451-0800-r11-20261108T094742Z.json",
+    "prior_verified_completed_at": "2026-11-08T01:47:42.000-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026",
+        "status": "accessible",
+        "result": "Latest relevant official situation report located: dated 5 November, posted 6 November; no 8 November Gaza situation report verified."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "Global WHO situation page checked; regional emergency situation report retrieval returned recurring HTTP 502; no newly dated health-service change verified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"08/November/2026\" \"12:\" wounded killed injured displaced",
+      "site:english.wafa.ps/Pages/LastNews November 8 2026 Gaza midday 12:00 13:00",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 8, 2026\" Sunday Palestinian aid casualties",
+      "site:aljazeera.com/news/2026/11/8 Gaza Sunday attacks floods displaced hospitals",
+      "site:reuters.com/world/middle-east/ Gaza November 8 2026 ceasefire flood casualties hostage",
+      "site:un.org OR site:news.un.org Gaza November 8 2026 aid storm water hospital",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza November 8 2026 shelter emergency flood food",
+      "Gaza Sunday November 8 2026 hospital Al Shifa emergency ambulance medical evacuations flood",
+      "Gaza Rafah Kerem Shalom crossing aid trucks November 8 2026 access disruptions",
+      "Gaza November 8 2026 civilian casualties shelling Khan Younis noon Sunday WAFA Anadolu",
+      "Gaza 8 November 2026 \"2,000 buildings\" \"300,000 tents\" flood earlier reported",
+      "غزة الأحد 8 نوفمبر 2026 ظهر إصابات قصف مستشفيات إسعاف معابر سيول الدفاع المدني"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "Latest Gaza casualty item remained the 09:05 8 November shooting, already logged. Subsequent 10:48 Ofer-prison, 10:49 Salfit, 11:06 Jerusalem and 12:03 Tubas updates lacked a specific Gaza nexus."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/8/floods-in-gaza-leave-tens-of-thousands-without-shelter",
+        "status": "accessible",
+        "result": "8 November article verified; shelter-risk quantified follow-up preserved; other storm, injury, aid and casualty context not duplicated."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Most recent displayed news 3 November; no newly dated Gaza ambulance or medical evacuation event."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring known restriction."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/",
+        "status": "search_robots_restricted",
+        "result": "No direct current Gaza article verified from this search; official OCHA page remained reachable."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and documented military impact",
+      "displacement, structural hazard and shelter capacity",
+      "food, water, sanitation, fuel, humanitarian aid and crossings",
+      "hospital functioning, medical transport/evacuations and ambulances",
+      "detention, hostages, ceasefire and negotiations"
+    ],
+    "duplicate_exclusions": [
+      "WAFA November 8 09:05 Khan Younis woman injured, previously logged.",
+      "November 7 flooding of 70,000 tents; previously logged injuries, Civil Defence calls, Al-Shifa closure, emergency-stock shortfalls.",
+      "Prior follow-up on 270 Gaza City camps, 20% drainage operation and 250 municipal service calls.",
+      "November 1 Israeli strikes and 5 November OCHA figures outside current window.",
+      "Deir el-Balah families' missed food aid since early Saturday, not verified as a new interruption during this run."
+    ],
+    "known_gaps": [
+      "Recurring WHO EMRO 502 and UNRWA 403; no material deterioration beyond established baseline.",
+      "UN News search robots restricted.",
+      "8 November Al Jazeera source has no exact publication clock time or Civil Defence assessment time; new-to-watch follow-up is not evidence of event onset within the hourly window.",
+      "No direct original Civil Defence bulletin independently establishing publication time.",
+      "Production state not inspected; deduplication is against previous supplementary heartbeat only."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "One bounded new-to-watch quantified displacement-shelter risk follow-up. Persistent source restrictions justify DEGRADED, not FAILED."
+  }
+}

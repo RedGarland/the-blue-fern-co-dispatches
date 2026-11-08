@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T034048-0800-recall12",
+  "scheduled_for": "2026-11-08T03:45:22-08:00",
+  "started_at": "2026-11-08T03:40:48-08:00",
+  "completed_at": "2026-11-08T03:45:59-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T02:48:23-08:00",
+    "end": "2026-11-08T03:45:59-08:00",
+    "basis": "From last independently verified Care Line heartbeat completion to present run, using Los Angeles local time. Retrospective candidate verified against prior watch-ledger before potential inclusion.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": [
+        "An initial incorrect/legacy CMS Public Notices URL was inaccessible; canonical CMS Public Notices page was subsequently found and read successfully. No loss of CMS coverage."
+      ]
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 8 2026 hospital emergency department closed shut suspended ambulance diversion United States",
+      "November 8 2026 labor delivery maternity obstetrics ward closure hospital services patients",
+      "November 8 2026 behavioral health psychiatric hospital inpatient unit closed admissions suspended",
+      "November 8 2026 rural hospital ER emergency service closure suspension news",
+      "November 8 2026 EMS ambulance rescue service station base closing suspension shutdown county",
+      "November 8 2026 air ambulance helicopter medical base closes operations suspended",
+      "November 8 2026 dialysis center clinic shuts down closed patients transferred",
+      "November 8 2026 cancer center oncology infusion chemotherapy clinic unexpectedly closes suspends service",
+      "Encompass Health Sea Pines Rehabilitation Hospital Melbourne Florida November 6 2026 indefinitely closed flood November 2026 official",
+      "November 8 2026 primary care urgent care community health center clinic closes abruptly patients rural United States",
+      "November 8 2026 hospital emergency maternity ambulance dialysis service resumed reopened restored after shutdown United States",
+      "November 7 8 2026 Puerto Rico Guam Virgin Islands Northern Marianas American Samoa hospital clinic EMS closure suspension restoration"
+    ],
+    "source_access_errors": [
+      "The first CMS URL guess was inaccessible; recovered through canonical CMS URL without losing notice coverage."
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sea Pines Rehabilitation Hospital, Melbourne/Brevard County, Florida — 90-bed inpatient rehabilitation hospital indefinitely closed from Nov 1–2 flooding; official Nov 6 announcement",
+        "reason": "Verified from Encompass Health SEC-filed press release, but exact event already recorded as a pending-review finding in November 6, 12:49 PST Care Line watch heartbeat; duplicate. Source: https://www.sec.gov/Archives/edgar/data/785161/000078516126000242/november2026pressrelease.htm",
+        "earlier_finding_id": "care-line-fl-melbourne-sea-pines-rehabilitation-hospital-indefinite-closure-20261106"
+      },
+      {
+        "item": "Sharon Regional Medical Center, PA, ER closure and wider service suspension",
+        "reason": "Previously recorded; no new in-window closure or effective reopening established."
+      },
+      {
+        "item": "Adventist Health White Memorial, CA, temporary ambulance diversion Nov 6–7",
+        "reason": "Recorded in Nov 8 01:40 watch heartbeat; no new independent in-window access change."
+      },
+      {
+        "item": "Vista Medical Center East, IL, ambulance diversion",
+        "reason": "Previously recorded Nov 7; no newly verified access change."
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago IL, Nov 1 maternity unit closure",
+        "reason": "Historical, previously recorded."
+      },
+      {
+        "item": "Carle Health Rantoul IL clinic moisture-related suspension, Oct 29",
+        "reason": "Outside hourly observation window and previously reported, no verified restoration."
+      },
+      {
+        "item": "Tehama County California and Decatur Illinois air-medical base closures, September 2026",
+        "reason": "Historical closures; not newly effective."
+      },
+      {
+        "item": "Non-U.S. hospital service notices and general rural healthcare policy coverage",
+        "reason": "Outside geographic or concrete access-impact scope."
+      }
+    ],
+    "result_summary": "CMS Public Notices checked before 12 targeted searches. CMS latest visible notice is 2026-11-02. No new qualifying nonduplicate U.S. or territorial healthcare-access development was established. A primary-source-confirmed Nov 6 Sea Pines report was a substantial retrospective lead, but direct GitHub inspection established that it was already captured in the Nov 6 12:49 PST watch heartbeat. One incorrect initial CMS URL was inaccessible, but the canonical CMS page was successfully retrieved and reviewed.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T024636-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T02:48:23-08:00",
+    "retrospective_duplicate_ledger": "data/private-agent-handoff/watch-ledger/care-line/2026-11-06/care-line-watch-20261106T124919-0800-recall12.json",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Supplementary bounded recall, not complete national collection.",
+      "Very recent overnight local reports may not yet be indexed.",
+      "Production collector and its independent deduplication were not inspected."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

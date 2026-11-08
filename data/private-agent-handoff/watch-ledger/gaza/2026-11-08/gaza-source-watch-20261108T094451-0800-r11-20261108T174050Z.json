@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T094451-0800-r11-20261108T174050Z",
+  "scheduled_for": "2026-11-08T09:44:51-08:00",
+  "started_at": "2026-11-08T09:40:50-08:00",
+  "completed_at": "2026-11-08T17:43:44.122Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T16:52:22.577Z",
+    "end": "2026-11-08T17:43:44.122Z",
+    "basis": "Starts at the verified completed_at of the immediately preceding 08:44-scheduled Gaza watch heartbeat. Publication timestamps are not treated as event timestamps. Only distinct qualifying Gaza developments newly evidenced since the preceding check count as findings.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production collector/dedupe/publishing remains authoritative and unchanged.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T084451-0800-r11-20261108T164930Z.json",
+    "previous_verified_completed_at": "2026-11-08T16:52:22.577Z",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Updates page still led with humanitarian situation report dated 5 Nov, published 6 Nov 2026; no new Nov 8 Gaza operational bulletin verified."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "Global WHO Gaza conflict page accessible, no new Nov 8 health update in its latest news listing. WHO EMRO emergency reports endpoint returned HTTP 502; previously known impairment."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/news/2026/11/8 غزة 8 نوفمبر 2026 مساء إصابة شهداء خان يونس جباليا",
+      "site:english.wafa.ps/Pages/Details/ \"November 8, 2026\" Gaza Sunday evening killed wounded",
+      "site:aa.com.tr/en/middle-east/ \"November 8, 2026\" Gaza casualties tents flooding aid ceasefire",
+      "site:aljazeera.com/news/2026/11/8 Gaza November 8 2026 evening strike aid health displaced",
+      "site:reuters.com/world/middle-east/ Gaza \"November 8, 2026\" Sunday airstrikes ceasefire aid",
+      "site:apnews.com/article/ Gaza November 8 2026 Israeli strike medical evacuation aid",
+      "site:news.un.org OR site:un.org Gaza November 8 2026 emergency aid shelters medical evacuation flooding Sunday",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza November 8 2026 new food water distribution fuel winter",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza 8 November 2026 injured ambulances transport fuel hospital",
+      "Gaza Rafah Kerem Shalom crossings truck medical evacuation November 8 2026 Sunday evening",
+      "Gaza November 8 2026 latest Hamas Israel negotiations hostage detainees ceasefire government Gadi Eisenkot impact",
+      "Gaza November 8 2026 19:00 Palestinian local time evening deaths injured Khan Younis Beit Lahia Jabalia latest"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "Latest visible news item 18:51 Palestine local; no verified new in-window Gaza casualty report. 16:59 Khan Younis deaths repeat prior heartbeat."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "Latest listing 18:37 Palestine local, with 17:49 translation of already handed-off Khan Younis two-deaths event. No new Gaza-specific casualty update after prior watch."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "Existing storm stories, previous injuries, prisoner-health reports with no Gaza-specific origin, and advocacy for aid access. No new dated actionable operational change verified."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Institutional Latest News top item 3 Nov; no independently verifiable new in-window ambulance or evacuation update."
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "accessible",
+        "result": "Current general emergency page describes food assistance cuts and access constraints without verifiable publication or operational change time inside the watch window."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Previously recorded direct-site access restriction persists."
+      }
+    ],
+    "covered_classes": [
+      "Civilian casualties and military operations with civilian impact",
+      "Displacement, flood-related shelter and infrastructure damage",
+      "Humanitarian aid, food/water, crossings and fuel",
+      "Hospitals, ambulances, medical transportation and evacuation",
+      "Detention, hostages and ceasefire/negotiation changes"
+    ],
+    "exclusions": [
+      "WAFA 16:59 Palestinian local report of two deaths and unspecified injuries near Taiba Towers, Khan Younis, already recorded in 07:44 watch; English translation and subsequent mentions are duplicates.",
+      "Nov 8 morning Khan Younis woman shot and four Jabalia-area injuries already handed off in earlier watches.",
+      "Repeated Gaza flood figures (70,000 flooded tents, 270 at-risk shelters, 20% drainage functionality, 2,000+ unstable buildings, 300,000 tent needs) previously handed off.",
+      "Press reports on Israeli presidential government-formation mandate without a verified new Gaza-specific ceasefire or access change; excluded as politics-only.",
+      "Search-indexed Palsawa report dated Nov 8 at 4:01 PM about PRCS-assisted evacuation of 26 patients and 31 companions via Rafah appears to concern Sunday morning activity, preceding this watch window. Direct source page could not be reopened and no contemporaneous PRCS/WHO primary confirmation was found; excluded from findings rather than misrepresenting older activity as new.",
+      "Unattributed AI-assisted crossing-status aggregator, unverified current-day operations, historic results, and Gaza-unlinked West Bank/prisoner stories excluded."
+    ],
+    "known_gaps": [
+      "WHO EMRO HTTP 502, UNRWA HTTP 403 and news.un.org robots restriction remain previously documented; OCHA/WHO global and alternative media sources accessible.",
+      "Some searches returned stale hits or zero targeted results; publisher feeds additionally inspected.",
+      "Potential older medical-evacuation report could not be directly corroborated; do not treat as a new in-window event.",
+      "Primary production collection and dedupe database were not accessed; absence of findings is bounded, not proof of no events."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "No new qualifying Gaza-specific development verified during this observation window. DEGRADED reflects ongoing source access limitations, without new material degradation. No publication or schedule mutation."
+  }
+}

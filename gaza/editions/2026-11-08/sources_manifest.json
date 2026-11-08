@@ -1,0 +1,59 @@
+[
+  {
+    "source_record_id": "MOHGAZA-20261108-STAFF-TRANSPORT-NOTICES",
+    "source_id": "MOHGAZA-20261108-STAFF-TRANSPORT-NOTICES",
+    "title": "Gaza Health Ministry reports staff transport stoppage notices",
+    "url": "https://t.me/MOHMediaGaza/7709",
+    "canonical_url": "https://t.me/MOHMediaGaza/7709",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "not_wrapper",
+    "wrapper_url": null,
+    "publisher": "Gaza Health Ministry",
+    "published_at": "2026-11-08",
+    "retrieved_at": "2026-11-08",
+    "retrieved_at_precision": "date",
+    "retrieved_calendar_date": "2026-11-08",
+    "retrieved_local_date": null,
+    "retrieval_boundary_date": "2026-11-08",
+    "retrieved_at_utc": null,
+    "retrieved_at_local": null,
+    "post_edition_date_source": false,
+    "summary_or_snippet": "Gaza's Health Ministry said on November 8 that several accredited transport companies had notified it they would stop services from that day, citing unpaid dues, repeated bus breakdowns and shortages of spare parts, oil and tires. The ministry warned that disrupted staff travel could threaten emergency care, operating rooms and intensive care units, and appealed for payment of arrears and operating supplies. This is the ministry's account of company notices and risks; the statement does not establish that hospitals have shut down.",
+    "source_type": "manual",
+    "region_scope": "Gaza Strip",
+    "category_hint": "health_system",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "manual-supplement",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Statement explicitly dated November 8, 2026 and says notices take effect Sunday November 8. Displayed post time09:37 has no explicit timezone; no conversion made. Prior October28 and November7 channel warnings establish the crisis predates this new formal-notice update.",
+    "editorial_label": "November 8 ministry statement about transport-company notices; hospital disruption is a warning, not independently verified closure.",
+    "event_date": "2026-11-08",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-11-08",
+    "used_in_story_ids": [
+      "gaza-story-2026-11-08-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core"
+  }
+]

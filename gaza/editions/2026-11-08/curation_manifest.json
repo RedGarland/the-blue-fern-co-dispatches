@@ -1,0 +1,76 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-08-001",
+    "title": "Gaza Health Ministry reports staff transport stoppage notices",
+    "summary": "Gaza's Health Ministry said on November 8 that several accredited transport companies had notified it they would stop services from that day, citing unpaid dues, repeated bus breakdowns and shortages of spare parts, oil and tires. The ministry warned that disrupted staff travel could threaten emergency care, operating rooms and intensive care units, and appealed for payment of arrears and operating supplies. This is the ministry's account of company notices and risks; the statement does not establish that hospitals have shut down.",
+    "category": "health_system",
+    "story_scope": "core_gaza",
+    "score": 54,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "MOHGAZA-20261108-STAFF-TRANSPORT-NOTICES"
+    ],
+    "source_ids": [
+      "MOHGAZA-20261108-STAFF-TRANSPORT-NOTICES"
+    ],
+    "source_urls": [
+      "https://t.me/MOHMediaGaza/7709"
+    ],
+    "publisher_names": [
+      "Gaza Health Ministry"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "MOHGAZA-20261108-STAFF-TRANSPORT-NOTICES",
+        "title": "Gaza Health Ministry reports staff transport stoppage notices",
+        "url": "https://t.me/MOHMediaGaza/7709",
+        "publisher": "Gaza Health Ministry",
+        "summary_or_snippet": "Gaza's Health Ministry said on November 8 that several accredited transport companies had notified it they would stop services from that day, citing unpaid dues, repeated bus breakdowns and shortages of spare parts, oil and tires. The ministry warned that disrupted staff travel could threaten emergency care, operating rooms and intensive care units, and appealed for payment of arrears and operating supplies. This is the ministry's account of company notices and risks; the statement does not establish that hospitals have shut down.",
+        "editorial_label": "November 8 ministry statement about transport-company notices; hospital disruption is a warning, not independently verified closure.",
+        "event_date": "2026-11-08",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "health_system",
+        "attribution": "Gaza Health Ministry",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-08T19:55:23.770646+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 54,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "health_system",
+    "location": "Gaza Strip",
+    "event_date": "2026-11-08",
+    "attribution": "Gaza Health Ministry",
+    "uncertainty": "reported source",
+    "casualty_counts": {}
+  }
+]

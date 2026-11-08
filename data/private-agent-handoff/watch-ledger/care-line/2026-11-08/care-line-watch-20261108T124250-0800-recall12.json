@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T124250-0800-recall12",
+  "scheduled_for": "2026-11-08T12:45:22-08:00",
+  "started_at": "2026-11-08T12:42:50-08:00",
+  "completed_at": "2026-11-08T12:44:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T10:44:23-08:00",
+    "end": "2026-11-08T12:44:48-08:00",
+    "basis": "Conservative lookback from the last GitHub heartbeat whose exact file path could be retrieved. Automation metadata records an intervening previous run at approximately 11:49 PST but its exact durable heartbeat and completion time were not independently retrievable through the connected GitHub file tools; includes possible overlap to avoid leaving a coverage gap.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization, termination notice, CCN 18P001",
+      "new_notices_since_prior_verified_heartbeat": 0,
+      "checked_via": "Official CMS Public Notices page, examined first (before 12 additional targeted searches); current listing verified after recovery from an outdated URL."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closure suspension diversion November 8 2026 United States",
+      "maternity labor delivery unit closure reopen November 8 2026 hospital United States",
+      "rural hospital emergency room services closed suspended November 8 2026",
+      "psychiatric behavioral health hospital admissions suspended closed November 8 2026",
+      "dialysis center clinic suddenly closed treatment unavailable November 8 2026 US",
+      "oncology cancer infusion chemotherapy services suspended closed November 8 2026",
+      "primary care health clinic urgent care suddenly closes November 8 2026 patients",
+      "ambulance EMS emergency medical service base shutting down suspended November 8 2026",
+      "air ambulance medical helicopter base closed grounded suspended November 8 2026 United States",
+      "hospital emergency department services reopened resumed November 8 2026 after closure",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic ambulance closure service November 2026",
+      "site:gov \"emergency department\" OR \"hospital\" \"closure\" \"November 8, 2026\" public health"
+    ],
+    "search_recency_filter_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "AdventHealth Rockmart Clinic, Polk County, GA expanded urgent-care hours and added cardiology",
+        "reason": "November 8 report describes expansion effective November 5, not abrupt restoration of a previously lost essential service or loss/suspension; no closure implicated.",
+        "source_url": "https://www.wrganews.com/2026/11/08/adventhealth-rockmart-clinic-expands-services-extends-hours-and-adds-cardiology-care/"
+      },
+      {
+        "item": "Peak Vista Pediatric Walk-In Center, Colorado Springs, CO",
+        "reason": "Reported November 6 but center opened October 1; new access model, not a newly effective restoration of a previously lost service.",
+        "source_url": "https://gazette.com/2026/11/06/new-pediatric-walk-in-center-from-peak-vista-fills-gap-in-healthcare/"
+      },
+      {
+        "item": "Sharon Regional Medical Center, PA ED and other service suspensions",
+        "reason": "Access restrictions occurred Nov 4-6 and were already recorded in prior watch heartbeats; no additional in-window event.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Roseland Community Hospital, IL labor and delivery",
+        "reason": "Closure occurred around Nov 1 and was previously captured; November 2 reporting is historical.",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "White Memorial ambulance diversion, Vista Medical Center East restrictions, Sea Pines Rehabilitation closure",
+        "reason": "Previously logged Care Line watch developments; searches did not verify a distinct new access effect."
+      },
+      {
+        "item": "International emergency department interruptions; US historical closure and proposal coverage",
+        "reason": "Outside covered US jurisdictions, outside observation window, or lacked concrete new access change."
+      }
+    ],
+    "result_summary": "CMS official Public Notices remains dated November 2. All 12 targeted search queries returned usable coverage without any verified new, nonduplicate US or territory hospital/ED, maternity, behavioral-health, dialysis, oncology, primary-care, EMS/air-medical loss, CMS action or abrupt essential-service restoration within the conservative observation window.",
+    "source_access_errors": [
+      {
+        "source_url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-public-notices",
+        "error": "Outdated CMS URL inaccessible; canonical CMS listing successfully recovered and inspected before other 12 targeted searches.",
+        "recovered": true
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Bounded supplementary recall, not a comprehensive national or territorial collector.",
+      "Sunday local reporting and indexing delays can cause recent events to appear after this observation.",
+      "Exact immediately prior watch heartbeat file could not be enumerated by the GitHub connector; search window overlaps the prior run conservatively.",
+      "Production collector deduplication was not independently verified."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T104236-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T10:44:23-08:00",
+    "prior_automation_recorded_run_time": "2026-11-08T11:49:20-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

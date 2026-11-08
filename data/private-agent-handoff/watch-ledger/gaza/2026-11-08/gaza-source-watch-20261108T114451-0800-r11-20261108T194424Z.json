@@ -1,0 +1,154 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T114451-0800-r11-20261108T194424Z",
+  "scheduled_for": "2026-11-08T11:44:51-08:00",
+  "started_at": "2026-11-08T11:42:33-08:00",
+  "completed_at": "2026-11-08T19:45:33.076Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T18:51:22.828Z",
+    "end": "2026-11-08T19:45:33.076Z",
+    "basis": "Start is the latest GitHub-readback verified completed_at of the immediately preceding 10:44 scheduled Gaza Source Watch. Publication time is not assumed to equal incident time. Newly evidenced, distinct Gaza-specific developments only; primary production remains authoritative.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261108-deir-al-balah-ard-al-ribat-sand-cliff-collapse-wafa-2057",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/8/%D9%85%D8%AD%D8%AF%D8%AB-%D8%AB%D8%A7%D9%86%D9%90-%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9-%D8%AD%D8%B5%D9%8A%D9%84%D8%A9-%D8%A7%D9%86%D9%87%D9%8A%D8%A7%D8%B1-%D8%AC%D8%B1%D9%81-%D8%B1%D9%85%D9%84%D9%8A-%D8%B9%D9%84%D9%89",
+      "title": "(محدث ثانِ) ارتفاع حصيلة انهيار جرف رملي على خيام نازحين في دير البلح إلى 4 شهداء",
+      "title_english": "Updated: Four reported killed, including three children, after sandy embankment collapses onto displaced families' tents in Deir al-Balah",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-08",
+      "publication_date": "2026-11-08",
+      "publication_time": "2026-11-08T20:57:00+02:00",
+      "event_date": "2026-11-08",
+      "event_time": null,
+      "location": "Ard al-Ribat displacement camp, Deir al-Balah, central Gaza Strip",
+      "affected_population": "WAFA Arabic second update reports four fatalities (one woman and three children), five injured rescued alive, with search for missing continuing. A separate Safa report claims five fatalities and six injured; the figures are disputed and must not be summed.",
+      "affected_system": "Displaced civilians and makeshift shelter safety; sandy cliff/embankment collapse onto tents amid heavy rain and unstable ground",
+      "exact_supporting_passage": "إلى أربعة شهداء، بينهم امرأة وثلاثة أطفال",
+      "source_type": "Palestinian public news agency quoting medical sources and rescue crews; local reporter on the same incident from Safa provides a differing count",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA Arabic homepage and WAFA English latest-news feed, clicked exact article after OCHA OPT and WHO official first checks and bounded targeted search; found supplementary Arabic report via targeted search.",
+        "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T104451-0800-r11-20261108T184843Z.json",
+        "previous_verified_completed_at": "2026-11-08T18:51:22.828Z",
+        "novelty": "The prior heartbeat did not contain this specific Deir al-Balah cliff collapse or casualties. WAFA Arabic second update timestamp 20:57 Jerusalem time (10:57 PST) and WAFA English 21:17 local (11:17 PST), both after the prior verified completion at about 10:51 PST.",
+        "temporal_limit": "The exact cliff-collapse time was not supplied; 'Sunday evening' is the source's stated incident period. Publication time is not represented as incident time.",
+        "primary_report": "WAFA Arabic second update: one woman and three children died and five living injured people were pulled out; crews continued searching for missing people.",
+        "alternate_report_url": "https://safa.ps/post/423107/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-5-%D9%85%D9%88%D8%A7%D8%B7%D9%86%D9%8A%D9%86-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-6-%D8%A8%D8%A7%D9%86%D9%87%D9%8A%D8%A7%D8%B1-%D8%AC%D8%B1%D9%81-%D8%B1%D9%85%D9%84%D9%8A-%D8%B9%D9%84%D9%89-%D8%AE%D9%8A%D8%A7%D9%85-%D8%A7%D9%84%D9%86%D8%A7%D8%B2%D8%AD%D9%8A%D9%86",
+        "alternate_report": "Safa's 21:00 Jerusalem-time article asserts five people killed including three children, six injured; WAFA's official Arabic second update reports four killed and five injured; English WAFA initial report records two deaths and five injured. Different counts concern the same incident. Do not treat any count as independently settled.",
+        "nonduplication": "Separate new direct-casualty event from earlier storm reports and quantified shelter/flooding risks, and from the earlier two killed in a Khan Younis drone strike. Do not combine incident fatality counts with weather cumulative losses.",
+        "corroboration": "Both WAFA and Safa report a collapse at displaced people's tents in Deir al-Balah, but counts diverge. No OCHA/WHO/PRCS independent incident verification located in this bounded run."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch, not Gaza production publisher or collector; no approval, publication, credential, permission, task or schedule changes.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T104451-0800-r11-20261108T184843Z.json",
+    "previous_verified_completed_at": "2026-11-08T18:51:22.828Z",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Latest listed humanitarian situation report is 5 November (posted 6 November); no new 8 November operational bulletin in official updates feed."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global conflict page accessible; no 8 November Gaza health bulletin in latest news listing; regional situation-report page returned HTTP 502, a recurring access impairment."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/news/2026/11/8 غزة 8 نوفمبر 2026 شهيد قصف إصابة مساء 20:00",
+      "site:english.wafa.ps/Pages/Details/ Nov 8 2026 Gaza Khan Younis Jabalia Israeli fire civilians afternoon",
+      "site:aa.com.tr/en/middle-east/ 8 Nov 2026 Gaza newly killed wounded Israeli strikes flooding Sunday evening",
+      "site:aljazeera.com/news/2026/11/8 Gaza November 8 latest attacks aid rescue healthcare Sunday",
+      "site:reuters.com/world/middle-east/ November 8 2026 Gaza aid ceasefire casualties crossings latest Sunday",
+      "site:apnews.com/article/ Gaza Nov 8 2026 Sunday killed injured floods humanitarian access",
+      "دير البلح انهيار جرف رملي خيام النازحين أربعة شهداء 8 نوفمبر 2026",
+      "Deir al Balah sand cliff collapse four killed November 8 2026 displaced tents rescue",
+      "Gaza November 8 2026 26 patients 31 companions Rafah medical evacuation PRCS Sunday",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza November 8 2026 floods winter tents water aid",
+      "Gaza Rafah Kerem Shalom Nov 8 2026 crossings fuel medical evacuation new operational change",
+      "Gaza Nov 8 2026 Israel Hamas ceasefire hostage detainees negotiations new developments Sunday"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "Direct homepage led to 20:57 local second update on fatal Deir al-Balah sand-cliff collapse; confirms first-hand attributed fatalities and injured, but exact incident time unavailable."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "21:17 local English story describes same incident using older figure of two deaths and five injured. Do not double count."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "Flooding pieces and aid appeals did not verify additional distinct in-window developments."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Latest homepage bulletin remains November 3; no newly verified medical-evacuation or ambulance bulletin."
+      },
+      {
+        "publisher": "Safa",
+        "url": "https://safa.ps/post/423107/",
+        "status": "accessible",
+        "result": "Reporter describes same cliff-collapse but counts five deaths and six injured; discrepancy logged without treating this as a second event or settled casualty count."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring access restriction, no newly material deterioration."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties, displacement shelter and storm-related direct casualties",
+      "aid and food/water entry, fuel, crossings, winter materials",
+      "hospitals, ambulances, medical evacuation and healthcare functioning",
+      "ceasefire/hostages/detention/negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "exclusions": [
+      "Prior two killed in Taiba Towers Khan Younis drone strike already recorded in 07:44 heartbeat; excluded from new count.",
+      "Earlier Khan Younis woman shot and Bir al-Naaja/Jabalia four additional injured previously handed off; excluded.",
+      "Earlier flooding, 270 at-risk camps, 20% drainage operation, 250 response calls, 2,000+ unstable buildings, 300,000 tents, and 70,000 flooded tents are repeats, not new incidents.",
+      "English WAFA story with two deaths and Safa story with five deaths refer to the same newly identified Deir al-Balah collapse, not additional independently separate tragedies.",
+      "Political/government-formation stories and advocacy statements with no demonstrated new Gaza operational change excluded.",
+      "Older Rafah medical-evacuation reports, Gaza-unrelated prison/West Bank claims, and historical Reuters/AP search hits excluded.",
+      "Editorial opinions, non-attributed social media assertions and unsourced claims excluded."
+    ],
+    "known_gaps": [
+      "WHO EMRO 502 and UNRWA 403 were also present in preceding watches. OCHA and WHO global remained accessible; these are continuing restrictions, not newly material coverage loss.",
+      "Safa and WAFA reported conflicting fatality/injury totals; independent humanitarian agency confirmation not located. Retain explicit source attribution and do not resolve by guessing.",
+      "Exact incident time unreported; search indexing delays and many stale hits limit completeness.",
+      "Primary Gaza production collector/dedupe database was not accessed or modified."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "One new Gaza-specific storm-related lethal shelter-collapse incident identified in the observation window; reported death and injury counts conflict. DEGRADED records continuing WHO regional/UNRWA direct-site restrictions, with useful alternative coverage retained."
+  }
+}

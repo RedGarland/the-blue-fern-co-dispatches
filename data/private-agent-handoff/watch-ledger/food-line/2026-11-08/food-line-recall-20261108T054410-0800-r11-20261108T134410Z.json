@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T054410-0800-r11-20261108T134410Z",
+  "scheduled_for": "2026-11-08T05:45:54-08:00",
+  "started_at": "2026-11-08T05:44:10-08:00",
+  "completed_at": "2026-11-08T05:47:23-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T04:46:20.739-08:00",
+    "end_at": "2026-11-08T05:47:23-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start verified by fetching immediately preceding 04:46:20.739 PST watch heartbeat on the same branch. Focus new locally dated and official disruptions since checkpoint, with bounded Nov 7-8 backfill for late-indexed reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only; production nationwide collection is authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss, closure or disaster",
+      "Emergency distribution canceled/suspended because of storm, flood, fire, power outage or facility damage",
+      "Abrupt pantry or food-bank closure / material access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" fire closed flooded \"November\" \"2026\"",
+      "\"sole grocery store\" closed destroyed flood November 2026",
+      "\"last grocery store\" shut closed November 8 2026",
+      "\"full service grocery store\" closure fire community November 2026",
+      "\"food distribution\" \"canceled\" hurricane storm outage \"November 8\" \"2026\"",
+      "\"emergency food distribution\" postponed canceled storm flood November 2026 Hawaii",
+      "\"food pantry\" \"closed\" \"flood\" \"November\" \"2026\" United States",
+      "\"food bank\" \"suspend\" \"services\" fire power outage \"November\" \"2026\"",
+      "site:gov \"SNAP\" \"November 8, 2026\" \"outage\" OR \"delay\" OR \"interruption\"",
+      "site:gov \"WIC\" \"November 2026\" \"unable\" \"benefits\" outage",
+      "\"EBT\" \"system down\" \"November 7\" \"2026\" SNAP benefits",
+      "\"food pantry\" \"closed\" \"November 7\" OR \"November 8\" 2026 emergency"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 5,
+      "failed": 1,
+      "urls": [
+        "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "https://211palmbeach.org/news/flood-resources-2026",
+        "https://www.michigan.gov/mdhhs/assistance-programs/food/learn-more/work-requirements",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "reason": "Nov. 6 county indexed result describes a scheduled Līhuʻe mobile pantry on Nov. 6, not a cancellation. Direct webpage fetch returned 403, but the same schedule was confirmed by Kauaʻi Now."
+      },
+      {
+        "source_url": "https://211palmbeach.org/news/flood-resources-2026",
+        "reason": "Nov. 6-updated Florida flood resource page lists Treasure Coast Food Bank's Nov. 7 emergency distribution as planned and routine pantry days; no cancellation or abrupt food-provider shutdown was found."
+      },
+      {
+        "source_url": "https://www.michigan.gov/mdhhs/assistance-programs/food/learn-more/work-requirements",
+        "reason": "Continuing November SNAP eligibility/work requirements are a policy baseline, not a newly announced immediate payment outage or disruption within this hour."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Unchanged, undated telephone/interview delays; no new benefit payment/service interruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated November 8 food-benefit interruption observed."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov. 6 reporting explicitly shows emergency distribution still scheduled; general hurricane resource-center closure is not a pantry shutdown and predates window."
+      },
+      {
+        "source_url": null,
+        "reason": "Old U.S. sole-grocery losses (e.g. 2020 Texas and 2026 September Maine), previously reviewed McCaysville GA flood and Provo UT closure, plus 2025 federal shutdown benefits headlines are stale or duplicates."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "type": "direct_source_fetch",
+        "url": "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "error": "403 Forbidden on direct page open; search-indexed county notice and independent local report were accessible.",
+        "impact": "Unable to independently open this county source directly; remaining food-distribution evidence was available from other sources."
+      }
+    ],
+    "assessment": "No newly verified nonduplicate qualifying disruption across 12 targeted searches and five successful direct source opens. Official county direct-source fetch rejected with HTTP 403; useful other coverage succeeded.",
+    "material_degradation": false,
+    "limitations": "This is a bounded search, not an exhaustive collector. Search can miss emerging events on private social networks or reports not yet indexed. Search results prominently returned older incidents and 2025 government shutdown articles. Direct county notice returned 403. Production collector and its dedupe were not independently audited.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one branch-specific private heartbeat only; no approvals, publication, scheduling, disabling or other production changes."
+  }
+}

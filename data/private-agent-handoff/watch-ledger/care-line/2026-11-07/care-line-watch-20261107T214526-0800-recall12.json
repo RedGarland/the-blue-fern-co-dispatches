@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T214526-0800-recall12",
+  "scheduled_for": "2026-11-07T21:45:22-08:00",
+  "started_at": "2026-11-07T21:45:26-08:00",
+  "completed_at": "2026-11-07T21:45:58-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T20:45:40.936-08:00",
+    "end": "2026-11-07T21:45:58-08:00",
+    "basis": "Start is the latest independently enumerated prior Care Line heartbeat completion on ops/watch-ledger; search index and publication lag acknowledged; existing logged developments excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination notice (CCN 18P001)",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 evening hospital emergency department ambulance diversion closed suspended 911 USA",
+      "November 7 2026 maternity labor and delivery hospital services temporarily suspended closed local news",
+      "November 7 2026 psychiatric behavioral health hospital inpatient unit closed stopped taking patients",
+      "November 7 2026 rural hospital emergency room closure suspension no emergency care",
+      "November 7 2026 dialysis center sudden closure patients missed treatment United States",
+      "November 7 2026 oncology cancer infusion services suspended clinic closed local US",
+      "November 7 2026 primary care clinic closed temporarily community health center rural county",
+      "November 7 2026 EMS ambulance service discontinued suspended response station closed United States",
+      "November 7 2026 air medical ambulance helicopter base closure suspension flight services USA",
+      "November 7 2026 November 8 2026 emergency department maternity reopened services resumed after closure hospital United States",
+      "November 7 2026 Puerto Rico Guam Virgin Islands American Samoa CNMI emergency hospital medical clinic ambulance services suspended",
+      "November 7 2026 state health department hospital license suspension emergency department closure order notice"
+    ],
+    "recency_days_per_search": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL, state-directed ambulance diversion effective November 7, 2026",
+        "reason": "Previously logged in Care Line positive heartbeat at 09:48 PST; no separately effective restoration or new restriction verified."
+      },
+      {
+        "item": "Sharon Regional Medical Center, PA, ED closure and all-service suspension",
+        "reason": "Effective November 4 and November 6, 2026, respectively; historical to this watch and previously captured."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur IL base closure",
+        "reason": "Effective September 16, 2026, historical."
+      },
+      {
+        "item": "Guam Memorial Hospital weather-related nonemergency suspension",
+        "reason": "October 16, 2026, not new to November 7 watch."
+      },
+      {
+        "item": "Georgian Bay General Hospital Nov 5-7 obstetrical pause and English NHS birth-centre closures",
+        "reason": "Canada and United Kingdom, outside U.S. and territories."
+      },
+      {
+        "item": "Funding warnings, health-policy changes, business news, proposed reopenings and older access restrictions",
+        "reason": "No verified newly effective service change within this observation window."
+      }
+    ],
+    "source_examples": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "https://ghs.guam.gov/node/4352",
+      "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+    ],
+    "result_summary": "Checked CMS Public Notices first (latest notice November 2, 2026), then exactly 12 targeted searches covering ED/hospital, maternity, behavioral health, rural, dialysis, oncology, primary care, ground and air EMS, restoration, territorial and regulator notices. No new qualifying nonduplicate concrete U.S. or territory healthcare-access development substantiated. No source/search retrieval failures; current local reporting sparse.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T204404-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T20:45:40.936-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "Supplementary bounded recall, not exhaustive national collection.",
+      "Local publishing and indexing may lag observation end; no claim of absence outside searched sources.",
+      "Production ingestion and deduplication not independently verified."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T014803-0800-r11-20261108T094803Z",
+  "scheduled_for": "2026-11-08T01:45:54-08:00",
+  "started_at": "2026-11-08T01:48:03-08:00",
+  "completed_at": "2026-11-08T01:49:50.863-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T00:49:07.999-08:00",
+    "end_at": "2026-11-08T01:49:50.863-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous hour's completed_at independently read from ops/watch-ledger heartbeat; targeted discovery included November 7–8 local news and wider November 2026 backfill to capture publication lag. A relevant event must be newly verified since that prior checkpoint, not merely an older indexed result."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value-miss recall only; primary nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss due to closure, fire, storm or disaster",
+      "Canceled/suspended emergency food distributions from storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/bank service closure or major access reduction",
+      "Official acute SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire November 7 2026 OR November 8 2026",
+      "\"sole grocery store\" closure flood fire November 2026",
+      "\"last full-service grocery\" closed November 2026",
+      "November 8 2026 food distribution canceled storm flooding food bank",
+      "November 7 2026 emergency food distribution postponed power outage",
+      "food pantry closed due to storm flood fire November 7 2026",
+      "food bank pantry abruptly closed services November 7 2026",
+      "food pantry sudden closure November 8 2026",
+      "food bank temporarily suspend food distribution November 2026 outage",
+      "November 8 2026 SNAP benefits interrupted official state notice",
+      "November 7 2026 EBT system outage benefits cannot access state agency",
+      "November 2026 WIC benefits outage interruption official"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 5,
+      "successful": 5,
+      "failed": 0,
+      "urls": [
+        "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://oklahoma.gov/okdhs/ebt.html",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/2025/11/08/supreme-court-emergency-order-pauses-november--snap-payments",
+        "reason": "November 8, 2025 SNAP disruption; not November 2026; stale search hit."
+      },
+      {
+        "source_url": "https://www.ncdhhs.gov/news/press-releases/2025/11/08/ncdhhs-pauses-full-snap-payments-after-court-decision-remains-ready-process-benefits-when-authorized",
+        "reason": "November 8, 2025 SNAP disruption, not current."
+      },
+      {
+        "source_url": "https://www.ourmidland.com/news/article/michigan-snap-work-requirements-22507085.php",
+        "reason": "Requirements took effect November 1, 2026; result is five days old, not a newly reported hourly acute interruption."
+      },
+      {
+        "source_url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "September 25 temporary El Paso food-bank closure; outside window."
+      },
+      {
+        "source_url": "https://www.cleveland19.com/2026/07/09/arraignment-man-accused-akron-grocery-store-fire/",
+        "reason": "Akron grocery-store fire was in July 2026; outside window."
+      },
+      {
+        "source_url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "reason": "Lists November 6 emergency food distribution; no fresh cancellation or suspension notice."
+      },
+      {
+        "source_url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "reason": "Future distributions Nov 9 onward are listed; generic option to sign up for cancellation alerts is not a cancellation."
+      },
+      {
+        "source_url": "https://oklahoma.gov/okdhs/ebt.html",
+        "reason": "November 2 customer-service phone update, not a new outage of benefits."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Persistent telephone processing wait times without new timestamp or acute payment/access interruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated acute food-assistance interruption verified."
+      },
+      {
+        "source_url": null,
+        "reason": "Previously recorded McCaysville, Georgia sole grocery flooding and Provo, Utah food-bank closure remain duplicate events from earlier watches; not re-emitted."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No newly verifiable, nonduplicate qualifying U.S. food-access disruption found after 12 targeted web searches and five successful direct-source checks.",
+    "material_degradation": false,
+    "limitations": "Search results frequently resurfaced 2025 SNAP announcements and older 2026 pantry/grocery incidents. Late-indexed local reports and provider social posts may be missed. Nonexhaustive supplementary watch; production collector's dedupe queue and output not inspected.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only one watch-ledger heartbeat authorized; no approval, publication, task disabling, scheduling, or production changes."
+  }
+}

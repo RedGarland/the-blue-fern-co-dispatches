@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T204559-0800-r11-20261108T044559Z",
+  "scheduled_for": "2026-11-07T20:45:44-08:00",
+  "started_at": "2026-11-07T20:45:59-08:00",
+  "completed_at": "2026-11-07T20:47:00.017-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T19:46:06-08:00",
+    "end_at": "2026-11-07T20:47:00.017-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since previous verified Food Line Source Watch heartbeat completed at 19:46:06 PST on November 7; searches include a 2-3 day discovery lookback for indexing lag, but only newly verifiable nonduplicate disruptions in the hourly observation interval qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only. The separate authoritative production nationwide collector was not inspected, changed, or represented as verified.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store lost from closure, fire, flood, or disaster",
+      "Weather/disaster/outage-caused emergency food distribution cancellation or suspension",
+      "Abrupt food pantry or food bank shutdown or material service reduction",
+      "New official SNAP/WIC/other food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T194452-0800-r11-20261108T034452Z.json",
+      "completed_at": "2026-11-07T19:46:06-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": "2-3",
+    "search_queries": [
+      "\"only grocery store\" (fire OR flood OR damaged OR closed) November 7 2026 USA",
+      "\"sole grocery store\" storm destroyed shuttered November 2026 town",
+      "\"last grocery store\" closure fire November 2026 rural",
+      "\"full service grocery store\" \"closed\" November 7 2026 flooding",
+      "\"food distribution\" (canceled OR cancelled OR postponed) (storm OR hurricane OR flood OR outage) \"November 7\" 2026",
+      "\"food bank\" (\"distribution canceled\" OR \"distribution cancelled\" OR \"suspended\") November 2026 weather",
+      "\"mobile food pantry\" cancelled storm November 2026 US",
+      "\"emergency food distribution\" (canceled OR suspended) hurricane November 2026 Hawaii",
+      "\"food pantry\" (\"closed indefinitely\" OR \"suspend services\" OR \"temporarily closed\") November 7 2026",
+      "\"food bank\" (fire OR flooding OR damage OR \"power outage\") \"closed\" November 2026",
+      "site:gov SNAP EBT benefits interruption November 7 2026 outage delayed inaccessible state",
+      "site:gov WIC benefits outage interruption clinic closure November 7 2026"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 6,
+      "failed": 0,
+      "urls": [
+        "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://oklahoma.gov/okdhs/ebt.html",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "Known McCaysville GA sole grocery-store flood damage on November 4, already considered in prior watch; not a new event in this window."
+      },
+      {
+        "publisher": "KSL",
+        "source_url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Known Provo UT food-bank closure announced prior to this observation interval, already in prior-watch exclusions."
+      },
+      {
+        "publisher": "Hawaiʻi Foodbank Kauaʻi / Kauaʻi Now",
+        "source_url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "reason": "Provider still lists Friday November 6 mobile pantry; November 6 Kauaʻi news independently lists distribution as scheduled, not canceled."
+      },
+      {
+        "publisher": "Greater Pittsburgh Community Food Bank",
+        "source_url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "reason": "November 7 and subsequent distributions still listed; general text about optional cancellation alerts is not an actual cancellation notice."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Earlier dated local office closures remain displayed; none establishes a newly announced SNAP/WIC payment or food-access interruption in this hourly window."
+      },
+      {
+        "publisher": "Hawaiʻi Department of Human Services",
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Long wait times for SNAP processing telephone service have no new dated benefit-access interruption."
+      },
+      {
+        "publisher": "Oklahoma Department of Human Services",
+        "source_url": "https://oklahoma.gov/okdhs/ebt.html",
+        "reason": "November 2 EBT customer phone system change does not indicate newly interrupted benefit access."
+      },
+      {
+        "publisher": "Other indexed results",
+        "source_url": null,
+        "reason": "Old/non-US grocery fires, older or retrospective grocery closures, new store openings, 2025 SNAP shutdown material, regular distributions, resource guides and promotions excluded."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "Twelve targeted searches and six independently opened direct source pages yielded zero source-verified, nonduplicate, newly reported U.S. disruptions qualifying in the four narrowly specified classes since 19:46:06 PST.",
+    "material_degradation": false,
+    "limitations": "Bounded 12-query search-index recall, not exhaustive nationwide coverage; social/provider posts and local indexing may lag; direct sources can change without timestamps. No primary production ingestion or deduplication verification.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One append-only JSON heartbeat on ops/watch-ledger; no approvals, publication, schedule changes, task disabling, merge or primary production mutation."
+  }
+}

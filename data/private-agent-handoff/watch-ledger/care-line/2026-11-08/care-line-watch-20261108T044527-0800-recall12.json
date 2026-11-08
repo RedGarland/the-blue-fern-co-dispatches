@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T044527-0800-recall12",
+  "scheduled_for": "2026-11-08T04:45:22-08:00",
+  "started_at": "2026-11-08T04:45:27-08:00",
+  "completed_at": "2026-11-08T04:46:32-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T03:45:59-08:00",
+    "end": "2026-11-08T04:46:32-08:00",
+    "basis": "Starts at the completed_at time of the latest verified prior Care Line watch heartbeat on ops/watch-ledger. Supplementary retrospective catch-up only; fresh sources evaluated against previous heartbeat to avoid duplicates.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "checked_via": "CMS official page opened and reviewed after recovering correct canonical URL."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "\"November 7\" \"2026\" hospital emergency department closed suspended ambulances diverted United States",
+      "\"November 7\" \"2026\" maternity labor delivery obstetrics service closure hospital patients",
+      "\"November 7\" \"2026\" behavioral health psychiatric inpatient facility closed admissions suspended",
+      "\"November 7\" \"2026\" rural hospital emergency room closure suspension reopened",
+      "\"November 7\" \"2026\" ambulance EMS service agency shuts down station base suspended response",
+      "\"November 7\" \"2026\" air ambulance helicopter base closure grounded medical service",
+      "November 7 8 2026 dialysis center abruptly closed patients transferred lost treatments United States",
+      "November 7 8 2026 cancer center oncology infusion chemotherapy clinic suspended closed patients",
+      "November 7 8 2026 primary care community clinic urgent care suddenly closes patients rural",
+      "November 7 8 2026 reopened restored emergency department hospital ambulance service after closure",
+      "November 7 8 2026 Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital ED clinic ambulance closed suspended reopened",
+      "November 7 8 2026 healthcare provider CMS Medicare termination notice CLIA suspension rescission hospital care"
+    ],
+    "source_access_errors": [
+      "Initial incorrect CMS Public Notices URL https://www.cms.gov/medicare/quality/quality-safety-oversight-general-information/public-notices could not be opened. Correct canonical CMS site was subsequently obtained and opened successfully; no CMS notice coverage lost."
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, IL, Nov 7 EMS bypass",
+        "reason": "Previously recorded in prior watches; no new in-window modification or restoration established.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Adventist Health White Memorial, Los Angeles, CA, Nov 6–7 temporary ambulance diversion",
+        "reason": "Previously recovered as pending review in Nov 8 01:40 watch heartbeat; no new access effect."
+      },
+      {
+        "item": "Sea Pines Rehabilitation Hospital, Melbourne, FL, indefinite closure reported Nov 6",
+        "reason": "Previously recorded in Nov 6 watch heartbeat; duplicate."
+      },
+      {
+        "item": "Sharon Regional, PA, emergency and other service restrictions",
+        "reason": "Historical and previously recorded; no new in-window effect."
+      },
+      {
+        "item": "Olney Hamilton Hospital, Olney, TX, Nov 7 public opening event for new building without maternity care",
+        "reason": "Ceremonial opening only; operational transition expected later and no newly effective closure/restoration established.",
+        "source_url": "https://northatlantastar.com/olney-texas-new-rural-hospital-without-maternity-care/"
+      },
+      {
+        "item": "Providence Inland Northwest hospital visitor restrictions effective Nov 9",
+        "reason": "Visitor restriction, not a verified change in essential clinical service availability, and not effective within observation window."
+      },
+      {
+        "item": "Guam, Northern Mariana Islands April and October 2026 emergency care suspensions and restorations",
+        "reason": "Historical events; no new in-window material access change."
+      },
+      {
+        "item": "Older rural maternity closure proposals, EMS base closures, oncology service expansions",
+        "reason": "Out of observation window or lacking a newly effective essential-service change."
+      }
+    ],
+    "result_summary": "Checked canonical CMS Public Notices (newest notice Nov 2) and exactly 12 additional targeted searches spanning hospital, emergency, maternity, psychiatric, EMS, air medical, dialysis, oncology, primary care, restorations and territories. No new qualifying, nonduplicate U.S. or territory healthcare-access event verified within the observation window or retrospective recall. A wrong CMS URL was inaccessible but canonical site was recovered; marked nonmaterial degraded to document the source attempt.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T034048-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T03:45:59-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Supplementary bounded recall is not exhaustive national surveillance.",
+      "Overnight local reports may not yet be indexed.",
+      "Production collector and independent deduplication not inspected."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

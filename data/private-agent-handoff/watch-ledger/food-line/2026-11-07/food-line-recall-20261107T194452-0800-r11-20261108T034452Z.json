@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261107T194452-0800-r11-20261108T034452Z",
+  "scheduled_for": "2026-11-07T19:44:52-08:00",
+  "started_at": "2026-11-07T19:44:52-08:00",
+  "completed_at": "2026-11-07T19:46:06-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-07T18:46:08-08:00",
+    "end_at": "2026-11-07T19:46:06-08:00",
+    "observation_date": "2026-11-07",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since verified preceding Food Line heartbeat, completed 18:46:08 PST; 3-day search recency permits indexing lag. Only newly verifiable, nonduplicate immediate food-access disruptions qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production nationwide collector remains authoritative and was not accessed, modified or validated.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store lost from fire, flood, disaster, or closure",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "previous_verified_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-07/food-line-recall-20261107T184532-0800-r11-20261108T024532Z.json",
+      "completed_at": "2026-11-07T18:46:08-08:00",
+      "status": "SUCCESS",
+      "outcome": "no_findings"
+    },
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": 3,
+    "search_queries": [
+      "\"only grocery store\" (flood OR fire OR closed OR destroyed) \"November\" \"2026\"",
+      "\"sole grocery store\" damaged closed \"November 7\" 2026",
+      "\"last grocery store\" fire closure town November 2026",
+      "\"full-service grocery store\" closure flood November 2026",
+      "\"food bank\" \"distribution cancelled\" (storm OR flood OR power) November 2026",
+      "\"food distribution\" \"canceled\" \"November 7, 2026\" storm",
+      "\"emergency food distribution\" \"suspended\" flooding November 2026",
+      "\"food pantry\" \"closed\" \"power outage\" November 7 2026",
+      "\"food bank\" \"temporarily closed\" (damage OR fire OR flooding) November 2026",
+      "\"food pantry\" \"suspend services\" November 2026",
+      "site:gov \"SNAP\" \"November 7, 2026\" (outage OR delayed OR suspended OR unavailable)",
+      "site:gov \"WIC\" \"November 7, 2026\" (closed OR outage OR interruption)"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 7,
+      "successful": 7,
+      "failed": 0,
+      "urls": [
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "https://oklahoma.gov/okdhs/ebt.html",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "publisher": "Georgia Public Broadcasting",
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville GA only-grocery flood damage occurred November 4 and was already recorded in previous hours; no new development."
+      },
+      {
+        "publisher": "KSL",
+        "source_url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Provo UT Community Action Services and Food Bank closure announced October 31/effective November 1; duplicate."
+      },
+      {
+        "publisher": "Hawaiʻi Foodbank Kauaʻi / Kauaʻi Now",
+        "source_url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "reason": "Provider and November 6 news still listed Friday November 6 emergency mobile food distribution, not a newly verified cancellation. No current closure claim."
+      },
+      {
+        "publisher": "Virginia Department of Social Services",
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "November 5-6 administrative office closures and expired October 30 outage; no new official SNAP/WIC interruption since prior heartbeat."
+      },
+      {
+        "publisher": "Hawaiʻi Department of Human Services",
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing undated SNAP telephone wait-time delays; not newly documented immediate benefits interruption."
+      },
+      {
+        "publisher": "Oklahoma Department of Human Services",
+        "source_url": "https://oklahoma.gov/okdhs/ebt.html",
+        "reason": "November 2 customer service phone system update is not new benefit access outage."
+      },
+      {
+        "publisher": "Indexed older/retrospective or nonqualifying coverage",
+        "source_url": "https://www.diningandcooking.com/us/79310/",
+        "reason": "November 6 Carrollton OH article describes grocery closure last January (not an event since previous hour); other indexed stories were historical, non-US, volunteer signups with weather-contingent caveats, grocery reopening, opinion, or food-access promotion."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "Twelve targeted searches and seven direct-source pages produced no newly source-verified, nonduplicate U.S. disruption in the four narrow recall classes since 18:46:08 PST. Search returned mainly older incidents, routine information and conditional (not actual) cancellations.",
+    "material_degradation": false,
+    "limitations": "Bounded search-index recall only, not exhaustive nationwide coverage. Source timestamps and in-hour post indexing can lag; provider pages show only current public notices. No claim that primary production has deduplicated or ingested any item.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One append-only heartbeat on ops/watch-ledger. No approval, publication, merge, schedule, or automation setting changes."
+  }
+}

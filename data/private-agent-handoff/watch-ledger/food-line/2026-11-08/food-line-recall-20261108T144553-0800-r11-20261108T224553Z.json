@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T144553-0800-r11-20261108T224553Z",
+  "scheduled_for": "2026-11-08T14:45:54-08:00",
+  "started_at": "2026-11-08T14:45:53-08:00",
+  "completed_at": "2026-11-08T14:47:37.213-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T13:47:00-08:00",
+    "end_at": "2026-11-08T14:47:37.213-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Verified preceding 13:47 PST Food Line heartbeat on ops/watch-ledger. Twelve bounded targeted web queries with a Nov 6-8 discovery/backfill lookback; a source published prior to the hourly checkpoint was not treated as a new finding.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T134450-0800-r11-20261108T214450Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value food-access disruption recall, not the primary nationwide collector; production collection remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting a community's sole, only, last, or full-service grocery store",
+      "Emergency food distribution canceled or suspended because of storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire flooding November 2026 town USA",
+      "\"last grocery store\" closed November 2026 small town",
+      "\"sole grocery store\" flood wildfire November 2026",
+      "\"only full service grocery store\" November 2026 closing storm",
+      "\"food distribution\" \"canceled\" flood November 8 2026",
+      "\"food bank\" \"suspended\" distributions storm November 2026",
+      "\"food pantry\" \"closed\" \"November 8, 2026\" storm fire",
+      "\"food bank\" \"temporarily closed\" November 2026 flood outage",
+      "\"mobile food pantry\" \"canceled\" \"November 8\" 2026",
+      "site:gov \"SNAP\" \"November 8, 2026\" outage delays benefits",
+      "site:gov \"WIC\" \"November 2026\" clinic closure system outage",
+      "\"EBT\" \"outage\" \"November 8, 2026\" state benefits"
+    ],
+    "search_recency": "2-day for most queries, 7-day for three grocery-store queries; explicit November 2026 terms.",
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 5,
+      "failed": 1,
+      "urls": [
+        "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://211palmbeach.org/news/flood-resources-2026"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "reason": "Nov 6 flood damages only McCaysville GA grocery; known prior event and not a new in-window development. VPM direct story accessible."
+      },
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "reason": "Nov 6 McCaysville account is prior-known; search text available but direct page access denied."
+      },
+      {
+        "source_url": "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "reason": "Official Nov 6 Kauaʻi notice schedules emergency distribution for that day; no cancellation or subsequent interruption."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing application/interview wait-time guidance without newly dated acute SNAP benefits interruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No fresh acute SNAP/WIC service interruption identified on agency alert page."
+      },
+      {
+        "source_url": "https://211palmbeach.org/news/flood-resources-2026",
+        "reason": "Flood recovery resource page last updated Nov 6; no in-window pantry closure or food distribution suspension found."
+      },
+      {
+        "source_url": null,
+        "reason": "Other search results were stale (including Nov 2025 SNAP coverage), irrelevant unrelated official pages, non-US events, scheduled/promotional events or prior-reviewed incidents."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "type": "direct_source_access",
+        "result": "DisabledError on direct open; search excerpt available",
+        "mitigation": "Independently accessible original reporting by VPM confirms known Nov 6 event; no new findings inferred from inaccessible page."
+      }
+    ],
+    "assessment": "No verifiable newly emerging qualifying food-access interruption found since the 13:47 PST verified checkpoint in the four specified miss classes.",
+    "limitations": "One direct source returned an access failure; five other checks and all 12 searches succeeded. Source indexing latency and bounded queries prevent exhaustive nationwide coverage. The known restricted Georgia story did not materially reduce effective sampling.",
+    "material_degradation": false,
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one private watch-ledger JSON. No approval, publication, ingestion, merge, schedule change or task disablement."
+  }
+}

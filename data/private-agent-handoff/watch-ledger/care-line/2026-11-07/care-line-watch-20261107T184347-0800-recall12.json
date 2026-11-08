@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T184347-0800-recall12",
+  "scheduled_for": "2026-11-07T18:45:22-08:00",
+  "started_at": "2026-11-07T18:43:47-08:00",
+  "completed_at": "2026-11-07T18:45:31.471-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T17:47:26-08:00",
+    "end": "2026-11-07T18:45:31.471-08:00",
+    "basis": "Previous independently verified Care Line watch completion to current run, with publication/indexing lag considered and prior-ledger duplicates excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination notice (CCN 18P001)",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department shut down temporarily closed diverted ambulances November 7 2026 US",
+      "maternity labor delivery unit closed suspended November 7 2026 hospital US",
+      "behavioral health psychiatric inpatient dialysis cancer oncology services suspended closed November 7 2026",
+      "rural health clinic primary care sudden closure patients November 7 2026 United States",
+      "November 7 2026 ambulance EMS service stopped operating base closure 911 rural county",
+      "November 7 2026 air ambulance medical helicopter base closure suspended flight operations",
+      "site:cms.gov \"2026-11-07\" \"Termination Notice\" OR \"Limitation of CLIA\"",
+      "hospital emergency department ambulance diversions ended reopened service restored November 7 2026",
+      "November 7 2026 hospital rural emergency services suspension shutdown 2026 patients",
+      "November 7 2026 Puerto Rico Guam US Virgin Islands CNMI American Samoa clinic emergency hospital services closed restored",
+      "November 7 2026 hospital ambulance bypass lifted Vista Medical Center East Waukegan new update",
+      "November 7 2026 medical clinic dialysis hospital closed reopened emergency care service suspended local news"
+    ],
+    "recency_days_per_search": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, IL, IDPH-directed EMS bypass",
+        "reason": "The 7 a.m. CST November 7 restriction was captured in 09:48 PST positive heartbeat; November 7 NBC Chicago corroboration adds no separately effective change."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon, PA, ED and hospital suspension",
+        "reason": "November 4 ED closure and November 6 full suspension predate this observation window and were recorded before this run."
+      },
+      {
+        "item": "Roseland Community Hospital maternity closure, Chicago, IL",
+        "reason": "Effective November 1 and previously recorded; no new service change verified."
+      },
+      {
+        "item": "Kula Hospital, Maui, HI, planned restoration",
+        "reason": "Recovery financing and planning announced September 2026; no confirmed effective reopening."
+      },
+      {
+        "item": "Tehama County CA and Decatur IL air ambulance base closures",
+        "reason": "September 2026, historical and prior coverage."
+      },
+      {
+        "item": "UK NHS maternity unit reports",
+        "reason": "Outside U.S. and territory geographic scope."
+      },
+      {
+        "item": "General rural hospital finance, ownership, advocacy, or proposed changes",
+        "reason": "No new effective patient access change substantiated within the search window."
+      }
+    ],
+    "source_examples": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.nbcchicago.com/news/local/vista-medical-center-east-placed-on-ems-bypass-amid-ongoing-challenges/4013661/",
+      "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/"
+    ],
+    "result_summary": "Checked CMS official Public Notices first; latest visible notice dated November 2. Ran exactly 12 subsequent targeted searches spanning essential clinical-service interruptions, rural and emergency services, ground and air EMS, CMS/CLIA, reopening/restoration, and U.S. territories. No new qualifying, nonduplicate concrete healthcare-access change confirmed after previous heartbeat completion.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T174604-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T17:47:26-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "Supplementary targeted recall is bounded, not an exhaustive nationwide collection.",
+      "Local-source publication/indexing can lag the observation window.",
+      "Production ingestion and deduplication not independently checked."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

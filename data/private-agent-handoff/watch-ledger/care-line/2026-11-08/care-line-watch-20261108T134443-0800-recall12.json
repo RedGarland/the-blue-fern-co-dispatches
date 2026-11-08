@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T134443-0800-recall12",
+  "scheduled_for": "2026-11-08T13:45:22-08:00",
+  "started_at": "2026-11-08T13:44:43-08:00",
+  "completed_at": "2026-11-08T13:46:01-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T12:44:48-08:00",
+    "end": "2026-11-08T13:46:01-08:00",
+    "basis": "Previous independently retrieved watch heartbeat completed_at through current completed_at; November 7-8 publications were considered for late-indexed retrospective recall.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization termination notice (CCN 18P001)",
+      "new_notices_since_prior_verified_heartbeat": 0,
+      "checked_via": "Official CMS Public Notices listing opened before the 12 targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed diverted patients November 8 2026 Sunday US",
+      "hospital maternity labor delivery services stopped reopened November 8 2026",
+      "hospital psychiatric behavioral health unit suspended closed November 8 2026",
+      "dialysis center closure interruption patients November 8 2026",
+      "oncology cancer treatment clinic closing immediate November 8 2026",
+      "rural hospital emergency room closure November 7 8 2026",
+      "ambulance base service suspended closure November 8 2026",
+      "air medical helicopter emergency transport service base closing November 2026 latest",
+      "primary care urgent care clinic abruptly closed November 8 2026 patients",
+      "hospital emergency department reopen resumed operations November 8 2026",
+      "Puerto Rico Guam Virgin Islands hospital clinic emergency service suspended November 8 2026",
+      "November 8 2026 healthcare patients displaced hospital service suspension local news"
+    ],
+    "search_recency_filter_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      3,
+      2,
+      2,
+      3,
+      2
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Greenbrier Valley Medical Center labor and delivery, West Virginia",
+        "source_url": "https://mountainmessenger.com/gov-morrisey-announces-reopening-of-labor-and-delivery-services-at-greenbrier-valley-medical-center-2026-11-07/",
+        "source_published_date": "2026-11-08",
+        "reason": "New article describes governor's plans and a partnership to reopen labor and delivery; does not confirm operations have resumed or supply an effective restoration date. Explicitly excluded as proposed reopening without concrete access effect."
+      },
+      {
+        "item": "One in 10 Minnesota women of childbearing age live in counties without a birthing center",
+        "source_url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center",
+        "source_published_date": "2026-11-08",
+        "reason": "New reporting about historical maternity access losses, not an additional in-window closure."
+      },
+      {
+        "item": "Sharon Regional Medical Center emergency department suspension",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+        "reason": "Previously captured November 4-6 access disruption, no verified new service change."
+      },
+      {
+        "item": "Roseland Community Hospital maternity closure",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Already captured historical November 1 closure; not new."
+      },
+      {
+        "item": "LifeFlight of Maine NPR air-ambulance article",
+        "source_url": "https://www.ideastream.org/npr-news/2026-11-08/one-air-ambulance-service-rethinks-what-it-takes-to-practice-medicine-in-the-sky",
+        "reason": "Description of medical protocols and service rather than ambulance/base closure or new restoration."
+      },
+      {
+        "item": "University of New Mexico Health System cybersecurity service diversion",
+        "source_url": "https://www.news4jax.com/health/2026/10/26/a-cybersecurity-issue-forces-a-major-new-mexico-hospital-to-divert-patients-and-close-clinics/",
+        "reason": "October 26 event; outside current observation and not established as newly changed in window."
+      }
+    ],
+    "result_summary": "Official CMS listing had no new notices; 12 targeted searches found no verified nonduplicate new US or territory healthcare-access loss or effective essential-service restoration during the hourly window. Proposed Greenbrier Valley labor/delivery reopening was expressly excluded because actual resumption was not confirmed.",
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Bounded supplementary recall; not a comprehensive national/territorial collector.",
+      "Sunday reporting and search indexing can delay discovery.",
+      "Search results were dominated by historical or out-of-scope coverage; a search negative does not prove absence of unindexed changes.",
+      "Production collector deduplication was not independently verified."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T124250-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T12:44:48-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T084256-0800-r11-20261108T164256Z",
+  "scheduled_for": "2026-11-08T08:45:54-08:00",
+  "started_at": "2026-11-08T08:42:56-08:00",
+  "completed_at": "2026-11-08T08:44:48.021-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T07:47:29.876-08:00",
+    "end_at": "2026-11-08T08:44:48.021-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous 07:47:29.876 PST heartbeat read directly from ops/watch-ledger; bounded same-day recall with recent Nov 6–8 backfill to detect late-indexed reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for narrowly defined high-value misses; the primary nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss or disaster",
+      "Storm/fire/flood/outage-related emergency food distribution cancellation or suspension",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire November 8 2026 town",
+      "\"sole grocery store\" fire closed November 2026 town",
+      "\"last grocery store\" closing November 2026 community",
+      "\"full service grocery store\" closed flood fire November 2026",
+      "\"food distribution\" canceled storm November 8 2026",
+      "\"food distribution\" suspended flooding November 2026",
+      "\"food pantry\" temporarily closed fire November 2026",
+      "\"food bank\" closed unexpectedly November 2026",
+      "\"SNAP\" benefits interruption November 8 2026 state agency",
+      "\"WIC\" interruption benefits November 8 2026 agency",
+      "site:gov November 8 2026 SNAP EBT outage interruption",
+      "\"food pantry\" cancelled Sunday November 8 2026 weather outage"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 6,
+      "failed": 0,
+      "urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://211palmbeach.org/news/flood-resources-2026",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "reason": "Official Nov. 6 Kauaʻi notice directly accessible this run and confirms scheduled Hawaiʻi Foodbank Kauaʻi emergency distribution, not a cancellation."
+      },
+      {
+        "source_url": "https://211palmbeach.org/news/flood-resources-2026",
+        "reason": "Nov. 6 resource update lists Nov. 7 Treasure Coast Food Bank emergency distribution as planned; no new cancellation reported."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Visible closures are pre-existing Nov. 5–6 local department office interruptions (maintenance/festival), not newly announced acute SNAP/WIC benefit interruptions."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing call-center/interview delay advisory without new time-specific SNAP/WIC interruption."
+      },
+      {
+        "source_url": "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "reason": "Recounts Kansas City Sun Fresh closure on Oct. 25; out of observation window and previously assessed."
+      },
+      {
+        "source_url": null,
+        "reason": "Other ranked matches mainly stale 2018–2025 grocery fires or 2025 SNAP shutdown advisories, or already-reviewed McCaysville GA / Provo UT events."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "Twelve targeted searches and six successful direct-source checks produced no verified, novel, in-window qualifying U.S. food-access disruption. Previous Kauaʻi County HTTP 403 issue did not recur in this run.",
+    "material_degradation": false,
+    "limitations": "Fresh indexing is incomplete, and narrow recall cannot guarantee exhaustive national coverage. Production collection and deduplication were not audited here.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Exactly one private ops/watch-ledger heartbeat only. No editorial approval, publication, schedule change, or disabling."
+  }
+}

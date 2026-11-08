@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T134451-0800-r11-20261108T214624Z",
+  "scheduled_for": "2026-11-08T13:44:51-08:00",
+  "started_at": "2026-11-08T13:43:58-08:00",
+  "completed_at": "2026-11-08T21:46:24.133Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T20:43:10.637Z",
+    "end": "2026-11-08T21:46:24.133Z",
+    "basis": "Previous verified Gaza Source Watch heartbeat completed_at through this run's completion; detects newly surfaced verifiable Gaza-specific developments, without assuming publication updates establish incident timing. Primary daily publisher remains authoritative.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; no publication, approvals, schedule changes, primary production interference, or credentials mutations.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T124451-0800-r11-20261108T204310Z.json",
+    "previous_verified_completed_at": "2026-11-08T20:43:10.637Z",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Latest update visible dated 6 November 2026 (5 November humanitarian situation report); no newer Gaza bulletin listed."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global crisis page accessible, no newly dated 8 November Gaza operational update visible. WHO EMRO direct OPT and regional reports pages returned HTTP 502 (recurring restriction)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 8 2026 23:00 24:00 latest strikes casualties deaths wounded Deir al Balah Gaza City",
+      "site:english.wafa.ps \"November 8, 2026\" Gaza late evening drone strikes injured collapse",
+      "site:wafa.ps/news/2026/11/8 غزة مساء الأحد الساعة الحادية عشرة شهداء إصابات",
+      "site:aa.com.tr/en/middle-east November 8 2026 Gaza late evening casualties flood emergency aid",
+      "site:reuters.com/world/middle-east/gaza November 8 2026 Sunday evening aid ceasefire storm Israel",
+      "site:apnews.com/article/gaza \"Nov 8, 2026\" humanitarian storm strike tents hospitals",
+      "site:aljazeera.com/news/2026/11/8 Gaza late Sunday 2026 attacks 8 November 23:00",
+      "site:who.int OR site:unicef.org OR site:wfp.org \"8 November 2026\" Gaza medical evacuation humanitarian food water",
+      "Gaza November 8 2026 22:00 23:59 Rafah Kerem Shalom crossings aid trucks medical evacuations fuel WHO Red Crescent",
+      "site:un.org OR site:ochaopt.org OR site:unicef.org Gaza \"8 November 2026\" flooding displacement new operational update",
+      "غزة 8 نوفمبر 2026 الساعة 23 24 مستجدات خيام غارات شهداء معبر رفح مستشفيات",
+      "site:english.wafa.ps/Pages/Details/ \"08/November/2026\" Gaza \"11:\" PM OR \"10:\" PM"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "Newer evening headlines were West Bank incidents/condolences. Gaza sand-cliff fatal collapse and two Khan Younis deaths already reported and captured in earlier watches."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "status": "accessible",
+        "result": "Most recent Gaza-specific news remained previously documented sand-cliff collapse at 21:17 Palestinian local time; latest later headlines are not Gaza-specific."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/11/8/%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-5-%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D9%8A%D9%86-%D8%A8%D9%87%D8%AC%D9%85%D8%A7%D8%AA-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A%D8%A9-%D9%81%D9%8A",
+        "status": "accessible",
+        "result": "Updated 9 Nov 00:28 Mecca time, within window, but repackages previously recorded five sand-collapse deaths, two Khan Younis deaths, Jabalia four injuries and Qatar Camp shooting. Six reportedly rescued versus WAFA five: unresolved variation, not a separately established new incident or dated operational change."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/world/2-gazans-killed-12-others-wounded-in-continued-israeli-attacks/4115888",
+        "status": "accessible",
+        "result": "Syndicates prior-day cumulative two killed and twelve injured comprising previously documented Khan Younis (two killed/seven injured), Jabalia (four injured), Hamad City (one injured); no new distinct incident."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/flooded-out-of-their-tents-gaza-families-have-nowhere-left-to-go/4115647",
+        "status": "accessible",
+        "result": "Storm impact report repeats previously covered 70,000 flooded tents, drainage at 20%, 270 at-risk sites, 250 calls and 60 mm rainfall, without verified within-window operational change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring access restriction; no evidence of new degradation in this execution."
+      }
+    ],
+    "recurring_source_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "HTTP 502",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "HTTP 403",
+        "material_new_deterioration": false
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "Ard al-Ribat / Deir al-Balah storm-related sand embankment collapse",
+        "reason": "Same incident and five-death toll captured before prior watch ended; reported count of survivors still divergent with no separately verified new change."
+      },
+      {
+        "event": "Khan Younis Taiba Towers/al-Mawasi deaths and injuries, Jabalia four wounded, woman shot near Qatar Camp",
+        "reason": "All already represented in earlier November 8 heartbeats; new aggregation of 2 deaths/12 injuries is not additional casualties."
+      },
+      {
+        "event": "Flooding, displacement shelters, equipment shortages, crossings, fuel and aid",
+        "reason": "Searches and accessible official updates did not verify a new dated operational disruption or improvement within observation window."
+      },
+      {
+        "event": "West Bank detentions/settler violence and political events",
+        "reason": "Not Gaza-specific qualifying humanitarian changes."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked before twelve additional targeted searches. Direct WAFA, Anadolu, Al Jazeera and UNRWA checks included. Recurring WHO EMRO/UNRWA access restrictions leave regional direct-coverage gap, but global WHO and multiple authoritative publishers accessible. No new distinct qualifying Gaza-specific development verified in the bounded window.",
+    "notification_warranted": false
+  }
+}

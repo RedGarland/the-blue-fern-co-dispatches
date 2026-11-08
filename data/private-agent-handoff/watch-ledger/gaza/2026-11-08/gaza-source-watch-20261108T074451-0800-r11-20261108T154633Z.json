@@ -1,0 +1,143 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T074451-0800-r11-20261108T154633Z",
+  "scheduled_for": "2026-11-08T07:44:51-08:00",
+  "started_at": "2026-11-08T07:42:28-08:00",
+  "completed_at": "2026-11-08T15:47:34.129Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T06:49:01.133-08:00",
+    "end": "2026-11-08T15:47:34.129Z",
+    "basis": "Start is the GitHub-readback verified completed_at of the immediately preceding 06:44 scheduled Gaza Source Watch heartbeat. Only newly published, distinct Gaza-specific items eligible for handoff; event time must not be inferred from publication time.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261108-khan-younis-taiba-towers-two-killed-wafa-1659",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/8/%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D8%A3%D8%AD%D8%AF%D9%87%D9%85%D8%A7-%D8%B3%D9%8A%D8%AF%D8%A9-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D8%AC%D8%B1%D8%A7%D8%A1-%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84",
+      "title": "شهيدان أحدهما سيدة ومصابون جراء قصف الاحتلال مدينة خان يونس",
+      "title_english": "Two Palestinians, including a woman, reported killed and others wounded by drone strike west of Khan Younis",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-08",
+      "publication_date": "2026-11-08",
+      "publication_time": "2026-11-08T16:59:00+02:00",
+      "event_date": "2026-11-08",
+      "event_time": null,
+      "location": "Vicinity of Taiba Towers, west of Khan Younis, southern Gaza Strip",
+      "affected_population": "Two reported deaths, including a woman; additional people wounded, exact number unreported",
+      "affected_system": "Civilian casualties; reported military drone strike on a group of people",
+      "exact_supporting_passage": "باستشهاد مواطنين أحدهما سيدة وإصابة عدد آخر بجروح مختلفة",
+      "source_type": "Palestinian public news agency quoting an unidentified Gaza medical source",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA Arabic latest-news/homepage after checking OCHA OPT and WHO first and completing 12 targeted searches; clicked publisher link to exact article.",
+        "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T064451-0800-r11-20261108T144640Z.json",
+        "previously_seen": "Not present in immediately preceding heartbeat (WAFA Arabic feed last documented through 16:38 Palestine local time). New WAFA article published at 16:59 Palestine local time, within this observation window.",
+        "timing_caveat": "WAFA says the deaths occurred Sunday evening but supplies no precise incident time; 16:59 is article publication, not confirmed strike time.",
+        "medical_attribution": "WAFA attributes both reported deaths and unspecified additional injuries to a medical source; describes a drone strike on a group near Taiba Towers.",
+        "nonduplication": "Distinct from previously handed-off Nov 8 morning Khan Younis woman injured by gunfire near Hamad City and four people wounded near Bir al-Naaja west of Jabalia; do not aggregate or conflate.",
+        "corroboration": "No independent second-source confirmation located in this bounded window; treat casualty details as agency-reported, not independently verified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only. No publication, approvals, or changes to authoritative production collection/publisher.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T064451-0800-r11-20261108T144640Z.json",
+    "previous_verified_completed_at": "2026-11-08T14:49:01.133Z",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Latest listed situation report remains 5 Nov 2026, published 6 Nov, with reporting period 27 Oct–2 Nov; no new 8 Nov Gaza report in feed."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_timeout",
+        "result": "WHO global situation page accessible; latest visible Gaza news is not 8 Nov. WHO EMRO regional situation-report fetch timed out, continuing prior regional-access impairment."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ November 8 2026 Gaza shooting injured killed Sunday after 16:00 Palestinian time",
+      "site:wafa.ps 8/11/2026 غزة استشهاد إصابات 17:00 18:00 مخيمات",
+      "site:aa.com.tr/en/middle-east/ November 8 2026 Gaza new casualties strikes floods hospitals afternoon",
+      "site:aljazeera.com/news/2026/11/8 Gaza Sunday latest Israeli strikes injured displacement aid rain",
+      "site:reuters.com/world/middle-east/ Gaza November 8 2026 Sunday new strikes aid ceasefire latest",
+      "site:apnews.com/article/ Gaza Sunday November 8 2026 injured aid flooding Israel",
+      "site:news.un.org OR site:un.org Gaza November 8 2026 humanitarian update shelters hospitals",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza 8 November 2026 water food health rainy season",
+      "Gaza Rafah Kerem Shalom crossing fuel trucks medical evacuation 8 November 2026 latest",
+      "Gaza hospital ambulance Al Shifa Nasser medical evacuation November 8 2026 Sunday latest",
+      "Gaza Hamas Israel ceasefire hostages detainees Egypt November 8 2026 Sunday new development",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza November 8 2026 hospital displacement shelter ambulances"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "New 16:59 Palestine-local Khan Younis casualties story; followed actual article link and verified medically attributed 2 deaths, one a woman, additional injured."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "Feed latest visible Gaza story remains morning Khan Younis woman injured; 16:59 Arabic article not yet mirrored."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "Current Gaza storm/flood stories repeat previous storm emergency; no distinct new in-window incident verified."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Latest visible institutional news Nov 3; no new Gaza medical/ambulance operational bulletin."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring direct-site restriction."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and military operations with documented civilian impact",
+      "displacement and shelter flooding, infrastructure damage",
+      "aid entry, food, water and crossings",
+      "hospitals, ambulances, transport, fuel and medical evacuations",
+      "detention, hostages and ceasefire/negotiations"
+    ],
+    "exclusions": [
+      "Morning Nov 8 Khan Younis woman injured by gunfire near Hamad City already recorded in earlier heartbeat; not double counted.",
+      "Nov 8 northern Gaza Bir al-Naaja incident with four additional wounded already handed off in 05:44 watch; excluded as duplicate.",
+      "Previously handed-off flooding, 270 at-risk camps, 20% drainage capacity, 250 emergency calls, 2,000+ at-risk buildings, 300,000 tent requirement, and other storm damage excluded as repeats.",
+      "WAFA prisoner health reports lack a specific Gaza origin/link; other West Bank-only updates excluded.",
+      "Reuters/AP/Al Jazeera matches without verified new Gaza-specific in-window developments excluded, including historical results."
+    ],
+    "known_gaps": [
+      "WHO EMRO timeout and UNRWA HTTP 403 continued the preceding known access restrictions. Material new degradation not established.",
+      "news.un.org blocked by robots restrictions, while OCHA primary site remained accessible.",
+      "News indexing delays and missing event-level times limit proof of exact incident time; no independent confirmation for the new fatality report.",
+      "Production dedupe/collector data is authoritative and was not accessed or modified."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "One new, date-stamped medically attributed Gaza casualty incident verified as a newly issued WAFA article; corroboration remains pending. Recurring inaccessible sources make the watch DEGRADED, without newly material coverage loss."
+  }
+}

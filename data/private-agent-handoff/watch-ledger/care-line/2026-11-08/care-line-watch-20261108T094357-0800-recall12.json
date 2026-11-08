@@ -1,0 +1,119 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T094357-0800-recall12",
+  "scheduled_for": "2026-11-08T09:45:22-08:00",
+  "started_at": "2026-11-08T09:43:57-08:00",
+  "completed_at": "2026-11-08T09:44:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T08:45:06-08:00",
+    "end": "2026-11-08T09:44:38-08:00",
+    "basis": "Start is completed_at of latest verified Care Line watch heartbeat on ops/watch-ledger. Scheduled supplementary bounded recall; production collector remains authoritative.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization, termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "checked_via": "Official CMS Public Notices listing opened and inspected before 12 targeted supplementary searches; valid official URL found after incorrect old URL failed."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department shutting down closure suspension November 8 2026 United States",
+      "emergency room closes ambulance diversion November 7 8 2026 hospital",
+      "maternity labor delivery unit service closure suspension November 2026 announced November 8",
+      "rural hospital emergency services closed suspended this weekend November 2026",
+      "psychiatric behavioral health hospital inpatient closure suspended November 7 8 2026",
+      "dialysis facility closure patients treatment stopped November 7 8 2026",
+      "oncology cancer infusion clinic suspended treatment closing November 7 8 2026 US",
+      "primary care urgent care clinic abruptly closed no appointments November 8 2026",
+      "ambulance service county EMS base closes shuts down November 7 8 2026",
+      "air ambulance helicopter medical base closed services suspended November 2026",
+      "emergency department reopened resumed services hospital November 7 8 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital medical emergency access services closure November 2026"
+    ],
+    "search_recency_filter_days": [
+      3,
+      3,
+      4,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      4
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East Waukegan IL EMS bypass",
+        "reason": "Verified Nov 7 ambulance diversion already recorded in prior heartbeats; no new in-window access effect.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Roseland Community Hospital Chicago maternity closure",
+        "reason": "Maternity ward closed about Nov 1; Nov 2 coverage is historical, not a new change.",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur IL base closure",
+        "reason": "Closure occurred September 16, 2026; recycled listing, not new.",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Patriot EMS West Virginia/Kentucky station losses",
+        "reason": "Coverage published March 2, 2026; not a new service loss.",
+        "source_url": "https://wchstv.com/news/local/patriot-ems-faces-financial-crisis"
+      },
+      {
+        "item": "Maine air-medical service innovation feature",
+        "reason": "November 8 reporting describes an air-medical practice, not a confirmed loss, suspension, closure or reopening of an essential service.",
+        "source_url": "https://www.wbur.org/npr/nx-s1-6017801/air-ambulance-service-rural-healthcare-staffing"
+      },
+      {
+        "item": "White Memorial ambulance diversion, Sharon Regional service suspensions, Sea Pines Rehabilitation closure",
+        "reason": "Previously logged by earlier Care Line watches; no distinct newly verified in-window event."
+      },
+      {
+        "item": "UK maternity/birth center reports and Canadian emergency-care closures",
+        "reason": "Outside the United States and its territories."
+      },
+      {
+        "item": "Ownership, financing, proposals, older historical or business-only reports",
+        "reason": "Excluded absent newly verified concrete current service-access effects."
+      }
+    ],
+    "result_summary": "Official CMS page lists no new notices beyond Nov 2, 2026. Twelve supplementary targeted searches did not verify any new, nonduplicate US or territorial healthcare-access closure, interruption, CMS access-risk action or concrete restoration during the Nov 8 08:45:06–09:44:38 PST window. Previous events and historical/out-of-scope results excluded.",
+    "source_access_errors": [
+      {
+        "url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertemergprep/public-notices",
+        "error": "Inaccessible outdated URL; official canonical CMS Public Notices page successfully located and inspected before supplementary searches.",
+        "recovered": true
+      }
+    ],
+    "material_coverage_loss": false,
+    "status_reason": "DEGRADED solely because initial outdated CMS URL failed; official CMS listing recovered and checked; no material loss of coverage.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T084357-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T08:45:06-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "This is a bounded recall, not comprehensive national or territory collection.",
+      "Search engine indexing on Sunday morning may lag official/local notices.",
+      "Known watch-ledger events screened; production collection deduplication was not independently checked."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

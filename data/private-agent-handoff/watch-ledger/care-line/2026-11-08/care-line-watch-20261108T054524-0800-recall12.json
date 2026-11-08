@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T054524-0800-recall12",
+  "scheduled_for": "2026-11-08T05:45:22-08:00",
+  "started_at": "2026-11-08T05:45:24-08:00",
+  "completed_at": "2026-11-08T05:48:34-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T04:46:32-08:00",
+    "end": "2026-11-08T05:48:34-08:00",
+    "basis": "Starts at completed_at of the last verified Care Line watch heartbeat on ops/watch-ledger. Supplementary retrospective recall; production collection remains authoritative.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "checked_via": "Official CMS Public Notices page opened successfully after a first low-recall CMS-site query returned no indexed results; a second CMS-specific query located the canonical page."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 8 2026 hospital emergency department closed suspended ambulance diversion patients",
+      "November 8 2026 maternity labor delivery obstetrics hospital service closing ceased operations",
+      "November 8 2026 psychiatric behavioral health hospital admissions suspended closed",
+      "November 8 2026 rural hospital emergency department closure service loss reopening",
+      "November 8 2026 ambulance EMS station base closes suspends response service county United States",
+      "November 8 2026 air ambulance medical helicopter base closed suspended",
+      "November 8 2026 dialysis center shut down patients transferred reopening",
+      "November 8 2026 cancer oncology chemotherapy infusion clinic closes suspended patients",
+      "November 8 2026 primary care community clinic urgent care suddenly closed patients USA",
+      "November 8 2026 hospital emergency department ambulance service reopened restored effective today",
+      "November 8 2026 Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic ambulance closure suspension",
+      "November 8 2026 Medicare CMS provider termination CLIA suspension rescission notice access hospital clinic"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital labor-and-delivery closure, Chicago, IL, reported Nov 6",
+        "reason": "Previously announced Oct 1 for completion by end of October; Nov 6 bankruptcy story confirmed historical closure, not a new in-window clinical-service change.",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-files-bankruptcy-days-closing-maternity-ward-chicagos-south-side/20018238/",
+        "historical_notice_url": "https://abc7chicago.com/post/roseland-community-hospital-close-labor-delivery-unit-raising-concerns-access-maternal-care-chicago-area/19898359/"
+      },
+      {
+        "item": "Minnesota rural maternity-access analysis, published Nov 8 at 4 AM",
+        "reason": "Newly published research on historical 2010-2024 reductions; mentions an announced 2027 Luverne maternity change but no newly effective closure or restoration.",
+        "source_url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center"
+      },
+      {
+        "item": "Sharon Regional Medical Center, PA, ED and inpatient suspension",
+        "reason": "Confirmed Nov 4 and Nov 6 events; previously recorded; later article is a recap, not a new access change.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Sea Pines Rehabilitation Hospital, Melbourne, FL, indefinite closure",
+        "reason": "Previously logged in Nov 6 watch heartbeat; Nov 6 operator statement not a new change.",
+        "source_url": "https://healthsouth.mediaroom.com/2026-11-06-Encompass-Health-announces-indefinite-closure-of-Sea-Pines-Rehabilitation-Hospital-due-to-flood-damage"
+      },
+      {
+        "item": "Kula Hospital, Maui, HI, restoration plan",
+        "reason": "September restoration funding/plan, no effective reopen date; ED still closed.",
+        "source_url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/"
+      },
+      {
+        "item": "Guam and Northern Mariana Islands government hospital notices",
+        "reason": "April/October storm-related suspensions and adjustments; no Nov 8 access effect found.",
+        "source_url": "https://ghs.guam.gov/node/4352"
+      },
+      {
+        "item": "Adventist Health White Memorial, Los Angeles, CA, Nov 6-7 ambulance diversion; Vista Medical Center East, IL, ambulance bypass",
+        "reason": "Previously recorded in Nov 8 and earlier watch heartbeats; no new verified change in this observation interval."
+      }
+    ],
+    "result_summary": "Official CMS notices checked first: latest dated Nov 2. Twelve additional targeted searches (all returned results; none materially failed) for hospital and emergency, maternity, behavioral health, rural, ground/air EMS, dialysis, oncology, primary care, abrupt restoration, territories and CMS/CLIA found no newly effective, nonduplicate qualifying healthcare-access changes. Newly published Nov 8 Minnesota research concerns historical gaps, not a new access event. Roseland's maternity closure was announced Oct 1 and has occurred before this window; Nov 6 coverage is retrospective. Overnight local reporting may be under-indexed.",
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T044527-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T04:46:32-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "Bounded supplementary recall is not exhaustive national surveillance.",
+      "Overnight local reporting may be indexed with delay.",
+      "Production collection records were not independently searched for this run; exclusions rely on the verified prior watch receipt and original report dates."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

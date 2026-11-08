@@ -1,0 +1,119 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T154918-0800-r11-20261108T234918Z",
+  "scheduled_for": "2026-11-08T15:45:54-08:00",
+  "started_at": "2026-11-08T15:49:18-08:00",
+  "completed_at": "2026-11-08T15:50:50-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T14:47:37.213-08:00",
+    "end_at": "2026-11-08T15:50:50-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Verified previous 14:47:37 PST heartbeat from ops/watch-ledger, with targeted Nov 6-8 discovery backfill to distinguish new developments from older/duplicate reports.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T144553-0800-r11-20261108T224553Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Food Line recall only; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Sole/last/only/full-service grocery-store loss or disaster",
+      "Disaster-, outage-, or damage-caused emergency food distribution cancellations",
+      "Abrupt food pantry or food bank closure / major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate food access effect"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" fire closed flood November 8 2026 town US",
+      "\"sole grocery store\" closed flood November 2026 community",
+      "\"last grocery store\" closing November 8 2026 rural",
+      "\"only full-service grocery store\" shut November 2026",
+      "\"food distribution\" canceled November 8 2026 storm flood",
+      "\"food bank\" suspended distribution November 8 2026 storm outage",
+      "\"food pantry\" temporarily closed November 8 2026 fire flood",
+      "\"mobile pantry\" canceled November 8 2026 weather",
+      "site:gov SNAP EBT benefits outage November 8 2026 new service disruption state",
+      "site:gov WIC system outage November 8 2026 benefits unavailable",
+      "\"food pantry\" \"suspending services\" \"November 2026\" sudden",
+      "\"SNAP\" \"November 8, 2026\" delayed payments interruption"
+    ],
+    "search_recency": "2 days for 10 searches and 3 days for 2 searches; explicit November 2026 terms; historical discovery lookback used only for deduplication.",
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 7,
+      "successful": 5,
+      "failed": 2,
+      "urls": [
+        "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "https://www.fns.usda.gov/snap/state-directory"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "reason": "Official Mecklenburg County announcement dated Nov 6: outage closes one in-person SNAP office but online, telephone, and alternate office access continue, and WIC appointments shift to telephone; predates hourly observation window."
+      },
+      {
+        "source_url": "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "reason": "McCaysville, Georgia sole grocery-store flood damage documented Nov 6; known previous watch signal, not new in-window development."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Kauaʻi emergency mobile distribution listed as scheduled Nov 6, not canceled; resource center closure relates to recovery service centers rather than food pantry shutdown."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Hawaiʻi SNAP ongoing general application/interview backlog guidance lacks a newly dated acute interruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No fresh SNAP/WIC access interruption identified on Virginia DSS alerts page."
+      },
+      {
+        "source_url": "https://saltlakejournal.com/article/provo-food-bank-closes-after-raising-100-000-in-emergency-fund/",
+        "reason": "Provo food-bank cessation Nov 1 already known, outside interval."
+      },
+      {
+        "source_url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "El Paso food-bank storm closure dates to September 2026, outside interval."
+      },
+      {
+        "source_url": "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/2025/11/08/supreme-court-emergency-order-pauses-november--snap-payments",
+        "reason": "Nov 8 historical SNAP suspension is from 2025, not Nov 2026."
+      },
+      {
+        "source_url": null,
+        "reason": "Other search hits were stale, unrelated, routine scheduled distributions, program guides, duplicate articles, nonqualifying proposals or promotional resources."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "type": "direct_source_access",
+        "result": "HTTP 403 Forbidden",
+        "mitigation": "Kauaʻi Now November 6 local-source report directly accessible and confirms scheduled distribution; no new cancellation evident."
+      },
+      {
+        "url": "https://www.fns.usda.gov/snap/state-directory",
+        "type": "direct_source_access",
+        "result": "HTTP 403 Forbidden",
+        "mitigation": "Hawaiʻi and Virginia state public benefit pages plus Mecklenburg County official notice were directly accessible; directory failure is nonmaterial."
+      }
+    ],
+    "coverage_assessment": "No new qualifying report verified in hourly window across four requested classes. Search queries all succeeded; two known direct pages blocked with alternatives available. The limited source-access restrictions require DEGRADED under watch rules, but do not materially compromise usable coverage.",
+    "notification_assessment": "No qualifying signal and no material degradation; no user notification required.",
+    "excluded_content": "Donation drives, ordinary schedules, resource guides, recipes, opinion, routine promotion, general inflation coverage and duplicates.",
+    "controls": "No approval, publication, production mutation, schedule alteration or task disabling."
+  }
+}

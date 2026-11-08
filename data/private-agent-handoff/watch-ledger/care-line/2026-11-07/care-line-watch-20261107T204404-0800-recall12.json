@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T204404-0800-recall12",
+  "scheduled_for": "2026-11-07T20:45:22-08:00",
+  "started_at": "2026-11-07T20:44:04-08:00",
+  "completed_at": "2026-11-07T20:45:40.936-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T18:45:31.471-08:00",
+    "end": "2026-11-07T20:45:40.936-08:00",
+    "basis": "Last independently verified prior watch completion used as conservative overlap because an intervening hourly heartbeat could not be independently enumerated; previously recorded developments excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization termination notice (CCN 18P001)",
+      "new_notices_since_last_verified_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 evening hospital emergency department closure ambulance diversion suspended United States",
+      "November 7 2026 maternity labor delivery unit hospital service closed suspended reopening",
+      "November 7 2026 behavioral health psychiatric inpatient facility abrupt closure patients",
+      "November 7 2026 dialysis oncology primary care clinic services temporarily closed patients",
+      "November 7 2026 rural hospital emergency room shut down emergency service loss state patients",
+      "November 7 2026 November 8 2026 ambulance EMS service suspended closed 911 district",
+      "November 7 2026 air ambulance medical helicopter base closing suspended services county",
+      "November 7 2026 emergency department labor delivery reopening services restored hospital ambulance bypass lifted",
+      "November 7 2026 Puerto Rico hospital emergency unit services suspended reopens clinic 2026",
+      "November 7 2026 Guam US Virgin Islands CNMI American Samoa hospital medical clinic ambulance service outage closure",
+      "November 7 2026 site:gov hospital closure emergency room ambulance bypass public health notice",
+      "Vista Medical Center East Waukegan November 7 2026 evening November 8 ambulance bypass reopened anesthesia dialysis status"
+    ],
+    "recency_days_per_search": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois, IDPH-directed EMS bypass starting November 7, 7 a.m. CST",
+        "reason": "Previously captured in earlier positive heartbeat; additional November 7 reporting adds no confirmed separately effective access change."
+      },
+      {
+        "item": "Vista Medical Center East anesthesia suspension, trauma designation loss, inpatient dialysis pause",
+        "reason": "Older October 2026 measures; no new effective access change or verified reversal."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania, ED closure and hospital suspension",
+        "reason": "November 4 and November 6 effective changes already documented; no newly effective status change."
+      },
+      {
+        "item": "Newark-Wayne Community Hospital maternity care suspension, New York",
+        "reason": "Effective September 3, 2026, historical."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, Illinois base closure",
+        "reason": "September 2026, historical and previously covered."
+      },
+      {
+        "item": "UK NHS maternity closures",
+        "reason": "Outside U.S. and territory scope."
+      },
+      {
+        "item": "Proposals, financial risk reports, business/ownership shifts, historical closures, generic Medicare plan changes",
+        "reason": "No newly verified concrete essential-service access effect in the observation window."
+      }
+    ],
+    "source_examples": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "https://www.rochesterregional.org/locations/hospitals/newark/update"
+    ],
+    "result_summary": "CMS official notices checked first; newest dated November 2, 2026. Twelve targeted web searches covered emergency and rural facilities, maternity, behavioral health, dialysis/oncology/primary care, ground/air EMS, restoration, and U.S. territories. No new qualifying, nonduplicate concrete access change verified. No individual source retrieval failures encountered; relevant late-day local reporting was sparse.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T184347-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T18:45:31.471-08:00",
+    "intervening_hourly_heartbeat": "not_independently_enumerated",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "Supplementary targeted recall is bounded and does not replace nationwide production collection.",
+      "Local-source publication and indexing may lag this observation window.",
+      "Latest prior watch record after the 18:45 PST verified checkpoint could not be enumerated, so coverage conservatively overlaps and known duplicates were excluded.",
+      "Production ingestion and deduplication not independently verified."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

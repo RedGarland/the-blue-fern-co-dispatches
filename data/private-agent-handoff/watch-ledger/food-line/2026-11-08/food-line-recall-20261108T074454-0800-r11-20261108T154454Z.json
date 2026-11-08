@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T074454-0800-r11-20261108T154454Z",
+  "scheduled_for": "2026-11-08T07:45:54-08:00",
+  "started_at": "2026-11-08T07:44:54-08:00",
+  "completed_at": "2026-11-08T07:47:29.876-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T06:46:49.635-08:00",
+    "end_at": "2026-11-08T07:47:29.876-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start inferred from prior scheduled-run metadata (2026-11-08T14:46:49.635Z). Last repository heartbeat independently read back was 05:47:23 PST; immediately preceding 06:xx heartbeat was not independently retrieved. Search also backfilled Nov 6-8 to catch late-indexed reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall only; primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss or disaster",
+      "Disaster- or outage-caused emergency distribution cancellation/suspension",
+      "Abrupt pantry/food-bank closure or material service-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire flooded November 8 2026 United States",
+      "\"sole grocery store\" closing fire November 2026 town",
+      "\"last grocery store\" shut down November 2026 rural",
+      "\"full service grocery store\" closure November 2026 community",
+      "\"food distribution\" canceled storm November 8 2026 food bank",
+      "\"food pantry\" \"closed\" flooding storm November 2026",
+      "\"food bank\" \"suspended\" services November 2026 emergency",
+      "\"food pantry\" \"temporarily closed\" November 2026 fire outage",
+      "site:gov \"SNAP\" \"benefits\" \"interruption\" November 8 2026",
+      "site:gov \"WIC\" \"services\" \"interrupted\" November 2026",
+      "\"SNAP\" \"EBT\" \"outage\" November 8 2026 official",
+      "\"emergency food distribution\" \"cancelled\" OR \"canceled\" November 2026"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 5,
+      "failed": 1,
+      "urls": [
+        "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "https://211palmbeach.org/news/flood-resources-2026",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://thebeaconnews.org/stories/2026/11/06/new-grocery-stores-united-market-sun-fresh/",
+        "reason": "Nov. 6 feature re-reports Blue Parkway Sun Fresh closure Oct. 25; previously reviewed and predates this observation window. United Market coverage is a reopening/success story, not new disruption."
+      },
+      {
+        "source_url": "https://211palmbeach.org/news/flood-resources-2026",
+        "reason": "Last updated Nov. 6; lists Nov. 7 Treasure Coast Food Bank emergency distribution as scheduled, no cancellation; ordinary pantry schedules unchanged."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov. 6 report says Hawaii Foodbank Kauai mobile distribution at Hale Lihue scheduled for Friday Nov. 6; hurricane resource center closure is not a food-pantry closure."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing SNAP telephone interview wait-time advisory, no newly dated acute payment/service interruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No new official acute SNAP/WIC payment interruption identified."
+      },
+      {
+        "source_url": null,
+        "reason": "Other matches were stale (2020 grocery fire, 2025 SNAP funding shutdown notices) or previously reviewed McCaysville GA/Provo UT cases. No novel qualifying fact in the observed window."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "type": "direct_source_fetch",
+        "url": "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "error": "HTTP 403 Forbidden on direct source page",
+        "impact": "Direct official notice unavailable; independent Nov. 6 Kauai Now report accessible and confirmed distribution remained scheduled. Recurrent nonmaterial source restriction."
+      }
+    ],
+    "assessment": "Twelve targeted searches and five successful direct-source opens surfaced no verified new nonduplicate qualifying U.S. food-access disruption. One official county notice returned 403; DEGRADED per search/source failure rule, but no material loss of coverage established.",
+    "material_degradation": false,
+    "limitations": "Time-specific search indexes favor older incidents and 2025 SNAP shutdown stories; bounded recall cannot guarantee exhaustive coverage. Previous 06:xx heartbeat could not be directly verified; prior-run timestamp from task metadata used. No production collector/deduplication audit performed.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only one private branch heartbeat to be created; no editorial approval, publication, schedule change, or task disabling."
+  }
+}

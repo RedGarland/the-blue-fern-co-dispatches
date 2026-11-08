@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T044451-0800-r11-20261108T124444Z",
+  "scheduled_for": "2026-11-08T04:44:51-08:00",
+  "started_at": "2026-11-08T04:43:11-08:00",
+  "completed_at": "2026-11-08T04:44:44.926-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T03:42:51-08:00",
+    "end": "2026-11-08T04:44:44.926-08:00",
+    "basis": "From immediately preceding verified supplementary Gaza heartbeat completion through this run; search index recency and Gaza-local article timestamps checked for duplication.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; authoritative Gaza production collector/publisher not changed and its deduplication state not verified.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T034451-0800-r11-20261108T114005Z.json",
+    "previous_verified_completed_at": "2026-11-08T03:42:51-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "report_url": "https://www.ochaopt.org/content/humanitarian-situation-report-5-november-2026",
+        "status": "accessible",
+        "result": "Homepage lists 6 Nov latest humanitarian situation report, dated 5 Nov, covering 27 Oct–2 Nov; no new in-window Gaza-specific update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global conflict page accessible but without a new Nov 8 dated Gaza update; regional emergency situation reports endpoint returned HTTP 502 (recurring). Initial alternate WHO URL gave 404; canonical link reached successfully."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"08 November 2026\" \"14:\" Gaza injured killed",
+      "site:english.wafa.ps/Pages/LastNews 8 November 2026 Gaza 13:00 14:00 15:00",
+      "site:aa.com.tr/en/middle-east/ \"Nov 8, 2026\" Gaza Sunday killed injured flooding shelter hospital",
+      "site:aljazeera.com/news/2026/11/8 Gaza Sunday attacks casualties flood latest",
+      "site:reuters.com/world/middle-east/ Gaza November 8 2026 Israeli attacks ceasefire hostages crossing aid",
+      "site:un.org OR site:news.un.org Gaza November 8 2026 flooding emergency aid medical evacuation WHO",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza November 8 2026 storm food water relief tents",
+      "Gaza 8 November 2026 14:00 15:00 Khan Younis Gaza City shelling civilians injured killed Sunday",
+      "Gaza hospital ambulances medical evacuation Rafah fuel 8 November 2026 14:00 updates",
+      "Gaza Rafah Kerem Shalom November 8 2026 crossings aid delivery truck permission Sunday",
+      "Gaza November 8 2026 Hamas Israel ceasefire negotiations hostage detainees Sunday Cairo",
+      "غزة 8 نوفمبر 2026 الساعة الثانية الثالثة بعد الظهر قصف إصابة استشهاد مستشفى نزوح معابر"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "Latest shown 8 Nov 14:21 Palestine time: broad Israeli-prison scabies testimony (not demonstrated Gaza-specific). No new Gaza incident after previously logged 09:05 southern Gaza injury."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176733",
+        "status": "accessible_scope_excluded",
+        "result": "8 Nov 14:21 report relays Palestinian Prisoners’ Society testimonies from October/early November concerning prisoners in multiple Israeli facilities, but does not identify Gaza detainees or new Gaza-specific case; excluded from Gaza watch."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Latest news shown 3 Nov; no new Gaza ambulance or health-capacity development."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring access restriction; not verified directly."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and military operations with documented civilian impact",
+      "displacement and storm shelter risk, infrastructure damage",
+      "aid access, food, water, fuel, crossings",
+      "health facilities, hospital/ambulance operation, medical evacuation",
+      "detention/hostages and ceasefire negotiations"
+    ],
+    "duplicate_exclusions": [
+      "8 Nov 09:05 WAFA report of Palestinian woman injured near Khan Younis previously handed off.",
+      "8 Nov Al Jazeera 2,000+ buildings collapse risk and need for 300,000 tents logged in prior watch.",
+      "8 Nov Anadolu 270 camps flood risk, 20% drainage functionality and 250 municipal calls logged earlier.",
+      "7 Nov storm impacts, flooding, 1,500 emergency calls, injuries, Al-Shifa disruption and aid shortages already documented.",
+      "Search results for Nov 1–5 attacks and Nov 7 Reuters flood coverage were not in this new window."
+    ],
+    "rejected_unverified_leads": [
+      "WAFA 14:21 prisoner scabies (roughly 80% of detainees per Palestinian Prisoners’ Society): geographic scope not demonstrably Gaza-linked, underlying evidence spans October/early Nov; not a verified new Gaza-specific event.",
+      "Gazanews.live 8 Nov crossing operating-status items are AI-assisted republications without direct named authority links; one 09:53 report predates window and previously rejected.",
+      "An apparent Nov 7 'new talks' aggregator was recycled from a 2025 article; not accepted as current."
+    ],
+    "known_gaps": [
+      "WHO EMRO HTTP 502 and UNRWA HTTP 403 are persistent baseline failures; no fresh deterioration demonstrated.",
+      "News.un.org search robots restriction; alternative OCHA and WHO global sources accessible.",
+      "Search-index latency and undated event times preclude exhaustive incident coverage.",
+      "Production deduplication not verified; handoff dedupe against latest supplementary heartbeat and supplied history."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "No verified new Gaza-specific qualifying development in the bounded interval; recurring regional-source access restrictions warrant DEGRADED but not a material new degradation."
+  }
+}

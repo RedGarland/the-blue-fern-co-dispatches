@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T114739-0800-recall12",
+  "scheduled_for": "2026-11-08T11:45:22-08:00",
+  "started_at": "2026-11-08T11:47:39-08:00",
+  "completed_at": "2026-11-08T11:49:07-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T10:44:23-08:00",
+    "end": "2026-11-08T11:49:07-08:00",
+    "basis": "Started at completed_at of most recent previously verified supplementary Care Line watch heartbeat on ops/watch-ledger. Publication/production collection not used to define window.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope; Kentucky; Organ Procurement Organization termination notice; CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "checked_via": "Official CMS Public Notices indexed result followed by direct page inspection; newest table row as of November 8, 2026."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closure suspension ambulance diversion Sunday November 8 2026 United States",
+      "hospital maternity labor and delivery closes reopens November 8 2026 United States",
+      "rural hospital emergency services suspended closed November 8 2026",
+      "behavioral health psychiatric hospital inpatient admissions suspended closed November 8 2026",
+      "dialysis center patients closed suspended service November 8 2026",
+      "oncology cancer clinic infusion service closed suddenly November 8 2026",
+      "primary care medical clinic immediate closure patients November 8 2026 United States",
+      "ambulance EMS station service closure suspension November 7 8 2026 US",
+      "air ambulance medevac helicopter base closed grounded November 8 2026",
+      "hospital ER emergency department reopened restored Sunday November 8 2026 after closure",
+      "site:gov hospital clinic ambulance closure suspension notice November 8 2026 health department",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa emergency hospital clinic closure November 2026"
+    ],
+    "search_recency_filter_days": [
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      2,
+      3,
+      3,
+      2,
+      3,
+      3
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "MPR News Minnesota birthing-center gaps (Nov 8, 2026)",
+        "source_url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center",
+        "reason": "Newly released statewide historical access data, not a new concrete in-window closure or restoration."
+      },
+      {
+        "item": "Sharon Regional Medical Center emergency department and wider service suspension",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+        "reason": "Nov 4 emergency department closure and Nov 6 service suspension already captured in prior watches; no new service change verified."
+      },
+      {
+        "item": "Roseland Community Hospital maternity unit",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Closure Nov 1; previously recorded, outside this hourly window."
+      },
+      {
+        "item": "ProPublica Texas emergency-care case (Nov 8 article)",
+        "source_url": "https://www.propublica.org/article/vitamin-k-shot-texas-lonestar-emergency-room-nicole-malouf",
+        "reason": "Reports care incident in 2023, without a verified new facility-access closure, suspension, or reopening."
+      },
+      {
+        "item": "Other rural hospital risk reporting, earlier service interruptions, out-of-country results",
+        "reason": "Historical context, speculative risk, or outside U.S. and territories, not newly qualifying actual service changes."
+      }
+    ],
+    "result_summary": "No new concrete, nonduplicate U.S. or territory hospital, ED, maternity, psychiatric, dialysis, oncology, primary care, ambulance/air-medical service closure/suspension, reopening, or CMS termination/CLIA notice could be verified within Nov 8 10:44:23 to latest check in Pacific time. CMS latest displayed notice remains Nov 2.",
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Twelve-search bounded supplementary recall is not comprehensive national or territory coverage.",
+      "Sunday and rapid local-reporting indexing delays can conceal recent service changes.",
+      "Production collection remains authoritative; no independent production deduplication performed."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T104236-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T10:44:23-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

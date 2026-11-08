@@ -1,0 +1,127 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T014055-0800-recall12",
+  "scheduled_for": "2026-11-08T00:45:22-08:00",
+  "started_at": "2026-11-08T01:40:55-08:00",
+  "completed_at": "2026-11-08T01:43:30-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T23:50:42.183-08:00",
+    "end": "2026-11-08T01:43:30-08:00",
+    "basis": "Conservative search from last independently verified Care Line heartbeat (2026-11-07 23:50:42 PST). Unable to enumerate any intervening 2026-11-08 00:45 heartbeat. Retrospective high-value recall exceptions are explicitly labeled.",
+    "retrospective_recall_included": true
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261107-ca-los-angeles-white-memorial-ambulance-diversion",
+      "canonical_source_url": "https://laist.com/news/politics/ice-detains-two-u-s-citizens-protesting-outside-white-memorial-hospital-rapid-response-groups-say",
+      "title": "ICE detains two US citizens protesting outside White Memorial Hospital, rapid response groups say",
+      "publisher": "LAist / The LA Local",
+      "exact_supporting_passage": "we diverted ambulances to nearby hospitals for about two hours to ensure every patient received timely care.",
+      "source_published_date": "2026-11-07",
+      "state": "CA",
+      "city": "Los Angeles (Boyle Heights)",
+      "county": "Los Angeles County",
+      "territory": null,
+      "event_type": "temporary_emergency_ambulance_diversion",
+      "service_line": "Emergency department ambulance access",
+      "access_consequences": "Adventist Health White Memorial temporarily rerouted incoming ambulances to nearby hospitals for approximately two hours after federal agents formed a line across its ambulance entrance. Hospital said it did not authorize the blockade. No complete ED closure established and diversion had ended.",
+      "affected_population": "Patients requiring ambulance transport to Adventist Health White Memorial and emergency patients in the Boyle Heights catchment area; exact patient count unknown.",
+      "effective_date": "2026-11-07",
+      "announcement_date": "2026-11-07",
+      "confidence": "high",
+      "source_role": "hospital_direct_statement_quoted_in_local_reporting",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department temporarily closes ambulances diverted November 8 2026 United States",
+      "maternity labor delivery hospital suspended closed services November 7 8 2026",
+      "psychiatric behavioral health hospital unit stopped admissions closed November 7 8 2026",
+      "rural hospital emergency services abruptly suspended November 7 8 2026",
+      "site:laist.com OR site:thelalocal.org OR site:latimes.com White Memorial ambulance blocked immigration agents November 7 2026",
+      "dialysis clinic center suspended treatments patients displaced November 7 8 2026 United States",
+      "oncology cancer center chemotherapy clinic halted care closed November 7 8 2026",
+      "primary care rural health clinic closed immediately patients November 7 8 2026",
+      "November 7 November 8 2026 ambulance EMS service base shutdown county air ambulance helicopter medical flight suspension US",
+      "November 8 2026 hospital emergency department ambulance diversion reopened restoration services resumed United States",
+      "November 7 November 8 2026 Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa hospital ambulance closure suspended reopened",
+      "\"White Memorial\" \"ambulance\" \"agents\" November 7 2026 LAist LA Local"
+    ],
+    "source_access_errors": [
+      {
+        "url": "https://lapatriot.com/20261108-white-memorial-er-ice-blockade",
+        "error": "Web source open DisabledError; superseded by verified LAist hospital statement"
+      },
+      {
+        "url": "https://econotimes.com/Los-Angeles-Hospital-Says-Federal-Agents-Blocked-Ambulance-Access-1773118",
+        "error": "Web source open DisabledError; superseded by verified LAist hospital statement"
+      },
+      {
+        "url": "https://abcfe-weighted.us-east-1.hosted.abcotvs.com/post/ice-presence-outside-boyle-heights-hospital-prompts-protest/20023368/",
+        "error": "Web source open DisabledError; local official/hospital statement verified in LAist"
+      }
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL, ambulance bypass since November 7",
+        "reason": "Already recorded in prior Nov 7 watch; no distinct new change."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon PA, ED/full-service suspensions November 4-6",
+        "reason": "Previously recorded."
+      },
+      {
+        "item": "Roseland Community Hospital maternity services, Chicago IL",
+        "reason": "Previously reported closure November 2, outside current interval."
+      },
+      {
+        "item": "Kula Hospital HI reopening plan",
+        "reason": "Funding and future rebuilding; no effective restored service."
+      },
+      {
+        "item": "Guam hospital service suspension October 16, 2026",
+        "reason": "Historical event, outside window."
+      },
+      {
+        "item": "Non-U.S. maternity/health facility closures",
+        "reason": "Outside U.S. and territory scope."
+      }
+    ],
+    "retrospective_finding_note": "White Memorial's concrete two-hour ambulance diversion occurred overnight Nov 6-7 and was covered by LAist on Nov 7, before the strict observation window. It is recorded as a late-discovered missed high-value access event absent from the last independently verified watch heartbeat, NOT as a newly occurring Nov 8 outage. Latest intervening hourly heartbeat and production deduplication were not independently enumerated.",
+    "source_examples": [
+      "https://laist.com/news/politics/ice-detains-two-u-s-citizens-protesting-outside-white-memorial-hospital-rapid-response-groups-say",
+      "https://laist.com/news/politics/community-la-leaders-denounce-ice-activity-at-white-memorial",
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+    ],
+    "result_summary": "CMS checked first; no notice newer than Nov 2. Twelve targeted searches uncovered one previously unrecorded, explicitly retrospective temporary ED ambulance diversion with direct hospital corroboration in strong local reporting. No additional verified in-window new access-change event established. Three noncritical web open failures; official CMS and LAist accessible.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T234925-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T23:50:42.183-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Bounded supplementary recall, not national production collection.",
+      "Latest intervening hourly heartbeat and production deduplication could not be independently checked.",
+      "Local overnight reporting may be indexed with delay."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

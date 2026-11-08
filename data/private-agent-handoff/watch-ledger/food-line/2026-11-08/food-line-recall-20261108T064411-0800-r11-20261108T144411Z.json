@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T064411-0800-r11-20261108T144411Z",
+  "scheduled_for": "2026-11-08T06:45:54-08:00",
+  "started_at": "2026-11-08T06:44:11-08:00",
+  "completed_at": "2026-11-08T06:46:31-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T05:47:23-08:00",
+    "end_at": "2026-11-08T06:46:31-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start verified from prior 05:47:23 PST heartbeat on ops/watch-ledger. Narrow check for newly occurring or newly reported qualifying events, with bounded Nov 7-8 late-indexed source review."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for high-value Food Line misses; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Loss of only/sole/last/full-service grocery store",
+      "Emergency food distribution cancellation due to disaster or utility/facility failure",
+      "Abrupt food pantry/food-bank service closure or severe access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 8 2026 America",
+      "\"last grocery store\" shut down community November 2026",
+      "\"sole grocery store\" storm damaged closed November 2026 USA",
+      "\"full-service grocery store\" closed fire flood November 2026 rural",
+      "\"emergency food distribution\" canceled November 8 2026 storm flood",
+      "\"food distribution\" suspended canceled hurricane Lowell November 8 2026",
+      "\"food pantry\" \"closed\" \"November 8, 2026\" emergency",
+      "\"food bank\" \"suspend\" \"distribution\" \"November\" \"2026\" flood fire",
+      "\"food pantry\" \"closure\" fire flood November 7 2026",
+      "site:gov \"SNAP\" \"November 8, 2026\" \"outage\" OR \"delayed\" OR \"suspended\"",
+      "site:gov \"WIC\" \"November 2026\" \"interruption\" OR \"system outage\" benefits",
+      "\"EBT\" \"not working\" \"November 8\" \"2026\" SNAP outage"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 10,
+      "successful": 10,
+      "failed": 0,
+      "urls": [
+        "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/",
+        "https://provo.com/news/utah-county-warming-center-community-action-closure-november-2026/",
+        "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://statusgator.com/services/forage",
+        "https://utah.news/article/464d8e5d-c005-40e9-aa0c-7dda4b30e38d",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://townlift.com/2026/11/heber-food-pantry-expands-access-to-meet-growing-needs-after-food-bank-closures/",
+        "https://www.kpcw.org/show/local-news-hour/2026-11-05/summit-county-council-considers-food-bank-stop-gap-2027-budget"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/",
+        "reason": "Nov 7 story about Coalville and Oakley UT pantries describes closures already discussed at Nov 4 county council meeting and confirmed in Nov 5 KPCW reporting; both stem from previously tracked Community Action Services and Food Bank network shutdown, so not a new within-hour disruption. Site-specific access losses may warrant separate historic backfill in the primary collector if not already indexed."
+      },
+      {
+        "source_url": "https://www.kpcw.org/show/local-news-hour/2026-11-05/summit-county-council-considers-food-bank-stop-gap-2027-budget",
+        "reason": "Primary earlier local coverage of Coalville/Oakley closure from Nov 5, prior to hourly window."
+      },
+      {
+        "source_url": "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "reason": "Nov 6 reporting confirms destroyed sole town grocery in McCaysville GA; already identified in earlier watches."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Hawaiʻi Foodbank Kauaʻi distribution remained scheduled, not canceled; older recovery notice."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated official SNAP/WIC/food-assistance outage."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing call-center/interview delays, no newly announced immediate assistance interruption."
+      },
+      {
+        "source_url": "https://statusgator.com/services/forage",
+        "reason": "Third-party EBT payment vendor monitor did not establish a new official SNAP/WIC interruption; live status text not reliable as a dated state notice."
+      },
+      {
+        "source_url": "https://www.bountifulfoodpantry.org/component/dpcalendar/location/6",
+        "reason": "Nov 11 scheduled Veterans Day holiday closure, routine not a newly abrupt closure."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No verified newly occurring, newly announced, or nonduplicate qualifying event in the verified hourly window. An older site-specific Coalville/Oakley closure report was found but its Nov 4-5 event was an extension of the prior Community Action shutdown, so excluded from new alerts.",
+    "material_degradation": false,
+    "limitations": "Bounded search of 12 targeted queries is not exhaustive; emerging notices may not yet be indexed. Production collector's deduplication and historic site-level coverage were not directly inspected; no claim of production backlog completeness.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One private heartbeat commit only; no publication, approval, schedule change, task disabling, or production mutation."
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-07",
+  "generated_at": "2026-11-08T04:14:52.425059+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-07/",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 2,
+  "story_count": 2,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 2,
+  "publishers": [
+    "Anadolu Agency",
+    "ICSPR"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-11-07T06:00:00-08:00",
+  "scheduled_run_time_basis": "default_06:00_America/Los_Angeles_reference_not_execution_evidence",
+  "retrieval_timing_complete": false,
+  "retrieval_time_precision_counts": {
+    "date": 2
+  },
+  "actual_run_local_time": "2026-11-07T20:14:52-08:00",
+  "source_window_start_utc": null,
+  "source_window_end_utc": null,
+  "first_source_retrieved_at": null,
+  "last_source_retrieved_at": null,
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-11-07",
+      "retrieved_at_precision": "date",
+      "retrieved_calendar_date": "2026-11-07",
+      "retrieved_local_date": null,
+      "retrieval_boundary_date": "2026-11-07",
+      "retrieved_at_utc": null,
+      "retrieved_at_local": null,
+      "batch_classification": "date_only_batch",
+      "source_record_ids": [
+        "AA-20261107-STORM-COLLAPSES",
+        "ICSPR-20261107-WINTER-RESPONSE-APPEAL"
+      ],
+      "source_count": 2
+    }
+  ]
+}

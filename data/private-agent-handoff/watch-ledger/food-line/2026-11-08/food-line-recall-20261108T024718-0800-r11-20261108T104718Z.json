@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T024718-0800-r11-20261108T104718Z",
+  "scheduled_for": "2026-11-08T02:45:54-08:00",
+  "started_at": "2026-11-08T02:47:18-08:00",
+  "completed_at": "2026-11-08T02:49:08.577-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T01:49:50.863-08:00",
+    "end_at": "2026-11-08T02:49:08.577-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start is completed_at from latest prior November 8 heartbeat independently read from ops/watch-ledger. Searches focused on publications November 7–8 (with short publication-lag backfill); newly discovered, relevant events must not duplicate earlier documented incidents."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Food Line recall; production nationwide collection authoritative. Not a production deduplication or publication decision.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss or closure, including fire or disaster",
+      "Emergency food distribution cancellations/suspensions due to flood, storm, fire, outage or damage",
+      "Abrupt food pantry or food bank service closures or major access reductions",
+      "New official SNAP/WIC/food-assistance interruptions with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" fire closed November 8 2026",
+      "\"sole grocery store\" closure flood November 7 2026",
+      "\"last grocery store\" closed rural November 2026",
+      "\"emergency food distribution\" canceled storm November 8 2026",
+      "\"food distribution\" suspended weather power outage November 7 2026",
+      "\"food pantry\" closed suddenly November 7 2026",
+      "\"food bank\" closed services fire flood November 8 2026",
+      "site:gov \"SNAP\" \"outage\" \"November 8\" \"2026\"",
+      "November 8 2026 state SNAP EBT \"delayed\" \"benefits\" interruption",
+      "November 7 2026 WIC benefits redemption outage state notice",
+      "site:facebook.com \"food distribution\" \"cancelled\" \"November 8\" \"2026\"",
+      "November 7 2026 \"grocery store\" \"only\" \"closing\" town"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 5,
+      "successful": 5,
+      "failed": 0,
+      "urls": [
+        "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://oklahoma.gov/okdhs/ebt.html"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://globalnews.ca/video/11849651/rural-n-b-grocery-store-re-opens-this-week-after-devastating-fire-eight-months-ago",
+        "reason": "New Brunswick is in Canada, not U.S.; reopening rather than new loss; May 2026 original event."
+      },
+      {
+        "source_url": "https://www.wcpo.com/news/local-news/hamilton-county/cincinnati/avondale/avondales-only-grocery-store-announces-closing-after-just-over-1-year",
+        "reason": "Avondale only-store announcement dates to July 9, 2026; outside the current window."
+      },
+      {
+        "source_url": "https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102",
+        "reason": "Santa Clarita unexpected closure from January 2026; stale."
+      },
+      {
+        "source_url": "https://www.gov.ca.gov/2025/10/20/trump-shutdown-could-soon-halt-food-support-for-millions-in-california-calfresh-cards-face-possibility-of-no-new-funds-in-november/",
+        "reason": "October 2025 SNAP shutdown article; not a new 2026 interruption."
+      },
+      {
+        "source_url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "reason": "November 6 emergency food event listed without a cancellation or suspension notice."
+      },
+      {
+        "source_url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "reason": "November 9–13 distributions remain scheduled; generic text-alert option for changes is not cancellation evidence."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "General SNAP phone/interview delays with no new dated immediate benefit outage."
+      },
+      {
+        "source_url": "https://oklahoma.gov/okdhs/ebt.html",
+        "reason": "November 2 customer service phone update, not newly interrupted food access."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated acute SNAP/WIC interruption surfaced."
+      },
+      {
+        "source_url": null,
+        "reason": "Previously reviewed McCaysville, GA grocery flooding and Provo, UT food-bank closure already accounted for; not re-emitted."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No newly verified nonduplicate high-value U.S. food-access disruption in this bounded run.",
+    "material_degradation": false,
+    "limitations": "Fast-search indexing returned old 2025 SNAP stories and older grocery/pantry closures despite date terms. Social-media posts and delayed local coverage might not be indexed. This is not exhaustive nationwide monitoring; no production ingestion/dedupe state inspected.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Heartbeat only; no approval, publication, production mutation, schedule change or disabling."
+  }
+}

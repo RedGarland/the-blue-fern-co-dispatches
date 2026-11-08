@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261107T234451-0800-r11-20261108T074534Z",
+  "scheduled_for": "2026-11-07T23:44:51-08:00",
+  "started_at": "2026-11-07T23:45:34-08:00",
+  "completed_at": "2026-11-07T23:48:02.316-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-07",
+    "start": "2026-11-07T22:45:23.960-08:00",
+    "end": "2026-11-07T23:48:02.316-08:00",
+    "basis": "Since the exact completed_at from the last verified Gaza Source Watch heartbeat; source-local publication and event dates may be November 8 while observation is still November 7 PST.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261108-khan-younis-hamad-city-woman-gunshot-wound",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176726",
+      "title": "Palestinian woman injured by Israeli gunfire in southern Gaza",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-08",
+      "publication_date": "2026-11-08",
+      "publication_time_local": "09:05 AM (publisher display; timezone not explicitly stated)",
+      "event_date": "2026-11-08",
+      "event_time": null,
+      "location": "Qatar Camp, Hamad City, north of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One Palestinian woman wounded in back; reported ongoing gunfire toward tents housing displaced people in eastern and southern Khan Younis",
+      "exact_supporting_passage": "the woman sustained a gunshot wound to the back after Israeli forces opened fire at Qatar Camp in Hamad City",
+      "source_type": "established news agency report citing local medical sources",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "searched_since": "2026-11-07T22:45:23.960-08:00",
+        "discovered_via": "Direct WAFA latest-news index and original report, following official OCHA OPT and WHO checks and bounded targeted searching.",
+        "report_index_url": "https://english.wafa.ps/Pages/LastNews",
+        "report_date_vs_observation_date": "November 8 09:05 WAFA site time, after the prior index latest item at 08:06 local; November 7 evening America/Los_Angeles observation.",
+        "corroboration": "WAFA cites unnamed medical sources; no independent on-the-record second news agency corroboration obtained during this run. Unverified social aggregator was disregarded.",
+        "caveats": "Attribution of shooter to Israeli forces is WAFA/medical-source reporting; no independent verification of the shooting or the exact time of occurrence. Do not conflate this event with November 7 storm injuries."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; production collection and publication remain authoritative and unchanged.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-07/gaza-source-watch-20261107T224451-0800-r11-20261108T064448Z.json",
+    "prior_verified_completed_at": "2026-11-07T22:45:23.960-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "latest_visible": "Humanitarian Situation Report | 5 November 2026, published November 6",
+        "result": "Homepage and latest humanitarian report checked before targeted searches. No newer OCHA situation report appeared."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global crisis page accessible with no November 7-8 Gaza health update; WHO EMRO direct page again failed HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 7 2026 late night November 8 2026 new casualties aid hospital flooding developments",
+      "site:ochaopt.org Gaza \"7 November 2026\" \"8 November 2026\" humanitarian flood",
+      "site:who.int Gaza \"7 November 2026\" \"8 November 2026\" hospital evacuation",
+      "site:reuters.com Gaza November 7 2026 November 8 ceasefire civilians killed floods crossings",
+      "site:english.wafa.ps \"08/November/2026\" Gaza deaths hospital bombing displaced",
+      "site:un.org OR site:news.un.org \"8 November 2026\" Gaza emergency humanitarian",
+      "\"Hamad City\" \"Qatar Camp\" \"November 8, 2026\" woman shot Gaza",
+      "Gaza Khan Younis Hamad City Sunday November 8 2026 woman wounded Israeli gunfire 09:05",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 8, 2026\" shooting tents hospital",
+      "site:unicef.org OR site:wfp.org \"8 November 2026\" Gaza flood emergency aid food water",
+      "site:reliefweb.int Gaza \"8 November 2026\" hospital flood aid crossings",
+      "Gaza Sunday November 8 2026 hostage ceasefire Rafah crossing fuel ambulance humanitarian negotiations"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "November 8 09:05 report about woman shot near Khan Younis new since previous index, full story read and recorded."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Most recent visible release dated November 3; no newly documented ambulance/healthcare change."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "status": "accessible",
+        "result": "Latest November 7 posts on flooding and Israeli government formation, no other distinct Gaza development in interval."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "status": "accessible",
+        "result": "November 7 Gaza flooding report reiterates already logged shelter inundation, shortages and civilian impacts."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring direct-access restriction; no new outage."
+      }
+    ],
+    "covered_classes": [
+      "civilian deaths, injuries, and conflict military operations with documented civilian effect",
+      "displacement, storm flooding, temporary shelters, structural damage and evacuation",
+      "food, water, fuel, aid stocks, access and border crossings",
+      "hospitals, clinics, ambulances, transport, referral, medical evacuations and service functioning",
+      "ceasefire negotiations, detainees and hostages"
+    ],
+    "duplicate_exclusions": [
+      "November 7 Ministry of Health report: 10 deaths and 22 wounded over 48 hours plus 12 retrospectively registered deaths; already recorded.",
+      "November 7 flood-related 70,000 tents; two-to-five injuries reported in previous watches; 2,166 calls and 218 responses; collapses; Al-Shifa four-hour disruption; emergency stocks inadequate; previously recorded.",
+      "Reuters and AFP November 7 storm/casualty articles and November 7 Al Jazeera newsfeed contain duplicate reports.",
+      "Political calls and Israeli coalition developments do not document changes in Gaza civilian access or ceasefire operations."
+    ],
+    "known_gaps": [
+      "WHO EMRO HTTP 502 and UNRWA HTTP 403 persist from earlier runs; WHO global and OCHA accessible.",
+      "Targeted news.un.org search returned non-retryable robots restriction; OCHA and UN global context accessible.",
+      "Some targeted search results returned dated content outside the observation window; excluded.",
+      "WAFA medical-source shooting report lacks independent additional established-source corroboration; confidence moderate.",
+      "Newsroom reporting and search-index lag mean no inference that other incidents did not happen.",
+      "Primary production deduplication state not directly inspected; newness compared to exact previous supplementary heartbeat and previous watch records."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "One newly reported civilian injury with documented displacement-tent gunfire recovered from WAFA; source-local November 8 report within November 7 PST watch. Recurring WHO EMRO and UNRWA restrictions retain DEGRADED status without new material deterioration. User notification indicated for positive finding."
+  }
+}

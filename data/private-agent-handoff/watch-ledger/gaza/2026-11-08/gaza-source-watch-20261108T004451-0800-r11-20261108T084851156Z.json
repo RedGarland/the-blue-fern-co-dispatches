@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T004451-0800-r11-20261108T084851156Z",
+  "scheduled_for": "2026-11-08T00:44:51-08:00",
+  "started_at": "2026-11-08T00:46:36-08:00",
+  "completed_at": "2026-11-08T00:48:51.156-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-07T23:48:02.316-08:00",
+    "end": "2026-11-08T00:48:51.156-08:00",
+    "basis": "Since exact completed_at of prior verified Gaza Source Watch heartbeat. Publication dates interpreted in local source time; prior report at 09:05 8 November (WAFA) was already logged.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; the primary daily Gaza production collector and publisher remain authoritative.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-07/gaza-source-watch-20261107T234451-0800-r11-20261108T074534Z.json",
+    "prior_verified_completed_at": "2026-11-07T23:48:02.316-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "latest_visible": "Humanitarian Situation Report | 5 November 2026, posted 6 November 2026",
+        "result": "Official homepage and recent report checked first. No newer Gaza humanitarian situation report visible."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global Gaza/OPT situation page checked first, no new November 8 health report in visible latest news; WHO regional site returned HTTP 502 (recurring restriction)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"08/November/2026\" Gaza wounded killed displaced morning",
+      "site:english.wafa.ps/Pages/LastNews November 8 2026 Gaza 10:00 11:00 Khan Younis",
+      "Gaza November 8 2026 Sunday morning casualties Israeli fire flooding relief response hospital",
+      "site:aa.com.tr/en/middle-east \"Nov 8, 2026\" Gaza displaced killed injuries aid",
+      "site:aljazeera.com/news/2026/11/8 Gaza casualties hospitals aid flood shooting",
+      "site:reuters.com/world/middle-east/ Gaza \"November 8, 2026\" aid ceasefire displaced",
+      "site:un.org OR site:news.un.org \"8 November 2026\" Gaza civilians floods hospitals",
+      "site:palestinercs.org/en November 8 2026 ambulance Gaza floods injury",
+      "site:unicef.org OR site:wfp.org \"8 November 2026\" Gaza aid food water displacement",
+      "Gaza November 8 2026 hostage detainees ceasefire crossing Rafah evacuation humanitarian Sunday",
+      "\"8 November 2026\" \"Gaza\" \"hospital\" \"wounded\" humanitarian morning",
+      "غزة 8 نوفمبر 2026 اليوم الأحد جرحى شهيد مستشفى أمطار قصف الساعة 11"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "Newest visible Gaza incident report remains 8 November 2026 09:05 (woman wounded near Hamad City); logged in previous watch. Later 09:25 item concerned Stockholm demonstration, not new Gaza civilian incident."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "status": "accessible",
+        "result": "8 November AFP image gallery revisits November 7 flooding, 70,000 tents, structural damage/injuries, and civil-defence capacity; excluded as duplicate, not a new event."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Latest visible release November 3. No new ambulance, evacuation, hospital or transport update."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring blocked direct access, not a newly material deterioration."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and military operations with documented civilian impacts",
+      "displacement, storm flooding, shelters and damaged structures",
+      "aid entry, food, clean water, fuel and humanitarian emergency response",
+      "hospitals, health system capacity, ambulances, referrals and medical evacuations",
+      "crossings, detainees/hostages, ceasefire and negotiation changes"
+    ],
+    "duplicate_exclusions": [
+      "WAFA 8 November 09:05 report of a woman shot near Qatar Camp/Hamad City was recorded by preceding watch and is not a new finding.",
+      "November 7 Gaza Health Ministry 48-hour casualty statistics (10 deaths and 22 injuries, 12 retrospective death additions) were already recorded.",
+      "November 7 flooding, around 70,000 tents affected, two-to-five reported injuries, 2,166 distress calls and 218 responses, damaged buildings, Al-Shifa four-hour closure and emergency aid shortages were already documented.",
+      "November 8 Al Jazeera/AFP photo gallery recaps November 7 storm with no distinct new dated incident or operational change.",
+      "Search results for November 1-6 incidents and other earlier events were excluded as outside the hourly window; West Bank events excluded as out of dispatch scope."
+    ],
+    "known_gaps": [
+      "WHO EMRO HTTP 502 and UNRWA HTTP 403 direct-access failures persist from previous watches.",
+      "UN News direct search returned robots restriction, but OCHA official primary reporting was accessible.",
+      "Some search results display crawler 'today' while underlying publication is November 7 or earlier; publication timestamp was compared before inclusion.",
+      "Indexing/reporting lag means absence of new verified reports does not establish no incidents occurred.",
+      "Primary production deduplication state not directly inspected; duplicate comparisons use verified supplementary run ledger and earlier run results."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "No distinct newly sourced qualifying Gaza development within the observed interval. Recurring direct-access gaps mean DEGRADED but without newly material loss of coverage. No user alert required under established notification threshold."
+  }
+}

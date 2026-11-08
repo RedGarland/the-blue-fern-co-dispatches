@@ -1,0 +1,147 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T154451-0800-r11-20261108T234952Z",
+  "scheduled_for": "2026-11-08T15:44:51-08:00",
+  "started_at": "2026-11-08T15:46:53-08:00",
+  "completed_at": "2026-11-08T23:49:52.968Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T22:44:19.738Z",
+    "end": "2026-11-08T23:49:52.968Z",
+    "local_start": "2026-11-08T14:44:19.738-08:00",
+    "local_end": "2026-11-08T23:49:52.968Z",
+    "basis": "From latest verified completed Gaza Source Watch heartbeat on 8 November at 14:44:19.738 PST to the last research check of this run. The newly retrieved November 9 (Gaza-local) report describes a Sunday November 8 official shelter assessment; exact release and event times were unavailable. New-to-watch disclosure, not independently established new storm incident.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261108-floods-350000-unsheltered-bursh",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/gaza-floods-leave-350-000-displaced-palestinians-without-shelter-health-ministry/4116383",
+      "title": "Gaza floods leave 350,000 displaced Palestinians without shelter: Health Ministry",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-09",
+      "publication_date": "2026-11-09",
+      "publication_time": null,
+      "event_date": "2026-11-08",
+      "event_time": null,
+      "location": "Gaza Strip, Palestinian territory (specific location not supplied)",
+      "affected_population_system": "Displaced Palestinian households and shelter access; Gaza Health Ministry director-general estimates 350,000 people sleeping outdoors after storm-related flooding.",
+      "exact_supporting_passage": "Gaza Health Ministry Director-General Munir al-Bursh appealed on Sunday for urgent shelter supplies, saying flooding had left 350,000 displaced Palestinians sleeping in the open.",
+      "source_type": "Established news agency reporting attributed official Gaza Health Ministry statement; unverified independent population count",
+      "classification": "follow_up",
+      "confidence": "medium",
+      "discovery_context": {
+        "newly_recovered_information": "Health Ministry director-general's explicit estimate of 350,000 displaced people without shelter and sleeping outdoors; the existing record previously included 70,000 flooded tents and aggregate storm exposure but not this unsheltered figure.",
+        "storm_event": "November 7-8 Gaza flooding; no separate new casualty event implied.",
+        "difference_from_prior_watch": "Checked previous six watch heartbeats from 09:44 to 14:44 PST: none preserved this 350,000 unsheltered estimate. A November 8 photo agency caption estimated about 350,000 storm-affected people, which is not identical to the unsheltered claim.",
+        "corroborating_context_url": "https://apa.atyaf.co/es/last-24-hours/displaced-palestinians-inspect-flooded-tents-after-heavy-rain-in-deir-el-balah-uxet",
+        "caveats": "The number is an attributed Gaza Health Ministry estimate, not a verified census. Separately reported estimate of 350,000 people affected is not proof all lack shelter. Exact statement and article publication times unavailable, so first appearance after 14:44 PST is not independently established.",
+        "crossing_context": "The official also said thousands of tents awaited entry at crossings; no dated operational change to a crossing was independently verified. This is not a separate crossing-status finding.",
+        "discovered_during_window_start_utc": "2026-11-08T22:44:19.738Z",
+        "bounded_review": "WHO/OCHA official-first checks; twelve subsequent targeted searches; Anadolu story direct read; Reuters, WAFA, UN/UNICEF/WFP, APA and prior heartbeats examined for exclusions."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only. Production pipeline is authoritative. No publication, approval, schedule, or production changes.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T144451-0800-r11-20261108T224419Z.json",
+    "previous_verified_completed_at": "2026-11-08T14:44:19.738-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Most recent listing dated November 6 for November 5 humanitarian report; no November 8-9 new update on the feed."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global overview accessible; no fresh November 8-9 health-system or evacuation release listed. WHO EMRO situation reports still return HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 8 2026 evening latest civilians killed injured November 9 overnight",
+      "site:english.wafa.ps/Pages/Details/ 8/November/2026 Gaza killed injured latest 23:00",
+      "site:aa.com.tr/en/middle-east 9 November 2026 Gaza killed wounded strike tents",
+      "site:aljazeera.com/news/2026/11/8 Gaza November 8 evening flooding deaths aid",
+      "Gaza crossing Rafah Kerem Shalom November 8 2026 November 9 medical evacuation humanitarian aid fuel",
+      "غزة 9 نوفمبر 2026 مساء الأحد 8 نوفمبر قصف شهداء إصابات خيام نزوح",
+      "\"350,000\" \"Gaza\" \"November 8, 2026\" floods shelter ministry",
+      "\"Munir al-Bursh\" \"350,000\" Gaza flooding November 8 2026",
+      "site:english.wafa.ps Gaza 8 November 2026 late night flood 350000 shelters",
+      "site:un.org OR site:unicef.org OR site:wfp.org Gaza November 9 2026 flooding shelters displacement",
+      "site:palestinercs.org Gaza November 8 2026 ambulance flood health",
+      "site:reuters.com OR site:apnews.com Gaza November 8 2026 afternoon flood rescue ceasefire"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "Latest Gaza-specific story remains 8 November sand collapse at 21:17 Gaza local, already recorded in preceding checks; later news relates to outside-Gaza subjects."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "New November 9 article attributes unsheltered count to Gaza Health Ministry director-general; landslide story repeats known five fatality incident. November 8 church committee appeal is an older appeal, not a separate newly confirmed infrastructure failure."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring access restriction."
+      }
+    ],
+    "recurring_source_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "HTTP 502",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "HTTP 403",
+        "material_new_deterioration": false
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "Deir al-Balah Ard al-Ribat sand-cliff collapse",
+        "reason": "Fatal incident and updated count of five already present in prior watch. November 9 Anadolu and Al Jazeera stories are follow-up repetitions, not newly confirmed deaths.",
+        "urls": [
+          "https://www.aa.com.tr/en/middle-east/landslide-kills-woman-and-4-children-sheltering-in-tents-in-central-gaza/4116380",
+          "https://english.wafa.ps/Pages/Details/176754"
+        ]
+      },
+      {
+        "event": "Two killed and other injuries in Khan Younis, four injuries in Jabalia, one woman shot near Hamad City",
+        "reason": "Previously logged by watch; November 8 compilations recount the same incidents, with no distinct event established."
+      },
+      {
+        "event": "70,000 flooded tents, 2,000 structurally risky buildings, Gaza Municipality drainage failure and storm rescue calls",
+        "reason": "Previously recorded storm metrics, no documented new separate change."
+      },
+      {
+        "event": "Church committee appeal, historical Saint Porphyrius Church rain ingress",
+        "reason": "Reported November 8 Sunday as an appeal made Saturday; no precise newly timed structural damage or operational consequence was verified.",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-church-committee-urges-aid-for-flood-hit-gaza/4115616"
+      },
+      {
+        "event": "Gaza aid/crossing change, new medical evacuation or health-facility capacity change",
+        "reason": "No new dated operational change confirmed by accessed sources."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO explicitly checked first, twelve additional targeted searches only, then direct publisher reads. One materially new-to-watch quantified shelter impact attributed to Ministry official; prior aggregate storm-exposure estimates do not prove it. WHO EMRO 502 and UNRWA 403 persist without new material deterioration. Alternative authoritative and established reporting remained available, therefore DEGRADED rather than FAILED.",
+    "notification_warranted": true
+  }
+}

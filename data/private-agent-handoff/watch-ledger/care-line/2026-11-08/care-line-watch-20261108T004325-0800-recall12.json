@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T004325-0800-recall12",
+  "scheduled_for": "2026-11-08T00:45:22-08:00",
+  "started_at": "2026-11-08T00:43:25-08:00",
+  "completed_at": "2026-11-08T00:44:34.801-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T23:50:42.183-08:00",
+    "end": "2026-11-08T00:44:34.801-08:00",
+    "basis": "Start at latest independently verified completed Care Line watch heartbeat on ops/watch-ledger; bounded source search for new publication and effective access changes through run completion; cross-midnight dates interpreted in America/Los_Angeles."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization Medicare termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closing ambulance diversion suspended November 7 November 8 2026 United States",
+      "maternity labor delivery unit halted closed November 7 8 2026 hospital",
+      "psychiatric behavioral health hospital admissions suspended closed November 7 8 2026",
+      "rural hospital emergency department services closure lost coverage November 7 8 2026",
+      "dialysis center shut down suspended treatments November 7 8 2026 patients",
+      "oncology cancer chemotherapy clinic service closure suspension November 7 8 2026",
+      "primary care clinic abrupt closure patients November 7 8 2026",
+      "ambulance EMS station shutdown service suspended November 7 8 2026",
+      "air ambulance medical helicopter base closure flight suspension November 7 8 2026",
+      "hospital emergency department maternity clinic service restored reopened ambulance November 7 8 2026",
+      "November 7 8 2026 Puerto Rico Guam US Virgin Islands hospital ambulance emergency service closure suspended",
+      "site:gov hospital emergency room closed clinic services suspended license terminated November 7 8 2026"
+    ],
+    "recency_days_per_search": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East ambulance bypass, Waukegan, Illinois (started November 7, 2026)",
+        "reason": "Already recorded in November 7 watch; no independently confirmed new restriction or restoration in this window."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania, emergency department closure and service suspension",
+        "reason": "Known changes reported November 4-6, predating this observation window."
+      },
+      {
+        "item": "Roseland Community Hospital maternity service closure, Chicago, Illinois",
+        "reason": "November 2 reporting about earlier effective closure; not new."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Illinois base closure",
+        "reason": "Older event, not new."
+      },
+      {
+        "item": "UK maternity unit closures",
+        "reason": "Outside U.S. and territories."
+      },
+      {
+        "item": "Maternity unit proposals, hospital financial concerns, historical closures and unrelated results",
+        "reason": "No independently verified concrete access change during the observation window."
+      }
+    ],
+    "source_examples": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+    ],
+    "result_summary": "CMS Public Notices checked first: latest notice dated Nov 2 (Network for Hope); no new official CMS termination, rescission, or CLIA notice. Twelve additional targeted searches with two-day recency covered U.S. hospital/ED, maternity, behavioral health, rural emergency, dialysis, oncology, primary care, ground and air ambulance, effective essential-service restoration, territories, and state/federal notices. Results were previous recorded events, historical, proposed, or out of scope. No new independently verified, nonduplicate access change discovered.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T234925-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T23:50:42.183-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "Bounded supplementary recall only; not the primary national collector.",
+      "New local reporting or agency notices may not yet be indexed, especially shortly after midnight Pacific.",
+      "Production collector ingestion and deduplication not independently checked."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

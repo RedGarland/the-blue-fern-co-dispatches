@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T054451-0800-r11-20261108T134238Z",
+  "scheduled_for": "2026-11-08T05:44:51-08:00",
+  "started_at": "2026-11-08T05:40:27-08:00",
+  "completed_at": "2026-11-08T05:42:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T04:44:44.926-08:00",
+    "end": "2026-11-08T05:42:38-08:00",
+    "basis": "Previous verified supplementary Gaza heartbeat completion through this run. Publication-day discovery can precede the window; exact event and article times are not established for new finding.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261108-bir-al-naaja-four-wounded-aa-4115888",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/5-gazans-wounded-in-continued-israeli-attacks/4115888",
+      "title": "5 Gazans wounded in continued Israeli attacks",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-08",
+      "publication_date": "2026-11-08",
+      "publication_time": null,
+      "event_date": "2026-11-08",
+      "event_time": null,
+      "location": "Bir al-Naaja area, west of Jabalia, northern Gaza Strip",
+      "affected_population": "Four Palestinian civilians injured, one seriously; distinct from previously recorded injury of a woman near Hamad City in Khan Younis",
+      "affected_system": "Civilian safety / casualties",
+      "exact_supporting_passage": "four Palestinians were wounded, including one seriously, in an Israeli strike targeting a group of civilians in northern Gaza",
+      "source_type": "Established reporting, citing a medical source and eyewitnesses",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "seen_in": "Direct Anadolu Agency Middle East feed and canonical article after 12 targeted searches",
+        "observed_at": "2026-11-08T05:41:00-08:00",
+        "prior_watch_dedupe": "Prior verified 04:44:44 heartbeat and prior outcomes recorded only the southern Khan Younis gunshot injury, not four wounded in northern Gaza.",
+        "qualification": "New to the supplementary watch; reported on Nov 8 but exact publication/event time unavailable, so occurrence during the hourly window cannot be proven.",
+        "corroboration": "Anadolu quotes a medical source; eyewitnesses describe a drone missile in the Bir al-Naaja area. No independent second-source confirmation found in this bounded run.",
+        "nonduplication": "The article's five-injured headline aggregates this four-person northern incident with a previously handed-off woman wounded in southern Gaza. This finding counts four distinct injuries, not five new ones."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; no production collector, publication, approval, or schedule changes.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T044451-0800-r11-20261108T124444Z.json",
+    "previous_verified_completed_at": "2026-11-08T04:44:44.926-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "result": "Homepage still lists 6 Nov report on situation through 5 Nov; no dated in-window Gaza update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "Global conflict page accessible; no new Nov 8 Gaza health bulletin; WHO EMRO emergency report site returned recurring HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"08 November 2026\" Gaza 15:00 16:00 injured killed",
+      "site:aa.com.tr/en/middle-east/ Gaza November 8 2026 afternoon Sunday displaced camps flooding deaths shelling",
+      "site:aljazeera.com/news/2026/11/8 Gaza November 8 2026 15:00 UTC attacks ceasefire flooding aid",
+      "site:reuters.com/world/middle-east/ Gaza November 8 2026 Israeli strikes ceasefire aid crossings",
+      "site:ochaopt.org Gaza November 8 2026 humanitarian situation Sunday flood shelter hospital",
+      "site:who.int Gaza November 8 2026 medical evacuation hospital health fuel aid",
+      "Gaza \"8 November 2026\" Sunday 16:00 Gaza city killed injured Israeli army floods",
+      "غزة 8 نوفمبر 2026 الساعة الرابعة عصرًا إصابات شهداء قصف خيام أمطار",
+      "site:un.org OR site:news.un.org Gaza November 8 2026 flood shelter ceasefire access",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org November 8 2026 Gaza storm food water distribution",
+      "Gaza Rafah Kerem Shalom crossing aid trucks Sunday November 8 2026 operational status 15:00",
+      "site:palestinercs.org OR site:msf.org Gaza November 8 2026 ambulances hospital fuel medical evacuation"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest entry 14:21 Palestine local time; no additional Gaza-specific incident beyond 09:05 woman shot near Khan Younis."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "result": "Latest list through 15:28 Palestine local time. 14:49 health minister conference comments restate long-standing health-service destruction without new measurable operational change."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/5-gazans-wounded-in-continued-israeli-attacks/4115888",
+        "result": "New-to-watch report found of four wounded in northern Gaza; headline's fifth is duplicate already recorded southern case."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest news 3 Nov; no new Gaza health-capacity report."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring direct-site access restriction."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties and military operations with civilian impact",
+      "displacement, shelter and infrastructure storm damage",
+      "aid, food, water, crossings and fuel",
+      "healthcare functioning, medical evacuation, ambulance transport",
+      "detention/hostages and ceasefire/negotiations"
+    ],
+    "exclusions": [
+      "Previously handed-off Nov 8 09:05 Palestine-local woman injured near Khan Younis was not counted again; present in Anadolu article's five-person tally.",
+      "Previously logged 270 flood-risk sites, 20% drainage capacity and 250 municipal calls from Anadolu are duplicates.",
+      "Previously logged 2,000+ buildings at collapse risk and 300,000 tents needed are duplicates.",
+      "Anadolu's Nov 8 report on rainwater in Saint Porphyrius Church describes a Saturday appeal and pre-existing storm damage; exact in-window timing unavailable, not treated as a newly occurring incident.",
+      "WAFA minister's conference remarks on damage to Gaza's health sector reiterate established conditions rather than a distinct functioning-capacity change.",
+      "WAFA prison-health testimony lacks verified Gaza-specific linkage.",
+      "Unverified AI-generated crossing status and recycled historical news excluded."
+    ],
+    "known_gaps": [
+      "WHO EMRO 502 and UNRWA 403 recurring baseline source failures; no newly material deterioration.",
+      "news.un.org robots restriction persists, alternative authoritative sources accessed.",
+      "Search indexing and missing exact event/publication timestamps limit assurance of event-hour precision.",
+      "Primary production dedupe was not independently verified."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "One distinct new-to-watch civilian casualty report found; four wounded near Jabalia, separate from already logged southern injury. Recurring source access restrictions require DEGRADED, not FAILED."
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T105037-0800-r11-20261108T185037Z",
+  "scheduled_for": "2026-11-08T10:45:54-08:00",
+  "started_at": "2026-11-08T10:50:37-08:00",
+  "completed_at": "2026-11-08T10:53:12-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T09:42:52.542-08:00",
+    "end_at": "2026-11-08T10:53:12-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last prior 09:42:52.542 PST SUCCESS/no_findings heartbeat independently read from ops/watch-ledger; Nov. 6–8 local reporting backfill to account for delayed publication and indexing, with qualifying event newness checked against the prior heartbeat."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss recall only. Production nationwide Food Line collector is authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss, fire, closure or disaster",
+      "Weather/disaster/outage-caused emergency food distribution cancellation or suspension",
+      "Abrupt pantry/food-bank closure or major service reduction",
+      "New official SNAP/WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": 3,
+    "search_queries": [
+      "November 8 2026 \"only grocery store\" closed fire town",
+      "November 8 2026 \"last grocery store\" closing town",
+      "November 8 2026 \"sole grocery store\" fire flood",
+      "November 8 2026 \"full-service grocery\" closed community",
+      "November 8 2026 food bank pantry suddenly closed service unavailable",
+      "November 8 2026 food pantry closed storm flooding fire damage",
+      "November 8 2026 emergency food distribution canceled storm flood",
+      "November 8 2026 food distribution suspended power outage",
+      "November 8 2026 SNAP EBT outage benefits interrupted agency notice",
+      "November 8 2026 WIC outage benefits unavailable state official",
+      "November 8 2026 pantry food bank temporarily suspends operations",
+      "November 8 2026 grocery fire only store rural community"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 10,
+      "successful": 9,
+      "failed": 1,
+      "urls": [
+        "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://211palmbeach.org/news/flood-resources-2026",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://yubanet.com/featured/now/",
+        "https://urbanmilwaukee.com/pressrelease/council-adopts-budget-amendment-aimed-at-grocery-store-and-pharmacy-retention/",
+        "https://www.clickorlando.com/news/local/2026/11/03/brevard-schools-will-remain-closed-amid-severe-flooding-heres-what-still-needs-to-be-done/",
+        "https://www.kauairecovers.org/",
+        "https://www.fns.usda.gov/snap/state/ebt-website"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.kauai.gov/County-Press-Releases/Nov.-6-Hurricane-Lowell-recovery-County-of-Kaua%CA%BBi-services-update-2026",
+        "reason": "Official Nov. 6 notice specified scheduled emergency distribution, not cancellation; no new in-window discontinuation."
+      },
+      {
+        "source_url": "https://www.kauairecovers.org/",
+        "reason": "County recovery directory offered resources and alerts, but no new emergency food service shutdown in reviewed content."
+      },
+      {
+        "source_url": "https://211palmbeach.org/news/flood-resources-2026",
+        "reason": "Last updated Nov. 6 at 7:45 p.m.; emergency food resources and scheduled distribution, not new in-window cancellation."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing SNAP phone/interview backlog guidance; not newly announced in-window benefits disruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No verified new acute SNAP/WIC service interruption identified."
+      },
+      {
+        "source_url": "https://urbanmilwaukee.com/pressrelease/council-adopts-budget-amendment-aimed-at-grocery-store-and-pharmacy-retention/",
+        "reason": "Nov. 6 prevention/funding plan; not an in-window grocery closure."
+      },
+      {
+        "source_url": "https://www.clickorlando.com/news/local/2026/11/03/brevard-schools-will-remain-closed-amid-severe-flooding-heres-what-still-needs-to-be-done/",
+        "reason": "Nov. 3 school flood closure; no qualifying new emergency food distribution suspension established."
+      },
+      {
+        "source_url": "https://yubanet.com/featured/now/",
+        "reason": "Nov. 8 local fire/weather updates unrelated to a qualifying grocery/pantry/food-assistance disruption."
+      },
+      {
+        "source_url": null,
+        "reason": "Search matches largely older Aug. 2026 Eastport ME grocery loss, 2020 Texas store fire, 2019 Arkansas closure, 2025 SNAP shutdown articles, unrelated international events and previously assessed incidents; excluded stale, outside-window or duplicate stories."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.fns.usda.gov/snap/state/ebt-website",
+        "type": "direct_source_access",
+        "result": "Web open returned Internal Error and URL inaccessible; no fresh evidence inferred.",
+        "mitigation": "Other available official state benefit notices checked directly; targeted SNAP/WIC searches completed without tool errors."
+      }
+    ],
+    "assessment": "No new, credible, in-window qualifying U.S. food-access disruption verified across 12 targeted searches and accessible direct sources. Single inaccessible FNS direct page causes DEGRADED status but does not materially compromise the bounded watch.",
+    "limitations": "One FNS endpoint inaccessible; search indexing and limited sampling prevent exhaustive coverage. Primary production collector and cross-system deduplication were not inspected.",
+    "material_degradation": false,
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "Only one private ops/watch-ledger heartbeat written. No approvals, publication, schedule changes, task disabling or production mutations."
+  }
+}

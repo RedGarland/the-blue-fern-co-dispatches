@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T084357-0800-recall12",
+  "scheduled_for": "2026-11-08T08:45:22-08:00",
+  "started_at": "2026-11-08T08:43:57-08:00",
+  "completed_at": "2026-11-08T08:45:06-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T07:43:15-08:00",
+    "end": "2026-11-08T08:45:06-08:00",
+    "basis": "Starts at completed_at of latest independently verified Care Line Watch heartbeat on ops/watch-ledger; supplementary recall is not authoritative production collection.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, OPO termination notice (CCN 18P001)",
+      "new_notices_since_prior_heartbeat": 0,
+      "checked_via": "Opened official CMS Public Notices page directly before targeted web searches, verified newest table entry."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency room temporarily closed ambulance diversion November 8 2026 United States",
+      "hospital maternity labor delivery service closure suspension November 8 2026 announced",
+      "behavioral health psychiatric hospital inpatient unit closure November 8 2026 local",
+      "dialysis center closed suspended patients November 8 2026 US",
+      "oncology cancer center clinic abruptly closed November 7 8 2026 patients",
+      "rural hospital emergency department closure critical access November 8 2026",
+      "primary care medical clinic sudden closure patients November 8 2026 US",
+      "ambulance EMS station base service shut down suspended November 8 2026 county USA",
+      "air ambulance medical helicopter flight base closure suspension Nov 8 2026 US",
+      "state health department hospital license emergency care service suspension closure November 8 2026",
+      "emergency department reopened resumed maternity hospital restored service Nov 8 2026",
+      "Puerto Rico Guam US Virgin Islands hospital emergency room ambulance service suspended closed November 8 2026"
+    ],
+    "search_recency_filter_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "MPR News Nov 8 Minnesota birthing-center access report",
+        "reason": "Documents closures dating back to 2010 and county-level historical loss, no new effective service change in this hourly window.",
+        "source_url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center"
+      },
+      {
+        "item": "Roseland Community Hospital maternity shutdown in Chicago",
+        "reason": "Closure took effect around Nov 1 and was previously reviewed; Nov 6 bankruptcy reporting not a new distinct service loss.",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Sharon Regional Medical Center PA",
+        "reason": "Nov 4 ER closure and Nov 6 acute/outpatient service suspension already recorded; no independently verified in-window change.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur IL base closure",
+        "reason": "Closure was Sept 16 2026, not new; aggregator result was recycled.",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Guam Memorial Hospital elective/nonemergency service suspension",
+        "reason": "Official Guam government announcement was Oct 16, 2026, with no new in-window disruption.",
+        "source_url": "https://ghs.guam.gov/node/4352"
+      },
+      {
+        "item": "White Memorial ambulance diversion, Vista Medical Center East restrictions, Sea Pines Rehabilitation closure",
+        "reason": "Previously reported and handled in earlier watch heartbeats; this window produced no new confirmed changes."
+      },
+      {
+        "item": "Foreign NHS maternity closures and Haiti hospital reopening",
+        "reason": "Outside U.S. and territories."
+      }
+    ],
+    "result_summary": "CMS Public Notices showed no new notice after Nov 2, 2026. Twelve bounded targeted web searches across U.S. and territories found no independently verified new, nonduplicate effective healthcare-access loss or concrete restoration in the Nov 8 07:43:15–08:45:06 PST window. Indexed hits were historical, previously logged, proposals/analyses, or outside geography.",
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T074141-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T07:43:15-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "Bounded 12-query web recall is not comprehensive national collection.",
+      "Sunday morning reporting and search indexing may lag.",
+      "Deduplication was performed against known verified watch-ledger events and event dates, not against the authoritative production collector."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T224237-0800-recall12",
+  "scheduled_for": "2026-11-07T22:45:22-08:00",
+  "started_at": "2026-11-07T22:42:37-08:00",
+  "completed_at": "2026-11-07T22:44:19.501-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T21:45:58-08:00",
+    "end": "2026-11-07T22:44:19.501-08:00",
+    "basis": "Last independently verified hourly Care Line heartbeat completion on ops/watch-ledger; indexes may lag; previously captured developments excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization Medicare termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 7 2026 late evening US hospital emergency department closed suspends accepts patients ambulance diversion",
+      "November 7 2026 November 8 hospital maternity labor delivery unit closure suspended effective",
+      "November 7 2026 behavioral health psychiatric hospital unit closed emergency admissions suspended",
+      "November 7 2026 rural critical access hospital emergency department service closure patients",
+      "November 7 2026 dialysis center closure patients relocated treatments USA November 8",
+      "November 7 2026 cancer oncology chemotherapy infusion clinic closed suspended patients",
+      "November 7 2026 primary care family medicine clinic urgent closure stopped seeing patients",
+      "November 7 2026 ambulance EMS 911 service ceased suspended county EMS station shut down",
+      "November 7 2026 Nov 8 2026 air ambulance medical helicopter base closed suspended flights United States",
+      "November 7 2026 November 8 hospital emergency department labor delivery reopening resumed ambulances accepted after suspension",
+      "November 7 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital emergency ambulance dialysis closure suspension",
+      "November 7 2026 November 8 2026 site:gov hospital emergency department closure notice ambulance diversion health department license"
+    ],
+    "recency_days_per_search": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois, November 7 ambulance bypass",
+        "reason": "Already captured by positive watch heartbeat earlier November 7; no distinct new effective change or reversal verified."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania, November 4 ED closure and November 6 full service suspension",
+        "reason": "Previously documented; not a new development in this watch window."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Illinois base closure",
+        "reason": "September 2026 event, not new."
+      },
+      {
+        "item": "Greene County EMS, Alabama suspension",
+        "reason": "July 2026 event, not new."
+      },
+      {
+        "item": "Generic funding risks, proposals, ownership changes, historical closures, non-U.S. results",
+        "reason": "No verified new concrete essential-service access effect within observation window."
+      }
+    ],
+    "source_examples": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "https://abc3340.com/news/local/greene-county-ems-suspends-ambulance-service",
+      "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+    ],
+    "result_summary": "CMS Public Notices checked first: latest notice November 2; no newer CMS provider termination, rescission or CLIA sanction. Exactly 12 additional targeted web searches across hospital/ED, maternity, behavioral health, rural service, dialysis, oncology, primary care, ground/air EMS, restoration, U.S. territories and government closures. No new qualifying, nonduplicate, verified concrete access change found. Search results primarily old, nonqualifying or irrelevant, with no explicit search/source retrieval failure.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T214526-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T21:45:58-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "Bounded supplementary recall, not exhaustive national collection.",
+      "Search engines can index recent local/official announcements later than the observation period.",
+      "Production ingestion and deduplication not independently verified."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

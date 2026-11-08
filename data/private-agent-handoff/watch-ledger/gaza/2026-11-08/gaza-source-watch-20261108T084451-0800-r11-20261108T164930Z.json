@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T084451-0800-r11-20261108T164930Z",
+  "scheduled_for": "2026-11-08T08:44:51-08:00",
+  "started_at": "2026-11-08T08:49:30-08:00",
+  "completed_at": "2026-11-08T16:52:22.577Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T15:47:34.129Z",
+    "end": "2026-11-08T16:52:22.577Z",
+    "basis": "From previous Gaza Source Watch heartbeat completed_at, verified by GitHub fetch_file, through current watch completion. Only distinct newly evidenced Gaza-specific developments are eligible; publication time is not assumed to be incident time.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 10
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall watch only; primary daily collection and publishing remain authoritative and unchanged.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T074451-0800-r11-20261108T154633Z.json",
+    "previous_verified_completed_at": "2026-11-08T15:47:34.129Z",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Latest situation report remains the 5 November 2026 report, released 6 November with 27 October–2 November Gaza reporting period. No new 8 November item in official updates listing."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "health_cluster_url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "global_and_health_cluster_accessible_regional_http_502",
+        "result": "Global conflict page and health-cluster page accessible, without 8 November Gaza-specific health news; WHO EMRO regional situation-report endpoint returned 502, a previously documented restriction."
+      }
+    ],
+    "additional_targeted_search_count": 10,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/news/2026/11/8 غزة الساعة 17 18 شهيد إصابة غارة خانيونس جباليا",
+      "site:english.wafa.ps/Pages/Details/ \"November 8, 2026\" Gaza killed wounded Sunday afternoon",
+      "site:aa.com.tr/en/middle-east/ \"November 8, 2026\" Gaza Sunday killed wounded flooding hospital",
+      "site:reuters.com/world/middle-east/ Gaza \"November 8, 2026\" aid strike ceasefire",
+      "site:apnews.com/article/ Gaza Israel November 8 2026 killed injured ceasefire",
+      "site:aljazeera.com/news/2026/11/8 Gaza latest killed wounded shelter floods ceasefire",
+      "site:un.org OR site:news.un.org Gaza 8 November 2026 humanitarian flood health crossing",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza November 8 2026 food water tents aid",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza 8 November 2026 ambulance hospital evacuation",
+      "Gaza November 8 2026 evening Rafah Kerem Shalom fuel trucks crossing evacuation ceasefire hostages"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "Latest visible 18:37 Palestine-local item concerns Jerusalem-area settlement attacks. The 17:49 English version of Khan Younis two-deaths report duplicates the Arabic WAFA 16:59 report recorded in previous heartbeat."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "timeout",
+        "result": "Direct homepage timed out; targeted Arabic search and accessible English news feed provided partial alternate coverage."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "New European commissioner appeal for greater Gaza aid access contains no verified new delivery, crossing, permission or operational change; storm article repeats previously captured flooding, municipal and rescue facts."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Latest institutional news still dated 3 November; no in-window ambulance or hospital operational change reported."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Previously documented direct-site restriction persists."
+      }
+    ],
+    "covered_classes": [
+      "Civilian deaths, injuries, military operations and civilian impact",
+      "Displacement, shelter flooding and infrastructure damage",
+      "Humanitarian aid, food, water, crossings and fuel",
+      "Hospital capacity, ambulances, medical transport and evacuation",
+      "Detention, hostages and ceasefire negotiations"
+    ],
+    "exclusions": [
+      "WAFA 17:49 English publication reporting two killed including a woman near Taiba Towers is an English follow-up to the previously handed-off Arabic 16:59 report; no new distinct deaths added.",
+      "Morning Khan Younis woman injured and Jabalia four additional injuries had already been handed off in earlier watches.",
+      "Anadolu and Al Jazeera reports repeat the established storm/flooding crisis, including 70,000 flooded tents, 270 at-risk sites, 20% drainage capacity, 2,000+ collapse-risk buildings and 300,000 tents requested.",
+      "EU commissioner’s 8 November appeal concerns access advocacy rather than a verified operational change in humanitarian access.",
+      "Israeli presidential mandate for Eisenkot to form a coalition is a political development; no Gaza-specific ceasefire or negotiations change established in sources checked.",
+      "West Bank-only detention and prison health reports have no verified Gaza-specific link.",
+      "Historic Reuters/AP results, uncorroborated and recycled reports excluded."
+    ],
+    "known_gaps": [
+      "WHO EMRO HTTP 502, UNRWA HTTP 403 and news.un.org robots restriction; established alternative OCHA, WHO global, WAFA English, Anadolu and PRCS coverage still available.",
+      "Direct WAFA Arabic homepage timed out during this watch; Arabic indexed content and English official feed partly mitigate gap.",
+      "Publisher indexing delay and lack of incident timestamps limit hourly completeness.",
+      "Primary production collector and its own dedupe records were not accessed; this watch does not establish production publication."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "No new distinct Gaza-specific qualifying development verified after prior heartbeat. DEGRADED reflects recurring WHO/UNRWA restrictions plus Arabic homepage timeout, but no material new coverage failure is established."
+  }
+}

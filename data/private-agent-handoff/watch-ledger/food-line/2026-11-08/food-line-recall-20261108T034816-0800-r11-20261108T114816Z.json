@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T034816-0800-r11-20261108T114816Z",
+  "scheduled_for": "2026-11-08T03:45:54-08:00",
+  "started_at": "2026-11-08T03:48:16-08:00",
+  "completed_at": "2026-11-08T03:50:46.283-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T02:49:08.577-08:00",
+    "end_at": "2026-11-08T03:50:46.283-08:00",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start independently verified from previous Food Line heartbeat on ops/watch-ledger. Discovery searched local publications from November 7–8 and short earlier backfill for lag, accepting only newly verified nonduplicate events since the prior checkpoint."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall only; the nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting a community's only/sole/last/full-service grocery",
+      "Emergency food distribution cancellation/suspension caused by storm, flood, fire, outage or facility damage",
+      "Abrupt food-bank/pantry closure or material service access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closes OR closed OR fire November 2026 town",
+      "\"sole grocery store\" fire OR flooding OR closes November 2026",
+      "\"last grocery store\" closed OR destroyed OR closing November 2026",
+      "\"only full service grocery\" closed OR closure OR fire November 2026",
+      "\"food distribution\" canceled OR cancelled storm flooding November 8 2026",
+      "\"food bank\" \"distribution canceled\" OR \"distribution suspended\" storm November 2026",
+      "\"emergency food distribution\" postponed \"November 8\" 2026 OR \"November 7\" 2026",
+      "\"food pantry\" closed OR suspended due to flooding OR fire \"November\" \"2026\"",
+      "\"food bank\" abrupt closure OR suspends operations November 7 2026",
+      "\"SNAP\" \"benefits delayed\" OR \"EBT outage\" November 8 2026 state agency",
+      "site:gov \"SNAP\" \"outage\" \"November 2026\" benefits",
+      "site:gov \"WIC\" suspended OR benefits unavailable November 2026"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 5,
+      "successful": 5,
+      "failed": 0,
+      "urls": [
+        "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://oklahoma.gov/okdhs/ebt.html"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "McCaysville, GA only-grocery flooding occurred before this watch and was previously documented; duplicate."
+      },
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, NY only-store fire happened September 2026; stale."
+      },
+      {
+        "source_url": "https://www.diningandcooking.com/us/80109/",
+        "reason": "Story published November 6 about Erie, KS grocery preservation originating in 2020; not a new grocery loss."
+      },
+      {
+        "source_url": "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/2025/11/08/supreme-court-emergency-order-pauses-november--snap-payments",
+        "reason": "November 8, 2025 government SNAP emergency order, not a 2026 interruption."
+      },
+      {
+        "source_url": "https://www.michigan.gov/mdhhs/assistance-programs/food/learn-more/work-requirements",
+        "reason": "Existing 2026 work-requirement guidance, not a newly reported acute outage."
+      },
+      {
+        "source_url": "https://kauai.hawaiifoodbank.org/get-help/emergency-assistance-resources/",
+        "reason": "Provider lists Nov 6 Līhuʻe emergency distribution, not a cancellation or suspension."
+      },
+      {
+        "source_url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "reason": "November 9–13 events remain on provider schedule; optional cancellation text alerts do not establish a cancellation."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated acute food assistance interruption found."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "General application/telephone delays lack a newly dated immediate benefit outage."
+      },
+      {
+        "source_url": "https://oklahoma.gov/okdhs/ebt.html",
+        "reason": "November 2 phone service update, not a newly verified EBT or SNAP access outage."
+      },
+      {
+        "source_url": null,
+        "reason": "Previously reviewed Provo, UT abrupt food-bank closure was not re-emitted; duplicate."
+      }
+    ],
+    "source_or_search_failures": [],
+    "assessment": "No newly verified nonduplicate U.S. high-value food-access disruption identified across 12 targeted searches and 5 successful direct provider/agency checks.",
+    "material_degradation": false,
+    "limitations": "Queries resurfaced outdated 2025 SNAP interruptions and earlier 2026 grocery/pantry losses. Provider social posts and late-indexed local coverage may be missed. Supplementary search is not exhaustive, and production collector deduplication/ingestion was not independently inspected.",
+    "production_collector_authoritative": true,
+    "production_dedupe_verified": false,
+    "action_limits": "One heartbeat only; no review approval, publication, schedule or production change, and no task disabling."
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261107T164447-0800-recall12",
+  "scheduled_for": "2026-11-07T16:45:22-08:00",
+  "started_at": "2026-11-07T16:44:47-08:00",
+  "completed_at": "2026-11-07T16:46:00.652-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-07T15:50:10.406-08:00",
+    "end": "2026-11-07T16:46:00.652-08:00",
+    "basis": "From last independently verified Care Line heartbeat through this execution. Searches target Nov 7 (with 1-2-day indexing overlap); date, effective-service impact and prior-ledger deduplication determine inclusion."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO termination notice (CCN 18P001)",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed suspended diverted patients November 7 2026 USA",
+      "maternity labor delivery unit suspended closed November 7 2026 hospital",
+      "rural hospital emergency services closing November 7 2026",
+      "ambulance service shutdown station base closure November 7 2026 United States",
+      "November 7 2026 psychiatric behavioral health hospital unit closing services suspended United States",
+      "November 7 2026 dialysis center closing patients transferred United States",
+      "November 7 2026 oncology cancer treatment clinic services closure United States",
+      "November 7 2026 primary care clinic sudden closure patients rural",
+      "November 7 2026 hospital emergency department reopening ambulance bypass lifted United States",
+      "November 7 2026 air ambulance medical helicopter base service suspended closure",
+      "November 7 2026 hospital clinic services shut down restored Puerto Rico Guam Virgin Islands Samoa",
+      "November 7 2026 state health department hospital license suspension emergency room closure ambulance diversion"
+    ],
+    "search_recency_days": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East EMS bypass, Waukegan, IL",
+        "reason": "Event began at 07:00 CST Nov 7 and was already preserved by the Nov 7 09:48 PST Care Line positive heartbeat; continued reporting is a duplicate."
+      },
+      {
+        "item": "Sharon Regional Medical Center emergency department closure and hospital-wide suspension, PA",
+        "reason": "ED closure Nov 4 and broader suspension Nov 6; documented in previous Care Line checks."
+      },
+      {
+        "item": "Roseland Community Hospital maternity suspension, Chicago, IL",
+        "reason": "Late October/Nov 1 effective event, previously documented; latest Nov 2 report is not new."
+      },
+      {
+        "item": "Tehama County, CA and Decatur, IL air medical base closures",
+        "reason": "September 2026 effective events, not changes in the observation window."
+      },
+      {
+        "item": "UK maternity facilities, older US care access stories, prospective unit closures and risk assessments",
+        "reason": "Out of geographic scope, historical, or lacking new concrete effective access change."
+      }
+    ],
+    "result_summary": "Checked CMS Public Notices first (latest visible notice Nov 2), then exactly twelve targeted searches. No verified new, nonduplicate U.S. or territory closure, service suspension, EMS/air-medical loss, relevant official notice or concrete restoration since prior verified watch. Search results predominantly repeated previously recorded Illinois/Pennsylvania changes or older events.",
+    "source_examples": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-07/care-line-watch-20261107T154906-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-07T15:50:10.406-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "coverage_limitations": [
+      "Supplementary search is bounded, not exhaustive; publication/indexing lag may hide qualifying local developments.",
+      "Production ingestion and deduplication were not independently verified."
+    ],
+    "material_coverage_loss": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

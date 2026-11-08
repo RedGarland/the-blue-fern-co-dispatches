@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261107T214451-0800-r11-20261108T054913Z",
+  "scheduled_for": "2026-11-07T21:44:51-08:00",
+  "started_at": "2026-11-07T21:47:46-08:00",
+  "completed_at": "2026-11-07T21:49:13.093-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-07",
+    "start": "2026-11-07T20:46:55.696-08:00",
+    "end": "2026-11-07T21:49:13.093-08:00",
+    "basis": "Since latest previously verified Gaza Source Watch heartbeat completion. Publication dates, event dates and discovery times distinguished; findings must be new to the watch or substantiated follow-ups, not presumed to have occurred during this observation hour.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; daily production collector and publisher remain authoritative.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-07/gaza-source-watch-20261107T204451-0800-r11-20261108T044655Z.json",
+    "prior_verified_completed_at": "2026-11-07T20:46:55.696-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "latest_visible": "Humanitarian Situation Report | 5 November 2026, published 6 November 2026",
+        "result": "Homepage checked before targeted searches. No new November 7–8 Gaza situation report visible; November 6 report covers prior reporting and is not new to this watch."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "WHO global crisis page checked before targeted searches and accessible. No new November 7–8 Gaza health update apparent. WHO EMRO regional page returned recurring HTTP 502. A preliminary outdated global slug returned 404 and a general WHO page timed out; corrected official WHO crisis URL succeeded."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 8 2026 early morning Israeli strikes Palestinian civilians casualties Sunday",
+      "site:english.wafa.ps \"November 8, 2026\" Gaza killed injured shelling",
+      "site:aa.com.tr/en/middle-east/ November 8 2026 Gaza injuries flooding collapses civilians",
+      "site:reuters.com/world/middle-east/ Gaza November 8 2026 ceasefire flooding aid",
+      "site:apnews.com/article/ Gaza November 8 2026 humanitarian storm civilian impact",
+      "site:aljazeera.com/news/2026/11/8/ Gaza Sunday hospital aid attacks",
+      "site:ochaopt.org Gaza November 8 2026 emergency shelter flooding humanitarian",
+      "site:who.int Gaza November 8 2026 hospital ambulance medical evacuation health",
+      "site:unicef.org Gaza November 8 2026 water food displacement children",
+      "site:wfp.org Gaza November 8 2026 food supply aid deliveries crossings",
+      "Gaza November 8 2026 Kerem Shalom Rafah crossing fuel ambulances medical evacuation changes",
+      "Gaza November 8 2026 prisoners hostages detainees ceasefire negotiation new military operations civilian impact"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "Index dated Sunday 8 November Palestinian local time, newest visible stories dated November 7 (including Gaza statements 19:41 and 19:14 local time). No new dated November 8 Gaza incident. Statements of concern alone excluded as non-operational."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/",
+        "status": "accessible",
+        "result": "Current Gaza items reflect 70,000 flooded tents and appeals for assistance or family evacuation; no newly substantiated evacuation or casualties not already in previous ledger."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "status": "accessible",
+        "result": "Gaza articles dated November 7 reiterate storms, flooding, shelter collapse risk; Israeli government formation item has no verified new ceasefire or aid implementation."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Most recent homepage news dated November 3. No new medical evacuation or ambulance service update."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Direct access recurring HTTP 403, same preexisting restriction as previous watches."
+      }
+    ],
+    "covered_classes": [
+      "civilian casualties, Israeli strikes or other military operations with documented civilian impact",
+      "displacement, flooding and storm-related rescue operations, shelter and infrastructure damage",
+      "aid access, food and water, relief supplies and crossings",
+      "hospital and emergency medical capacity, ambulance services, health transport, fuel and medical evacuation",
+      "detainees, hostages, ceasefire implementation and negotiations"
+    ],
+    "duplicate_exclusions": [
+      "Previously recorded November 7 Gaza Ministry of Health 48-hour report: 10 hospital-arrival deaths, 22 injuries and 12 retrospective registrations.",
+      "Previously recorded flooding: up to 70,000 flooded tents, five injuries (overlap with earlier two uncertain), four building collapses, 2,166 Civil Defence distress calls/218 responses, four-hour Al-Shifa emergency department interruption and insufficient aid stocks.",
+      "November 7 Reuters and Al Jazeera/Anadolu weather reports retell preexisting emergency; no new independently verified operational delta.",
+      "November 7 political appeals, family evacuation requests and Israeli post-election government-formation news do not by themselves establish new Gaza humanitarian operations or changes to ceasefire implementation.",
+      "Older January 2026 OCHA, 2025 UNICEF and WFP reports retrieved by targeted search are outside window."
+    ],
+    "known_gaps": [
+      "WHO EMRO regional HTTP 502 and UNRWA HTTP 403 persist, but global WHO, OCHA and alternative established outlets remained accessible.",
+      "One attempted stale WHO page path returned 404 and general WHO page timed out; corrected authoritative WHO situation page was successfully reviewed.",
+      "Search engine returned aged and undated results for several narrow November 8 queries; absence of a hit does not prove no incident occurred.",
+      "No finding is a bounded recall judgment only. Production duplicate state was not independently verified."
+    ],
+    "material_coverage_loss": false,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false,
+    "assessment": "No distinct new qualifying Gaza event or substantive new operational follow-up independently traceable since preceding 20:46:55 PST heartbeat. DEGRADED reflects known WHO EMRO and UNRWA access issues without material deterioration; do not notify."
+  }
+}

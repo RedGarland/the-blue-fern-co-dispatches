@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T024636-0800-recall12",
+  "scheduled_for": "2026-11-08T02:45:22-08:00",
+  "started_at": "2026-11-08T02:46:36-08:00",
+  "completed_at": "2026-11-08T02:48:23-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T01:43:30-08:00",
+    "end": "2026-11-08T02:48:23-08:00",
+    "basis": "From prior independently verified Care Line heartbeat completion to this check completion; retrospective leads evaluated only for distinct, nonduplicate verified access changes.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO termination notice, CCN 18P001",
+      "new_notices_since_prior_heartbeat": 0,
+      "access_errors": []
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 8 2026 hospital emergency department closed suspended ambulances diverted United States",
+      "November 7 8 2026 maternity labor delivery hospital closed suspended services",
+      "November 8 2026 psychiatric behavioral health unit hospital stopped admissions closure",
+      "November 8 2026 rural hospital emergency services closure suspension urgent",
+      "November 8 2026 ambulance EMS rescue service station base shut down ceased operations United States",
+      "November 7 8 2026 air ambulance medical helicopter base closure suspension medical flight",
+      "November 7 8 2026 dialysis clinic stopped treatments closed patients transferred",
+      "November 7 8 2026 cancer oncology chemotherapy infusion center clinic closed suspended patients",
+      "November 7 8 2026 rural community primary care clinic closed immediately provider patients United States",
+      "November 8 2026 hospital emergency department dialysis ambulance service reopened resumed restored after suspension United States",
+      "November 7 8 2026 Puerto Rico Guam Virgin Islands CNMI American Samoa hospital emergency maternity clinic ambulance suspended restored",
+      "November 7 8 2026 ambulance diversion emergency hospital hospital closure local news Waukegan White Memorial"
+    ],
+    "source_access_errors": [],
+    "reviewed_exclusions": [
+      {
+        "item": "Adventist Health White Memorial, Los Angeles CA, temporary ambulance diversion Nov 6-7",
+        "reason": "Already recorded in immediately preceding 2026-11-08 01:40 heartbeat; retrospective event; no separate in-window restoration or closure established."
+      },
+      {
+        "item": "Vista Medical Center East, Waukegan IL, ambulance diversion Nov 7",
+        "reason": "Previously recorded in Nov 7 watch; no independently verified new state change during current window."
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon PA, ED Nov 4 and wider service suspension Nov 6",
+        "reason": "Previously recorded; no new in-window access change."
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago IL, maternity closure Nov 1",
+        "reason": "Already reported Nov 2; predates window."
+      },
+      {
+        "item": "NHS birth-centre closures in England reported Nov 7",
+        "reason": "Outside U.S. and territories."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur IL base closure Sep 16",
+        "reason": "Historical, not a new change."
+      },
+      {
+        "item": "Plymouth IN chemotherapy return reported Jun 8",
+        "reason": "Old restoration, predates window."
+      },
+      {
+        "item": "Hospital or infusion center 'closed today' weekend hours",
+        "reason": "Ordinary hours, not a service loss."
+      },
+      {
+        "item": "Rural healthcare financial distress and policy proposals",
+        "reason": "No concrete new effective service change."
+      }
+    ],
+    "result_summary": "CMS public notices first; latest notice still 2026-11-02. Twelve targeted web searches covering urgent/rural/behavioral/maternity/dialysis/oncology/primary care/ambulance/air-medical/restoration/territories found no new verified qualifying and nonduplicate access developments during the bounded hourly window. No source-access failure observed.",
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T014055-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T01:43:30-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Supplementary bounded recall, not comprehensive national collection.",
+      "Local overnight reporting may not be indexed until subsequent watches.",
+      "Production collection and deduplication remain authoritative and were not independently inspected."
+    ],
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

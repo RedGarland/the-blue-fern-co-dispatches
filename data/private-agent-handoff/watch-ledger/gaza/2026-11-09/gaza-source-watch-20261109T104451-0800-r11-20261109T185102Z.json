@@ -1,0 +1,188 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T104451-0800-r11-20261109T185102Z",
+  "scheduled_for": "2026-11-09T10:44:51-08:00",
+  "started_at": "2026-11-09T10:49:19-08:00",
+  "completed_at": "2026-11-09T10:51:02-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T17:46:54Z",
+    "end": "2026-11-09T18:51:02Z",
+    "local_start": "2026-11-09T09:46:54-08:00",
+    "local_end": "2026-11-09T10:51:02-08:00",
+    "basis": "Start based on completed_at of the latest authenticated predecessor watch heartbeat, at 09:46:54 PST. One event newly published at 10:31 PST. Palestinian local time is 10 hours ahead of PST on November 9.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261109-jabalia-west-airstrike-wounded-person-dies",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176802",
+      "title": "Palestinian dies of wounds sustained in Israeli airstrike on Jabalia in northern Gaza",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-09",
+      "publication_date": "2026-11-09T20:31:00+02:00",
+      "event_date": "2026-11-09",
+      "event_time": null,
+      "original_airstrike_date": null,
+      "location": "West of Jabalia, northern Gaza Strip",
+      "affected_population_or_system": "One Palestinian reported to have died from injuries sustained in an Israeli airstrike targeting a group of people; the individual's identity and civilian/combatant status were not verified.",
+      "affected_population": "Palestinians exposed to airstrikes in the western Jabalia area",
+      "affected_system": "Civilian protection and casualty reporting; civilian status of the deceased is not independently verified",
+      "exact_supporting_passage": "A Palestinian succumbed on Monday to wounds sustained in an Israeli airstrike targeting a group of people west of Jabalia, in the northern Gaza Strip.",
+      "passage_language": "en",
+      "source_type": "Official Palestinian news agency; single-source account, not independently corroborated",
+      "classification": "follow-up",
+      "new_or_follow_up": "follow-up",
+      "confidence": "medium",
+      "discovery_context": {
+        "source_published_inside_strict_observation_window": true,
+        "published_at_local_pst": "2026-11-09T10:31:00-08:00",
+        "verified_from": "WAFA publisher article, 9 November 2026, 8:31 PM Palestine local time",
+        "original_strike_time_verified": false,
+        "death_time_verified": false,
+        "duplicate_check": "Not in last two authenticated watch heartbeats or previously recorded Gaza City drone-injury, Nuseirat tent-collapse, Rafah medical-evacuation or Deir al-Balah storm incidents.",
+        "qualifying_reason": "Newly reported fatality outcome with distinct Jabalia location and Israeli airstrike attribution, though original strike date and casualty accounting remain unresolved.",
+        "caveat": "The publication repeats the earlier aggregate death toll (74,643), so whether this death was already included in prior aggregate figures cannot be determined. No name, precise death time, prior strike date or independent confirmation is supplied.",
+        "additional_report_detail": "WAFA also notes artillery fire east of Khan Younis but does not document resulting civilian harm there; excluded as a second finding."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; production daily publisher and collector remain authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T094451-0800-r11-20261109T174654Z.json",
+    "previous_heartbeat_completed_at": "2026-11-09T09:46:54-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "result": "Latest listed humanitarian situation report is dated 9 November and describes 6–8 November storm impacts. Shelter, healthcare and meal disruptions were already captured by earlier Gaza watch runs; no new in-window situation report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "WHO_GLOBAL_ACCESSIBLE; WHO_EMRO_HTTP_502",
+        "result": "WHO global emergency portal accessible with no in-window new report shown. WHO Eastern Mediterranean OPT resources returned HTTP 502 again."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/news/2026/11/9 غزة \"20:\" إصابة قصف نازحين",
+      "site:english.wafa.ps/Pages/Details/ \"09/November/2026\" Gaza November 9 evening injuries",
+      "site:reuters.com/world/middle-east/ Gaza November 9 2026 evening Israeli strikes civilian killed humanitarian",
+      "site:apnews.com/article/ Gaza November 9 2026 latest hospital Rafah flooding ceasefire casualties",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"9 Nov 2026\" Gaza new health displacement water crossing",
+      "site:palestinercs.org November 9 2026 Gaza ambulances evacuation medical",
+      "site:unicef.org/press-releases \"9 November 2026\" Gaza children flooding winter",
+      "site:wfp.org/news \"9 November 2026\" Gaza meals food crossing",
+      "site:emro.who.int/opt/news \"9 November 2026\" Gaza hospital evacuation",
+      "site:icrc.org/en/news-release \"9 November 2026\" Gaza humanitarian hostages",
+      "site:aljazeera.com/news/2026/11/9/ Gaza November 9 evening civilians ceasefire strikes flooding",
+      "Gaza November 9 2026 19:00 20:00 Palestine Gaza medical evacuation killed wounded water access crossing latest"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "Current homepage lists 8:31 PM Palestine-time report of Palestinian dying from prior airstrike injuries west of Jabalia, published at 10:31 AM PST. Original publisher article directly verified."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "Homepage accessible; other visible storm and casualty stories were previously recorded or outside observation window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "status": "accessible",
+        "result": "Latest homepage news item dated 2 November; no verified new ambulance or facility development."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "accessible",
+        "result": "Evergreen Palestine emergency overview; no dated Gaza in-window operational change verified."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring source restriction; mitigated through OCHA and other accessible official sources."
+      },
+      {
+        "publisher": "UN News Gaza",
+        "url": "https://news.un.org/en/tags/gaza",
+        "status": "robots_restricted",
+        "result": "Direct fetch denied; alternative authoritative sources accessible."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "OCHA 9 November storm damage, displacements, medical service interruptions",
+        "reason": "Previously recorded in earlier Gaza watch runs for November 6–8 events."
+      },
+      {
+        "event": "WAFA Nuseirat three injuries from house wall falling onto shelter",
+        "reason": "Distinct but previously recorded in immediately preceding heartbeat; excluded as duplicate."
+      },
+      {
+        "event": "WAFA Rafah 23 patients, 28 companions medically evacuated",
+        "reason": "Previously recorded in November 9 morning heartbeat; no new crossing count."
+      },
+      {
+        "event": "WAFA 3 killed and 15 injured 48-hour Ministry of Health aggregate",
+        "reason": "Published earlier, already reviewed, and not evidence of a separate incident in this window."
+      },
+      {
+        "event": "Reuters, Guardian and OCHA sand embankment collapse casualty variations",
+        "reason": "Previously identified Deir al-Balah storm tragedy; no new discrete event."
+      },
+      {
+        "event": "WAFA artillery shelling east of Khan Younis",
+        "reason": "No specific documented civilian impact in source; not a separate qualifying finding."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "HTTP 502",
+        "prior_status": "HTTP 502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global emergency portal and OCHA OPT"
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA and WFP"
+      },
+      {
+        "publisher": "UN News",
+        "status": "robots restriction",
+        "prior_status": "robots restriction",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA and established reporting"
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO explicitly checked first. Exactly 12 additional targeted searches, then source-page verification and direct publisher checks. One newly published Palestinian death from wounds sustained in an earlier Israeli airstrike was documented at a distinct location. The underlying strike date and civilian status are unknown. Recurring WHO EMRO, UNRWA and UN News source restrictions warrant DEGRADED status but are not material new deterioration. Remaining independent reporting remained available.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no production publication",
+      "no approval",
+      "no social posting",
+      "no schedule change",
+      "no task disablement"
+    ]
+  }
+}

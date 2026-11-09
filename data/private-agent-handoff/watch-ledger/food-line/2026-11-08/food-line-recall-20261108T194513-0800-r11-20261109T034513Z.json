@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T194513-0800-r11-20261109T034513Z",
+  "scheduled_for": "2026-11-08T19:45:54-08:00",
+  "started_at": "2026-11-08T19:45:13-08:00",
+  "completed_at": "2026-11-09T03:46:50.905Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T02:42:51.176Z",
+    "end_at": "2026-11-09T03:46:50.905Z",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous durable heartbeat retrieved directly from ops/watch-ledger; discovery lookback one day, but findings require new evidence of a qualifying access disruption since prior completed_at.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T184111-0800-r11-20261109T024111Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Closure/fire/disaster affecting a community's only, sole, last or full-service grocery store",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official SNAP, WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" \"closed\" \"November 8, 2026\" fire community",
+      "\"sole grocery store\" fire closed November 2026 town",
+      "\"last grocery store\" destroyed closed flood November 2026",
+      "\"full service grocery\" fire closure November 8 2026 rural",
+      "\"food distribution\" canceled postponed \"November 8\" 2026 storm power",
+      "\"emergency food distribution\" canceled November 8 2026 hurricane",
+      "\"food pantry\" \"closed\" \"November 8, 2026\" flooding outage",
+      "\"food bank\" temporarily closed \"November 2026\" storm fire",
+      "site:gov SNAP EBT outage interruption November 8 2026 state announcement benefits delayed",
+      "site:gov WIC benefits service interruption outage November 8 2026",
+      "\"SNAP\" \"benefits\" \"suspended\" \"November 8, 2026\" state",
+      "\"food pantry\" \"temporarily closed\" \"November 8\" 2026 food bank"
+    ],
+    "search_recency_days": 1,
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 6,
+      "failed": 0,
+      "urls": [
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.chilichili.net/477073/chance-to-come-together-park-record/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://thecoconutmama.com/missouri-neighborhood-loses-supermarket-rising-costs-permanent-closure/",
+        "reason": "Article surfaced Nov 8 but KC Sun Fresh closure occurred Oct 25, not newly initiated in the hourly interval."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov 6 Kauaʻi recovery notice reports emergency distribution scheduled; no suspension or cancellation."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing/undated SNAP processing call delays; cannot attribute a newly initiated food-assistance interruption to this interval."
+      },
+      {
+        "source_url": "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "reason": "Nov 6 Mecklenburg County service office power outage already reviewed in earlier hour."
+      },
+      {
+        "source_url": "https://www.chilichili.net/477073/chance-to-come-together-park-record/",
+        "reason": "Republished opinion/commentary about longstanding Utah pantry closure; not a new access loss and excluded opinion."
+      },
+      {
+        "source_url": "https://apnews.com/article/snap-food-government-shutdown-trump-a807e9f0c0a7213e203c074553dc1f9b",
+        "reason": "2025 SNAP shutdown article surfaced in queries; out of observation window."
+      }
+    ],
+    "source_or_search_failures": [],
+    "coverage_assessment": "All 12 targeted searches and 6 direct-source checks succeeded. No verified, newly reported qualifying food-access disruption identified since prior heartbeat. Search freshness/indexing cannot establish exhaustive nationwide absence.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine promotion, generic inflation articles, older incidents and duplicates.",
+    "notification_assessment": "No qualifying new finding or material failure/degradation; no notification warranted.",
+    "controls": "No editorial approval, publication, production collector change, schedule modification or task disabling."
+  }
+}

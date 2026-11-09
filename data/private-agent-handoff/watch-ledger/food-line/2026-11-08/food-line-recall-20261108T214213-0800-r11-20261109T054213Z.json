@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T214213-0800-r11-20261109T054213Z",
+  "scheduled_for": "2026-11-08T21:45:54-08:00",
+  "started_at": "2026-11-08T21:42:13-08:00",
+  "completed_at": "2026-11-09T05:44:09.191Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T04:52:39.186Z",
+    "end_at": "2026-11-09T05:44:09.191Z",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Latest verified ops/watch-ledger heartbeat, with a bounded two-to-three-day discovery lookback. New signal qualification requires evidence not documented before the preceding completed_at.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T205048-0800-r11-20261109T045048Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall only; primary national production collector remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting a community's only, sole, last or full-service grocery store",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official SNAP, WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire November 8 2026 community",
+      "\"last grocery store\" shutdown damaged November 2026 town",
+      "\"sole grocery store\" closed fire storm November 2026",
+      "\"full-service grocery store\" closed fire flood November 2026",
+      "food pantry abruptly closed today November 8 2026",
+      "food bank closes services suddenly November 2026 emergency",
+      "food distribution cancelled storm flooding November 8 2026",
+      "emergency food distribution suspended outage November 8 2026",
+      "SNAP benefits interruption outage notice November 8 2026 state agency",
+      "WIC benefits service disruption EBT outage November 8 2026",
+      "food pantry fire closure November 8 2026 local news",
+      "SNAP EBT system down November 8 2026 official benefits access"
+    ],
+    "search_recency_days_range": [
+      2,
+      3
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 8,
+      "failed": 0,
+      "urls": [
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://dhs.vi.gov/news/",
+        "https://www.thecooldown.com/sustainable-food/texas-food-pantries-donations-families-demand/",
+        "https://www.fredericksburgfreepress.com/2026/11/08/food-bank-distribution-this-week-78/",
+        "https://yubanet.com/featured/now/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.thecooldown.com/sustainable-food/texas-food-pantries-donations-families-demand/",
+        "reason": "Nov 8 report describes increasing demand and donor declines at two Austin-area pantries; both continue operating, with no newly verified service shutdown or material access reduction."
+      },
+      {
+        "source_url": "https://www.fredericksburgfreepress.com/2026/11/08/food-bank-distribution-this-week-78/",
+        "reason": "Nov 8 routine schedule of continuing distributions, not a suspension or cancellation."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov 6 Hawaiʻi Foodbank Kauaʻi notice describes scheduled distribution, not cancellation; predates window and previously reviewed."
+      },
+      {
+        "source_url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "reason": "Only-store closure reported in August 2026, outside current interval."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing undated SNAP phone/processing delays; no newly announced interruption in this interval."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No verified newly initiated SNAP/WIC interruption among the service notices checked."
+      },
+      {
+        "source_url": "https://yubanet.com/featured/now/",
+        "reason": "Current Nov 8 fire and road alerts do not establish disruption of qualifying grocery, pantry or assistance access."
+      },
+      {
+        "source_url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-federal-shutdown-explained-2/",
+        "reason": "Old November 2025 government-shutdown benefits report, not current 2026 interruption."
+      }
+    ],
+    "source_or_search_failures": [],
+    "coverage_assessment": "Twelve bounded targeted searches and eight direct-source checks completed without tool/source failure. No new, source-verified qualifying disruption was found since prior 20:52:39 PST checkpoint. Search indexing and provider notice latency prevent an exhaustive claim of nationwide absence.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine program promotion, generic inflation stories, out-of-window events, and duplicates.",
+    "notification_assessment": "No new qualifying signal and no material failure/degradation; no notification warranted.",
+    "controls": "No approval, publication, production collection modification, schedule change or task disabling."
+  }
+}

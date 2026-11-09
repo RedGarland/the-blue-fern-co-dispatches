@@ -1,0 +1,150 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T054451-0800-r11-20261109T135430Z",
+  "scheduled_for": "2026-11-09T05:44:51-08:00",
+  "started_at": "2026-11-09T05:54:30-08:00",
+  "completed_at": "2026-11-09T05:57:26.484-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T12:45:23.082Z",
+    "end": "2026-11-09T13:57:26.484Z",
+    "local_start": "2026-11-09T04:45:23.082-08:00",
+    "local_end": "2026-11-09T05:57:26.484-08:00",
+    "basis": "Verified immediate predecessor heartbeat completion through authenticated GitHub readback; source publication and event times checked separately. Exclude duplicates and older incidents.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall watch only; production daily collector and publisher remain authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T044451-0800-r11-20261109T124523082Z.json",
+    "previous_verified_completed_at": "2026-11-09T04:45:23.082-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "status": "accessible",
+        "result": "November 9 OCHA heavy-rains report recounts November 6–8 storm impacts; damage, shelter, food-delivery and healthcare-disruption statistics already captured by prior heartbeat. No later verified new report identified."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "global_accessible_regional_HTTP_502",
+        "result": "Global emergency portal accessed; no new November 9 Gaza-specific WHO health operations update. WHO EMRO regional endpoint returned continuing HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/news/2026/11/9/ غزة الساعة 15:00 15:30 شهداء إصابات",
+      "site:english.wafa.ps Gaza November 9 2026 3:00 PM wounded civilians airstrike",
+      "Gaza Nov 9 2026 \"15:00\" \"strike\" casualties Gaza City Khan Younis",
+      "site:ochaopt.org \"09 Nov 2026\" Gaza \"hospital\" crossing flood update",
+      "site:unicef.org 9 November 2026 Gaza storm shelter water children update",
+      "site:wfp.org 9 November 2026 Gaza food meals aid crossing emergency",
+      "Gaza November 9 2026 Reuters AP November 9 ceasefire hostages negotiations humanitarian casualties",
+      "site:english.wafa.ps/Pages/Details/ \"09/November/2026\" \"03:\" \"Gaza\"",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"9 Nov 2026\" Gaza access evacuation",
+      "Gaza \"November 9, 2026\" ambulance hospital evacuation fuel crossing humanitarian 15:00",
+      "site:unrwa.org \"9 November 2026\" Gaza shelters flooding updates",
+      "site:aljazeera.com/news/2026/11/9 Gaza civilians killed wounded aid crossing flooding military"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "Homepage latest listings through November 9 15:45 Palestine time (05:45 PST), but in-window reports concern West Bank or non-qualifying subjects. Gaza strikes and casualty aggregate listings were at 11:25 and 12:24 Palestine time, before the window."
+      },
+      {
+        "publisher": "WAFA updated ministerial briefing",
+        "url": "https://www.wafa.ps/news/2026/11/9/%D9%85%D8%AD%D8%AF%D8%AB-%D8%AA%D8%AD%D8%B0%D9%8A%D8%B1%D8%A7%D8%AA-%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A9-%D9%88%D8%A3%D9%85%D9%85%D9%8A%D8%A9-%D8%B4%D8%AA%D8%A7%D8%A1-%D8%BA%D8%B2%D8%A9-%D9%8A%D9%87%D8%AF%D8%AF",
+        "status": "accessible",
+        "result": "Updated article carries original 14:07 Palestine-time publication timestamp (04:07 PST). It repeats previously recorded 300,000-family/30%-blocked-supplies and OCHA storm facts; no verifiable in-window update timestamp."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "timeout",
+        "result": "Direct homepage timed out; indexed direct English article confirmed cumulative 48-hour casualty aggregate predates window and was already excluded."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/environment/four-killed-gaza-after-sand-embankment-collapses-tents-2026-11-09/",
+        "status": "accessible",
+        "result": "Published 12:55 UTC (04:55 PST), inside this watch interval, but documents the same Deir al-Balah sand-embankment collapse late November 8 already recorded. Reuters reports four fatalities and six injuries, diverging from OCHA's five fatalities/one injury; do not add or merge unconfirmed counts."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Previously observed restriction persists; alternative OCHA source remains accessible."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "Deir al-Balah sand embankment collapse",
+        "reason": "Already documented. November 9 Reuters report published during interval adds eyewitness accounts but refers to the same November 8 event. Its casualty counts conflict with OCHA/WAFA; do not double-count or silently reconcile.",
+        "source_url": "https://www.reuters.com/business/environment/four-killed-gaza-after-sand-embankment-collapses-tents-2026-11-09/"
+      },
+      {
+        "event": "OCHA Nov 9 storm impact assessment, shelter and healthcare damage",
+        "reason": "Already recorded by prior positive heartbeat; no new later verified change.",
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026"
+      },
+      {
+        "event": "WAFA Nov 9 ministerial winter shelter and crossing-access briefing",
+        "reason": "Recorded by immediately preceding 04:45 PST heartbeat; original 14:07 Palestine-time publication predates interval, no separately verified edit timestamp.",
+        "source_url": "https://www.wafa.ps/news/2026/11/9/%D9%85%D8%AD%D8%AF%D8%AB-%D8%AA%D8%AD%D8%B0%D9%8A%D8%B1%D8%A7%D8%AA-%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A9-%D9%88%D8%A3%D9%85%D9%85%D9%8A%D8%A9-%D8%B4%D8%AA%D8%A7%D8%A1-%D8%BA%D8%B2%D8%A9-%D9%8A%D9%87%D8%AF%D8%AF"
+      },
+      {
+        "event": "WAFA Nov 9 Gaza City injuries and 48-hour casualties",
+        "reason": "Articles predate interval; no newly evidenced in-window incident.",
+        "source_url": "https://english.wafa.ps/Pages/Details/176786"
+      },
+      {
+        "event": "Le Monde storm article and other background on winter flooding and stalled ceasefire",
+        "reason": "Earlier publication or recycled storm events; no distinct in-window development.",
+        "source_url": "https://www.lemonde.fr/en/international/article/2026/11/09/gaza-residents-despair-after-torrential-rains-flood-tens-of-thousands-of-makeshift-shelters_6775837_4.html"
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "HTTP 502",
+        "prior_status": "HTTP 502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global portal and OCHA OPT accessible"
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA official report accessible"
+      },
+      {
+        "publisher": "WAFA English homepage",
+        "observed_status": "timeout",
+        "prior_status": "accessible",
+        "material_new_deterioration": false,
+        "mitigation": "WAFA Arabic homepage and article accessible; indexed English article separately available; transient timeout not established as systemic"
+      }
+    ],
+    "coverage_assessment": "No distinct, verified high-value Gaza development first published or occurring in this interval. Twelve additional targeted searches plus direct source checks found background, duplicate incident reporting, and earlier-window publications. Overall coverage useful but DEGRADED because WHO regional and UNRWA access remained restricted and WAFA English homepage timed out; no material new deterioration.",
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no production publication",
+      "no approval",
+      "no social posting",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

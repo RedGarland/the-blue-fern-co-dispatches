@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T034611-0800-r11-20261109T114611Z",
+  "scheduled_for": "2026-11-09T03:45:54-08:00",
+  "started_at": "2026-11-09T03:46:11-08:00",
+  "completed_at": "2026-11-09T03:47:51.116-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T02:45:46.428-08:00",
+    "end_at": "2026-11-09T03:47:51.116-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous completed watch-ledger heartbeat read directly from GitHub ops/watch-ledger, used as exclusive start bound. Search retrieval includes older background candidates, but findings require newly verified qualifying events or material updates in the hourly window.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T024315-0800-r11-20261109T104315Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary audited-miss recall only; production Food Line collection remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster to a community's only, sole, last or full-service grocery store",
+      "Canceled or suspended emergency food distribution caused by storm, flooding, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major service-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate benefit-access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "recency_filter": "First eight searches used recency=2 days. Final four used date-specific text without a recency engine filter; all candidates were date-vetted against the hourly window.",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire flood \"November 8\" OR \"November 9\" 2026",
+      "\"last grocery store\" \"November\" 2026 closed fire community",
+      "\"food distribution\" canceled storm November 9 2026 food bank",
+      "\"food pantry\" \"closed\" \"November 9\" 2026 power outage",
+      "SNAP benefits outage interrupted November 9 2026 state agency alert",
+      "WIC services interrupted closed November 9 2026 official",
+      "\"food bank\" \"closed\" \"Nov. 9, 2026\" emergency",
+      "\"only full-service grocery\" fire November 2026",
+      "food pantry closure suspended today November 9 2026 United States emergency",
+      "grocery store fire \"Nov 8, 2026\" small town sole",
+      "food bank cancel distribution November 8 2026 flooding storm",
+      "site:gov \"SNAP\" \"November 9, 2026\" interruption benefits delayed"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 6,
+      "failed": 2,
+      "urls": [
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.fns.usda.gov/snap/state-directory",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.azahcccs.gov/Shared/News.html"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Important Eau Claire cancellations for the remainder of 2026, but the direct article was published November 3 and updated November 6, before this observation window. No verified new update."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "November 6 Lowell recovery article identifies scheduled emergency distribution and previously closed hurricane resource centers, not new canceled food distributions in the observed interval."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Virginia DSS alerts show previously announced November 5/6 non-food-specific office closures ending November 9 at 08:00 and older notices; no new SNAP/WIC benefits interruption established."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "November 9 Michigan mobile pantry distributions listed as scheduled, not canceled."
+      },
+      {
+        "source_url": "https://www.ncdhhs.gov/news/press-releases/2025/11/08/ncdhhs-pauses-full-snap-payments-after-court-decision-remains-ready-process-benefits-when-authorized",
+        "reason": "November 2025 SNAP funding disruption, a year outside the observation window."
+      },
+      {
+        "source_url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "September 2026 weather-related food bank closure, already historical."
+      },
+      {
+        "source_url": "https://www.fingerlakes1.com/2026/09/13/fire-destroys-spencers-only-full-service-grocery-store/",
+        "reason": "September 2026 sole/full-service store destruction, historical and not a new November 9 development."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.fns.usda.gov/snap/state-directory",
+        "type": "HTTP_403_FORBIDDEN",
+        "material": false,
+        "note": "Recurring inaccessible federal SNAP state directory; state-level pages and targeted searches remained accessible."
+      },
+      {
+        "url": "https://www.azahcccs.gov/Shared/News.html",
+        "type": "HTTP_403_FORBIDDEN",
+        "material": false,
+        "note": "Arizona AHCCCS news index inaccessible; no evidence this is a SNAP/WIC outage. Alternative agency alerts and searches remained accessible."
+      }
+    ],
+    "coverage_assessment": "All 12 targeted searches returned results without tool errors. Six of eight selected direct-source pages were accessible. Search results were dominated by historical grocery losses, September storm-related distribution interruptions, November 2025 SNAP news, routine food distribution listings, and pre-window Eau Claire cancellation. No new qualifying disruption was verified since 02:45:46 PST. Two recurring source-access restrictions caused DEGRADED status but did not materially compromise this bounded supplementary review. Zero findings is not proof of nationwide absence.",
+    "excluded_content": "Donation drives, routine program promotion, resource guides, recipes, opinion, generic price/inflation stories, nonqualifying disasters, duplicates and out-of-window events.",
+    "notification_assessment": "Zero findings; two nonmaterial 403 source-access limitations, so no user notification under the stated criteria.",
+    "controls": "No approval, publication, schedule change, task disabling or production collector mutation."
+  }
+}

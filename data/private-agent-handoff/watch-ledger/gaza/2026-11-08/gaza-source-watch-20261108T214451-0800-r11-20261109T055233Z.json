@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T214451-0800-r11-20261109T055233Z",
+  "scheduled_for": "2026-11-08T21:44:51-08:00",
+  "started_at": "2026-11-08T21:49:45-08:00",
+  "completed_at": "2026-11-09T05:52:33.805Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-09T04:50:37.707Z",
+    "end": "2026-11-09T05:52:33.805Z",
+    "local_start": "2026-11-08T20:50:37.707-08:00",
+    "local_end": "2026-11-08T21:52:33.805-08:00",
+    "basis": "Starts at actual completed_at of latest confirmed 20:44 PDT/PST scheduled previous Gaza Source Watch heartbeat; events and publication times assessed separately.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza miss-class recall; primary production Gaza collector and publisher remain authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T204451-0800-r11-20261109T044821Z.json",
+    "previous_verified_completed_at": "2026-11-08T20:50:37.707-08:00",
+    "prior_ledger_discovery": "Read the branch directory via authenticated GitHub contents API and verified the latest preceding 20:44 PST heartbeat before deduplication.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Latest listed publication still 6 November 2026, situation report for 5 November; no newly dated 8 or 9 November Gaza operational update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_timeout",
+        "result": "Global WHO conflict portal accessible and contains no newly dated Nov 8-9 health news or service change; WHO EMRO situation report URL timed out this run. Previous heartbeat logged regional HTTP 502, indicating ongoing impairment; this run's exact observed failure was a timeout."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 9 2026 05:00 UTC killed injured strikes civilians latest November 8 evening",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"9/November/2026\" killed injured OR flooded",
+      "site:aa.com.tr/en/middle-east/ Gaza \"09.11.2026\" killed injuries shelter humanitarian",
+      "site:aljazeera.com/news/2026/11/9 Gaza overnight casualties aid access ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 9 2026 ceasefire crossing hospital latest",
+      "site:palestinercs.org Gaza November 9 2026 ambulance medical evacuation hospital PRCS",
+      "غزة فجر الاثنين 9 نوفمبر 2026 شهداء إصابات قصف خيام النازحين أخبار عاجلة",
+      "غزة مساء الأحد 8 نوفمبر 2026 9 نوفمبر أمطار انهيار خيام قتلى جرحى مساء",
+      "site:un.org OR site:unicef.org OR site:wfp.org Gaza 9 November 2026 shelter flooding aid water",
+      "site:english.wafa.ps \"Monday, 9 November 2026\" Gaza casualties hospital",
+      "November 9 2026 Gaza Rafah Kerem Shalom crossing medical evacuation fuel humanitarian update",
+      "Gaza November 9 2026 latest hostages ceasefire Israeli military strikes civilians Gaza early morning"
+    ],
+    "additional_search_execution": "Two batches of six targeted web queries after the first OCHA and WHO searches. First six fast; second six slow. English and Arabic; direct article/publisher checks did not count as targeted searches.",
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/Details/176754",
+        "status": "homepage_timeout_article_accessible",
+        "result": "WAFA homepage timed out, but the individual 8 Nov 21:17 Gaza-local Deir al-Balah sand cliff collapse report and its latest-news panel loaded. Newer panel headlines were West Bank or diplomacy rather than a new Gaza event."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "Recent Gaza stories describe the already documented 70,000 flooded tents, the Nov 8 Deir al-Balah fatal landslide, and the previously logged 350,000 unsheltered estimate. No new event or consequential change established since last heartbeat."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Most recent listed news dated Nov 3, 2026; no new documented Gaza medical evacuation, ambulance, field hospital, or healthcare-capacity change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring access-denied response; alternative verified UN/agency reporting and established reporting remain available."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "timeout",
+        "prior_status": "HTTP 502",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "WAFA homepage",
+        "observed_status": "timeout",
+        "mitigation": "Individual WAFA article and latest-news links accessible; same limitation noted in an earlier watch; no material coverage loss."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "Deir al-Balah Ard El-Rebat sand-cliff collapse, five deaths and five injuries",
+        "reason": "Previously logged and included in preceding watches; no new fatality or injury verified in this window.",
+        "url": "https://english.wafa.ps/Pages/Details/176754"
+      },
+      {
+        "event": "Gaza flooding affecting 70,000 tents and reported 350,000 people sleeping outside",
+        "reason": "Already documented storm and quantification; recirculated Nov 8-9 reporting provides no new measured change in this observation window.",
+        "urls": [
+          "https://www.aa.com.tr/en/middle-east/gaza-floods-leave-350-000-displaced-palestinians-without-shelter-health-ministry/4116383",
+          "https://www.aljazeera.com/news/2026/11/8/floods-in-gaza-leave-tens-of-thousands-without-shelter"
+        ]
+      },
+      {
+        "event": "Anadolu Nov 8 field report on shelter, 60mm of rain, drainage capacity, injuries and 270 threatened camps",
+        "reason": "Article dated Nov 8 summarizes earlier storm impacts and risks; no distinct post-20:50 PST operational event established.",
+        "url": "https://www.aa.com.tr/en/middle-east/flooded-out-of-their-tents-gaza-families-have-nowhere-left-to-go/4115647"
+      },
+      {
+        "event": "Gaza November 7 Reuters storm report, prior military casualties, prisoner and negotiations reports",
+        "reason": "Older, recycled or outside window; no independently verified new Gaza-specific event."
+      },
+      {
+        "event": "Crossings, food/water access, medical evacuation, hospital operation, transport, fuel, hostage/detention and ceasefire",
+        "reason": "No verified distinct operational status change since prior hourly check."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO explicitly checked first, then 12 additional targeted searches and direct publisher/article checks. No new traceable civilian casualty, displacement, aid, health, infrastructure, crossing, hostage or ceasefire development differentiated from prior watch. WHO EMRO remained inaccessible, UNRWA returned 403 and WAFA homepage timed out, but reliable alternative coverage was accessible. DEGRADED/no_findings rather than FAILED; existing restrictions are not a materially new degradation.",
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no publication",
+      "no production collector changes",
+      "no approval",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

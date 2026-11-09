@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T004902-0800-recall12",
+  "scheduled_for": "2026-11-09T00:45:22-08:00",
+  "started_at": "2026-11-09T00:46:34-08:00",
+  "completed_at": "2026-11-09T00:49:02.794-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T23:55:55-08:00",
+    "end": "2026-11-09T00:49:02.794-08:00",
+    "basis": "Start equals the completed_at of the newest directly verified prior Care Line Watch heartbeat in GitHub ops/watch-ledger (2026-11-08 23:54:55 run); end is this recall's cutoff.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization, CCN 18P001, termination notice",
+      "new_notices_in_window": 0,
+      "method": "Opened current official CMS Public Notices listing and inspected its newest dated rows before performing any targeted search."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department ambulance divert closed \"November 9\" \"2026\" USA",
+      "hospital maternity labor delivery services suspended closure \"November 9\" \"2026\" United States",
+      "psychiatric behavioral health hospital facility closed care suspended \"November 9\" \"2026\"",
+      "\"November 8, 2026\" \"hospital\" \"closed\" emergency",
+      "\"Nov. 8, 2026\" \"hospital\" \"services\" suspended",
+      "\"November 8, 2026\" \"dialysis\" \"closed\" clinic",
+      "ambulance service EMS station base grounded suspended closure \"November 8\" \"2026\" US",
+      "air ambulance base medical helicopter closed operations \"November 8\" \"2026\"",
+      "rural hospital emergency department shut down reopen November 8 2026 United States",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices 2026-11-08 2026-11-09 termination rescission CLIA",
+      "\"November 8\" \"2026\" \"clinic\" \"closing\" \"primary care\" OR \"cancer\" OR \"oncology\" USA",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital clinic EMS ambulance services closure November 8 9 2026"
+    ],
+    "search_recency_days": 2,
+    "search_engine": "web targeted search",
+    "reviewed_exclusions": [
+      {
+        "item": "Adventist Health White Memorial ambulance entrance blockade, Boyle Heights, CA",
+        "source_url": "https://lapatriot.com/",
+        "reason": "November 8 retrospective coverage of a Friday/Saturday interruption; previously known, no new access effect established during the 23:55–00:49 PST observation window."
+      },
+      {
+        "item": "Vista Medical Center East and Gateway Regional Medical Center ambulance bypasses, Illinois",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/",
+        "reason": "Bypasses effective November 7, reported and acknowledged in previous heartbeats; not a distinct new service change."
+      },
+      {
+        "item": "Minnesota rural obstetric access report",
+        "source_url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center",
+        "reason": "New reporting of historical access trends and an already-announced future Luverne change, rather than a concrete service change in this hourly interval."
+      },
+      {
+        "item": "North Quadra Urgent and Primary Care Centre, British Columbia",
+        "source_url": "https://www.islandhealth.ca/locations/hospitals-health-centre-locations/north-quadra-urgent-and-primary-care-centre",
+        "reason": "Temporary November 8 closure was in Canada, outside U.S. and territory scope."
+      },
+      {
+        "item": "Historical Mercy Air 34 Paso Robles base closure",
+        "source_url": "https://www.newtimesslo.com/mercy-air-34s-paso-robles-base-closure-spells-the-end-of-the-only-air-ambulance-in-slo-county/",
+        "reason": "2025 development, not new."
+      },
+      {
+        "item": "Guam Memorial Hospital storm-response service suspension",
+        "source_url": "https://ghs.guam.gov/node/4352",
+        "reason": "Official announcement dated October 16, 2026, outside interval."
+      },
+      {
+        "item": "Rural service reopening proposals",
+        "source_url": "https://www.northcarolinahealthnews.org/2026/04/06/ecu-martin-hospital-proposal/",
+        "reason": "Proposal predates watch interval and lacks an effective restoration in this interval."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "result_summary": "Official CMS Public Notices still topped by November 2 notice. Twelve targeted searches covering hospital/ED, obstetrics, behavioral health, dialysis, cancer/primary care, rural emergency, ground/air EMS, concrete restorations, CMS/CLIA and territories returned no independently substantiated, new, nonduplicate U.S./territory healthcare service interruption or restoration first announced or effective between November 8 23:55:55 and November 9 00:49 PST.",
+    "coverage_limitations": [
+      "Sunday overnight reporting and search indexing delays can obscure near-real-time local events.",
+      "Search results were noisy or historical; absence of verified findings does not establish absence of events.",
+      "This bounded supplementary recall is not comprehensive national/territorial collection.",
+      "Production intake/deduplication database was not accessed; production collection is authoritative."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T235455-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T23:55:55-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

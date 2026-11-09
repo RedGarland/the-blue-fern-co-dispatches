@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T095023-0800-recall12-20261109T175236Z",
+  "scheduled_for": "2026-11-09T09:45:22-08:00",
+  "started_at": "2026-11-09T09:50:23-08:00",
+  "completed_at": "2026-11-09T09:52:36.196-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T08:42:23-08:00",
+    "end": "2026-11-09T09:52:36.196-08:00",
+    "basis": "The start is the completed_at timestamp of the latest verified Care Line Watch heartbeat on ops/watch-ledger; two-day publication/indexing overlap was searched, but only new nonduplicates in the current observation interval would qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value healthcare-access recall only; authoritative national production collection and publication decisions remain separate.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T084046-0800-recall12-20261109T164223Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T08:42:23-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "status": "accessible",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), organ procurement organization termination notice",
+      "new_notices_in_observation_window": 0
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "November 9 2026 hospital emergency department closed suspended ambulance diversion \"today\" United States",
+      "Nov 9 2026 hospital labor delivery maternity unit closure suspension obstetrics",
+      "November 9 2026 rural hospital emergency department service shut down reduced hours",
+      "November 9 2026 psychiatric behavioral health inpatient unit closes temporarily hospital patients",
+      "November 9 2026 dialysis clinic center closed patients transferred or services suspended",
+      "November 9 2026 cancer treatment oncology infusion clinic closed service interruption",
+      "November 9 2026 primary care clinic suddenly closes patients appointments county health center",
+      "November 9 2026 ambulance EMS emergency medical transport service station closes suspended",
+      "November 9 2026 air medical helicopter base shuts down pauses operations EMS",
+      "November 9 2026 emergency room hospital maternity clinic reopens resumes services after closure",
+      "November 9 2026 Medicare provider termination rescission CLIA certificate suspension limitation CMS official notice",
+      "November 9 2026 Puerto Rico Guam US Virgin Islands CNMI American Samoa hospital clinic emergency service closure reopening"
+    ],
+    "search_method": "Direct official CMS Public Notices check preceded twelve targeted news/official-source web searches using 2-day recency; results assessed against actual event/publication dates, service consequence, U.S. jurisdiction and prior watch coverage.",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois ambulance bypass",
+        "reason": "Effective November 7, 2026, and already documented by prior recall runs, not new in this interval.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Anaheim Global Medical Center ambulance receiving designation suspension",
+        "reason": "Reported May 9, 2026; historical.",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/"
+      },
+      {
+        "item": "Stanford Medicine Sutter Health Cancer Center East Bay announcement",
+        "reason": "Press release November 9, 2026, states first patients expected December 1; new facility launch, not an already effective restoration of previously lost essential service.",
+        "source_url": "https://vitals.sutterhealth.org/media-resources/press-releases/stanford-medicine-sutter-health-cancer-center"
+      },
+      {
+        "item": "Mead Family Cancer Center in Columbus, Nebraska",
+        "reason": "New/consolidated facility reported November 9 rather than a documented restoration after essential service loss.",
+        "source_url": "https://healthcaredesignmagazine.com/news/columbus-community-hospital-opens-mead-family-cancer-center-in-columbus-nebraska/166303/"
+      },
+      {
+        "item": "CMS provider enrollment Federal Register rule November 9, 2026",
+        "reason": "General rule; not an individualized termination, rescission or CLIA access-risk notice.",
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-2026-11-09/pdf/2026-22750.pdf"
+      },
+      {
+        "item": "Guam Regional Medical City temporary storm-related closures",
+        "reason": "April/October 2026 disruptions, outside this observation window.",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/"
+      }
+    ],
+    "result_summary": "No new verified nonduplicate in-window hospital/ED/maternity/psychiatric/dialysis/oncology/primary-care suspension, rural/emergency/ambulance/air-medical loss, individualized CMS/CLIA access-risk action, or concrete restoration of previously lost essential service.",
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Search engine indexing and local reporting lag can obscure same-hour changes.",
+      "Coverage is bounded, not exhaustive, especially for small-territory/local reporting.",
+      "Authoritative production collector findings and its deduplication records were not independently inspected."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

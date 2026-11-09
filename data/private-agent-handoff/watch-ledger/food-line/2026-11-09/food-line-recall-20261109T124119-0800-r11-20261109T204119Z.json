@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T124119-0800-r11-20261109T204119Z",
+  "scheduled_for": "2026-11-09T12:41:19-08:00",
+  "started_at": "2026-11-09T12:41:19-08:00",
+  "completed_at": "2026-11-09T12:43:41.084-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T11:43:32-08:00",
+    "end_at": "2026-11-09T12:43:41.085-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start from prior completed heartbeat read from the designated GitHub branch; accept only verifiably new disruptions within this interval.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T114234-0800-r11-20261109T194234Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only. Production Food Line collector remains authoritative.",
+    "target_classes": [
+      "Community loses only/sole/last/full-service grocery via fire, disaster, or closure",
+      "Emergency food distribution canceled/suspended by storm, flood, fire, outage, or building damage",
+      "Abrupt pantry or food-bank closure or major reduction in access",
+      "New official SNAP/WIC/EBT/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast, recent-result filter 2-3 days",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 9 2026 rural community",
+      "\"last grocery store\" closing November 2026 local",
+      "\"sole grocery\" fire closed November 2026 town",
+      "\"food distribution\" canceled storm November 9 2026",
+      "\"food bank\" distribution suspended flooding November 2026",
+      "\"food pantry\" closed power outage November 9 2026",
+      "\"food pantry\" abrupt closure November 2026 no longer serving",
+      "\"food bank\" services suspended building damage November 2026",
+      "site:gov \"SNAP\" \"interruption\" November 9 2026 benefits",
+      "site:gov \"WIC\" \"service interruption\" November 2026",
+      "\"SNAP\" \"EBT\" outage today November 9 2026 state",
+      "\"food assistance\" benefits halted November 9 2026 state notice"
+    ],
+    "direct_source_checks": {
+      "count": 12,
+      "successful": 6,
+      "failed": 6,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dphss.guam.gov/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.fns.usda.gov/snap/state-directory",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.dcf.ks.gov/Newsroom/Pages/SNAPBenefits.aspx",
+        "https://www.dcf.ks.gov/Newsroom/",
+        "https://dphss.guam.gov/press-release/",
+        "https://otda.ny.gov/programs/snap/",
+        "https://www.cdss.ca.gov/inforesources/calfresh"
+      ],
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout on Guam DPHSS official homepage",
+          "impact": "Guam press-release headlines were indexed in targeted search; no in-window dated food-access outage established."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/state-directory",
+          "error": "HTTP 403 Forbidden on USDA SNAP state directory",
+          "impact": "Known recurring directory restriction, with state agency direct checks available."
+        },
+        {
+          "url": "https://www.dcf.ks.gov/Newsroom/Pages/SNAPBenefits.aspx",
+          "error": "Timeout accessing historical Kansas DCF SNAP benefits notice",
+          "impact": "Historical notice is outside observation window; no current interruption substantiated."
+        },
+        {
+          "url": "https://www.dcf.ks.gov/Newsroom/",
+          "error": "Timeout accessing Kansas DCF newsroom",
+          "impact": "Same Kansas source-host access issue; search coverage remained."
+        },
+        {
+          "url": "https://dphss.guam.gov/press-release/",
+          "error": "Guam DPHSS press-release URL inaccessible",
+          "impact": "Same Guam host issue; recent indexed Guam notices outside interval."
+        },
+        {
+          "url": "https://otda.ny.gov/programs/snap/",
+          "error": "HTTP 502 Bad Gateway on NY OTDA SNAP overview",
+          "impact": "Generic overview unavailable; 12 targeted news/agency searches remained usable."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Spencer, NY only-store fire occurred September 11, 2026, outside this window."
+      },
+      {
+        "source_url": "https://www.dcf.ks.gov/Newsroom/Pages/SNAPBenefits.aspx",
+        "reason": "Kansas SNAP notice dated October 21, 2025; old and direct page timed out."
+      },
+      {
+        "source_url": "https://dphss.guam.gov/",
+        "reason": "Indexed Nov 5 Guam WIC-waiver termination and Nov 6 newsroom headlines predate current interval; page direct access timed out."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "November 9 Michigan mobile pantry schedule shows planned distribution activity, not cancellation."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "November 6 Kauaʻi hurricane recovery report includes scheduled distribution, not a newly canceled emergency distribution."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing Hawaiʻi SNAP call-center delays are previously known, without a new dated in-window interruption."
+      },
+      {
+        "source_url": "https://www.cdss.ca.gov/inforesources/calfresh",
+        "reason": "California CalFresh program overview contains no new immediately effective disruption."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Wisconsin FoodShare member news showed no new verifiable in-window access interruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Virginia DSS alerts showed no new verifiable in-window SNAP/WIC disruption."
+      }
+    ],
+    "exclusion_policy": "Omit donation drives, resource guides, recipes, commentary, promotions, scheduled routine programs, inflation, old items and duplicates; require new dated loss of access backed by traceable source.",
+    "assessment": "Twelve targeted recent searches yielded no newly verified qualifying U.S. disruption since the previous heartbeat. Six direct-source URLs were readable. Six attempted opens failed (including repeat failures on Kansas and Guam hosts plus a known USDA 403 and NY 502), making the run DEGRADED, but alternate news and agency evidence preserved useful bounded coverage. This is not proof of exhaustive national absence.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

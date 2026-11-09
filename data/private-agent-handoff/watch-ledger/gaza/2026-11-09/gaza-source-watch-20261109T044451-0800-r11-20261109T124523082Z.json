@@ -1,0 +1,160 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T044451-0800-r11-20261109T124523082Z",
+  "scheduled_for": "2026-11-09T04:44:51-08:00",
+  "started_at": "2026-11-09T04:43:01-08:00",
+  "completed_at": "2026-11-09T04:45:23.082-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T11:46:44Z",
+    "end": "2026-11-09T12:45:23.082Z",
+    "local_start": "2026-11-09T03:46:44-08:00",
+    "local_end": "2026-11-09T04:45:23.082-08:00",
+    "basis": "Starts at confirmed immediate predecessor heartbeat completion; verify source publication and underlying event dates separately, and exclude previously recorded events.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261109-1407-palestinian-social-minister-winter-shelter-aid-access",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/9/%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D8%A3%D9%85%D8%B7%D8%A7%D8%B1-%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9-%D9%88%D9%85%D8%A7-%D8%B3%D8%A8%D8%A8%D8%AA%D9%87-%D9%85%D9%86-%D8%AE%D8%B3%D8%A7%D8%A6%D8%B1",
+      "title": "Hamad: Recent rains and losses require immediate action to protect lives",
+      "title_original": "حمد: الأمطار الأخيرة وما سببته من خسائر يستدعي حراكا فوريا لحماية الأرواح",
+      "publisher": "WAFA — Palestinian News & Information Agency",
+      "source_date": "2026-11-09",
+      "publication_date": "2026-11-09",
+      "publication_datetime": "2026-11-09T14:07:00+02:00",
+      "event_date": "2026-11-09",
+      "event_datetime": null,
+      "location": "Ramallah press briefing about Gaza Strip; displacement sites and border crossings in Gaza",
+      "affected_population_system": "Gaza's displaced households; winter shelter and humanitarian shelter-supply/crossing access; water infrastructure",
+      "exact_supporting_passage": "لا يزال نحو 30% من مواد الإغاثة والإيواء المخصصة للاستجابة عالقاً على المعابر بانتظار الدخول",
+      "source_type": "Official Palestinian ministerial briefing reported by Palestinian state news agency (attributed estimates, not independently audited)",
+      "classification": "follow-up",
+      "confidence": "moderate",
+      "summary": "At a new November 9 press briefing, acting relief minister Samah Hamad estimated more than 300,000 Gaza families lack adequate protection from cold/rain; approximately 30% of designated shelter/relief supplies remain at crossings awaiting entry; available winter-response supplies are about 10% of historical intervention levels. She also cited over 1,600 displacement sites at risk of pooling/flooding and up to 80% of water infrastructure requiring repair. These are newly reported official quantitative assessments of the ongoing storm-related humanitarian access and shelter shortfall, not newly displaced households or independently confirmed figures.",
+      "discovery_context": {
+        "watch_window_local": "2026-11-09T03:46:44-08:00 to 2026-11-09T04:45:23.082-08:00",
+        "publisher_local_time": "2026-11-09 14:07 Palestine time (04:07 PST)",
+        "discovered_via": "Direct inspection of WAFA Arabic homepage and linked article after OCHA OPT and WHO-first checks and targeted searching",
+        "source_observation": "WAFA article paragraphs describing the ministerial press conference and UN humanitarian coordinator remarks",
+        "verification_limitations": "Numbers attributed to Palestinian minister; no independent OCHA/WHO confirmation of the 30%, 10%, or 300,000-family estimates within this run. Already documented storm impacts and deaths must not be added as separate incidents.",
+        "dedupe_key": "2026-11-09-ramallah-winter-relief-briefing-samah-hamad-30-percent-crossing-supply"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; daily production publisher/collector remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T034451-0800-r11-20261109T114443Z.json",
+    "previous_verified_completed_at": "2026-11-09T03:46:44-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "result": "November 9 OCHA report covers storm events of November 6–8. Its shelter losses and facility-disruption metrics were recorded in earlier positive heartbeat; no newer OCHA report surfaced.",
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026"
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "global_accessible_regional_HTTP_502",
+        "result": "Global WHO emergency portal accessible with no November 9 Gaza operational update; WHO EMRO returned recurring HTTP 502."
+      }
+    ],
+    "who_specific_source_searches_before_additional_targeted_searches": [
+      "site:who.int Gaza health emergency November 9 2026 WHO medical evacuation hospitals",
+      "site:emro.who.int Palestine Gaza November 9 2026 WHO health update"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza 9 November 2026 injured killed 14:00",
+      "site:wafa.ps/news/2026/11/9/ غزة إصابات قصف الساعة 14",
+      "Gaza November 9 2026 14:00 GMT+2 Israeli strike civilians killed injured Gaza city Khan Younis",
+      "site:ochaopt.org Gaza \"09 Nov 2026\" \"health\" \"crossings\"",
+      "site:unicef.org \"9 November 2026\" Gaza flood water shelters",
+      "site:wfp.org \"9 November 2026\" Gaza food aid trucks meals",
+      "site:english.wafa.ps \"09/November/2026\" \"PM\" \"Gaza\" ambulance",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"9 Nov 2026\" Gaza evacuation crossing",
+      "Gaza 9 November 2026 humanitarian crossing aid fuel evacuation 14:00 Palestine WHO",
+      "Gaza November 9 2026 ceasefire negotiations hostages detainees updates Reuters AP latest",
+      "Gaza November 9 2026 hospitals flood repairs clinic evacuation patients Nasser update afternoon",
+      "site:aljazeera.com/news/2026/11/9 Gaza killed injured flooding ceasefire"
+    ],
+    "additional_search_execution": "Exactly 12 additional targeted searches in two batches of six; WHO-specific official-first source searches are separate.",
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "November 9 14:07 Palestine-time ministerial winter humanitarian briefing captured as a new quantitative follow-up, with underlying estimates marked attributed."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "No newer post-window distinct Gaza civilian casualty incident found; latest source display around 13:39 Palestine time."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Previously observed restriction persists."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "HTTP 502",
+        "prior_status": "HTTP 502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global portal and OCHA official site accessible; WHO-specific indexing search performed."
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA report and WAFA direct Arabic/English sources accessible."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "OCHA Nov 9 Gaza storm shelter damage, 26k affected households, clinic/hospital disruptions",
+        "reason": "Already recorded in prior positive heartbeat; no later update."
+      },
+      {
+        "event": "WAFA Nov 9 Gaza City Al-Sina'a junction injuries, plus 11:25 Palestine-time article with updated cumulative injury detail",
+        "reason": "Initial event already recorded, article's original publication predates window; no verified update time or distinct in-window event."
+      },
+      {
+        "event": "WAFA 48-hour casualty count 3 fatalities/15 injuries, published 12:24 Palestine time",
+        "reason": "Predates immediate predecessor completion and is retrospective aggregate; no distinct in-window incident."
+      },
+      {
+        "event": "Deir Al Balah sand-hill collapse deaths, Gaza flooding and damaged tents",
+        "reason": "Previously covered same storm event; no verified newly occurring event."
+      },
+      {
+        "event": "Prior WHO reports, older ceasefire and crossing references, opinion and non-Gaza incidents",
+        "reason": "Not within observation interval or not qualifying factual developments."
+      }
+    ],
+    "coverage_assessment": "One new attributable ministerial quantitative assessment published inside observation interval, as a follow-up to ongoing winter shelter/access shortages. WHO regional access and UNRWA restrictions recur without new deterioration; other official and source coverage remained useful. Status DEGRADED rather than FAILED.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no production publication",
+      "no approval",
+      "no social posting",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

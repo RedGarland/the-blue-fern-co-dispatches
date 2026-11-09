@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T224900-0800-recall12",
+  "scheduled_for": "2026-11-08T22:45:22-08:00",
+  "started_at": "2026-11-08T22:49:00-08:00",
+  "completed_at": "2026-11-08T22:50:38-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T21:50:01.398-08:00",
+    "end": "2026-11-08T22:50:38-08:00",
+    "basis": "Start equals completed_at of directly fetched preceding hourly Care Line heartbeat on ops/watch-ledger; end is the observation cutoff for this bounded recall.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, OPO, CCN 18P001, termination notice",
+      "new_notices_in_window": 0,
+      "method": "Opened CMS official Public Notices page and confirmed its top dated entries before any targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department temporarily closed diverted ambulances Sunday November 8 2026 United States",
+      "hospital maternity labor delivery unit closure suspended November 8 2026 USA",
+      "inpatient behavioral health psychiatric hospital services closed suspended November 8 2026",
+      "dialysis clinic cancer oncology treatment center closing service suspended November 8 2026",
+      "primary care family medical clinic abruptly closed patients November 8 2026 United States",
+      "rural hospital emergency services shutdown temporary outage November 8 2026",
+      "ambulance EMS station base service closed suspended November 8 2026",
+      "air ambulance helicopter medical base ceased operations November 8 2026",
+      "hospital emergency department reopening services restored November 8 2026 USA",
+      "CMS provider certification termination rescission CLIA notice posted November 8 2026 site:cms.gov",
+      "Guam Puerto Rico Virgin Islands American Samoa Northern Mariana hospital emergency clinic closure November 8 2026",
+      "Vista Medical Center East Illinois ambulance bypass payroll Sunday Nov 8 2026 emergency service update"
+    ],
+    "search_recency_days": 1,
+    "search_engine": "web targeted search",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois — ambulance bypass",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/",
+        "reason": "November 8 article published 5:38 p.m. local time, before the prior heartbeat at 9:50 p.m. PST; the report describes an ambulance bypass in effect from Saturday November 7 at 7 a.m. No distinct new service change in this watch window."
+      },
+      {
+        "item": "Gateway Regional Medical Center, Granite City, Illinois — EMS bypass",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/",
+        "reason": "The November 8 report states Gateway also went on EMS bypass at 7 a.m. Saturday November 7. Outside this hourly interval; could be evaluated separately for historical production recall without treating as a new hourly finding."
+      },
+      {
+        "item": "NHS birth-centre and midwifery closures in England",
+        "source_url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights",
+        "reason": "Outside U.S. and its territories."
+      },
+      {
+        "item": "Older CMS provider termination and CLIA notices",
+        "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "Newest visible CMS notice dated November 2, before the observation interval."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "result_summary": "CMS public notices unchanged (latest November 2). Twelve targeted searches across hospital/ED, maternity, behavioral-health, dialysis, oncology, primary care, rural emergency, ground and air EMS, restorations, CMS/CLIA and territories found no independently verified qualifying nonduplicate development first announced or effective during the 21:50–22:50 PST observation interval.",
+    "coverage_limitations": [
+      "Evening/Sunday reporting and indexing delays may postpone discovery.",
+      "Bounded supplementary web recall is not comprehensive national or territory collection.",
+      "Production intake/deduplication database was not directly accessed; production remains authoritative."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T214753-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T21:50:01.398-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

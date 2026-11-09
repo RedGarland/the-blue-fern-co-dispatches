@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T015011-0800-r11-20261109T095011Z",
+  "scheduled_for": "2026-11-09T01:45:54-08:00",
+  "started_at": "2026-11-09T01:50:11-08:00",
+  "completed_at": "2026-11-09T01:51:11-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T00:53:59-08:00",
+    "end_at": "2026-11-09T01:51:11-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified Food Line ops/watch-ledger heartbeat completed_at through this run. Searches used 2-day recency to discover newly indexed evidence; only new or materially changed access interruptions during the bounded interval qualify.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T005325-0800-r11-20261109T085325Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value audit-miss recall; nationwide production Food Line collection remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting the only, sole, last, or full-service grocery in a community",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official new SNAP, WIC, or food-assistance interruption with immediate access impact"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": 2,
+    "search_queries": [
+      "\"only grocery store\" fire closed November 9 2026 United States",
+      "\"only grocery store\" flood damage closure November 8 9 2026",
+      "\"last grocery store\" \"November 9\" 2026 closed",
+      "\"sole grocery store\" destroyed fire November 2026 town",
+      "\"food distribution\" canceled \"November 9\" 2026 storm",
+      "\"food pantry\" canceled distribution flooding storm November 9 2026",
+      "\"food bank\" \"closed due to\" storm November 9 2026",
+      "\"food pantry\" \"temporarily closed\" \"November 9\" 2026",
+      "\"food bank\" \"services suspended\" November 8 2026",
+      "SNAP benefits access system outage November 9 2026 state agency",
+      "site:gov SNAP EBT \"service interruption\" November 9 2026",
+      "site:gov WIC benefits outage November 9 2026"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 7,
+      "failed": 1,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/",
+        "https://www.azahcccs.gov/Shared/News.html",
+        "https://www.fns.usda.gov/snap/state-directory",
+        "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "reason": "November 6 reporting on flood damage to the only grocery in McCaysville, Georgia; previously captured and no additional new interruption verified in this hour."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "November 9 West Michigan emergency mobile distributions remain listed as scheduled; no qualifying weather-related cancelation."
+      },
+      {
+        "source_url": "https://www.azahcccs.gov/Shared/News.html",
+        "reason": "The page lists November 8 planned maintenance of AHCCCS Solutions Center posted October 26; not a new SNAP or WIC access disruption. Earlier June HEAplus issue was restored and is out-of-window."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing SNAP contact, application and recertification delay notice; no new dated disruption identified."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No freshly dated qualifying SNAP/WIC interruption identified in agency alerts."
+      },
+      {
+        "source_url": "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/",
+        "reason": "No November 9 immediate benefits-access interruption evident in agency newsroom."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "No November 9 immediate FoodShare interruption evident on member news page."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.fns.usda.gov/snap/state-directory",
+        "type": "HTTP_403_FORBIDDEN",
+        "material": false,
+        "note": "USDA SNAP state-directory direct page was inaccessible; targeted searches and other official state agency pages remained accessible. This single nonmaterial restriction is recorded as DEGRADED per user rule."
+      }
+    ],
+    "coverage_assessment": "All 12 searches returned results without tool errors, but high-signal new reports were not identified. Seven of eight direct sources were accessible. One nonmaterial USDA HTTP 403; no independently verified new food-access disruption in the hourly interval. This bounded search cannot establish comprehensive national absence.",
+    "excluded_content": "Donation requests, general resource lists, recipes, commentary, ordinary promotion, generic inflation, preexisting grocery/store flood reports, routine planned maintenance and old SNAP-related material.",
+    "notification_assessment": "No new qualifying finding and only nonmaterial degradation; user notification suppressed.",
+    "controls": "No review approvals, publication, production changes, schedule changes or task disabling."
+  }
+}

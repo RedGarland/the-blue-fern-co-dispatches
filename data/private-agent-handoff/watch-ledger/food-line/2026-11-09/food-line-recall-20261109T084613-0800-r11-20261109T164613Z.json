@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T084613-0800-r11-20261109T164613Z",
+  "scheduled_for": "2026-11-09T08:45:54-08:00",
+  "started_at": "2026-11-09T08:46:13-08:00",
+  "completed_at": "2026-11-09T08:48:04.632-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T07:47:52-08:00",
+    "end_at": "2026-11-09T08:48:04.632-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Latest prior completed Food Line heartbeat on ops/watch-ledger read before searches; exclude earlier published/reported events even if indexed today.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T074606-0800-r11-20261109T154606Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Food Line miss-class recall; primary nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss, closure or disaster",
+      "Canceled/suspended emergency food distribution due to weather/disaster/outage/facility damage",
+      "Abrupt pantry or food-bank closure or major service reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate food-access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web search: 12 fast searches, recency 1 day",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "November 9 2026 \"only grocery store\" closed fire rural town USA",
+      "November 9 2026 \"sole grocery store\" burns closes town",
+      "November 9 2026 \"last grocery store\" shuts closes community",
+      "November 9 2026 \"full-service grocery store\" fire closure rural",
+      "November 9 2026 food bank food pantry closed unexpectedly service suspension United States",
+      "November 9 2026 food distribution cancelled suspended storm flood outage power",
+      "November 9 2026 SNAP EBT outage benefits delayed state agency notice access disrupted",
+      "November 9 2026 WIC office closed benefits suspended state department notice",
+      "November 9 2026 food pantry closes immediately unexpectedly site:org",
+      "November 9 2026 food bank distribution canceled flood storm power outage site:gov",
+      "November 9 2026 Georgia McCaysville grocery store flooding emergency food distribution suspended",
+      "November 9 2026 \"food distribution\" \"canceled\" storm USA"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 8,
+      "failed": 0,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://communityactionprovo.org/get-to-know-us/update.html",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://content.govdelivery.com/accounts/HIKAUAICOUNTY/bulletins/430f3fe"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+        "reason": "Significant McCaysville, Georgia loss of only grocery due to flooding, but original report dated November 6 at 3:54 PM; strictly prior to hourly checkpoint, not a new signal."
+      },
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire cancellations reported November 3 and updated November 6, no newly reported change in window."
+      },
+      {
+        "source_url": "https://communityactionprovo.org/get-to-know-us/update.html",
+        "reason": "Provider notice last updated October 27 indicates Provo, Oakley, Coalville remain open and Heber slated to close mid-November; no new in-window notice; a search-result third-party claim of Provo shutdown contradicted by provider."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Agency lists older Middlesex and Lynchburg service office closures reopening November 9 at 08:00 ET; not newly reported and not a confirmed direct SNAP/WIC benefit interruption."
+      },
+      {
+        "source_url": "https://content.govdelivery.com/accounts/HIKAUAICOUNTY/bulletins/430f3fe",
+        "reason": "County's October 29 Hurricane Lowell recovery notice announces emergency food distribution, not a canceled distribution; out of window."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "No verified new November 9 emergency FoodShare/EBT interruption after prior checkpoint."
+      }
+    ],
+    "exclusion_policy": "Excluded donation drives, resource guides, routine distribution schedules, opinion, historical grocery fires, old pantry closures, prior SNAP shutdown stories from 2025, and unverified claims or index freshness without event-time evidence.",
+    "assessment": "No new qualifying development verified within the narrow hourly window. The November 6 McCaysville sole-grocery loss is material in underlying Food Line subject matter but is historical relative to this watch and therefore not presented as new. Search indexing lag and provider updates not indexed publicly limit any claim of nationwide completeness.",
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

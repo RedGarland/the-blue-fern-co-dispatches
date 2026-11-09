@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T164537-0800-r11-20261109T004537Z",
+  "scheduled_for": "2026-11-08T16:45:54-08:00",
+  "started_at": "2026-11-08T16:45:37-08:00",
+  "completed_at": "2026-11-09T00:47:17.171Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T15:50:50-08:00",
+    "end_at": "2026-11-09T00:47:17.171Z",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Verified 15:50:50 PST prior heartbeat on ops/watch-ledger; 2-3-day targeted discovery lookback only to catch delayed reporting and exclude duplicates.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T154918-0800-r11-20261108T234918Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Food Line high-value recall watch only; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Loss of a community's only/sole/last/full-service grocery store from closure/fire/disaster",
+      "Emergency food distribution canceled/suspended because of storms, flood, fire, outage, facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "Official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" \"November 8, 2026\" closed OR fire OR flood",
+      "\"sole grocery store\" November 2026 flooded closed town",
+      "\"last grocery store\" \"November 2026\" closed rural",
+      "\"only full-service grocery\" November 2026 storm closure",
+      "\"food distribution\" canceled OR cancelled November 8 2026 storm flood",
+      "\"food bank\" \"suspended distribution\" November 8 2026 storm",
+      "\"food pantry\" \"temporarily closed\" \"November 8\" \"2026\" fire OR flood OR power",
+      "\"food pantry\" \"suspending services\" November 2026 closure",
+      "\"mobile food pantry\" cancelled November 8 2026 weather",
+      "site:gov \"SNAP\" \"outage\" \"November 8, 2026\" benefits",
+      "site:gov \"WIC\" \"system outage\" November 2026 service",
+      "\"SNAP\" \"November 8, 2026\" delayed benefit payments interruption new"
+    ],
+    "search_recency": "2 or 3 days, with explicit November 8, 2026 / November 2026 terms",
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 5,
+      "failed": 1,
+      "urls": [
+        "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "https://muscatinechurch.org/event/november-mobile-food-pantry-distribution/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "reason": "McCaysville, GA sole grocery-store flood damage reported November 6 and documented in prior watches; not an in-window new signal."
+      },
+      {
+        "source_url": "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "reason": "November 6 Mecklenburg County power outage closed one office, but SNAP alternatives remained open via online, telephone and another resource center; predates window and is not a fresh benefits issuance interruption."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "November 6 Kauaʻi local recovery article confirms foodbank mobile distribution scheduled, not canceled; hurricane resource centers are not food pantry closures."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing SNAP interview/renewal wait times; no newly dated acute interruption identified."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated SNAP/WIC interruption identified."
+      },
+      {
+        "source_url": "https://muscatinechurch.org/event/november-mobile-food-pantry-distribution/",
+        "reason": "Search result describes a scheduled November 10 mobile distribution, not a canceled one; direct check blocked."
+      },
+      {
+        "source_url": "https://kvia.com/news/el-paso/2026/09/23/el-paso-food-bank-asks-for-help-with-rain-damaged-canopies-sign/",
+        "reason": "El Paso storm-damaged foodbank closure occurred in September 2026, outside window."
+      },
+      {
+        "source_url": "https://calmatters.digitaldemocracy.org/bills/ca_202520260sb1077",
+        "reason": "Page's November 8 SNAP shutdown chronology describes a past 2025 shutdown, not a new 2026 action."
+      },
+      {
+        "source_url": null,
+        "reason": "Other results were old grocery losses, routine pantry event calendars, unrelated program guides, proposed rules, unverified secondary issuance calendars, or promotional resources."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://muscatinechurch.org/event/november-mobile-food-pantry-distribution/",
+        "type": "direct_source_access",
+        "result": "HTTP 403 Forbidden",
+        "mitigation": "Search snippet indicated a routine future distribution on Nov 10 and no cancellation, so limited source failure was nonmaterial to the target miss classes."
+      }
+    ],
+    "coverage_assessment": "All 12 searches ran; five of six direct pages opened. No new qualifying signal verified in the hourly interval. Search result quality was limited by many older or generic pages. One nonmaterial direct-source 403 requires DEGRADED under explicit watch rule.",
+    "notification_assessment": "No qualifying signal, and failed direct check concerned routine scheduled distribution with no evidence of a material coverage gap; no user notification.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine program promotion, generic inflation stories, duplicates.",
+    "controls": "No approval, publication, production mutation, schedule modification or task disabling."
+  }
+}

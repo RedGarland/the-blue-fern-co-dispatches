@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T124251-0800-recall12-20261109T124343-0800",
+  "scheduled_for": "2026-11-09T12:45:22-08:00",
+  "started_at": "2026-11-09T12:42:51-08:00",
+  "completed_at": "2026-11-09T12:43:43-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T11:50:08.682-08:00",
+    "end": "2026-11-09T12:43:43-08:00",
+    "basis": "Start uses latest verified care-line heartbeat completed_at. Search results may include overlap or older reporting for screening, but only newly substantiated nonduplicate developments since previous check qualify."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall of U.S. and territory healthcare-access changes; production collection remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T114821-0800-recall12-20261109T195008682Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T11:50:08.682-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "status": "accessible",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, organ procurement organization Medicare termination notice",
+      "new_notices_in_observation_window": 0
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "November 9 2026 hospital emergency department closed suspended reopened patients ambulance diversion today US",
+      "November 9 2026 maternity labor delivery obstetrics hospital unit closed suspended reopened today",
+      "November 9 2026 rural hospital emergency services shutdown closure reopened news",
+      "November 9 2026 behavioral health psychiatric hospital unit closure admissions suspended mental health",
+      "November 9 2026 dialysis center oncology infusion cancer clinic service closure patients",
+      "November 9 2026 ambulance EMS station base air ambulance service suspended closing reinstated",
+      "November 9 2026 primary care clinic abruptly closes patients access urgent care medical practice",
+      "November 9 2026 emergency department reopened restored service after shutdown hospital United States",
+      "November 9 2026 state health department hospital service suspended licensure emergency maternal dialysis closure",
+      "November 9 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital emergency ambulance clinic closure suspension",
+      "November 9 2026 hospital emergency bypass ambulance diverted ED shutdown lack of staff Illinois Missouri",
+      "November 9 2026 Medicare certification provider agreement terminated CLIA suspension rescission notice CMS laboratory"
+    ],
+    "search_method": "Directly opened CMS Public Notices before performing 12 web searches with one-day recency; reviewed returned date, jurisdiction, service effect, prior cutoff, and duplicates. No additional queries made.",
+    "reviewed_exclusions": [
+      {
+        "item": "North Devon maternity unit reopening delay",
+        "source_url": "https://www.aol.com/articles/maternity-unit-remain-shut-over-180403000.html",
+        "reason": "United Kingdom, outside U.S./territory scope; already-shut unit."
+      },
+      {
+        "item": "NHS birth-centre closure report",
+        "source_url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights",
+        "reason": "United Kingdom; retrospective closures, outside jurisdiction."
+      },
+      {
+        "item": "Kula Hospital restoration funding",
+        "source_url": "https://www.mauinews.com/news/local-news/2026/09/green-announces-65-million-for-kula-hospital-restoration/",
+        "reason": "September 2026 plan; emergency department still closed; no newly effective restoration."
+      },
+      {
+        "item": "Rural hospital risk reports",
+        "source_url": "https://www.vpm.org/news/2026-06-09/willett-sentara-bon-secours-carilion-vcu-health-hospital-closures/",
+        "reason": "Prior risk estimates, not a new concrete access change."
+      },
+      {
+        "item": "Historical service closures and corporate ownership coverage",
+        "source_url": "https://www.fiercehealthcare.com/hospitals/when-hospital-leaves-town",
+        "reason": "2025 retrospective reporting, not an in-window event."
+      }
+    ],
+    "result_summary": "No new verified in-window U.S. or territory hospital, ED, maternity, behavioral-health, dialysis, oncology, primary-care, ambulance, or air-medical loss/restoration; CMS listing has no new provider termination/rescission/CLIA notice since November 2.",
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Fresh search results included substantial historical and non-U.S. matches despite one-day recency, reducing recall confidence.",
+      "Same-hour reporting and search indexing delay can conceal newly occurring access changes.",
+      "Bounded 12-search recall does not exhaustively examine every state and territory.",
+      "Production queue and deduplication records not independently checked; comparison uses prior verified supplementary heartbeat."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

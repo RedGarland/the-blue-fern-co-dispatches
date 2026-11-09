@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T071218-0800-r11-20261109T151218Z",
+  "scheduled_for": "2026-11-09T06:45:54-08:00",
+  "started_at": "2026-11-09T07:12:18-08:00",
+  "completed_at": "2026-11-09T07:14:32.621-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T05:48:09-08:00",
+    "end_at": "2026-11-09T07:14:32.621-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last verifiable completed Food Line watch heartbeat on ops/watch-ledger; no newer Food Line heartbeat appeared in November 9 directory at read time. Candidate incidents must have qualifying event/announcement evidence after this checkpoint.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T054703-0800-r11-20261109T134703Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary audit-driven high-value miss-class recall; production nationwide Food Line collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss, closure, fire, or disaster",
+      "Emergency food-distribution cancellation/suspension due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP, WIC, or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web search: 8 fresh fast and 4 targeted slow",
+    "search_recency_days": "1 for eight fast queries; 2 for four slow queries; publication/event dates screened against preceding hourly checkpoint",
+    "search_queries": [
+      "November 9 2026 \"only grocery store\" fire closed community USA",
+      "November 9 2026 \"last grocery store\" closes rural town",
+      "\"sole grocery store\" fire Sunday Monday November 2026",
+      "food pantry closed unexpectedly November 9 2026 emergency US",
+      "food bank shuts down services temporarily November 9 2026 flooding fire",
+      "\"food distribution\" cancelled November 9 2026 storm flood outage",
+      "SNAP EBT outage interruption November 9 2026 state benefits site:gov",
+      "WIC office closure services interrupted November 9 2026 site:gov",
+      "November 9 2026 news rural town only grocery store closed burned US",
+      "November 9 2026 pantry food bank emergency closure service suspended distribution canceled",
+      "November 9 2026 SNAP benefits delayed EBT WIC agency outage food assistance",
+      "Kauai Hurricane Lowell November 9 2026 food pantry distribution cancelled closed"
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 7,
+      "successful": 7,
+      "failed": 0,
+      "urls": [
+        "https://content.govdelivery.com/accounts/HIKAUAICOUNTY/bulletins/430f3fe",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://communityactionprovo.org/get-to-know-us/update.html",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://communityactionprovo.org/get-to-know-us/update.html",
+        "reason": "Provider page last updated Oct. 27 says Provo, Oakley, Coalville pantries remain open and Heber pantry planned to close mid-November; the Nov. 1 closure article predates observation window. No fresh provider change."
+      },
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire pop-up distribution cancellation was reported Nov. 3 and updated Nov. 6; previously reviewed and outside hourly window."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Nov. 9 Michigan mobile distributions are scheduled; no newly cancelled event indicated."
+      },
+      {
+        "source_url": "https://content.govdelivery.com/accounts/HIKAUAICOUNTY/bulletins/430f3fe",
+        "reason": "County bulletin of Oct. 29 announced an Oct. 30 emergency distribution, not a new cancellation; Nov. 6 local recovery reporting likewise describes scheduled distribution."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated SNAP/WIC-specific urgent service interruption verified in observation window."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Standing FoodShare notices without a verifiable newly announced benefit-payment or access outage in observation window."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing application/interview delay FAQ; no freshly dated November 9 outage notice."
+      },
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Spencer NY only-grocery-store fire occurred Sep. 11, 2026; historical."
+      },
+      {
+        "source_url": "https://kvia.com/news/el-paso/2026/09/23/el-paso-food-bank-asks-for-help-with-rain-damaged-canopies-sign/",
+        "reason": "El Paso food bank distribution interruption occurred Sep. 2026; historical."
+      },
+      {
+        "source_url": "https://www.ncdhhs.gov/news/press-releases/2025/11/04/snap-beneficiaries-will-receive-partial-november-benefits",
+        "reason": "SNAP notice concerns November 2025, not November 2026."
+      }
+    ],
+    "source_or_search_failures": [],
+    "coverage_assessment": "All 12 targeted web searches returned without tool errors; seven direct primary/local source pages opened. Search results predominantly historical or non-U.S.; no verifiable newly announced U.S. disruption within 2026-11-09 05:48:09–2026-11-09T07:14:32.621-08:00 found. Search indexing may lag and this is not exhaustive nationwide clearance.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine promotions, generic inflation, old incidents, uncertain event dates and duplicates.",
+    "notification_assessment": "No newly qualified findings or material search degradation; user notification not warranted.",
+    "controls": "No review approvals, publication, schedule edits, task disabling, or change to primary production collector."
+  }
+}

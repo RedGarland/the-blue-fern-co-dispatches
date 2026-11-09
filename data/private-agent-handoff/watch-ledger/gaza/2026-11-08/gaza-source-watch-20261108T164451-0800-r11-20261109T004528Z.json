@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T164451-0800-r11-20261109T004528Z",
+  "scheduled_for": "2026-11-08T16:44:51-08:00",
+  "started_at": "2026-11-08T16:43:26-08:00",
+  "completed_at": "2026-11-09T00:45:28.613Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-08T23:49:52.968Z",
+    "end": "2026-11-09T00:45:28.613Z",
+    "local_start": "2026-11-08T15:49:52.968-08:00",
+    "local_end": "2026-11-08T16:45:28.613-08:00",
+    "basis": "Continuation from the latest preceding verified heartbeat (completed 15:49:52.968 PST). Report publication/event dates were checked to exclude older reports and repeats; no distinct new qualifying Gaza development confirmed in the window.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; production publisher/collector remains authoritative. No production, publication, approval, permissions or scheduling changes.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T154451-0800-r11-20261108T234952Z.json",
+    "previous_verified_completed_at": "2026-11-08T15:49:52.968-08:00",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Latest listed update is 6 November (report for 5 November); no new 8-9 November situation publication in official feed."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_http_502",
+        "result": "Global emergency portal has no 8-9 November Gaza health-system or medical evacuation release; WHO regional situation-report endpoint returned HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 8 2026 November 9 latest civilian killed injured airstrike drones Palestinian WAFA",
+      "Gaza November 9 2026 8 November storm tents sand embankment collapse rescue death toll families displacement",
+      "site:ochaopt.org Gaza 8 November 2026 9 November humanitarian update",
+      "site:who.int OR site:emro.who.int Gaza 8 November 2026 9 November hospital medical evacuation healthcare",
+      "Gaza 8 November 2026 9 November Rafah Kerem Shalom crossing food aid humanitarian trucks restrictions",
+      "Gaza November 8 2026 9 November latest ceasefire negotiations hostages prisoners Israeli military civilian impact",
+      "Gaza November 8 2026 9 November water pumping sewage fuel ambulance hospital medical capacity",
+      "site:wafa.ps/en Gaza November 8 2026 9 November killed wounded displaced drone humanitarian",
+      "Gaza November 9 2026 November 8 latest casualties evening medical source Deir al-Balah Khan Younis",
+      "site:anadolu.com.tr/en/middle-east/gaza Nov. 8, 2026 Nov. 9, 2026",
+      "site:aljazeera.com/news/2026/11/8 Gaza killed injured families storm hospital",
+      "site:un.org/unispal OR site:reliefweb.int 8 Nov 2026 Gaza flood shelter water hospital"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "Latest published Gaza casualty and sand-collapse items dated 8 November 17:49 and 21:17 Gaza local, already recorded; no newer specific Gaza incident in displayed feed."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "Current Gaza items repeat previously logged 350,000 shelter estimate, five-fatality sand collapse and Khan Younis/Jabalia casualty incidents. EU humanitarian commissioner appeal does not establish a new dated access restriction or delivery."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Recurring access restriction, same as preceding heartbeat."
+      }
+    ],
+    "recurring_source_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "HTTP 502",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "HTTP 403",
+        "material_new_deterioration": false
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "Ard al-Ribat Deir al-Balah sand embankment collapse (5 dead; 5 wounded in revised WAFA report)",
+        "reason": "Previously documented event and casualty revision, no novel incident.",
+        "url": "https://english.wafa.ps/Pages/Details/176754"
+      },
+      {
+        "event": "November 8 Khan Younis strike and Jabalia drone strike",
+        "reason": "Anadolu 2 dead/12 injured overview combines known attacks; not 12 newly established injuries.",
+        "url": "https://www.aa.com.tr/en/world/2-gazans-killed-12-others-wounded-in-continued-israeli-attacks/4115888"
+      },
+      {
+        "event": "350,000 unsheltered storm impact, 70,000 flooded tents, other storm/shelter metrics",
+        "reason": "Quantification already reported in previous hourly heartbeats.",
+        "url": "https://www.aa.com.tr/en/middle-east/gaza-floods-leave-350-000-displaced-palestinians-without-shelter-health-ministry/4116383"
+      },
+      {
+        "event": "EU commissioner flood/aid appeal",
+        "reason": "Reiterates humanitarian need but no substantiated change in operational aid entry, crossing status or resources.",
+        "url": "https://www.aa.com.tr/en/middle-east/eu-commissioner-urges-more-aid-access-to-gaza-as-floods-sweep-through-displacement-camps/4116100"
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked before twelve additional targeted searches; direct WAFA/Anadolu checks and preceding ledger read used for deduplication. Search results were frequently historical or repeated earlier 8 November events. WHO EMRO and UNRWA restrictions persist without material new deterioration; alternative coverage accessible. DEGRADED with no_findings rather than abort.",
+    "notification_warranted": false
+  }
+}

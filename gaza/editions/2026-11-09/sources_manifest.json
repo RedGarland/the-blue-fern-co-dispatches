@@ -1,0 +1,59 @@
+[
+  {
+    "source_record_id": "MOHGAZA-20261109-HOSPITAL-ARRIVAL-BULLETIN",
+    "source_id": "MOHGAZA-20261109-HOSPITAL-ARRIVAL-BULLETIN",
+    "title": "Gaza Health Ministry reports preceding-day hospital casualty arrivals",
+    "url": "https://t.me/MOHMediaGaza/7710",
+    "canonical_url": "https://t.me/MOHMediaGaza/7710",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "not_wrapper",
+    "wrapper_url": null,
+    "publisher": "Gaza Health Ministry",
+    "published_at": "2026-11-09",
+    "retrieved_at": "2026-11-09",
+    "retrieved_at_precision": "date",
+    "retrieved_calendar_date": "2026-11-09",
+    "retrieved_local_date": null,
+    "retrieval_boundary_date": "2026-11-09",
+    "retrieved_at_utc": null,
+    "retrieved_at_local": null,
+    "post_edition_date_source": false,
+    "summary_or_snippet": "In its November 9 bulletin, Gaza's Health Ministry reported three deaths and 15 injury cases received by hospitals during the preceding 24 hours. It classified two deaths as new and one as resulting from earlier wounds. The underlying attack dates and victim status were not established. These are attributed hospital figures, not an independently verified total of events on November 9.",
+    "source_type": "manual",
+    "region_scope": "Gaza Strip",
+    "category_hint": "civilian_harm",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "manual-supplement",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Statement explicitly dated Monday November9,2026. Displayed10:07 has no explicit timezone; no conversion. Body lines318–335 retained. The selected preceding24-hour hospital paragraph is separate from the bulletin's cumulative totals and storm-collapse paragraph.",
+    "editorial_label": "November 9 bulletin covering preceding 24-hour hospital reports, not a November 9 incident total.",
+    "event_date": "2026-11-09",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-11-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-11-09-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core"
+  }
+]

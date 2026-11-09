@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T094530-0800-r11-20261109T174530Z",
+  "scheduled_for": "2026-11-09T09:45:54-08:00",
+  "started_at": "2026-11-09T09:45:30-08:00",
+  "completed_at": "2026-11-09T09:47:21-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T08:48:04.632-08:00",
+    "end_at": "2026-11-09T09:47:21-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Latest previously completed Food Line heartbeat read directly from ops/watch-ledger before this run; consider only new, verifiable developments after that checkpoint, not newly indexed historical incidents.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T084613-0800-r11-20261109T164613Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Food Line miss-class recall; nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery store loss, closure, fire or disaster",
+      "Emergency food distribution canceled/suspended because of storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank closure or major service reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate food-access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast search, one-day recency, America/Los_Angeles observation date",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "November 9 2026 only grocery store closes fire flood rural community",
+      "November 9 2026 sole grocery store destroyed town United States",
+      "November 9 2026 last grocery store shut down community today",
+      "November 9 2026 full service grocery fire closure town rural",
+      "November 9 2026 food pantry abruptly closed suspended operations",
+      "November 9 2026 food bank closes distribution site immediately access",
+      "November 9 2026 food distribution canceled storm flooding power outage",
+      "November 9 2026 emergency food distribution suspended weather storm",
+      "November 9 2026 SNAP EBT benefits outage delay state agency alerts",
+      "November 9 2026 WIC benefits office interruption closure state agency",
+      "November 9 2026 site:gov food pantry closed November storm outage",
+      "November 9 2026 site:org food bank distribution cancellation fire flood"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 8,
+      "failed": 0,
+      "urls": [
+        "https://www.news4jax.com/news/local/2026/11/09/winn-dixie-sells-last-georgia-stores-focuses-on-florida-locations/",
+        "https://www.bridgedetroit.com/detroit-food-cooperative-fights-survival/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://communityactionprovo.org/get-to-know-us/update.html",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.news4jax.com/news/local/2026/11/09/winn-dixie-sells-last-georgia-stores-focuses-on-florida-locations/",
+        "reason": "Local report published November 9 at 12:09 PM Eastern reports sale of five remaining Winn-Dixie stores in Georgia to Food Lion; stores remain open until later brief conversions and are expected to reopen mid-December. Not a sole community grocery loss or confirmed immediate major food-access interruption."
+      },
+      {
+        "source_url": "https://www.bridgedetroit.com/detroit-food-cooperative-fights-survival/",
+        "reason": "November 9 06:00 Eastern feature on Detroit co-op financial challenges; not a newly announced sudden closure, and published before the hourly search window."
+      },
+      {
+        "source_url": "https://communityactionprovo.org/get-to-know-us/update.html",
+        "reason": "Provider update dated October 27 says Provo/Oakley/Coalville remain open and Heber site to close mid-November; pre-existing notice, no new immediate disruption."
+      },
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire pop-up distributions for remainder of 2026 were canceled in report dated November 3, updated November 6, already known to prior checks; not an in-window development."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Hawaii SNAP application/interview wait-time notice does not establish a newly dated same-hour SNAP/WIC benefit interruption."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "General mobile pantry schedule does not identify a newly confirmed emergency cancellation."
+      }
+    ],
+    "exclusion_policy": "Omitted donation drives, resource guides, recipes, opinion, routine program promotion, generic inflation, old grocery fires, old pantry shutdowns, 2025 SNAP shutdown coverage, and duplicate historical items.",
+    "assessment": "No newly verified high-value qualifying signal between the previous completed checkpoint and this run. Search results were heavily dominated by historical events and incidental 2026 news. Bounded national recall cannot establish nationwide completeness; emerging local notices may be delayed in indexing.",
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

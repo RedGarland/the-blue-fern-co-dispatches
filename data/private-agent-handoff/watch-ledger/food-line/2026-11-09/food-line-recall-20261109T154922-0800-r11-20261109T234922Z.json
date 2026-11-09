@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T154922-0800-r11-20261109T234922Z",
+  "scheduled_for": "2026-11-09T15:45:54-08:00",
+  "started_at": "2026-11-09T15:49:22-08:00",
+  "completed_at": "2026-11-09T15:50:18-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T14:46:04-08:00",
+    "end_at": "2026-11-09T15:50:18-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Interval begins at the verified completed_at of the preceding Food Line heartbeat. Newly published or newly effective U.S. access disruptions only.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T144508-0800-r11-20261109T224508Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary, bounded recall for audited miss classes, not the primary nationwide Food Line collector. Production remains authoritative.",
+    "target_classes": [
+      "Only, sole, last or full-service grocery store loss, closure, fire or disaster",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast, recency 1 day, explicitly checking November 9 2026; source publication/event date manually screened",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 9 2026 community United States",
+      "\"sole grocery store\" closure fire November 9 2026 town",
+      "\"last grocery store\" closing November 9 2026 town",
+      "\"full-service grocery store\" fire closed November 2026 access",
+      "\"food distribution\" canceled storm Monday November 9 2026",
+      "\"food pantry\" closed flooding power outage November 9 2026",
+      "November 9 2026 SNAP benefits unavailable EBT outage state agency official notice",
+      "November 9 2026 WIC interrupted benefits EBT outage state health department",
+      "November 9 2026 food stamps delayed issuance state emergency interruption",
+      "November 9 2026 food bank pantry emergency closure suspended operations",
+      "November 9 2026 food distribution canceled due to storm flooding power outage",
+      "November 9 2026 sole grocery closes community fire food access"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 6,
+      "failed": 2,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.cdss.ca.gov/inforesources/calfresh",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://kauainownews.com/category/lowell-recovery/",
+        "https://www.fns.usda.gov/snap/news-updates",
+        "https://www.daretocare.org/events/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/news-updates",
+          "error": "Direct page fetch returned internal error / inaccessible."
+        },
+        {
+          "url": "https://www.daretocare.org/events/",
+          "error": "Direct page fetch returned internal error / inaccessible."
+        }
+      ],
+      "freshness_limits": [
+        "Direct-source pages did not substantiate an announcement or effective food-assistance interruption within the specific interval.",
+        "Feeding America West Michigan schedule lists routine distributions and warns schedules may change; no verified in-window cancellation.",
+        "Kauaʻi Lowell recovery listing latest visible Nov 6 2026 for relevant food support, not an in-window cancellation.",
+        "Hawaiʻi SNAP processing-phone delay page lacks a date confirming a new event during this interval."
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.fingerlakes1.com/2026/09/13/fire-destroys-spencers-only-full-service-grocery-store/",
+        "reason": "Spencer NY sole grocery loss occurred in September 2026; historical duplicate."
+      },
+      {
+        "source_url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "El Paso food-bank closure occurred September 25 2026; historical."
+      },
+      {
+        "source_url": "https://mynbc15.com/news/local/isaias-weather-closures-and-cancellations",
+        "reason": "Alabama storm food-distribution cancellation in October 2026; outside window."
+      },
+      {
+        "source_url": "https://www.kqed.org/news/12060770/snap-calfresh-food-stamps-government-shutdown-november-payments-ebt",
+        "reason": "CalFresh November payment delay story dates to 2025, not a new November 2026 development."
+      },
+      {
+        "source_url": "https://abc7ny.com/post/usda-notifying-states-are-now-working-towards-paying-november-snap-benefits-full/18126903/",
+        "reason": "November 8, 2025 SNAP funding coverage; year mismatch."
+      },
+      {
+        "source_url": "https://nunatsiaq.com/stories/article/whale-cove-declares-local-state-of-emergency-as-fire-guts-only-grocery-store/",
+        "reason": "Historical and outside U.S. geographic scope (Nunavut, Canada)."
+      },
+      {
+        "source_url": "https://arkansasradio.com/2026/11/hope-lutheran-baby-pantry-free-supplies-batesville-november-9-2026/",
+        "reason": "Scheduled baby-pantry distribution, not an interruption."
+      }
+    ],
+    "exclusion_policy": "Exclude donation drives, resource guides, recipes, opinion, routine promotions/distributions, generic inflation, older incidents, duplicates and non-U.S. events.",
+    "assessment": "No new qualifying U.S. food-access disruption verified in the observed interval after 12 usable targeted searches and 6 usable direct-source checks. Two direct endpoints were inaccessible; supplementary coverage remained useful but is incomplete. Absence of a finding is not proof of nationwide absence.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

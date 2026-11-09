@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T134747-0800-recall12-cms239199",
+  "scheduled_for": "2026-11-09T13:45:22-08:00",
+  "started_at": "2026-11-09T13:47:47-08:00",
+  "completed_at": "2026-11-09T13:49:55.438-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T12:43:43-08:00",
+    "end": "2026-11-09T13:49:55.438-08:00",
+    "basis": "Start is the verified previous Care Line Watch heartbeat completion; newness is relative to that heartbeat's CMS listing (latest visible 2026-11-02). Exact time of the newly indexed CMS notice is not published."
+  },
+  "findings": [
+    {
+      "finding_id": "cms-public-notice-2026-11-09-mi-239199-termination",
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "title": "Compassionate Home Health Services — CMS Medicare Termination Notice (CCN 239199)",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "source_published_date": "2026-11-09",
+      "state": "Michigan",
+      "city": "Pontiac",
+      "county": "Oakland",
+      "territory": null,
+      "event_type": "cms_provider_termination_notice",
+      "service_line": "Home health agency / Medicare participation",
+      "access_consequences": "CMS added a Medicare provider termination notice for CCN 239199, creating potential Medicare-funded home-health access disruption. The effective date and whether clinical services cease are not independently established from the available CMS index.",
+      "affected_population": "Medicare beneficiaries receiving or seeking home-health care from Compassionate Home Health Services; patient count unknown",
+      "effective_date": null,
+      "announcement_date": "2026-11-09",
+      "confidence": "high_for_notice; unverified_effective_date",
+      "source_role": "official_regulator",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territory healthcare-access recall; production collection remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T124251-0800-recall12-20261109T124343-0800.json",
+    "prior_heartbeat_completed_at": "2026-11-09T12:43:43-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "status": "index_accessible_detail_unresolved",
+      "latest_visible_notice_date": "2026-11-09",
+      "new_notice": "Compassionate Home Health Services, Michigan, home health agency, CCN 239199 — termination notice",
+      "prior_latest_visible_notice_date": "2026-11-02",
+      "new_notices_since_previous_heartbeat": 1,
+      "issue": "The CMS index displayed the new November 9 row, but the clicked link resolved to the older Network for Hope (November 2) detail page in web retrieval; no independently confirmed November 9 detail PDF/effective date. The canonical source URL is therefore the CMS index."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices/ \"Compassionate Home Health Services\" \"2026-11-09\"",
+      "November 9 2026 hospital emergency department closure suspension reopened United States",
+      "November 9 2026 maternity labor delivery unit suspension closure hospital",
+      "November 9 2026 hospital behavioral health psychiatric services closing suspended",
+      "November 9 2026 dialysis oncology cancer clinic closes suspends services",
+      "November 9 2026 rural hospital emergency services closure suspension",
+      "\"Compassionate Home Health Services\" \"239199\" CMS 2026",
+      "\"Compassionate Home Health Services\" 2026-11-09 termination notice Michigan",
+      "November 9 2026 ambulance EMS air ambulance base closure suspended services US",
+      "November 9 2026 primary care clinics close immediately patients health access",
+      "November 9 2026 hospital emergency services reopened after closure USA",
+      "November 9 2026 Puerto Rico Guam USVI American Samoa CNMI hospital ambulance health closure"
+    ],
+    "search_method": "CMS Public Notices directly opened first; exactly 12 subsequent targeted web searches in two batches, filtered by jurisdiction, event, announcement/effective date, and comparison with previous hourly recall.",
+    "corroborating_provider_profile_url": "https://plainrecords.com/home-health/239199/",
+    "corroboration_scope": "Secondary CMS-derived provider profile confirms CCN 239199 and Pontiac, Michigan location, but does not independently establish termination or its effective date.",
+    "reviewed_exclusions": [
+      {
+        "item": "Greene County, Illinois, Boyd Memorial ambulance funding dispute; contract expiry November 9",
+        "reason": "Prior reporting of an unresolved funding/contract dispute, not independently confirmed service suspension or base closure",
+        "source_url": "https://www.myjournalcourier.com/news/article/greene-county-ambulance-bid-boyd-memorial-dispute-22486173.php"
+      },
+      {
+        "item": "Kula Hospital, Maui restoration announcement",
+        "reason": "September project with no confirmed effective reopening; emergency department remained closed",
+        "source_url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/"
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital maternity closure",
+        "reason": "August announcement of prospective December 18 change, known before observation window",
+        "source_url": "https://www.washingtonpost.com/national/2026/08/07/labor-delivery-mainehealth-lincoln-hospital-close-december/f785ce34-9277-11f1-9fdc-0a725c989a7b_story.html"
+      },
+      {
+        "item": "Historical hospital and behavioral health service changes, Guam/CNMI emergency declarations",
+        "reason": "Outside observation window; not new effective U.S. access disruption"
+      },
+      {
+        "item": "UK maternity and hospital closures",
+        "reason": "Outside U.S. and territory scope"
+      }
+    ],
+    "source_access_errors": [
+      "CMS detail link resolution did not match the newly listed November 9 provider; index row verified but full notice/effective termination date unavailable."
+    ],
+    "coverage_limitations": [
+      "Search indexes returned older and non-U.S. results despite exact November 9 searches.",
+      "The CMS listing has a notice date but no exact time of appearance; finding classified as newly discovered since prior verified CMS snapshot, not proven posted within the hour.",
+      "Bounded search does not exhaustively scan all states and territories; same-hour indexing/reporting delays apply.",
+      "Production queue and deduplication records not verified; finding is for pending review only."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": true,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no review approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

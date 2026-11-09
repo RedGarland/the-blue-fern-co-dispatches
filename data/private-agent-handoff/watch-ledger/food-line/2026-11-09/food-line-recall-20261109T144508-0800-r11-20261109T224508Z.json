@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T144508-0800-r11-20261109T224508Z",
+  "scheduled_for": "2026-11-09T14:45:08-08:00",
+  "started_at": "2026-11-09T14:45:08-08:00",
+  "completed_at": "2026-11-09T14:46:04-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T13:47:09-08:00",
+    "end_at": "2026-11-09T14:46:04-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Begins at the independently verified completed_at of preceding Food Line watch ledger heartbeat; requires newly published or newly effective direct access disruption within this bounded interval, not historical reposts.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T134533-0800-r11-20261109T214533Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall check for four audited miss classes; production nationwide collection is authoritative.",
+    "target_classes": [
+      "Loss/fire/disaster closure of only, sole, last or full-service community grocery",
+      "Emergency food distribution canceled/suspended for disaster/weather/outage/facility damage",
+      "Abrupt pantry or food bank shutdown or major reduction in food access",
+      "New official SNAP, WIC or food assistance benefit/system interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast; recency 1 day, targeted to Nov 9 2026",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "November 9 2026 \"only grocery store\" closed fire town",
+      "November 9 2026 \"last grocery store\" closing residents",
+      "November 9 2026 \"sole supermarket\" fire shutdown",
+      "November 9 2026 food bank \"distribution canceled\" storm",
+      "November 9 2026 \"food distribution\" canceled flooding hurricane",
+      "November 9 2026 mobile pantry cancellation power outage",
+      "November 9 2026 \"food pantry\" \"closed\" \"today\" services",
+      "November 9 2026 food bank temporarily closes distribution services fire",
+      "November 9 2026 pantry service suspended suddenly building damage",
+      "November 9 2026 SNAP EBT benefits outage delayed state department notice",
+      "November 9 2026 WIC EBT systems down suspension benefits official",
+      "November 9 2026 official agency emergency food assistance benefits interruption inaccessible"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 7,
+      "failed": 1,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.cdss.ca.gov/inforesources/calfresh",
+        "https://daretocare.org/events/category/mobile-pantries/today/",
+        "https://kauainownews.com/category/lowell-recovery/",
+        "https://www.fns.usda.gov/snap/news-updates"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/news-updates",
+          "error": "Source returned internal error/inaccessible to web fetch; no new federal notice could be independently verified at this endpoint."
+        }
+      ],
+      "freshness_limits": [
+        "Dare to Care /today/ direct fetch returned an October 8 2026 calendar snapshot despite November 9 search index; not evidence of current November 9 service status.",
+        "Hawaiʻi SNAP agency page describes previously documented call-center delays without a November 9 timestamp."
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Spencer, NY sole grocery fire occurred September 11, 2026; historical duplicate."
+      },
+      {
+        "source_url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "El Paso food bank storm closure dates to September 25, 2026; not in window."
+      },
+      {
+        "source_url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+        "reason": "Alabama storm-related food distribution cancellation dated October 7, 2026; historical."
+      },
+      {
+        "source_url": "https://www.hometownstation.com/santa-clarita-news/community-news/santa-clarita-valley-food-pantry-unexpectedly-closes-580102",
+        "reason": "Santa Clarita Valley pantry strike closure dated January 27, 2026; historical."
+      },
+      {
+        "source_url": "https://idahocapitalsun.com/2025/11/24/homedale-food-pantry-social-service-provider-closes-amid-federal-funding-uncertainty/",
+        "reason": "Homedale pantry closure reported November 24, 2025; historical."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Virginia social service offices listed closures on November 5-6 with scheduled reopening November 9 8 a.m.; not a newly announced in-window SNAP/WIC benefit interruption."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing application and phone delay notice without an in-window dated new event."
+      },
+      {
+        "source_url": "https://kauainownews.com/category/lowell-recovery/",
+        "reason": "Latest indexed Hurricane Lowell emergency food coverage remained November 6; scheduled distributions, not canceled in-window."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Provider schedule contains ordinary distribution listings, no newly verified in-window cancellations."
+      },
+      {
+        "source_url": "https://www.cdss.ca.gov/inforesources/calfresh",
+        "reason": "CalFresh general information and older hot topics; no newly documented immediate-access interruption."
+      }
+    ],
+    "exclusion_policy": "Omit fundraising, routine distributions and resource listings, opinion, generic inflation, program promotion, historical/duplicated reports, and non-U.S. locations.",
+    "assessment": "Twelve targeted searches returned usable results and seven of eight direct-source page checks were accessible. None substantiated a newly reported qualifying U.S. food-access disruption since the last verified heartbeat. The single USDA page access failure limits that endpoint but does not materially impair supplementary coverage; the absence of a finding is not evidence of comprehensive nationwide absence.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T164343-0800-recall12",
+  "scheduled_for": "2026-11-08T16:45:22-08:00",
+  "started_at": "2026-11-08T16:43:43-08:00",
+  "completed_at": "2026-11-08T16:45:36-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T15:47:12-08:00",
+    "end": "2026-11-08T16:45:36-08:00",
+    "basis": "Previous independently fetched watch-ledger heartbeat completion through this supplementary recall's completion.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), OPO termination notice (CCN 18P001)",
+      "new_notices_since_prior_heartbeat": 0,
+      "checked_via": "Direct CMS official Public Notices table before all 12 additional targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closes suspends operations November 8 2026 US",
+      "maternity labor delivery services closed suspended November 8 2026 hospital",
+      "rural hospital emergency room shutdown ambulance no service November 2026",
+      "ambulance service ceased operations air medical base closure November 8 2026",
+      "behavioral health psychiatric hospital inpatient unit closure suspension November 2026",
+      "dialysis center closing suspended patients November 8 2026",
+      "oncology cancer center clinic closure service suspended November 2026",
+      "primary care clinic closing patients November 8 2026",
+      "site:gov 2026 November 8 hospital emergency service suspended closure reopening notice",
+      "Guam Puerto Rico Virgin Islands American Samoa CNMI hospital emergency dialysis clinic closure November 2026",
+      "hospital emergency department reopens after suspension November 8 2026 United States",
+      "air medical ambulance rescue service shutdown or suspended November 7 8 2026 county"
+    ],
+    "targeted_search_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Adventist Health White Memorial ambulance access obstruction during ICE incident, Los Angeles",
+        "reason": "November 8 local report at 13:47 PST describes November 7 incident, before current 15:47 PST start; not a new development in current watch window and previously discussed by prior watches.",
+        "source_url": "https://abc7.com/post/ice-presence-outside-boyle-heights-hospital-prompts-protest/20023368/"
+      },
+      {
+        "item": "Sharon Regional Medical Center, PA ER and other suspended hospital services",
+        "reason": "ER suspended November 4, all services effective November 6; already included in earlier watch exclusions. No further newly effective change discovered.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago maternity unit",
+        "reason": "Closure occurred November 1 and was already covered in prior watch exclusions.",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Minnesota maternity access desert research",
+        "reason": "November 8 MPR report concerns cumulative historical closures, not a newly effective service loss within observation window.",
+        "source_url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center"
+      },
+      {
+        "item": "University Hospitals Geneva Seidman Cancer Center, OH, upcoming closure",
+        "reason": "Previously announced September 2026 for future effective November 13; not newly announced or implemented during this window.",
+        "source_url": "https://www.cleveland19.com/2026/09/20/ill-just-have-go-further-patients-brace-longer-commutes-geneva-cancer-center-closes/"
+      },
+      {
+        "item": "Guam hospital storm-related emergency and outpatient suspensions",
+        "reason": "Relevant notices dated April and October 2026, no new operational change within this period.",
+        "source_url": "https://ghs.guam.gov/node/4352"
+      },
+      {
+        "item": "North Quadra urgent-care closure, British Columbia",
+        "reason": "Canada, outside geographic scope even though November 8 date is current.",
+        "source_url": "https://www.islandhealth.ca/locations/hospitals-health-centre-locations/north-quadra-urgent-and-primary-care-centre"
+      },
+      {
+        "item": "Other retrieved items",
+        "reason": "Older events, prospective plans or openings not restoring a previously lost essential service, ownership or policy stories, and unrelated search matches."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "result_summary": "CMS Public Notices' newest listed entry remained dated November 2. Twelve additional bounded searches across hospital/ED, maternity, rural, psychiatric, dialysis, oncology, primary care, EMS/air transport, reopening and U.S. territories found no substantiated, new, nonduplicate healthcare-access change in the period.",
+    "coverage_limitations": [
+      "Sunday and late-afternoon local reporting/search index delays may delay discovery of new incidents.",
+      "Search results contained older and out-of-scope items; no new event was inferred from headline alone.",
+      "Production collection is authoritative; supplementary run did not independently verify the production deduplication ledger."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T154616-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T15:47:12-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T014644-0800-recall12",
+  "scheduled_for": "2026-11-09T01:45:22-08:00",
+  "started_at": "2026-11-09T01:46:44-08:00",
+  "completed_at": "2026-11-09T01:47:53-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-09T00:49:02.794-08:00",
+    "end": "2026-11-09T01:47:53-08:00",
+    "basis": "Start is completed_at of directly verified most recent Care Line heartbeat on ops/watch-ledger (2026-11-09T00:49:02.794-08:00); end is this run's bounded observation cutoff.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, Organ Procurement Organization, CCN 18P001, Termination Notice",
+      "new_notices_in_window": 0,
+      "method": "Opened and inspected the official CMS Public Notices table before running additional targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closure ambulance diversion November 9 2026 US healthcare services",
+      "hospital maternity labor delivery closed suspended November 9 2026 United States",
+      "hospital behavioral health psychiatric service suspension closed November 9 2026 USA",
+      "dialysis center closed suddenly patient access November 9 2026 United States",
+      "oncology cancer clinic treatment services interrupted closure November 9 2026 US",
+      "primary care clinic abruptly closed patients November 9 2026 USA",
+      "rural hospital emergency department closed suspended reopening November 9 2026 US",
+      "ambulance EMS service suspension base closure November 9 2026 United States",
+      "air ambulance medical helicopter base closure suspension November 9 2026",
+      "hospital emergency room reopened restored service November 9 2026 US",
+      "site:cms.gov \"2026-11-09\" termination rescission CLIA provider",
+      "Puerto Rico Guam Virgin Islands Northern Mariana American Samoa hospital emergency clinic ambulance closure November 9 2026"
+    ],
+    "search_recency_days": 1,
+    "search_engine": "web targeted search",
+    "reviewed_exclusions": [
+      {
+        "item": "Anaheim Global Medical Center 911 ambulance receiving designation suspension, California",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/",
+        "reason": "Historical May 2026 event, not new within this interval."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Airport base closure, Illinois",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "September 16, 2026 closure, outside interval; aggregation not new local evidence."
+      },
+      {
+        "item": "Branch County local inpatient psychiatric service suspension, Michigan",
+        "source_url": "https://wtvbam.com/2026/07/30/965280/",
+        "reason": "Reported July 30, 2026; no new service consequence verified during this window."
+      },
+      {
+        "item": "Maternity losses in Maine, Minnesota and Texas",
+        "source_url": "https://themainemonitor.org/her-labor-turned-dangerous/",
+        "reason": "Historical access reporting, not an abrupt Nov 9 change."
+      },
+      {
+        "item": "Fiona Stanley Hospital ICU fire in Perth",
+        "source_url": "https://www.abc.net.au/news/2026-08-20/fire-at-icu-in-perth-s-fiona-stanley-hospital-forces-evacuation/107058760",
+        "reason": "August 2026 incident in Australia, outside both time window and U.S./territory geography."
+      },
+      {
+        "item": "Vista Medical Center East and Gateway Regional Medical Center Illinois ambulance bypasses",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/",
+        "reason": "Previously logged in earlier heartbeat; bypasses began November 7, not a new development during this window."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "result_summary": "CMS Public Notices remained topped by a November 2 notice. Twelve additional targeted searches spanning hospitals/ED, maternity, behavioral health, dialysis, oncology, primary care, rural service, ground and air EMS, concrete restorations, CMS/CLIA, and U.S. territories produced no newly verified nonduplicate access changes first announced or effective during the November 9 00:49–01:47 PST interval.",
+    "coverage_limitations": [
+      "Overnight local reporting and indexing lags may delay discovery of genuine events.",
+      "Search results were dominated by older or out-of-scope stories; absence of confirmed findings is not proof of absence.",
+      "Bounded supplementary recall does not replace production national collection.",
+      "Production intake and deduplication records were not directly accessed."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T004902-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-09T00:49:02.794-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

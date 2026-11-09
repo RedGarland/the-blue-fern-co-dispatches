@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T024315-0800-r11-20261109T104315Z",
+  "scheduled_for": "2026-11-09T02:45:54-08:00",
+  "started_at": "2026-11-09T02:43:15-08:00",
+  "completed_at": "2026-11-09T02:45:46.428-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T01:51:11-08:00",
+    "end_at": "2026-11-09T02:45:46.428-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Verified previous Food Line watch-ledger heartbeat completion. Searches use 2-day recency to detect newly indexed reporting; only new or materially changed qualifying disruptions in this interval are findings.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T015011-0800-r11-20261109T095011Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary audited-miss recall only; production nationwide Food Line collector is authoritative.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting a community's only, sole, last or full-service grocery store",
+      "Canceled or suspended emergency food distribution due to storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank service closure or major food-access reduction",
+      "Official new SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_recency_days": 2,
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" fire closure flooded November 9 2026",
+      "\"last grocery store\" closes November 2026 rural town",
+      "\"only full service grocery store\" closed November 2026 storm",
+      "\"sole grocery store\" damaged flooding 2026 November 9",
+      "\"food distribution\" \"canceled\" storm November 9 2026",
+      "\"food bank\" \"distribution cancelled\" flood fire November 2026",
+      "\"food pantry\" \"temporarily closed\" emergency November 9 2026",
+      "\"food pantry\" \"suspended services\" November 2026",
+      "\"SNAP\" \"EBT\" outage \"November 9\" \"2026\" state",
+      "site:gov \"WIC\" \"system outage\" \"November\" \"2026\"",
+      "site:gov \"SNAP\" \"benefits unavailable\" \"Nov 9\" 2026",
+      "\"food bank\" \"closed due to\" fire storm flood November 9 2026"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 7,
+      "failed": 1,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/",
+        "https://www.azahcccs.gov/Shared/News.html",
+        "https://www.fns.usda.gov/snap/state-directory",
+        "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "reason": "Georgia Public Broadcasting's November 6 report documents loss of McCaysville's only grocery store following flooding; already recorded in prior watches and no verified materially new impact since 01:51:11 PST."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "November 9 Mobile Food Pantry distributions remain scheduled, not canceled; routine listings excluded."
+      },
+      {
+        "source_url": "https://www.azahcccs.gov/Shared/News.html",
+        "reason": "Arizona AHCCCS November 8 system upgrade was preannounced on October 26 and affects the AHCCCS Solutions Center, not newly verified SNAP/WIC benefit access."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing application/telephone wait-time notice, without a new dated immediate benefits interruption."
+      },
+      {
+        "source_url": "https://abcnews.com/Politics/timeline-legal-battle-surrounding-snap-benefits-funding/story?id=127364855",
+        "reason": "November 9, 2025 SNAP legal dispute, not November 2026; date-confounded search hit."
+      },
+      {
+        "source_url": "https://cbsaustin.com/news/local/fire-destroys-small-central-texas-towns-only-grocery-store",
+        "reason": "Only grocery store fire occurred March 2020, out of window."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.fns.usda.gov/snap/state-directory",
+        "type": "HTTP_403_FORBIDDEN",
+        "material": false,
+        "note": "Recurring USDA SNAP state-directory access restriction. Other state agency pages and targeted searches accessible. Does not establish current disruption."
+      }
+    ],
+    "coverage_assessment": "Twelve targeted searches returned results without tool errors; results were mostly older grocery closures, legacy 2025 SNAP reports, routine pantry listings or unrelated agency documents. Seven of eight direct sources accessible. No new qualifying U.S. food-access disruption verified in the bounded hourly interval; limited source discovery cannot establish absence nationwide. One nonmaterial USDA 403 yields DEGRADED rather than SUCCESS.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine program promotion, inflation commentary, historical events, undated references, duplicates and non-food-agency interruptions.",
+    "notification_assessment": "No new qualifying signal and only a recurring nonmaterial source-access restriction; user notification suppressed.",
+    "controls": "No review approvals, publication, production changes, schedule modifications, task disabling or other mutations."
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T124451-0800-r11-20261109T204529Z",
+  "scheduled_for": "2026-11-09T12:44:51-08:00",
+  "started_at": "2026-11-09T12:44:07-08:00",
+  "completed_at": "2026-11-09T12:45:29-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T19:41:28Z",
+    "end": "2026-11-09T20:45:29Z",
+    "local_start": "2026-11-09T11:41:28-08:00",
+    "local_end": "2026-11-09T12:45:29-08:00",
+    "previous_run_completed_at": "2026-11-09T11:41:28-08:00",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Bounded supplementary recall since authenticated preceding heartbeat ended 11:41:28 PST on 9 November 2026. Palestine time is ten hours ahead of PST at this date."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only. Authoritative daily Gaza production collection and publication unchanged.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T114451-0800-r11-20261109T194128Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "status": "accessible",
+        "result": "Report dated 9 November covers the 6–8 November rain, shelter destruction, infrastructure damage and temporary healthcare disruptions. Impacts and estimates previously registered; no newly verified in-window event."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "WHO_GLOBAL_ACCESSIBLE; WHO_EMRO_HTTP_502",
+        "result": "Global page accessible with no in-window Gaza health operational news; regional resource endpoint returned HTTP 502, same failure as preceding watch."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"09/November/2026\" Gaza \"22:\" killed injured",
+      "site:wafa.ps/news/2026/11/9 غزة الساعة العاشرة مساء شهداء جرحى نازحين",
+      "site:reuters.com/world/middle-east/ Gaza Nov 9 2026 20:00 GMT ceasefire aid storm casualties",
+      "site:apnews.com/article/ Gaza November 9 2026 evening civilians displaced medical crossing storm",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"9 Nov 2026\" Gaza hospitals medical evacuation rainfall water",
+      "site:palestinercs.org Gaza November 9 2026 ambulance access injury flooding",
+      "site:unicef.org Gaza \"9 November 2026\" shelter water children winter flooding",
+      "site:wfp.org Gaza \"9 November 2026\" food distribution crossings",
+      "site:icrc.org/en Gaza November 9 2026 detainees released hostages medical humanitarian",
+      "site:aljazeera.com/news/2026/11/9/ Gaza 9 November 2026 latest medical evacuation civilians",
+      "site:theguardian.com/world/2026/nov/09 Gaza rain aid hospital ceasefire attacks",
+      "Gaza 9 November 2026 21:40 22:30 Palestine time WAFA casualty crossing flooding hospital breaking"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "Most recent items at 22:16 and 22:13 Palestine time concerned Abu Shukheidem/Ramallah and a ministerial inspection; 21:44 and 21:01 concern West Bank. Most recent Gaza fatality item 20:24 Palestine time (10:24 PST), already recorded."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "accessible",
+        "result": "Latest listed at 21:57 Palestine time is Nablus, while latest listed Gaza death from previous injuries is 20:31 (10:31 PST), already recorded. No new Gaza in-window injury or medical evacuation."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "status": "accessible",
+        "result": "Latest homepage operational entry dated 2 November; no in-window new ambulance or hospital disruption."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Persistent source restriction."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/tags/gaza",
+        "status": "restricted",
+        "result": "Persistent access restriction."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/environment/four-killed-gaza-after-sand-embankment-collapses-tents-2026-11-09/",
+        "status": "accessible_via_search",
+        "result": "Deir al-Balah collapse describes previously logged 6–8 November rain incident. Differing casualties not independently reconciled."
+      },
+      {
+        "publisher": "The Guardian",
+        "url": "https://www.theguardian.com/world/2026/nov/09/witnesses-struggle-save-people-buried-gaza-landslide",
+        "status": "accessible_via_search",
+        "result": "Previously logged Deir al-Balah landslide in 6–8 November storm; no discrete new incident."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "West of Jabalia death from earlier airstrike",
+        "reason": "Already recorded in previous watches, published 20:24–20:31 Palestine time, before observation window."
+      },
+      {
+        "event": "Rafah medical evacuation of 23 patients and 28 companions",
+        "reason": "Previously recorded; no new crossing total verified."
+      },
+      {
+        "event": "Three displaced people injured by wall collapse north of Nuseirat",
+        "reason": "Already recorded; no new injury count."
+      },
+      {
+        "event": "Deir al-Balah embankment collapse and flooding impact report",
+        "reason": "Occurred before the observation window and already recorded; different published casualty totals not counted as a separate event."
+      },
+      {
+        "event": "WAFA account of storm damage to livelihoods and three small businesses in Khan Younis",
+        "reason": "WAFA report published 16:08 Palestine time (06:08 PST), before window; contextual report about previously identified storm."
+      },
+      {
+        "event": "WAFA Arabic 21:01–22:16 updates",
+        "reason": "Recent articles concern West Bank events or non-Gaza government activity; outside remit."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "current_status": "HTTP 502",
+        "prior_status": "HTTP 502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global and OCHA OPT"
+      },
+      {
+        "publisher": "UNRWA",
+        "current_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA OPT/WFP"
+      },
+      {
+        "publisher": "UN News",
+        "current_status": "restricted",
+        "prior_status": "restricted",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA OPT and reporting"
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked before exactly twelve further targeted searches. WAFA Arabic/English recent queues and primary-source pages inspected directly. No distinct verified Gaza development newly published in the observation interval. Persistent WHO EMRO, UNRWA and UN News restrictions justify DEGRADED; no material new deterioration and alternative humanitarian coverage available.",
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no approval",
+      "no production publication",
+      "no social posting",
+      "no scheduling changes",
+      "no automation disablement"
+    ]
+  }
+}

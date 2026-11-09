@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T184111-0800-r11-20261109T024111Z",
+  "scheduled_for": "2026-11-08T18:45:54-08:00",
+  "started_at": "2026-11-08T18:41:11-08:00",
+  "completed_at": "2026-11-09T02:42:51.176Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T01:51:31.036Z",
+    "end_at": "2026-11-09T02:42:51.176Z",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior hourly heartbeat read and independently verified from ops/watch-ledger. Search queries searched one-day recency as a discovery lookback; only developments after prior completed_at count as new.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T174909-0800-r11-20261109T014909Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only. Nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss, fire, closure, disaster",
+      "Emergency food distribution canceled or suspended for storm, flood, fire, outage, facility damage",
+      "Abrupt pantry or food bank closure or major service reduction",
+      "Official SNAP, WIC or other immediate food-assistance interruption"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" \"closed\" OR \"fire\" November 8 2026",
+      "\"sole grocery store\" \"fire\" OR \"flood\" OR \"shut\" November 2026",
+      "\"last grocery store\" closing November 2026 community",
+      "\"food distribution\" \"canceled\" \"storm\" November 8 2026",
+      "\"food distribution\" suspended flooding power outage November 2026",
+      "\"food pantry\" \"closed\" \"fire\" November 8 2026",
+      "\"food bank\" \"closed\" \"flood\" OR \"storm\" November 2026",
+      "site:gov \"SNAP\" \"benefits\" \"interruption\" \"November 8, 2026\"",
+      "site:gov \"WIC\" \"service disruption\" \"November 2026\"",
+      "\"SNAP\" \"EBT\" \"outage\" November 8 2026 state agency",
+      "\"food pantry\" \"temporarily closed\" November 2026",
+      "\"emergency food distribution\" \"cancelled\" November 2026"
+    ],
+    "search_recency_days": 1,
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 6,
+      "failed": 0,
+      "urls": [
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/",
+        "reason": "Nov 7 article documents Utah pantry closures already discussed at Nov 4 county meeting, not new in hourly window."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov 6 Hurricane Lowell recovery/resource reporting; no in-window emergency distribution cancellation substantiated."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Official ongoing Hawaii SNAP call-center delays, undated; no evidence of newly initiated interruption in window."
+      },
+      {
+        "source_url": "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "reason": "Earlier Nov 6 Mecklenburg County service office outage; previously reviewed, not new in window."
+      },
+      {
+        "source_url": "https://solomonswords.net/democrats-collecting-for-newly-established-food-pantry-in-shongo/",
+        "reason": "Nov 8 food donation drive to a new pantry; explicitly excluded class."
+      },
+      {
+        "source_url": "https://patch.com/connecticut/fairfield/5-things-know-week-fairfield-0",
+        "reason": "Nov 8 planned pantry zoning meeting; no abrupt access loss."
+      },
+      {
+        "source_url": "https://spectrumlocalnews.com/tx/austin/news/2026/09/28/el-paso-braces-for-another-round-of-rain-after-already-shutting-down-a-food-bank-",
+        "reason": "Sep 28 El Paso storm-damaged food bank closure, out of window."
+      }
+    ],
+    "source_or_search_failures": [],
+    "coverage_assessment": "12/12 targeted searches, 6/6 direct-source checks succeeded. No newly reported, verified high-value disruption in the bounded interval; search results skewed older, so this is not exhaustive national coverage.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine program promotion, inflation coverage, duplicates, older incidents.",
+    "notification_assessment": "No new qualifying signal or material search failure; no notification warranted.",
+    "controls": "No editorial approval, publication, production changes, schedule modification, or task disabling."
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T094451-0800-r11-20261109T174654Z",
+  "scheduled_for": "2026-11-09T09:44:51-08:00",
+  "started_at": "2026-11-09T09:44:08-08:00",
+  "completed_at": "2026-11-09T09:46:54-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T16:45:08Z",
+    "end": "2026-11-09T17:46:54.849Z",
+    "local_start": "2026-11-09T08:45:08-08:00",
+    "local_end": "2026-11-09T09:46:54-08:00",
+    "basis": "Immediate predecessor heartbeat completed_at, verified via authenticated GitHub read. Palestinian source local time converted with Palestine +10 hours relative to PST on 2026-11-09. One clearly identified late-discovered incident published 6 minutes before prior heartbeat completion is explicitly marked outside the strict publication window and included as a previously missed, independently distinct recall event.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261109-nuseirat-al-mufti-displaced-tent-wall-collapse-injuries-3",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/9/%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%AB%D9%84%D8%A7%D8%AB%D8%A9-%D9%85%D9%88%D8%A7%D8%B7%D9%86%D9%8A%D9%86-%D8%AC%D8%B1%D8%A7%D8%A1-%D8%B3%D9%82%D9%88%D8%B7-%D8%B3%D9%88%D8%B1-%D9%85%D9%86%D8%B2%D9%84-%D8%B9%D9%84%D9%89",
+      "title": "Three Palestinians injured when a house wall falls onto displaced people's tent north of Nuseirat camp",
+      "original_title": "إصابة ثلاثة مواطنين جراء سقوط سور منزل على خيمة للنازحين وسط قطاع غزة",
+      "publisher": "Palestine News and Information Agency (WAFA), Arabic",
+      "source_date": "2026-11-09",
+      "publication_date": "2026-11-09T18:39:00+02:00",
+      "event_date": "2026-11-09",
+      "event_time": null,
+      "location": "Al-Mufti area, north of Nuseirat refugee camp, central Gaza Strip",
+      "affected_population_or_system": "Three displaced Palestinians injured by collapse of a home wall onto a shelter tent; severity and identities unverified",
+      "affected_population": "Displaced Palestinians sheltering in a tent",
+      "affected_system": "Civilian shelter safety; storm-exacerbated structural damage",
+      "exact_supporting_passage": "أصيب ثلاثة مواطنين، اليوم الاثنين، جراء سقوط سور منزل على خيمة تؤوي نازحين في منطقة المفتي شمال مخيم النصيرات، وسط قطاع غزة.",
+      "passage_language": "ar",
+      "source_type": "Palestinian official news agency (single-source reporting)",
+      "classification": "new",
+      "new_or_follow_up": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "discovered_during_run_id": "gaza-source-watch-20261109T094451-0800-r11-20261109T174654Z",
+        "discovered_at_or_after": "2026-11-09T09:44:08-08:00",
+        "published_inside_strict_observation_window": false,
+        "publication_offset_before_window_start_minutes": 6,
+        "overlap_policy": "Bounded late-discovery recall (6-minute overlap). Finding was not in immediately preceding zero-finding heartbeat or earlier positive incident summaries; distinguish it from the prior Deir al-Balah sand embankment collapse and earlier Gaza City strike.",
+        "verified_basis": "WAFA Arabic publisher page with explicit date/time and location; no independent secondary verification during this check.",
+        "caveat": "WAFA attributes three injuries but does not provide names, clinical severity, precise incident time, or independent corroboration. Storm involvement is contextual, not a separately verified cause of wall failure.",
+        "discovered_via": "WAFA Arabic homepage direct check, followed by the original article",
+        "previous_heartbeat_completed_at": "2026-11-09T08:45:08-08:00"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; daily production publisher and collector authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T084451-0800-r11-20261109T164508Z.json",
+    "previous_heartbeat_completed_at": "2026-11-09T08:45:08-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "result": "Homepage most recent Gaza update is heavy-rains situation report, dated Nov 9 describing Nov 6-8. Previously captured; no new report within window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "WHO_GLOBAL_ACCESSIBLE; WHO_EMRO_HTTP_502",
+        "result": "WHO global page accessible; its linked latest WHO regional news predates the observation window. WHO EMRO returned the same 502 restriction as prior watch."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"09/November/2026\" Gaza 18:00 19:00 casualties",
+      "site:wafa.ps/Pages/Details/ 9 نوفمبر 2026 غزة مساء إصابات شهداء",
+      "site:reuters.com/world/middle-east/ Gaza \"November 9, 2026\" strikes aid crossing",
+      "site:apnews.com/article/ Gaza November 9 2026 civilians strikes aid hospitals",
+      "site:aljazeera.com/news/2026/11/9/ Gaza evening 9 November casualties ceasefire",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"9 Nov 2026\" Gaza shelter food aid healthcare",
+      "site:unicef.org \"9 November 2026\" Gaza tents children water",
+      "site:wfp.org \"9 November 2026\" Gaza food kitchens trucking",
+      "site:palestinercs.org \"9 November 2026\" Gaza ambulances patients injured",
+      "site:icrc.org \"9 November 2026\" Gaza health detention exchange",
+      "Gaza \"November 9, 2026\" 19:00 20:00 Palestine crossing civilians storm hospitals",
+      "site:news.un.org/en Gaza \"9 November 2026\" humanitarian shelter health access"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "Identified 18:39 Palestine-time Nov 9 distinct Nuseirat shelter-wall collapse injury report (late-discovered by six minutes beyond strict window). Latest 19:03 medical officials meeting in Cairo did not record a new Gaza health service change; other headlines outside scope."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "homepage_timeout",
+        "result": "Search-indexed individual pages accessible; Rafah evacuation, Gaza City strike and daily death tally predate window and were previously captured or assessed."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "status": "accessible",
+        "result": "Latest visible news dated Nov 2; no verified in-window hospital or ambulance operations change."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "accessible",
+        "result": "Undated aggregate food insecurity/assistance figures lack evidence of in-window publication or event; excluded."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "result": "Persistent source-specific access failure; WHO global and OCHA alternatives available."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Persistent source-specific access failure; other UN sources available."
+      },
+      {
+        "publisher": "UN News Gaza",
+        "url": "https://news.un.org/en/tags/gaza",
+        "status": "robots_restricted",
+        "result": "Direct domain search blocked; alternate official and established reporting accessible."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "OCHA 9 Nov report of storm shelters, clinics, displacement and food disruptions",
+        "reason": "Already recorded in prior Gaza Source Watch ledgers; event on Nov 6-8"
+      },
+      {
+        "event": "WAFA 23 patients plus 28 companions depart Gaza through Rafah",
+        "reason": "Previously recorded in 06:44-hour heartbeat; publication 06:40 PST"
+      },
+      {
+        "event": "WAFA Nov 9 Gaza City drone-strike civilian injuries",
+        "reason": "Previously recorded in 01:44-hour positive heartbeat"
+      },
+      {
+        "event": "Reuters Nov 9 Deir al-Balah sand embankment collapse",
+        "reason": "Earlier storm event; number discrepancy is not a new incident"
+      },
+      {
+        "event": "WAFA Nov 9 19:03 Palestine-time meeting between Palestinian health minister and evacuated doctors in Cairo",
+        "reason": "Discussion of plans, without verified change to actual Gaza medical capacity or services"
+      },
+      {
+        "event": "Unverified social or OSINT aggregators and recycled storm accounts",
+        "reason": "No reliable independent source for a separate new event"
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "HTTP 502",
+        "prior_status": "HTTP 502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global, OCHA"
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA, WFP, UNICEF"
+      },
+      {
+        "publisher": "WAFA English homepage",
+        "status": "timeout",
+        "prior_status": "accessible",
+        "material_new_deterioration": false,
+        "mitigation": "WAFA Arabic homepage and article, indexed WAFA English articles"
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO explicitly checked first, followed by exactly 12 targeted searches and direct publisher verification. One separately identified Nov 9 incident was newly recovered through six-minute overlap with previous completed watch; publication lies just outside the strict current search window, explicitly disclosed. No independently confirmed new item was published within the strict 08:45-09:45 PST interval. Persistent WHO EMRO/UNRWA restrictions and new WAFA English timeout leave status DEGRADED; material core reporting continued via WAFA Arabic and OCHA.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no production publication",
+      "no approval",
+      "no social posting",
+      "no schedule change",
+      "no task disablement"
+    ]
+  }
+}

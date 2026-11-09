@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T174909-0800-r11-20261109T014909Z",
+  "scheduled_for": "2026-11-08T17:45:54-08:00",
+  "started_at": "2026-11-08T17:49:09-08:00",
+  "completed_at": "2026-11-09T01:51:31.036Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T16:47:17.171-08:00",
+    "end_at": "2026-11-09T01:51:31.036Z",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Prior heartbeat independently read from ops/watch-ledger (completed_at 2026-11-09T00:47:17.171Z); targeted discovery also looked back 2-3 days to identify late-indexed sources and exclude earlier incidents.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T164537-0800-r11-20261109T004537Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary nationwide Food Line production collection is authoritative.",
+    "target_classes": [
+      "Loss or closure from fire/disaster of only/sole/last/full-service community grocery",
+      "Emergency food distribution canceled or suspended by storm/flood/fire/outage/facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "November 8 2026 \"only grocery store\" closed fire flood town",
+      "November 8 2026 \"sole grocery store\" fire closed rural",
+      "November 8 2026 \"last grocery store\" closes community",
+      "\"food distribution\" cancelled storm November 8 2026 food bank",
+      "\"food distribution\" canceled flooding November 7 8 2026",
+      "\"food pantry\" \"closed\" emergency November 8 2026",
+      "\"food bank\" suspended operations emergency November 2026",
+      "site:gov \"SNAP\" \"benefits\" delay November 8 2026 interruption",
+      "site:gov \"WIC\" \"services\" interrupted November 2026 outage",
+      "November 8 2026 EBT outage benefits state assistance disrupted SNAP",
+      "November 8 2026 \"food pantry\" \"closed\" \"today\" news",
+      "November 8 2026 \"food distribution\" \"canceled\" \"storm\" OR \"power\""
+    ],
+    "search_recency_days": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      2,
+      2
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 9,
+      "successful": 9,
+      "failed": 0,
+      "urls": [
+        "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/",
+        "https://townlift.com/2026/11/heber-food-pantry-expands-access-to-meet-growing-needs-after-food-bank-closures/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "https://www.bountifulfoodpantry.org/",
+        "https://masonfoodpantry.org/calendar"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/",
+        "reason": "Published Nov. 7 and describes closures already acknowledged at the Nov. 4 county meeting; significant older access issue, not a new disruption since the preceding 16:47 PST checkpoint."
+      },
+      {
+        "source_url": "https://townlift.com/2026/11/heber-food-pantry-expands-access-to-meet-growing-needs-after-food-bank-closures/",
+        "reason": "Published Nov. 5, documents earlier Community Action Services and Food Bank closure and expanded alternative Heber pantry access; no in-window change."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov. 6 Kauai hurricane recovery reporting says emergency food distribution remains scheduled; no cancelled distribution."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Hawaii SNAP telephone processing delays are continuing, undated on official notice; no newly dated acute interruption."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Official Virginia DSS alert index, no verified new food benefit access interruption in window."
+      },
+      {
+        "source_url": "https://news.mecknc.gov/news/power-outage-affects-mecklenburg-county-services-valerie-c-woodard-center-0",
+        "reason": "Mecklenburg County Nov. 6 office outage is older, alternative SNAP application access remained available."
+      },
+      {
+        "source_url": "https://www.bountifulfoodpantry.org/",
+        "reason": "Pantry Veterans Day Nov. 11 closure is planned holiday scheduling, not acute closure."
+      },
+      {
+        "source_url": "https://masonfoodpantry.org/calendar",
+        "reason": "Pantry Nov. 11 Veterans Day/holiday closures are planned rather than emergency shutdown."
+      },
+      {
+        "source_url": null,
+        "reason": "Other indexed results were 2020–2025 news, Canadian sources, routine resource guides/food drives, future pantry schedules, and unrelated program policies."
+      }
+    ],
+    "source_or_search_failures": [],
+    "coverage_assessment": "12/12 targeted searches and 9/9 direct source checks completed. No new qualifying disruption verified in hourly interval. Search results skewed older, so a zero result is not evidence of exhaustive national coverage.",
+    "notification_assessment": "No newly qualifying verified event and no material watch failure; no notification warranted.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine program promotion, generic inflation stories, duplicates.",
+    "controls": "No approval, publication, production mutation, schedule change or task disabling."
+  }
+}

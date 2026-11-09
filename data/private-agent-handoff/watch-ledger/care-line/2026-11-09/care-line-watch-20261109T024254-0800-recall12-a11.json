@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T024254-0800-recall12-a11",
+  "scheduled_for": "2026-11-09T02:45:22-08:00",
+  "started_at": "2026-11-09T02:42:54-08:00",
+  "completed_at": "2026-11-09T02:44:40-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-09T01:47:53-08:00",
+    "end": "2026-11-09T02:44:40-08:00",
+    "basis": "Previous verified Care Line heartbeat completed_at through current bounded observation cutoff. Nominal schedule time is 02:45:22 PST; this execution began before that nominal time.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, CCN 18P001, Organ Procurement Organization termination",
+      "new_notices_in_window": 0,
+      "method": "Opened the official CMS Public Notices table and verified top dated rows before targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed ambulance diversion Nov 9 2026 US 2026",
+      "hospital labor delivery maternity unit closed suspended Nov 8 9 2026 US",
+      "behavioral health psychiatric hospital unit suspended admissions November 9 2026 USA",
+      "dialysis center abruptly shut closed patients November 8 9 2026 US",
+      "oncology cancer clinic chemotherapy services suspended closure November 9 2026 United States",
+      "primary care clinic sudden closure patients November 9 2026 USA",
+      "rural hospital emergency room temporarily closed services Nov 9 2026 US",
+      "ambulance EMS base service closing suspended November 8 9 2026 counties United States",
+      "air ambulance helicopter medical flight base closing suspending November 8 9 2026 US",
+      "hospital emergency department reopening restored patient service Nov 8 9 2026 US",
+      "site:cms.gov \"November 9, 2026\" \"CLIA\" \"termination\" provider",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa hospital clinic emergency ambulance service closing November 8 9 2026"
+    ],
+    "search_recency_days": "1-2",
+    "search_engine": "web targeted fast search",
+    "reviewed_exclusions": [
+      {
+        "item": "Prevea Washington Street Health Center primary and urgent care (Green Bay, WI), last patient day planned November 13, 2026",
+        "source_url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center",
+        "reason": "Undated standing website notice; could not establish a first announcement or new effect within the 01:47–02:44 PST window. Planned November 13 closure not yet effective."
+      },
+      {
+        "item": "Vista Medical Center East and Gateway Regional Medical Center Illinois ambulance bypasses",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/",
+        "reason": "Already documented in previous Care Line heartbeat; bypasses took effect November 7."
+      },
+      {
+        "item": "Anaheim Global Medical Center 911 receiving designation suspension, California",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/",
+        "reason": "May 2026 event, not new."
+      },
+      {
+        "item": "Lehigh Valley Hospital–Dickson City ED reopening",
+        "source_url": "https://www.lvhn.org/news/jefferson-health-announces-reopening-plans-lehigh-valley-hospital-dickson-city",
+        "reason": "February 2026 reopening, not new."
+      },
+      {
+        "item": "CMS CY 2027 Physician Fee Schedule final rule",
+        "source_url": "https://www.cms.gov/medicare/payment/fee-schedules/physician/federal-regulation-notices/cms-1848-f",
+        "reason": "November 9 publication of a regulation, not a named facility provider termination, CLIA restriction, or concrete sudden healthcare-service access loss."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "result_summary": "Official CMS notices latest entry 2026-11-02. Twelve additional targeted searches across hospital/ED, maternity, psychiatric, dialysis, oncology, primary care, rural, EMS/air medical, restorations, CMS/CLIA and U.S. territories found no verified new, in-window, nonduplicate healthcare-access change.",
+    "coverage_limitations": [
+      "Overnight reporting and search-index lag may delay discovery.",
+      "Relevant-looking search results were historical, undated, prospective, geographically out of scope, or not access changes.",
+      "Production collection and its deduplication queue were not accessed; the supplementary recall watch is not authoritative."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T014644-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-09T01:47:53-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T034451-0800-r11-20261109T114443Z",
+  "scheduled_for": "2026-11-09T03:44:51-08:00",
+  "started_at": "2026-11-09T03:44:43-08:00",
+  "completed_at": "2026-11-09T03:46:44-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T10:42:27Z",
+    "end": "2026-11-09T11:46:44.937Z",
+    "local_start": "2026-11-09T02:42:27-08:00",
+    "local_end": "2026-11-09T03:46:44-08:00",
+    "basis": "Observation starts at the verified immediate predecessor heartbeat completion; publication and event dates checked separately. New-to-watch findings must be distinct, non-duplicative and in the observation interval.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary daily Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T024451-0800-r11-20261109T104126Z.json",
+    "previous_verified_completed_at": "2026-11-09T02:42:27-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Latest OCHA report (posted 9 Nov; events 6–8 Nov) on flooding, shelter damage and health-service disruption already captured in prior finding heartbeat. No newer OCHA Gaza report posted.",
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026"
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.emro.who.int/opt/",
+        "global_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "regional_HTTP_502_global_accessible",
+        "result": "WHO EMRO returned 502 again; accessible global WHO emergency portal displayed no 9 Nov Gaza development."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"09/November/2026\" killed injured after 12 pm",
+      "Gaza November 9 2026 civilian casualties strikes November 9 afternoon Reuters AP",
+      "site:unicef.org Gaza \"9 November 2026\" water children shelter",
+      "site:wfp.org Gaza \"9 November 2026\" aid food access",
+      "site:reliefweb.int \"Gaza\" \"9 Nov 2026\" health medical evacuation",
+      "Gaza November 9 2026 ceasefire talks hostage detainee prisoner release update Israel",
+      "site:english.wafa.ps/Pages/Details/ \"09/November/2026\" \"GAZA\" \"PM\" wounded",
+      "Gaza today November 9 2026 injuries killed Gaza City Khan Younis Rafah Palestinian sources 13:00",
+      "Gaza November 9 2026 Rafah crossing aid trucks medical evacuations WHO OCHA update",
+      "Gaza November 9 2026 floods hospitals clinic functioning health cluster new damage",
+      "Gaza November 9 2026 Israel airstrikes attacks civilians latest Al Jazeera Middle East Eye Anadolu",
+      "site:unrwa.org OR site:un.org OR site:icrc.org \"9 November 2026\" \"Gaza\" shelter humanitarian"
+    ],
+    "additional_search_execution": "Exactly 12 targeted searches in two batches of six, after two official-first OCHA OPT/WHO searches; direct publisher/portal verification is not counted as search.",
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "Newest surfaced Gaza strike-and-injuries article remains the November 9 11:51 AM Palestine-time report, already recorded in prior finding heartbeat. Current homepage did not surface a newer Gaza casualty event."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "WAFA posted a medical-source 48-hour aggregate at 12:24 PM Palestine time (02:24 AM PST): three bodies and 15 injured patients received by hospitals, cumulative toll 74,643 killed/175,962 injured. The article predates the immediate predecessor watch completion by ~18 minutes and its two-day reporting period predates the observation window; no separable new incident or post-window revision established. Kept as outside-window recall note, not counted as current finding.",
+        "source_url": "https://www.wafa.ps/news/2026/11/9/%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9-%D8%AD%D8%B5%D9%8A%D9%84%D8%A9-%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D8%A5%D9%84%D9%89-74643-%D9%88%D8%A7%D9%84%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A5%D9%84%D9%89"
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring access restriction; no new deterioration."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "HTTP 502",
+        "prior_status": "HTTP 502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global emergency page and OCHA OPT accessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA OPT and independent news publishers accessible."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "WAFA Gaza City Al-Sina'a junction civilian injuries, November 9 at 11:51 AM Palestine time",
+        "reason": "Already recorded in prior positive heartbeat; no verified new casualty detail."
+      },
+      {
+        "event": "OCHA Gaza storm shelter assessments and health-service disruptions (6–8 Nov)",
+        "reason": "Same 9 Nov OCHA report and underlying events already recorded in prior positive heartbeat."
+      },
+      {
+        "event": "WAFA medical-source daily casualty update published November 9 at 12:24 PM Palestine time",
+        "reason": "Published ~02:24 PST, before the immediate previous watch completed at 02:42 PST, with 48-hour retrospective totals; no new incident identifiable inside current window. Preserve as out-of-window recall context for primary collector, not a positive finding."
+      },
+      {
+        "event": "Deir al-Balah sand-hill collapse, flooding and previously reported fatalities",
+        "reason": "Previously recorded; no independent new death or injury report in current interval."
+      },
+      {
+        "event": "Earlier negotiations, older medical-evacuation/crossing metrics, unrelated regional incidents, opinion and unsupported claims",
+        "reason": "Not new or not substantiated as new Gaza civilian impact."
+      }
+    ],
+    "coverage_assessment": "No distinct, verifiable and in-window qualifying development since 02:42:27 PST. WHO EMRO 502 and UNRWA 403 persist, with official OCHA and other accessible reporting mitigating; DEGRADED is retained rather than FAILED. No materially new degradation relative to immediate predecessor.",
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no production publication",
+      "no approval",
+      "no social posting",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T235215-0800-r11-20261109T075215Z",
+  "scheduled_for": "2026-11-08T23:45:54-08:00",
+  "started_at": "2026-11-08T23:52:15-08:00",
+  "completed_at": "2026-11-09T07:54:32.904Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T06:52:01.296Z",
+    "end_at": "2026-11-09T07:54:32.904Z",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last verified Food Line ops/watch-ledger heartbeat completed_at; 2–3 day discovery recency used only to detect newly reported or materially updated access disruptions within this interval.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T225031-0800-r11-20261109T065031Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary audited-miss recall watch only; primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss or closure due to fire/disaster",
+      "Canceled/suspended emergency food distribution from storms/flood/fire/outage/facility damage",
+      "Abrupt pantry or food bank closure or major service reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 8 2026 United States",
+      "\"sole grocery store\" shut down lost community November 2026",
+      "\"last grocery store\" closed \"November\" 2026 town",
+      "\"food distribution\" canceled storm flooding power outage \"November 8\" 2026",
+      "\"food pantry\" closed abruptly \"November 8\" 2026",
+      "\"food bank\" \"suspend\" distribution weather November 2026",
+      "\"SNAP\" \"benefits\" \"interrupted\" \"November 8, 2026\" state",
+      "\"WIC\" \"outage\" \"November 8\" 2026 benefits",
+      "site:gov \"SNAP\" \"system outage\" \"November 2026\" benefits",
+      "site:gov \"WIC\" \"temporarily unavailable\" \"November\" \"2026\"",
+      "\"food pantry\" \"emergency closure\" \"November 2026\" local",
+      "\"food distribution\" \"cancelled\" \"flooding\" \"November\" \"2026\" United States"
+    ],
+    "search_recency_days_range": [
+      2,
+      3
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 7,
+      "failed": 1,
+      "urls": [
+        "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "https://www.shareofmclean.org/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.kauai.gov/Government/Departments-Agencies/Emergency-Management"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "reason": "The only-grocery-store flood damage in McCaysville, GA was reported November 6 and documented in prior hourly watches; not new since prior heartbeat."
+      },
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer NY only-grocery-store fire occurred before this observation period."
+      },
+      {
+        "source_url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "reason": "Eastport ME single-grocery closure announced in August; out-of-window duplicate."
+      },
+      {
+        "source_url": "https://www.shareofmclean.org/",
+        "reason": "Provider posted Veterans Day and Thanksgiving closures on dates November 11/25/28, routine planned holidays, not abrupt damage-related interruption."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Upcoming Michigan distributions November 9 onward remain scheduled; no qualifying cancellation."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing undated SNAP interview/call center wait-time notice, not a newly confirmed benefit interruption."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "No newly dated immediate FoodShare interruption identified on official member news page."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No newly dated immediate SNAP/WIC interruption verified on accessible official alerts page."
+      },
+      {
+        "source_url": "https://www.diningandcooking.com/us/79765/",
+        "reason": "November 6 article describes reopening/new grocery access in Vinton County, not loss of access."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.kauai.gov/Government/Departments-Agencies/Emergency-Management",
+        "type": "WEB_OPEN_INTERNAL_ERROR",
+        "material": false,
+        "note": "One county emergency management directory could not be accessed; alternate local and official sources remained accessible and no new qualifying cancellation was otherwise corroborated."
+      }
+    ],
+    "coverage_assessment": "All 12 bounded targeted searches returned results; 7 of 8 direct-source checks accessible. One county emergency directory could not be opened, making run DEGRADED by policy but not materially impairing current recall coverage. No source-verified newly qualifying disruption within the interval. Search-index delays and scope mean this is not proof of national absence.",
+    "excluded_content": "Donation drives, resource directories, recipes, opinion, routine promotions/closures/distributions, inflation, older or previously audited events, uncorroborated outage anecdotes.",
+    "notification_assessment": "No new qualifying signal and only nonmaterial single-source access failure; suppress user notification.",
+    "controls": "No approval, publication, production collection alteration, schedule change, or automation disabling."
+  }
+}

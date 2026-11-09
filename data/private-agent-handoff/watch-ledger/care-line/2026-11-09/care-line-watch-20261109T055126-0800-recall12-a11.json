@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T055126-0800-recall12-a11",
+  "scheduled_for": "2026-11-09T05:45:22-08:00",
+  "started_at": "2026-11-09T05:51:26-08:00",
+  "completed_at": "2026-11-09T05:52:20-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-09T04:49:15-08:00",
+    "end": "2026-11-09T05:52:20-08:00",
+    "basis": "Start is exact verified completed_at in prior care-line watch heartbeat; end is local observation time after CMS check and 12 targeted searches.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), organ procurement organization, termination notice",
+      "new_notices_in_window": 0,
+      "method": "Official CMS listing opened and inspected before additional targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department shut down closed overnight November 9 2026 United States",
+      "hospital maternity labor delivery unit suspended closed Nov 9 2026 USA",
+      "rural hospital emergency care stopped service suspension November 9 2026",
+      "ambulance service air medical helicopter base closure suspension Nov 9 2026",
+      "behavioral psychiatric hospital inpatient admissions suspended November 9 2026",
+      "dialysis clinic oncology treatment primary care clinic closing immediately November 9 2026",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-11-09\" termination rescission CLIA",
+      "\"Nov 9, 2026\" \"emergency department\" \"closed\" OR \"suspended\" hospital",
+      "\"November 9, 2026\" \"ambulance\" \"suspended\" OR \"out of service\" OR \"closed\" healthcare",
+      "\"Nov. 9, 2026\" \"hospital\" \"reopens\" OR \"resumes\" emergency maternity",
+      "site:guampdn.com OR site:postguam.com OR site:virginislandsdailynews.com OR site:elnuevodia.com medical hospital closed suspended November 2026",
+      "\"November 9, 2026\" \"hospital\" \"EMS bypass\" OR \"diversion\" OR \"no longer accepting\""
+    ],
+    "search_engine": "web fast",
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East (Waukegan, Illinois) EMS bypass",
+        "reason": "Previously reported change effective November 7; outside this run window.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Anaheim Global Medical Center emergency receiving designation suspension",
+        "reason": "Reported May 9, 2026; historical.",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur air medical base closure",
+        "reason": "September 2026 closure; historical.",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "November 9 CMS 2027 reimbursement final rules",
+        "reason": "New rule publication but no identified discrete concrete essential-service loss or reopening in this interval.",
+        "source_url": "https://www.cms.gov/medicare/payment/prospective-payment-systems/home-health/home-health-prospective-payment-system-regulations-and-notices/cms-1844-f"
+      },
+      {
+        "item": "NHS maternity birth centre closures in England",
+        "reason": "Outside U.S. and territories.",
+        "source_url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights"
+      }
+    ],
+    "source_access_errors": [
+      {
+        "search_number": 11,
+        "issue": "robots.txt blocked access to guampdn.com, postguam.com, virginislandsdailynews.com in territory-targeted search",
+        "impact": "Limited direct verification of three territory-local sources; other results and CMS remained available.",
+        "material": false
+      }
+    ],
+    "result_summary": "No verified new in-window, nonduplicate U.S. or territory essential healthcare closure/suspension, EMS/air-medical cessation, CMS provider/CLIA action, or concrete effective restoration was found.",
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Three territory-local news domains were inaccessible under robots.txt; partial territory search coverage retained.",
+      "Early-morning reporting and indexing lag may hide events until a later run.",
+      "This was a supplementary bounded search, not primary collection or verified production deduplication."
+    ],
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T044826-0800-recall12-a11.json",
+    "previous_verified_completed_at": "2026-11-09T04:49:15-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

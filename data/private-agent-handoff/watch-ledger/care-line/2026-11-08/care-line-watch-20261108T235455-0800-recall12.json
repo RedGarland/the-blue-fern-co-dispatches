@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T235455-0800-recall12",
+  "scheduled_for": "2026-11-08T23:45:22-08:00",
+  "started_at": "2026-11-08T23:54:55-08:00",
+  "completed_at": "2026-11-08T23:55:55-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T22:50:38-08:00",
+    "end": "2026-11-08T23:55:55-08:00",
+    "basis": "Start is completed_at of directly fetched preceding Care Line watch heartbeat on ops/watch-ledger; end is this run's observation cutoff.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization, CCN 18P001, termination notice",
+      "new_notices_in_window": 0,
+      "method": "Opened official CMS Public Notices page before all 12 targeted searches; the latest listed legal notice remained November 2."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed diverted ambulances November 8 2026 United States",
+      "hospital closes suspends services November 8 2026 Sunday US",
+      "maternity labor delivery unit closure suspend November 8 2026 hospital",
+      "rural hospital emergency services shutdown November 8 2026 local news",
+      "mental health behavioral psychiatric unit abruptly closes November 8 2026 US",
+      "dialysis center oncology cancer clinic closed November 8 2026 patients",
+      "ambulance service closes stops operations November 8 2026 United States local",
+      "air medical helicopter base closure ambulance suspension November 8 2026",
+      "primary care clinic urgent care closed suddenly November 8 2026 patients",
+      "hospital emergency room reopened restored services November 8 2026 United States",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-11-08\" OR \"2026-11-09\" termination",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital emergency clinic service closure November 8 2026"
+    ],
+    "search_recency_days": 2,
+    "search_engine": "web targeted search",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East and Gateway Regional Medical Center, Illinois, EMS bypasses",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/",
+        "reason": "Reported earlier on November 8; bypasses began November 7 and were already noted in preceding heartbeat, not new in this 22:50–23:55 PST interval."
+      },
+      {
+        "item": "Sharon Regional Medical Center, PA emergency department and broader service suspension",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+        "reason": "Effective November 4 and November 6, respectively; historical and already monitored."
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago, maternity closure",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Prior November 1 maternity closure; outside observation interval and previously monitored."
+      },
+      {
+        "item": "Minnesota rural maternity access data report",
+        "source_url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center",
+        "reason": "New publication about accumulated historical closures and access statistics, without a discrete new effective closure in watch window."
+      },
+      {
+        "item": "AdventHealth Rockmart Clinic services and hours expansion",
+        "source_url": "https://www.wrganews.com/2026/11/08/adventhealth-rockmart-clinic-expands-services-extends-hours-and-adds-cardiology-care/",
+        "reason": "Already effective November 5; not an abrupt restoration of previously lost essential services in the watch interval."
+      },
+      {
+        "item": "England NHS birth-centre closures",
+        "source_url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights",
+        "reason": "Outside U.S. or territory scope."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "result_summary": "CMS Public Notices checked first and unchanged since November 2. Twelve additional targeted searches across hospitals/ED, maternity, behavioral health, dialysis/oncology, primary care, rural emergency loss, ground/air EMS, restorations, CMS/CLIA, and territories yielded no verified new and nonduplicate service change first announced or effective during the 22:50–23:55 PST window.",
+    "coverage_limitations": [
+      "Late Sunday reporting and search indexing delays may mask developments until later checks.",
+      "Supplementary bounded web search is not the production national/territory collector.",
+      "Production intake/deduplication records were not independently accessible for cross-check; production remains authoritative."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T224900-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T22:50:38-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

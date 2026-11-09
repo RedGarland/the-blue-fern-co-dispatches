@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T145019-0800-recall11",
+  "scheduled_for": "2026-11-09T14:45:22-08:00",
+  "started_at": "2026-11-09T14:50:19-08:00",
+  "completed_at": "2026-11-09T14:52:11-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T13:49:55.438-08:00",
+    "end": "2026-11-09T14:52:11-08:00",
+    "basis": "From prior verified hourly Care Line Watch completion through this run; event discovery is compared with the prior heartbeat, not simply publication date."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary U.S. and territory healthcare-access recall, not the authoritative production collector.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T134747-0800-recall12-cms239199.json",
+    "prior_heartbeat_completed_at": "2026-11-09T13:49:55.438-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services, Michigan, HHA, CCN 239199, termination notice",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "index_accessible_detail_fetch_failed",
+      "issue": "The November 9 CMS index row was unchanged from the prior heartbeat. Its linked detail page failed to fetch (DisabledError); effective date remains unverified. Not reported again as a new finding."
+    },
+    "cms_preliminary_search_query": "site:cms.gov \"Public Notices\" Medicare 2026 November 9 termination home health",
+    "additional_targeted_searches_count": 11,
+    "targeted_search_queries": [
+      "November 9 2026 hospital closes emergency department temporarily suspends service United States",
+      "November 9 2026 rural hospital emergency room diversion closure local news",
+      "November 9 2026 labor delivery maternity unit closed suspended hospital",
+      "November 9 2026 behavioral health psychiatric inpatient unit shutdown admissions halted hospital",
+      "November 9 2026 dialysis center closes emergency suspended patients treatment",
+      "November 9 2026 cancer oncology clinic closure suspended infusion treatments",
+      "November 9 2026 community health clinic primary care closure walk in access",
+      "November 9 2026 ambulance service shut down suspension EMS station closure air medical base",
+      "November 9 2026 hospital emergency maternity service reopened restored after closure",
+      "November 9 2026 healthcare access hospital ambulance clinic Puerto Rico US Virgin Islands Guam Northern Mariana Islands American Samoa",
+      "November 9 2026 hospital ED maternity dialysis health service closure restoration state department of health notice"
+    ],
+    "search_method": "Checked the CMS Public Notices index directly first, reviewed linked notice (failed fetch), then performed 11 targeted recency-filtered web searches covering critical service lines, EMS, restorations, and U.S. territories.",
+    "reviewed_exclusions": [
+      {
+        "item": "West Suburban Medical Center, Oak Park, IL",
+        "reason": "March 2026 suspension/April 2026 follow-up; previously known, outside window."
+      },
+      {
+        "item": "Anaheim Global Medical Center 911 ambulance designation",
+        "reason": "May 2026 restriction, outside window."
+      },
+      {
+        "item": "Henderson Hospital, Nevada maternity/NICU announcement",
+        "reason": "August 2026 announcement, outside window."
+      },
+      {
+        "item": "DaVita Dialysis Center Novi, Michigan",
+        "reason": "June 2026 closure, outside window."
+      },
+      {
+        "item": "North Devon maternity service protest, UK",
+        "reason": "Published November 9 but non-U.S./territory and retrospective."
+      },
+      {
+        "item": "UC Davis rural primary-care feature dated November 9",
+        "reason": "Workforce profile; no new concrete service closure or restoration."
+      },
+      {
+        "item": "MaineHealth Lincoln Hospital obstetrics",
+        "reason": "Earlier prospective service change; not newly effective in this window."
+      },
+      {
+        "item": "Canadian primary-care listing",
+        "reason": "Outside U.S. and territory scope."
+      }
+    ],
+    "source_access_errors": [
+      "CMS Compassionate Home Health Services detail link returned DisabledError; official index row accessible."
+    ],
+    "coverage_limitations": [
+      "Search result relevance was weak; most hits were historic, prospective, or non-U.S.",
+      "CMS search snippet omitted the latest row although the directly fetched CMS page showed the November 9 row.",
+      "Bounded 11-search sampling does not exhaust all states or territories.",
+      "Late reporting and search-indexing delays can conceal same-hour changes.",
+      "Production queue and deduplication records were not independently verified."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no review approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

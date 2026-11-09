@@ -1,0 +1,128 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261108T225031-0800-r11-20261109T065031Z",
+  "scheduled_for": "2026-11-08T22:45:54-08:00",
+  "started_at": "2026-11-08T22:50:31-08:00",
+  "completed_at": "2026-11-09T06:52:01.296Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T05:44:09.191Z",
+    "end_at": "2026-11-09T06:52:01.296Z",
+    "observation_date": "2026-11-08",
+    "timezone": "America/Los_Angeles",
+    "basis": "Last independently retrieved ops/watch-ledger heartbeat; 2–3 day discovery lookback only, with new signals limited to events or material updates since previous completed_at.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T214213-0800-r11-20261109T054213Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch for audited miss classes only; nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss, closure, fire, or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank service closure or major access reduction",
+      "New official SNAP, WIC, or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire November 8 2026 community",
+      "\"last grocery store\" closure fire storm November 2026 town",
+      "\"sole grocery store\" damaged closed November 2026",
+      "\"full-service grocery store\" closed flooding fire November 2026",
+      "\"food pantry\" \"closed\" \"November 8, 2026\" emergency access",
+      "\"food bank\" \"suspended\" distributions \"November 8\" 2026",
+      "\"food distribution\" canceled storm flooding \"November 8\" 2026",
+      "\"food pantry\" power outage storm \"November 9 2026\" cancelled",
+      "\"SNAP\" \"benefits\" \"interruption\" \"November 8, 2026\" official notice",
+      "\"WIC\" \"EBT\" \"outage\" \"November 8 2026\" state agency",
+      "\"SNAP EBT\" \"system down\" November 8 2026 benefits",
+      "\"food bank\" \"fire\" \"closed\" \"November 8 2026\" local"
+    ],
+    "search_recency_days_range": [
+      2,
+      3
+    ],
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 11,
+      "successful": 10,
+      "failed": 1,
+      "urls": [
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://ebtcheckup.com/ebt-news/",
+        "https://www.bountifulfoodpantry.org/component/dpcalendar/location/6",
+        "https://coloradopetpantry.org/events/category/pet-food-banks/day/2026-11-09/",
+        "https://www.kcur.org/news/2026-11-07/a-kansas-city-grocery-store-thrives-where-others-closed-now-the-model-is-expanding",
+        "https://www.diningandcooking.com/us/82101/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.fredericksburgfreepress.com/2026/11/08/food-bank-distribution-this-week-78/",
+        "https://jfs.ohio.gov/about/communications/news/ohio-taking-steps-to-distribute-full-november-snap-benefits-next"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.kcur.org/news/2026-11-07/a-kansas-city-grocery-store-thrives-where-others-closed-now-the-model-is-expanding",
+        "reason": "Nov 7 report recounts Blue Parkway Sun Fresh closure on Oct 25, 2026; old event and not new within this hourly interval."
+      },
+      {
+        "source_url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "reason": "Eastport sole grocery closure announced in August 2026; out of window."
+      },
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "September 2026 Spencer, NY only-grocery fire; out of window."
+      },
+      {
+        "source_url": "https://www.diningandcooking.com/us/82101/",
+        "reason": "Nov 8 syndicated WBKO-branded text is a pantry resource directory and mentions an unverified broader shutdown-related SNAP lapse, not a newly documented official interruption since prior checkpoint."
+      },
+      {
+        "source_url": "https://ebtcheckup.com/ebt-news/",
+        "reason": "Independent aggregator lists Ohio November SNAP issuance delays as updated Nov 7, and other rules/policies dated before the current observation window; no fresh official interruption verified."
+      },
+      {
+        "source_url": "https://www.fredericksburgfreepress.com/2026/11/08/food-bank-distribution-this-week-78/",
+        "reason": "Routine continuing weekly distribution announcement, not cancellation."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "November 9 onward Michigan distributions remain listed as scheduled."
+      },
+      {
+        "source_url": "https://coloradopetpantry.org/events/category/pet-food-banks/day/2026-11-09/",
+        "reason": "Weather-rescheduled pet-food distributions, not qualifying human food-access disruption."
+      },
+      {
+        "source_url": "https://www.bountifulfoodpantry.org/component/dpcalendar/location/6",
+        "reason": "Provider schedule showed routine/holiday closures and one cached older page, not abrupt or storm-damage service loss."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing undated SNAP application/call-center delays, no newly dated interruption."
+      },
+      {
+        "source_url": "https://statusgator.com/services/ncr/wic-ebt-us",
+        "reason": "Anecdotal nonofficial WIC user report from Nov 7 and platform status up; does not satisfy official interruption requirement."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://jfs.ohio.gov/about/communications/news/ohio-taking-steps-to-distribute-full-november-snap-benefits-next",
+        "type": "HTTP_404",
+        "material": false,
+        "note": "Historical Ohio SNAP issuance update linked by independent aggregator could not be read at the official URL; aggregator dates it Nov 7, before this hourly window; other state agency sources checked successfully."
+      }
+    ],
+    "coverage_assessment": "Twelve bounded targeted searches succeeded, with 10 of 11 direct-source checks accessible. One Ohio agency linked page returned 404, so status is DEGRADED, nonmaterial for the current interval. No newly source-verified qualifying disruption was found after the prior 21:44:09 PST checkpoint. Search indexing and source-notice lag prevent claiming exhaustive national absence.",
+    "excluded_content": "Donation drives, guides, routine food-bank distributions, recipes, opinion, generic inflation, prior-reviewed incidents, out-of-window events, and uncorroborated unofficial outage anecdotes.",
+    "notification_assessment": "No qualifying new signal and no material watch failure; silent completion.",
+    "controls": "No approval, publication, primary collector change, schedule change, or task disabling."
+  }
+}

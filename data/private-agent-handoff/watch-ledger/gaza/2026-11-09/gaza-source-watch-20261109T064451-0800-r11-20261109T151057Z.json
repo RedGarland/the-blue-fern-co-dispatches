@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T064451-0800-r11-20261109T151057Z",
+  "scheduled_for": "2026-11-09T06:44:51-08:00",
+  "started_at": "2026-11-09T07:10:57-08:00",
+  "completed_at": "2026-11-09T07:12:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T13:57:26.484Z",
+    "end": "2026-11-09T15:12:48Z",
+    "local_start": "2026-11-09T05:57:26.484-08:00",
+    "local_end": "2026-11-09T07:12:48-08:00",
+    "basis": "Read immediate predecessor committed heartbeat via authenticated GitHub fetch; reviewed event and publication timestamps separately; excluded previously recorded items.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261109-rafah-patient-evacuations-23patients-28companions",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176795",
+      "title": "51 Palestinians, including 23 patients, evacuated via Rafah crossing today",
+      "publisher": "Palestinian News & Information Agency (WAFA)",
+      "source_date": "2026-11-09",
+      "source_publication_at": "2026-11-09T16:40:00+02:00",
+      "event_date": "2026-11-09",
+      "event_at": null,
+      "location": "Rafah crossing, southern Gaza Strip, Gaza/Egypt border",
+      "affected_population_system": "Medical evacuation and patient movement across Rafah; 23 patients and 28 accompanying persons",
+      "exact_supporting_passage": "A total of 51 Palestinians, comprising 23 patients and 28 companions, left the Gaza Strip through the Rafah crossing on Monday.",
+      "source_type": "Established Palestinian news agency reporting same-day patient-movement statistics; origin of statistics unspecified",
+      "classification": "new",
+      "confidence": "high for reported departure statistics; independent crossing/WHO confirmation not established",
+      "bounded_discovery_context": {
+        "observed_window": "2026-11-09T05:57:26.484-08:00/2026-11-09T07:12:48-08:00",
+        "first_publication_in_window": true,
+        "matching_earlier_ledger_finding": false,
+        "reported_departures_total": 51,
+        "reported_patients": 23,
+        "reported_companions": 28,
+        "reported_returns": 0,
+        "reported_turned_back_cases": 4,
+        "corroborating_source_url": "https://wafa.ps/news/2026/11/9/51-%D9%85%D8%B1%D9%8A%D8%B6%D8%A7%D9%8B-%D9%88%D9%85%D8%B1%D8%A7%D9%81%D9%82%D8%A7%D9%8B-%D8%BA%D8%A7%D8%AF%D8%B1%D9%88%D8%A7-%D9%82%D8%B7%D8%A7%D8%B9-%D8%BA%D8%B2%D8%A9-%D8%B9%D8%A8%D8%B1-%D9%85%D8%B9%D8%A8%D8%B1",
+        "corroboration_note": "Parallel WAFA Arabic edition at 16:26 local reports same counts; not independent corroboration.",
+        "source_discovered_via": "Direct WAFA publisher homepage check, following OCHA/WHO initial checks."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch; authoritative production Gaza collection and publication untouched.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T054451-0800-r11-20261109T135430Z.json",
+    "previous_heartbeat_completed_at": "2026-11-09T05:57:26.484-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "latest_gaza_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "status": "accessible",
+        "result": "Latest November 9 publication describes November 6–8 flooding, shelters and health impacts already captured in prior positive heartbeat. Not a fresh in-window event."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "alternative_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "EMRO_HTTP_502; global_portal_accessible",
+        "result": "No in-window Gaza-specific WHO update seen on accessible global WHO portal; regional site still inaccessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org/content \"09 Nov 2026\" Gaza humanitarian crossing medical evacuation update",
+      "site:who.int Gaza \"9 November 2026\" medical evacuations hospitals fuel patients",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"9 November 2026\" Rafah patient humanitarian access",
+      "site:unicef.org Gaza 9 November 2026 water shelter displaced children healthcare",
+      "site:wfp.org Gaza 9 November 2026 meal deliveries food access crossings",
+      "site:unrwa.org Gaza November 9 2026 shelter flood clinic displacement",
+      "site:english.wafa.ps/Pages/Details/ \"09/November/2026\" \"Gaza\" \"PM\" casualty crossing",
+      "Gaza \"November 9, 2026\" Reuters AP new strike killed injured ceasefire crossing Rafah",
+      "site:aljazeera.com/news/2026/11/9 Gaza patients evacuation civilian airstrikes aid border",
+      "Gaza Nov 9 2026 16:00 17:00 Palestine ambulance casualties Khan Younis Rafah Jabalia",
+      "Gaza Rafah 9 November 2026 23 patients 28 companions four turned back crossing evacuation",
+      "Gaza November 9 2026 Gaza City Jabalia civilian victims Rafah medical evac latest 16:00"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "Latest 16:40 Palestine-time Rafah crossing medical movement report verified at canonical article URL."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "accessible",
+        "result": "Arabic medical evacuation story at 16:26 Palestine time agrees with English story; not independent."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "status": "accessible",
+        "result": "Homepage shows no current November 9 report on this evacuation."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Prior restriction persists."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "OCHA November 9 storm situation report",
+        "reason": "Previous positive heartbeat already recorded quantified November 6–8 storm damage, shelter needs, hospital disruptions and flooding.",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026"
+      },
+      {
+        "event": "WAFA casualties and Gaza City injury claims November 9 morning",
+        "reason": "Published before current observation window, already captured or considered in predecessor.",
+        "url": "https://english.wafa.ps/Pages/Details/176786"
+      },
+      {
+        "event": "Reuters Deir al-Balah sand embankment collapse coverage",
+        "reason": "Same November 8 collapse documented in previous watches; conflicting casualty totals not merged.",
+        "url": "https://www.reuters.com/business/environment/four-killed-gaza-after-sand-embankment-collapses-tents-2026-11-09/"
+      },
+      {
+        "event": "WAFA updated winter shelter ministerial warning",
+        "reason": "Original 14:07 Palestine-time report predates window and figures already recorded in prior watch.",
+        "url": "https://english.wafa.ps/"
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "HTTP 502",
+        "prior_status": "HTTP 502",
+        "material_new_deterioration": false,
+        "mitigation": "Accessible global WHO portal and OCHA"
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA OPT accessible"
+      }
+    ],
+    "coverage_assessment": "One in-window qualifying medical-evacuation/crossing development identified from WAFA with exact same-day counts; earlier storm/casualty coverage excluded. Useful cross-source coverage but DEGRADED owing to recurring WHO EMRO and UNRWA access limits, without material new access deterioration.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no production publication",
+      "no approval",
+      "no social posting",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T104203-0800-recall12-20261109T184244Z",
+  "scheduled_for": "2026-11-09T10:45:22-08:00",
+  "started_at": "2026-11-09T10:42:03-08:00",
+  "completed_at": "2026-11-09T10:42:44-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T09:52:36.196-08:00",
+    "end": "2026-11-09T10:42:44-08:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed_at; targeted one-day recency searches used for contextual overlap; count only new nonduplicate concrete access developments since interval start."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss-class recall, not the authoritative national production collector.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T095023-0800-recall12-20261109T175236Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T09:52:36.196-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "status": "accessible",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), OPO termination",
+      "new_notices_in_observation_window": 0
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "November 9 2026 hospital emergency department closure suspended services United States",
+      "November 9 2026 maternity obstetrics labor delivery unit closure pause hospital",
+      "November 9 2026 inpatient psychiatric behavioral health hospital closed suspends admissions",
+      "November 9 2026 dialysis center oncology clinic closing suspended patient services",
+      "November 9 2026 rural hospital emergency room closure temporary shutdown medical access",
+      "November 9 2026 ambulance EMS air ambulance base closing suspension service",
+      "November 9 2026 hospital emergency department reopens services restored after closure",
+      "site:cms.gov \"2026-11-09\" \"termination\" \"provider\" CLIA",
+      "November 9 2026 Puerto Rico Guam US Virgin Islands hospital emergency services closed interruption",
+      "November 9 2026 rural primary care health clinic closure shutdown",
+      "November 9 2026 emergency hospital ambulance bypass diverted patients Illinois",
+      "November 9 2026 hospital care restored oncology dialysis ambulance reopen clinic"
+    ],
+    "search_method": "Direct CMS Public Notices page read first, followed by exactly twelve targeted fresh web searches (one-day recency), plus source-article inspection; evaluated reporting and event dates, concrete access effects, U.S./territory jurisdiction and duplicate history.",
+    "reviewed_exclusions": [
+      {
+        "item": "Carolina Public Press November 9 rural North Carolina perinatal access report",
+        "source_url": "https://carolinapublicpress.org/82994/bringing-maternal-healthcare-to-rural-nc-grant-powered-community-health-centers-offer-hope/",
+        "reason": "Graham County mobile obstetric unit only planned for early 2027; Pender County program is an existing expansion, no newly effective restoration of previously lost essential service established within interval."
+      },
+      {
+        "item": "Anaheim Global Medical Center 911 ambulance restriction",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/",
+        "reason": "May 9, 2026 report; historical."
+      },
+      {
+        "item": "Vista Medical Center East and Gateway Regional Medical Center ambulance diversions",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+        "reason": "November 7 actions already logged in prior recall runs, not new in current interval."
+      },
+      {
+        "item": "CMS-1848-F Medicare Physician Fee Schedule final rule",
+        "source_url": "https://www.cms.gov/medicare/payment/fee-schedules/physician/federal-regulation-notices/cms-1848-f",
+        "reason": "General payment rule; no individualized provider termination, CLIA limitation or rescission access notice."
+      }
+    ],
+    "result_summary": "No new verified nonduplicate in-window hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care interruption, rural or EMS/air-medical access loss, CMS/CLIA individualized action, or effective restoration of previously lost essential service.",
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Search and same-hour local-news indexing can lag events.",
+      "Bounded 12-search scope cannot guarantee complete 50-state and territory recall; local and territory reporting may be underindexed.",
+      "No independent access to production collector findings or deduplication records during this watch."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

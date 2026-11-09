@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T084046-0800-recall12-20261109T164223Z",
+  "scheduled_for": "2026-11-09T08:45:22-08:00",
+  "started_at": "2026-11-09T08:40:46-08:00",
+  "completed_at": "2026-11-09T08:42:23-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T07:46:34.976-08:00",
+    "end": "2026-11-09T08:42:23-08:00",
+    "basis": "Start taken from the latest verified prior Care Line Watch heartbeat completed_at on ops/watch-ledger; end is current local observation time. Two-day freshness overlap used for indexing, but older items were not counted as new.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for new, concrete U.S. and territory essential healthcare-access changes, separate from authoritative production collector.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T074522-0800-recall12-20261109T154634976Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T07:46:34.976-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "status": "accessible",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), organ procurement organization termination notice",
+      "new_listed_notices_in_window": 0,
+      "details": "Direct CMS listing checked before any additional targeted searches; no November 9 notice was present."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "November 9 2026 hospital emergency department closure suspended today United States",
+      "November 9 2026 hospital labor and delivery maternity closure suspended obstetrics",
+      "November 9 2026 rural hospital emergency services shutdown ambulance diversion",
+      "November 9 2026 behavioral health psychiatric unit hospital closing suspension patients",
+      "November 9 2026 dialysis center clinic closed suspended patients transfers",
+      "November 9 2026 oncology cancer infusion services closed suspended treatment clinic",
+      "November 9 2026 primary care clinic health center closes suspends appointments access",
+      "November 9 2026 ambulance EMS service station closure suspension emergency transport",
+      "November 9 2026 air ambulance helicopter base closing suspension medical flight",
+      "November 9 2026 emergency room hospital maternity department reopens restored services",
+      "November 9 2026 CMS Medicare provider agreement termination rescission CLIA certificate suspended limited notice",
+      "November 9 2026 Puerto Rico Guam Virgin Islands Northern Mariana American Samoa healthcare hospital clinic emergency ambulance closure reopened"
+    ],
+    "search_method": "Direct check of CMS Public Notices followed by exactly 12 targeted web searches with a two-day recency scope. Candidate result dates, actual effective service changes, geography, and previous recall coverage were assessed.",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East in Waukegan, Illinois ambulance EMS bypass",
+        "reason": "Effective November 7, previously documented by prior recall runs; not new in 07:46–08:42 PST interval.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Anaheim Global Medical Center 911 ambulance receiving suspension",
+        "reason": "Reported May 9, 2026, not new.",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/"
+      },
+      {
+        "item": "St. Joseph Warren Hospital (Ohio) obstetric deliveries",
+        "reason": "October 29 announcement of future December consolidation, outside observation interval.",
+        "source_url": "https://www.aol.com/articles/st-joseph-warren-hospital-ending-195522000.html"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, Illinois helicopter base",
+        "reason": "Historical September 2026 closure, previously seen in Care Line watches.",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Guam Regional Medical City outpatient services",
+        "reason": "Temporary October 2026 typhoon interruption and October 19 restoration, historical.",
+        "source_url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      },
+      {
+        "item": "Kula Hospital, Hawaii proposed storm-repair reopening",
+        "reason": "Restoration project/plans only, not a confirmed effective reopening in the observation window.",
+        "source_url": "https://www.aha.org/tellingthehospitalstory/stories/hawaii-hospital-set-comeback-after-storm-damage-closure"
+      },
+      {
+        "item": "Federal Register November 9, 2026 provider enrollment rule",
+        "reason": "General regulation with terminology on revocation; not an individualized newly effective provider access-risk notice.",
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-2026-11-09/pdf/2026-22750.pdf"
+      }
+    ],
+    "result_summary": "No verified, newly reported nonduplicate in-window hospital/ED/maternity/behavioral health/dialysis/oncology/primary care loss, rural/EMS/air-medical loss, official CMS provider or CLIA access-risk action, or concrete restoration in the United States or territories.",
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Web search freshness and indexing vary; newly posted local notices may be missed in the same hour.",
+      "Territory-local reporting visibility is limited; no assertion of complete territory coverage.",
+      "The production national collector and its deduplication ledger were not reviewed; this supplementary scan is not production publication authority."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

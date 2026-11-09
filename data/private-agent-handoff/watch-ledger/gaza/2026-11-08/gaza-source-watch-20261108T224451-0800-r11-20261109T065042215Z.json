@@ -1,0 +1,143 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T224451-0800-r11-20261109T065042215Z",
+  "scheduled_for": "2026-11-08T22:44:51-08:00",
+  "started_at": "2026-11-08T22:49:49-08:00",
+  "completed_at": "2026-11-09T06:50:42.215Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-09T05:52:33.805Z",
+    "end": "2026-11-09T06:50:42.215Z",
+    "local_start": "2026-11-08T21:52:33.805-08:00",
+    "local_end": "2026-11-08T22:50:42.215-08:00",
+    "basis": "Starts at the verified prior watch heartbeat completed_at; report publication and incident dates checked against that boundary, without treating older recycled reporting as new.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; Gaza production publisher/collector authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T214451-0800-r11-20261109T055233Z.json",
+    "previous_verified_completed_at": "2026-11-08T21:52:33.805-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "Latest posted OCHA OPT item remains 6 November 2026 humanitarian situation report for 5 November; no newly published November 8-9 Gaza update in listing."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "global_accessible_regional_timeout",
+        "result": "WHO global emergency situation page accessible, no newly dated Nov 8-9 health operational change visible. WHO EMRO direct situation report access timed out; recurring restriction from prior watch (previously timeout/502)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 9 2026 06:00 UTC civilians killed wounded overnight Jabalia Khan Younis Deir Balah",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"09/November/2026\" killed injured floods",
+      "site:aa.com.tr/en/middle-east/ Gaza \"09.11.2026\" strikes shelter casualties humanitarian",
+      "site:aljazeera.com/news/2026/11/9 Gaza November 9 2026 ceasefire aid civilians medical",
+      "site:reuters.com/world/middle-east/ Gaza November 9 2026 overnight hospital aid strikes ceasefire",
+      "site:palestinercs.org \"9 November 2026\" Gaza ambulance hospital medical evacuation",
+      "غزة فجر الاثنين 9 نوفمبر 2026 شهداء جرحى قصف الطائرات خيام النازحين",
+      "غزة مساء 8 نوفمبر 2026 صباح 9 نوفمبر 2026 انهيار أمطار ضحايا مستشفيات",
+      "site:un.org OR site:unicef.org OR site:wfp.org Gaza November 9 2026 flooding shelters aid water displacement",
+      "site:english.wafa.ps \"09/November/2026\" \"GAZA\" \"injured\" \"killed\"",
+      "Gaza November 9 2026 Rafah Kerem Shalom crossing medical evacuations ambulance fuel operational change",
+      "Gaza November 9 2026 ceasefire hostages detention negotiations strikes overnight civilian impact"
+    ],
+    "additional_search_execution": "After explicit initial OCHA and WHO search checks, executed six English targeted fast searches, then six focused English/Arabic slow searches; direct publisher opens and link clicks were not counted as new searches.",
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "Latest list reached 9 November 08:28 Palestine time; newly listed item concerns a Chicago protest, not a new Gaza operational event. Latest distinct Gaza mortality reports concern already logged November 8 Khan Younis strike and Deir al-Balah sandbank collapse."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Latest posted news 3 November; no new Gaza ambulance, capacity, evacuation or medical services change visible."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "Relevant reporting repeats flooding, humanitarian appeals, and detained Palestinians' scabies prevalence. No Gaza-specific new incident since boundary established."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "http_403",
+        "result": "Access denied, same standing restriction; alternative UN sources available."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "timeout",
+        "prior_status": "timeout_or_HTTP_502",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "Five deaths in Deir al-Balah sand-cliff/sandbank collapse (differing accounts of ages and casualty breakdown)",
+        "reason": "Previously documented and recorded on 8 November. Al Jazeera/Anadolu account dates to Nov 8 and provides no verified new fatality since last watch.",
+        "urls": [
+          "https://english.wafa.ps/Pages/Details/176754",
+          "https://www.aljazeera.com/news/2026/11/8/floods-in-gaza-leave-tens-of-thousands-without-shelter"
+        ]
+      },
+      {
+        "event": "Two killed in Khan Younis, November 8",
+        "reason": "Already logged in earlier November 8 watch; search results recirculate same incident.",
+        "url": "https://english.wafa.ps/Pages/Details/176738"
+      },
+      {
+        "event": "70,000 flood-affected tents, 350,000 without shelter, severe rain impacts and aid access shortages",
+        "reason": "Reports and statements already recorded in earlier watches, no new corroborated quantitative/operational delta in this window.",
+        "url": "https://www.aljazeera.com/news/2026/11/8/floods-in-gaza-leave-tens-of-thousands-without-shelter"
+      },
+      {
+        "event": "Scabies among Palestinian prisoners in Israeli jails",
+        "reason": "Geographic and detainee links to Gaza not established in article; prior watch also excluded this broad population allegation.",
+        "url": "https://www.aa.com.tr/en/middle-east/around-80-of-palestinian-prisoners-suffer-from-scabies-in-israeli-jails-advocacy-group-says/4116193"
+      },
+      {
+        "event": "EU Commissioner's Nov 8 appeal for more Gaza aid access",
+        "reason": "Statement calls for aid; no verified operational border change, delivery change, or distinct new impact in observation window.",
+        "url": "https://www.aa.com.tr/en/middle-east/eu-commissioner-urges-more-aid-access-to-gaza-as-floods-sweep-through-displacement-camps/4116100"
+      },
+      {
+        "event": "Medical evacuation, hospital, ambulance, fuel, transport, crossings, hostage, detention, ceasefire/negotiations",
+        "reason": "No independently supported new Gaza-specific service/operational status change in bounded searches."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked first, then 12 targeted searches plus direct WAFA, PRCS, Anadolu, UNRWA and WHO regional checks. No distinct newly verified qualifying Gaza event since the preceding heartbeat; recurring WHO EMRO timeout and UNRWA 403 mean partial coverage, not a materially new degradation.",
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no publication",
+      "no production changes",
+      "no approval",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

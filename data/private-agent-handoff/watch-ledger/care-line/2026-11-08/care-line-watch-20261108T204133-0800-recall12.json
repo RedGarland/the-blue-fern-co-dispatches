@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T204133-0800-recall12",
+  "scheduled_for": "2026-11-08T20:45:22-08:00",
+  "started_at": "2026-11-08T20:41:33-08:00",
+  "completed_at": "2026-11-08T20:43:24-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T19:42:08-08:00",
+    "end": "2026-11-08T20:43:24-08:00",
+    "basis": "Previous hourly heartbeat directly fetched and verified from ops/watch-ledger; start is its completed_at. Observation closed at this watch run's completion.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY; termination notice; organ procurement organization; CCN 18P001.",
+      "new_notices_in_window": 0,
+      "checked_via": "Opened official CMS Public Notices directly before targeted web searches; reviewed current dated top entries."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency room closure suspended diverted patients November 8 2026 United States",
+      "hospital maternity labor delivery unit closed suspended Sunday November 8 2026 US",
+      "rural critical access hospital emergency services shutdown Nov 8 2026",
+      "psychiatric hospital behavioral health inpatient closure services November 8 2026 United States",
+      "ambulance EMS service suspended shut down response service November 8 2026 US rural",
+      "air medical helicopter base closing service suspended November 8 2026 United States",
+      "dialysis center abruptly closed patients November 8 2026 Nov 9 US",
+      "oncology cancer center primary care clinic closed effective November 8 2026 United States",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-11-08\" OR \"2026-11-09\" termination CLIA",
+      "Nov 8 2026 hospital emergency department reopened resumed operation after closure United States local news",
+      "November 8 2026 Puerto Rico Guam Virgin Islands American Samoa Northern Mariana hospital emergency maternity ambulance service suspended",
+      "November 8 2026 local hospital patients diverted services suspended sudden closure United States"
+    ],
+    "search_engine": "web search",
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital, Chicago, labor and delivery closure",
+        "reason": "Previously reported before the observation window, without new effective service change.",
+        "source_url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/"
+      },
+      {
+        "item": "West Suburban Medical Center, Oak Park, closure",
+        "reason": "Historical March 2026 closure and April litigation; no new access effect.",
+        "source_url": "https://abc7chicago.com/post/new-lawsuit-accuses-shuttered-oak-park-hospital-west-suburban-medical-center-ceo-financial-mismanagement/18943702/"
+      },
+      {
+        "item": "University of Mississippi Medical Center clinic resumption",
+        "reason": "Reopened March 2, 2026, outside this watch window.",
+        "source_url": "https://www.healthcaredive.com/news/university-of-mississippi-medical-center-ransomware-attack/812823/"
+      },
+      {
+        "item": "Fort Gordon inpatient critical care diversion",
+        "reason": "April 2026, not a new event within this hourly window.",
+        "source_url": "https://www.wrdw.com/2026/04/29/fort-gordon-hospital-pause-inpatient-critical-care/"
+      },
+      {
+        "item": "Rural hospital closure risk and healthcare business coverage",
+        "reason": "Analyses, background, ownership reports, and proposals without confirmed newly effective access change excluded."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "result_summary": "Official CMS listing was unchanged from November 2. Twelve bounded supplementary searches covering hospital/ED, maternity, rural, behavioral health, EMS/air medical, dialysis, oncology, primary care, CMS/CLIA, territory services, and effective reopenings found no new qualifying, nonduplicate healthcare-access change in the observation window.",
+    "coverage_limitations": [
+      "Sunday evening local reporting and search-indexing delays may obscure very recent service changes.",
+      "Search is bounded supplementary recall rather than exhaustive real-time surveillance of all U.S. jurisdictions.",
+      "Production collection and internal deduplication state were not accessed; production remains authoritative."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T194058-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T19:42:08-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

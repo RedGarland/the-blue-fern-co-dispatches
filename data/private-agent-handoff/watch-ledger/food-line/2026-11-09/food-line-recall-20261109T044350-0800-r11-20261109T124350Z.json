@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T044350-0800-r11-20261109T124350Z",
+  "scheduled_for": "2026-11-09T04:45:54-08:00",
+  "started_at": "2026-11-09T04:43:50-08:00",
+  "completed_at": "2026-11-09T04:45:54.771-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T03:47:51.116-08:00",
+    "end_at": "2026-11-09T04:45:54.771-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous completed watch-ledger heartbeat verified directly in GitHub. Earlier candidates included for context only; qualifying new events or updates must be inside this hourly window.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T034611-0800-r11-20261109T114611Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall; production Food Line collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss or closure",
+      "Emergency food-distribution cancellation from hazard or outage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/assistance interruption with immediate access impact"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "recency_filter": "2 days, with 2026 and Nov. 9 verification by direct source",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 9 2026 town",
+      "\"sole grocery store\" damaged fire flooding 2026 November",
+      "\"last full-service grocery\" shutting closure November 2026",
+      "\"food distribution\" canceled Nov 9 2026 storm power",
+      "\"food bank\" \"distribution\" postponed November 9 2026 weather",
+      "food pantry distribution suspended flooding outage November 9 2026",
+      "\"food pantry\" closed unexpectedly Monday November 9 2026",
+      "\"food bank\" temporarily closed damage November 9 2026",
+      "\"pantry\" \"services suspended\" November 2026",
+      "SNAP November 9 2026 benefits outage delay emergency state official notice",
+      "WIC November 9 2026 interruption office closure vouchers outage state agency",
+      "site:gov SNAP benefits system down November 9 2026"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 8,
+      "failed": 0,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.fox13now.com/news/local-news/utah-county/provo-food-bank-announces-temporary-closure-amid-financial-shortfall",
+        "https://www.ncdhhs.gov/divisions/child-and-family-well-being/food-and-nutrition-services-food-stamps",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire cancellation announced Nov. 3, updated Nov. 6; already known and before current window."
+      },
+      {
+        "source_url": "https://www.fox13now.com/news/local-news/utah-county/provo-food-bank-announces-temporary-closure-amid-financial-shortfall",
+        "reason": "Provo food bank temporary closure reported earlier Nov. 2026; not newly verified."
+      },
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Spencer only-store fire on Sep. 11, 2026; historical."
+      },
+      {
+        "source_url": "https://www.themainewire.com/2026/08/eastport-losing-its-only-grocery-store-as-rising-costs-and-closures-test-rural-maine/",
+        "reason": "Eastport grocery closure reported August 2026; out of window."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "November 9 Michigan food pantry distributions scheduled, not canceled."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov. 6 Kauaʻi hurricane recovery update lists scheduled distribution and older resource center closures."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Virginia social-services closures originated Nov. 5-6, before window, and no new SNAP/WIC access impact verified."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Existing undated FoodShare PIN fraud item not provably new to hourly window; page last revised Oct. 16."
+      },
+      {
+        "source_url": "https://www.ncdhhs.gov/divisions/child-and-family-well-being/food-and-nutrition-services-food-stamps",
+        "reason": "Earlier SNAP eligibility rules, not new benefits interruption."
+      }
+    ],
+    "source_or_search_failures": [],
+    "coverage_assessment": "Twelve targeted searches and eight direct-source reads succeeded. Only pre-window closure notices, older grocery losses, scheduled food pantries, undated standing agency notices, and 2025 SNAP articles surfaced. No new qualifying development verified since Nov. 9 03:47:51 PST. A transient GitHub branch conflict occurred on first heartbeat write attempt, then retry targeted the same unique path. This is bounded coverage, not nationwide proof of absence.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine promotion, inflation stories, historical signals and duplicates.",
+    "notification_assessment": "No findings and no material watch degradation; no notification.",
+    "controls": "No approval, publication, schedule change, task disabling, or production collector modification."
+  }
+}

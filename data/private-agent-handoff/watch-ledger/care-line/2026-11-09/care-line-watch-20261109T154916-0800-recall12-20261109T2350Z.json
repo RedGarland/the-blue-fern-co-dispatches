@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T154916-0800-recall12-20261109T2350Z",
+  "scheduled_for": "2026-11-09T15:45:22-08:00",
+  "started_at": "2026-11-09T15:49:16-08:00",
+  "completed_at": "2026-11-09T15:51:29.029-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T14:52:11-08:00",
+    "end": "2026-11-09T15:51:29.029-08:00",
+    "basis": "Previous verified care-line hourly heartbeat completion to present; compared candidate events and CMS index against previous run rather than assuming same-date announcements are newly discovered."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value U.S. and territory healthcare-access changes; authoritative production collection is separate.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T145019-0800-recall11.json",
+    "prior_heartbeat_completed_at": "2026-11-09T14:52:11-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services — Michigan — Home Health Agency — CCN 239199 — Termination Notice",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "index_accessible",
+      "note": "Already preserved as pending_review by 13:49:55 PST heartbeat; not duplicated. Effective date not verified from CMS detail page. No newer rows seen."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "\"November 9, 2026\" hospital emergency department closed temporarily suspension rural health",
+      "\"November 9, 2026\" labor delivery maternity hospital service closes suspends",
+      "\"November 9, 2026\" psychiatric behavioral health inpatient hospital admissions suspended closed",
+      "\"November 9, 2026\" dialysis facility suspended closed patients",
+      "\"November 9, 2026\" oncology cancer clinic infusion canceled closure",
+      "\"November 9, 2026\" community health center primary care clinic closed temporarily",
+      "\"November 9, 2026\" ambulance EMS service shut down ceased responding closure",
+      "\"November 9, 2026\" air ambulance medical helicopter base closing suspended",
+      "\"November 9, 2026\" emergency room reopened maternity reopening services resumed hospital",
+      "\"November 9, 2026\" healthcare service closures public notice state department of health",
+      "\"November 9, 2026\" Puerto Rico Guam US Virgin Islands hospital services disrupted ambulance closure",
+      "\"November 9, 2026\" American Samoa Northern Mariana Islands CNMI hospital clinic service closure reopening"
+    ],
+    "search_method": "Direct CMS index access preceded exactly 12 additional targeted recency=1 web search queries. Reviewed matched official and local reports for new effective loss or restoration, jurisdiction and duplicates.",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois — emergency ambulance bypass",
+        "source_url": "https://abc7chicago.com/post/vista-health-system-news-medical-center-east-waukegan-il-ems-bypass-amid-american-healthcare-systems-payroll-issues/20027472/",
+        "reason": "ABC7 page shows publication Monday November 9, 2026 10:54 PM Chicago time (8:54 PM PST), later than this 3:50 PM PST observation cutoff. Service-order effective time not independently dated earlier. Flagged as future-dated search lead, not eligible to count as observed in this run; check in subsequent scheduled run."
+      },
+      {
+        "item": "Stanford Medicine Sutter Health Cancer Center, Oakland, California",
+        "source_url": "https://vitals.sutterhealth.org/media-resources/press-releases/stanford-medicine-sutter-health-cancer-center",
+        "reason": "November 9 ribbon-cutting; first patients anticipated December 1, 2026 and full operation in February 2027, not an effective reopening of a previously lost essential service."
+      },
+      {
+        "item": "Culmore Clinic permanent site, Northern Virginia",
+        "source_url": "https://annandaletoday.com/the-culmore-clinic-is-raising-funds-for-its-permanent-home/",
+        "reason": "Fundraising and planned move to a building expected in 2028; no newly effective service interruption."
+      },
+      {
+        "item": "Elmore Community Hospital, Alabama",
+        "source_url": "https://www.alreporter.com/2026/10/26/filings-in-elmore-community-hospital-fight-shed-more-light-on-secret-plan",
+        "reason": "October 26 ownership/legal dispute story without new confirmed service effect in observation window."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "A recency-filtered search yielded many old, out-of-jurisdiction, or future-dated articles; no validated new same-hour qualifying event.",
+      "The future-dated Waukegan bypass article is a follow-up lead only and should be reassessed once its publication timestamp has passed.",
+      "Bounded searches are not exhaustive across states or territories; local news indexing/reporting delay may conceal short-lived suspensions.",
+      "CMS prior HHA termination notice detail and effective date remain unresolved; newly posted notice not duplicated.",
+      "Production queue and deduplication records not independently verified; production collector remains authoritative."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

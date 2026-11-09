@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T034723-0800-recall12-a11",
+  "scheduled_for": "2026-11-09T03:45:22-08:00",
+  "started_at": "2026-11-09T03:47:23-08:00",
+  "completed_at": "2026-11-09T03:48:54-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-09T02:44:40-08:00",
+    "end": "2026-11-09T03:48:54-08:00",
+    "basis": "Verified prior Care Line heartbeat completed_at through current observation cutoff; the prior heartbeat was identified on ops/watch-ledger and read using the GitHub connection.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope; Kentucky; CCN 18P001; organ procurement organization; termination notice",
+      "new_notices_in_window": 0,
+      "method": "Opened official CMS Public Notices and read current dated top entries before any targeted search."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed suspended diverted patients November 9 2026 United States",
+      "hospital labor delivery maternity unit closed suspended November 8 9 2026",
+      "psychiatric hospital behavioral health inpatient beds shutdown suspension November 9 2026",
+      "dialysis center treatment interrupted suddenly closed November 8 9 2026",
+      "cancer oncology infusion clinic sudden closure patients November 9 2026",
+      "rural hospital emergency services discontinued closed November 9 2026 US",
+      "ambulance EMS service suspension shuts down base November 8 9 2026",
+      "air medical helicopter ambulance base closes services suspended November 2026",
+      "primary care health clinic suddenly shut down November 9 2026 patients",
+      "hospital emergency ambulance diversion Nov 9 2026 US staffed",
+      "Puerto Rico Guam US Virgin Islands hospital urgent service suspended Nov 8 9 2026",
+      "hospital emergency room maternity EMS service reopened restored November 9 2026"
+    ],
+    "search_engine": "web fast targeted search",
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East and Gateway Regional Medical Center ambulance bypasses in Illinois",
+        "reason": "Documented by prior Care Line heartbeats; bypasses were effective November 7, before observation interval.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/"
+      },
+      {
+        "item": "Prevea Washington Street Health Center primary and urgent care planned November 13 cessation",
+        "reason": "Undated standing facility notice in verified prior heartbeat; no new announcement or concrete effective service loss in this observation interval.",
+        "source_url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center"
+      },
+      {
+        "item": "Albany Memorial Emergency Department reopening",
+        "reason": "June 26, 2025 reopening, outside interval.",
+        "source_url": "https://cbs6albany.com/news/local/temporary-suspension-of-services-and-er-dept-diversion-at-albany-memorial-hospital-samaritan-st-peters-emergency-services-troy-albany-north-health-partners-"
+      },
+      {
+        "item": "NHS maternity unit closures",
+        "reason": "England, outside United States and territories.",
+        "source_url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur Airport base closure report",
+        "reason": "Reported in October 2026, not a new November 9 development.",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      }
+    ],
+    "result_summary": "No verified new, in-window, nonduplicate US or territory healthcare-access loss or restoration in the bounded recall. The newest visible CMS notice remains November 2. Searches largely returned historical, non-US, prospective, policy-only, or unrelated items.",
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Search results are not exhaustive and overnight news publication/indexing may lag.",
+      "Date-filtered search can return older material; publication dates were used to exclude historical results.",
+      "Production collector and its internal deduplication queue were not accessed; this supplementary watch is not authoritative."
+    ],
+    "previous_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T024254-0800-recall12-a11.json",
+    "previous_verified_completed_at": "2026-11-09T02:44:40-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

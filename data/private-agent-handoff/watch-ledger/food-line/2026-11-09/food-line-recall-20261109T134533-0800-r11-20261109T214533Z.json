@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T134533-0800-r11-20261109T214533Z",
+  "scheduled_for": "2026-11-09T13:45:33-08:00",
+  "started_at": "2026-11-09T13:45:33-08:00",
+  "completed_at": "2026-11-09T13:47:09-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T12:43:41.084-08:00",
+    "end_at": "2026-11-09T13:47:09-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Start immediately after the preceding GitHub-verified completed heartbeat and end at the current review; require publication or new access impact within this window, exclude repeats.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T124119-0800-r11-20261109T204119Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Food Line recall watch; production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery closed, destroyed, or lost to fire/disaster",
+      "Emergency food distribution canceled/suspended because of storm/flood/fire/outage/facility damage",
+      "Abrupt food pantry/food-bank shutdown or major access reduction",
+      "New official SNAP/WIC/EBT/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast with 1-2-day recency filters",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "November 9 2026 \"only grocery store\" closed fire community",
+      "November 9 2026 \"last grocery store\" closing town",
+      "November 9 2026 \"sole supermarket\" fire closed",
+      "November 9 2026 \"food distribution\" canceled storm food bank",
+      "November 9 2026 food pantry distribution suspended weather flood",
+      "November 9 2026 \"mobile pantry\" cancelled closure outage",
+      "November 9 2026 food pantry abruptly closed community loses access",
+      "November 9 2026 food bank closed indefinitely damage fire",
+      "November 9 2026 \"food pantry\" \"temporarily closed\"",
+      "November 9 2026 SNAP benefits delayed outage state agency",
+      "November 9 2026 WIC benefits EBT unavailable disruption",
+      "November 9 2026 official food assistance emergency interruption benefits"
+    ],
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 6,
+      "failed": 0,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.cdss.ca.gov/inforesources/calfresh",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ],
+      "additional_article_section_review": "https://kauainownews.com/category/lowell-recovery/"
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Spencer, New York sole-store fire reported September 11, 2026; historical and already excluded in preceding heartbeat."
+      },
+      {
+        "source_url": "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "reason": "September 15, 2026 market opening, not newly lost grocery access."
+      },
+      {
+        "source_url": "https://www.wtkr.com/news/in-the-community/portsmouth/oasis-social-ministry-temporarily-closes-food-pantry-services-due-to-city-of-portsmouth-construction-project",
+        "reason": "Pantry access reduction reported approximately six months before search; old event."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "November 6 coverage describes a scheduled emergency food distribution; no qualifying in-window cancellation."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "November 9 and 10 distributions listed normally; no cancellations shown in available schedule text."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Previously known SNAP telephone access delay; no new dated in-window program interruption."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "No November 9 in-window interruption in checked member news."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "No November 9 in-window food-program alert in checked state alerts."
+      },
+      {
+        "source_url": "https://www.cdss.ca.gov/inforesources/calfresh",
+        "reason": "Program overview and older notices; no new immediate-access disruption."
+      },
+      {
+        "source_url": "https://massmarketretailers.com/france-accuses-iran-of-hacking-supermarket-refrigeration-systems/",
+        "reason": "November 9 supermarket disruption located in France, outside U.S. scope."
+      }
+    ],
+    "exclusion_policy": "No donation drives, resource guides, recipes, promotion, opinion, generic inflation stories, routine distribution scheduling, historic events, or duplicates.",
+    "assessment": "No source checked substantiated a new qualifying U.S. food-access disruption during the bounded interval. All 12 targeted searches returned results and six selected direct-source opens succeeded. No evidence of a material watch failure, but index latency and limited supplementary scope mean national absence is not established.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

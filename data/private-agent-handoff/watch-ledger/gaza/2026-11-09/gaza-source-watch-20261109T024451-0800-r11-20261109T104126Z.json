@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T024451-0800-r11-20261109T104126Z",
+  "scheduled_for": "2026-11-09T02:44:51-08:00",
+  "started_at": "2026-11-09T02:41:26-08:00",
+  "completed_at": "2026-11-09T02:42:27-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T10:15:49.282Z",
+    "end": "2026-11-09T10:42:27Z",
+    "local_start": "2026-11-09T02:15:49.282-08:00",
+    "local_end": "2026-11-09T02:42:27-08:00",
+    "basis": "Start at verified previous Gaza Source Watch heartbeat completion, with publication/event times separately assessed. Scheduled time nominally 02:44:51 local; this execution was invoked earlier at 02:41:26 local.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; production collector/publisher remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T014451-0800-r11-20261109T101234Z.json",
+    "previous_verified_completed_at": "2026-11-09T02:15:49.282-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "result": "Latest OCHA heavy-rains report dated 9 November covers 6–8 November and was already recorded in predecessor heartbeat; no additional new publication located during this check.",
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026"
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.emro.who.int/opt/",
+        "global_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "regional_HTTP_502_global_accessible",
+        "result": "Regional site returned HTTP 502 (recurring); accessible WHO global emergency page did not list a new 9 Nov Gaza update."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:who.int \"Gaza\" \"9 November 2026\" health medical evacuations",
+      "site:unicef.org \"Gaza\" \"9 November 2026\" displaced children water",
+      "site:wfp.org \"Gaza\" \"9 November 2026\" meals flood aid",
+      "site:ochaopt.org/content \"9 November 2026\" Gaza access new situation update",
+      "site:english.wafa.ps/Pages/Details/ \"09/November/2026\" Gaza injured killed 12:00",
+      "Gaza November 9 2026 civilian killed injured Israeli strike Reuters AP latest",
+      "Gaza November 9 2026 Rafah Kerem Shalom humanitarian crossings medical evacuation patients WHO new update",
+      "Gaza November 9 2026 ceasefire negotiations hostage detainee release prisoner talks civilian impact",
+      "site:unrwa.org \"9 November 2026\" Gaza shelters displaced rain storm",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"9 Nov 2026\" Gaza health access",
+      "Gaza November 9 2026 storm water sewage pump fuel clinic hospital disrupted today",
+      "Gaza 9 November 2026 humanitarian situation UN shelter WASH food aid additional developments"
+    ],
+    "additional_search_execution": "Exactly 12 targeted searches (two batches of six) following OCHA OPT and WHO official-first checks, with additional direct publisher/article verification.",
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "Latest surfaced Gaza civilian-injury report dated 9 Nov 11:51 AM Palestinian time, already recorded by predecessor as finding gaza-20261109-wafa-al-sinaa-junction-civilian-injuries."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring access restriction; alternate OCHA OPT accessible."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "HTTP 502",
+        "prior_status": "HTTP 502 or timeout",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global emergency portal and OCHA OPT verified"
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA OPT and established reporting available"
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "WAFA 9 Nov Gaza City Al-Sina'a junction injuries",
+        "reason": "Previously recorded in immediate prior heartbeat; no verified additional casualties or material correction."
+      },
+      {
+        "event": "OCHA 9 Nov storm shelter assessments and health-service disruption",
+        "reason": "Both already recorded as distinct follow-ups in predecessor; same report and same underlying 6–8 Nov events."
+      },
+      {
+        "event": "Deir al-Balah sand-hill collapse, prior storm casualties, flood impacts",
+        "reason": "Previously recorded; not treated as new incidents."
+      },
+      {
+        "event": "Older reporting, unsupported or undated claims and unrelated coverage",
+        "reason": "Outside narrow observation window or lacked verifiable new qualifying development."
+      }
+    ],
+    "coverage_assessment": "No qualifying new or materially updated Gaza developments verified since 02:15:49 PST. Fresh searches were dominated by prior-period or irrelevant material. OCHA accessible; WHO EMRO 502 and UNRWA 403 recurring and not materially worsened, so retain DEGRADED rather than FAILED.",
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no production publication",
+      "no social posting",
+      "no approvals",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

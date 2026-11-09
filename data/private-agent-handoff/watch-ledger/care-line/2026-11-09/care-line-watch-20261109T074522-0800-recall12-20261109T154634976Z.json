@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T074522-0800-recall12-20261109T154634976Z",
+  "scheduled_for": "2026-11-09T07:45:22-08:00",
+  "started_at": "2026-11-09T07:45:00-08:00",
+  "completed_at": "2026-11-09T07:46:34.976-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T07:13:31.281-08:00",
+    "end": "2026-11-09T07:46:34.976-08:00",
+    "basis": "Start uses readback of preceding branch heartbeat completed_at; end uses current execution clock. Source announcement dates, publication dates and concrete access effects checked against this interval. Searches allowed two-day indexing overlap without treating older events as new.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value essential healthcare access changes; production national collector remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T064522-0800-r11-20261109T151048Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T07:13:31.281-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "status": "accessible",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, KY, organ procurement organization, termination notice",
+      "new_listed_notices_in_window": 0,
+      "details": "Official page opened and current listing checked before additional targeted searches; no newer entries than November 2."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "November 9 2026 hospital emergency department closing closed suspended service patients United States",
+      "November 9 2026 labor delivery maternity obstetrics service closed suspended hospital",
+      "November 9 2026 rural hospital emergency services suspended diversion patients",
+      "November 9 2026 inpatient psychiatric behavioral health hospital service shutdown closed",
+      "November 9 2026 dialysis center clinic suspension closure patient transfers",
+      "November 9 2026 cancer oncology infusion treatment center clinic closed services",
+      "November 9 2026 primary care clinic federally qualified health center closure services suspended",
+      "November 9 2026 ambulance EMS service closed station base shutdown",
+      "November 9 2026 air ambulance medical helicopter base suspended closed",
+      "November 9 2026 emergency department maternity hospital reopening restoration medical services",
+      "November 9 2026 CMS provider agreement termination notice rescission CLIA suspension limitation",
+      "November 9 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital clinic closure emergency ambulance"
+    ],
+    "search_method": "Twelve targeted web searches with two-day recency and direct follow-up inspection of three candidate articles; searched U.S. states and territories.",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East (Waukegan, Illinois) ambulance bypass",
+        "reason": "Effective November 7, previously documented in earlier Care Line recalls, no new in-window change.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Benefis Health outpatient behavioral-health and rehabilitation service discontinuations (Great Falls, Montana)",
+        "reason": "Previously reported restructuring, planned to begin December 19, not newly announced or effective in the observation interval.",
+        "source_url": "https://www.krtv.com/news/benefis-health-system-to-restructure-services-citing-financial-pressure"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center maternity reopening (West Virginia)",
+        "reason": "November 5 announcement of prospective/phased reopening subject to agreements and approvals; service not verified restored in window.",
+        "source_url": "https://www.wdbj7.com/2026/11/05/greenbrier-valley-medical-center-reopening-maternity-ward-wv-governor-announces/"
+      },
+      {
+        "item": "Mead Family Cancer Center (Columbus, Nebraska)",
+        "reason": "November 9 report of new consolidated cancer-treatment facility; not a restoration of a previously lost essential service and no in-window service-loss effect established.",
+        "source_url": "https://healthcaredesignmagazine.com/news/columbus-community-hospital-opens-mead-family-cancer-center-in-columbus-nebraska/166303/"
+      },
+      {
+        "item": "Tehama County and Decatur air-medical base closures",
+        "reason": "Historical September/October 2026 reports, not new in the observation interval.",
+        "source_url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times"
+      }
+    ],
+    "result_summary": "No verified new nonduplicate in-window U.S. or territory essential healthcare service loss, qualifying CMS provider/CLIA access-risk action, medical transport/base shutdown, or concrete effective restoration.",
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Early-morning publication and search-index delays can hide later-emerging notices.",
+      "Sparse searchable territory-local reporting prevents comprehensive coverage claims.",
+      "Production collector and its global deduplication ledger were not audited; this is a supplementary bounded recall only."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T014451-0800-r11-20261109T101234Z",
+  "scheduled_for": "2026-11-09T01:44:51-08:00",
+  "started_at": "2026-11-09T02:12:34-08:00",
+  "completed_at": "2026-11-09T10:15:49.282Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T07:58:47.663Z",
+    "end": "2026-11-09T10:15:49.282Z",
+    "local_start": "2026-11-08T23:58:47.663-08:00",
+    "local_end": "2026-11-09T02:15:49-08:00",
+    "basis": "Latest verified predecessor Gaza heartbeat completed at 23:58:47 PST on 8 Nov; authenticated GitHub compare showed four intervening commits to other watch ledgers and no subsequent Gaza heartbeat. Source publication dates and event dates assessed separately; 6–8 Nov storm impact details classified as follow-up, not new storms.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261109-wafa-al-sinaa-junction-civilian-injuries",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176780",
+      "title": "Injuries reported following Israeli bombardment of various areas in Gaza",
+      "publisher": "Palestinian News and Information Agency (WAFA)",
+      "source_date": "2026-11-09",
+      "publication_date": "2026-11-09",
+      "publication_time_local": "2026-11-09 11:51 (Palestinian local time)",
+      "event_date": "2026-11-09",
+      "event_time": null,
+      "location": "Al-Sina'a (Industry) junction, western Gaza City, Gaza Strip",
+      "affected_population_or_system": "Multiple civilians reportedly injured; precise number and severity unknown",
+      "supporting_passage": "a number of civilians suffered various injuries",
+      "source_type": "established_news_agency_reporting_medical_sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": "Found via direct WAFA homepage and linked report after 12 bounded searches; report published 11:51 local 9 November (01:51 PST), following predecessor heartbeat at 23:58 PST 8 November. Medical sources are cited but not named; casualty number and independent verification unavailable. Same report says a residential roof was struck in Al-Rimal and demolition operations occurred in Rafah; neither is counted as an additional casualty incident without documented harm."
+    },
+    {
+      "finding_id": "gaza-20261109-ocha-storm-shelter-cluster-nov8-assessment",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+      "title": "Humanitarian Situation Report: Heavy Rains in the Gaza Strip | 8 November 2026 — shelter assessment",
+      "publisher": "UN OCHA occupied Palestinian territory",
+      "source_date": "2026-11-08",
+      "publication_date": "2026-11-09",
+      "publication_time_local": null,
+      "event_date": "2026-11-08",
+      "event_time": null,
+      "location": "Gaza Strip, across five governorates",
+      "affected_population_or_system": "More than 26,000 households appealed for storm-related shelter/belonging damage support; approximately 600 households re-displaced; over 6,000 family shelters reportedly destroyed and 17,400 damaged; over 3,900 households reportedly without shelters; preliminary sector estimates",
+      "supporting_passage": "over 6,000 family shelters have reportedly been destroyed",
+      "source_type": "primary_un_humanitarian_situation_report",
+      "classification": "follow-up",
+      "confidence": "high_for_attributed_preliminary_UN_cluster_assessment",
+      "bounded_discovery_context": "New official OCHA report dated 9 November found on OCHA OPT homepage during official-first check. Provides detailed numerical humanitarian assessment beyond previous storm coverage; not counted as a second separate storm or new independent displacement incident. Estimates refer to 6–8 November; exact report release hour not shown, so new-to-watch status is based on a newly issued report rather than a known event time."
+    },
+    {
+      "finding_id": "gaza-20261109-ocha-storm-health-service-disruptions",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+      "title": "Humanitarian Situation Report: Heavy Rains in the Gaza Strip | 8 November 2026 — healthcare service impacts",
+      "publisher": "UN OCHA occupied Palestinian territory",
+      "source_date": "2026-11-08",
+      "publication_date": "2026-11-09",
+      "publication_time_local": null,
+      "event_date": "2026-11-08",
+      "event_time": null,
+      "location": "Nasser Medical Complex; Patient's Friends Benevolent Society Hospital; An Nakheel and Al Yasmin clinics; At Tuffah and Bir 19 medical points; Gaza Strip",
+      "affected_population_or_system": "Healthcare service capacity and access: flooding affected hospital departments, a pediatric department/pharmacy/radiology basement, two clinics and two medical points; one partner reported suspended fixed and mobile sexual/reproductive health services, others temporarily suspended mobile services; Médecins du Monde reported 54% fewer consultations during flooding",
+      "supporting_passage": "Health facilities also suffered leaks and flooding.",
+      "source_type": "primary_un_humanitarian_situation_report",
+      "classification": "follow-up",
+      "confidence": "high_for_attributed_UN_health_cluster_reporting",
+      "bounded_discovery_context": "Separately qualifying healthcare service-impact class described in the newly issued OCHA report. Some clinic and mobile team services resumed; this record describes storm-period disruption, not an assertion that all facilities remain closed on 9 November. Exact start/end times for individual disruptions unverified."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not authoritative production collection or publication.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T234451-0800-r11-20261109T075628Z.json",
+    "previous_verified_completed_at": "2026-11-08T23:58:47.663-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "intervening_gaza_ledger_files_verified_absent_using_github_compare": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "accessible",
+        "result": "New situation report published 9 November 2026 on severe rain 6–8 Nov, including new sector assessments of shelter damage, health facility and food service disruptions.",
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026"
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.emro.who.int/opt/",
+        "global_url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "regional_HTTP_502_global_accessible",
+        "result": "WHO regional occupied Palestinian territory portal failed HTTP 502; global emergencies portal accessible but latest listed relevant news did not cover the current Nov 8–9 window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:who.int Gaza November 9 2026 flood health facilities WHO",
+      "Gaza November 9 2026 healthcare hospitals mobile clinics flooding storm OCHA WHO",
+      "Gaza November 9 2026 crossings humanitarian aid fuel shelter tents restrictions UN",
+      "Gaza November 9 2026 killed wounded civilians Khan Younis Jabalia airstrike WAFA Reuters AP",
+      "November 9 2026 Gaza UNRWA UNICEF storm shelters children reports latest",
+      "November 9 2026 Gaza WFP food kitchens water sanitation power impact storm",
+      "November 9 2026 Gaza WHO medical evacuations Rafah crossing patients",
+      "November 9 2026 Gaza ceasefire negotiations hostages detainees Israeli military operations civilians",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"09/November/2026\" killed wounded storm",
+      "site:ochaopt.org/content/ \"09 Nov 2026\" Gaza storm aid food hospital",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"9 Nov 2026\" Gaza health shelter flooding",
+      "site:apnews.com/article/gaza November 9 2026 rain casualties ceasefire aid"
+    ],
+    "additional_search_execution": "Exactly 12 targeted fast web searches after OCHA and WHO direct source checks; direct publisher/article clicks and alternate WHO direct URL opens not counted as searches.",
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "accessible",
+        "result": "Direct official news agency homepage revealed November 9 11:51 Palestinian local report citing medical sources about civilian injuries after drone strike near Al-Sina'a junction; verified full article at https://english.wafa.ps/Pages/Details/176780"
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring access restriction; alternate UN source OCHA accessible."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "HTTP 502",
+        "prior_status": "HTTP 502 or timeout",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global portal and OCHA OPT verified"
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA OPT and established reporting available"
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "Deir al-Balah storm-related sand hill collapse, five killed",
+        "reason": "Already in predecessor ledger; OCHA attributes five deaths to Civil Defense. Not counted as a new fatality or separate incident; source variances in prior reporting not resolved further here."
+      },
+      {
+        "event": "Previously reported Nov 8 Khan Younis and Jabalia casualties",
+        "reason": "Previously logged; not counted again."
+      },
+      {
+        "event": "Widespread storm flooding and tent loss",
+        "reason": "Previously logged as a storm emergency; OCHA sector figures treated only as quantified follow-up."
+      },
+      {
+        "event": "OCHA temporary kitchen disruptions and 7,250 delayed meals",
+        "reason": "OCHA says meal delivery and kitchen production returned to normal by 8 Nov; documented but not separately elevated as ongoing high-value new development."
+      },
+      {
+        "event": "WAFA report of roof strike near Palestine Mosque, Al-Rimal and Rafah demolitions",
+        "reason": "Context in same article, but no verified additional casualties or clearly documented additional civilian impact suitable for a separate finding."
+      },
+      {
+        "event": "Old search results, opinion, repeated or undated claims",
+        "reason": "Publication and event dates outside window or insufficient direct validation."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked first, then exactly 12 additional targeted searches and direct official/publisher checks. Three qualifying new-to-watch records: one newly reported civilian injury incident and two substantive OCHA storm-response follow-ups (shelter scale, medical operations). Previous report of the fatal Deir al-Balah collapse not recounted. WHO EMRO 502 and UNRWA 403 are recurrent access issues; enough authoritative alternate coverage to proceed DEGRADED/findings, not FAILED. Earlier storm impacts are not presented as new events on 9 November.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no production publication",
+      "no social posting",
+      "no approvals",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

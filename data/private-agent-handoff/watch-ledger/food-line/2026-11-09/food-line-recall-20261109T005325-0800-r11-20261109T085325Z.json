@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T005325-0800-r11-20261109T085325Z",
+  "scheduled_for": "2026-11-09T00:45:54-08:00",
+  "started_at": "2026-11-09T00:53:25-08:00",
+  "completed_at": "2026-11-09T00:53:59-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-08T23:54:32.904-08:00",
+    "end_at": "2026-11-09T00:53:59-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Previous verified Food Line watch-ledger heartbeat completed_at. Discovery search recency 2 days to surface freshly indexed reports; only new or materially changed events during the hourly interval would qualify.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-08/food-line-recall-20261108T235215-0800-r11-20261109T075215Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary audited-miss recall only; primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting the only, sole, last, or full-service grocery store in a community",
+      "Canceled/suspended emergency food distribution due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "fast",
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 9 2026",
+      "\"sole grocery store\" destroyed closed November 8 2026",
+      "\"last grocery store\" closes November 2026 town",
+      "\"full service grocery store\" closed fire flood November 2026 rural",
+      "\"food distribution\" canceled storm flooding \"November 9\" 2026",
+      "\"food bank\" \"distribution canceled\" weather outage November 2026",
+      "\"food pantry\" \"closed\" \"November 9, 2026\" emergency",
+      "\"food pantry\" \"suspended services\" \"November\" 2026",
+      "\"food bank\" \"closed due to\" flooding \"November 8\" 2026",
+      "\"SNAP\" \"benefits\" \"outage\" \"November 9\" 2026 state agency",
+      "site:gov \"SNAP\" \"service interruption\" \"November\" \"2026\"",
+      "site:gov \"WIC\" \"unavailable\" \"November\" \"2026\" outage"
+    ],
+    "search_recency_days": 2,
+    "search_query_errors_observed": 0,
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 7,
+      "failed": 1,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/",
+        "https://www.azahcccs.gov/Shared/News.html"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "reason": "Flood damage at McCaysville GA's only grocery was reported November 6 and recorded in prior hourly watches; no newly verified access impact this hour."
+      },
+      {
+        "source_url": "https://www.vpm.org/npr-story/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight-flooding/",
+        "reason": "Duplicate syndication/coverage dated November 6 of the same previously documented McCaysville grocery loss."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Listed county social-services office closures were dated November 3–6, with reopening November 9; pre-existing routine event, maintenance, or facility issues, not new SNAP/WIC benefit interruption this hour."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing SNAP application and telephone wait-time notice has no new dated immediate benefits interruption in the observed interval."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "November 9 onward mobile food distributions displayed as scheduled, with no qualifying announced emergency cancellation."
+      },
+      {
+        "source_url": "https://www.azahcccs.gov/Shared/News.html",
+        "reason": "Search surfaced Arizona HEAplus interruption/restoration dated June 5–6, 2026; out-of-window, and direct news page was blocked."
+      },
+      {
+        "source_url": "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/",
+        "reason": "No fresh November 9 SNAP/WIC interruption verified; indexed 2025 November benefit-pause notices were date-confounded and excluded."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "No newly dated immediate FoodShare access interruption found."
+      }
+    ],
+    "source_or_search_failures": [
+      {
+        "url": "https://www.azahcccs.gov/Shared/News.html",
+        "type": "HTTP_403_FORBIDDEN",
+        "material": false,
+        "note": "Arizona agency news directory could not be opened directly; other accessible state-agency channels and targeted searches supplied useful coverage. No current incident was independently identified."
+      }
+    ],
+    "coverage_assessment": "All 12 targeted searches returned information without tool errors. Seven of eight direct checks were accessible. Search results were dominated by historical incidents, prior-watch duplicates, and routine distribution pages. One nonmaterial Arizona agency HTTP 403 makes the result DEGRADED under source-failure policy. No new, source-verified qualifying food-access interruption established in the bounded interval; search indexing limits prevent a claim of nationwide absence.",
+    "excluded_content": "Donation drives, resource guides, recipes, opinion, routine promotion, generic inflation, previously documented grocery losses, planned closures, undated announcements, and 2025 SNAP disruption stories.",
+    "notification_assessment": "No new qualifying signal; one nonmaterial direct-source 403. Notification suppressed per user rule.",
+    "controls": "No review approval, publication, production collector change, schedule change, task disabling, or other mutation."
+  }
+}

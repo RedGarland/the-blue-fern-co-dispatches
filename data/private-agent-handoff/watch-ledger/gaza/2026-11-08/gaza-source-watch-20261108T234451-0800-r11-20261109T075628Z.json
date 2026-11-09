@@ -1,0 +1,146 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261108T234451-0800-r11-20261109T075628Z",
+  "scheduled_for": "2026-11-08T23:44:51-08:00",
+  "started_at": "2026-11-08T23:56:28-08:00",
+  "completed_at": "2026-11-09T07:58:47.663Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-08",
+    "start": "2026-11-09T06:50:42.215Z",
+    "end": "2026-11-09T07:58:47.663Z",
+    "local_start": "2026-11-08T22:50:42.215-08:00",
+    "local_end": "2026-11-08T23:58:47.663-08:00",
+    "basis": "Window begins at latest verified predecessor heartbeat completed_at. Assessed both article publication and underlying event times; older recirculated reports excluded.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall watch, not primary daily production collector/publisher.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-08/gaza-source-watch-20261108T224451-0800-r11-20261109T065042215Z.json",
+    "previous_verified_completed_at": "2026-11-08T22:50:42.215-08:00",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "accessible",
+        "result": "As checked, most recent update listed is 6 Nov 2026 humanitarian situation report covering 5 Nov. No new November 8-9 Gaza update in official list."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "global_accessible_regional_HTTP_502",
+        "result": "WHO global emergency portal accessible, but most recent listed relevant update predates observation period; EMRO portal returned HTTP 502 (recurring restriction). An older guessed WHO URL returned HTTP 404; corrected global URL was accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 9 2026 10:00 killed injured November 9 northern",
+      "Gaza November 9 2026 morning casualties airstrike Khan Younis Jabalia Rafah civilians latest",
+      "site:aa.com.tr/en/middle-east Gaza Nov 9 2026 morning killed wounded flood tents",
+      "site:aljazeera.com/news/2026/11/9 Gaza ceasefire flood aid hospital operations deaths",
+      "site:un.org OR site:unicef.org OR site:wfp.org Gaza 9 November 2026 food aid shelter crossing health",
+      "Gaza 9 November 2026 medical evacuation hospital ambulance fuel WHO red crescent operational",
+      "غزة الاثنين 9 نوفمبر 2026 صباحا شهداء مصابين الاحتلال طائرات قصف 9 تشرين الثاني",
+      "غزة الإثنين 9 نوفمبر 2026 صباح اليوم أمطار خيام نازحين انهيار مستشفى إسعاف",
+      "site:english.wafa.ps/Pages/Details/ Monday 9 November 2026 Gaza",
+      "site:aa.com.tr/en/middle-east/ 09.11.2026 Gaza killed",
+      "site:reuters.com/world/middle-east/ November 9 2026 Gaza aid killed",
+      "November 9 2026 Gaza Gaza City humanitarian civilian casualties crossings displacement hospital ceasefire morning latest"
+    ],
+    "additional_search_execution": "Six fast plus six slow targeted searches after direct OCHA/WHO first checks. Direct publisher opens and article link clicks are not additional searches.",
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "homepage_timeout",
+        "result": "Direct homepage and search page timed out. Indexed snapshot showed November 8 local news including already known sand-cliff collapse; cannot assert a complete contemporaneous WAFA feed check."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "accessible",
+        "result": "Latest directly verified Gaza story, published November 9, describes Deir al-Balah landslide late Sunday already logged as five deaths. No distinct additional casualties, confirmed rescue change, or infrastructure event found within window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "accessible",
+        "result": "Most recent listed PRCS newsroom item November 3, no newer ambulance, hospital or evacuation operational update verified."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Access denied as in prior watches; other UN and established publisher coverage accessible."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/amp/news/2026/11/8/floods-in-gaza-leave-tens-of-thousands-without-shelter",
+        "status": "accessible",
+        "result": "November 8 flood report documents already recorded storm/tent impacts; no verified new event within this hourly window."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "observed_status": "HTTP 502",
+        "prior_status": "timeout_or_HTTP_502",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "observed_status": "HTTP 403",
+        "prior_status": "HTTP 403",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "WAFA",
+        "observed_status": "homepage_and_search_timeout",
+        "prior_status": "homepage_timeout_or_accessible_intermitently",
+        "material_new_deterioration": false,
+        "mitigation": "Established agency results and other outlets checked; confidence limited for latest WAFA feed."
+      }
+    ],
+    "exclusions": [
+      {
+        "event": "Deir al-Balah sand cliff/landslide on Nov 8 with five reported deaths, including a woman and children",
+        "reason": "Previously logged; Nov 9 Anadolu story retells late-Sunday incident without verified new fatality since prior completion.",
+        "url": "https://www.aa.com.tr/en/middle-east/landslide-kills-woman-and-4-children-sheltering-in-tents-in-central-gaza/4116380"
+      },
+      {
+        "event": "70,000 flooded tents, hundreds of thousands displaced without shelter, and storm assistance challenges",
+        "reason": "Previously recorded on Nov 7-8; no verified distinct quantitative or operational change in current window.",
+        "url": "https://www.aljazeera.com/amp/news/2026/11/8/floods-in-gaza-leave-tens-of-thousands-without-shelter"
+      },
+      {
+        "event": "Earlier November 8 Khan Younis and Jabalia civilian deaths/injuries",
+        "reason": "Logged in previous recalls; no newly distinct casualties verified."
+      },
+      {
+        "event": "Older casualty, crossing, hospital functionality and medical evacuation reports",
+        "reason": "Outside the observation window; no new operational change verified in current bounded searches."
+      },
+      {
+        "event": "Search snippet suggesting 2 people hurt in Gaza wall collapse",
+        "reason": "Undated/index-inconsistent snippet, not validated by direct current article or independent corroboration; excluded rather than guessing."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked first, followed by exactly 12 targeted queries and direct publisher/article checks. No new traceable Gaza civilian, shelter, health, aid, crossing, detention or ceasefire event verified since latest predecessor heartbeat. Existing WHO EMRO 502, UNRWA 403 and intermittent WAFA failures restrict coverage; alternative authoritative/established coverage remained accessible. DEGRADED/no_findings, not FAILED, and no material new watch deterioration.",
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no publication",
+      "no production modifications",
+      "no approval",
+      "no schedule change",
+      "no automation disablement"
+    ]
+  }
+}

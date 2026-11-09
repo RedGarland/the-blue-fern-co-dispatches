@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T064522-0800-r11-20261109T151048Z",
+  "scheduled_for": "2026-11-09T06:45:22-08:00",
+  "started_at": "2026-11-09T07:10:48-08:00",
+  "completed_at": "2026-11-09T07:13:31.281-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T05:52:20-08:00",
+    "end": "2026-11-09T07:13:31.281-08:00",
+    "basis": "Verified preceding Care Line Watch heartbeat completed_at from authenticated GitHub readback. Published dates and access effects compared with the interval. Included a conservative catch-up since no newer Care Line heartbeat was present at branch inspection.",
+    "retrospective_recall_included": false
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Care Line recall watch; production collection remains authoritative. Not a production publication or deduplication run.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T055126-0800-recall12-a11.json",
+    "prior_heartbeat_completed_at": "2026-11-09T05:52:20-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "status": "accessible",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope, Kentucky, Organ Procurement Organization, termination notice",
+      "new_listed_notices_in_window": 0,
+      "details": "Direct official CMS page inspected before additional searches; entries from November 2 and earlier predate the window."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "November 9 2026 hospital closes emergency department shuts down services today United States",
+      "November 9 2026 maternity labor delivery unit closure suspension hospital",
+      "November 9 2026 behavioral health inpatient psychiatric hospital services suspended closed",
+      "November 9 2026 dialysis cancer oncology primary care clinic closed patients",
+      "November 9 2026 rural hospital emergency room service suspension ambulance diversion",
+      "November 9 2026 ambulance service closes base air medical helicopter suspended",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-11-09\" OR \"2026-11-08\"",
+      "November 9 2026 Medicare provider termination CLIA suspended license rescission hospital lab",
+      "November 9 2026 reopened restored emergency department hospital ambulance maternity services",
+      "November 9 2026 Guam Puerto Rico U.S. Virgin Islands hospital emergency ambulance services suspension closure",
+      "November 9 2026 Illinois Vista Medical Center East Gateway Regional ambulance bypass resumed new update",
+      "November 9 2026 hospital \"closed\" \"patients\" \"emergency\" \"Monday\" site:com"
+    ],
+    "search_method": "web fast targeted searches; recency 1 day for six queries and 2 days for six; search results individually screened for publisher/source date and concrete access consequence.",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL, ambulance bypass",
+        "reason": "EMS bypass effective November 7 at 7 a.m., and November 8 follow-up reporting predate current interval; already included in previous Care Line history.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Gateway Regional Medical Center, Granite City IL, EMS bypass",
+        "reason": "November 8 follow-up states bypass effective November 7 at 7 a.m.; existing incident, not new in this observation window.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/"
+      },
+      {
+        "item": "Vista and Gateway missed payroll",
+        "reason": "Financial/labor reporting alone not a new discrete access change after the previously reported bypass; exclude as ownership/business context.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/08/completely-unacceptable-and-irresponsible-state-blasts-owner-of-vista-medical-center-east-in-waukegan-over-missed-payroll/"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur base closure",
+        "reason": "September 2026 historical closure, not newly effective or announced.",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Maine rural maternity units and pending litigation",
+        "reason": "August 2026 historical and proposed events, no new in-window concrete service change.",
+        "source_url": "https://wgme.com/news/local/maine-lawmakers-look-for-ways-to-stop-closures-of-hospital-labor-and-delivery-units-health-healthcare-maternity-ward"
+      },
+      {
+        "item": "Guam Regional Medical City storm suspensions",
+        "reason": "April 2026 dated suspension, not a November event.",
+        "source_url": "https://www.grmc.gu/2026/04/10/grmc-announces-suspension-of-visitations-and-clinic-operations-rehabilitation-and-or-services-monday-to-wednesday-due-to-tropical-storm-sinlaku/"
+      },
+      {
+        "item": "NHS birth center closings",
+        "reason": "Outside the United States and territories.",
+        "source_url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights"
+      }
+    ],
+    "result_summary": "No newly verified, nonduplicative U.S. or territory essential healthcare closure/suspension, emergency/rural or medical-transport service loss, CMS provider/CLIA action, or effective essential-service restoration within the observation window.",
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Search indexing and news publication may lag the morning observation window; lack of results is not proof of absence.",
+      "Territory results were sparse; bounded national recall does not establish exhaustive territory-local coverage.",
+      "Primary production collection and its deduplication ledger were not independently audited in this supplementary watch."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

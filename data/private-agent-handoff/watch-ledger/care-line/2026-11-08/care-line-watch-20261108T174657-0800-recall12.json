@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261108T174657-0800-recall12",
+  "scheduled_for": "2026-11-08T17:45:22-08:00",
+  "started_at": "2026-11-08T17:46:57-08:00",
+  "completed_at": "2026-11-08T17:48:14-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-08T16:45:36-08:00",
+    "end": "2026-11-08T17:48:14-08:00",
+    "basis": "Independently fetched preceding ledger entry completed_at through this supplementary recall completion.",
+    "retrospective_recall_included": true
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (KY), OPO termination notice (CCN 18P001)",
+      "new_notices_since_previous_watch": 0,
+      "checked_via": "Direct official CMS Public Notices table, preceding targeted searches."
+    },
+    "additional_targeted_searches": 12,
+    "targeted_search_queries": [
+      "November 8 2026 hospital closes emergency department suspends services United States",
+      "November 8 2026 maternity labor delivery unit closure hospital local news",
+      "November 8 2026 rural hospital emergency services suspended closed",
+      "November 8 2026 ambulance EMS air medical base closed suspended operations",
+      "November 8 2026 psychiatric behavioral health inpatient hospital closure suspended",
+      "November 8 2026 dialysis treatment center suspension closure patients",
+      "November 8 2026 cancer oncology center shutting down services patients",
+      "November 8 2026 primary care clinic abrupt closure temporarily closed patients",
+      "site:gov November 8 2026 hospital emergency department service closed suspension notice state health department",
+      "November 8 2026 hospital emergency dialysis oncology ambulance service restored reopened after closure USA",
+      "November 8 2026 Puerto Rico Guam US Virgin Islands CNMI American Samoa hospital ambulance clinic dialysis suspension closure",
+      "November 8 2026 5pm hospital closes clinic emergency department ambulance suspended local news US"
+    ],
+    "targeted_search_recency_days": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL, ambulance bypass",
+        "reason": "CBS Chicago report updated November 8 2026 at 3:30 p.m. CST (1:30 p.m. PST), before this watch window started at 4:45 p.m. PST; Vista ambulance-access restrictions already discussed in the preceding watch. No newly timed change established within this window.",
+        "source_url": "https://www.cbsnews.com/chicago/news/vista-medical-center-east-waukegan-ambulance-bypass/"
+      },
+      {
+        "item": "Sharon Regional Medical Center PA emergency department and general service suspension",
+        "reason": "ED closure occurred November 4 and services suspended from November 6; historical/prior-watch item rather than new change.",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Roseland Community Hospital Chicago labor and delivery",
+        "reason": "Maternity closure November 1; earlier than observation window and covered by preceding recall checks.",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Minnesota maternity-access data",
+        "reason": "November 8 report summarizes accumulated historical closures and access deserts; no new operational closure in the last hour.",
+        "source_url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center"
+      },
+      {
+        "item": "Watsonville Community Hospital maternity and NICU",
+        "reason": "October 28 board recommendation and conditional prospective notice; no new effective loss in current window.",
+        "source_url": "https://pajaronian.com/pvhcd-board-recommends-closure-of-labor-delivery-nicu/"
+      },
+      {
+        "item": "Guam Memorial Hospital Authority storm-related suspension",
+        "reason": "October 16 emergency notice, not a new November 8 action.",
+        "source_url": "https://ghs.guam.gov/node/4352"
+      },
+      {
+        "item": "Other results",
+        "reason": "Older rural and psychiatric service changes, UK/Australian health stories, broad health policy stories, unrelated matches, and new clinic openings that did not restore documented lost essential service."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "result_summary": "CMS latest listed notice remains 2026-11-02. Twelve bounded targeted news/official searches found no substantiated newly announced/effective, nonduplicate U.S. or territory access interruption or restoration during 2026-11-08 16:45:36–17:48:14 PST.",
+    "coverage_limitations": [
+      "Sunday evening publication and search-index lag may delay detection of fresh local incidents.",
+      "A bounded search cannot guarantee nationwide completeness; primary production collection is authoritative.",
+      "No production event ledger was independently read to verify upstream deduplication; time-based exclusion applied against prior watch."
+    ],
+    "prior_verified_heartbeat": "data/private-agent-handoff/watch-ledger/care-line/2026-11-08/care-line-watch-20261108T164343-0800-recall12.json",
+    "prior_verified_completed_at": "2026-11-08T16:45:36-08:00",
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "publication_or_approval": "none",
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T114821-0800-recall12-20261109T195008682Z",
+  "scheduled_for": "2026-11-09T11:45:22-08:00",
+  "started_at": "2026-11-09T11:48:21-08:00",
+  "completed_at": "2026-11-09T11:50:08.682-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T10:42:44-08:00",
+    "end": "2026-11-09T11:50:08.682-08:00",
+    "basis": "Start based on previous verified care-line watch heartbeat completed_at. News searches scoped to the November 9 calendar day and 1-day recency for overlap, qualifying changes counted only if newly verified after prior checkpoint."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value healthcare-access miss classes; production national collector remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T104203-0800-recall12-20261109T184244Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T10:42:44-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "status": "accessible",
+      "latest_visible_notice_date": "2026-11-02",
+      "latest_visible_notice": "Network for Hope (Kentucky), organ procurement organization Medicare termination notice",
+      "new_notices_in_observation_window": 0
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "November 9 2026 hospital emergency department closure suspend service United States",
+      "November 9 2026 hospital labor delivery obstetrics maternity closure pause reopened",
+      "November 9 2026 psychiatric behavioral health hospital closed suspends admissions services",
+      "November 9 2026 dialysis clinic closed suspended treatment oncology patients",
+      "November 9 2026 rural hospital emergency service closure or reopening today",
+      "November 9 2026 ambulance EMS base air medical service closing suspended today",
+      "November 9 2026 hospital emergency room reopens after closure services restored patients",
+      "site:cms.gov \"2026-11-09\" \"termination\" \"CLIA\" hospital provider",
+      "November 9 2026 hospital clinic closed primary care access patients urgent care service changes",
+      "November 9 2026 Puerto Rico Guam Virgin Islands American Samoa Mariana Islands hospital emergency service suspension closure",
+      "November 9 2026 nursing medical ambulance diversions hospital bypass closed emergency",
+      "November 9 2026 sudden suspended mobile clinics dialysis chemotherapy psychiatric hospital service resumes"
+    ],
+    "search_method": "Read official CMS Public Notices first, then exactly 12 targeted fresh web searches with one-day recency. Assessed event/concrete-access timing, U.S. and territory jurisdiction, prior-known duplication, and actual service effect.",
+    "reviewed_exclusions": [
+      {
+        "item": "Mississippi $205M rural health award",
+        "source_url": "https://mississippitoday.org/2026/11/09/mississippi-awarded-205m-for-second-year-of-federal-rural-health-program/",
+        "reason": "Funding news, no newly effective closure, suspension, or restoration of essential service."
+      },
+      {
+        "item": "Santa Barbara half-marathon emergency visits",
+        "source_url": "https://abc7.com/post/more-dozen-runners-fall-ill-during-santa-barbara-half-marathon-cottage-health-hospital-treating-least-19-people/20025183/",
+        "reason": "Increased patient presentations, no evidence hospital or ambulance service was suspended."
+      },
+      {
+        "item": "West Suburban Medical Center closure",
+        "source_url": "https://abc7chicago.com/post/departments-probing-finances-west-suburban-hospital-oak-park-illinois-abrupt-closure-state-rep-lashawn-ford-says/18881569/",
+        "reason": "Historic March/April 2026 closure, not a new development in observation window."
+      },
+      {
+        "item": "Martin County, NC future rural emergency hospital",
+        "source_url": "https://www.witn.com/2026/10/09/martin-county-receives-funding-new-rural-emergency-hospital/",
+        "reason": "October funding and future construction; no operating emergency service restored as of this observation interval."
+      },
+      {
+        "item": "CMS-1848-F",
+        "source_url": "https://www.cms.gov/medicare/payment/fee-schedules/physician/federal-regulation-notices/cms-1848-f",
+        "reason": "November 9 general physician fee schedule rule, not an individualized Medicare provider or CLIA access notice."
+      },
+      {
+        "item": "North Quadra urgent and primary care centre",
+        "source_url": "https://www.islandhealth.ca/locations/hospitals-health-centre-locations/north-quadra-urgent-and-primary-care-centre",
+        "reason": "British Columbia, Canada; outside U.S./territory scope; standard hours update not confirmed closure."
+      }
+    ],
+    "result_summary": "No newly substantiated in-window and nonduplicate facility/service closure, suspension, emergency or EMS access loss, new CMS provider/CLIA action, or concrete restoration of previously lost essential care among bounded results.",
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Same-hour source publication and search indexing may lag the underlying access event.",
+      "Twelve targeted searches are supplementary and do not guarantee comprehensive 50-state/territory coverage.",
+      "Production collector queue and deduplication history were not independently accessible; prior ledger used for comparison."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

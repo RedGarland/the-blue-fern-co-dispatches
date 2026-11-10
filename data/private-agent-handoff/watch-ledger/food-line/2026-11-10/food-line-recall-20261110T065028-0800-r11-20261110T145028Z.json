@@ -1,0 +1,127 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T065028-0800-r11-20261110T145028Z",
+  "scheduled_for": "2026-11-10T06:45:54-08:00",
+  "started_at": "2026-11-10T06:50:28-08:00",
+  "completed_at": "2026-11-10T06:52:16.341-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T05:52:09-08:00",
+    "end_at": "2026-11-10T06:52:16.341-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Independently retrieved prior Food Line heartbeat on ops/watch-ledger; bound is prior completed_at, not the scheduled start.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T055030-0800-r11-20261110T135030Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class recall; production nationwide Food Line collector remains authoritative. A negative result is not nationwide clearance.",
+    "target_classes": [
+      "Sole, only, last, or full-service community grocery closure, loss, fire or disaster",
+      "Emergency food distribution canceled/suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank closure or major service access reduction",
+      "New official SNAP, WIC, or other food assistance interruption immediately blocking access"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "Eight fast and four slow targeted web searches, preferentially recent; search engines also return historical material despite date filters.",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" (fire OR closes OR shuttered OR destroyed) \"November\" \"2026\" US town",
+      "\"sole grocery store\" fire closed town November 10 2026",
+      "\"last grocery store\" closing November 2026 community",
+      "\"full service grocery store\" fire closed November 9 10 2026",
+      "\"food distribution\" \"canceled\" storm flood outage November 10 2026",
+      "\"mobile food pantry\" \"cancelled\" weather November 10 2026",
+      "\"food bank\" \"closed until further notice\" November 2026",
+      "\"SNAP\" \"WIC\" \"EBT\" benefit interruption outage delayed \"November 10\" \"2026\"",
+      "site:*.gov \"SNAP\" \"November 10, 2026\" (outage OR delayed OR unavailable OR suspended)",
+      "November 10 2026 food pantry closed fire damage emergency distribution cancelled",
+      "November 9 2026 \"only grocery store\" closing closed fire small town",
+      "November 10 2026 food bank distribution canceled severe storm flood power outage United States"
+    ],
+    "direct_source_checks": {
+      "count": 11,
+      "successful": 9,
+      "failed": 2,
+      "urls": [
+        "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "https://www.fns.usda.gov/snap/updates",
+        "https://www.fns.usda.gov/disaster-assistance",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.myflfamilies.com/services/public-assistance",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://www.hawaiifoodbank.org/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct open inaccessible through web tool.",
+          "impact": "Recurring federal SNAP bulletin blind spot; official state SNAP/WIC pages accessible."
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster-assistance",
+          "error": "Direct open inaccessible through web tool.",
+          "impact": "Federal disaster index not independently checked; local news discovery and official state pages provided useful coverage."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "reason": "High-value only-grocery flooding in McCaysville, Georgia occurred about Nov. 4 and was reported Nov. 6; newly encountered in search but NOT a new development within this hourly window. Production dedup status unknown; do not mislabel as fresh or clear it as already collected."
+      },
+      {
+        "source_url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Utah County food bank closed Nov. 1, previously reviewed; not new this hour."
+      },
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, New York only grocery fire September 2026, historical."
+      },
+      {
+        "source_url": "https://6abc.com/post/fire-destroys-south-philadelphia-community-pantry-food-mission-continues/19986236/",
+        "reason": "Oct. 27 pantry structure fire; community fridge remained operational and food provision continued, not new."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Future Nov. 21 SNAP documentation rule; not an immediate new service interruption."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC Sept. 2 notice confirms offices and benefits continued, no suspension."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing application/interview telephone wait notices; no newly dated suspension."
+      },
+      {
+        "source_url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "reason": "Routine scheduling and opt-in notices, no newly dated emergency cancellation."
+      },
+      {
+        "source_url": "https://westpalmnow.com/palm-beach-county-flood-state-of-emergency/",
+        "reason": "Flood recovery and aid center opening (Nov. 10 update), not canceled food distribution."
+      },
+      {
+        "source_url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Upcoming Nov. 14 single Safeway location closure in Arvada, which has alternative grocery stores; not sole community full-service loss and reported weeks earlier."
+      }
+    ],
+    "excluded_categories": "Donation drives, resources/guides, recipes, opinion, routine food distributions and promotion, generic inflation, old incidents, 2025 SNAP shutdown stories, out-of-country events, and nonimmediate policy changes.",
+    "assessment": "No source-backed new qualifying food-access disruption was verified within 2026-11-10 05:52:09–completion PST. Two federal USDA direct pages inaccessible; remaining search and state/provider coverage useful. DEGRADED due to persistent nonmaterial federal-source access limitation.",
+    "material_degradation": false,
+    "approval_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T124313-0800-recall12-20261110T2044Z",
+  "scheduled_for": "2026-11-10T12:45:22-08:00",
+  "started_at": "2026-11-10T12:43:13-08:00",
+  "completed_at": "2026-11-10T12:45:04.558-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T11:48:21.097-08:00",
+    "end": "2026-11-10T12:45:04.558-08:00",
+    "basis": "From previous verified supplementary Care Line heartbeat completion through current run. Newly reported or newly effective, concrete care-access changes searched with same-day and recent-index lookback."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall watch only; production national collector and review remain authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T114617-0800-recall12-20261110T194738Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T11:48:21.097-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — Illinois — Limitation of CLIA certificate — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "The November 10 Advanced Urgent Care CLIA action was previously flagged and is not a new finding. Direct canonical CMS table was checked; initial search extract omitted the newest entry, but canonical page confirmed it."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "November 10 2026 hospital closes emergency department temporarily service suspended patients",
+      "November 10 2026 maternity labor delivery unit closure suspend service hospital",
+      "November 10 2026 rural hospital urgent care clinic closure emergency services",
+      "November 10 2026 ambulance service closure suspended air ambulance base",
+      "November 10 2026 behavioral health psychiatric hospital unit services shut down admissions suspension",
+      "November 10 2026 dialysis center oncology outpatient primary care clinic closed suspended patients",
+      "November 10 2026 hospital emergency department reopening restored service after shutdown",
+      "November 10 2026 state department health hospital license suspended ordered emergency services stop site:gov",
+      "Puerto Rico Guam US Virgin Islands hospital emergency dialysis clinic service suspension reopening November 10 2026",
+      "American Samoa CNMI Northern Mariana Islands hospital clinic medical service interruption reopening November 10 2026",
+      "November 10 2026 \"ambulance\" \"service\" \"suspended\" \"county\" hospital",
+      "November 10 2026 \"hospital\" \"closed\" \"emergency\" \"patients\" health department"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center — Sharon, Pennsylvania",
+        "reason": "November 4/6 emergency, acute, and outpatient service suspensions previously reported; November 10 follow-up is not a fresh change.",
+        "url": "https://www.beckershospitalreview.com/finance/pennsylvania-hospital-to-suspend-all-services/"
+      },
+      {
+        "item": "Roseland Community Hospital — Chicago, Illinois",
+        "reason": "Maternity ward closed November 1 and covered November 2, not a new development.",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Guam Regional Medical City — Dededo, Guam",
+        "reason": "October 19 restoration from typhoon-related suspensions is historical and previously reported.",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      },
+      {
+        "item": "Guam Memorial Hospital Authority storm-related suspensions",
+        "reason": "October 16 storm precautions and service restrictions do not establish a new November 10 service change.",
+        "url": "https://ghs.guam.gov/node/4352"
+      },
+      {
+        "item": "Georgian Bay General Hospital",
+        "reason": "Ontario, Canada; outside U.S. and territories, regardless of upcoming November 11 obstetrics suspension.",
+        "url": "https://www.midlandtoday.ca/local-news/gbgh-obstetrical-closures-continue-as-staffing-challenges-persist-12985861"
+      },
+      {
+        "item": "LifeStar Ambulance — Illinois",
+        "reason": "EMS-system suspension occurred in May 2026; search results are historical.",
+        "url": "https://www.illinoistimes.com/news/lifestar-ambulance-fights-suspension/"
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": null,
+    "coverage_limitations": [
+      "Some web-search result snippets lag the direct CMS Public Notices table.",
+      "Publication and indexing delays can conceal same-hour local service changes.",
+      "Twelve targeted searches do not ensure exhaustive 50-state or territory coverage.",
+      "No production queue reconciliation or independent production deduplication verification was attempted."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No new qualifying nonduplicate finding and no material degradation; no notification.",
+    "actions_not_taken": [
+      "No approvals",
+      "No publication",
+      "No schedule change",
+      "No disabling"
+    ]
+  }
+}

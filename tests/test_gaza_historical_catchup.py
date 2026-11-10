@@ -751,3 +751,23 @@ def test_obsolete_date_keyed_approval_requires_renewed_human_approval(tmp_path: 
     _json(forged["request_path"], forged["request"])
     with pytest.raises(GazaHistoricalCatchupError, match="canonical catch-up path"):
         create_approval(forged["root"], forged["pages"], forged["request_path"])
+
+def test_source_link_captions_use_actual_hosts_preserving_reviewed_copy(tmp_path):
+    case = _make_case(tmp_path)
+    root = case["root"]
+    decision = json.loads((root / case["decision_path"]).read_text())
+    decision["evidence_references"].append({"role": "corroborating", "url": "https://other.example/report", "supporting_passage": "Attributed report"})
+    _json(root / case["decision_path"], decision)
+    head = _commit(root, "add corroborating source", "data")
+    case["request"]["source_base_commit"] = head
+    case["request"]["review_bindings"] = [_binding(root, head, case["review_path"])]
+    case["request"]["decision_bindings"] = [_binding(root, head, case["decision_path"])]
+    _json(case["request_path"], case["request"])
+    bundle = _plan(_approve_and_merge(case))
+    before = json.dumps(bundle.items, sort_keys=True)
+    rendered = owner._render_edition(bundle).decode()
+    assert '>other.example</a>' in rendered
+    assert 'href="https://other.example/report"' in rendered
+    assert '>Example News</a>' not in rendered
+    assert before == json.dumps(bundle.items, sort_keys=True)
+    assert bundle.items[0]["public_copy"]["uncertainty"] in rendered

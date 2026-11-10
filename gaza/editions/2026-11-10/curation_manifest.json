@@ -1,0 +1,638 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-10-007",
+    "title": "Father, child among eight Palestinians killed in Israeli attacks on Gaza",
+    "summary": "Al Jazeera reports, citing local health sources, that Israeli attacks killed at least eight Palestinians on 10 November. It describes three deaths in an attack on a home in Daraj, a father and his 13-year-old son killed in an attack on a tent in Zeitoun, and a man killed by gunfire in Khan Younis. The article's later update cites Wafa reporting two further deaths in an attack in Sabra. These are attributed reports of separate incidents, not an independently verified final daily toll. They are not added to cumulative ceasefire or storm casualties.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 79,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-10-aljazeera-middle-east-284e74581043"
+    ],
+    "source_ids": [
+      "gaza-2026-11-10-aljazeera-middle-east-284e74581043"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/11/10/israeli-attacks-kill-at-least-six-in-gaza-including-father-and-son?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-10-aljazeera-middle-east-284e74581043",
+        "title": "Father, child among eight Palestinians killed in Israeli attacks on Gaza",
+        "url": "https://www.aljazeera.com/news/2026/11/10/israeli-attacks-kill-at-least-six-in-gaza-including-father-and-son?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera reports, citing local health sources, that Israeli attacks killed at least eight Palestinians on 10 November. It describes three deaths in an attack on a home in Daraj, a father and his 13-year-old son killed in an attack on a tent in Zeitoun, and a man killed by gunfire in Khan Younis. The article's later update cites Wafa reporting two further deaths in an attack in Sabra. These are attributed reports of separate incidents, not an independently verified final daily toll. They are not added to cumulative ceasefire or storm casualties.",
+        "published_at": "2026-11-10T15:49:36+00:00",
+        "modified_at": "2026-11-10T19:31:22Z",
+        "event_date_precision": "day",
+        "event_date_basis": "Canonical article describes Tuesday incidents and later Tuesday Sabra update; day precision only, not publication timestamp.",
+        "event_date": "2026-11-10",
+        "location": "Gaza City and Khan Younis",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-10T21:06:48.138523+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis",
+      "palestin"
+    ],
+    "top_story_relevance_score": 79,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza City and Khan Younis",
+    "event_date": "2026-11-10",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-10-001",
+    "title": "Humanitarian Situation Report: Heavy Rains in the Gaza Strip | 8 November 2026",
+    "summary": "OCHA's report titled 8 November, published on 9 November, describes rain beginning on 6 November and damage over that weekend to displacement sites, shelters and services across Gaza. Humanitarian partners reported more than 26,000 household appeals by 8 November; OCHA identifies the figures as preliminary. OCHA says Israeli restrictions on supplies and equipment and funding shortages constrain the response. This is a weekend assessment, not a new measurement on 10 November.",
+    "category": "displacement",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-10-ocha-opt-updates-20a21ae94ce9"
+    ],
+    "source_ids": [
+      "gaza-2026-11-10-ocha-opt-updates-20a21ae94ce9"
+    ],
+    "source_urls": [
+      "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026"
+    ],
+    "publisher_names": [
+      "OCHA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-10-ocha-opt-updates-20a21ae94ce9",
+        "title": "Humanitarian Situation Report: Heavy Rains in the Gaza Strip | 8 November 2026",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "canonical_url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "publisher": "OCHA",
+        "summary_or_snippet": "OCHA's report titled 8 November, published on 9 November, describes rain beginning on 6 November and damage over that weekend to displacement sites, shelters and services across Gaza. Humanitarian partners reported more than 26,000 household appeals by 8 November; OCHA identifies the figures as preliminary. OCHA says Israeli restrictions on supplies and equipment and funding shortages constrain the response. This is a weekend assessment, not a new measurement on 10 November.",
+        "published_at": "2026-11-09T12:00:00Z",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "displacement",
+        "attribution": "OCHA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-10T21:06:48.138523+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "displacement",
+    "location": "Gaza Strip",
+    "event_date": "",
+    "attribution": "OCHA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-10-003",
+    "title": "Four killed in Gaza after sand embankment collapses onto tents, health ministry says",
+    "summary": "Reports concern one sandbank collapse at a displacement camp south of Deir al-Balah on 2026-11-08. Accounts and casualty figures are attributed separately below; they are not added together. BBC News: BBC reports that a sand embankment collapsed onto tents at a displaced-family camp south of Deir al-Balah on Sunday night, 8 November. Civil Defence initially reported five deaths. BBC says the Health Ministry revised that account on Monday morning to four: three children and one woman. This is one collapse, not two events; the initial and revised counts must not be added together. The Guardian: The Guardian reports that a sand bank collapsed onto tents at a displaced-family camp south of Deir al-Balah on Sunday, 8 November. Its retained article reports five deaths. This is its account of that collapse, not a separate event or a final independently verified toll; retain this report alongside the separately attributed BBC account rather than adding the counts.",
+    "category": "displacement",
+    "story_scope": "core_gaza",
+    "score": 58,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-11-10-006"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-10-bbc-middle-east-b49cb248645d",
+      "gaza-2026-11-10-guardian-world-22f884a89a09"
+    ],
+    "source_ids": [
+      "gaza-2026-11-10-bbc-middle-east-b49cb248645d",
+      "gaza-2026-11-10-guardian-world-22f884a89a09"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cqd090ee8px5o?at_medium=RSS&at_campaign=rss",
+      "https://www.theguardian.com/world/2026/nov/09/witnesses-struggle-save-people-buried-gaza-landslide"
+    ],
+    "publisher_names": [
+      "BBC News",
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-10-bbc-middle-east-b49cb248645d",
+        "title": "Four killed in Gaza after sand embankment collapses onto tents, health ministry says",
+        "url": "https://www.bbc.co.uk/news/articles/cqd090ee8px5o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "BBC reports that a sand embankment collapsed onto tents at a displaced-family camp south of Deir al-Balah on Sunday night, 8 November. Civil Defence initially reported five deaths. BBC says the Health Ministry revised that account on Monday morning to four: three children and one woman. This is one collapse, not two events; the initial and revised counts must not be added together.",
+        "published_at": "2026-11-09T10:41:57+00:00",
+        "modified_at": null,
+        "event_date_precision": "day",
+        "event_date_basis": "Canonical article explicitly describes Sunday (8 November 2026) collapse; same camp south of Deir al-Balah. Article publication is 9 November, not event date.",
+        "event_date": "2026-11-08",
+        "location": "south of Deir al-Balah",
+        "development_type": "primary_report",
+        "affected_system": "displacement",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      },
+      {
+        "source_record_id": "gaza-2026-11-10-guardian-world-22f884a89a09",
+        "title": "Witnesses recount struggle to save people buried in 'horrifying' Gaza landslide",
+        "url": "https://www.theguardian.com/world/2026/nov/09/witnesses-struggle-save-people-buried-gaza-landslide",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "The Guardian reports that a sand bank collapsed onto tents at a displaced-family camp south of Deir al-Balah on Sunday, 8 November. Its retained article reports five deaths. This is its account of that collapse, not a separate event or a final independently verified toll; retain this report alongside the separately attributed BBC account rather than adding the counts.",
+        "published_at": "2026-11-09T18:27:51+00:00",
+        "modified_at": "2026-11-10T11:36:22Z",
+        "event_date_precision": "day",
+        "event_date_basis": "Canonical article explicitly describes Sunday (8 November 2026) collapse; same camp south of Deir al-Balah. Article publication is 9 November, not event date.",
+        "event_date": "2026-11-08",
+        "location": "south of Deir al-Balah",
+        "development_type": "primary_report",
+        "affected_system": "displacement",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-10T21:06:48.138523+00:00",
+    "relevance_terms_matched": [
+      "deir al-balah",
+      "gaza"
+    ],
+    "top_story_relevance_score": 58,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "displacement",
+    "location": "south of Deir al-Balah",
+    "event_date": "2026-11-08",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-10-002",
+    "title": "Board of Peace says Israel's aid response after Gaza floods 'insufficent'",
+    "summary": "BBC reported on 10 November that the Board of Peace called for Israel to allow necessary humanitarian supplies into Gaza after flooding and described the response as insufficient. The Board also blamed Hamas's failure to disarm and transfer authority for compounding hardship. COGAT said tents and winter supplies had entered Gaza and maintained restrictions on equipment it said could have military uses. Hamas disputed the Board's account and blamed Israeli restrictions. These are the parties' stated positions, not an independently established allocation of responsibility.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-10-bbc-middle-east-4f1ef85ecb19"
+    ],
+    "source_ids": [
+      "gaza-2026-11-10-bbc-middle-east-4f1ef85ecb19"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cw4g1g4ll5m1o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-10-bbc-middle-east-4f1ef85ecb19",
+        "title": "Board of Peace says Israel's aid response after Gaza floods 'insufficent'",
+        "url": "https://www.bbc.co.uk/news/articles/cw4g1g4ll5m1o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "BBC reported on 10 November that the Board of Peace called for Israel to allow necessary humanitarian supplies into Gaza after flooding and described the response as insufficient. The Board also blamed Hamas's failure to disarm and transfer authority for compounding hardship. COGAT said tents and winter supplies had entered Gaza and maintained restrictions on equipment it said could have military uses. Hamas disputed the Board's account and blamed Israeli restrictions. These are the parties' stated positions, not an independently established allocation of responsibility.",
+        "published_at": "2026-11-10T15:21:18+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-10T21:06:48.138523+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-10-006",
+    "title": "Witnesses recount struggle to save people buried in 'horrifying' Gaza landslide",
+    "summary": "The Guardian reports that a sand bank collapsed onto tents at a displaced-family camp south of Deir al-Balah on Sunday, 8 November. Its retained article reports five deaths. This is its account of that collapse, not a separate event or a final independently verified toll; retain this report alongside the separately attributed BBC account rather than adding the counts.",
+    "category": "displacement",
+    "story_scope": "core_gaza",
+    "score": 43,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-10-guardian-world-22f884a89a09"
+    ],
+    "source_ids": [
+      "gaza-2026-11-10-guardian-world-22f884a89a09"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/nov/09/witnesses-struggle-save-people-buried-gaza-landslide"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-10-guardian-world-22f884a89a09",
+        "title": "Witnesses recount struggle to save people buried in 'horrifying' Gaza landslide",
+        "url": "https://www.theguardian.com/world/2026/nov/09/witnesses-struggle-save-people-buried-gaza-landslide",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "The Guardian reports that a sand bank collapsed onto tents at a displaced-family camp south of Deir al-Balah on Sunday, 8 November. Its retained article reports five deaths. This is its account of that collapse, not a separate event or a final independently verified toll; retain this report alongside the separately attributed BBC account rather than adding the counts.",
+        "published_at": "2026-11-09T18:27:51+00:00",
+        "modified_at": "2026-11-10T11:36:22Z",
+        "event_date_precision": "day",
+        "event_date_basis": "Canonical article explicitly describes Sunday (8 November 2026) collapse; same camp south of Deir al-Balah. Article publication is 9 November, not event date.",
+        "event_date": "2026-11-08",
+        "location": "south of Deir al-Balah",
+        "development_type": "primary_report",
+        "affected_system": "displacement",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-10T21:06:48.138523+00:00",
+    "relevance_terms_matched": [
+      "deir al-balah",
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "displacement",
+    "location": "south of Deir al-Balah",
+    "event_date": "2026-11-08",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-11-10-003",
+    "prior_edition_date": "2026-11-10",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_sandbank_collapse_south_of_deir_al_balah_2026-11-08"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-11-10-005",
+    "title": "Lewis Hamilton visits Egypt's Rafah crossing and Gaza aid facilities",
+    "summary": "Associated Press, carried by The Guardian on 10 November, reports Lewis Hamilton visiting the Egyptian side of the Rafah crossing and Egyptian Red Crescent logistics warehouses. This context item describes a visit outside Gaza, not evidence that the crossing reopened or aid deliveries increased. The exact visit date is not established in the retained source.",
+    "category": "context",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-11-10-008"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-10-guardian-world-e0b340c3243d",
+      "gaza-2026-11-10-aljazeera-middle-east-4a208eb159fa"
+    ],
+    "source_ids": [
+      "gaza-2026-11-10-guardian-world-e0b340c3243d",
+      "gaza-2026-11-10-aljazeera-middle-east-4a208eb159fa"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/nov/10/lewis-hamilton-egypt-rafah-crossing-gaza-aid-facilities",
+      "https://www.aljazeera.com/video/newsfeed/2026/11/10/lewis-hamilton-visits-rafah-crossing-to-witness-gaza-aid-efforts?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "The Guardian",
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-10-guardian-world-e0b340c3243d",
+        "title": "Lewis Hamilton visits Egypt's Rafah crossing and Gaza aid facilities",
+        "url": "https://www.theguardian.com/world/2026/nov/10/lewis-hamilton-egypt-rafah-crossing-gaza-aid-facilities",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Associated Press, carried by The Guardian on 10 November, reports Lewis Hamilton visiting the Egyptian side of the Rafah crossing and Egyptian Red Crescent logistics warehouses. This context item describes a visit outside Gaza, not evidence that the crossing reopened or aid deliveries increased. The exact visit date is not established in the retained source.",
+        "published_at": "2026-11-10T15:39:26+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": "Publication date is November10; retained source does not establish exact visit date.",
+        "event_date": "",
+        "location": "Egyptian side of Rafah crossing",
+        "development_type": "primary_report",
+        "affected_system": "context",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      },
+      {
+        "source_record_id": "gaza-2026-11-10-aljazeera-middle-east-4a208eb159fa",
+        "title": "Lewis Hamilton visits Rafah crossing to witness Gaza aid efforts",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/11/10/lewis-hamilton-visits-rafah-crossing-to-witness-gaza-aid-efforts?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera's video report published on 10 November describes Lewis Hamilton visiting the Egyptian side of Rafah crossing. This is the same visit covered by Associated Press via The Guardian, and provides context outside Gaza rather than evidence of increased aid access. The exact visit date is not established in the retained source.",
+        "published_at": "2026-11-10T15:21:11+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": "Publication date is November10; retained source does not establish exact visit date.",
+        "event_date": "",
+        "location": "Egyptian side of Rafah crossing",
+        "development_type": "primary_report",
+        "affected_system": "context",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-10T21:06:48.138523+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "rafah"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "context",
+    "location": "Egyptian side of Rafah crossing",
+    "event_date": "",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-10-008",
+    "title": "Lewis Hamilton visits Rafah crossing to witness Gaza aid efforts",
+    "summary": "Al Jazeera's video report published on 10 November describes Lewis Hamilton visiting the Egyptian side of Rafah crossing. This is the same visit covered by Associated Press via. The Guardian, and provides context outside Gaza rather than evidence of increased aid access. The exact visit date is not established in the retained source.",
+    "category": "context",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-10-aljazeera-middle-east-4a208eb159fa"
+    ],
+    "source_ids": [
+      "gaza-2026-11-10-aljazeera-middle-east-4a208eb159fa"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/11/10/lewis-hamilton-visits-rafah-crossing-to-witness-gaza-aid-efforts?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-10-aljazeera-middle-east-4a208eb159fa",
+        "title": "Lewis Hamilton visits Rafah crossing to witness Gaza aid efforts",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/11/10/lewis-hamilton-visits-rafah-crossing-to-witness-gaza-aid-efforts?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera's video report published on 10 November describes Lewis Hamilton visiting the Egyptian side of Rafah crossing. This is the same visit covered by Associated Press via The Guardian, and provides context outside Gaza rather than evidence of increased aid access. The exact visit date is not established in the retained source.",
+        "published_at": "2026-11-10T15:21:11+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": "Publication date is November10; retained source does not establish exact visit date.",
+        "event_date": "",
+        "location": "Egyptian side of Rafah crossing",
+        "development_type": "primary_report",
+        "affected_system": "context",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-10T21:06:48.138523+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "rafah"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "context",
+    "location": "Egyptian side of Rafah crossing",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-11-10-005",
+    "prior_edition_date": "2026-11-10",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_named_visit_lewis_hamilton_rafah_crossing_2026-11-10"
+    ]
+  }
+]

@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T095016-0800-recall12-20261110T175223Z",
+  "scheduled_for": "2026-11-10T09:45:22-08:00",
+  "started_at": "2026-11-10T09:50:16-08:00",
+  "completed_at": "2026-11-10T09:52:23.407-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T08:45:08-08:00",
+    "end": "2026-11-10T09:52:23.407-08:00",
+    "basis": "Starts at the verified previous supplementary heartbeat completion; seeks newly reported concrete healthcare-access changes (not only events effective during the window)."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production Care Line national collection is authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T084356-0800-recall12-20261110T164508Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T08:45:08-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care, Illinois — Limitation of CLIA cert — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "Already captured in previous supplementary watch; no newer notice on the directly opened canonical CMS table.",
+      "index_cache_note": "Initial search-index snippet listed November 9 as newest, but direct CMS page displayed November 10; direct page was used for determination."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department temporary closed suspended November 10 2026 United States",
+      "maternity labor delivery unit closed suspended November 10 2026 US hospital",
+      "dialysis clinic closure suspension November 10 2026 patients",
+      "behavioral health psychiatric inpatient center closure suspended November 10 2026",
+      "rural hospital emergency services abruptly closed November 10 2026",
+      "ambulance service EMS base shut down suspended November 10 2026 local",
+      "\"November 10, 2026\" cancer oncology clinic \"closed\" OR \"suspend\" patient",
+      "\"November 10, 2026\" primary care clinic \"closing\" OR \"suspended\" appointments",
+      "\"November 10, 2026\" air ambulance helicopter base \"closed\" OR \"suspended\"",
+      "site:guampdn.com OR site:postguam.com OR site:saipantribune.com OR site:vi.gov OR site:elnuevodia.com hospital emergency dialysis service suspended restored November 2026",
+      "\"November 10, 2026\" hospital emergency department \"reopened\" OR \"resumed\" OR \"restored\" services",
+      "site:pa.gov OR site:health.ny.gov OR site:illinois.gov OR site:dhhs.nh.gov hospital closure emergency restriction November 10 2026"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Advanced Urgent Care, Orland Park, Illinois",
+        "reason": "November 10 CMS CLIA limitation recorded by prior watch; not a new event.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon, Pennsylvania",
+        "reason": "November 9 report restated November 4 state closure order, November 6 emergency suspension and November 17 effective license revocation; no separately verified change in this observation window.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "Roseland Community Hospital labor and delivery, Chicago, Illinois",
+        "reason": "November 2 reporting on prior October 31 maternity closure; historical, not newly reported.",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Other search hits",
+        "reason": "Historical emergency and EMS changes, future proposals without concrete service change, policy/ownership news, overseas incidents or non-healthcare closures; not qualifying."
+      }
+    ],
+    "source_access_errors": [
+      {
+        "sources": [
+          "guampdn.com",
+          "postguam.com"
+        ],
+        "type": "robots.txt denied",
+        "observed_during": "Targeted territory-source search 10 of 12",
+        "impact": "Unable to inspect these two Guam local-news domains through the search interface; other territory and mainland search results remained accessible."
+      }
+    ],
+    "material_coverage_loss": "Narrow Guam local-news source access loss; supplementary targeted search results still available.",
+    "coverage_limitations": [
+      "Two Guam news domains denied crawling, limiting same-hour local confirmation in that territory.",
+      "Search indexing and timestamp granularity cannot guarantee comprehensive detection within the hour.",
+      "Bounded twelve-query supplementary recall does not cover every local source, state or U.S. territory exhaustively.",
+      "Production queue/dedupe was not inspected; production collection remains authoritative."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "Report degraded territorial-source coverage, even though no new qualifying event was found.",
+    "actions_not_taken": [
+      "No approvals",
+      "No publication",
+      "No schedule changes",
+      "No task disabling"
+    ]
+  }
+}

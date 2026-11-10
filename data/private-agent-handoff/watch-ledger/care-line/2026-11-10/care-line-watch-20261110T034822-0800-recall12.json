@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T034822-0800-recall12",
+  "scheduled_for": "2026-11-10T03:45:22-08:00",
+  "started_at": "2026-11-10T03:48:22-08:00",
+  "completed_at": "2026-11-10T03:49:40-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T02:44:55-08:00",
+    "end": "2026-11-10T03:49:40-08:00",
+    "basis": "Previous durable Care Line recall heartbeat completed 2026-11-10 02:44:55 PST. Checked new announcements and concrete access changes through this run; excluded prior events, forward-looking risks, overseas items and duplicative articles."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; national production Care Line collector remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T024337-0800-recall12.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T02:44:55-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_visible_notice": "Compassionate Home Health Services — Termination Notice — CCN 239199 — Michigan",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "previously_recorded": true,
+      "new_notices_since_previous_watch": 0
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "site:cms.gov \"Public Notices\" \"Termination\" \"November\" \"2026\" Medicare provider",
+      "hospital emergency department closure suspension November 10 2026 United States hospital local news",
+      "hospital labor delivery maternity ward closed Nov 9 10 2026 patients",
+      "rural emergency department hospital sudden closure Nov 9 10 2026",
+      "behavioral health inpatient psychiatric hospital services suspended November 10 2026",
+      "dialysis treatment center suddenly closed November 9 10 2026 patients",
+      "oncology cancer clinic primary care abrupt closure November 10 2026",
+      "ambulance EMS service stopped operations base closure Nov 10 2026 US",
+      "air medical flight helicopter ambulance base shutdown suspended November 2026",
+      "hospital ER emergency services reopen resume November 10 2026 after closure",
+      "Puerto Rico Guam U.S. Virgin Islands American Samoa hospital emergency services interrupted November 10 2026",
+      "hospital ED bypass ambulance diversion November 10 2026 hospital clinic care access"
+    ],
+    "search_recency_days": 2,
+    "searched_classes": [
+      "Hospital and ED closures/suspensions",
+      "Maternity and labor-and-delivery loss",
+      "Behavioral health service suspension",
+      "Dialysis, oncology, primary-care loss",
+      "Rural emergency service loss",
+      "Ambulance and air-medical closure/base suspension",
+      "CMS terminations, rescissions and CLIA restrictions",
+      "Concrete essential-service restorations",
+      "United States, DC, Puerto Rico, Guam, US Virgin Islands, Northern Mariana Islands and American Samoa"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "source_url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+        "reason": "Emergency department closure Nov 4 and broader service suspension effective Nov 6, before previous observation window; Nov 17 license revocation remains future."
+      },
+      {
+        "item": "Oklahoma certified community behavioral health clinics",
+        "source_url": "https://oklahomavoice.com/2026/11/10/somebody-stepped-in-and-helped-advocates-press-to-keep-oklahomas-mental-healthcare-safety-net/",
+        "reason": "November 10 analysis of sustained funding risk, previously announced privatization and future service threats; no new concrete access loss or restoration."
+      },
+      {
+        "item": "Dennys River Ambulance Service, Maine",
+        "source_url": "https://www.wabi.tv/2026/10/23/longtime-emts-retirement-ends-maines-only-all-volunteer-ambulance-service/",
+        "reason": "October 23 reporting of planned November 30 cessation, not newly announced or effective in this window."
+      },
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois",
+        "source_url": "https://www.lakemchenryscanner.com/2026/10/23/state-evaluating-whether-vista-can-keep-trauma-center-designation-after-anesthesia-services-suspended-at-waukegan-hospital/",
+        "reason": "October 23 prior reporting; no new independently confirmed access change this window."
+      },
+      {
+        "item": "Tehama County air ambulance base, California",
+        "source_url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times",
+        "reason": "September 17 closure; historical."
+      },
+      {
+        "item": "Fitzgibbon Hospital maternity service, Missouri",
+        "source_url": "https://thebeaconnews.org/stories/2026/10/08/fitzgibbon-ama-bankruptcy-labor-and-delivery-marshall-mo-2026/",
+        "reason": "October 8 service cut; historical."
+      }
+    ],
+    "source_access_errors": [
+      {
+        "attempt": "Initial legacy CMS Public Notices URL",
+        "url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertemergprep/public-notices",
+        "error": "Direct request returned inaccessible",
+        "recovery": "Correct canonical CMS page accessed and its entire current notice listing verified; no substantive CMS coverage lost."
+      }
+    ],
+    "coverage_limitations": [
+      "Early-morning and same-hour source publication/indexing delays mean absence of discovered reports does not establish absence of incidents.",
+      "Fixed search cap of 12 additional queries limits granular county, provider and territory recall.",
+      "Production collector was not accessed; dedupe based on latest verified supplementary heartbeat and known historical reports.",
+      "One stale CMS URL failed but the canonical notice page was successfully verified; no material coverage loss."
+    ],
+    "material_coverage_loss": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no review approval",
+      "no edition publication",
+      "no schedule alteration",
+      "no task disabling"
+    ]
+  }
+}

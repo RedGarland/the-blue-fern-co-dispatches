@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T104314-0800-recall12-20261110T184524Z",
+  "scheduled_for": "2026-11-10T10:45:22-08:00",
+  "started_at": "2026-11-10T10:43:14-08:00",
+  "completed_at": "2026-11-10T10:45:24.810-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T09:52:23.407-08:00",
+    "end": "2026-11-10T10:45:24.810-08:00",
+    "basis": "Begins at prior verified supplementary heartbeat completion; checks newly reported or newly effective concrete healthcare-access changes, including delayed reporting."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Care Line national collection is authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T095016-0800-recall12-20261110T175223Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T09:52:23.407-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care, Illinois — Limitation of CLIA cert — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "Same November 10 Illinois CLIA limitation previously captured and pending review; no newer official notice found.",
+      "index_cache_note": "Search-index extract lagged the directly opened CMS table; relied on the direct official table showing November 10 notice."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department closure suspension reopening November 10 2026 United States",
+      "maternity labor delivery unit closing temporarily suspended November 10 2026 hospital",
+      "behavioral health psychiatric hospital inpatient services closed suspended November 10 2026",
+      "dialysis oncology cancer center services closure temporary suspended November 10 2026",
+      "rural hospital urgent care primary care clinic closes services suspended November 10 2026",
+      "ambulance EMS service station base closure suspension November 10 2026",
+      "air ambulance helicopter medical transport base shutting down service November 10 2026 United States",
+      "hospital emergency department reopens restores service after closure November 10 2026",
+      "Puerto Rico Guam November 10 2026 hospital emergency services ambulance clinic shutdown",
+      "US Virgin Islands CNMI Northern Mariana American Samoa hospital clinic ambulance November 10 2026 closure",
+      "site:pa.gov OR site:ny.gov OR site:wa.gov emergency hospital service suspension notice November 10 2026",
+      "\"November 10, 2026\" (\"ambulance\" OR \"emergency room\" OR \"labor and delivery\") (\"closed\" OR \"suspended\" OR \"reopened\")"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Advanced Urgent Care, Orland Park, Illinois",
+        "reason": "November 10 CMS CLIA limitation already logged as a positive prior watch; not new.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon, Pennsylvania",
+        "reason": "Newer reporting restates November 4 emergency-department closure and November 6 service suspension; prior watch recorded these.",
+        "url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Oklahoma certified community behavioral health clinics",
+        "reason": "November 10 reporting describes financial risk and previous operational transfers but does not establish newly effective loss or restoration of care within this window.",
+        "url": "https://oklahomavoice.com/2026/11/10/somebody-stepped-in-and-helped-advocates-press-to-keep-oklahomas-mental-healthcare-safety-net/"
+      },
+      {
+        "item": "Martin General Hospital, North Carolina",
+        "reason": "Existing July 2026 funding and conversion proposal; no verified reopening yet.",
+        "url": "https://www.northcarolinahealthnews.org/2026/07/13/martin-general-funds-budget/"
+      },
+      {
+        "item": "Other hits",
+        "reason": "Historical closures, planned changes without effective access consequence, unrelated non-US events and nonclinical stories."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": null,
+    "coverage_limitations": [
+      "Same-hour indexing and publication delays can mask local events.",
+      "Twelve bounded targeted searches cannot exhaustively cover all states, local outlets, and US territories.",
+      "Search indexing of CMS initially omitted November 10 entry even though directly opened CMS page listed it.",
+      "No new confirmation of previously noted Guam-domain access restrictions was attempted this run; territory recall relies on indexed coverage.",
+      "Production queue and deduplication were not inspected; production remains authoritative."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No alert: no newly qualifying finding and no newly observed material degradation.",
+    "actions_not_taken": [
+      "No approvals",
+      "No publication",
+      "No schedule changes",
+      "No task disabling"
+    ]
+  }
+}

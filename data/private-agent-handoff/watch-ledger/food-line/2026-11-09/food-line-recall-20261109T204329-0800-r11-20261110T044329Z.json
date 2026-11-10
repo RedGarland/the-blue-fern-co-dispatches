@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T204329-0800-r11-20261110T044329Z",
+  "scheduled_for": "2026-11-09T20:45:54-08:00",
+  "started_at": "2026-11-09T20:43:29-08:00",
+  "completed_at": "2026-11-09T20:45:54-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T19:48:41-08:00",
+    "end_at": "2026-11-09T20:45:54-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completed_at of latest read-back-verified hourly Food Line heartbeat; evaluated event dates and original source publication dates rather than search crawl timestamps.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T194746-0800-r11-20261110T034746Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Closure, fire, or disaster at a community's only/sole/last/full-service grocery store",
+      "Emergency food distribution canceled or suspended because of storm, flood, fire, power outage, or facility damage",
+      "Abrupt food pantry or food bank closure or major service reduction",
+      "New official SNAP/WIC/food-assistance interruption creating immediate food-access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast targeted search; compared original publication and incident dates against 2026-11-09 19:48:41-08:00 checkpoint",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closing fire November 9 2026 town",
+      "\"last grocery store\" closed fire Nov 9 2026 community",
+      "\"food pantry\" \"closed\" \"November 9, 2026\" emergency",
+      "\"food distribution\" canceled storm November 9 2026",
+      "SNAP benefits interrupted November 9 2026 state agency outage",
+      "WIC benefits unavailable November 9 2026 state agency",
+      "food bank canceled distribution due to weather November 9 2026",
+      "full service grocery store closure November 9 2026 local news rural",
+      "site:facebook.com food bank \"cancelled\" \"November 9, 2026\" storm",
+      "\"November 9, 2026\" \"food pantry\" \"closed\" flood OR fire OR damage",
+      "\"Nov 9, 2026\" \"SNAP\" \"outage\" benefits EBT",
+      "\"November 9, 2026\" \"grocery store\" \"only\" \"closing\""
+    ],
+    "direct_source_checks": {
+      "count": 11,
+      "successful": 11,
+      "failed": 0,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.cdss.ca.gov/inforesources/calfresh",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://communityactionprovo.org/",
+        "https://www.forgottenharvest.org/find-food/",
+        "https://utahrecord.org/summitcounty/issues/emergency-food-pantry-funding",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://lawrencekstimes.com/2026/11/04/jodys-market-to-close/",
+        "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/"
+      ],
+      "failures": [],
+      "observations": [
+        "Wisconsin FoodShare member news included EBT PIN-reset alert but agency page was last revised October 16, 2026, with no evidence that the incident arose inside this hourly interval.",
+        "Virginia DSS alerts concerned agency closures ending by November 9, 8 AM and expired October outages; no new in-window SNAP/WIC outage.",
+        "Hawaii BESSD posted existing processing-center delays without a newly dated service-interruption notice.",
+        "California CalFresh landing page contained standing program descriptions and resources, not a newly dated interruption.",
+        "Feeding America West Michigan's dynamic mobile food pantry schedule showed no directly established disaster-caused cancellation newly posted within this interval.",
+        "Community Action Services and Food Bank in Provo posted closure effective November 1, 2026; prior event.",
+        "Forgotten Harvest's November 9 mobile pantry schedule listed distributions and no verified in-window cancellation.",
+        "Utah Record and Nov 7 TownLift coverage confirm already closed Coalville and Oakley food pantries, with a Nov 4 council discussion; not a newly occurring or newly reported hourly event.",
+        "WEAU local report on Feed My People Eau Claire pop-up cancellations originally published November 3 and updated November 6; predates window.",
+        "Lawrence Times Jody's Market closure notice was published November 4 and described a downtown microgrocery with larger grocery alternatives; not in-window or sole community full-service store."
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/",
+        "reason": "Nov 7 report of food pantry closures established by Nov 4; previously known and out of hourly window."
+      },
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Major Eau Claire service reduction initially reported Nov 3, updated Nov 6; not new to hour."
+      },
+      {
+        "source_url": "https://lawrencekstimes.com/2026/11/04/jodys-market-to-close/",
+        "reason": "Nov 4 announcement of downtown microgrocery closure; out-of-window and not a community's last full-service grocery."
+      },
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Only-grocery-store fire happened Sep 11; historical."
+      },
+      {
+        "source_url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "Storm-caused food bank closure occurred Sep 25; historical."
+      },
+      {
+        "source_url": "https://www.ncdhhs.gov/news/press-releases/2025/11/08/ncdhhs-pauses-full-snap-payments-after-court-decision-remains-ready-process-benefits-when-authorized",
+        "reason": "2025 SNAP government shutdown action, not November 2026."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "EBT skimming/PIN reset alert lacks evidence of new posting or newly begun disruption during this interval; last revised October 16."
+      },
+      {
+        "source_url": "https://www.forgottenharvest.org/find-food/",
+        "reason": "Routine distribution calendar, with no date/cause-qualified cancellation."
+      }
+    ],
+    "exclusion_policy": "Excluded donation appeals, resource guides, recipes, opinions, routine program publicity, inflation-only coverage, historic or previously observed events, and announcements without verified immediate new access loss.",
+    "assessment": "No new source-verified qualifying disruption found for the hourly interval. Twelve search queries returned normally and eleven examined direct source pages loaded; absence of a verified report is not proof of exhaustive nationwide absence.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

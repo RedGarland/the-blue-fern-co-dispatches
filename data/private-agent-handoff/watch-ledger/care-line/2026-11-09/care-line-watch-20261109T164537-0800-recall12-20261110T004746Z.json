@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T164537-0800-recall12-20261110T004746Z",
+  "scheduled_for": "2026-11-09T16:45:22-08:00",
+  "started_at": "2026-11-09T16:45:37-08:00",
+  "completed_at": "2026-11-09T16:47:46.218-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T15:51:29.029-08:00",
+    "end": "2026-11-09T16:47:46.218-08:00",
+    "basis": "Prior independently verified Care Line Watch heartbeat completion through this run; date and publication timestamps checked against Pacific observation cutoff, excluding previously recorded events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for newly reported or effective healthcare access losses/restorations in the U.S. and territories; production collection remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T154916-0800-recall12-20261109T2350Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T15:51:29.029-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services — Termination Notice — CCN 239199 — Home Health Agency — Michigan",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "index_accessible",
+      "note": "The latest indexed CMS notice is the same November 9 Michigan home-health agency termination recorded in an earlier pending-review heartbeat. No new CMS index row. The agency notice's effective date was not established; do not count it twice."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "Illinois hospital ambulance bypass November 9 2026 emergency department diversion latest",
+      "\"Nov 9, 2026\" hospital emergency room closing closed suspended services United States",
+      "November 9 2026 rural hospital maternity labor delivery unit closing suspension",
+      "November 9 2026 dialysis cancer oncology clinic closure patients access",
+      "November 9 2026 ambulance service air medical helicopter base closing suspension",
+      "November 9 2026 psychiatric behavioral health hospital inpatient unit closing suspension",
+      "November 9 2026 hospital reopening emergency department maternity unit restored services",
+      "November 9 2026 Puerto Rico Guam U.S. Virgin Islands American Samoa Northern Mariana hospital medical service closure emergency",
+      "\"November 9, 2026\" \"hospital\" \"closed\" \"emergency\" patients ambulance",
+      "\"November 9, 2026\" \"clinic\" \"closing\" \"patients\" healthcare access",
+      "\"November 9, 2026\" \"ambulance\" \"service\" \"suspended\" closure",
+      "\"November 9, 2026\" \"emergency department\" \"reopened\" \"hospital\" United States"
+    ],
+    "search_method": "CMS canonical Public Notices index was opened and checked before exactly 12 additional targeted recency=1 web searches; official and strong local reporting screened for event date, source publication timestamp, territory relevance, and prior coverage.",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois — ambulance diversion",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+        "reason": "State EMS bypass effective November 7 at 7:00 a.m., preceding the prior November 9 hourly check; the same event is not newly effective."
+      },
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois — ABC7 updated report",
+        "source_url": "https://abc7chicago.com/post/vista-health-system-news-medical-center-east-waukegan-il-ems-bypass-amid-american-healthcare-systems-payroll-issues/20027472/",
+        "reason": "Publisher timestamp November 9 at 10:54 p.m. Chicago time (8:54 p.m. PST), later than the 4:45–4:47 p.m. PST observation cutoff; article describes the already-existing November 7 EMS bypass. Not eligible as a new finding in this run."
+      },
+      {
+        "item": "Johns Hopkins All Children's Hospital, St. Petersburg, Florida — temporary lockdown",
+        "source_url": "https://clearwaterherald.com/article/johns-hopkins-hospital-clears-bomb-threat-after-morning-lockdown/",
+        "reason": "Article dated November 9 describes a brief incident Sunday November 8 with operations already restored; no independently established new event in this hour. Single less-established report not used to infer a new essential-service change."
+      },
+      {
+        "item": "Rural North Carolina prenatal health center expansion",
+        "source_url": "https://carolinapublicpress.org/82994/bringing-maternal-healthcare-to-rural-nc-grant-powered-community-health-centers-offer-hope/",
+        "reason": "November 9 reporting describes planned future mobile/perinatal-service expansion and ongoing primary care, not a concrete newly effective restoration."
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, Illinois base",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "Base closure effective September 16, 2026, not newly effective or announced within this observation window."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Search results disproportionately included older stories, proposed changes, out-of-jurisdiction events, and an article whose timestamp is later than the run cutoff.",
+      "Indexed same-day search results do not guarantee same-hour publication or effective service change; publication may lag the actual event.",
+      "Bounded searches cannot exhaustively cover all states, tribes, counties, facilities, and territories; especially limited territory-local discovery.",
+      "CMS notice-detail effective date for the previously recorded Michigan provider remains unverified; no duplicate finding created.",
+      "Production queue/deduplication state not independently inspected; production collector remains authoritative."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

@@ -773,3 +773,21 @@ def test_source_link_captions_use_actual_hosts_preserving_reviewed_copy(tmp_path
     assert '>Example News</a>' not in rendered
     assert before == json.dumps(bundle.items, sort_keys=True)
     assert bundle.items[0]["public_copy"]["uncertainty"] in rendered
+
+
+@pytest.mark.parametrize("classes", ["edition-list", "edition-list gaza-readable-list", "edition-list archive-list", "archive-list edition-list"])
+def test_catchup_navigation_accepts_current_class_tokens_without_rewriting_history(classes: str) -> None:
+    from types import SimpleNamespace
+    from bluefern_dispatches.gaza_historical_catchup import _insert_archive_entry
+
+    bundle = SimpleNamespace(public_path="gaza/catchups/gaza-historical-catchup-test/", catchup_id="gaza-historical-catchup-test", publication_date="2026-11-10", title="Recovered developments")
+    before = f'<section><ul class="{classes}">\n<li>existing history</li>\n</ul></section>'.encode()
+    after = _insert_archive_entry(before, bundle)
+    added = after[len(before.split(b"\n", 1)[0]) + 1:].split(b"\n", 1)[0] + b"\n"
+    assert b'class="historical-catchup"' in added
+    assert after.replace(added, b"", 1) == before
+    with pytest.raises(GazaHistoricalCatchupError, match="already exists"):
+        _insert_archive_entry(after, bundle)
+    for invalid in (b'<ul class="not-edition-list">\n</ul>', b'<ul data-class="edition-list">\n</ul>'):
+        with pytest.raises(GazaHistoricalCatchupError, match="no edition list"):
+            _insert_archive_entry(invalid, bundle)

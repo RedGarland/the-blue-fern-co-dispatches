@@ -1197,10 +1197,17 @@ def _insert_archive_entry(raw: bytes, bundle: CatchupBundle) -> bytes:
     relative_url = f"catchups/{bundle.catchup_id}/"
     if bundle.public_path in text or relative_url in text:
         raise GazaHistoricalCatchupError("catch-up navigation entry already exists")
-    start = text.find('<ul class="edition-list">')
-    if start < 0:
+    edition_list = next(
+        (
+            match
+            for match in re.finditer(r"<ul\b[^>]*\sclass\s*=\s*([\"'])(.*?)\1[^>]*>", text, re.IGNORECASE)
+            if "edition-list" in match.group(2).split()
+        ),
+        None,
+    )
+    if edition_list is None:
         raise GazaHistoricalCatchupError("Gaza navigation has no edition list")
-    insertion = text.find("\n", start)
+    insertion = text.find("\n", edition_list.end())
     if insertion < 0:
         raise GazaHistoricalCatchupError("Gaza navigation edition list is malformed")
     label = f"Historical catch-up / {bundle.publication_date} — {bundle.title}"

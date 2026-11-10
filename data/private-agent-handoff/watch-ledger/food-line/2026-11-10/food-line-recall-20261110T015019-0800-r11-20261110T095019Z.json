@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T015019-0800-r11-20261110T095019Z",
+  "scheduled_for": "2026-11-10T01:45:54-08:00",
+  "started_at": "2026-11-10T01:50:19-08:00",
+  "completed_at": "2026-11-10T01:52:00.786-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T00:44:45.076-08:00",
+    "end_at": "2026-11-10T01:52:00.786-08:00",
+    "observation_date": "2026-11-10",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since verified previous Food Line hourly watch completion; dates of source reporting and events screened independently.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T004246-0800-r11-20261110T084246Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall watch; production nationwide collector remains authoritative. No matching result cannot establish nationwide clearance.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting sole/last/full-service community grocery",
+      "Emergency food distribution canceled/suspended for storm, flooding, fire, power outage or facility damage",
+      "Abrupt pantry or food-bank closure/major access reduction",
+      "New official SNAP/WIC/food assistance interruption with immediate consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast, recency 1 day",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed OR fire OR burned \"November 9\" 2026",
+      "\"last grocery store\" closure fire \"November\" \"2026\" USA",
+      "\"only full service grocery\" closing fire \"November 10\" 2026",
+      "\"food distribution\" \"canceled\" storm OR flooding OR fire \"November 10\" 2026",
+      "\"mobile food pantry\" \"cancelled\" \"November 10\" 2026 storm",
+      "\"food bank\" \"closed\" flood fire outage \"November 9\" 2026",
+      "\"food pantry\" \"temporarily closed\" \"November 10\" 2026",
+      "site:gov \"SNAP benefits\" \"interruption\" OR \"delayed\" \"November 10\" 2026",
+      "site:gov WIC \"service interruption\" \"November 2026\" benefits",
+      "SNAP EBT outage benefits suspended November 9 10 2026 state official",
+      "food pantry emergency distribution cancelled November 10 2026 storm power outage",
+      "site:gov SNAP WIC EBT outage alert today November 2026 state November 9"
+    ],
+    "direct_source_checks": {
+      "count": 9,
+      "successful": 8,
+      "failed": 1,
+      "urls": [
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.fns.usda.gov/snap/updates",
+        "https://dfcs.georgia.gov/",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "https://dfcs.georgia.gov/services/snap/connectebt-website-and-mobile-app/new-security-features-ebt-cards-effective-oct-22",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct-source access returned Internal Error.",
+          "impact": "Nonmaterial single-page failure; state SNAP and WIC agency pages were accessible and independently checked. Coverage not nationally exhaustive."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire, WI Feed My People cancellation reported Nov 3, outside this interval and previously reviewed."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov 6 Kauaʻi recovery account confirms a food distribution remained scheduled; no fresh cancellation."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Oregon application/renewal proof requirement begins Nov 21; no verified immediate access loss in window."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Undated/continuing telephone processing delays, not a newly timed benefit interruption."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "Sept 2 California WIC notice says WIC offices and benefits continue."
+      },
+      {
+        "source_url": "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "reason": "Georgia hotline restored, no newly dated outage within observation interval."
+      },
+      {
+        "source_url": "https://dfcs.georgia.gov/services/snap/connectebt-website-and-mobile-app/new-security-features-ebt-cards-effective-oct-22",
+        "reason": "Georgia EBT restrictions effective Oct 22, already known; no new Nov 10 interruption."
+      },
+      {
+        "source_url": "https://www.governor.state.nm.us/2025/10/27/governor-responds-to-usda-suspension-of-snap-benefits/",
+        "reason": "Historical 2025 government shutdown SNAP action, not 2026."
+      }
+    ],
+    "exclusion_policy": "Excluded old grocery closures, old storm disruptions, ongoing known policy restrictions, routine promotions, aid guides, donations, generic inflation, unrelated businesses and search results with unverified publication time.",
+    "assessment": "Twelve targeted one-day searches plus nine direct checks found no newly verifiable qualifying U.S. food-access disruption since the prior completed heartbeat. One USDA page inaccessible; results therefore do not imply nationwide absence.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

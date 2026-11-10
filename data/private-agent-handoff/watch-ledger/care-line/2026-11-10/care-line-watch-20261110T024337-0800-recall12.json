@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T024337-0800-recall12",
+  "scheduled_for": "2026-11-10T02:45:22-08:00",
+  "started_at": "2026-11-10T02:43:37-08:00",
+  "completed_at": "2026-11-10T02:44:55-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T01:49:22-08:00",
+    "end": "2026-11-10T02:44:55-08:00",
+    "basis": "Prior verified Care Line recall heartbeat completion through this run; reports assessed by source publication and event timing, with only nonduplicate concrete access changes eligible."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch; production Care Line collection remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T014813-0800-recall12-20261110T094922Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T01:49:22-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_visible_notice": "Compassionate Home Health Services — Termination Notice — CCN 239199 — Michigan",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "previously_recorded": true,
+      "new_notices_since_previous_watch": 0
+    },
+    "additional_targeted_searches_count": 12,
+    "search_recency_days": 2,
+    "additional_targeted_searches": [
+      "November 10 2026 hospital emergency department abruptly closed temporarily suspended services US",
+      "November 10 2026 maternity unit labor delivery stopped accepting patients hospital",
+      "November 10 2026 rural hospital emergency room shut down overnight patients",
+      "November 10 2026 behavioral health psychiatric inpatient facility shutdown suspension patients",
+      "November 10 2026 dialysis center closure suspends treatment patients US",
+      "November 10 2026 cancer oncology primary care clinic sudden closure appointments cancelled",
+      "November 10 2026 ambulance service EMS suspended operations base closure paramedic US",
+      "November 10 2026 helicopter air ambulance medical transport base closing grounded service",
+      "November 10 2026 hospital emergency room reopens services restored after suspension US",
+      "November 10 2026 medical emergency clinic hospital shutdown disruption Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa",
+      "site:gov \"November 10, 2026\" hospital emergency clinic service suspended terminated",
+      "Nov 10 2026 local news hospital ED EMS bypass ambulances diverted patient access closure"
+    ],
+    "searched_classes": [
+      "hospital, ED, maternity, behavioral-health, dialysis, oncology and primary-care service closure/suspension",
+      "rural and emergency service loss",
+      "ambulance, air-medical and EMS base cessation",
+      "CMS Medicare provider termination, rescission, CLIA restrictions",
+      "effective restoration/reopening of an essential service",
+      "United States, DC and territories"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "source_url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "Nov. 9 article reiterates Nov. 4 state order and Nov. 6 ED suspension reported before prior window; Nov. 17 revocation effective date is future. No newly effective service change in this check."
+      },
+      {
+        "item": "Insight Hospital & Medical Center, Coldwater, Michigan, behavioral-health service pause",
+        "source_url": "https://wwmt.com/news/local/insight-hospital-temporarily-suspending-inpatient-behavioral-health-services-planning-improvements-evaluation-patient-needs-health-care-coldwater-branch-county-western-michigan",
+        "reason": "July 22, 2026 suspension, not new."
+      },
+      {
+        "item": "ProPublica report on Texas emergency care",
+        "source_url": "https://www.propublica.org/article/vitamin-k-shot-texas-lonestar-emergency-room-nicole-malouf",
+        "reason": "Describes 2023 treatment incident; not a closure, suspension or restoration."
+      },
+      {
+        "item": "Maine LifeFlight profile",
+        "source_url": "https://www.gpb.org/news/2026/11/08/one-air-ambulance-service-rethinks-what-it-takes-practice-medicine-in-the-sky",
+        "reason": "November 8 feature about an operating air ambulance service; no suspension/base closure."
+      },
+      {
+        "item": "West Virginia microhospital profile",
+        "source_url": "https://www.healthcaredive.com/news/the-hospital-hiding-in-a-strip-mall/833249/",
+        "reason": "November 5 general operating-facility profile; no newly effective access change."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Same-hour reporting and search indexing may delay discovery; zero findings is not proof of zero events.",
+      "Bounded 12-search budget has limited provider- and territory-level recall.",
+      "Production collector/queue was not inspected; duplicates excluded against the previous supplementary heartbeat and known previously reported events.",
+      "Search recency filters sometimes return older articles or events; chronology was checked before classification."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no review approval",
+      "no edition publication",
+      "no schedule alteration",
+      "no task disabling"
+    ]
+  }
+}

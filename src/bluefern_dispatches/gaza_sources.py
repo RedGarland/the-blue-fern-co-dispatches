@@ -1393,6 +1393,60 @@ def _discover_ocha_report_items(listing_html: str, listing_url: str) -> list[dic
     return results
 
 
+def _extract_ocha_document_paragraphs(article_html: str) -> list[str]:
+    """Extract verbatim substantive paragraphs only from known OCHA report roots."""
+    class Parser(HTMLParser):
+        void = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+        skipped = {"script", "style", "noscript", "template", "svg", "nav", "footer", "aside", "figure", "figcaption"}
+
+        def __init__(self) -> None:
+            super().__init__(convert_charrefs=True)
+            self.stack: list[tuple[str, bool, bool]] = []
+            self.current: list[str] | None = None
+            self.paragraphs: list[str] = []
+
+        def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+            attr = dict(attrs)
+            in_root = (self.stack[-1][1] if self.stack else False) or (
+                attr.get("id") == "block-ocha-sub-impact-theme-system-main"
+            )
+            skip = (self.stack[-1][2] if self.stack else False) or tag in self.skipped
+            if tag not in self.void:
+                self.stack.append((tag, in_root, skip))
+            if tag == "p" and in_root and not skip:
+                self.current = []
+            elif tag == "br" and self.current is not None:
+                self.current.append(" ")
+
+        def handle_endtag(self, tag: str) -> None:
+            if tag == "p" and self.current is not None:
+                paragraph = clean_feed_text("".join(self.current))
+                if len(paragraph) >= 120:
+                    self.paragraphs.append(paragraph)
+                self.current = None
+            if tag not in self.void:
+                for index in range(len(self.stack) - 1, -1, -1):
+                    if self.stack[index][0] == tag:
+                        del self.stack[index:]
+                        break
+
+        def handle_data(self, data: str) -> None:
+            if self.current is not None and self.stack and self.stack[-1][1] and not self.stack[-1][2]:
+                self.current.append(data)
+
+    parser = Parser()
+    parser.feed(str(article_html or ""))
+    parser.close()
+    selected: list[str] = []
+    size = 0
+    for paragraph in parser.paragraphs:
+        if size + len(paragraph) + 1 > OCHA_REPORT_BODY_MAX_CHARS:
+            break  # Never cut a source sentence into a new claim.
+        selected.append(paragraph)
+        size += len(paragraph) + 1
+    return selected
+
+
 def _extract_ocha_report_body(article_html: str) -> str:
     class _OchaReportParser(HTMLParser):
         _SKIPPED_TAGS = {"script", "style", "noscript", "template", "svg", "nav", "footer", "aside"}
@@ -2542,12 +2596,17 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
                 if content_text.lower() not in summary.lower():
                     summary = f"{summary} {content_text}".strip() if summary else content_text
                 article_fetch_status = "healthcare_prose_extracted"
-            elif ocha_report_body:
-                article_fetch_status = "insufficient_healthcare_content"
-                article_fetch_failure_reason = "OCHA report body did not contain all required healthcare facts"
             else:
-                article_fetch_status = "insufficient_report_content"
-                article_fetch_failure_reason = "OCHA report body container was not extractable"
+                paragraphs = _extract_ocha_document_paragraphs(str(article_payload.get("content_text") or ""))
+                if paragraphs:
+                    ocha_report_body = "\n\n".join(paragraphs)
+                    content_text = ocha_report_body
+                    # Exact source paragraph, not a generated summary or legacy healthcare assertion.
+                    summary = paragraphs[0]
+                    article_fetch_status = "report_paragraphs_extracted"
+                else:
+                    article_fetch_status = "insufficient_report_content"
+                    article_fetch_failure_reason = "No substantive paragraph in a trusted OCHA report container"
         elif article_payload is not None:
             article_fetch_status = "failed_report_fetch"
             article_fetch_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "report fetch failed")
@@ -2734,6 +2793,10 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
                 "content_available": bool(content_text),
                 "article_body_length": len(ocha_report_body),
                 "ocha_healthcare_fragments": ocha_healthcare_fragments,
+                "editorial_eligible": bool(content_text),
+                "source_excerpt_is_normalized_source_paragraph": article_fetch_status == "report_paragraphs_extracted",
+                "article_response_text_sha256": hashlib.sha256(str((article_payload or {}).get("content_text") or "").encode("utf-8")).hexdigest() if article_payload and article_payload.get("ok") else None,
+                "source_excerpt_method": "known_ocha_report_first_complete_paragraph" if article_fetch_status == "report_paragraphs_extracted" else None,
             }
             if _is_ocha_source(source)
             else {}
@@ -3316,6 +3379,16 @@ def collect_gaza_sources(
                 )
                 _provider_reject(diag, "rejected_untrusted_canonical", item, date_basis=basis)
                 continue
+            if _is_ocha_source(source) and record.get("editorial_eligible") is not True:
+                reason = "ocha_substantive_report_evidence_unavailable"
+                diag["status"] = "failed_evidence_extraction"
+                diag.setdefault("evidence_failures", []).append({"url": url, "reason": reason, "article_fetch_status": record.get("article_fetch_status")})
+                if not any(failure.get("source_id") == source.source_id for failure in failed_source_ids):
+                    failed_source_ids.append({"source_id": source.source_id, "reason": reason})
+                    stage_counts["providers_failed"] += 1
+                errors.append(f"{source.source_id}: {reason}")
+                _provider_reject(diag, reason, item, date_basis=basis)
+                continue
             url_key = gaza_collection_url_dedupe_key(record)
             if url_key in seen_urls:
                 _provider_reject(diag, "duplicate_url_in_collection", item, relevance_band=str(record.get("relevance_band") or "core"), date_basis=basis)
@@ -3328,7 +3401,7 @@ def collect_gaza_sources(
             stage_counts["providers_successful"] += 1
             stage_counts["providers_with_accepted_records"] += 1
             working_providers.append(source.source_id)
-        if len(records) == source_record_start:
+        if len(records) == source_record_start and diag.get("status") != "failed_evidence_extraction":
             stage_counts["providers_no_matches"] += 1
             no_match_source_ids.append(
                 {"source_id": source.source_id, "reason": f"no matching Gaza items for {edition_date}"}

@@ -554,10 +554,26 @@ def _gaza_event_key(story: dict[str, Any]) -> str:
     named_casualty = _gaza_named_casualty_event_key(story)
     if named_casualty:
         return named_casualty
-    casualty_terms = {"kill", "death", "dead", "casualty", "casualti", "injur", "injury", "wound"}
-    ceasefire_terms = {"ceasefire", "ceasefir", "truce"}
-    if ceasefire_terms & tokens and tokens & casualty_terms:
-        return "gaza_ceasefire_casualty"
+    # Background mentions of ceasefire casualties are a topic, not an event
+    # identity. They must never join a visit, an incident, and a running toll.
+    # A narrowly identified visit requires the headline subject, action, place,
+    # and one common source publication day; body/background text is excluded.
+    title = str(story.get("title") or "")
+    visit = re.match(r"^([A-Z][a-z]+(?: [A-Z][a-z]+)+) visits?\b", title)
+    if visit and re.search(r"\bRafah (?:border )?crossing\b", title, re.IGNORECASE):
+        days = {
+            str(record.get("published_at") or "")[:10]
+            for record in story.get("source_records") or []
+            if isinstance(record, dict)
+        }
+        if len(days) == 1:
+            day = next(iter(days))
+            try:
+                date.fromisoformat(day)
+            except ValueError:
+                pass
+            else:
+                return f"gaza_named_visit_{normalize_text(visit.group(1)).replace(' ', '_')}_rafah_crossing_{day}"
     return ""
 
 

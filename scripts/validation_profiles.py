@@ -31,6 +31,9 @@ VALIDATION_PROFILES: dict[str, ValidationProfile] = {
         description="Gaza daily dispatch plus shared publish-safety checks.",
         tests=(
             "tests/test_gaza_sources.py",
+            "tests/test_gaza_ocha_document.py",
+            "tests/test_story_dedupe.py",
+            "tests/test_gaza_aggregate_preservation.py",
             "tests/test_gaza_dispatch_generation.py",
             "tests/test_gaza_backfill.py",
             "tests/test_run_daily_gaza.py",

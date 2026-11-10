@@ -1,0 +1,123 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T124451-0800-r11-20261110T204857221Z",
+  "scheduled_for": "2026-11-10T12:44:51-08:00",
+  "started_at": "2026-11-10T12:46:38-08:00",
+  "completed_at": "2026-11-10T20:48:57.221Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T19:50:34.055Z",
+    "end": "2026-11-10T20:48:57.221Z",
+    "start_local": "2026-11-10T11:50:34.055-08:00",
+    "end_local": "2026-11-10T12:48:57.221-08:00",
+    "previous_run_completed_at": "2026-11-10T19:50:34.055Z",
+    "basis": "New or previously overlooked traceable Gaza humanitarian changes since prior authenticated heartbeat. Excludes duplicated casualty counts, older reports and unverifiable claims.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; primary production Gaza collector/publisher remains authoritative and untouched.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T114451-0800-r11-20261110T195034055Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Newest listed publication remains 9 November 2026 Gaza heavy rains report about 8 November. No new 10 November Gaza operational bulletin."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_TIMEOUT",
+        "result": "WHO global emergency situation page accessible without a newly dated 10 November Gaza development. WHO EMRO OPT direct endpoint timed out; recurring regional source access restriction, not an observed new deterioration."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza \"10/November/2026\" \"PM\" killed injured displaced hospital",
+      "site:reuters.com/world/middle-east/ Gaza November 10 2026 Tuesday afternoon November 10 new strike casualties aid",
+      "site:apnews.com/article/ Gaza November 10 2026 Tuesday afternoon new deaths hospital Rafah",
+      "site:palestine.un.org/en/ \"10 November 2026\" Gaza humanitarian flood aid water",
+      "site:unicef.org Gaza \"10 November 2026\" children shelter water medical",
+      "site:wfp.org Gaza \"10 November 2026\" food aid crossings",
+      "site:palestinercs.org November 10 2026 Gaza ambulance medical aid fuel patient shelter",
+      "site:aljazeera.com/news/2026/11/10/ Gaza after 19:00 UTC November 10 strike hospital tent crossing",
+      "site:theguardian.com/world/2026/nov/10/ gaza deaths aid israel ceasefire",
+      "site:middleeasteye.net/news/ November 10 2026 Gaza Israeli strike displacement healthcare",
+      "Rafah crossing Gaza Nov 10 2026 20:00 UTC new medical evacuations patients trucks crossing update",
+      "Gaza ceasefire hostages negotiation November 10 2026 afternoon November 10 humanitarian civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest listed 10 November article at 21:54 Palestine time (11:54 PST) concerns Arab health ministers' call for support, not a documented new Gaza service/operational change. Gaza City strike 18:47 Palestine time and older casualty stories were logged in prior watches."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "result": "Seven-death tally and descriptions of Zeitoun, Daraj, Khan Younis and Sabra incidents already reviewed; original publication 11:47 UTC; no documented distinct new event in window."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-yemen-saudi-iran-november-10-2026-f4407845b6dd105e54190ccab7d55f8d",
+        "result": "Five-death Gaza count is previously recorded and overlaps Reuters/WAFA incidents; no attributable new Gaza incident established."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en/326017-children-among-dead-heavy-rains-flood-tents-and-shelters-gaza",
+        "result": "10 November coverage of 6–8 November storm and established casualties, no newly dated effects within window."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/",
+        "result": "Gaza heavy-rains statement dated 9 November remains most recent Gaza-related homepage news; no new Gaza release confirmed."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/10/palestine-weekly-west-bank-on-fire-and-gazas-tents-under",
+        "result": "Weekly narrative recaps earlier Nov 3–9 incidents, crossing restrictions and previous aid/flooding concerns. No new 11:50–12:48 PST development."
+      }
+    ],
+    "exclusions": [
+      "Do not re-count the previously documented Khan Younis, Zeitoun, Daraj and Sabra deaths; Reuters and AP aggregates overlap and diverge.",
+      "Do not treat the 10 November UN Palestine recap of 6–8 November storms as a newly occurring event.",
+      "UNICEF Sheikh Radwan stormwater-basin equipment denial was previously recorded at 06:44 PST.",
+      "WAFA late political statements, West Bank incidents, and funding announcements without verified Gaza service change fail novelty or scope.",
+      "9 November Rafah medical evacuation count (23 patients, 28 companions) predates prior window.",
+      "2025 and earlier 2026 search returns are stale, excluded."
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "TIMEOUT on direct 10 November check (previously HTTP 502)",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "Prior HTTP 403; not directly retested",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UN News",
+        "status": "Prior access restriction; UN Palestine alternative available",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED for persistent WHO regional endpoint access failure. OCHA, WHO global and established reporting remained accessible; no material worsening from previous watch.",
+    "limitations": "12 targeted web searches after two official-first checks; search indices lag some source updates. A source failure was recorded rather than aborting. No independently grounded new qualifying development established.",
+    "notification_reason": "No qualifying distinct new development or materially new degradation; no user notification warranted.",
+    "changes_to_production": "none; publication, approval, merge, permissions and schedule unchanged"
+  }
+}

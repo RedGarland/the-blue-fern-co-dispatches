@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T234522-0800-recall12-20261110T075117Z",
+  "scheduled_for": "2026-11-09T23:45:22-08:00",
+  "started_at": "2026-11-09T23:50:19-08:00",
+  "completed_at": "2026-11-09T23:51:17-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T22:47:49-08:00",
+    "end": "2026-11-09T23:51:17-08:00",
+    "basis": "Previous verified Care Line watch heartbeat completion through current run; seek newly verifiable unique developments, not historical rediscoveries. Production collector is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary healthcare-access recall, not the authoritative national production collection.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T224522-0800-recall12-20261110T064749Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T22:47:49-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "index_accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services — MI — HHA CCN 239199 — Termination Notice",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_prior_heartbeat": 0,
+      "note": "Previously captured in earlier November 9 recall run. No newer CMS provider termination, rescission, or CLIA limitation/suspension visible. Termination notice alone does not prove physical closure."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "hospital emergency department temporary closure ambulance diversion November 9 2026 United States",
+      "hospital maternity obstetrics labor delivery suspend services November 9 2026",
+      "behavioral health psychiatric hospital closed suspended admissions November 9 2026",
+      "dialysis or oncology clinic closure November 9 2026 local patients",
+      "rural hospital emergency department shut down November 9 2026",
+      "ambulance EMS air medical base service closing or suspended November 9 2026",
+      "\"November 9, 2026\" \"hospital\" \"closing\" \"patients\" healthcare local",
+      "\"November 9, 2026\" \"emergency department\" \"reopened\" OR \"resumed\"",
+      "\"November 9, 2026\" \"ambulance\" \"service\" \"suspended\" OR \"closure\"",
+      "\"November 9, 2026\" \"primary care\" \"clinic\" \"closing\" OR \"closed\"",
+      "November 9 2026 Puerto Rico Guam US Virgin Islands hospital clinic ambulance service interruption closure",
+      "\"November 9, 2026\" \"hospital\" \"services\" \"suspended\" OR \"restored\""
+    ],
+    "targeted_search_recency_days": 2,
+    "searched_classes": [
+      "hospital, ED, maternity, behavioral-health, dialysis, oncology, primary care closure or suspension",
+      "rural and emergency service loss",
+      "ambulance / EMS / air-medical closure or suspension",
+      "CMS terminations, rescissions, CLIA actions",
+      "concrete reopening of previously lost essential services",
+      "U.S. states and territories"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Roseland Community Hospital Chicago maternity ward shutdown",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Reported November 2 and shutdown occurred earlier than observation window; not a new event."
+      },
+      {
+        "item": "Anaheim Global Medical Center 911 ambulance receiving designation suspension",
+        "source_url": "https://abc7.com/post/anaheim-global-medical-center-temporarily-barred-receiving-911-ambulance-patients/19060643/",
+        "reason": "May 9, 2026 report, historical not newly effective or announced."
+      },
+      {
+        "item": "Idaho federal rural health transformation grant",
+        "source_url": "https://idahocapitalsun.com/2026/11/09/idaho-to-receive-182-7m-in-second-year-of-federal-rural-health-transformation-grant/",
+        "reason": "Funding report, not an actual new service closure, suspension, or confirmed reopening."
+      },
+      {
+        "item": "Older U.S. hospital closures and proposed/at-risk service reductions",
+        "source_url": null,
+        "reason": "Search results surfaced historical incidents or future financial risks without new concrete access effects."
+      },
+      {
+        "item": "Foreign health-service reports, corporate earnings and generic national health analysis",
+        "source_url": null,
+        "reason": "Out of requested geography or no qualifying service change."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "One-hour observation window has inevitable reporting and search-index delays.",
+      "Twelve targeted searches cannot exhaustively cover all states, territories, or non-indexed local alerts.",
+      "Production collector queue not accessible in this run; deduplication grounded in last verified heartbeat and previous known developments only."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule change",
+      "no task disablement"
+    ]
+  }
+}

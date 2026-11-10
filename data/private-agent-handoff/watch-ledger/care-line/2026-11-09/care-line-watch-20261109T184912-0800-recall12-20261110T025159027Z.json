@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T184912-0800-recall12-20261110T025159027Z",
+  "scheduled_for": "2026-11-09T18:45:22-08:00",
+  "started_at": "2026-11-09T18:49:12-08:00",
+  "completed_at": "2026-11-09T18:51:59.027-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T17:47:38-08:00",
+    "end": "2026-11-09T18:51:59.027-08:00",
+    "basis": "Since last verified Care Line Watch heartbeat completion, Pacific time; notice publication/effective timing screened independently of search crawl dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for new healthcare-access losses/restorations in the U.S. and territories. Production national collector remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T174556-0800-recall12-20261109T174738-0800.json",
+    "prior_heartbeat_completed_at": "2026-11-09T17:47:38-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services, Michigan, termination notice, Home Health Agency, CCN 239199",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "canonical_index_accessible",
+      "note": "This notice was already recorded pending_review in an earlier November 9 heartbeat; its effective date remains unverified and it was not duplicated. Search preview was stale (showed November 2), but live opened index confirms November 9 row."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed suspended November 9 2026 United States access",
+      "labor delivery maternity unit closure suspension November 9 2026 hospital",
+      "rural hospital emergency services suspended reopened November 9 2026",
+      "behavioral health dialysis oncology primary care clinic closing November 9 2026",
+      "\"November 9, 2026\" ambulance EMS service suspended closed station county United States",
+      "\"November 9, 2026\" air medical helicopter medical transport base closes closure US",
+      "\"November 9, 2026\" hospital emergency room maternity unit reopens services restored",
+      "November 9 2026 Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic closure emergency dialysis",
+      "Nov 9 2026 hospital to shut down emergency department patients tonight closure US",
+      "November 9 2026 ambulance emergency medical services ceasing service county local news",
+      "November 9 2026 health system closes outpatient clinic dialysis psychiatric unit local news",
+      "November 9 2026 hospital emergency department services restored reopen after closure local government"
+    ],
+    "search_method": "CMS checked first; exactly twelve subsequent targeted recency=1–2 day web searches. Read accessible reporting and cross-checked prior hour's heartbeat for duplicates.",
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL — EMS bypass",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+        "reason": "Bypass began November 7; already evaluated during earlier checks, no newly confirmed change."
+      },
+      {
+        "item": "Adventist Health White Memorial, Boyle Heights CA — ambulance diversion",
+        "source_url": "https://wearemitu.com/wearemitu/news/ice-boyle-heights-hospital-er-white-memorial/",
+        "reason": "November 9 recap of November 6 overnight ~2-hour diversion; previously screened by 17:47 watch, not new."
+      },
+      {
+        "item": "University Hospitals Ohio — MyChart/websites restored",
+        "source_url": "https://www.ideastream.org/health/2026-11-09/university-hospitals-websites-mychart-restored-following-cybersecurity-incident",
+        "reason": "Published November 9 at 2:36 PM Eastern (11:36 AM PST), before prior hourly check; administrative digital restoration, not newly restored essential clinical service this hour."
+      },
+      {
+        "item": "Hendricks Community Hospital MN — charity-care billing settlement",
+        "source_url": "https://www.ag.state.mn.us/Office/Communications/2026/11/09_Hendricks.asp",
+        "reason": "Refunds and revised charity-care process, no closure, suspension or reopening of a specified essential clinical service; no eligible access-loss event."
+      },
+      {
+        "item": "Guam outpatient suspension from Typhoon Champi",
+        "source_url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "October 17 announcement and October 19 temporary service interruption; historical, not new this hour."
+      },
+      {
+        "item": "North Devon maternity unit and Canadian paramedic strike negotiations",
+        "source_url": "https://www.aol.com/articles/maternity-unit-remain-shut-over-180403000.html",
+        "reason": "Outside U.S. and territories; Canadian item is prospective strike, no new access effect."
+      },
+      {
+        "item": "Vanderbilt university cyber incident",
+        "source_url": "https://www.wsmv.com/2026/11/09/vanderbilt-urges-university-community-shut-down-devices-amid-cybersecurity-incident-heres-what-we-know/",
+        "reason": "University IT precaution; reporting does not establish hospital clinical service interruption."
+      }
+    ],
+    "source_access_errors": [
+      {
+        "source_url": "https://www.cms.gov/medicare/provider-enrollment-and-certification/surveycertemergprep/public-notices",
+        "error": "Obsolete/incorrect CMS Public Notices route inaccessible in initial direct open",
+        "material": false,
+        "mitigation": "Resolved and opened canonical live CMS Public Notices index successfully before running targeted searches."
+      }
+    ],
+    "coverage_limitations": [
+      "One obsolete CMS URL failed but authoritative canonical CMS index was accessed successfully; this run conservatively records DEGRADED according to source-error policy.",
+      "Bounded search discovery cannot establish comprehensive same-hour coverage; publication may lag actual facility events.",
+      "Territory-local sources were sparsely indexed; no new territory event verified.",
+      "Production queue state not independently checked; cross-run watch deduplication completed against last heartbeat."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

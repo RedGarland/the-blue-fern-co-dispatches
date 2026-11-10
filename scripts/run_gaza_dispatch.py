@@ -869,6 +869,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                             ),
                             "publisher": source["publisher"],
                             "summary_or_snippet": source.get("summary_or_snippet"),
+                            "published_at": source.get("published_at"),
                             **({"editorial_label": source["editorial_label"]} if "editorial_label" in source else {}),
                             "event_date": fragment.get("event_date"),
                             "location": fragment.get("location"),

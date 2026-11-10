@@ -3588,7 +3588,7 @@ def test_gaza_public_prose_cleans_sentence_stitching_in_html(request, tmp_path_f
     assert "between israel and the militant group hamas" in lowered
 
 
-def test_gaza_public_prose_collapses_same_event_ceasefire_reports_and_preserves_traceability(request, tmp_path_factory, monkeypatch):
+def test_gaza_public_prose_preserves_distinct_reports_despite_shared_ceasefire_background(request, tmp_path_factory, monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(request, tmp_path_factory, repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
@@ -3640,10 +3640,31 @@ def test_gaza_public_prose_collapses_same_event_ceasefire_reports_and_preserves_
     html = read(work / "output" / "site" / "gaza" / "editions" / edition_date / "index.html")
     today_read = html.split("<h2>Today", 1)[1].split("<h2>At A Glance</h2>", 1)[0]
     at_a_glance = html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
-    assert today_read.count("<p>") == 2
-    assert today_read.count("Multiple outlets reported it") == 1
-    assert at_a_glance.count("<li>") == 1
-    assert at_a_glance.count("1,000") <= 1
+    # These records share cumulative casualty background, not established event
+    # identity: one headline is a specific drone strike. Match the corresponding
+    # test_story_dedupe regression, rather than restoring topic-only clustering.
+    assert today_read.count("<p>") == 4
+    assert "3 reported developments" in today_read
+    assert "Multiple outlets reported it" not in today_read
+    assert at_a_glance.count("<li>") == 3
+    assert records[1]["title"] in at_a_glance
+    articles = [part.split("</article>", 1)[0] for part in html.split("<article>")[1:]]
+    assert len(articles) == 3
+    for record, count, attribution in zip(
+        records,
+        ("1,008", "1,007", "1,005"),
+        ("the health ministry said", "Health Ministry says", "according to Gaza Health Ministry"),
+    ):
+        article = next(part for part in articles if f'<h3>{record["title"]}</h3>' in part)
+        assert record["url"] in article
+        assert record["publisher"] in article
+        assert count in article
+        assert attribution in article
+        assert count in today_read
+        assert attribution in today_read
+    # The differing attributed running totals are not additive event tolls.
+    assert "3,020" not in today_read
+    assert "3020" not in today_read
     for url in (
         "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
         "https://www.aljazeera.com/news/2026/6/18/israel-kills-at-least-three-palestinians-in-gaza-city-drone-strike?traffic_source=rss",

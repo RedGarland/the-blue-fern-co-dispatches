@@ -695,6 +695,15 @@ def classify_against_prior(candidate: dict[str, Any], prior_rows: list[dict[str,
             return "duplicate_skip", ["normalized_title", "no_new_summary_detail"], prior
         if publisher_title and not has_new_detail(candidate, prior):
             return "duplicate_skip", ["publisher_title", "no_new_summary_detail"], prior
+        # Shared casualty vocabulary or a reused ceasefire background paragraph
+        # does not identify the same incident across editions. Keep distinct
+        # headline reports separate unless a URL or strong headline identity
+        # actually connects them. Exact repeats above remain suppressed.
+        casualty_headline = re.compile(r"\b(?:killed|dead|deaths?|injured|wounded)\b", re.I)
+        if (not exact_url and not title_match and not fuzzy_title
+                and casualty_headline.search(str(candidate.get("title") or ""))
+                and casualty_headline.search(str(prior.get("title") or ""))):
+            continue
         if is_major_update(candidate, prior):
             return "major_update", ["same_topic", "material_new_development"], prior
         if exact_url or fuzzy_title or topic_match:

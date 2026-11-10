@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 PAGES_SHA = '1c050908845bf1f1657891015fa5b52a7e1c7ddb'
-SOURCE_SHA = '3b55ce385a7c6f7f879986a753ec7808956fa4ef'
+SOURCE_SHA = 'bf0bfac5bec749d1640432895988dd8fe1668792'
 PLAYWRIGHT_VERSION = '1.64.1'
 RESERVE = 2 * 1024**3
 EXPECTED = {'gaza/index.html': ('170a0cb139c5d1d5557b1db63acc3f70a88e1e1202e3aee9c57d1d2e79a463d0', 'abff83ae487f5819d8ec5338e5d6e879b6adc93ae21a65a57f1a0b967ddaa3fa'), 'gaza/archive.html': ('abe3dc4a8fd1896fcadc1b190ba79ff7b4e6af26f3ac6f8e1824003b09ac23ba', '9ec7b4209a20f28e4702dacc8df0da7feac1e85d169df28b29cfa8f31b6cbde2'), 'gaza/rss.xml': ('f5d3660ed794654780c32f7b172168879d3a36f6dc91d0d9e769df2dcef3d0f6', '5529078d934c6d1b26a4c45b06132c3ec23b98f945f0d6b54342ac649180abfb'), 'gaza/editions/2026-11-10/index.html': (None, '41807d3138e86042ffa11f0474aa4acfd378a1867fa5539d62693d6d3d333c74'), 'gaza/editions/2026-11-10/edition_manifest.json': (None, '2af0d0787a980cf7201e351326a1d89225f5ee8364a011491e31e09ff88a8bb8'), 'gaza/editions/2026-11-10/curation_manifest.json': (None, '46e60c457e4638aeed2aad666034cd027f2cb92b988dbfb155f7b134171b1ecb'), 'gaza/editions/2026-11-10/sources_manifest.json': (None, '5f2c3dbb33679c13ece32d160b4e2d94fa6b71280fc157ca506d005b4a84806a')}

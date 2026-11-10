@@ -713,3 +713,184 @@ def test_compact_gaza_wrong_tag_monitoring_marker_cannot_fall_back_to_legacy():
 def test_compact_gaza_wrong_tag_latest_card_is_rejected():
     document = _compact_gaza_html().replace('<article class="gaza-latest-card">', '<div class="gaza-latest-card">').replace('</article>', '</div>')
     assert 'gaza_latest_card' in _compact_issues(document)[1]
+
+
+RETROSPECTIVE_PATH = "/food-line/source-based-retrospectives/fixture-october-21-24-2026/"
+RETROSPECTIVE_DOCUMENT = """<html><head><title>Food Line source-based retrospective</title></head>
+<body><main><p class="date">Source-based retrospective</p><h1>Documented food-access pressure</h1>
+<p class="notice">This retrospective is neither a complete daily edition nor an exhaustive October catch-up.</p>
+<article><p class="date">October 24, 2026</p><h2>A source-backed report</h2><p class="source"><a href="https://example.org/report">Reported source</a>, October 24, 2026.</p></article>
+<article><p class="date">October 21, 2026</p><h2>Another report</h2><p class="source"><a href="https://example.org/report2">Other source</a>, October 21, 2026.</p></article>
+</main></body></html>"""
+
+
+def _retrospective_card(href=RETROSPECTIVE_PATH, label="Limited retrospective"):
+    return f'<article class="edition-card edition-card--food-line"><p class="edition-type">{label}</p><h3><a href="{href}">October 21–24 limited retrospective</a></h3><p class="edition-source">Food Line Dispatch · October 21–24, 2026</p></article>'
+
+
+def test_root_food_publication_link_accepts_real_edition_and_limited_retrospective(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / "food-line/editions/2026-10-15/index.html", "<h1>Food Line edition</h1>")
+    assert _has_root_food_publication_link(tmp_path, '<a href="/food-line/editions/2026-10-15/">Food Line edition</a>')
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / "index.html", RETROSPECTIVE_DOCUMENT)
+    assert _has_root_food_publication_link(tmp_path, _retrospective_card())
+
+
+@pytest.mark.parametrize("href", [
+    "https://evil.example/food-line/source-based-retrospectives/fixture-october-21-24-2026/",
+    "//evil.example/food-line/source-based-retrospectives/fixture-october-21-24-2026/",
+    "/food-line/source-based-retrospectives/../elsewhere/",
+    "/food-line/source-based-retrospectives/%2e%2e/elsewhere/",
+    "/food-line/source-based-retrospectives/fake/",
+    RETROSPECTIVE_PATH + "?redirect=elsewhere",
+    RETROSPECTIVE_PATH + "#unverified",
+    "/food-line/editions/2026-02-30/",
+])
+def test_root_food_publication_link_rejects_missing_offsite_and_unsafe(tmp_path, href):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / "index.html", RETROSPECTIVE_DOCUMENT)
+    assert not _has_root_food_publication_link(tmp_path, _retrospective_card(href))
+
+
+@pytest.mark.parametrize("root,target", [
+    (RETROSPECTIVE_PATH, RETROSPECTIVE_DOCUMENT),
+    (_retrospective_card(label="Daily edition"), RETROSPECTIVE_DOCUMENT),
+    (_retrospective_card(), "<h1>Unrelated page</h1>"),
+    (_retrospective_card(), RETROSPECTIVE_DOCUMENT.replace("neither a complete daily edition", "a complete daily edition")),
+    (_retrospective_card(), RETROSPECTIVE_DOCUMENT.replace("Source-based retrospective</p>", "Daily edition</p>")),
+])
+def test_root_food_publication_link_rejects_text_only_and_mislabelled(tmp_path, root, target):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / "index.html", target)
+    assert not _has_root_food_publication_link(tmp_path, root)
+
+
+def test_root_food_publication_link_rejects_symlink_target(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    real = tmp_path / 'real.html'
+    _write(real, RETROSPECTIVE_DOCUMENT)
+    target = tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html'
+    target.parent.mkdir(parents=True)
+    target.symlink_to(real)
+    assert not _has_root_food_publication_link(tmp_path, _retrospective_card())
+
+
+def test_root_food_publication_link_accepts_synthetic_contract_target(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    fixture = Path(__file__).parent / 'fixtures/food-retrospective-visual'
+    card = (fixture / 'root-card.html').read_text()
+    target = (fixture / 'target.html').read_text()
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', target)
+    assert _has_root_food_publication_link(tmp_path, card)
+    assert not _has_root_food_publication_link(tmp_path, card.replace('Limited retrospective', 'Daily edition'))
+
+
+@pytest.mark.parametrize("attribute", ['hidden', 'inert', 'aria-hidden="true"', 'style="display:none"'])
+def test_root_food_publication_link_rejects_hidden_card(tmp_path, attribute):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', RETROSPECTIVE_DOCUMENT)
+    assert not _has_root_food_publication_link(tmp_path, _retrospective_card().replace('<article ', f'<article {attribute} '))
+
+
+@pytest.mark.parametrize("target", [
+    RETROSPECTIVE_DOCUMENT.replace('<p class="date">October 24, 2026</p>', '<p class="date">Undated</p>'),
+    RETROSPECTIVE_DOCUMENT.replace('October 24, 2026', 'October 25, 2026'),
+    RETROSPECTIVE_DOCUMENT.replace('October 24, 2026', 'February 30, 2026'),
+    RETROSPECTIVE_DOCUMENT.replace('Reported source</a>, October 24, 2026.', 'Reported source</a>, October 23, 2026.'),
+])
+def test_root_food_publication_link_rejects_undated_or_inconsistent_target_dates(tmp_path, target):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', target)
+    assert not _has_root_food_publication_link(tmp_path, _retrospective_card())
+
+
+def test_root_food_publication_link_does_not_infer_dates_from_slug(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', RETROSPECTIVE_DOCUMENT)
+    card = _retrospective_card().replace('Food Line Dispatch · October 21–24, 2026', 'Food Line Dispatch')
+    assert not _has_root_food_publication_link(tmp_path, card)
+
+
+@pytest.mark.parametrize("wrapper", ["template", "script", "style", "noscript", "details"])
+def test_root_food_publication_link_rejects_nonrendered_card_contexts(tmp_path, wrapper):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', RETROSPECTIVE_DOCUMENT)
+    root = f'<{wrapper}>' + _retrospective_card() + f'</{wrapper}>'
+    assert not _has_root_food_publication_link(tmp_path, root)
+
+
+@pytest.mark.parametrize("side", ["root", "target"])
+def test_root_food_publication_link_rejects_base_origin_rewriting(tmp_path, side):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    base = '<base href="https://evil.example/">'
+    root, target = _retrospective_card(), RETROSPECTIVE_DOCUMENT
+    if side == "root":
+        root = base + root
+    else:
+        target = target.replace('<head>', '<head>' + base)
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', target)
+    assert not _has_root_food_publication_link(tmp_path, root)
+
+
+def test_root_food_publication_link_allows_only_visible_closed_details_summary(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / 'food-line/editions/2026-10-15/index.html', '<h1>Food edition</h1>')
+    link = '<a href="/food-line/editions/2026-10-15/">Food edition</a>'
+    assert _has_root_food_publication_link(tmp_path, f'<details><summary>{link}</summary></details>')
+    assert not _has_root_food_publication_link(tmp_path, f'<details><summary>First summary</summary><summary>{link}</summary></details>')
+    assert not _has_root_food_publication_link(tmp_path, f'<details><summary>Open me</summary>{link}</details>')
+    assert _has_root_food_publication_link(tmp_path, f'<details open><summary>Close me</summary>{link}</details>')
+
+
+def test_root_food_publication_link_rejects_hidden_target_date_and_notice(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    for original in ('class="notice"', 'class="date">October 24'):
+        target = RETROSPECTIVE_DOCUMENT.replace(original, 'hidden ' + original)
+        _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', target)
+        assert not _has_root_food_publication_link(tmp_path, _retrospective_card())
+
+
+@pytest.mark.parametrize("href", ['', 'javascript:void(0)', '#', '/local', '//evil.example/citation'])
+def test_root_food_publication_link_rejects_fake_source_urls(tmp_path, href):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    target = RETROSPECTIVE_DOCUMENT.replace('https://example.org/report"', href + '"')
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', target)
+    assert not _has_root_food_publication_link(tmp_path, _retrospective_card())
+
+
+def test_root_food_publication_link_rejects_hidden_type_heading_and_citation(tmp_path):
+    from bluefern_dispatches.public_site_visuals import _has_root_food_publication_link
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', RETROSPECTIVE_DOCUMENT)
+    assert not _has_root_food_publication_link(tmp_path, _retrospective_card().replace('class="edition-type"', 'hidden class="edition-type"'))
+    for original in ('<h2>', '<a href="https://example.org/report"'):
+        target = RETROSPECTIVE_DOCUMENT.replace(original, original.replace('<', '<', 1).replace('>', ' hidden>', 1) if original == '<h2>' else '<a hidden href="https://example.org/report"')
+        _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', target)
+        assert not _has_root_food_publication_link(tmp_path, _retrospective_card())
+
+
+@pytest.mark.parametrize('root_visible,target_visible,expected_check', [
+    (False, True, 'latest_food_link_visibility'),
+    (True, False, 'latest_food_target_visibility'),
+    (True, True, None),
+])
+def test_root_food_publication_link_computed_visibility_result_is_enforced(tmp_path, root_visible, target_visible, expected_check):
+    from unittest.mock import Mock
+    from bluefern_dispatches.public_site_visuals import _check_root_food_publication_browser
+    _write(tmp_path / 'index.html', _retrospective_card())
+    _write(tmp_path / RETROSPECTIVE_PATH.lstrip('/') / 'index.html', RETROSPECTIVE_DOCUMENT)
+    base = 'http://127.0.0.1:43210'
+    page = Mock()
+    page.evaluate.return_value = root_visible
+    target = page.context.new_page.return_value
+    target.goto.return_value.status = 200
+    target.url = base + RETROSPECTIVE_PATH
+    target.evaluate.return_value = target_visible
+    issues = []
+    _check_root_food_publication_browser(page, tmp_path, base, issues)
+    assert [issue.check for issue in issues] == ([expected_check] if expected_check else [])
+    assert 'checkVisibility' in page.evaluate.call_args.args[0]
+    if root_visible:
+        target.close.assert_called_once()
+        assert 'checkVisibility' in target.evaluate.call_args.args[0]
+    else:
+        page.context.new_page.assert_not_called()

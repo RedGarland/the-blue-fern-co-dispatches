@@ -30,7 +30,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
-          ref: 3b55ce385a7c6f7f879986a753ec7808956fa4ef
+          ref: bf0bfac5bec749d1640432895988dd8fe1668792
           path: source
           persist-credentials: false
       - uses: actions/checkout@v4
@@ -46,6 +46,13 @@ jobs:
         run: |
           python -m pip install -r source/requirements.txt 'playwright==1.64.1'
           python -m playwright install --with-deps chromium
+      - name: Run complete visual-validator regression modules
+        working-directory: source
+        env:
+          DISPATCHES_TEST_ROOT: ${{ runner.temp }}/nov10-visual-unit-tests
+        run: |
+          mkdir -p "$DISPATCHES_TEST_ROOT"
+          python -B -m pytest -q -p no:cacheprovider --basetemp "$DISPATCHES_TEST_ROOT/pytest" tests/test_public_site_visuals.py tests/test_staged_gaza_visuals.py
       - name: Verify exact immutable package checkout
         run: |
           test "$(git -C review rev-parse HEAD)" = "$REVIEW_COMMIT"

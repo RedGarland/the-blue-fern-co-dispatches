@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T154908-0800-recall12-20261110T2350Z",
+  "scheduled_for": "2026-11-10T15:45:22-08:00",
+  "started_at": "2026-11-10T15:49:08-08:00",
+  "completed_at": "2026-11-10T15:50:46-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T14:44:39.135-08:00",
+    "end": "2026-11-10T15:50:46-08:00",
+    "basis": "From verified previous Care Line Watch heartbeat completion to this run, with recency=1 day search overlap for delayed reporting. PST UTC-08:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — Illinois — Limitation of CLIA certificate — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "Previously captured November 10 Advanced Urgent Care CLIA limitation; no newer listed notice verified at the time checked.",
+      "retrieval_note": "An initial guessed CMS URL could not be opened; CMS-specific lookup resolved the correct canonical notices URL, which was opened and checked directly. No material CMS coverage loss."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department suspended closed services November 10 2026 local news",
+      "hospital maternity labor delivery closure suspension Nov 10 2026",
+      "rural emergency room hospital closure loss access Nov 10 2026",
+      "psychiatric behavioral health inpatient unit closing services November 10 2026",
+      "dialysis center closes patients transfer November 10 2026",
+      "oncology infusion cancer clinic service suspended November 10 2026",
+      "primary care community health clinic abrupt closed suspension patients November 10 2026",
+      "ambulance EMS service station closing ceased operations November 10 2026 US",
+      "air ambulance helicopter base closes service November 10 2026",
+      "reopened resumed hospital emergency department labor delivery dialysis services November 10 2026",
+      "Puerto Rico Guam U.S. Virgin Islands American Samoa Northern Mariana hospital emergency clinic closure interruption November 10 2026",
+      "state department of health suspension hospital license closure emergency department November 10 2026"
+    ],
+    "search_methods": "Twelve recency-one-day targeted web searches after official CMS notices check, across hospital and specialist services, EMS/air medical, service restoration, and U.S. territories.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Mercer County, Pennsylvania",
+        "reason": "Official closure/suspension events dated November 4–6 and state action previously reported by prior watch; a November 9 report recaps already-known access loss, no new service consequence in window.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "Benefis Health System, Great Falls, Montana",
+        "reason": "Restructuring reported before this hourly window, with future start December 19; not a new qualifying access change in this watch window.",
+        "url": "https://www.krtv.com/news/benefis-health-system-to-restructure-services-citing-financial-pressure"
+      },
+      {
+        "item": "Fishing Point Healthcare, Portsmouth, Virginia",
+        "reason": "Medicaid patient service pause occurred in April 2026, historical result.",
+        "url": "https://www.wtkr.com/news/in-the-community/portsmouth/thousands-of-medicaid-patients-lose-access-as-portsmouth-clinic-pauses-care"
+      },
+      {
+        "item": "Air Evac Decatur Airport base, Illinois",
+        "reason": "Closure took effect September 16, 2026, previously known.",
+        "url": "https://www.wandtv.com/2026/09/16/air-evac-closes-base-decatur-airport/"
+      },
+      {
+        "item": "Kauaʻi, Hawaii Hurricane Lowell recovery",
+        "reason": "November 10 update includes public-health recovery survey and storm recovery, but no newly verified essential health service loss or restoration.",
+        "url": "https://kauainownews.com/2026/11/10/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/"
+      },
+      {
+        "item": "Minnesota maternity care statistics",
+        "reason": "November 8 statewide access analysis describes longer-standing closures, not a new unit closure during the observation window.",
+        "url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center"
+      }
+    ],
+    "source_access_errors": [
+      {
+        "url": "https://www.cms.gov/medicare/quality/safety-oversight-general-information/public-notices",
+        "reason": "Initial incorrect/obsolete URL could not be opened; canonical page worked."
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Indexing and same-hour publication delays can hide very recent local changes.",
+      "Twelve targeted searches are supplementary, not exhaustive across all U.S. states and territories.",
+      "Direct production Care Line queue deduplication was not inspected; previous watch heartbeat and named prior reports were checked for known duplicates.",
+      "Some results from news search did not respect the hourly publication boundary, so each candidate's published/event date was assessed."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No notification: zero newly confirmed qualifying nonduplicate findings, no material degradation.",
+    "actions_not_taken": [
+      "No approval",
+      "No publication",
+      "No schedule modification",
+      "No task disabling"
+    ]
+  }
+}

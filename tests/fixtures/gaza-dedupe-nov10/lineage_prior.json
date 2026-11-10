@@ -1,0 +1,77 @@
+[
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-02",
+    "story_id": "gaza-story-2026-09-02-012",
+    "title": "Will the EU take action against Israel?",
+    "normalized_title": "will the eu take action against israel",
+    "summary": "Surge in Israeli settler attacks against Palestinians.",
+    "source_urls": [
+      "https://www.aljazeera.com/video/inside-story/2026/9/2/will-the-eu-take-action-against-israel?traffic_source=rss"
+    ],
+    "canonical_urls": [
+      "https://www.aljazeera.com/video/inside-story/2026/9/2/will-the-eu-take-action-against-israel?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "category": "conflict",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "3234030d6c7bb9b4",
+    "first_seen_date": "2026-09-02",
+    "last_seen_date": "2026-09-02",
+    "update_count": 0,
+    "latest_classification": "major_update"
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-23",
+    "story_id": "gaza-story-2026-07-23-003",
+    "title": "Israel releases 35 detainees from Gaza",
+    "normalized_title": "israel releases 35 detainees from gaza",
+    "summary": "",
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/23/israel-releases-35-detainees-from-gaza?traffic_source=rss"
+    ],
+    "canonical_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/23/israel-releases-35-detainees-from-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "category": "conflict",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "75751523078cc288",
+    "first_seen_date": "2026-07-23",
+    "last_seen_date": "2026-07-23",
+    "update_count": 0,
+    "latest_classification": "major_update"
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-13",
+    "story_id": "gaza-story-2026-09-13-001",
+    "title": "Humanitarian Situation Report | 11 September 2026",
+    "normalized_title": "humanitarian situation report 11 september 2026",
+    "summary": "Official OCHA humanitarian situation report.",
+    "source_urls": [
+      "https://www.ochaopt.org/content/humanitarian-situation-report-11-september-2026"
+    ],
+    "canonical_urls": [
+      "https://www.ochaopt.org/content/humanitarian-situation-report-11-september-2026"
+    ],
+    "publisher_names": [
+      "OCHA"
+    ],
+    "category": "humanitarian",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "dbe5456abb13bac1",
+    "first_seen_date": "2026-09-13",
+    "last_seen_date": "2026-09-13",
+    "update_count": 0,
+    "latest_classification": "new"
+  }
+]

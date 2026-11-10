@@ -34,6 +34,7 @@ VALIDATION_PROFILES: dict[str, ValidationProfile] = {
             "tests/test_gaza_ocha_document.py",
             "tests/test_story_dedupe.py",
             "tests/test_gaza_dedupe_normalized.py",
+            "tests/test_gaza_sandbank_identity.py",
             "tests/test_gaza_aggregate_preservation.py",
             "tests/test_gaza_dispatch_generation.py",
             "tests/test_gaza_backfill.py",

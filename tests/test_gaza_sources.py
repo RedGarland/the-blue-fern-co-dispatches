@@ -3965,7 +3965,8 @@ def test_ocha_aug_28_report_collects_by_publication_date_and_curates_healthcare_
     ]
     assert "https://www.ochaopt.org/updates/rss.xml" not in calls
     record = result["sources"][0]
-    assert record["published_at"] == "2026-08-28T00:00:00+00:00"
+    assert record["published_at"] == "2026-08-28"
+    assert record["published_at_precision"] == "date"
     assert record["discovery_url"] == "https://www.ochaopt.org/publications/situation-reports"
     assert record["resolved_canonical_url"].endswith("humanitarian-situation-report-28-august-2026")
     assert record["canonicalization_status"] == "resolved_official_report_url"

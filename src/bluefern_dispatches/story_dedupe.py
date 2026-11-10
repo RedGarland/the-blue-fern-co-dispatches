@@ -493,6 +493,42 @@ def _gaza_named_casualty_event_key(story: dict[str, Any]) -> str:
     return "_".join(parts)
 
 
+def _gaza_sandbank_collapse_event_key(story: dict[str, Any]) -> str:
+    """Only join explicitly dated reports of the specific displacement-camp event.
+
+    Publication dates and general flood-report body references are insufficient.
+    Counts are deliberately not part of identity and never become a consensus.
+    """
+    title = normalize_text(str(story.get("title") or ""))
+    if not ("landslide" in title or re.search(r"(?:sand ?bank|embankment).{0,40}collaps", title)):
+        return ""
+    text = normalize_text(_gaza_story_text(story) + " " + str(story.get("location") or ""))
+    if not re.search(r"\bsand ?bank\b|\bsand embankment\b", text):
+        return ""
+    location = normalize_text(str(story.get("location") or ""))
+    if not re.search(r"\bsouth of deir al balah\b", location):
+        return ""
+    if not re.search(r"\btents?\b|\bcamp for displaced\b|\bdisplacement camp\b", text):
+        return ""
+    day = str(story.get("event_date") or "")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
+        return ""
+    try:
+        date.fromisoformat(day)
+    except ValueError:
+        return ""
+    return f"gaza_sandbank_collapse_{location.replace(chr(32), chr(95))}_{day}"
+
+
+def _sandbank_accounts(story: dict[str, Any]) -> list[dict[str, Any]]:
+    if story.get("attributed_event_accounts"):
+        return list(story["attributed_event_accounts"])
+    return [{"publishers": list(story.get("publisher_names") or []),
+             "summary": str(story.get("summary") or ""),
+             "source_record_ids": list(story.get("source_record_ids") or []),
+             "event_date": story.get("event_date")}]
+
+
 def merge_story(base: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
     merged = dict(base)
     for key in ("source_record_ids", "source_ids", "source_urls", "publisher_names", "canonical_urls"):
@@ -511,6 +547,17 @@ def merge_story(base: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any
         merged["source_records"] = list(by_id.values())
     if len(str(incoming.get("summary") or "")) > len(str(base.get("summary") or "")):
         merged["summary"] = incoming.get("summary")
+    event_key = _gaza_sandbank_collapse_event_key(base)
+    if event_key and event_key == _gaza_sandbank_collapse_event_key(incoming):
+        accounts = _sandbank_accounts(base) + _sandbank_accounts(incoming)
+        merged["attributed_event_accounts"] = accounts
+        day = str(base["event_date"])
+        merged["title"] = f"Reports on the {day} sandbank collapse south of Deir al-Balah"
+        lead = (f"Reports concern one sandbank collapse at a displacement camp south of Deir al-Balah on {day}. "
+                "Accounts and casualty figures are attributed separately below; they are not added together.")
+        merged["event_account_overview"] = lead
+        merged["summary"] = lead + " " + " ".join(
+            f"{', '.join(account['publishers'])}: {account['summary']}" for account in accounts)
     merged["score"] = max(int(base.get("score") or 0), int(incoming.get("score") or 0))
     reasons = list(base.get("scoring_reasons") or []) + list(incoming.get("scoring_reasons") or [])
     reasons.append(f"merged_duplicate_story={incoming.get('story_id')}")
@@ -551,6 +598,9 @@ def _gaza_event_key(story: dict[str, Any]) -> str:
     location = bool(re.search(r"\b(near cyprus|off cyprus|cyprus|international waters|maritime blockade)\b", text))
     if actor and action and obj and location:
         return "gaza_flotilla_interception_israeli_forces_cyprus"
+    sandbank = _gaza_sandbank_collapse_event_key(story)
+    if sandbank:
+        return sandbank
     named_casualty = _gaza_named_casualty_event_key(story)
     if named_casualty:
         return named_casualty
@@ -703,6 +753,14 @@ def classify_against_prior(candidate: dict[str, Any], prior_rows: list[dict[str,
         if (not exact_url and not title_match and not fuzzy_title
                 and casualty_headline.search(str(candidate.get("title") or ""))
                 and casualty_headline.search(str(prior.get("title") or ""))):
+            continue
+        # Gaza's current memory schema has no provenance-bound event identity:
+        # publication/retrieval dates and generic geography are not event proof.
+        # Different URLs/headlines must not inherit historical records merely
+        # through topic, actor, report-template, or fuzzy headline overlap. Keep
+        # the candidate as new rather than manufacture a continuing-event link.
+        # Exact URL and normalized-title updates retain their established paths.
+        if prior.get("dispatch_slug") == "gaza" and not exact_url and not title_match:
             continue
         if is_major_update(candidate, prior):
             return "major_update", ["same_topic", "material_new_development"], prior

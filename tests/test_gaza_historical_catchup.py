@@ -816,7 +816,7 @@ def test_explicit_renewal_preserves_git_authority_and_requires_merge(tmp_path: P
     assert _plan(case).catchup_id == new['catchup_id']
 
 
-@pytest.mark.parametrize('change', ['title', 'publication_date', 'approved_at', 'prior_hash', 'inventory', 'stage', 'publication'])
+@pytest.mark.parametrize('change', ['title', 'publication_date', 'approved_at', 'prior_hash', 'inventory', 'stage', 'publication', 'authorization', 'request_hash'])
 def test_renewal_refuses_drift_or_known_execution_without_mutation(tmp_path: Path, change: str) -> None:
     case = _renewal_case(tmp_path)
     if change == 'title':
@@ -832,14 +832,20 @@ def test_renewal_refuses_drift_or_known_execution_without_mutation(tmp_path: Pat
         case['renewal']['stage_inventory_complete'] = False
     elif change == 'stage':
         (case['stages'] / 'gaza-historical-catchup-stage-partial').mkdir()
+    elif change == 'authorization':
+        case['renewal']['renewal_authorized'] = False
     elif change == 'publication':
         occupied = case['pages'] / case['request']['public_path']
         occupied.mkdir(parents=True)
         (occupied / 'index.html').write_text('published')
+        case['request']['pages_head'] = _commit(case['pages'], 'synthetic published path', '.')
     _json(case['request_path'], case['request'])
     case['renewal']['request_raw_sha256'] = owner.sha256_bytes(case['request_path'].read_bytes())
+    if change == 'request_hash':
+        case['renewal']['request_raw_sha256'] = '0' * 64
     _json(case['renewal_path'], case['renewal'])
-    with pytest.raises(GazaHistoricalCatchupError):
+    expected = 'occupied' if change == 'publication' else None
+    with pytest.raises(GazaHistoricalCatchupError, match=expected):
         owner.renew_approval(case['root'], case['pages'], case['request_path'], case['renewal_path'])
     assert (case['root'] / case['approval_path']).read_bytes() == case['prior_raw']
 

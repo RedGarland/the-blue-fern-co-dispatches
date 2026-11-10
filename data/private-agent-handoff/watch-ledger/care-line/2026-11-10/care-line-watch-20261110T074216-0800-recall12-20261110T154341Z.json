@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T074216-0800-recall12-20261110T154341Z",
+  "scheduled_for": "2026-11-10T07:45:22-08:00",
+  "started_at": "2026-11-10T07:42:16-08:00",
+  "completed_at": "2026-11-10T07:43:41.257-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T06:41:26-08:00",
+    "end": "2026-11-10T07:43:41.257-08:00",
+    "basis": "Begins at verified previous supplementary Care Line heartbeat completion. Qualifying news newly documented or discovered in this window; distinguish publication and effective date."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall; national production collector remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T064028-0800-recall12-20261110T144126Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T06:41:26-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — Limitation of CLIA cert — 14D2049789 — Illinois",
+      "classification": "Previously logged in 05:50 heartbeat; no newer notices visible since previous 06:41 watch.",
+      "new_notices_since_previous_watch": 0,
+      "supporting_index_link": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "notice_detail_url_error": "Direct CMS Advanced Urgent Care detail URL was inaccessible to web reader; official index was accessible and previous finding verified in heartbeat."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "November 10 2026 hospital emergency department closed suspended medical services local news United States",
+      "November 10 2026 hospital labor delivery obstetrics maternity closed suspended births",
+      "November 10 2026 rural hospital closing emergency room ambulance diversion",
+      "November 10 2026 dialysis center closes stops patients oncology infusion clinic closures",
+      "November 10 2026 psychiatric behavioral health inpatient hospital closed suspended admissions",
+      "November 10 2026 primary care clinic practice suddenly closed patients appointments",
+      "November 10 2026 ambulance EMS service suspended station closure local news",
+      "November 10 2026 air ambulance helicopter medevac base closing shutdown",
+      "November 10 2026 hospital emergency department reopened resumed services restoration",
+      "November 10 2026 dialysis unit restored cancer oncology clinic reopening actual patients",
+      "November 10 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands emergency department hospital closure",
+      "November 10 2026 site:gov OR site:us \"clinic\" \"hospital\" \"closure\" \"emergency\" \"service\" notice"
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Advanced Urgent Care, Orland Park, Illinois",
+        "reason": "CLIA Routine Chemistry limitation already logged 05:50 PST and confirmed 06:41 PST; not new.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon, Pennsylvania",
+        "reason": "November 9 news article repeats regulator action dated Nov 4 and ED suspension Nov 6; no new hour-window change.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "Oklahoma mental-health safety net funding pressures",
+        "reason": "Nov 10 article covers risk, advocacy and prior changes, not a new confirmed essential-service loss.",
+        "url": "https://oklahomavoice.com/2026/11/10/somebody-stepped-in-and-helped-advocates-press-to-keep-oklahomas-mental-healthcare-safety-net/"
+      },
+      {
+        "item": "Mercy Air 34 Paso Robles and Air Evac Lifeteam Decatur helicopter base closures",
+        "reason": "Historical 2025 and September 2026 actions, not new Nov 10 developments.",
+        "url": "https://www.newtimesslo.com/mercy-air-34s-paso-robles-base-closure-spells-the-end-of-the-only-air-ambulance-in-slo-county/"
+      },
+      {
+        "item": "Port Hardy hospital ED reopening",
+        "reason": "October 2026 occurrence in Canada, outside geography and time window.",
+        "url": "https://www.theraven.fm/news1/raven-country-news/port-hardy-hospital-emergency-department-reopens-early-following-staffing-shortage/"
+      }
+    ],
+    "source_access_errors": [
+      {
+        "source": "CMS individual Advanced Urgent Care detail page",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices/advanced-urgent-care",
+        "result": "web reader could not access",
+        "resolution": "Official CMS index and previously verified heartbeat were available; no change needed for duplicate classification."
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "The 12 targeted searches are a bounded recall rather than an exhaustive scan of every jurisdiction or source.",
+      "Search engines can lag publication; same-hour source timestamps are often unavailable.",
+      "Territory-local same-hour reporting has limited visibility.",
+      "Production review queue and production deduplication state were not consulted; production collection remains authoritative."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "schedule_timing_note": "This automation run began before nominal 07:45:22 PST schedule time; scheduled_for is the nominal occurrence, started_at is the observed run start.",
+    "notification_decision": "No notification: zero new qualifying developments and no material degradation.",
+    "actions_not_taken": [
+      "No approvals",
+      "No publication",
+      "No schedule alteration",
+      "No task disabling"
+    ]
+  }
+}

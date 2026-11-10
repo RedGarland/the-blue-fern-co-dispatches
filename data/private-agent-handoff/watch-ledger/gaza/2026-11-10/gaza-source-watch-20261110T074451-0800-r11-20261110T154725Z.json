@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T074451-0800-r11-20261110T154725Z",
+  "scheduled_for": "2026-11-10T07:44:51-08:00",
+  "started_at": "2026-11-10T07:45:36-08:00",
+  "completed_at": "2026-11-10T15:47:25.302Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T14:46:40.081Z",
+    "end": "2026-11-10T15:47:25.302Z",
+    "previous_run_completed_at": "2026-11-10T14:46:40.081Z",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Review of new publication and evidence since authenticated previous heartbeat, 06:46:40 PST; late-indexed prior reports checked for previously unrecorded details. No distinct newly verified qualifying development."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only. Production daily Gaza collector and publisher remain authoritative; no publication, approval, schedule or permissions actions.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T064451-0800-r11-20261110T144550Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed item remains November 9 2026 heavy-rains situation report; no new November 10 OCHA bulletin."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502",
+        "result": "Global crisis page available; no newly dated November 10 Gaza hospital/medical evacuation update on it. Regional OPT page returned recurring 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 10 2026 15:00 UTC latest Reuters Israeli strikes casualties floods",
+      "site:english.wafa.ps \"10/November/2026\" Gaza killed injured after 16:00 Jerusalem",
+      "site:palestineredcrescent.org November 10 2026 Gaza ambulance tents flooding",
+      "site:unicef.org Gaza 10 November 2026 water floods winter supplies",
+      "site:wfp.org Gaza 10 November 2026 food aid trucks access",
+      "site:unrwa.org Gaza 10 November 2026 shelter displacement access",
+      "site:reliefweb.int Gaza humanitarian update 10 November 2026 2026",
+      "site:reuters.com November 10 2026 Gaza ceasefire airstrikes civilian aid",
+      "site:apnews.com Gaza November 10 2026 airstrike flood crossings",
+      "site:aljazeera.com/news/2026/11/10 Gaza latest injuries killed",
+      "Gaza November 10 2026 hospital functioning medical evacuation WHO PRCS",
+      "Gaza November 10 2026 Rafah Kerem Shalom crossing humanitarian convoy civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "result": "Latest visible Gaza-specific November 10 reports remain the 15:42 Palestine time al-Daraj house strike and earlier casualty/aggregate reports already in previous ledgers; no newer Gaza item verified."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176800",
+        "status": "ACCESSIBLE",
+        "result": "Three injuries from Nuseirat wall collapse were reported November 9 at 19:10 Palestine time (prior date), excluded as prior reporting rather than an hourly development."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage listed older dated content; no distinct November 10 operational change verified."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/environment/unicef-says-israel-blocks-gaza-basin-repairs-warns-flood-risk-2026-11-10/",
+        "status": "SEARCH_RESULT_ACCESSIBLE",
+        "result": "UNICEF equipment rejection and stormwater basin flooding risk already recorded in previous heartbeat; excluded as duplicate."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "known_previous": true
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "known_previous": true
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "status": "ROBOTS_DENIED",
+        "known_previous": true
+      }
+    ],
+    "exclusions": [
+      "Reuters November 10 UNICEF Sheikh Radwan stormwater basin equipment rejection and flood risk duplicated previous 06:46 PST heartbeat.",
+      "WAFA 15:42 Palestine time al-Daraj three-fatality claim and unresolved Reuters/AP one-fatality discrepancy duplicated previous heartbeat; no confirmed net additional deaths.",
+      "Earlier Gaza City al-Zeitoun two deaths, Khan Younis one death, reported fisherman injury, medical-source casualty aggregate, shelter-tent shortfall and storm deaths were already logged in earlier watches.",
+      "WAFA November 9 Nuseirat tent/wall collapse three injuries predates this observation window, with no newly corroborated change.",
+      "Historical WHO medical evacuations, WFP aid data, OCHA reports and older crossings items excluded; unsupported social material and opinion excluded."
+    ],
+    "scope_and_limitations": "OCHA and WHO checked first, then 12 additional targeted web searches plus direct publisher reads. Queries often returned archival rather than hour-current material. Reliable coverage remained through OCHA, WHO global, WAFA, PRCS and established-wire search results, while recurring source access restrictions prevented full coverage.",
+    "status_rationale": "DEGRADED rather than FAILED because WHO regional returned 502, UNRWA returned 403 and UN News robots restriction persists, as in prior watches; adequate alternative verification remained and there was no newly material access deterioration.",
+    "notification_reason": "No new qualifying development and no newly material deterioration; heartbeat only."
+  }
+}

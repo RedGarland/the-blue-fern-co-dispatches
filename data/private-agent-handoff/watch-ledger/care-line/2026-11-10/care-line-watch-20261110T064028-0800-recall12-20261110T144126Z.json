@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T064028-0800-recall12-20261110T144126Z",
+  "scheduled_for": "2026-11-10T06:40:28-08:00",
+  "started_at": "2026-11-10T06:40:28-08:00",
+  "completed_at": "2026-11-10T06:41:26-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T05:50:57.205-08:00",
+    "end": "2026-11-10T06:41:26-08:00",
+    "basis": "From the last verified supplementary Care Line heartbeat completion. Newly documented qualifying changes only; announcement, effective, and discovery dates distinguished."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not the authoritative national Care Line production collector.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T054749-0800-recall12-20261110T1350Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T05:50:57.205-08:00",
+    "previous_finding_id": "cms-clia-limitation-il-advanced-urgent-care-14d2049789-20261110",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — CLIA limitation — 14D2049789 — Illinois",
+      "classification": "Previously logged in prior heartbeat, not a new qualifying finding in this window.",
+      "new_notices_since_previous_watch": 0,
+      "direct_pdf_retry_result": "Previously logged CMS PDF URL inaccessible in this run; no material impact on comparison because live canonical index and prior verified heartbeat were accessible."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department closed suspended services November 10 2026 local news USA",
+      "hospital labor and delivery maternity unit closed suspended November 10 2026",
+      "rural hospital emergency medical services shut down November 10 2026",
+      "dialysis center closure patients November 10 2026 United States",
+      "oncology infusion cancer care clinic closure suspended November 10 2026",
+      "ambulance EMS station base shutdown suspended November 10 2026",
+      "air ambulance medevac helicopter base permanently closing November 10 2026 United States",
+      "behavioral health psychiatric crisis inpatient unit closing November 10 2026 US",
+      "primary care family practice clinic sudden closing November 10 2026 patients",
+      "hospital emergency department reopened resumed operations November 10 2026 US",
+      "site:gov November 10 2026 hospital emergency department ambulance suspension reopening",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital clinic emergency closure November 10 2026"
+    ],
+    "search_recency_days": 1,
+    "reviewed_exclusions": [
+      {
+        "item": "Advanced Urgent Care (Illinois) CLIA limitation",
+        "reason": "Duplicate; first identified and logged in previous verified heartbeat.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Oklahoma certified community behavioral health clinic safety-net funding risks",
+        "reason": "November 10 local reporting discusses financial sustainability, prior privatization and possible future closure without a new verified service cessation in this window.",
+        "url": "https://oklahomavoice.com/2026/11/10/somebody-stepped-in-and-helped-advocates-press-to-keep-oklahomas-mental-healthcare-safety-net/"
+      },
+      {
+        "item": "Seidman Cancer Center, Geneva, Ohio",
+        "reason": "September 2026 report of November 13 scheduled closure; historical announcement outside observation window.",
+        "url": "https://www.cleveland19.com/2026/09/20/ill-just-have-go-further-patients-brace-longer-commutes-geneva-cancer-center-closes/"
+      },
+      {
+        "item": "Historic dialysis closures in Alabama and Georgia",
+        "reason": "February/March 2026 reporting; not new developments."
+      },
+      {
+        "item": "Reopening and closure stories outside United States",
+        "reason": "Non-U.S. healthcare facilities outside remit."
+      }
+    ],
+    "source_access_errors": [
+      {
+        "source": "CMS prior Advanced Urgent Care notice PDF",
+        "url": "https://www.cms.gov/files/document/illinois-advanced-urgent-care-11-10-2026.pdf",
+        "result": "inaccessible on web open",
+        "resolution": "Prior heartbeat contains verified primary notice details; CMS canonical index accessible, and no need to count prior event again."
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Search results do not offer reliable publication-time precision within the 51-minute window; publication/indexing delays may conceal developments.",
+      "Twelve bounded searches are not an exhaustive survey of all U.S. states or territories.",
+      "Production collector state and unpublished review queue were not consulted; production remains authoritative.",
+      "The runtime showed this execution starting 06:40:28 PST, before the schedule's nominal :45:22 mark; the available execution timestamp is used as scheduled_for proxy, not a claim of the nominal due time."
+    ],
+    "notification_decision": "No notification: no new qualifying developments, no material degradation.",
+    "guardrails": "No approvals, publications, schedule edits, or task disabling."
+  }
+}

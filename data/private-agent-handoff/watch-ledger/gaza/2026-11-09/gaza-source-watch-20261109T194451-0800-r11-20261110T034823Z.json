@@ -1,0 +1,143 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T194451-0800-r11-20261110T034823Z",
+  "scheduled_for": "2026-11-09T19:44:51-08:00",
+  "started_at": "2026-11-09T19:46:26-08:00",
+  "completed_at": "2026-11-09T19:48:23.738-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T18:45:27.777-08:00",
+    "end": "2026-11-09T19:48:23.738-08:00",
+    "previous_run_completed_at": "2026-11-09T18:45:27.777-08:00",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Last 18:44:51 PST scheduled watch's completed_at was authenticated via ops/watch-ledger heartbeat. Reporting from 10 November in Palestine local time was checked; novelty evaluated against the America/Los_Angeles observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; the production Gaza daily collector/publisher remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T184451-0800-r11-20261110T024527Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Direct homepage and 9 November Heavy Rains in Gaza report checked first. Latest listed posting is the 9 November report about 6–8 November flooding; previously covered, no verified fresh event in window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE; REGIONAL_HTTP_502",
+        "result": "WHO global emergency portal accessible; listed latest news and regional material predated window. Regional emergency situation reports endpoint returned HTTP 502, a recurring restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details 10/November/2026 Gaza killed injured displacement crossing",
+      "site:wafa.ps/news/2026/11/10 غزة صباح اليوم قصف إصابات شهداء خيام",
+      "site:aljazeera.com/news/2026/11/10 Gaza airstrike civilian casualty displaced",
+      "site:reuters.com/world/middle-east/ Gaza November 10 2026 aid ceasefire civilians",
+      "site:apnews.com/article/ Gaza November 10 2026 hospital flooding civilian",
+      "site:news.un.org/en/ 10 November 2026 Gaza humanitarian update",
+      "site:reliefweb.int/report/occupied-palestinian-territory 10 Nov 2026 Gaza floods health displacement",
+      "site:unicef.org 10 November 2026 Gaza children aid water hospital",
+      "site:wfp.org Gaza November 10 2026 meals food aid",
+      "site:middleeasteye.net/news/gaza 10 November 2026 casualties evacuation",
+      "site:who.int OR site:emro.who.int Gaza November 10 2026 medical evacuation hospital",
+      "Gaza Strip 10 November 2026 early morning strikes injuries displaced crossing ceasefire humanitarian latest"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed 9 November 21:57 Palestine local time (West Bank); latest Gaza entry is the previously recorded Jabalia death report at 20:31 Palestine local. No later Gaza item visible."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage showed Gaza cumulative casualty updates, 9 November winter flooding and Rafah evacuation reporting, not a distinct event in this observation window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest prominent organizational item dated 2 November; no new Gaza ambulance/health service change found."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring access restriction. OCHA and UNICEF available for alternate humanitarian coverage."
+      }
+    ],
+    "excluded_or_unverified": [
+      {
+        "item": "9 November UNICEF press release on Gaza flooding, three children killed, 950,000 people in flood-exposed areas",
+        "source_url": "https://www.unicef.org/sop/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "reason": "9 November update on 6–8 November storm impacts, not new within this hourly observation; figures overlap previously assessed OCHA/Reuters reports."
+      },
+      {
+        "item": "9 November Reuters Deir al-Balah sand-embankment collapse and Guardian witness accounts",
+        "reason": "Re-reporting of established 7–8 November fatal flood incident; variations in counts not a newly distinct event."
+      },
+      {
+        "item": "9 November WAFA Jabalia death following earlier strike; Nuseirat tent collapse injuries; 23-patient Rafah medical evacuation",
+        "reason": "Already in earlier authenticated watch findings."
+      },
+      {
+        "item": "9 November Al Jazeera Arabic report of 10 injuries in Gaza City and two in Jabalia",
+        "source_url": "https://www.aljazeera.net/news/2026/11/9/%D8%B9%D8%A7%D8%AC%D9%84-%D8%A7%D9%84%D9%87%D9%84%D8%A7%D9%84-%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1-%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A-10-%D9%85%D8%B5%D8%A7%D8%A8%D9%8A%D9%86",
+        "reason": "Reported 9 November 12:40 Mecca time, before prior watch's close; also described in preceding heartbeat's excluded items."
+      },
+      {
+        "item": "9 November Financial Times report of Board of Peace humanitarian emergency warning",
+        "reason": "Published 9 November without verified in-window publication time or distinct new civilian impact/operational change; existing flooding and supply constraints. Excluded from high-value missed developments."
+      },
+      {
+        "item": "Older reports, West Bank events, opinion, unsourced claims",
+        "reason": "Out of scope or insufficiently new/verifiable."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "current_status": "HTTP_502",
+        "previous_status": "TIMEOUT",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global portal and OCHA OPT accessible; exact error changed but endpoint remains inaccessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "current_status": "HTTP_403",
+        "previous_status": "HTTP_403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA OPT, UNICEF, WFP and WAFA available."
+      },
+      {
+        "publisher": "UN News",
+        "current_status": "SEARCH_BLOCKED_ROBOTS",
+        "previous_status": "RESTRICTED",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA OPT accessible for UN official reporting."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked before twelve additional targeted searches; independent direct WAFA English/Arabic, OCHA homepage, PRCS and UNRWA checks. Searches found no traceable, non-duplicate development first reported between 18:45:27 and completion in Pacific time. Existing WHO regional, UNRWA, and UN News restrictions continue without confirmed material new deterioration. Useful alternative primary-source coverage remains; DEGRADED, not FAILED.",
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no deployment",
+      "no social posting",
+      "no automation or schedule modification"
+    ]
+  }
+}

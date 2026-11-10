@@ -1,0 +1,175 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T024451-0800-r11-20261110T105123Z",
+  "scheduled_for": "2026-11-10T02:44:51-08:00",
+  "started_at": "2026-11-10T02:49:03-08:00",
+  "completed_at": "2026-11-10T02:51:23.201-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T01:49:58-08:00",
+    "end": "2026-11-10T02:51:23.201-08:00",
+    "previous_run_completed_at": "2026-11-10T01:49:58-08:00",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Prior hourly heartbeat fetched from ops/watch-ledger; bounded discovery by new publication since prior completion, with previous-day aggregate comparison for deduplication."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-moh-casualty-tally-1216-wafa",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/10/%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9-%D8%AD%D8%B5%D9%8A%D9%84%D8%A9-%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D8%A5%D9%84%D9%89-74645-%D9%88%D8%A7%D9%84%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A5%D9%84%D9%89",
+      "title": "Gaza medical sources report updated casualty totals: 74,645 killed and 175,978 injured since 7 October 2023",
+      "original_title": "ارتفاع حصيلة الشهداء إلى 74,645 والإصابات إلى 175,978 منذ بدء العدوان",
+      "publisher": "Palestine News and Information Agency (WAFA), relaying Gaza medical sources",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": "2026-11-10T12:16:00+02:00",
+      "event_date": null,
+      "event_time": null,
+      "reporting_period": "Previous 48 hours as of November 10 report; exact start/end and individual casualty dates not given",
+      "location": "Gaza Strip, occupied Palestinian territory; individual locations unspecified",
+      "affected_population_system": "WAFA cites Gaza medical sources: cumulative deaths 74,645 (+2 from 9 Nov), cumulative injuries 175,978 (+16); hospitals reportedly received two deceased persons and 16 injured in the prior 48 hours; since-ceasefire totals 1,614 killed (+1), 5,849 injured (+16), and 850 bodies recovered (+1). Rescue/ambulance teams still unable to reach some victims under rubble or on roads.",
+      "exact_supporting_passage": "وبينت مصادر طبية، في تقرير صدر اليوم الثلاثاء، أن مستشفيات قطاع غزة استقبلت، خلال الساعات الـ48 الماضية، شهيدين، و16 إصابة.",
+      "source_type": "Established national news agency relaying a same-day aggregate report by unnamed Gaza medical sources; not independent primary dataset verification",
+      "classification": "follow-up",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "first_detected_in_watch": "2026-11-10T02:49:03-08:00 to 2026-11-10T02:51:23.201-08:00",
+        "observation_window": "2026-11-10T01:49:58-08:00 to 2026-11-10T02:51:23.201-08:00",
+        "publication_in_window": true,
+        "previous_day_comparison_source_url": "https://api.wafa.ps/news/2026/11/9/%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9-%D8%AD%D8%B5%D9%8A%D9%84%D8%A9-%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D8%A5%D9%84%D9%89-74643-%D9%88%D8%A7%D9%84%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A5%D9%84%D9%89",
+        "previous_day_report": "9 Nov 2026 12:24 Palestine time: 74,643 dead, 175,962 injured; since-ceasefire deaths 1,613, injuries 5,833, recovered 849.",
+        "latest_report": "10 Nov 2026 12:16 Palestine time (02:16 PST): 74,645 dead, 175,978 injured; since-ceasefire deaths 1,614, injuries 5,849, recovered 850.",
+        "deduplication": "New daily aggregate reporting, not a separate incident. Previously recorded Khan Younis fatal shooting (WAFA 11:11 Palestine time) and fisherman injury must not be counted as additional people on top of the aggregate.",
+        "limitations": "The 48-hour hospital figure and cumulative deltas are related but not guaranteed to be identical reporting cohorts; no individual identities, location, timestamps, civilian/combatant status or independent MoH source document verified. Cannot assert two separate new deaths since preceding hourly check."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not authoritative production publication/collector.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T014451-0800-r11-20261110T094958Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest dated update 9 November 2026 flood situation report for 8 November, previously known; no later in-window OCHA update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502",
+        "result": "WHO global page accessible, no newly dated in-window health update; regional emergency situation reports endpoint recurring 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details \"10/November/2026\" Gaza 12:00 killed wounded medical",
+      "site:wafa.ps/news/2026/11/10 غزة الساعة 12 11 إصابة شهيد قصف مستشفى",
+      "Gaza November 10 2026 latest civilian deaths strikes ceasefire 12:00 Jerusalem Reuters",
+      "site:apnews.com/article/ Gaza November 10 2026 aid casualties crossing hospital",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"10 Nov 2026\" Gaza evacuation infrastructure",
+      "site:news.un.org/en/ \"10 November 2026\" Gaza aid humanitarian medical",
+      "site:wafa.ps/news/2026/11/9 \"74,643\" \"175,962\" غزة",
+      "site:who.int OR site:emro.who.int \"10 November 2026\" Gaza hospital medical evacuation transport",
+      "site:unicef.org Gaza 10 November 2026 flood children water shelter response",
+      "site:wfp.org Gaza 10 November 2026 food access crossing supply",
+      "site:palestinercs.org \"10 Nov 2026\" Gaza ambulance patients",
+      "Gaza November 10 2026 Rafah Kerem Shalom crossing ceasefire hostage mediation negotiations civilian impact"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "New Gaza medical-source casualty-tally report published at 12:16 Palestine time; verified linked full article and 9 Nov comparator."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "Latest English Gaza casualty incident already recorded (Khan Younis 11:11); no later new incident at observed index cutoff."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed newsroom item dated Nov 3, no in-window operations update."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated in-window operational food-access change established."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring restriction; alternate OCHA/WHO coverage used."
+      }
+    ],
+    "excluded_or_unverified": [
+      {
+        "item": "WAFA Khan Younis gunshot fatality at 11:11 Palestine time",
+        "reason": "Previously logged by prior hourly watch; possible inclusion within current casualty aggregate, not a second independent finding."
+      },
+      {
+        "item": "Fisherman injured/two boats damaged off Khan Younis",
+        "reason": "Previously logged by Nov 9 watch; do not recount."
+      },
+      {
+        "item": "Storm, flooded tents, collapsed embankment, aid constraints",
+        "reason": "Events and restrictions already reported Nov 9 or earlier; no distinct new in-window changes verified."
+      },
+      {
+        "item": "West Bank detention and settler violence",
+        "reason": "Outside Gaza scope."
+      },
+      {
+        "item": "48-hour two dead and 16 injured",
+        "reason": "Reported as a fresh aggregate and included only within one tally update; cannot assert separate newly occurring incidents or dates."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "current_status": "HTTP_502",
+        "previous_status": "HTTP_502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global site accessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "current_status": "HTTP_403",
+        "previous_status": "HTTP_403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA and alternate official sites checked."
+      },
+      {
+        "publisher": "UN News",
+        "current_status": "ROBOTS_BLOCKED",
+        "previous_status": "SEARCH_BLOCKED_ROBOTS",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA and WHO accessible."
+      }
+    ],
+    "coverage_assessment": "OCHA and WHO checked first; exactly 12 additional targeted searches and direct publisher checks. One newly published Gaza medical-source aggregate casualty update verified and compared with Nov 9. Recurring access restrictions persist without material new deterioration, so DEGRADED not FAILED.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no merge",
+      "no deployment",
+      "no social posting",
+      "no schedule change",
+      "no automation disable"
+    ]
+  }
+}

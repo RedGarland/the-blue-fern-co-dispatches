@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T174556-0800-recall12-20261109T174738-0800",
+  "scheduled_for": "2026-11-09T17:45:22-08:00",
+  "started_at": "2026-11-09T17:45:56-08:00",
+  "completed_at": "2026-11-09T17:47:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T16:47:46.218-08:00",
+    "end": "2026-11-09T17:47:38-08:00",
+    "basis": "Prior independently verified hourly Care Line heartbeat completion through this run, using Pacific time. Screened announcement and effective dates separately and excluded prior events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for healthcare access losses/restorations across the United States and territories; production collection remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T164537-0800-recall12-20261110T004746Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T16:47:46.218-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services — Termination Notice — CCN 239199 — Home Health Agency — Michigan",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_previous_heartbeat": 0,
+      "status": "index_accessible",
+      "note": "Same Michigan Medicare termination index entry identified and recorded as pending_review in an earlier November 9 heartbeat; no new notice visible; do not duplicate."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "hospital emergency department permanently closed suspended service November 9 2026 United States",
+      "maternity labor delivery unit closing suspended reopened November 9 2026 hospital",
+      "behavioral health psychiatric inpatient facility closure interruption November 9 2026",
+      "dialysis center cancer clinic oncology services closure suspended November 9 2026",
+      "rural hospital emergency room shutdown service loss November 9 2026",
+      "primary care clinic closes abruptly patients November 9 2026",
+      "ambulance service station base shut down suspended November 9 2026 US",
+      "air medical helicopter service base closure November 9 2026 US",
+      "emergency department ambulance diversion closure November 9 2026 US county",
+      "hospital reopened emergency room maternity reopened November 9 2026 service restored",
+      "site:gov hospital emergency closure advisory November 9 2026 county health",
+      "Puerto Rico Guam US Virgin Islands CNMI American Samoa clinic hospital dialysis ambulance shutdown November 9 2026"
+    ],
+    "search_method": "Opened live CMS Public Notices index first; conducted exactly 12 additional targeted web searches (recency=1 day); followed result/source links only for validation, not additional searches.",
+    "reviewed_exclusions": [
+      {
+        "item": "Adventist Health White Memorial Medical Center, Boyle Heights, Los Angeles — approximately two-hour ambulance diversion after ambulance entrance obstruction",
+        "source_url": "https://abc7.com/post/ice-presence-outside-boyle-heights-hospital-prompts-protest/20023368/",
+        "secondary_source_url": "https://wearemitu.com/wearemitu/news/ice-boyle-heights-hospital-er-white-memorial/",
+        "reason": "The interruption occurred overnight November 6 and was already reported by ABC7 on November 8; November 9 recap did not establish a new access interruption within this hourly observation window. Do not treat a republished past event as new."
+      },
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois — EMS bypass",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+        "reason": "Ambulance bypass began November 7 at 7:00 a.m., previously reviewed and excluded by prior Care Line heartbeats; no new change detected."
+      },
+      {
+        "item": "Bradford Regional Medical Center, Pennsylvania — future emergency and inpatient closure",
+        "source_url": "https://radio.wpsu.org/2026-02-18/bradford-regional-medical-center-mckean-county-pa-hospital-closing-inpatient-emergency-services",
+        "reason": "February 18 article and proposed mid-2026 closure; not a new event in this observation window."
+      },
+      {
+        "item": "United Kingdom birth-center closures",
+        "source_url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights",
+        "reason": "Outside U.S. and territories, and events are historical."
+      }
+    ],
+    "source_access_errors": [
+      {
+        "source_url": "https://www.nbclosangeles.com/news/local/boyle-heights-ice-presence-white-memorial-hospital/3967429/",
+        "error": "403 Forbidden on optional NBC Los Angeles source follow-through",
+        "material": false,
+        "mitigation": "ABC7 Los Angeles November 8 primary reporting and November 9 mitú recap independently accessible; event predates observation window."
+      }
+    ],
+    "coverage_limitations": [
+      "The optional NBC Los Angeles link could not be fetched (HTTP 403); useful independent coverage was available. Nonmaterial source-access degradation recorded per watch instruction.",
+      "Search results included historical/out-of-scope stories and did not establish an additional newly effective or reported U.S. access change in the window.",
+      "A dozen searches cannot exhaustively cover all states, tribal/municipal services, facilities, and territories; territory-local discovery particularly limited.",
+      "Search index and publisher timing can lag event occurrence; a zero finding is not proof of no real-world changes.",
+      "Production queue/dedupe state not independently inspected; production collection remains authoritative."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

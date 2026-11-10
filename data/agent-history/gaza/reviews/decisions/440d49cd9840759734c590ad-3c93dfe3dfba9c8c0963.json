@@ -1,0 +1,72 @@
+{
+  "agent_run_id": "gaza-recovery-5eb343b258226e360676f1a9",
+  "archive_content_change_authorized": false,
+  "attribution_assessment": {
+    "attributed_to": "UN spokesperson Stephane Dujarric, reported by Anadolu; assessment period unspecified",
+    "attribution_preserved": true,
+    "estimate_not_independently_verified": true,
+    "methodology_preserved": true,
+    "mode": "organizational_estimate",
+    "safe_future_wording": "Anadolu reported on November 3 that UN spokesperson Stephane Dujarric said only half of humanitarian partners' waste-collection vehicle fleet in Gaza was operational because of Israeli restrictions on engine oil and spare parts. He warned that incomplete rubbish collection was increasing public-health risks and called for wider entry of essential supplies. This records the UN's assessment of ongoing conditions; the underlying assessment period was not specified.",
+    "uncertainty_preserved": true,
+    "unsupported_certainty_escalation": false
+  },
+  "audio_authorized": false,
+  "audit_candidate_id": "GZ-RECOVERY-2733cfb7af8daacb2fab4830",
+  "candidate_event_fingerprint": "sha256:fafd916e9be3ee9ce0b29d3f9fde61fd1963f84503fae6c8b5ac508fc974e308",
+  "cluster_authorized": false,
+  "date_assessment": {
+    "event_date": "2026-11-03",
+    "source_published_at": "2026-11-03"
+  },
+  "decided_at": "2026-11-09T02:21:41.833203+00:00",
+  "decision": "confirmed",
+  "decision_reason": "Private substantive review of the retained, independently fact-checked research summary and bounded source lineage. No original HTTP body or original-source quotation is asserted. Retained matching snapshot plus released Nov7/Nov8 projections has no matching source or event; this is not an exhaustive live operational-state claim. Half refers to humanitarian partners fleet, not all municipal waste vehicles. Nov3 statement date is not crisis onset; earlier Oct2 reporting already described grounded vehicles. Anadolu and transcript reproduce one statement, not independent field measurements. No quantified deterioration over an earlier comparable baseline.",
+  "domain": "gaza",
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_historical_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null,
+    "public_baseline_head": "57eb2e09c544b988481985d3ee6d883aa4abc9da",
+    "scope": "Retained source matching snapshot, released Nov7/Nov8 manifest projections, and separately reviewed 304 public HTML/source artifacts. Not an assertion of unseen PC state."
+  },
+  "edition_authorized": false,
+  "evidence_references": [
+    {
+      "role": "principal",
+      "supporting_passage": "Retained independently reviewed research summary, not an original-source quotation or HTTP body capture: Anadolu reported on November 3 that UN spokesperson Stephane Dujarric said only half of humanitarian partners' waste-collection vehicle fleet in Gaza was operational because of Israeli restrictions on engine oil and spare parts. He warned that incomplete rubbish collection was increasing public-health risks and called for wider entry of essential supplies. This records the UN's assessment of ongoing conditions; the underlying assessment period was not specified.",
+      "url": "https://www.aa.com.tr/en/middle-east/un-warns-gaza-waste-collection-crippled-by-israeli-restrictions/4110438"
+    },
+    {
+      "role": "corroborating",
+      "supporting_passage": "Retained research summary, not an original-source quotation or body capture: The November 3 briefing transcript supports the same Dujarric statement about half of humanitarian partners' waste-collection fleet operating amid supply restrictions. The transcript is automatically generated and explicitly not an official record. It is statement corroboration, not an independent field assessment; the underlying assessment period was unspecified.",
+      "url": "https://transcripts.un.org/en/briefing/sg/2026-11-03"
+    }
+  ],
+  "normalized_artifact_path": "data/agent-history/gaza/normalized/440d49cd9840759734c590adfee46f03aefec1ce5ce8cf48e89cb48779cc0726.json",
+  "normalized_artifact_sha256": "a6cc5585010a904aef6d9af1fdcb526d64510644715d8dd5ff7568e3a27d86d9",
+  "operator": "dot private recovery review; not human publication approval",
+  "previous_review_status": "pending_review",
+  "publication_approval": false,
+  "publication_authorized": false,
+  "publication_eligible": false,
+  "queue_action": "none",
+  "queue_authorized": false,
+  "raw_archive_artifact_path": "data/agent-history/gaza/raw/440d49cd9840759734c590adfee46f03aefec1ce5ce8cf48e89cb48779cc0726.json",
+  "raw_archive_artifact_sha256": "8dc5f4fd7ecef1a8c230f600c2c7c184285c09b4cb9849918f1c5f4421db66ac",
+  "raw_sha256": "440d49cd9840759734c590adfee46f03aefec1ce5ce8cf48e89cb48779cc0726",
+  "report_artifact_path": "data/agent-history/gaza/reports/440d49cd9840759734c590adfee46f03aefec1ce5ce8cf48e89cb48779cc0726.json",
+  "report_artifact_sha256": "5eb3177d81d8bb8b8c3c263bc968ec7a6e169d7e7c2eebf482c2027b1a79bbe5",
+  "resulting_review_state": "substantively_reviewed",
+  "review_artifact_path": "data/agent-history/gaza/reviews/GZ-RECOVERY-2733cfb7af8daacb2fab4830.candidate.json",
+  "review_artifact_sha256": "91b31f131171b73998a3ba86d59e3572743dede69d6bc21929d1b6c17de36c50",
+  "schema_version": "gaza_historical_editorial_decision_v2",
+  "source_record_authorized": false,
+  "taxonomy_review": {
+    "category": "humanitarian_operations",
+    "gaza_role": "humanitarian_operations_and_safety",
+    "source_role": "secondary_news_report"
+  }
+}

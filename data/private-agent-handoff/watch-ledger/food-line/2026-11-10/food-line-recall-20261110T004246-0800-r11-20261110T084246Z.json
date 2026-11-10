@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T004246-0800-r11-20261110T084246Z",
+  "scheduled_for": "2026-11-10T00:45:54-08:00",
+  "started_at": "2026-11-10T00:42:46-08:00",
+  "completed_at": "2026-11-10T00:44:45.076-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T23:48:29-08:00",
+    "end_at": "2026-11-10T00:44:45.076-08:00",
+    "observation_date": "2026-11-10",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since independently verified prior Food Line hourly heartbeat completed_at; source publication/event timing checked separately. Nominal hourly slot may be later than early-triggered run.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T234829-0800-r11-20261110T074829Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall watch only; primary nationwide production collector remains authoritative. Absence of a match is not nationwide clearance.",
+    "target_classes": [
+      "Loss/fire/disaster or closure of only/sole/last/full-service community grocery",
+      "Emergency distribution canceled or suspended due to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast, recency 1 day",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "November 10 2026 only grocery store burned fire closed town community",
+      "November 10 2026 last full service grocery store closure small town",
+      "November 10 2026 sole grocery market storm damage forced close",
+      "November 10 2026 food distribution canceled weather storm flooding food bank",
+      "November 10 2026 food pantry distribution suspended outage fire damage",
+      "November 10 2026 emergency food distribution postponed county storm",
+      "November 10 2026 food bank abruptly shut down food pantry closed",
+      "November 10 2026 food pantry suspends operations facility damage",
+      "November 10 2026 food assistance pantry service reduced unexpectedly",
+      "site:gov SNAP EBT outage notice November 10 2026 benefits unavailable",
+      "site:gov WIC system interruption November 10 2026 offices closed benefits",
+      "November 10 2026 SNAP benefits delayed EBT statewide outage agency announcement"
+    ],
+    "direct_source_checks": {
+      "count": 9,
+      "successful": 8,
+      "failed": 1,
+      "urls": [
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.fns.usda.gov/snap/updates",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://dhs.georgia.gov/",
+        "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "https://dfcs.georgia.gov/services/snap/connectebt-website-and-mobile-app/new-security-features-ebt-cards-effective-oct-22"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct source fetch returned inaccessible/internal error.",
+          "impact": "Nonmaterial single-endpoint failure; Oregon SNAP, Hawaiʻi DHS, California WIC and Georgia DHS official sources readable. No nationwide clearance inferred."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire, Wisconsin pop-up cancellation announced Nov 3 and updated Nov 6; already known, no newly announced disruption."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov 6 Kauaʻi recovery report lists a distribution going ahead, not cancellation."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Oregon SNAP housing/utility proof change due Nov 21; no immediate interruption observed in window."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing SNAP processing telephone delays, with no newly dated outage or immediate service cutoff."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC September 2 notice says offices are open and benefits continue."
+      },
+      {
+        "source_url": "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "reason": "Georgia EBT phone support restoration announcement lacks a newly dated interruption in this window; call center now online."
+      },
+      {
+        "source_url": "https://dfcs.georgia.gov/services/snap/connectebt-website-and-mobile-app/new-security-features-ebt-cards-effective-oct-22",
+        "reason": "Georgia EBT online/out-of-state default security restrictions began Oct 22, not new in this interval; customers can unlock cards."
+      },
+      {
+        "source_url": "https://www.thestreet.com/retail/clarks-market-store-closure-parachute-colorado",
+        "reason": "Parachute, Colorado grocery closure September 2026, outside window."
+      },
+      {
+        "source_url": "https://www.wibw.com/2026/01/10/two-jefferson-county-towns-face-grocery-desert-after-country-harvest-closures/",
+        "reason": "Kansas sole-grocery closures January 2026, outside window."
+      }
+    ],
+    "exclusion_policy": "Excluded older grocery losses, historical/previously recorded pantry disruptions, old 2025 SNAP shutdown coverage, openings, donation and promotional stories, resource guides, policy changes without newly verified immediate impact.",
+    "assessment": "No new qualifying source-backed disruption was found between 23:48:29 PST Nov 9 and the completed_at timestamp Nov 10, using 12 bounded targeted searches and 9 direct source pages. One repeatedly inaccessible USDA page creates a nonmaterial coverage limitation.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

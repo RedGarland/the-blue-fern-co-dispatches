@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T164948-0800-r11-20261110T004948Z",
+  "scheduled_for": "2026-11-09T16:45:54-08:00",
+  "started_at": "2026-11-09T16:49:48-08:00",
+  "completed_at": "2026-11-09T16:50:52-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T15:50:18-08:00",
+    "end_at": "2026-11-09T16:50:52-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since the completed_at of the preceding verified Food Line supplementary heartbeat; seek newly published or newly effective U.S. food-access interruptions.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T154922-0800-r11-20261109T234922Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not a nationwide primary collection. Production collection remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting a community's only, sole, last or full-service grocery store",
+      "Emergency food distribution canceled/suspended owing to storm, flood, fire, power outage or facility damage",
+      "Abrupt food pantry or food bank service closure or major access reduction",
+      "New official SNAP, WIC or other food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast; recency=1 day; Nov 9, 2026 targeted search terms; screened original event and publication dates",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 9 2026 town United States",
+      "\"sole grocery store\" lost burned closure November 9 2026",
+      "\"last grocery store\" shutting down November 9 2026 food desert",
+      "\"full-service grocery store\" destroyed fire November 9 2026 community",
+      "\"food distribution\" canceled storm November 9 2026 Monday",
+      "\"food distribution\" postponed flooding power outage November 9 2026",
+      "\"food pantry\" closed abruptly November 9 2026 service suspension",
+      "\"food bank\" shutdown damage November 9 2026 operations",
+      "SNAP benefits EBT statewide outage November 9 2026 official notice",
+      "WIC EBT benefits service interruption November 9 2026 state agency",
+      "food assistance emergency issuance suspension November 9 2026 state",
+      "food pantry distributions canceled weather November 9 2026 United States"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 6,
+      "failed": 2,
+      "urls": [
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.cdss.ca.gov/inforesources/calfresh",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://kauainownews.com/category/lowell-recovery/",
+        "https://www.fns.usda.gov/snap/news-updates",
+        "https://www.daretocare.org/events/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/news-updates",
+          "error": "Direct webpage fetch returned internal error / inaccessible."
+        },
+        {
+          "url": "https://www.daretocare.org/events/",
+          "error": "Direct webpage fetch returned internal error / inaccessible."
+        }
+      ],
+      "freshness_limits": [
+        "Wisconsin FoodShare page last revised October 16, 2026; prior FoodShare PIN reset fraud warning and October 1 notices are not new within this hour.",
+        "Virginia DSS shows closures effective November 3-9 (and expired outages), but nothing newly announced during this hour affecting SNAP/WIC access.",
+        "Hawaii SNAP processing-center phone delays have no publication timestamp showing an in-window new interruption.",
+        "Feeding America West Michigan schedule shows a December 3, 2026 CANCELLED mobile distribution but does not give cause, publication timestamp or in-window occurrence; cannot establish a new qualifying storm/disaster cancellation.",
+        "Kauaʻi Lowell recovery page's newest visible bulletin concerns November 6, 2026, rather than new Nov 9 food-service suspension.",
+        "Recency-restricted search returned historical 2025 and earlier 2026 results; excluded by actual source dates instead of search index recency."
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Spencer, New York sole grocer fire September 11, 2026; previously recorded incident."
+      },
+      {
+        "source_url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+        "reason": "Food-distribution weather cancellation October 7, 2026; outside hourly window."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "December 3, 2026 canceled mobile pantry shown, but no disruption cause or when cancellation was announced; does not meet bounded new/verified threshold."
+      },
+      {
+        "source_url": "https://www.dss.virginia.gov/alerts/",
+        "reason": "Local office closures listed through November 9, 2026, reflect earlier planned events and reopening, not a new food-benefits service interruption in-window."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "FoodShare card skimming warning and notices predate this hour; no new in-window access disruption."
+      },
+      {
+        "source_url": "https://www.theguardian.com/us-news/2025/oct/24/government-shutdown-food-stamps-snap",
+        "reason": "October 2025 SNAP shutdown reporting; year mismatch."
+      }
+    ],
+    "exclusion_policy": "Exclude donation drives, resource guides, recipes, opinion, routine program promotion, inflation-only stories, historical incidents, duplicates and non-U.S. events.",
+    "assessment": "No new qualifying U.S. food-access disruption independently verified for the hourly window. Twelve targeted searches usable; six of eight direct pages accessible. Two inaccessible direct endpoints limit corroboration but do not materially defeat the narrow supplementary recall; lack of findings does not prove nationwide absence.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

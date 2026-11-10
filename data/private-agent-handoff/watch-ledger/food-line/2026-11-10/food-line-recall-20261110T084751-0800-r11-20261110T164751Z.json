@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T084751-0800-r11-20261110T164751Z",
+  "scheduled_for": "2026-11-10T08:45:54-08:00",
+  "started_at": "2026-11-10T08:47:51-08:00",
+  "completed_at": "2026-11-10T08:49:28.947-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T07:43:57.406-08:00",
+    "end_at": "2026-11-10T08:49:28.947-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Start bound uses the previous independently verified ops/watch-ledger heartbeat completed_at; target newly surfaced developments, with older stories reviewed only for exclusions.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T074236-0800-r11-20261110T154236Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded high-value recall; production nationwide Food Line collection remains authoritative. No findings do not establish nationwide absence.",
+    "target_classes": [
+      "Loss/closure/fire/disaster of a town's sole, only, last or full-service grocery",
+      "Emergency food distribution cancellation due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank closure or major reduction of access",
+      "Official SNAP/WIC/food-assistance interruption causing immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 10 2026 town",
+      "\"last grocery store\" closed damaged fire November 2026 rural",
+      "\"sole grocery store\" shutdown flood 2026 November United States",
+      "\"food distribution\" canceled cancelled storm November 10 2026",
+      "\"food pantry\" \"closed until further notice\" November 10 2026",
+      "\"food bank\" \"suspended\" distributions storm flooding November 2026",
+      "SNAP EBT benefits outage suspended November 10 2026 state agency",
+      "WIC interrupted services power outage November 10 2026 state",
+      "November 10 2026 emergency food distribution canceled due to weather flooding storm US local pantry",
+      "November 10 2026 only grocery store fire closes sole supermarket local news",
+      "November 10 2026 food bank pantry abrupt closure reduced hours facility damage local",
+      "November 10 2026 SNAP WIC EBT outage benefits disrupted state notice official"
+    ],
+    "search_engines": "Eight fast and four slow targeted searches using 2-day recency preference, evaluated against real article publication and event dates (search results sometimes surface old stories).",
+    "direct_source_checks": {
+      "count": 17,
+      "successful": 15,
+      "failed": 2,
+      "urls": [
+        "https://www.fns.usda.gov/snap/updates",
+        "https://www.fns.usda.gov/disaster-assistance",
+        "https://fns-prod.azureedge.us/disaster/newmexico",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.hawaiifoodbank.org/",
+        "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "https://www.kwtx.com/2026/11/07/no-injuries-reported-after-structure-fire-lorena/",
+        "https://hoodline.com/2026/10/san-jose-gives-food-pantry-60-days-to-clear-sidewalk-or-shut-down/",
+        "https://fna-bwbufwdzbabpezgc.z01.azurefd.us/disaster/newmexico",
+        "https://www.myflfamilies.com/services/public-assistance",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://fns-prod.azureedge.us/disaster/florida",
+        "https://fns-prod.azureedge.us/disaster/georgia"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct open inaccessible in web tool.",
+          "impact": "Persistent federal SNAP updates coverage gap; multiple official state benefit pages accessed."
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster-assistance",
+          "error": "Direct open inaccessible in web tool.",
+          "impact": "Federal disaster index inaccessible; available regional USDA mirrors examined but may be stale."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.gpb.org/news/2026/11/06/flooding-devastates-mccaysville-for-the-second-time-in-year",
+        "reason": "Only McCaysville GA grocery reported mud-covered on Nov 6 after Nov 4 flood; already documented by prior watch, not new this interval."
+      },
+      {
+        "source_url": "https://www.kwtx.com/2026/11/07/no-injuries-reported-after-structure-fire-lorena/",
+        "reason": "Nov 7 TX supermarket compressor/fire incident, no evidence it was the only community grocery or that access was halted; older than window."
+      },
+      {
+        "source_url": "https://hoodline.com/2026/10/san-jose-gives-food-pantry-60-days-to-clear-sidewalk-or-shut-down/",
+        "reason": "Oct 3 projected 60-day regulatory order; report said pantry still operating, not a newly verified immediate closure."
+      },
+      {
+        "source_url": "https://saltlakejournal.com/article/provo-food-bank-closes-after-raising-100-000-in-emergency-fund/",
+        "reason": "Provo Utah food bank closure effective Nov 1 and previously documented, not new within hourly window."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Oregon prospective Nov 21 SNAP housing/utility proof rule, not immediate interruption."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC September 2 update states benefits and services operating."
+      },
+      {
+        "source_url": "https://www.northamptonsurvival.org/get-food/calendar/",
+        "reason": "Regular Nov 10 pantry distribution and Nov 11 holiday closure; neither emergency cancellation nor abrupt closure."
+      },
+      {
+        "source_url": "https://wck.org/news/central-florida-floods/",
+        "reason": "Nov 4 WCK disaster response reported meal deliveries, not a canceled distribution."
+      },
+      {
+        "source_url": "https://fna-bwbufwdzbabpezgc.z01.azurefd.us/disaster/newmexico",
+        "reason": "Search snippet mentions Nov 5 replacement-benefit reporting waiver, but direct page served older July content; neither verifies a new interruption in current hour."
+      },
+      {
+        "source_url": "https://www.nj.gov/health/news/2025/approved/20251017a.shtml",
+        "reason": "October 2025 potential SNAP/WIC interruption is historical, not a 2026 incident."
+      }
+    ],
+    "source_freshness_warning": "One USDA New Mexico disaster mirror appeared with a current search snippet but direct open showed a 3-month-old crawl; do not treat freshness-sensitive index responses as confirmation of a new action.",
+    "excluded_categories": "Donation drives, resource directories, recipes, opinion, routine promotions/distributions, inflation stories, historical 2025 SNAP shutdown material, already logged incidents, prospective non-immediate rules and international events.",
+    "assessment": "No new source-backed qualifying U.S. food-access disruption found within 2026-11-10 07:43:57–08:49 PST. Two federal USDA direct endpoints inaccessible while other state/provider/source coverage remained usable. Degradation is recurring and nonmaterial to the bounded recall, not nationwide clearance.",
+    "material_degradation": false,
+    "approval_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

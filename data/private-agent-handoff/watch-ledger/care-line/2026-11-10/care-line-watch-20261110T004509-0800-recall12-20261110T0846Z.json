@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T004509-0800-recall12-20261110T0846Z",
+  "scheduled_for": "2026-11-10T00:45:22-08:00",
+  "started_at": "2026-11-10T00:45:09-08:00",
+  "completed_at": "2026-11-10T00:46:22-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-09T23:51:17-08:00",
+    "end": "2026-11-10T00:46:22-08:00",
+    "basis": "Previous verified Care Line recall heartbeat completion through this run; evaluate only newly identified nonduplicate substantive healthcare-access changes. Production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall; not primary national collection.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T234522-0800-recall12-20261110T075117Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T23:51:17-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "index_accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services — MI — CCN 239199 — Termination Notice",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_prior_heartbeat": 0,
+      "note": "The 2026-11-09 Michigan HHA termination was already captured by an earlier hourly watch; no newly posted notice visible."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed temporarily suspended patients November 9 2026 US",
+      "maternity labor delivery unit stops service closes November 9 2026 hospital",
+      "hospital rural emergency services shutdown ambulance diversion November 9 2026",
+      "behavioral health psychiatric hospital inpatient facility closes November 9 2026",
+      "dialysis center oncology clinic primary care closes patients November 9 2026",
+      "ambulance service paramedic air medical base temporarily suspended closed November 9 2026",
+      "\"November 10, 2026\" \"hospital\" \"closed\" \"emergency department\" USA",
+      "\"November 9, 2026\" \"ambulance\" \"service\" \"suspended\" \"county\"",
+      "\"November 9, 2026\" \"dialysis\" \"clinic\" \"closed\" OR \"reopened\"",
+      "\"November 9, 2026\" \"hospital\" \"reopened\" \"emergency\" services",
+      "\"November 9, 2026\" \"Puerto Rico\" OR \"Guam\" OR \"Virgin Islands\" emergency hospital clinic closure",
+      "\"November 9, 2026\" \"clinic\" \"closed\" \"patients\" rural healthcare"
+    ],
+    "targeted_search_recency_days": 2,
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "emergency or rural essential service loss",
+      "ambulance and air-medical service/base loss",
+      "official CMS termination, rescission, CLIA sanctions",
+      "concrete reopening or restoration of essential healthcare access",
+      "U.S. states and territories"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, IL, full EMS bypass",
+        "source_url": "https://abc7chicago.com/post/vista-health-system-news-medical-center-east-waukegan-il-ems-bypass-amid-american-healthcare-systems-payroll-issues/20027472/",
+        "reason": "New November 9 late-evening news reporting pre-existing November 7 bypass, reviewed and excluded in earlier watches; not new event."
+      },
+      {
+        "item": "Adventist Health White Memorial, Boyle Heights, CA, ambulance diversion",
+        "source_url": "https://wearemitu.com/wearemitu/news/ice-boyle-heights-hospital-er-white-memorial/",
+        "reason": "November 9 report concerns temporary ambulance access restriction on November 6; already known, historical to observation window."
+      },
+      {
+        "item": "WVU Medicine Healthy Minds Kids facility, Wheeling, WV",
+        "source_url": "https://wtov9.com/news/local/orchard-park-wvu-medicine-wvu-medicine-healthy-minds-kids-pediatric-psychiatry-wheeling-hospital-child-mental-health-rockefeller-neuroscience-institute-inpatient-stabilization-ohio-valley",
+        "reason": "Rebranding and ownership transition with unchanged existing services, not access restoration."
+      },
+      {
+        "item": "Oregon rural health program award",
+        "source_url": "https://www.flashalert.net/id/OregonHealthAuthority",
+        "reason": "Funding announcement without newly effective service restoration or interruption."
+      },
+      {
+        "item": "Johns Hopkins All Children's Hospital temporary lockdown and reopening, FL",
+        "source_url": "https://clearwaterherald.com/article/johns-hopkins-hospital-clears-bomb-threat-after-morning-lockdown/",
+        "reason": "Claimed November 8 event, outside observation window; single low-confidence source and no new access effect."
+      },
+      {
+        "item": "Morrow County Boardman Immediate Care remodeling notice",
+        "source_url": "https://mchd.specialdistrict.org/",
+        "reason": "June 22, 2026 suspension, not new."
+      },
+      {
+        "item": "Other historical or future possible closures, foreign developments, unrelated health stories",
+        "source_url": null,
+        "reason": "No newly verified concrete U.S. healthcare-access change."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Original guessed legacy CMS URL returned an access error; canonical current CMS Public Notices page was independently located and verified, so CMS coverage remained intact.",
+      "Search engines may not index local events or official notices within this 55-minute window.",
+      "Twelve targeted searches give bounded recall; smaller or territory-local providers may not be represented.",
+      "Production collector and queue were not inspected; deduplication against earlier watch records, not live production state."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disabling"
+    ]
+  }
+}

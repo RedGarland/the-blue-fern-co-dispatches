@@ -1370,6 +1370,9 @@ def _source_family_counts_from_sources(sources: list[dict[str, Any]]) -> dict[st
 
 
 def _story_section_label(story: dict[str, Any], source: dict[str, Any] | None) -> str:
+    # Explicit contextual classification outranks broad source/category hints.
+    if story.get("context_only") is True:
+        return "Context and Background"
     scope = str(story.get("story_scope") or "").strip().lower()
     category = str(story.get("category") or "").strip().lower()
     source_category = str((source or {}).get("category_hint") or "").strip().lower()
@@ -2025,12 +2028,13 @@ def render_gaza_edition(
             "Civilian Harm and Access": [],
             "International Law and Diplomacy": [],
             "Other Gaza Developments": [],
+            "Context and Background": [],
         }
         for story in stories:
             first_source_id = str((story.get("source_record_ids") or [""])[0])
             source = source_by_id.get(first_source_id)
             grouped[_story_section_label(story, source)].append(story)
-        for label in ("Core Gaza Developments", "Civilian Harm and Access", "International Law and Diplomacy", "Other Gaza Developments"):
+        for label in ("Core Gaza Developments", "Civilian Harm and Access", "International Law and Diplomacy", "Other Gaza Developments", "Context and Background"):
             section_stories = grouped.get(label) or []
             if not section_stories:
                 continue

@@ -217,3 +217,27 @@ def test_all_context_overview_is_labelled_without_ground_development_claim():
     overview = _build_today_read([story], {})
     assert "0 reported developments and 1 context item" in overview[0]
     assert overview[1] == story["summary"]
+
+
+def test_context_section_overrides_core_scope_and_source_hints():
+    from scripts.run_gaza_dispatch import _story_section_label, render_gaza_edition
+    records = json.loads((FIXTURE / "source_records.json").read_text())
+    sources, _, errors = normalize_sources(records, "2026-11-10", "2026-11-10T20:00:00Z")
+    assert not errors
+    for source in sources:
+        if "Hamilton" in source["title"]:
+            source["attribution_mode"] = "gaza_adjacent_context"
+    stories, _, _ = curate_stories(sources, "2026-11-10", "2026-11-10T20:00:00Z")
+    context = next(story for story in stories if story["context_only"])
+    assert _story_section_label(context, {"category_hint": "humanitarian aid"}) == "Context and Background"
+    assert _story_section_label(context, {"category_hint": "diplomacy"}) == "Context and Background"
+    ground = next(story for story in stories if not story["context_only"])
+    assert _story_section_label(ground, None) == "Core Gaza Developments"
+    rendered = render_gaza_edition("2026-11-10", stories, sources, {}, root=FIXTURE)
+    core = rendered.split("<h2>Core Gaza Developments</h2>", 1)[1].split("<h2>", 1)[0]
+    contextual = rendered.split("<h2>Context and Background</h2>", 1)[1].split("<h2>", 1)[0]
+    assert "Hamilton" not in core
+    assert "Hamilton" in contextual
+    for source in sources:
+        if "Hamilton" in source["title"]:
+            assert source["url"] in contextual

@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T114617-0800-recall12-20261110T194738Z",
+  "scheduled_for": "2026-11-10T11:45:22-08:00",
+  "started_at": "2026-11-10T11:46:17-08:00",
+  "completed_at": "2026-11-10T11:48:21.097-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T10:45:24.810-08:00",
+    "end": "2026-11-10T11:48:21.097-08:00",
+    "basis": "From previous verified supplementary heartbeat completion to this run; targeted search of newly reported or newly effective, concrete U.S. and territory healthcare-access changes, including possible reporting delays."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall only; primary production national collection remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T104314-0800-recall12-20261110T184524Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T10:45:24.810-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care, Illinois — Limitation of CLIA cert — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "Already logged as a positive prior watch; no newer CMS public notice visible in the direct official table.",
+      "index_cache_note": "One initial incorrect CMS URL was inaccessible and the search extract briefly showed a stale table; direct opening of the canonical CMS table confirmed the November 10 entry."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department closed suspended November 10 2026 U.S. local news",
+      "maternity labor delivery unit closure suspension November 10 2026 hospital local news",
+      "behavioral health psychiatric inpatient unit closing suspending care November 10 2026",
+      "rural hospital emergency service shut down November 10 2026 county",
+      "November 10 2026 ambulance service closing suspended county EMS base United States",
+      "November 10 2026 air ambulance helicopter base closure suspended service",
+      "November 10 2026 dialysis center oncology clinic primary care closed appointments cancelled patients",
+      "November 10 2026 hospital health center emergency reopened restored services after closure",
+      "Puerto Rico Guam US Virgin Islands hospital emergency clinic dialysis service closed suspended reopened November 10 2026",
+      "American Samoa Northern Mariana Islands CNMI hospital emergency health center service interruption restored November 10 2026",
+      "site:gov November 10 2026 hospital emergency department closure healthcare service suspension state department health",
+      "November 10 2026 \"closed\" \"patients\" hospital clinic dialysis maternity outpatient emergency service"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Advanced Urgent Care, Orland Park, Illinois",
+        "reason": "Prior reported and pending-review November 10 CLIA limitation; not new.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Sharon Regional Medical Center, Sharon, Pennsylvania",
+        "reason": "Newer reporting repeats November 4 emergency-department closure and November 6 service suspension; previously identified.",
+        "url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866"
+      },
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois",
+        "reason": "Illinois EMS bypass began November 7 and was reported previously; not newly effective this watch.",
+        "url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago, Illinois",
+        "reason": "Maternity service closure November 1, reported November 2; historical rather than newly reported.",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Guam Regional Medical City and Guam Memorial Hospital Authority storm-related services",
+        "reason": "October 2026 storm suspensions and restorations are historical; no new November 10 change verified.",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      },
+      {
+        "item": "Martin General Hospital, North Carolina",
+        "reason": "Existing funding and reopening proposal, not confirmed operational reopening.",
+        "url": "https://www.northcarolinahealthnews.org/2026/07/13/martin-general-funds-budget/"
+      },
+      {
+        "item": "UW Medicine Veterans Day holiday hours",
+        "reason": "Routine scheduled holiday hours, not an abrupt loss or restoration of an essential service.",
+        "url": "https://www.uwmedicine.org/patient-resources/inclement-weather-and-holiday-hours"
+      }
+    ],
+    "source_access_errors": [],
+    "resolved_url_errors": [
+      "Initial speculative CMS URL /medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices was inaccessible. Canonical CMS page opened successfully; not a source outage."
+    ],
+    "material_coverage_loss": null,
+    "coverage_limitations": [
+      "Some search-index snippets were stale compared with directly opened CMS public notices.",
+      "Same-hour publication and search-index delays can hide local developments.",
+      "Twelve bounded targeted searches cannot exhaustively check all U.S. states, territories, or local sources.",
+      "No primary production queue or independent production deduplication verification was performed."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No alert: no newly qualifying, nonduplicate finding or material degradation.",
+    "actions_not_taken": [
+      "No approvals",
+      "No publication",
+      "No schedule changes",
+      "No task disabling"
+    ]
+  }
+}

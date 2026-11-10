@@ -44,7 +44,7 @@ jobs:
       - name: Install validator dependencies and package-pinned Chromium
         timeout-minutes: 7
         run: |
-          python -m pip install -r source/requirements.txt 'playwright==1.64.1'
+          python -m pip install -r source/requirements.txt 'playwright==1.64.1' pytest
           python -m playwright install --with-deps chromium
       - name: Run complete visual-validator regression modules
         working-directory: source

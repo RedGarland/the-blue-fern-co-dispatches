@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T234829-0800-r11-20261110T074829Z",
+  "scheduled_for": "2026-11-09T23:45:54-08:00",
+  "started_at": "2026-11-09T23:46:58-08:00",
+  "completed_at": "2026-11-09T23:48:29-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T22:52:17.119-08:00",
+    "end_at": "2026-11-09T23:48:29-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since verified previous hourly Food Line heartbeat completed_at; publication/event timing evaluated separately; Eastern U.S. sources may show November 10.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T225047-0800-r11-20261110T065047Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall watch. Primary nationwide production collector remains authoritative; no nationwide coverage claim.",
+    "target_classes": [
+      "Closure/fire/disaster of only, sole, last, or full-service community grocery",
+      "Storm/flood/fire/outage/damage cancellation of emergency food distribution",
+      "Abrupt pantry or food-bank service closure or major access reduction",
+      "New official SNAP/WIC or other food-assistance interruption causing immediate access impacts"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast targeted searches",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "November 9 2026 11 pm grocery store only grocery closed fire community United States",
+      "November 10 2026 town last grocery store closes fire damaged",
+      "November 9 2026 sole full service grocery store shutting down town",
+      "November 10 2026 cancelled food distribution storm flooding food bank",
+      "food pantry shut down suddenly November 9 2026 fire damage United States",
+      "food bank closes operation November 10 2026 emergency access disruption",
+      "food pantry canceled distribution November 9 2026 power outage storm",
+      "emergency food distribution postponed canceled Nov 10 2026 weather flood",
+      "site:gov November 9 2026 SNAP EBT system outage benefits delayed state notice",
+      "site:gov November 10 2026 WIC interrupted benefits service outage agency",
+      "SNAP EBT card outage November 9 2026 10 November food assistance benefits official",
+      "food stamp emergency benefits suspended November 10 2026 state agency food assistance"
+    ],
+    "direct_source_checks": {
+      "count": 9,
+      "successful": 8,
+      "failed": 1,
+      "urls": [
+        "https://www.northernnewsnow.com/2026/11/10/lincoln-park-grocery-store-holds-soft-opening-superior-street/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.fns.usda.gov/snap/updates",
+        "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct source fetch returned inaccessible/internal error.",
+          "impact": "Nonmaterial single-endpoint loss; alternative official California WIC, Oregon SNAP, and Hawaiʻi SNAP notices readable. No inference of nationwide clearance."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.northernnewsnow.com/2026/11/10/lincoln-park-grocery-store-holds-soft-opening-superior-street/",
+        "reason": "Northern News Now article published Nov 9, 2026 reports a newly opened Lincoln Park grocery store in Duluth, Minnesota, not a closure; is outside requested loss class."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Oregon SNAP documentation change begins November 21, 2026 for new applications/renewals; no evidenced immediate interruption in this 22:52–23:48 PST window."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Hawaiʻi SNAP applications/renewals page acknowledges ongoing long call center waits but gives no evidence of a new interruption during the hourly window."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC notice dated Sep 2, 2026 says offices/enrollment continue; no interruption."
+      },
+      {
+        "source_url": "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "reason": "Provo, Utah food bank shutdown effective Nov 1 reported Oct 31; previously known, out of window."
+      },
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Eau Claire distribution cancellation published Nov 3 and updated Nov 6; already observed and no new announcement."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Kauaʻi hurricane recovery update Nov 6 lists distribution proceeding, no new cancellation."
+      },
+      {
+        "source_url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "El Paso storm-damaged food bank closure published Sep 25; older resolved event."
+      }
+    ],
+    "exclusion_policy": "Excluded historical and duplicate closures, older storm cancellations, 2025 SNAP shutdown articles recirculated in 2026 search, food-access openings, donation appeals, generic aid guides, routine program promotion, and policy changes without immediate benefit interruption.",
+    "assessment": "No new qualifying immediate U.S. food-access disruption identified by 12 targeted searches plus nine direct checks since 2026-11-09 22:52:17 PST. Bounded supplementary recall, not comprehensive nationwide clearance.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

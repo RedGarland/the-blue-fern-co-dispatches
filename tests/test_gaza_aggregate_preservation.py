@@ -353,3 +353,46 @@ def test_limited_source_manifest_gets_explicit_aggregate_label(tmp_path: Path):
     site_root, _pages_repo, dispatch = fixture_roots(tmp_path)
     presentation = briefing_presentation_for_edition(site_root, dispatch, DATE)
     assert presentation.type_label == "Limited-source update"
+
+
+def test_same_day_catchup_is_not_daily_identity_and_is_preserved(tmp_path: Path):
+    site, pages, dispatch = fixture_roots(tmp_path)
+    row = f'<li class="historical-catchup"><span class="edition-date">{DATE}</span><a href="catchups/reviewed-batch/">Approved retrospective</a></li>'
+    item = f'<item><title>Approved retrospective</title><link>https://dispatches.thebluefernco.com/gaza/catchups/reviewed-batch/</link><guid>https://dispatches.thebluefernco.com/gaza/catchups/reviewed-batch/</guid><pubDate>Fri, 16 Oct 2026 12:00:00 +0000</pubDate></item>'
+    for filename in ('archive.html', 'index.html'):
+        path = pages / 'gaza' / filename
+        write(path, path.read_text().replace('</ul>', row + '</ul>', 1))
+    path = pages / 'gaza/rss.xml'
+    write(path, path.read_text().replace('</channel>', item + '</channel>'))
+    baseline = {f: (pages / 'gaza' / f).read_bytes() for f in ('archive.html','index.html','rss.xml')}
+    assert _gaza_aggregate_render_from_pages_history(site, dispatch, DATE, pages, dry_run=False, wrote=[])
+    for filename in baseline:
+        content = (site / 'gaza' / filename).read_text()
+        assert (item if filename == 'rss.xml' else row) in content
+        assert 'editions/' + DATE + '/' in content
+        assert (pages / 'gaza' / filename).read_bytes() == baseline[filename]
+    import re
+    archive = (site / 'gaza/archive.html').read_text()
+    index = (site / 'gaza/index.html').read_text()
+    assert 'editions/' + DATE + '/' in re.search(r'<section class="archive-latest".*?</section>', archive, re.S).group()
+    assert 'editions/' + DATE + '/' in re.search(r'<article class="gaza-latest-card".*?</article>', index, re.S).group()
+    # Once the daily identity exists, mismatch still refuses even alongside catch-up.
+    for filename in baseline:
+        write(pages / 'gaza' / filename, (site / 'gaza' / filename).read_text())
+    manifest = site / 'gaza/editions' / DATE / 'edition_manifest.json'
+    data = json.loads(manifest.read_text()); data['public_archive_title'] = 'Changed daily title'
+    write(manifest, json.dumps(data))
+    with pytest.raises(ValueError, match='separate correction workflow'):
+        _gaza_aggregate_render_from_pages_history(site, dispatch, DATE, pages, dry_run=True, wrote=[])
+
+
+@pytest.mark.parametrize('record', [
+    '<li><span>2026-10-16</span><a href="corrections/record/">Correction</a></li>',
+    '<li class="archive-row--no-update">2026-10-16 No update</li>',
+    '<li><a href="catchups/batch/">2026-10-16</a><a href="editions/2026-10-16/">Daily</a></li>',
+    '<li><a href="https://unverified.example/gaza/catchups/batch/">2026-10-16</a></li>',
+    '<item><link>https://dispatches.thebluefernco.com/gaza/catchups/batch/</link><guid>different-identity</guid><pubDate>Fri, 16 Oct 2026 12:00:00 +0000</pubDate></item>',
+])
+def test_daily_identity_does_not_exempt_ambiguous_or_noncatchup_record(record):
+    from bluefern_dispatches.generator import _gaza_daily_identity_dates_in_text
+    assert DATE in _gaza_daily_identity_dates_in_text(record)

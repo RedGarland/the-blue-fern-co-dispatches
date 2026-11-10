@@ -166,7 +166,7 @@ def test_gaza_flotilla_same_event_titles_merge_into_one_group(story_root):
     assert all(item.get("public_rendered") is False for item in merged_decisions)
 
 
-def test_gaza_ceasefire_casualty_repeated_reports_merge_into_one_group(story_root):
+def test_gaza_ceasefire_background_does_not_establish_same_event(story_root):
     root = story_root
     first = story(
         "a",
@@ -192,12 +192,9 @@ def test_gaza_ceasefire_casualty_repeated_reports_merge_into_one_group(story_roo
 
     result = dedupe_public_stories(root, "gaza", "2026-06-18", [first, second, third])
 
-    assert len(result.stories) == 1
-    merged_story = result.stories[0]
-    assert len(merged_story["source_urls"]) == 3
-    assert result.report["duplicate_groups"]
-    assert all(group["duplicate_reason"] == "gaza_ceasefire_casualty" for group in result.report["duplicate_groups"])
-    assert len([item for item in result.decisions if item.get("include_decision") == "merge_into_existing"]) == 2
+    assert len(result.stories) == 3
+    assert not result.report["duplicate_groups"]
+    assert all(len(item["source_urls"]) == 1 for item in result.stories)
 
 
 def test_gaza_official_follow_up_counts_as_material_update_not_duplicate(story_root):
@@ -653,3 +650,25 @@ def test_cascadia_render_writes_dedupe_report_and_keeps_weekly_archive_only(casc
     assert "2026-05-10" in rss
     assert "2026-05-09" not in archive
     assert "2026-05-09" not in rss
+
+
+def test_gaza_visit_does_not_absorb_attack_with_ceasefire_background(story_root):
+    visit = story("visit", "Lewis Hamilton visits Egypt's Rafah crossing and Gaza aid facilities",
+                  "https://example.com/visit", summary="He has spoken about children killed in Gaza and called for a ceasefire.")
+    attack = story("attack", "Father, child among six Palestinians killed in Israeli attacks on Gaza",
+                   "https://example.com/attack", summary="More than 1,600 killed since last year's ceasefire, the ministry says.")
+    video = story("video", "Lewis Hamilton visits Rafah crossing to witness Gaza aid efforts",
+                  "https://example.com/video")
+    result = dedupe_public_stories(story_root, "gaza", "2026-11-10", [visit, attack, video])
+    assert len(result.stories) == 2
+    attack_result = next(item for item in result.stories if item["story_id"] == "attack")
+    assert attack_result["source_urls"] == ["https://example.com/attack"]
+    visit_result = next(item for item in result.stories if item["story_id"] != "attack")
+    assert set(visit_result["source_urls"]) == {"https://example.com/visit", "https://example.com/video"}
+
+
+def test_gaza_named_visit_requires_same_source_day(story_root):
+    first = story("first", "Lewis Hamilton visits Egypt's Rafah crossing and Gaza aid facilities", "https://example.com/first")
+    second = story("second", "Lewis Hamilton visits Rafah crossing to witness Gaza aid efforts", "https://example.com/second", published_at="2026-05-09T00:00:00Z")
+    result = dedupe_public_stories(story_root, "gaza", "2026-11-10", [first, second])
+    assert len(result.stories) == 2

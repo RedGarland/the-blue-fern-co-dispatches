@@ -413,6 +413,12 @@ def normalize_sources(
                 "wrapper_url": wrapper_url or None,
                 "publisher": str(record["publisher"]).strip(),
                 "published_at": str(record["published_at"]).strip(),
+                # Publication and retrieval clocks do not establish event time.
+                "event_date": str(record.get("event_date") or "").strip() or None,
+                "event_date_precision": str(record.get("event_date_precision") or "unknown").strip(),
+                "event_date_basis": str(record.get("event_date_basis") or "").strip() or None,
+                "location": str(record.get("location") or "").strip() or None,
+                "modified_at": str(record.get("modified_at") or "").strip() or None,
                 "retrieved_at": retrieved_at,
                 "retrieved_local_date": retrieved_local_date,
                 "post_edition_date_source": post_edition_date_source,
@@ -462,6 +468,9 @@ def normalize_sources(
                         "article_body_length": int(record.get("article_body_length") or 0),
                         "content_text": str(record.get("content_text") or "") or None,
                         "ocha_healthcare_fragments": list(record.get("ocha_healthcare_fragments") or []),
+                        "report_period_date": record.get("report_period_date"),
+                        "published_at_precision": record.get("published_at_precision"),
+                        "publication_date_basis": record.get("publication_date_basis"),
                     }
                     if str(record.get("provider_id") or "") == "ocha-opt-updates"
                     else {}
@@ -607,8 +616,8 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
             category=base_scope if base_scope == "palestinian_development" else str(source.get("category_hint") or ""),
             development_type="primary_report",
             affected_system=str(source.get("category_hint") or ""),
-            location=str(source.get("region_scope") or ""),
-            event_date=str(source.get("published_at") or ""),
+            location=str(source.get("location") or source.get("region_scope") or ""),
+            event_date=str(source.get("event_date") or ""),
             attribution=str(source.get("publisher") or ""),
             uncertainty="reported source",
             casualty_counts={},
@@ -641,7 +650,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                     development_type="casualty_event",
                     affected_system="civilians",
                     location="Al-Qarara, north of Khan Younis",
-                    event_date=str(source.get("published_at") or ""),
+                    event_date=str(source.get("event_date") or ""),
                     attribution=str(source.get("publisher") or ""),
                     uncertainty=attribution,
                     casualty_counts={"new_deaths": 3},
@@ -659,7 +668,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                     development_type="casualty_event",
                     affected_system="displaced civilians",
                     location="Al-Mashahara, east of Gaza City",
-                    event_date=str(source.get("published_at") or ""),
+                    event_date=str(source.get("event_date") or ""),
                     attribution=str(source.get("publisher") or ""),
                     uncertainty="WAFA attributed the account to local sources; injuries were reported only as several",
                     casualty_counts={"new_deaths": 1, "injuries_reported_as": "several"},
@@ -704,7 +713,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                     development_type="casualty_event",
                     affected_system="civilians",
                     location="Tal al-Hawa, Gaza City",
-                    event_date=str(source.get("published_at") or ""),
+                    event_date=str(source.get("event_date") or ""),
                     attribution=str(source.get("publisher") or ""),
                     uncertainty=uncertainty,
                     casualty_counts=counts,
@@ -722,7 +731,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                     development_type="infrastructure_casualty_event",
                     affected_system="hospital medicine supplies",
                     location="Al-Aqsa Martyrs Hospital, Deir al-Balah",
-                    event_date=str(source.get("published_at") or ""),
+                    event_date=str(source.get("event_date") or ""),
                     attribution=str(source.get("publisher") or ""),
                     uncertainty="WAFA eyewitness account; damage extent not immediately known",
                     casualty_counts={"new_injuries": 3},
@@ -743,7 +752,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 development_type="infrastructure_service_loss",
                 affected_system="water infrastructure",
                 location="Deir al-Balah",
-                event_date=str(source.get("published_at") or ""),
+                event_date=str(source.get("event_date") or ""),
                 attribution=str(source.get("publisher") or ""),
                 uncertainty="reported by UNICEF",
                 casualty_counts={},
@@ -769,7 +778,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 development_type="recovery_milestone",
                 affected_system="civil defense recovery",
                 location=str(source.get("region_scope") or "Gaza"),
-                event_date=str(source.get("published_at") or ""),
+                event_date=str(source.get("event_date") or ""),
                 attribution=str(source.get("publisher") or ""),
                 uncertainty="reported by Gaza Civil Defense",
                 casualty_counts={
@@ -793,7 +802,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 development_type="casualty_event",
                 affected_system="displaced civilians",
                 location="Al-Mashahara, east of Gaza City",
-                event_date=str(source.get("published_at") or ""),
+                event_date=str(source.get("event_date") or ""),
                 attribution=str(source.get("publisher") or ""),
                 uncertainty="reported by WAFA / local sources",
                 casualty_counts={"new_deaths": 1, "new_injuries": 1},
@@ -869,6 +878,10 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                             ),
                             "publisher": source["publisher"],
                             "summary_or_snippet": source.get("summary_or_snippet"),
+                            "published_at": source.get("published_at"),
+                            "modified_at": source.get("modified_at"),
+                            "event_date_precision": source.get("event_date_precision") or "unknown",
+                            "event_date_basis": source.get("event_date_basis"),
                             **({"editorial_label": source["editorial_label"]} if "editorial_label" in source else {}),
                             "event_date": fragment.get("event_date"),
                             "location": fragment.get("location"),
@@ -978,6 +991,8 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
             if chosen_pub:
                 publisher_counts[chosen_pub] = publisher_counts.get(chosen_pub, 0) + 1
         stories = ordered
+    # Context remains visible, but cannot outrank reported ground developments.
+    stories.sort(key=lambda row: bool(row.get("context_only")))
     for story in stories:
         top_story_candidates.append(
             {
@@ -1355,6 +1370,9 @@ def _source_family_counts_from_sources(sources: list[dict[str, Any]]) -> dict[st
 
 
 def _story_section_label(story: dict[str, Any], source: dict[str, Any] | None) -> str:
+    # Explicit contextual classification outranks broad source/category hints.
+    if story.get("context_only") is True:
+        return "Context and Background"
     scope = str(story.get("story_scope") or "").strip().lower()
     category = str(story.get("category") or "").strip().lower()
     source_category = str((source or {}).get("category_hint") or "").strip().lower()
@@ -1568,6 +1586,20 @@ def _story_summary_fallback(title: str) -> str:
 def _build_today_read(stories: list[dict[str, Any]], source_by_id: dict[str, dict[str, Any]]) -> list[str]:
     if not stories:
         return []
+    context_count = sum(bool(story.get("context_only")) for story in stories)
+    developments = [story for story in stories if not story.get("context_only")]
+    if context_count:
+        lead = (f"Today’s saved source records cover {len(developments)} reported "
+                f"{_pluralize(len(developments), 'development')} and {context_count} "
+                f"{_pluralize(context_count, 'context item')}.")
+        # Prefer ground reports in mixed editions; an all-context diagnostic is
+        # labelled as zero developments (the separate thin-edition gate remains).
+        overview_stories = developments or stories
+        lines = []
+        for story in overview_stories[:3]:
+            cleaned = _cleanup_summary_paragraphs(str(story.get("summary") or ""))
+            lines.append(str(story.get("event_account_overview") or (cleaned[0] if cleaned else _story_summary_fallback(str(story.get("title") or "")))))
+        return [lead, *lines]
     if len(stories) < 2:
         story = stories[0]
         lead = "Today’s saved source records point to 1 reported development."
@@ -1577,7 +1609,9 @@ def _build_today_read(stories: list[dict[str, Any]], source_by_id: dict[str, dic
         else:
             line = _story_summary_fallback(str(story.get("title") or ""))
         publishers = _story_source_publishers(story, source_by_id)
-        if len(publishers) > 1:
+        if story.get("event_account_overview"):
+            line = str(story["event_account_overview"])
+        elif len(publishers) > 1:
             line = f"{line} Multiple outlets reported it: {', '.join(publishers[:3])}."
         return [lead, line]
     section_labels = []
@@ -1600,7 +1634,9 @@ def _build_today_read(stories: list[dict[str, Any]], source_by_id: dict[str, dic
         else:
             line = _story_summary_fallback(str(story.get("title") or ""))
         publishers = _story_source_publishers(story, source_by_id)
-        if len(publishers) > 1:
+        if story.get("event_account_overview"):
+            line = str(story["event_account_overview"])
+        elif len(publishers) > 1:
             line = f"{line} Multiple outlets reported it: {', '.join(publishers[:3])}."
         summary_lines.append(line)
     if not summary_lines:
@@ -1992,12 +2028,13 @@ def render_gaza_edition(
             "Civilian Harm and Access": [],
             "International Law and Diplomacy": [],
             "Other Gaza Developments": [],
+            "Context and Background": [],
         }
         for story in stories:
             first_source_id = str((story.get("source_record_ids") or [""])[0])
             source = source_by_id.get(first_source_id)
             grouped[_story_section_label(story, source)].append(story)
-        for label in ("Core Gaza Developments", "Civilian Harm and Access", "International Law and Diplomacy", "Other Gaza Developments"):
+        for label in ("Core Gaza Developments", "Civilian Harm and Access", "International Law and Diplomacy", "Other Gaza Developments", "Context and Background"):
             section_stories = grouped.get(label) or []
             if not section_stories:
                 continue

@@ -1325,6 +1325,66 @@ def _ocha_report_publication_date(title: str, url: str) -> str:
     return ""
 
 
+def _ocha_canonical_publication_date(article_html: str) -> tuple[str, str]:
+    """Read scoped publication fields, including those inside layout divs."""
+    class PublicationFields(HTMLParser):
+        VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.stack = []
+            self.active = []
+            self.fields = []
+
+        def handle_starttag(self, tag, attrs):
+            tag = tag.lower()
+            attrs = {key.lower(): value or "" for key, value in attrs}
+            if tag not in self.VOID:
+                self.stack.append(tag)
+            if tag == "div" and set(attrs.get("class", "").split()) & {"date", "l-field-publish-date"}:
+                self.active.append({"depth": len(self.stack), "text": [], "times": []})
+            if tag == "time" and "datetime" in attrs:
+                for field in self.active:
+                    field["times"].append(attrs["datetime"].strip())
+
+        def handle_endtag(self, tag):
+            tag = tag.lower()
+            if tag in self.VOID or tag not in self.stack:
+                return
+            depth = len(self.stack) - self.stack[::-1].index(tag)
+            # Accept only closed publication fields; unclosed/malformed fields
+            # must not leak dates from a following element outside their scope.
+            self.fields.extend(field for field in self.active if field["depth"] == depth and tag == "div")
+            self.active = [field for field in self.active if field["depth"] < depth]
+            self.stack = self.stack[:depth - 1]
+
+        def handle_data(self, data):
+            for field in self.active:
+                field["text"].append(data)
+
+    parser = PublicationFields()
+    parser.feed(str(article_html or ""))
+    parser.close()
+    values: set[tuple[str, str]] = set()
+    for field in parser.fields:
+        if field["times"]:
+            for raw in field["times"]:
+                if re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw):
+                    try: date.fromisoformat(raw)
+                    except ValueError: continue
+                    values.add((raw, "date"))
+                elif re.search(r"(?:Z|[+-]\d{2}:\d{2})$", raw):
+                    parsed = _parse_metadata_dt(raw)
+                    if parsed is not None:
+                        values.add((_format_utc(parsed), "timestamp"))
+        else:
+            text = clean_feed_text(" ".join(field["text"])).strip()
+            try: parsed = datetime.strptime(text, "%d %B %Y").date()
+            except ValueError: continue
+            values.add((parsed.isoformat(), "date"))
+    return next(iter(values)) if len(values) == 1 and not parser.active else ("", "unknown")
+
+
 def _discover_ocha_report_items(listing_html: str, listing_url: str) -> list[dict[str, str]]:
     class _OchaListingParser(HTMLParser):
         _VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
@@ -1391,6 +1451,60 @@ def _discover_ocha_report_items(listing_html: str, listing_url: str) -> list[dic
         if len(results) >= OCHA_REPORT_MAX_CANDIDATES:
             break
     return results
+
+
+def _extract_ocha_document_paragraphs(article_html: str) -> list[str]:
+    """Extract verbatim substantive paragraphs only from known OCHA report roots."""
+    class Parser(HTMLParser):
+        void = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+        skipped = {"script", "style", "noscript", "template", "svg", "nav", "footer", "aside", "figure", "figcaption"}
+
+        def __init__(self) -> None:
+            super().__init__(convert_charrefs=True)
+            self.stack: list[tuple[str, bool, bool]] = []
+            self.current: list[str] | None = None
+            self.paragraphs: list[str] = []
+
+        def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+            attr = dict(attrs)
+            in_root = (self.stack[-1][1] if self.stack else False) or (
+                attr.get("id") == "block-ocha-sub-impact-theme-system-main"
+            )
+            skip = (self.stack[-1][2] if self.stack else False) or tag in self.skipped
+            if tag not in self.void:
+                self.stack.append((tag, in_root, skip))
+            if tag == "p" and in_root and not skip:
+                self.current = []
+            elif tag == "br" and self.current is not None:
+                self.current.append(" ")
+
+        def handle_endtag(self, tag: str) -> None:
+            if tag == "p" and self.current is not None:
+                paragraph = clean_feed_text("".join(self.current))
+                if len(paragraph) >= 120:
+                    self.paragraphs.append(paragraph)
+                self.current = None
+            if tag not in self.void:
+                for index in range(len(self.stack) - 1, -1, -1):
+                    if self.stack[index][0] == tag:
+                        del self.stack[index:]
+                        break
+
+        def handle_data(self, data: str) -> None:
+            if self.current is not None and self.stack and self.stack[-1][1] and not self.stack[-1][2]:
+                self.current.append(data)
+
+    parser = Parser()
+    parser.feed(str(article_html or ""))
+    parser.close()
+    selected: list[str] = []
+    size = 0
+    for paragraph in parser.paragraphs:
+        if size + len(paragraph) + 1 > OCHA_REPORT_BODY_MAX_CHARS:
+            break  # Never cut a source sentence into a new claim.
+        selected.append(paragraph)
+        size += len(paragraph) + 1
+    return selected
 
 
 def _extract_ocha_report_body(article_html: str) -> str:
@@ -2249,6 +2363,16 @@ def build_gaza_collection_timing_metadata(
             and batch_time_local > same_day_baseline_local_dt
         ):
             classification = "later_same_day_update"
+        elif (
+            batch_time_local is not None
+            and batch_time_local.date() == scheduled_run_local_dt.date()
+            and batch_time_local.replace(second=0, microsecond=0) > scheduled_run_local_dt
+        ):
+            # A delayed first collection is not proof that the content was
+            # updated, but must not be described as the scheduled batch.
+            classification = "after_scheduled_initial_batch"
+        elif batch_time_local is None:
+            classification = "unknown_retrieval_time"
         else:
             classification = "scheduled_or_pre_scheduled_batch"
         retrieval_batches.append(
@@ -2419,6 +2543,10 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     if not title or not url or not url.startswith(("http://", "https://")):
         return None
     published_at = (item.get("published_at") or "").strip()
+    ocha_report_period_date = published_at.split("T", 1)[0] if _is_ocha_source(source) else ""
+    ocha_publication_precision = "unknown"
+    if _is_ocha_source(source):
+        published_at = ""  # Index report period is not publication evidence.
     canonical_url, canonical_status = extract_canonical_from_google_wrapper(url)
     wrapper_url = url if _looks_like_google_news_wrapper(url) else ""
     if not canonical_url:
@@ -2535,6 +2663,7 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
                 resolved_canonical_url = final_article_url
 
         if article_payload and article_payload.get("ok"):
+            published_at, ocha_publication_precision = _ocha_canonical_publication_date(str(article_payload.get("content_text") or ""))
             ocha_report_body = _extract_ocha_report_body(str(article_payload.get("content_text") or ""))
             content_text = _extract_ocha_healthcare_excerpt(ocha_report_body)
             if content_text:
@@ -2542,12 +2671,17 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
                 if content_text.lower() not in summary.lower():
                     summary = f"{summary} {content_text}".strip() if summary else content_text
                 article_fetch_status = "healthcare_prose_extracted"
-            elif ocha_report_body:
-                article_fetch_status = "insufficient_healthcare_content"
-                article_fetch_failure_reason = "OCHA report body did not contain all required healthcare facts"
             else:
-                article_fetch_status = "insufficient_report_content"
-                article_fetch_failure_reason = "OCHA report body container was not extractable"
+                paragraphs = _extract_ocha_document_paragraphs(str(article_payload.get("content_text") or ""))
+                if paragraphs:
+                    ocha_report_body = "\n\n".join(paragraphs)
+                    content_text = ocha_report_body
+                    # Exact source paragraph, not a generated summary or legacy healthcare assertion.
+                    summary = paragraphs[0]
+                    article_fetch_status = "report_paragraphs_extracted"
+                else:
+                    article_fetch_status = "insufficient_report_content"
+                    article_fetch_failure_reason = "No substantive paragraph in a trusted OCHA report container"
         elif article_payload is not None:
             article_fetch_status = "failed_report_fetch"
             article_fetch_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "report fetch failed")
@@ -2734,6 +2868,13 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
                 "content_available": bool(content_text),
                 "article_body_length": len(ocha_report_body),
                 "ocha_healthcare_fragments": ocha_healthcare_fragments,
+                "report_period_date": ocha_report_period_date or None,
+                "published_at_precision": ocha_publication_precision,
+                "publication_date_basis": "canonical_report_publication_field" if published_at else "unverified",
+                "editorial_eligible": bool(content_text),
+                "source_excerpt_is_normalized_source_paragraph": article_fetch_status == "report_paragraphs_extracted",
+                "article_response_text_sha256": hashlib.sha256(str((article_payload or {}).get("content_text") or "").encode("utf-8")).hexdigest() if article_payload and article_payload.get("ok") else None,
+                "source_excerpt_method": "known_ocha_report_first_complete_paragraph" if article_fetch_status == "report_paragraphs_extracted" else None,
             }
             if _is_ocha_source(source)
             else {}
@@ -3284,7 +3425,20 @@ def collect_gaza_sources(
                 else:
                     _provider_reject(diag, "rejected_off_topic", item, relevance_band="off_topic")
                 continue
-            basis = _date_basis(item.get("published_at", ""), lookback_start, lookback_end)
+            # Official report titles identify reporting periods, which may be
+            # outside the window even when the canonical publication is inside.
+            record = normalize_rss_item(item, source, edition_date, retrieved_at) if _is_ocha_source(source) else None
+            if _is_ocha_source(source) and (record is None or not record.get("published_at")):
+                reason = "ocha_substantive_report_evidence_unavailable" if not record or not record.get("editorial_eligible") else "ocha_canonical_publication_date_unavailable"
+                diag["status"] = "failed_evidence_extraction"
+                diag.setdefault("evidence_failures", []).append({"url": url, "reason": reason})
+                if not any(failure.get("source_id") == source.source_id for failure in failed_source_ids):
+                    failed_source_ids.append({"source_id": source.source_id, "reason": reason})
+                    stage_counts["providers_failed"] += 1
+                errors.append(f"{source.source_id}: {reason}")
+                _provider_reject(diag, reason, item, date_basis="missing_published_at")
+                continue
+            basis = _date_basis((record or item).get("published_at", ""), lookback_start, lookback_end)
             if basis == "missing_published_at":
                 _provider_reject(diag, "rejected_missing_published_at", item, date_basis=basis)
                 continue
@@ -3295,7 +3449,8 @@ def collect_gaza_sources(
                 _provider_reject(diag, "rejected_date_out_of_window", item, date_basis=basis)
                 continue
             diag["items_in_date_window"] = int(diag.get("items_in_date_window") or 0) + 1
-            record = normalize_rss_item(item, source, edition_date, retrieved_at)
+            if not _is_ocha_source(source):
+                record = normalize_rss_item(item, source, edition_date, retrieved_at)
             if record is None:
                 if not title:
                     _provider_reject(diag, "rejected_missing_title", item, date_basis=basis)
@@ -3316,6 +3471,16 @@ def collect_gaza_sources(
                 )
                 _provider_reject(diag, "rejected_untrusted_canonical", item, date_basis=basis)
                 continue
+            if _is_ocha_source(source) and record.get("editorial_eligible") is not True:
+                reason = "ocha_substantive_report_evidence_unavailable"
+                diag["status"] = "failed_evidence_extraction"
+                diag.setdefault("evidence_failures", []).append({"url": url, "reason": reason, "article_fetch_status": record.get("article_fetch_status")})
+                if not any(failure.get("source_id") == source.source_id for failure in failed_source_ids):
+                    failed_source_ids.append({"source_id": source.source_id, "reason": reason})
+                    stage_counts["providers_failed"] += 1
+                errors.append(f"{source.source_id}: {reason}")
+                _provider_reject(diag, reason, item, date_basis=basis)
+                continue
             url_key = gaza_collection_url_dedupe_key(record)
             if url_key in seen_urls:
                 _provider_reject(diag, "duplicate_url_in_collection", item, relevance_band=str(record.get("relevance_band") or "core"), date_basis=basis)
@@ -3328,7 +3493,7 @@ def collect_gaza_sources(
             stage_counts["providers_successful"] += 1
             stage_counts["providers_with_accepted_records"] += 1
             working_providers.append(source.source_id)
-        if len(records) == source_record_start:
+        if len(records) == source_record_start and diag.get("status") != "failed_evidence_extraction":
             stage_counts["providers_no_matches"] += 1
             no_match_source_ids.append(
                 {"source_id": source.source_id, "reason": f"no matching Gaza items for {edition_date}"}

@@ -2852,6 +2852,35 @@ def _gaza_history_dates_in_text(text: str) -> list[str]:
     return dates
 
 
+def _gaza_daily_identity_dates_in_text(text: str) -> list[str]:
+    """Exclude distinct catch-up routes from daily-edition identity only.
+
+    Catch-up publication dates still order retained public history, but are not
+    evidence that the daily /editions/YYYY-MM-DD/ route already exists. Strip
+    only complete list/feed records whose every link identifies one catch-up
+    route. Ambiguous, mixed-route, correction and no-update records retain the
+    existing conservative date scan. Never modify the published baseline.
+    """
+    catchup_route = re.compile(
+        rf"(?:{re.escape(BASE_URL)}/gaza/|/gaza/|)catchups/([a-zA-Z0-9_-]+)/?"
+    )
+
+    def retain_unless_catchup(match: re.Match[str]) -> str:
+        record = match.group(0)
+        links = re.findall(r'\bhref=[\"\']([^\"\']+)[\"\']', record, re.IGNORECASE)
+        links.extend(re.findall(r'<(?:link|guid)\b[^>]*>([^<]+)</(?:link|guid)>', record, re.IGNORECASE))
+        routes = [catchup_route.fullmatch(html.unescape(link).strip()) for link in links]
+        if routes and all(routes) and len({route.group(1) for route in routes if route}) == 1:
+            return ""
+        return record
+
+    daily_text = re.sub(
+        r'<(?P<record_tag>li|item)\b[^>]*>.*?</(?P=record_tag)>',
+        retain_unless_catchup, text, flags=re.IGNORECASE | re.DOTALL,
+    )
+    return _gaza_history_dates_in_text(daily_text)
+
+
 def _gaza_history_date_for_entry(text: str) -> str | None:
     dates = _gaza_history_dates_in_text(text)
     return dates[0] if dates else None
@@ -2985,9 +3014,9 @@ def _gaza_aggregate_render_from_pages_history(
     displaced_latest = former_latest_record(index) if correction_proof is not None else None
 
     baseline_date_sets = {
-        "archive": set(_gaza_history_dates_in_text(archive)),
-        "index": set(_gaza_history_dates_in_text(index)),
-        "rss": set(_gaza_history_dates_in_text(rss)),
+        "archive": set(_gaza_daily_identity_dates_in_text(archive)),
+        "index": set(_gaza_daily_identity_dates_in_text(index)),
+        "rss": set(_gaza_daily_identity_dates_in_text(rss)),
     }
     present = {name for name, dates in baseline_date_sets.items() if edition_date in dates}
     if present and present != set(baseline_date_sets):
@@ -3016,7 +3045,12 @@ def _gaza_aggregate_render_from_pages_history(
     else:
         row = ("daily", edition_date)
         archive_row = render_briefing_archive_row(briefing_presentation_for_edition(site_root, dispatch, edition_date))
-        baseline_latest_date = _gaza_aggregate_latest_date(archive, index, rss)
+        # A catch-up publication is a separate route, not the latest daily.
+        # Correction/no-update dates remain conservative latest-entry blockers.
+        baseline_latest_date = max(
+            (date for dates in baseline_date_sets.values() for date in dates),
+            default=None,
+        )
         is_newest_edition = baseline_latest_date is None or edition_date > baseline_latest_date
         if is_newest_edition:
             archive_latest = _render_gaza_archive_latest_entry(site_root, dispatch, row)

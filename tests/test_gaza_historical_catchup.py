@@ -773,3 +773,152 @@ def test_source_link_captions_use_actual_hosts_preserving_reviewed_copy(tmp_path
     assert '>Example News</a>' not in rendered
     assert before == json.dumps(bundle.items, sort_keys=True)
     assert bundle.items[0]["public_copy"]["uncertainty"] in rendered
+
+
+def _renewal_case(tmp_path: Path) -> dict:
+    case = _approve_and_merge(_make_case(tmp_path))
+    case['prior_raw'] = (case['root'] / case['approval_path']).read_bytes()
+    case['request']['source_base_commit'] = _git(case['root'], 'rev-parse', 'HEAD')
+    case['request']['approved_at'] = '2026-09-04T09:00:00Z'
+    _json(case['request_path'], case['request'])
+    stages = case['private'] / 'known-stages'
+    stages.mkdir()
+    renewal = {
+        'schema_version': 'gaza_historical_catchup_renewal_request_v1',
+        'prior_approval_binding': _binding(case['root'], case['approval_commit'], case['approval_path']),
+        'request_raw_sha256': owner.sha256_bytes(case['request_path'].read_bytes()),
+        'approved_by': case['request']['approved_by'], 'approved_at': case['request']['approved_at'],
+        'renewal_authorized': True, 'stage_inventory_complete': True, 'stage_roots': [str(stages)],
+    }
+    case.update(renewal=renewal, stages=stages, renewal_path=case['private'] / 'renewal.json')
+    _json(case['renewal_path'], renewal)
+    return case
+
+
+def test_explicit_renewal_preserves_git_authority_and_requires_merge(tmp_path: Path) -> None:
+    case = _renewal_case(tmp_path)
+    with pytest.raises(GazaHistoricalCatchupError, match='conflicting'):
+        create_approval(case['root'], case['pages'], case['request_path'])
+    result = owner.renew_approval(case['root'], case['pages'], case['request_path'], case['renewal_path'])
+    assert result['status'] == 'approval_renewed_pending_human_merge'
+    old = owner.load_committed_json(case['root'], commit=case['approval_commit'], path=case['approval_path'], prefix=owner.APPROVAL_PREFIX)
+    assert old.raw == case['prior_raw']
+    new = json.loads((case['root'] / case['approval_path']).read_bytes())
+    for field in ('approved_items', 'item_order', 'ordered_public_copy_sha256', 'public_url', 'public_path', 'publication_date', 'title', 'retrospective_disclosure'):
+        assert new[field] == old.payload[field]
+    assert new['renewal_provenance']['supersedes'] == case['renewal']['prior_approval_binding']
+    assert new['renewal_provenance']['global_stage_absence_verified'] is False
+    commit = _commit(case['root'], 'renewal only', case['approval_path'])
+    case['approval_commit'] = commit
+    with pytest.raises(GazaHistoricalCatchupError, match='protected merge'):
+        _plan(case)
+    _commit(case['root'], 'human protected merge', allow_empty=True)
+    assert _plan(case).catchup_id == new['catchup_id']
+
+
+@pytest.mark.parametrize('change', ['title', 'publication_date', 'approved_at', 'prior_hash', 'inventory', 'stage', 'publication', 'authorization', 'request_hash'])
+def test_renewal_refuses_drift_or_known_execution_without_mutation(tmp_path: Path, change: str) -> None:
+    case = _renewal_case(tmp_path)
+    if change == 'title':
+        case['request']['title'] += ' changed'
+    elif change == 'publication_date':
+        case['request']['publication_date'] = '2026-09-05'
+    elif change == 'approved_at':
+        case['request']['approved_at'] = '2026-09-03T18:00:00Z'
+        case['renewal']['approved_at'] = case['request']['approved_at']
+    elif change == 'prior_hash':
+        case['renewal']['prior_approval_binding']['sha256'] = '0' * 64
+    elif change == 'inventory':
+        case['renewal']['stage_inventory_complete'] = False
+    elif change == 'stage':
+        (case['stages'] / 'gaza-historical-catchup-stage-partial').mkdir()
+    elif change == 'authorization':
+        case['renewal']['renewal_authorized'] = False
+    elif change == 'publication':
+        occupied = case['pages'] / case['request']['public_path']
+        occupied.mkdir(parents=True)
+        (occupied / 'index.html').write_text('published')
+        case['request']['pages_head'] = _commit(case['pages'], 'synthetic published path', '.')
+    _json(case['request_path'], case['request'])
+    case['renewal']['request_raw_sha256'] = owner.sha256_bytes(case['request_path'].read_bytes())
+    if change == 'request_hash':
+        case['renewal']['request_raw_sha256'] = '0' * 64
+    _json(case['renewal_path'], case['renewal'])
+    expected = 'occupied' if change == 'publication' else None
+    with pytest.raises(GazaHistoricalCatchupError, match=expected):
+        owner.renew_approval(case['root'], case['pages'], case['request_path'], case['renewal_path'])
+    assert (case['root'] / case['approval_path']).read_bytes() == case['prior_raw']
+
+
+def test_renewal_provenance_checked_after_human_merge(tmp_path: Path) -> None:
+    case = _renewal_case(tmp_path)
+    owner.renew_approval(case['root'], case['pages'], case['request_path'], case['renewal_path'])
+    path = case['root'] / case['approval_path']
+    payload = json.loads(path.read_bytes())
+    payload['renewal_provenance']['superseded_approval_fingerprint'] = 'sha256:' + '0' * 64
+    payload.pop('approval_fingerprint')
+    payload['approval_fingerprint'] = owner.fingerprint(payload)
+    _json(path, payload)
+    case['approval_commit'] = _commit(case['root'], 'invalid renewal only', case['approval_path'])
+    _commit(case['root'], 'protected merge', allow_empty=True)
+    with pytest.raises(GazaHistoricalCatchupError, match='superseded approval fingerprint'):
+        _plan(case)
+
+
+@pytest.mark.parametrize('inventory_kind', ['missing', 'empty', 'duplicate', 'symlink'])
+def test_renewal_inventory_fails_closed(tmp_path: Path, inventory_kind: str) -> None:
+    case = _renewal_case(tmp_path)
+    if inventory_kind == 'missing':
+        case['renewal']['stage_roots'] = [str(case['private'] / 'missing')]
+    elif inventory_kind == 'empty':
+        case['renewal']['stage_roots'] = []
+    elif inventory_kind == 'duplicate':
+        case['renewal']['stage_roots'] *= 2
+    else:
+        (case['stages'] / 'unknown').symlink_to(case['private'], target_is_directory=True)
+    _json(case['renewal_path'], case['renewal'])
+    with pytest.raises((GazaHistoricalCatchupError, OSError)):
+        owner.renew_approval(case['root'], case['pages'], case['request_path'], case['renewal_path'])
+    assert (case['root'] / case['approval_path']).read_bytes() == case['prior_raw']
+
+
+@pytest.mark.parametrize("classes", ["edition-list", "edition-list gaza-readable-list", "edition-list archive-list", "archive-list edition-list"])
+def test_catchup_navigation_accepts_current_class_tokens_without_rewriting_history(classes: str) -> None:
+    from types import SimpleNamespace
+    from bluefern_dispatches.gaza_historical_catchup import _insert_archive_entry
+
+    bundle = SimpleNamespace(public_path="gaza/catchups/gaza-historical-catchup-test/", catchup_id="gaza-historical-catchup-test", publication_date="2026-11-10", title="Recovered developments")
+    before = f'<section><ul class="{classes}">\n<li>existing history</li>\n</ul></section>'.encode()
+    after = _insert_archive_entry(before, bundle)
+    added = after[len(before.split(b"\n", 1)[0]) + 1:].split(b"\n", 1)[0] + b"\n"
+    assert b'class="historical-catchup"' in added
+    assert after.replace(added, b"", 1) == before
+    with pytest.raises(GazaHistoricalCatchupError, match="already exists"):
+        _insert_archive_entry(after, bundle)
+    for invalid in (b'<ul class="not-edition-list">\n</ul>', b'<ul data-class="edition-list">\n</ul>'):
+        with pytest.raises(GazaHistoricalCatchupError, match="no edition list"):
+            _insert_archive_entry(invalid, bundle)
+
+
+@pytest.mark.parametrize("mutation", ["binding_path", "binding_commit", "old_file", "parent_symlink"])
+def test_renewal_rejects_false_provenance_and_noncanonical_inventory(tmp_path: Path, mutation: str) -> None:
+    case = _renewal_case(tmp_path)
+    if mutation == "binding_path":
+        case["renewal"]["prior_approval_binding"]["path"] = "approvals/gaza/missing-approval-v2.json"
+    elif mutation == "binding_commit":
+        case["renewal"]["prior_approval_binding"]["commit"] = case["source_base"]
+    elif mutation == "old_file":
+        target = case["root"] / case["approval_path"]
+        target.write_bytes(target.read_bytes() + b" ")
+        case["request"]["source_base_commit"] = _commit(case["root"], "different current approval bytes", case["approval_path"])
+        _json(case["request_path"], case["request"])
+        case["renewal"]["request_raw_sha256"] = owner.sha256_bytes(case["request_path"].read_bytes())
+    else:
+        link = case["private"] / "alias"
+        link.symlink_to(case["private"], target_is_directory=True)
+        case["renewal"]["stage_roots"] = [str(link / "known-stages")]
+    _json(case["renewal_path"], case["renewal"])
+    before = (case["root"] / case["approval_path"]).read_bytes()
+    with pytest.raises((GazaHistoricalCatchupError, OSError)):
+        owner.renew_approval(case["root"], case["pages"], case["request_path"], case["renewal_path"])
+    assert (case["root"] / case["approval_path"]).read_bytes() == before

@@ -12,6 +12,7 @@ from dataclasses import dataclass, asdict
 from datetime import date
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
 
@@ -233,6 +234,197 @@ def _check_compact_gaza_browser(page: Any, issues: list[VisualIssue]) -> None:
                 issues.append(VisualIssue("/gaza/", "gaza_compact_visibility", str(exc)))
 
 
+def _root_link_evidence_visible(node: Any) -> bool:
+    """Conservative static visibility; browser layout gates remain mandatory."""
+    if node is None:
+        return False
+    for ancestor in [node, *node.parents]:
+        if ancestor.name in {"template", "script", "style", "noscript"}:
+            return False
+        if (ancestor.has_attr("hidden") or ancestor.has_attr("inert")
+                or str(ancestor.get("aria-hidden", "")).lower() == "true"
+                or re.search(r"(?:display\s*:\s*none|visibility\s*:\s*(?:hidden|collapse)|content-visibility\s*:\s*hidden)",
+                             str(ancestor.get("style", "")), re.I)):
+            return False
+        if ancestor.name == "details" and not ancestor.has_attr("open"):
+            summary = ancestor.find("summary", recursive=False)
+            if summary is None or not (node is summary or any(parent is summary for parent in node.parents)):
+                return False
+    return True
+
+
+def _food_retrospective_dates_match(card: Any, document: Any) -> bool:
+    """Bind the displayed root range to dated reports, never to a route slug."""
+    months = {name.lower(): number for number, name in enumerate((
+        "January", "February", "March", "April", "May", "June", "July", "August",
+        "September", "October", "November", "December"), 1)}
+    pattern = r"([A-Za-z]+)\s+(\d{1,2})(?:[–-](\d{1,2}))?,\s+(\d{4})"
+    root_label = card.select_one(".edition-source")
+    if not _root_link_evidence_visible(root_label):
+        return False
+    matches = list(re.finditer(pattern, root_label.get_text(" ", strip=True)))
+    if len(matches) != 1:
+        return False
+    def parsed(match: Any) -> tuple[date, date]:
+        month, first, last, year = match.groups()
+        start = date(int(year), months[month.lower()], int(first))
+        end = date(int(year), months[month.lower()], int(last or first))
+        if end < start:
+            raise ValueError("reversed retrospective range")
+        return start, end
+    try:
+        root_start, root_end = parsed(matches[0])
+        report_dates = []
+        for article in document.select("main > article"):
+            label = article.select_one(":scope > .date")
+            source = article.select_one(":scope > .source")
+            if not _root_link_evidence_visible(label) or not _root_link_evidence_visible(source):
+                return False
+            report = re.fullmatch(pattern, label.get_text(" ", strip=True))
+            if report is None or report.group(3):
+                return False
+            day, _ = parsed(report)
+            # The date heading must agree with the linked report attribution.
+            source_dates = [parsed(m)[0] for m in re.finditer(pattern, source.get_text(" ", strip=True))]
+            if source_dates != [day]:
+                return False
+            report_dates.append(day)
+        return bool(report_dates) and min(report_dates) == root_start and max(report_dates) == root_end
+    except (KeyError, ValueError):
+        return False
+
+
+def _root_food_publication_target(pages_root: Path, root_html: str) -> str | None:
+    """Accept an actual local edition, or an explicitly limited retrospective.
+
+    A retrospective is a distinct existing publication type, not an edition or
+    a waiver of the root navigation requirement. Never count text-only URLs,
+    offsite lookalikes, unsafe paths, missing targets or unlabelled pages.
+    """
+    soup = BeautifulSoup(root_html, "html.parser")
+    if soup.find("base", href=True) is not None:
+        return None
+    for anchor in soup.find_all("a", href=True):
+        if not anchor.get_text(" ", strip=True):
+            continue
+        if not _root_link_evidence_visible(anchor):
+            continue
+        href = str(anchor["href"])
+        edition = re.fullmatch(r"/food-line/editions/(\d{4}-\d{2}-\d{2})/(?:index\.html)?", href)
+        retrospective = re.fullmatch(r"/food-line/source-based-retrospectives/([a-z0-9]+(?:-[a-z0-9]+)*)/(?:index\.html)?", href)
+        if not edition and not retrospective:
+            continue
+        if edition:
+            try:
+                date.fromisoformat(edition.group(1))
+            except ValueError:
+                continue
+        relative = href.lstrip("/")
+        if href.endswith("/"):
+            relative += "index.html"
+        target = pages_root / relative
+        current = pages_root
+        unsafe = pages_root.is_symlink()
+        for part in Path(relative).parts:
+            current /= part
+            unsafe = unsafe or current.is_symlink()
+        if unsafe or not target.is_file():
+            continue
+        if edition:
+            return href
+        # Retrospective acceptance requires truthful labeling in the root card
+        # and in the linked document, including its limited-edition disclaimer.
+        card = anchor.find_parent("article", class_="edition-card--food-line")
+        if card is None or "retrospective" not in anchor.get_text(" ", strip=True).lower():
+            continue
+        label = card.select_one(".edition-type")
+        if not _root_link_evidence_visible(label) or label.get_text(" ", strip=True).lower() not in {
+            "limited retrospective", "source-based retrospective"
+        }:
+            continue
+        document = BeautifulSoup(_read_text(target), "html.parser")
+        if document.find("base", href=True) is not None:
+            continue
+        title = document.title.get_text(" ", strip=True).lower() if document.title else ""
+        kind = document.select_one("main > .date")
+        notice = document.select_one("main > .notice")
+        if ("food line" not in title or "retrospective" not in title or kind is None
+                or kind.get_text(" ", strip=True).lower() != "source-based retrospective"
+                or not _root_link_evidence_visible(kind) or not _root_link_evidence_visible(notice)
+                or not _root_link_evidence_visible(document.select_one("main > h1"))):
+            continue
+        if not re.search(r"\b(?:not|neither)\s+(?:a\s+)?complete\s+daily\s+edition\b",
+                         notice.get_text(" ", strip=True), flags=re.I):
+            continue
+        articles = document.select("main > article")
+        if not articles or any(not _root_link_evidence_visible(article.select_one("h2")) for article in articles):
+            continue
+        citations_ok = True
+        for article in articles:
+            citations = article.select(".source a[href]")
+            if not citations:
+                citations_ok = False
+            for citation in citations:
+                parsed = urlsplit(str(citation.get("href", "")))
+                if (not _root_link_evidence_visible(citation) or not citation.get_text(" ", strip=True)
+                        or parsed.scheme not in {"https", "http"} or not parsed.hostname
+                        or parsed.username or parsed.password or any(c.isspace() for c in citation["href"])):
+                    citations_ok = False
+        if not citations_ok:
+            continue
+        if not _food_retrospective_dates_match(card, document):
+            continue
+        return href
+    return None
+
+
+def _has_root_food_publication_link(pages_root: Path, root_html: str) -> bool:
+    return _root_food_publication_target(pages_root, root_html) is not None
+
+
+def _check_root_food_publication_browser(page: Any, pages_root: Path, base_url: str, issues: list[VisualIssue]) -> None:
+    """Require computed visibility and same-origin navigation, not DOM labels alone."""
+    href = _root_food_publication_target(pages_root, _read_text(pages_root / "index.html"))
+    if href is None:
+        return  # The static latest_food_link check already reports this failure.
+    retrospective = "/source-based-retrospectives/" in href
+    visible = page.evaluate("""({href, retrospective}) => {
+      const visible = el => !!el && el.checkVisibility({checkOpacity:true, checkVisibilityCSS:true}) && el.getClientRects().length > 0;
+      return Array.from(document.querySelectorAll('a[href]')).some(a => {
+        if (a.getAttribute('href') !== href || new URL(a.href).origin !== location.origin || !visible(a)) return false;
+        if (!retrospective) return true;
+        const card = a.closest('article.edition-card--food-line');
+        return !!card && visible(card.querySelector('.edition-type')) && visible(card.querySelector('.edition-source'));
+      });
+    }""", {"href": href, "retrospective": retrospective})
+    if not visible:
+        issues.append(VisualIssue("/", "latest_food_link_visibility", "Food publication link/type/date is not visibly rendered at the same origin"))
+        return
+    if not retrospective:
+        return
+    target = page.context.new_page()
+    try:
+        response = target.goto(base_url + href, wait_until="networkidle")
+        if not response or response.status != 200 or target.url != base_url + href:
+            raise ValueError("retrospective target did not resolve to exact local HTTP200 path")
+        visible = target.evaluate("""() => {
+          const visible = el => !!el && el.checkVisibility({checkOpacity:true, checkVisibilityCSS:true}) && el.getClientRects().length > 0;
+          const required = ['main > .date', 'main > .notice', 'main > h1'];
+          if (!required.every(s => visible(document.querySelector(s)))) return false;
+          const articles = Array.from(document.querySelectorAll('main > article'));
+          return articles.length > 0 && articles.every(a => {
+            const links = Array.from(a.querySelectorAll('.source a[href]'));
+            return visible(a.querySelector('.date')) && visible(a.querySelector('h2')) && visible(a.querySelector('.source')) && links.length > 0 && links.every(visible);
+          });
+        }""")
+        if not visible:
+            raise ValueError("retrospective date, limitation, heading or source citation is CSS-hidden")
+    except Exception as exc:
+        issues.append(VisualIssue("/", "latest_food_target_visibility", str(exc)))
+    finally:
+        target.close()
+
+
 def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str, Any]:
     food_path = _find_latest_food_path(pages_root)
     food_dir = pages_root / food_path.strip("/")
@@ -420,8 +612,8 @@ def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str
                     break
             break
 
-    if "/food-line/editions/" not in root_html:
-        issues.append(VisualIssue("/", "latest_food_link", "root page does not link to a Food Line edition"))
+    if not _has_root_food_publication_link(pages_root, root_html):
+        issues.append(VisualIssue("/", "latest_food_link", "root page lacks a valid local Food Line edition or explicitly labeled limited retrospective link"))
     if "/gaza/editions/" not in root_html:
         issues.append(VisualIssue("/", "latest_gaza_link", "root page does not link to a Gaza edition"))
 
@@ -730,6 +922,8 @@ def _visual_checks_with_playwright(
                             issues.append(VisualIssue(path, "primary_button_contrast", f"button contrast is below 4.5:1: {contrast_ratio:.2f} ({button.get('text')})"))
                         if str(button.get("backgroundColor") or "").lower() == CANONICAL_RGB["--bf-dark-blue"] and str(button.get("color") or "").lower() != CANONICAL_RGB["--bf-white"]:
                             issues.append(VisualIssue(path, "primary_button_contrast", f"dark primary button text is not white: {button.get('color')} ({button.get('text')})"))
+                    if path == "/":
+                        _check_root_food_publication_browser(page, pages_root, base_url, issues)
                     if path == "/":
                         desk_order = list(metrics.get("editionCardDeskOrder") or [])
                         expected_order = ["gaza", "food-line", "care-line"]

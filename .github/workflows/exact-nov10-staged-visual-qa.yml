@@ -1,0 +1,77 @@
+# LOCAL PROPOSAL ONLY. Not installed, uploaded or authorized for execution.
+# Proposed branch layout: nov10-visual-qa/{runner,manifest,payload} as below.
+name: Exact November 10 Gaza staged visual QA
+on:
+  pull_request:
+    branches: [add/pages-repo-default]
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'nov10-visual-qa/**'
+      - '.github/workflows/exact-nov10-staged-visual-qa.yml'
+permissions:
+  contents: read
+jobs:
+  exact_nov10:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      REVIEW_COMMIT: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Require immutable reviewed package commit
+        shell: bash
+        run: '[[ "$REVIEW_COMMIT" =~ ^[0-9a-f]{40}$ ]]'
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: review
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bf0bfac5bec749d1640432895988dd8fe1668792
+          path: source
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 1c050908845bf1f1657891015fa5b52a7e1c7ddb
+          path: pages-baseline
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install validator dependencies and package-pinned Chromium
+        timeout-minutes: 7
+        run: |
+          python -m pip install -r source/requirements.txt 'playwright==1.64.1' pytest
+          python -m playwright install --with-deps chromium
+      - name: Run complete visual-validator regression modules
+        working-directory: source
+        env:
+          DISPATCHES_TEST_ROOT: ${{ runner.temp }}/nov10-visual-unit-tests
+        run: |
+          mkdir -p "$DISPATCHES_TEST_ROOT"
+          python -B -m pytest -q -p no:cacheprovider --basetemp "$DISPATCHES_TEST_ROOT/pytest" tests/test_public_site_visuals.py tests/test_staged_gaza_visuals.py
+      - name: Verify exact immutable package checkout
+        run: |
+          test "$(git -C review rev-parse HEAD)" = "$REVIEW_COMMIT"
+          test -z "$(git -C review status --porcelain --untracked-files=all --ignored=matching)"
+      - name: Validate exact seven-path stage with unchanged visual gates
+        timeout-minutes: 10
+        run: |
+          python -B review/nov10-visual-qa/check_exact_nov10_visuals.py \
+            --source "$GITHUB_WORKSPACE/source" \
+            --baseline "$GITHUB_WORKSPACE/pages-baseline" \
+            --payload "$GITHUB_WORKSPACE/review/nov10-visual-qa/payload" \
+            --manifest "$GITHUB_WORKSPACE/review/nov10-visual-qa/scoped-publication-manifest.json" \
+            --candidate "$RUNNER_TEMP/exact-nov10-stage" \
+            --evidence "$RUNNER_TEMP/exact-nov10-evidence"
+      - name: Preserve status, stage hashes and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exact-nov10-visuals-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/exact-nov10-evidence
+          if-no-files-found: error
+          retention-days: 3

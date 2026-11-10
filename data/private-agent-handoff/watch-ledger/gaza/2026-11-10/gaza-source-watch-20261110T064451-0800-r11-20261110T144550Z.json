@@ -1,0 +1,168 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T064451-0800-r11-20261110T144550Z",
+  "scheduled_for": "2026-11-10T06:44:51-08:00",
+  "started_at": "2026-11-10T06:43:50-08:00",
+  "completed_at": "2026-11-10T14:46:40.081Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T05:53:22.812-08:00",
+    "end": "2026-11-10T14:46:40.081Z",
+    "previous_run_completed_at": "2026-11-10T13:53:22.812Z",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Compared against authenticated prior heartbeat; newly released Reuters evidence within window and a prior-window WAFA report missed by earlier recall. Publication dates are distinct from event dates."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-sheikh-radwan-stormwater-basin-repair-equipment-rejected-unicef",
+      "canonical_source_url": "https://www.reuters.com/business/environment/unicef-says-israel-blocks-gaza-basin-repairs-warns-flood-risk-2026-11-10/",
+      "title": "UNICEF reports recent rejection of equipment for $3 million Sheikh Radwan stormwater basin repair plan",
+      "publisher": "Reuters (quoting UNICEF spokesperson James Elder)",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_utc": "2026-11-10T13:57:00Z",
+      "publication_time_pst": "2026-11-10T05:57:00-08:00",
+      "event_date": null,
+      "event_time": null,
+      "location": "Sheikh Radwan stormwater basin, Gaza City, Gaza Strip",
+      "affected_population_system": "Displaced Gaza City residents in flood-risk camps and streets; sewage-contaminated stormwater basin, sanitation, water, disease exposure, flood prevention; repair equipment/import approval and $3 million rehabilitation proposal.",
+      "exact_supporting_passage": "but that COGAT, the Israeli military agency overseeing humanitarian affairs in Gaza, had rejected the project in the past few days.",
+      "source_type": "Established independent international news agency quoting a named UNICEF spokesperson at a briefing; reporting no immediate COGAT comment",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "discovered_during_run": "2026-11-10T06:43:50-08:00 onward",
+        "publication_in_observation_window": true,
+        "new_evidence": "The specific reported rejection in recent days and the $3 million repair plan were not logged in the immediately preceding heartbeat.",
+        "verification": "Reuters quotes UNICEF's James Elder and specifies COGAT rejection; UNICEF's dated November 9 statement independently describes prolonged repair equipment access problems and a partially functioning basin.",
+        "corroborating_primary_url": "https://www.unicef.org/jordan/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "uncertainty": "Exact date of rejection, formal written decision and Israeli authorities' response not independently verified; no new flooding or injuries attributed to this rejection.",
+        "search_source": "Targeted press-agency search #1 returned Reuters; direct Reuters and UNICEF reads."
+      }
+    },
+    {
+      "finding_id": "gaza-20261110-daraj-ghabayen-family-house-strike-wafa-three-dead-followup",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176836",
+      "title": "WAFA reports three killed in an al-Daraj house airstrike, compared with one previously reported near a school",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": "2026-11-10T15:42:00+02:00",
+      "publication_time_pst": "2026-11-10T05:42:00-08:00",
+      "event_date": "2026-11-10",
+      "event_time": null,
+      "location": "House of the Ghabayen family near Musa bin Nuseir School, al-Daraj neighborhood, eastern Gaza City, Gaza Strip",
+      "affected_population_system": "Three fatalities according to WAFA, identities and civilian status unverified. An earlier Reuters item reported one person killed near a Daraj school. Whether the reports represent the same event and whether the net number of victims changed remain unresolved.",
+      "exact_supporting_passage": "Three Palestinians were killed today in an Israeli airstrike targeting Gaza City.",
+      "source_type": "Palestinian news agency report attributed to its correspondent; no independent casualty confirmation of revised number",
+      "classification": "follow-up",
+      "confidence": "low",
+      "bounded_discovery_context": {
+        "discovered_during_run": "2026-11-10T06:43:50-08:00 onward",
+        "publication_in_observation_window": false,
+        "late_discovered_prior_window_miss": true,
+        "comparison": "Prior verified heartbeat records one Daraj near-school fatality via Reuters. New WAFA report describes Ghabayen house near Musa bin Nuseir School and three deaths. AP and Reuters still describe a total of four fatalities across two Gaza City strikes and Khan Younis.",
+        "no_double_count": "Do not add two to any death tally absent confirmation; contradictory casualty figures, geographic overlap and timing remain unresolved.",
+        "uncertainty": "Specific time of strike not documented; WAFA's three-person toll conflicts with Reuters/AP descriptions, so this is an uncorroborated revision, not proof of additional deaths.",
+        "search_source": "Direct WAFA homepage check and article read following the bounded 12 searches."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not primary publishing or approval. No deployment, publication, schedule or permission changes.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T054451-0800-r11-20261110T135159Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Most recent dated update remains November 9 report about November 8 heavy rains; no new November 10 OCHA situation report seen."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502",
+        "result": "WHO global crisis page accessible with background health reporting; regional portal again yielded HTTP 502, no new WHO Gaza medical evacuation or facility bulletin verified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 10 2026 14:00 15:00 GMT Israeli strike civilians AP Reuters November 10",
+      "site:english.wafa.ps \"10/November/2026\" Gaza killed injured shelling afternoon",
+      "site:palestinercs.org Gaza 10 November 2026 health ambulance hospital latest",
+      "site:unicef.org \"10 November 2026\" Gaza water displacement children",
+      "site:wfp.org \"10 November 2026\" Gaza food aid crossings",
+      "site:un.org/unispal/ \"10 November 2026\" Gaza OCHA aid crossing",
+      "site:english.wafa.ps/Pages/Details/ 10/November/2026 04:00 PM Gaza strike death evacuation",
+      "site:aljazeera.com/news/2026/11/10/ Gaza Tuesday November 10 2026 afternoon ceasefire raids medical",
+      "site:reuters.com/world/middle-east/ \"November 10, 2026\" Gaza medical evacuation water humanitarian talks",
+      "site:apnews.com/article/ Gaza November 10 2026 hospital ambulance crossing Rafah aid",
+      "site:icrc.org Gaza November 10 2026 detained hostage wounded families relief",
+      "Gaza 10 November 2026 16:00 local time Israeli operations civilians aid evacuation hospital crossings"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "result": "November 10 15:42 Palestine time Daraj house strike toll of three appears not captured in previous heartbeat; earlier al-Zeitoun and Khan Younis reports excluded as duplicates."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/environment/unicef-says-israel-blocks-gaza-basin-repairs-warns-flood-risk-2026-11-10/",
+        "status": "ACCESSIBLE",
+        "result": "Newly posted UNICEF-source disclosure on equipment rejection and sewage-overflow risks."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/jordan/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "status": "ACCESSIBLE",
+        "result": "Nov 9 New York dateline / Nov 10 Jordan repost documents long-running Sheikh Radwan repairs problem and severe flood exposure, but prior storm fatalities and long-running conditions are not new."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-yemen-saudi-iran-november-10-2026-f4407845b6dd105e54190ccab7d55f8d",
+        "status": "ACCESSIBLE",
+        "result": "Still reports four previously recorded November 10 Gaza deaths; does not substantiate WAFA's higher three-person Daraj figure."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "known_previous": true
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "known_previous": true
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "status": "ROBOTS_DENIED",
+        "known_previous": true
+      }
+    ],
+    "exclusions": [
+      "OCHA November 9 storm report and November 8 flooding, displacement and sand embankment fatalities already known.",
+      "Previously logged November 10 al-Zeitoun two deaths, Khan Younis one death, fisherman injury, ministry aggregate and PRCS 1,618-tent disclosure excluded as repeats.",
+      "UNICEF November 9 statement reposted November 10 is not itself a new incident; used only as source context for Reuters' new COGAT rejection account.",
+      "Reuters/AP's unchanged four-death coverage is not a new Gaza casualty incident; included only to flag discrepancy with WAFA's three-Daraj-death account.",
+      "Older historical evacuation/crossing stories, opinion and unverified social claims excluded."
+    ],
+    "scope_and_limitations": "12 targeted searches in addition to the two OCHA/WHO checks; several targeted searches returned irrelevant archival results. Source publication times do not establish incident times. Source-access restrictions persisted from earlier runs without material new deterioration.",
+    "status_rationale": "DEGRADED, not FAILED: WHO EMRO HTTP 502, UNRWA HTTP 403 and UN News robots restriction persisted, but OCHA, WHO global, WAFA, Reuters, AP, UNICEF remained usable.",
+    "notification_reason": "At least one distinct newly reported aid/water infrastructure impediment and one cautionary casualty-toll follow-up."
+  }
+}

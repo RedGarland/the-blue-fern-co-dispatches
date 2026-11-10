@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T144252-0800-recall12-20261110T224252Z",
+  "scheduled_for": "2026-11-10T14:45:22-08:00",
+  "started_at": "2026-11-10T14:42:52-08:00",
+  "completed_at": "2026-11-10T14:44:39.135-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T13:42:46-08:00",
+    "end": "2026-11-10T14:44:39.135-08:00",
+    "basis": "From previous Care Line Watch heartbeat completion through this supplementary recall run, with news-index overlap to catch delayed publication. Time zone PST (UTC-08:00)."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — Illinois — Limitation of CLIA certificate — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "Already recorded as pending-review finding in earlier hourly watch; no new notice in the current window.",
+      "retrieval_note": "Initial guessed CMS path inaccessible; CMS-specific lookup found correct canonical path, opened and checked listing directly; no material loss."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department closed suspended services November 10 2026 United States",
+      "hospital maternity labor delivery unit closing November 10 2026 local news",
+      "rural hospital emergency room suspension closure November 10 2026",
+      "behavioral health psychiatric hospital unit service closure November 10 2026",
+      "dialysis kidney center closed patient transfer November 10 2026",
+      "cancer oncology infusion clinic closed services November 10 2026",
+      "primary care clinic sudden closure patients November 10 2026",
+      "ambulance EMS service ceased operations station closure November 10 2026",
+      "November 10 2026 air ambulance helicopter EMS base closing suspending operations United States",
+      "November 10 2026 Guam Puerto Rico US Virgin Islands hospital clinic emergency services closure reopening",
+      "November 10 2026 restored reopened emergency department maternity dialysis clinic hospital service after suspension",
+      "November 10 2026 hospital \"temporarily closed\" \"emergency\" \"patients\" local news"
+    ],
+    "search_methods": "Eight recency-limited fast searches plus four targeted deep searches, following CMS notices verification.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "Emergency and other services suspension began Nov 4–6, 2026, and state order dated Nov 4, with Nov 7 reporting. Previously covered, no new access change in this watch window.",
+        "url": "https://www.beckershospitalreview.com/finance/pennsylvania-hospital-to-suspend-all-services/"
+      },
+      {
+        "item": "Sea Pines Rehabilitation Hospital, Melbourne, Florida",
+        "reason": "Flood closure occurred Nov 1–2, reported in SEC filing Nov 6; historical event relative to current hourly watch.",
+        "url": "https://www.stocktitan.net/sec-filings/EHC/8-k-encompass-health-corp-reports-material-event-be0353b6ee24.html"
+      },
+      {
+        "item": "Watsonville Community Hospital maternity services, California",
+        "reason": "October proposal/board action targeting potential March 2027 change, not new concrete service interruption in current window.",
+        "url": "https://santacruzlocal.org/2026/10/28/watsonville-community-hospital-moves-to-shutter-labor-and-delivery/"
+      },
+      {
+        "item": "Air Evac Decatur base and PHI Air Medical Red Bluff base",
+        "reason": "Previously reported September 2026 service changes, not new hourly development.",
+        "url": "https://www.wandtv.com/2026/09/16/air-evac-closes-base-decatur-airport/"
+      },
+      {
+        "item": "Guam Memorial Hospital and Guam Regional Medical City",
+        "reason": "Storm service suspension/restoration was October 2026, outside current window.",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      },
+      {
+        "item": "Kula Hospital, Hawaii",
+        "reason": "Still temporarily closed; November 2 update describes future 2027 reopening, no actual new restoration.",
+        "url": "https://www.mauihealth.org/important-community-updates/kula-hospital-facility-and-operations-updates/"
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Same-hour local reporting, indexing and search freshness may delay discovery.",
+      "Twelve targeted additional searches are not exhaustive across all U.S. states and territories.",
+      "Direct primary production Care Line queue/record deduplication not independently inspected; previous watch heartbeat and CMS historical record used for known duplicates."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No notification: no new qualifying nonduplicate finding and no material watch degradation.",
+    "actions_not_taken": [
+      "No approval",
+      "No publication",
+      "No schedule modification",
+      "No task disabling"
+    ]
+  }
+}

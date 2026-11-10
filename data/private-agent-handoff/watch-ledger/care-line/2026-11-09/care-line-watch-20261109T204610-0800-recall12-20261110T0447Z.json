@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T204610-0800-recall12-20261110T0447Z",
+  "scheduled_for": "2026-11-09T20:45:22-08:00",
+  "started_at": "2026-11-09T20:46:10-08:00",
+  "completed_at": "2026-11-09T20:48:11.500-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T19:48:39.893-08:00",
+    "end": "2026-11-09T20:48:11.500-08:00",
+    "basis": "From verified previous heartbeat completion to the present run's final search review; publication, announcement, and effective dates evaluated separately; later-published items excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production collection remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T194657-0800-recall12-20261110T0348Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T19:48:39.893-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "live_index_accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services — MI — HHA CCN 239199 — Termination Notice",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_prior_heartbeat": 0,
+      "note": "Live canonical CMS index verified; this Michigan termination was recorded as pending_review in an earlier watch and is not a new finding. CMS search preview was stale (November 2)."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "hospital closure emergency department suspension November 9 2026 United States tonight",
+      "maternity labor delivery unit closure suspension November 9 2026 hospital US",
+      "behavioral health psychiatric inpatient hospital closure November 9 2026",
+      "dialysis clinic cancer oncology service closure suspension November 9 2026",
+      "primary care clinic sudden closure patients November 9 2026",
+      "rural hospital emergency service shutdown lost access November 9 2026",
+      "ambulance service stopped operation closure November 9 2026 county",
+      "air medical helicopter base closing suspension November 9 2026",
+      "hospital emergency department ambulance diversion shutdown November 9 2026 US",
+      "hospital reopened emergency room restored services November 9 2026",
+      "site:cms.gov/medicare/health-safety-standards \"2026-11-09\" \"Suspension\" OR \"Rescission\" OR \"Limitation\"",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital emergency ambulance closure November 9 2026"
+    ],
+    "targeted_search_recency_days": 1,
+    "searched_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures/suspensions",
+      "emergency and rural service loss",
+      "ambulance and air-medical base/service closures",
+      "official CMS termination/rescission and CLIA limitation/suspension",
+      "confirmed reopening of previously lost essential service",
+      "U.S. territories"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East EMS bypass, Waukegan, Illinois",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+        "reason": "EMS bypass effective November 7 at 7 a.m.; previously reviewed, so not novel. ABC7 November 9 coverage was stamped 10:54 p.m. Central (8:54 p.m. Pacific), later than this run's cutoff."
+      },
+      {
+        "item": "Adventist Health White Memorial ambulance diversion, Boyle Heights, California",
+        "source_url": "https://wearemitu.com/wearemitu/news/ice-boyle-heights-hospital-er-white-memorial/",
+        "reason": "November 9 recap describes a roughly two-hour ambulance diversion on November 6; no new or continuing interruption established during the observation window; item has date but no verifiable within-window publication time."
+      },
+      {
+        "item": "Roseland Community Hospital maternity ward closure, Chicago, Illinois",
+        "source_url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "November 1 closure reported November 2; not a new observation-window development."
+      },
+      {
+        "item": "North Devon maternity closures",
+        "source_url": "https://www.northdevongazette.co.uk/news/protesters-mark-three-month-closure-of-north-devon-maternity-unit-9340567",
+        "reason": "Outside U.S. and territories; prolonged existing service interruption."
+      },
+      {
+        "item": "Potential rural hospital closures and general health-policy/labor news",
+        "source_url": "https://www.commonwealthfund.org/publications/explainer/2026/feb/why-rural-hospitals-face-funding-crisis-how-it-could-get-worse",
+        "reason": "Background/future risk or staffing stories without verified new effective access change."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "CMS indexed search snippet lagged, but live source page was checked successfully.",
+      "Same-hour local reporting delays may obscure events during the latest observation window.",
+      "Bounded 12-search public recall cannot ensure exhaustive coverage of all U.S. territories and local outlets.",
+      "No independent production-queue query; duplicate screening against verified prior watch heartbeat and earlier documented watch findings."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

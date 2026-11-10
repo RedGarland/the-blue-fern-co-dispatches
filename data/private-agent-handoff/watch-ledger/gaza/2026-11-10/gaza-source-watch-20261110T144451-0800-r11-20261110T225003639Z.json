@@ -1,0 +1,132 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T144451-0800-r11-20261110T225003639Z",
+  "scheduled_for": "2026-11-10T14:44:51-08:00",
+  "started_at": "2026-11-10T14:47:07-08:00",
+  "completed_at": "2026-11-10T22:50:03.639Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T21:49:41.595Z",
+    "end": "2026-11-10T22:50:03.639Z",
+    "start_local": "2026-11-10T13:49:41.595-08:00",
+    "end_local": "2026-11-10T14:50:03.639-08:00",
+    "previous_run_completed_at": "2026-11-10T21:49:41.595Z",
+    "basis": "Traceable new or previously missed meaningful developments since immediately preceding authenticated heartbeat; exclude older events without a newly verified substantive update.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall watch only; authoritative production collector/publisher unchanged.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T134451-0800-r11-20261110T214807Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Official updates listing last showed 9 November publication (heavy-rains humanitarian situation report for 8 November); no November 10 Gaza field bulletin found."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "Global emergency hub accessible, with no new dated 10 November operational report; WHO EMRO regional reports endpoint direct fetch returned HTTP 502, recurring restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"10/November/2026\" \"PM\" Gaza killed injured 11",
+      "site:reuters.com/world/middle-east/ Gaza November 10 2026 afternoon evening strike aid hospital Israeli",
+      "site:apnews.com/article/ Gaza November 10 2026 Tuesday afternoon death aid tent strikes",
+      "site:palestine.un.org/en/ \"10 November 2026\" Gaza fuel water medical hospital update",
+      "site:unicef.org \"10 November 2026\" Gaza shelter equipment rains displacement",
+      "site:palestinercs.org Gaza November 10 2026 latest paramedic ambulance casualties",
+      "site:wfp.org Gaza \"10 November 2026\" food distribution aid access new",
+      "site:unrwa.org Gaza November 10 2026 emergency shelter health access",
+      "Gaza November 10 2026 new humanitarian aid crossing Rafah Kerem Shalom 22:00 UTC Israel COGAT",
+      "Gaza November 10 2026 medical evacuation cancer ambulance hospital fuel WHO PRCS evening",
+      "Gaza ceasefire hostage negotiations detention agreement November 10 2026 Reuters latest Tuesday",
+      "Gaza Nov 10 2026 afternoon latest civilians strikes displacement water infrastructure news live updates"
+    ],
+    "source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Most recent Gaza attack notices remain earlier 10 November Zeitoun, Daraj and Sabra incidents. No newly timestamped Gaza operational incident in this interval; latest 22:39 local notice concerns Geneva social-protection meeting."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "result": "Seven-fatality Gaza roundup overlaps prior documented Zeitoun, Daraj, Khan Younis and Sabra incidents. No distinct newly supported casualty found."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/f4407845b6dd105e54190ccab7d55f8d",
+        "result": "Five-death summary already covered; no new separately confirmed casualty."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en/326017-children-among-dead-heavy-rains-flood-tents-and-shelters-gaza",
+        "result": "10 November article recaps November 6–8 flooding and earlier OCHA operational data; excluded as repeat."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/jordan/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "result": "9 November dateline on storm-related deaths, not a new 10 November incident."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-fire-kills-5-palestinians-wounds-14-others-in-gaza-amid-ceasefire-violations/4118530",
+        "result": "Daily Gaza roundup describes previously reported strikes; also claims fisher injury/boats hit and Maghazi property demolition without precise publication/event time inside current window. Do not upgrade to new finding without temporal validation."
+      },
+      {
+        "publisher": "Financial Times and The Times",
+        "urls": [
+          "https://www.ft.com/content/20dc125b-02e0-4bee-be43-16aa7f8185d9",
+          "https://www.thetimes.com/world/middle-east/article/peace-board-israel-gaza-floods-6kl06cvr7"
+        ],
+        "result": "Board of Peace statements document calls for more flood-related aid and criticism of existing restrictions, not a verified new crossing, relief delivery, or response operation; full articles partly paywalled."
+      }
+    ],
+    "exclusions": [
+      "Previously logged Zeitoun, Daraj, Khan Younis and Sabra casualty incidents, including competing aggregate totals and incident details, not recounted.",
+      "Flooding, child fatalities and tent damage from November 6–9 already reported by OCHA and UNICEF are not newly occurring during this interval.",
+      "UNICEF Sheikh Radwan basin equipment rejection reported earlier in the day is a duplicate.",
+      "Japanese health-response contribution was announced before this watch window and no new service-capacity change during the interval was documented.",
+      "WAFA fisherman injury and damage to two fishing boats, published 08:48 local Palestine time on November 10, is older than this window; independently supported by Anadolu's date-level roundup but not a new timed development.",
+      "Board of Peace public statements without a documented new on-the-ground operational change excluded.",
+      "Items relating to West Bank only, earlier dates, humanitarian visits without verified new deliveries, and unsupported/incidental claims excluded."
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "HTTP 502 on direct report portal check",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "Previously observed HTTP 403; not directly rechecked this run",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "FT / The Times",
+        "status": "Partial paywall for some coverage",
+        "previously_observed": null,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO regional reports endpoint remained HTTP 502. OCHA OPT, WHO global, UN Palestine, WAFA, Reuters, AP and Anadolu provided useful coverage; no materially new loss of access.",
+    "limitations": "Two official-first searches followed by exactly twelve targeted web searches; opens/readbacks do not count as additional searches. Publication-time precision of some same-day stories is insufficient to assert that they changed during this hourly window. Indexing can lag.",
+    "notification_reason": "No newly verified qualifying development in the period, and no materially worsened source coverage.",
+    "changes_to_production": "none; no publication, approval, merge, permission or schedule changes"
+  }
+}

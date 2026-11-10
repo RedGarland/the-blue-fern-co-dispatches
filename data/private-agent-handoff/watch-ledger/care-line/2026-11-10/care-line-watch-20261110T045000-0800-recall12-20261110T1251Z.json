@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T045000-0800-recall12-20261110T1251Z",
+  "scheduled_for": "2026-11-10T04:45:22-08:00",
+  "started_at": "2026-11-10T04:50:00-08:00",
+  "completed_at": "2026-11-10T04:52:02.670-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T03:49:40-08:00",
+    "end": "2026-11-10T04:52:02.670-08:00",
+    "basis": "Begins at verified prior Care Line watch heartbeat completion. Search for newly announced concrete access effects since then; verify CMS notices against prior recorded notice. Previously reported events and newly republished historical stories excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; national production Care Line collector remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T034822-0800-recall12.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T03:49:40-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_visible_notice": "Compassionate Home Health Services — Termination Notice — CCN 239199 — Michigan",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "previously_recorded": true,
+      "new_notices_since_previous_watch": 0
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department closure diverted patients November 10 2026 United States",
+      "maternity labor delivery unit services suspended closing November 9 10 2026",
+      "rural hospital emergency services suspended closed reopening November 10 2026",
+      "behavioral health psychiatric inpatient hospital shutdown services November 10 2026",
+      "ambulance service permanently suspended closed base air medical helicopter November 10 2026 USA",
+      "dialysis center closing patients transferred November 10 2026",
+      "oncology cancer center chemotherapy services suspended closed November 10 2026",
+      "community clinic primary care abrupt closure November 10 2026",
+      "November 10 2026 hospital emergency room reopens restores 24 hour emergency care US",
+      "November 10 2026 air ambulance helicopter base closing ambulance staffing emergency service suspended county",
+      "November 10 2026 Puerto Rico Guam Virgin Islands hospital emergency clinic suspended closed reopens",
+      "November 10 2026 health department emergency suspension medical facility license hospital patient access state"
+    ],
+    "search_recency_days": 2,
+    "searched_classes": [
+      "Hospital and ED closure/suspension",
+      "Maternity and labor/delivery loss",
+      "Rural and emergency service loss",
+      "Behavioral health inpatient suspension",
+      "Dialysis and oncology service loss",
+      "Primary care closure",
+      "Ambulance and air-medical base closure",
+      "CMS termination, rescission, CLIA suspension/limitation",
+      "Concrete restoration of essential services",
+      "United States, DC, Puerto Rico, Guam, US Virgin Islands, Northern Mariana Islands and American Samoa (bounded coverage)"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "source_url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "Nov 10 secondary report summarizes Nov 4 state order, Nov 4/6 care suspensions and planned Nov 17 revocation; preceding watch explicitly excluded same event, no new access change in current window."
+      },
+      {
+        "item": "Air Evac Lifeteam, Decatur Airport base, Illinois",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "September 2026 closure, historical and outside observation window."
+      },
+      {
+        "item": "Appomattox dialysis clinic, Virginia",
+        "source_url": "https://wset.com/news/local/appomattox-dialysis-clinic-to-shut-down-april-18-impacting-39-patients-healthcare-uva-kidney-march-2026",
+        "reason": "March 2026 announcement and April closure, historical."
+      },
+      {
+        "item": "Laguna Beach Providence Mission Hospital ED proposal, California",
+        "source_url": "https://abc7.com/story/laguna-beach-residents-push-keep-emergency-room-open-providence-mission-hospital-plans-changes/19792037/",
+        "reason": "September 2026 reporting on planning/concerns rather than a newly effective change."
+      },
+      {
+        "item": "Air-ambulance feature, NPR/WBUR",
+        "source_url": "https://www.wbur.org/npr/nx-s1-6017801/air-ambulance-service-rural-healthcare-staffing",
+        "reason": "November 8 general service/business feature, not a new concrete service loss."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Search result relevance was poor for narrow early-morning November 10 window; many retrieved items were historical, foreign or planned.",
+      "Near-real-time publication and search indexing lag can conceal same-hour events.",
+      "Fixed 12-query cap constrains county and territory local-source recall; no exhaustive territory-by-territory verification.",
+      "National production Care Line collector and its deduplication state were not accessed; prior supplementary heartbeat and known event history used for recall deduplication."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "no review approval",
+      "no publication",
+      "no schedule alteration",
+      "no task disabling"
+    ]
+  }
+}

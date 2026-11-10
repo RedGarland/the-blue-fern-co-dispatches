@@ -90,6 +90,8 @@ def _make_case(
     _git(root, "config", "core.autocrlf", "false")
     _git(pages, "init", "-b", "gh-pages")
     _git(pages, "config", "core.autocrlf", "false")
+    _git(pages, "config", "user.name", "Fixture")
+    _git(pages, "config", "user.email", "fixture@example.invalid")
     _git(remote, "init", "--bare")
 
     for relative in owner.PROTECTED_OWNER_PATHS:

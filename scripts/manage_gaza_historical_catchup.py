@@ -14,6 +14,7 @@ if str(SRC) not in sys.path:
 from bluefern_dispatches.gaza_historical_catchup import (
     GazaHistoricalCatchupError,
     create_approval,
+    renew_approval,
     create_private_preview,
     create_stage,
     load_plan,
@@ -34,6 +35,12 @@ def _parser() -> argparse.ArgumentParser:
     approve.add_argument("--repo-root", type=Path, required=True)
     approve.add_argument("--pages-root", type=Path, required=True)
     approve.add_argument("--request", type=Path, required=True)
+
+    renew = commands.add_parser("renew", help="Prepare explicit exact-copy renewal; human protected merge required.")
+    renew.add_argument("--repo-root", type=Path, required=True)
+    renew.add_argument("--pages-root", type=Path, required=True)
+    renew.add_argument("--request", type=Path, required=True)
+    renew.add_argument("--renewal-request", type=Path, required=True)
 
     for name, help_text in (
         ("plan", "Validate a committed approval without persistent mutation."),
@@ -63,6 +70,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.operation == "approve":
             result = create_approval(args.repo_root, args.pages_root, args.request)
+        elif args.operation == "renew":
+            result = renew_approval(args.repo_root, args.pages_root, args.request, args.renewal_request)
         else:
             if args.operation == "publish":
                 replay = published_replay_result(

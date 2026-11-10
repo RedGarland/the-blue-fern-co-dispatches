@@ -631,7 +631,7 @@ def _approval_request(path: Path, root: Path, pages: Path) -> tuple[dict[str, An
     return payload, raw
 
 
-def create_approval(root: Path, pages_root: Path, request_path: Path) -> dict[str, Any]:
+def _prepare_approval(root: Path, pages_root: Path, request_path: Path) -> tuple[Path, str, dict[str, Any]]:
     root = _root(root)
     pages = pages_root.absolute().resolve(strict=True)
     request, request_raw = _approval_request(request_path, root, pages)
@@ -742,6 +742,12 @@ def create_approval(root: Path, pages_root: Path, request_path: Path) -> dict[st
         "published": False,
     }
     approval["approval_fingerprint"] = fingerprint(approval)
+    return root, approval_path, approval
+
+
+def create_approval(root: Path, pages_root: Path, request_path: Path) -> dict[str, Any]:
+    root, approval_path, approval = _prepare_approval(root, pages_root, request_path)
+    items = approval["approved_items"]
     target = root / approval_path
     raw = canonical_json(approval)
     if target.exists():
@@ -763,6 +769,126 @@ def create_approval(root: Path, pages_root: Path, request_path: Path) -> dict[st
         "audio_authorized": False,
         "social_authorized": False,
     }
+
+
+def renew_approval(root: Path, pages_root: Path, request_path: Path, renewal_request_path: Path) -> dict[str, Any]:
+    """Prepare a replacement at the canonical path; prior authority stays immutable in Git.
+
+    Inventory completeness is an explicit human declaration, NOT a global stage scan.
+    No merge or publication is performed. Every later plan still requires protected merge.
+    """
+    root, approval_path, approval = _prepare_approval(root, pages_root, request_path)
+    pages = pages_root.resolve(strict=True)
+    private = renewal_request_path.resolve(strict=True)
+    if root in private.parents or pages in private.parents:
+        raise GazaHistoricalCatchupError("renewal request must remain outside source and Pages")
+    renewal_raw = private.read_bytes()
+    renewal = json.loads(renewal_raw.decode("utf-8"))
+    required = {"schema_version", "prior_approval_binding", "request_raw_sha256", "approved_by", "approved_at",
+                "renewal_authorized", "stage_inventory_complete", "stage_roots"}
+    if not isinstance(renewal, dict) or set(renewal) != required or renewal.get("schema_version") != "gaza_historical_catchup_renewal_request_v1":
+        raise GazaHistoricalCatchupError("renewal request fields are invalid")
+    if renewal["renewal_authorized"] is not True or renewal["stage_inventory_complete"] is not True:
+        raise GazaHistoricalCatchupError("renewal requires human authorization and complete stage inventory declaration")
+    if any(renewal[key] != approval[key] for key in ("request_raw_sha256", "approved_by", "approved_at")):
+        raise GazaHistoricalCatchupError("renewal does not bind the exact fresh human request")
+    prior = _load_binding(root, renewal["prior_approval_binding"], prefix=APPROVAL_PREFIX)
+    _require_commit(root, prior.commit, strict_ancestor=True)
+    _approval_only_commit(root, prior.commit, prior.path)
+    if prior.path != approval_path or (root / approval_path).read_bytes() != prior.raw:
+        raise GazaHistoricalCatchupError("renewal must supersede the exact current committed approval")
+    old = prior.payload
+    identity = dict(old)
+    old_fingerprint = identity.pop("approval_fingerprint", None)
+    if old_fingerprint != fingerprint(identity):
+        raise GazaHistoricalCatchupError("prior approval fingerprint drifted")
+    _, before = _timestamp(old.get("approved_at"), "prior approved_at")
+    _, after = _timestamp(approval["approved_at"], "renewed approved_at")
+    if after <= before:
+        raise GazaHistoricalCatchupError("renewal requires a fresh later human approval timestamp")
+    mutable = {"source_base_commit", "pages_head", "approved_at", "request_raw_sha256", "request_fingerprint", "approval_fingerprint", "renewal_provenance"}
+    if {k: v for k, v in old.items() if k not in mutable} != {k: v for k, v in approval.items() if k not in mutable}:
+        raise GazaHistoricalCatchupError("renewal must preserve exact reader copy, items, route, date, approver, and authority flags")
+    _assert_vacant(root, pages, approval["catchup_id"])
+    _assert_no_public_collision(root, pages, approval["approved_items"])
+    roots = renewal["stage_roots"]
+    if not isinstance(roots, list) or not roots or any(not isinstance(value, str) or not value for value in roots):
+        raise GazaHistoricalCatchupError("renewal requires a nonempty known stage-root inventory")
+    resolved = []
+    for value in roots:
+        candidate = Path(value)
+        if not candidate.is_absolute() or any(part.is_symlink() for part in (candidate, *candidate.parents)):
+            raise GazaHistoricalCatchupError("stage inventory roots must be absolute nonsymlink directories")
+        stage_root = candidate.resolve(strict=True)
+        if not stage_root.is_dir() or stage_root == root or stage_root == pages or root in stage_root.parents or pages in stage_root.parents:
+            raise GazaHistoricalCatchupError("stage inventory root must be an accessible external directory")
+        # Reject incomplete packages too, and symlinked descendants instead of skipping them.
+        def scan_error(error: OSError) -> None:
+            raise GazaHistoricalCatchupError("stage inventory cannot be completely inspected") from error
+        for current, directories, files in os.walk(stage_root, followlinks=False, onerror=scan_error):
+            for name in directories + files:
+                child = Path(current) / name
+                if child.is_symlink() or name.startswith("gaza-historical-catchup-stage-") or name == "release_manifest.json":
+                    raise GazaHistoricalCatchupError("stage inventory contains a retained stage, manifest, or uninspectable symlink")
+        if stage_root.name.startswith("gaza-historical-catchup-stage-"):
+            raise GazaHistoricalCatchupError("stage inventory root is itself a retained stage")
+        resolved.append(str(stage_root))
+    if len(set(resolved)) != len(resolved):
+        raise GazaHistoricalCatchupError("stage inventory contains duplicate roots")
+    approval["renewal_provenance"] = {
+        "schema_version": "gaza_historical_catchup_renewal_provenance_v1",
+        "supersedes": _binding(prior), "superseded_approval_fingerprint": old_fingerprint,
+        "renewal_request_raw_sha256": sha256_bytes(renewal_raw),
+        "stage_inventory_sha256": fingerprint(resolved), "stage_root_count": len(resolved),
+        "stage_inventory_complete_human_declaration": True,
+        "global_stage_absence_verified": False,
+        "protected_human_merge_required": True,
+    }
+    approval.pop("approval_fingerprint")
+    approval["approval_fingerprint"] = fingerprint(approval)
+    # Recheck bytes immediately before the only mutation. Ordinary approve never uses this path.
+    if (root / approval_path).read_bytes() != prior.raw:
+        raise GazaHistoricalCatchupError("approval changed during renewal")
+    _atomic_write(root / approval_path, canonical_json(approval))
+    return {"ok": True, "status": "approval_renewed_pending_human_merge", "approval_path": approval_path,
+            "approval_fingerprint": approval["approval_fingerprint"], "supersedes": _binding(prior),
+            "persistent_mutation": True, "published": False, "protected_human_merge_required": True}
+
+
+def _validate_renewal_provenance(root: Path, row: dict[str, Any], approval_commit: str, approval_path: str) -> None:
+    provenance = row.get("renewal_provenance")
+    if provenance is None:
+        return
+    expected = {"schema_version", "supersedes", "superseded_approval_fingerprint", "renewal_request_raw_sha256",
+                "stage_inventory_sha256", "stage_root_count", "stage_inventory_complete_human_declaration",
+                "global_stage_absence_verified", "protected_human_merge_required"}
+    if not isinstance(provenance, dict) or set(provenance) != expected or provenance.get("schema_version") != "gaza_historical_catchup_renewal_provenance_v1":
+        raise GazaHistoricalCatchupError("renewal provenance fields are invalid")
+    if (provenance["stage_inventory_complete_human_declaration"] is not True
+            or provenance["global_stage_absence_verified"] is not False
+            or provenance["protected_human_merge_required"] is not True
+            or type(provenance["stage_root_count"]) is not int or provenance["stage_root_count"] < 1
+            or not re.fullmatch(r"[0-9a-f]{64}", str(provenance["renewal_request_raw_sha256"]))
+            or not re.fullmatch(r"sha256:[0-9a-f]{64}", str(provenance["stage_inventory_sha256"]))):
+        raise GazaHistoricalCatchupError("renewal inventory provenance is invalid")
+    prior = _load_binding(root, provenance["supersedes"], prefix=APPROVAL_PREFIX)
+    _approval_only_commit(root, prior.commit, prior.path)
+    if prior.path != approval_path or prior.commit == approval_commit or subprocess.run(
+        ["git", "-C", str(root), "merge-base", "--is-ancestor", prior.commit, str(row.get("source_base_commit"))],
+        check=False, capture_output=True,
+    ).returncode != 0:
+        raise GazaHistoricalCatchupError("renewal provenance must precede the renewed source base at the same approval path")
+    old = dict(prior.payload)
+    old_fingerprint = old.pop("approval_fingerprint", None)
+    if old_fingerprint != fingerprint(old) or old_fingerprint != provenance["superseded_approval_fingerprint"]:
+        raise GazaHistoricalCatchupError("superseded approval fingerprint drifted")
+    mutable = {"source_base_commit", "pages_head", "approved_at", "request_raw_sha256", "request_fingerprint", "approval_fingerprint", "renewal_provenance"}
+    if {k: v for k, v in old.items() if k not in mutable} != {k: v for k, v in row.items() if k not in mutable}:
+        raise GazaHistoricalCatchupError("renewal provenance changed immutable approval content")
+    _, before = _timestamp(old.get("approved_at"), "prior approved_at")
+    _, after = _timestamp(row.get("approved_at"), "renewed approved_at")
+    if after <= before:
+        raise GazaHistoricalCatchupError("renewal provenance lacks fresh human approval")
 
 
 def _atomic_write(path: Path, raw: bytes) -> None:
@@ -884,6 +1010,7 @@ def load_plan(
     stored = identity_source.pop("approval_fingerprint", None)
     if stored != fingerprint(identity_source):
         raise GazaHistoricalCatchupError("historical catch-up approval fingerprint drifted")
+    _validate_renewal_provenance(root, row, approval_commit, approval_path)
     expected_authority = {
         "publication_authorized": True,
         "pages_authorized": True,

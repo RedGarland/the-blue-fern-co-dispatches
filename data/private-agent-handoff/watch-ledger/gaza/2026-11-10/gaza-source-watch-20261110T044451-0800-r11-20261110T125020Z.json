@@ -1,0 +1,196 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T044451-0800-r11-20261110T125020Z",
+  "scheduled_for": "2026-11-10T04:44:51-08:00",
+  "started_at": "2026-11-10T04:47:59-08:00",
+  "completed_at": "2026-11-10T04:50:20-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T03:48:33.507-08:00",
+    "end": "2026-11-10T04:50:20-08:00",
+    "previous_run_completed_at": "2026-11-10T03:48:33.507-08:00",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Started from previous verified watch heartbeat. Both discoveries concern November 10 coverage published 03:16 and 03:47 PST, narrowly preceding the prior run's 03:48:33 completion; they are late-discovered new-to-ledger developments, not events newly occurring in this watch window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-zeitoun-fadi-abubakr-rajab-reuters-followup",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+      "title": "Reuters identifies Gaza City al-Zeitoun strike victims as father Fadi Rajab and his 13-year-old son Abubakr; roof of displacement shelter hit",
+      "publisher": "Reuters",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": "2026-11-10T11:47:00Z",
+      "publication_time_pst": "2026-11-10T03:47:00-08:00",
+      "event_date": "2026-11-10",
+      "event_time": null,
+      "location": "al-Zeitoun neighborhood, Gaza City, Gaza Strip",
+      "affected_population_system": "Displaced civilian shelter and two reportedly killed, including a 13-year-old boy and his father. These are the two al-Zeitoun deaths previously logged on WAFA, not two additional deaths. Reuters also reports Khan Younis fatality already logged; no additional casualty count.",
+      "exact_supporting_passage": "Fadi Rajab and his son Abubakr were killed in an airstrike that hit the roof of a displacement shelter",
+      "source_type": "Established international news agency reporting statements from local medical officials",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-10T04:49:00-08:00",
+        "prior_finding_id": "gaza-20261110-zeitoun-drone-strike-two-killed-wafa-1243",
+        "distinct_new_fatality_count": 0,
+        "novel_evidence": "Named victims; child age 13; shelter roof impact; independent outlet corroboration of two earlier-recorded deaths.",
+        "publication_in_observation_window": false,
+        "late_discovered_prior_window_miss": true,
+        "limitations": "Reuters attributes account to medics; Israeli military had not immediately commented. Precise incident time and independent forensic verification not available.",
+        "search_source": "targeted web news search #11 of 12"
+      }
+    },
+    {
+      "finding_id": "gaza-20261110-amal-al-rifi-yasmin-detention-cancer-chemo-care",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/10/3-%D8%A3%D8%B3%D9%8A%D8%B1%D8%A7%D8%AA-%D9%82%D8%A7%D8%B5%D8%B1%D8%A7%D8%AA-%D8%A8%D9%8A%D9%86-90-%D8%A3%D8%B3%D9%8A%D8%B1%D8%A9-%D9%8A%D9%82%D8%A8%D8%B9%D9%86-%D9%81%D9%8A-%D8%B3%D8%AC%D9%88%D9%86",
+      "title": "Palestinian detainee groups report that two Gaza women remain detained after return from treatment abroad; mother has not resumed chemotherapy",
+      "publisher": "Palestine News and Information Agency (WAFA), citing Commission of Detainees and Ex-Detainees Affairs and Palestinian Prisoner's Society",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": "2026-11-10T13:16:00+02:00",
+      "publication_time_pst": "2026-11-10T03:16:00-08:00",
+      "event_date": "2026-10-20",
+      "event_time": null,
+      "location": "Amal and Yasmin al-Rifi from Gaza Strip; detained on return from Egypt on 2026-10-20; transferred from Ashkelon to Damon Prison on 2026-10-29, Israel",
+      "affected_population_system": "Reportedly detained Gaza women Amal al-Rifi (60) and daughter Yasmin (33). Detainee organizations say Amal has cancer and missed her scheduled fifth chemotherapy session on October 21 following detention on October 20, with treatment still not resumed as of November 10. Details attributed to detainee advocates and their legal visit; no independent medical records verified.",
+      "exact_supporting_passage": "آمال الريفي (60 عاما) وابنتها ياسمين (33 عاما)، ... آمال التي تعاني من مرض السرطان، وتحرم من استكمال علاجها",
+      "source_type": "Established Palestinian national news agency relaying named detainee-rights organizations' joint statement",
+      "classification": "follow-up",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-10T04:49:00-08:00",
+        "publication_in_observation_window": false,
+        "late_discovered_prior_window_miss": true,
+        "novel_evidence": "Detainees' names and ages, reported detention while returning from Egyptian care, chemotherapy interruption, present medical-access warning.",
+        "deduplication": "Not a new arrest on November 10; report concerns detention dating to October 20 and a new dated assessment of continuing interrupted care; separate from Gaza casualty events.",
+        "limitations": "Claim is attributed to detainee-rights organizations through WAFA and corroborated as same organizational statement by Palestinian Information Center; Israeli prison or medical records not independently verified.",
+        "search_source": "WAFA Arabic direct newsroom followed by targeted search #9 of 12"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production daily Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T034451-0800-r11-20261110T114553Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed November 9 heavy-rain situation report; prior flooding impacts already recorded, no new in-window item."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502;TWO_INITIAL_GLOBAL_URLS_HTTP_404",
+        "result": "Global WHO conflict page accessible on canonical URL and did not show new November 10 Gaza operation; WHO EMRO 502 is recurring."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps November 10 2026 Gaza Gaza City Khan Younis deaths injuries latest",
+      "site:ochaopt.org 10 Nov 2026 Gaza aid displacement crossings",
+      "site:who.int Gaza 10 November 2026 medical evacuation hospitals",
+      "site:palestinercs.org November 10 2026 Gaza ambulance medical",
+      "site:unicef.org Gaza November 10 2026 water children displaced",
+      "site:wfp.org Gaza November 10 2026 food assistance access",
+      "Gaza November 10 2026 latest Reuters AP casualties ceasefire Israel humanitarian",
+      "Gaza November 10 2026 attacks infrastructure food water healthcare crossing evacuation Al Jazeera",
+      "آمال الريفي ياسمين الريفي الأسيرة السرطان 10 نوفمبر 2026 احتجاز علاج سجن الدامون",
+      "Gaza November 10 2026 humanitarian aid crossings 14:00 Palestine latest OCHA UN WFP UNRWA",
+      "Gaza November 10 2026 deaths civilian strike al-Zeitoun Khan Younis 2 pm 3 pm WAFA Reuters",
+      "Gaza November 10 2026 ceasefire hostage release medical evacuation WHO Red Crescent 14:00"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA Arabic/English",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "No newly posted distinct Gaza casualty event after preceding al-Zeitoun case; Arabic detainee update identified as late missed qualified event."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "status": "ACCESSIBLE",
+        "result": "Additional names/ages/shelter detail for previously logged al-Zeitoun incident; no double-count."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/jordan/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "status": "ACCESSIBLE",
+        "result": "November 10 webpage with November 9 dateline on previously documented weekend flooding and child fatalities; no new distinct event."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "result": "Undated ongoing food-aid constraints and cuts; no verified change during observation window."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "result": "Latest visible news November 3; no qualifying new response."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Known recurring restriction."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/tags/gaza",
+        "status": "RESTRICTED",
+        "result": "Known recurring restriction."
+      }
+    ],
+    "exclusions": [
+      "Gaza November 10 ministry casualty aggregate 74,645 killed/175,978 injured previously logged; no duplicate added.",
+      "The al-Zeitoun two fatal victims and Khan Younis victim already logged in previous hourly heartbeats; Reuters is an enrichment/corroboration only.",
+      "Storm-related deaths and flood impacts described by UNICEF and Reuters on November 9 are prior documented events, not new distinct fatalities.",
+      "Ceasefire/reconstruction deadlock reported as ongoing context, not a newly established agreement or operational change.",
+      "WFP ongoing food parcel reductions cannot be dated specifically to the current window, not a new item.",
+      "Out-of-scope West Bank detainees and unsupported social claims excluded."
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "current_status": "HTTP_502",
+        "previous_status": "HTTP_502",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "current_status": "HTTP_403",
+        "previous_status": "HTTP_403",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UN News",
+        "current_status": "RESTRICTED",
+        "previous_status": "ROBOTS_BLOCKED",
+        "material_new_deterioration": false
+      }
+    ],
+    "coverage_assessment": "Materially useful late discovery of a 13-year-old victim in the previously logged al-Zeitoun shelter strike and an earlier-published Gaza detainee medical-care interruption. No brand-new post-03:48 PST incident established. Known source access restrictions persisted; DEGRADED rather than FAILED because alternate authoritative/established reporting available.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no deployment",
+      "no merge",
+      "no social posting",
+      "no schedule change",
+      "no automation disable"
+    ]
+  }
+}

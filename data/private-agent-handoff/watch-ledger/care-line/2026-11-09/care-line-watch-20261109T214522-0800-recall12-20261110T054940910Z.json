@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T214522-0800-recall12-20261110T054940910Z",
+  "scheduled_for": "2026-11-09T21:45:22-08:00",
+  "started_at": "2026-11-09T21:48:08-08:00",
+  "completed_at": "2026-11-09T21:49:40-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T20:48:11.500-08:00",
+    "end": "2026-11-09T21:49:40-08:00",
+    "basis": "Verified prior heartbeat completion through this run's final source review; older developments and later reports were not treated as new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Production collection remains authoritative.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T204610-0800-recall12-20261110T0447Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T20:48:11.500-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "index_accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services — MI — HHA CCN 239199 — Termination Notice",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_prior_heartbeat": 0,
+      "note": "Previously captured as pending_review in the November 9 watch; no fresh CMS notice was visible. Medicare termination notice does not itself establish closure of the physical agency."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "hospital emergency department closed suspended November 9 2026 November 10 US overnight",
+      "labor delivery maternity unit closure interruption November 9 2026 U.S. hospital",
+      "psychiatric behavioral health inpatient hospital closure suspension November 9 2026",
+      "dialysis cancer oncology clinic closed services suspended November 9 2026 United States",
+      "rural hospital emergency room closing suspended services November 9 2026",
+      "ambulance EMS station service closed suspended November 9 2026",
+      "medical helicopter air ambulance base closing suspension November 9 2026",
+      "primary care health center abrupt closure patients November 9 2026",
+      "hospital emergency department reopens restores emergency services November 9 2026 United States",
+      "hospital ambulance diversion ended restriction lifted November 9 2026 Waukegan Vista Medical",
+      "Puerto Rico Guam Virgin Islands Northern Mariana American Samoa healthcare clinic emergency ambulance suspension November 9 2026",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-11-09\" \"Rescission\" OR \"CLIA\" OR \"Termination\""
+    ],
+    "targeted_search_recency_days": 1,
+    "searched_classes": [
+      "hospital, ED, maternity, behavioral health, dialysis, oncology, primary care closures/suspensions",
+      "emergency and rural service loss",
+      "ambulance and air-medical base suspensions/closures",
+      "CMS terminations, rescissions, CLIA restrictions",
+      "concrete restorations/reopenings",
+      "U.S. territories"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan, IL EMS bypass",
+        "source_url": "https://abc7chicago.com/post/vista-health-system-news-medical-center-east-waukegan-il-ems-bypass-amid-american-healthcare-systems-payroll-issues/20027472/",
+        "reason": "Local ABC7 report stamped 2026-11-09 22:54 Central (20:54 Pacific), but describes the known EMS bypass that began November 7, not a new or restored service. Reporting adds impact detail; not a separate novel event."
+      },
+      {
+        "item": "Adventist Health White Memorial ED ambulance diversion, Boyle Heights, CA",
+        "source_url": "https://wearemitu.com/wearemitu/news/ice-boyle-heights-hospital-er-white-memorial/",
+        "reason": "November 9 recap of a roughly two-hour diversion November 6; already reviewed."
+      },
+      {
+        "item": "Kula Hospital, Maui, HI restoration funding",
+        "source_url": "https://www.mauinews.com/news/local-news/2026/09/green-announces-65-million-for-kula-hospital-restoration/",
+        "reason": "Planning/funding announcement; ED still closed, no newly effective restoration."
+      },
+      {
+        "item": "Guam Memorial Hospital storm-related service suspensions",
+        "source_url": "https://ghs.guam.gov/node/4352",
+        "reason": "Official October 16 notice, outside hourly novelty window."
+      },
+      {
+        "item": "Martin General Hospital proposed reopening, NC",
+        "source_url": "https://wcti12.com/news/local/don-davis-pushes-to-reopen-martin-general-hospital",
+        "reason": "July funding advocacy only, no implemented restoration."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Bounded 12-search web recall is not exhaustive of U.S. states/territories or low-indexed local outlets.",
+      "Near-real-time local publication/indexing delays may conceal events from the past hour.",
+      "No independent production queue access or primary collection reconciliation; compared against verified prior heartbeat and known earlier watch records."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule change",
+      "no task disablement"
+    ]
+  }
+}

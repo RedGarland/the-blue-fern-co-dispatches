@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T105056-0800-r11-20261110T185056Z",
+  "scheduled_for": "2026-11-10T10:45:54-08:00",
+  "started_at": "2026-11-10T10:50:56-08:00",
+  "completed_at": "2026-11-10T10:52:39.775-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T09:51:56.804-08:00",
+    "end_at": "2026-11-10T10:52:39.775-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Previous independently read-back verified watch-ledger completion, to this check. Source event and publication dates compared with this bound; older incidents and advance notices excluded.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T095024-0800-r11-20261110T175024Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary four-class high-value recall only, not the production nationwide collector; no finding is not proof of nationwide absence.",
+    "target_classes": [
+      "Loss/closure/fire/disaster of sole/only/last/full-service grocery",
+      "Emergency food distribution cancellation from storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 10 2026",
+      "\"sole grocery store\" fire closed November 2026 community",
+      "\"last grocery store\" shutdown fire town November 10 2026",
+      "\"only full-service grocery store\" closes November 2026",
+      "\"food distribution\" \"canceled\" storm November 10 2026",
+      "\"food pantry\" \"closed\" flooding November 10 2026",
+      "\"food bank\" \"suspended\" service November 10 2026",
+      "\"food distribution\" \"cancelled\" power outage November 10 2026",
+      "\"SNAP\" \"EBT\" outage \"November 10, 2026\" benefits state",
+      "\"WIC\" \"service interruption\" \"November 10\" 2026",
+      "\"food pantry\" \"temporarily closed\" \"Nov 10, 2026\"",
+      "\"food bank\" \"distribution canceled\" \"November 10\" 2026 weather"
+    ],
+    "search_engines": "12 targeted fast web searches, requested short publication recency; actual publication/event timestamps reviewed independently.",
+    "direct_source_checks": {
+      "count": 14,
+      "successful": 12,
+      "failed": 2,
+      "urls": [
+        "https://status.joinforage.app/",
+        "https://status.joinforage.app/uptime",
+        "https://ebtcheckup.com/states/colorado/",
+        "https://viconsortium.com/vi-community_center/virgin-islands-usda-approved-snap-replacement-delivers--539-891-to-3-755-st--thomas-st--john-households-after-wapa-outages",
+        "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "https://www.fns.usda.gov/snap",
+        "https://www.fns.usda.gov/newsroom",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.ri.gov/",
+        "https://dhs.georgia.gov/",
+        "https://www.northamptonsurvival.org/get-food/calendar/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Federal SNAP direct-page gap; alternative state pages and search results accessible."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "USDA/FNS newsroom direct-page gap recurring from prior check; no new material scope gap identified."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "reason": "Kalona, Iowa only full-service grocery operating and seeking buyer; published Nov 8; possible future closure, not an actual new loss."
+      },
+      {
+        "source_url": "https://status.joinforage.app/",
+        "reason": "Processor maintenance for MT, PA, NJ and AS completed Nov 10 at 12:00 UTC (04:00 PST); announced Nov 3, well before the 09:51–10:52 PST interval; no new incident."
+      },
+      {
+        "source_url": "https://viconsortium.com/vi-community_center/virgin-islands-usda-approved-snap-replacement-delivers--539-891-to-3-755-st--thomas-st--john-households-after-wapa-outages",
+        "reason": "Nov 10 reporting concerns benefits already restored Nov 7 following October outages; not new disruption."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Prospective Nov 21 application/renewal document requirement; no confirmed immediate interruption."
+      },
+      {
+        "source_url": "https://dhs.ri.gov/",
+        "reason": "DHS offices conducting remote service during pest treatment; undated notice, alternate channels remain, no newly timed SNAP interruption established."
+      },
+      {
+        "source_url": "https://www.northamptonsurvival.org/get-food/calendar/",
+        "reason": "Calendar shows routine distribution times/holiday closures rather than newly canceled disaster distribution."
+      }
+    ],
+    "excluded_categories": "Donation drives, guides, recipes, opinion, inflation news, normal scheduled services, older/disaster-recovery stories, foreign cases, planned future changes without current impact, duplicates.",
+    "assessment": "No newly dated, verified qualifying four-class food-access disruption during the November 10, 2026 09:51–10:52 PST supplemental watch. Two recurring USDA direct endpoints blocked with HTTP 403, while 12 searches and 12 successfully opened direct sources supported bounded coverage.",
+    "material_degradation": false,
+    "approval_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

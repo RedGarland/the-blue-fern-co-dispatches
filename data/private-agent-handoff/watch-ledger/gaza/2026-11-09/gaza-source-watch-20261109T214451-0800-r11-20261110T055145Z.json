@@ -1,0 +1,160 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261109T214451-0800-r11-20261110T055145Z",
+  "scheduled_for": "2026-11-09T21:44:51-08:00",
+  "started_at": "2026-11-09T21:49:50-08:00",
+  "completed_at": "2026-11-09T21:51:45.003-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T20:44:57-08:00",
+    "end": "2026-11-09T21:51:45.003-08:00",
+    "previous_run_completed_at": "2026-11-09T20:44:57-08:00",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Previous run completed_at read and verified from authenticated ops/watch-ledger heartbeat. Palestinian local 10 November 07:42 equals Pacific 9 November 21:42, within this observation window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-khan-younis-offshore-fisher-injured-boats-damaged-wafa",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/10/%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%B5%D9%8A%D8%A7%D8%AF-%D9%88%D8%AA%D8%B6%D8%B1%D8%B1-%D9%85%D8%B1%D9%83%D8%A8%D9%8A-%D8%B5%D9%8A%D8%AF-%D8%A8%D9%86%D9%8A%D8%B1%D8%A7%D9%86-%D8%A8%D8%AD%D8%B1%D9%8A%D8%A9",
+      "title": "إصابة صياد وتضرر مركبي صيد بنيران بحرية الاحتلال قبالة ساحل خان يونس",
+      "title_english": "Fisherman injured and two fishing boats damaged by Israeli naval fire off Khan Younis",
+      "publisher": "WAFA — Palestine News and Information Agency",
+      "source_publication_date": "2026-11-10",
+      "source_publication_time": "07:42 Asia/Jerusalem (21:42 PST on 2026-11-09)",
+      "event_date": "2026-11-10",
+      "event_time": null,
+      "location": "Offshore Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One fisherman reportedly injured; two civilian fishing boats reportedly damaged; fishing livelihoods",
+      "exact_supporting_passage": "أُصيب صياد، اليوم الثلاثاء، جراء إطلاق زوارق بحرية الاحتلال الإسرائيلي النار تجاه مراكب الصيادين قبالة ساحل مدينة خان يونس",
+      "source_type": "Palestinian national news agency (single-source direct report)",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "observation_window_pst": "2026-11-09T20:44:57-08:00 to 2026-11-09T21:51:45.003-08:00",
+        "discovered_via": "Direct WAFA Arabic homepage and article; first six and second six additional targeted searches showed no independently verified duplicate",
+        "publisher_local_date": "2026-11-10",
+        "reported_cause": "WAFA attributes the gunfire to Israeli naval vessels",
+        "injury_severity": null,
+        "identities": null,
+        "independent_confirmation": null,
+        "story_is_distinct_from_previous_watch_findings": true,
+        "previously_recorded_jabalia_death_and_nuseirat_collapse_are_not_part_of_this_finding": true
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall; not primary Gaza production collector or publisher.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-09/gaza-source-watch-20261109T204451-0800-r11-20261110T044457Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/situation-reports",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed 9 November 2026 Heavy Rains report covers 6–8 November flooding and was assessed previously; no distinct in-window development."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502",
+        "result": "Global portal accessible; no new window-specific hospital, medical evacuation, ambulance, fuel or health-capacity update. Regional endpoint 502, as in prior heartbeat."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details \"10/November/2026\" Gaza killed injured",
+      "site:wafa.ps/news/2026/11/10 غزة صباح الثلاثاء قصف شهداء إصابات",
+      "site:palestinercs.org Gaza November 10 2026 ambulance emergency",
+      "site:reuters.com/world/middle-east/ Gaza November 10 2026 deaths ceasefire rain aid",
+      "site:apnews.com/article Gaza November 10 2026 Palestinians flooding ceasefire aid",
+      "site:aljazeera.com/news/2026/11/10 Gaza Israel aid casualties rain",
+      "site:unicef.org/sop 10 November 2026 Gaza clinics storm injured",
+      "site:reliefweb.int/report/occupied-palestinian-territory 10 Nov 2026 Gaza food hospital shelter",
+      "site:wfp.org/news Gaza November 10 2026 crossings food kitchens",
+      "site:news.un.org/en/ Gaza November 10 2026 aid medical evacuations",
+      "site:middleeasteye.net/news Gaza November 10 2026 night deaths injuries",
+      "Gaza 10 November 2026 Tuesday morning killed injured medical evacuations Rafah crossings storms"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "Last-news index still led with 9 November items, including already recorded Jabalia casualty; Arabic site led with 10 November fisher injury."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "result": "10 November 07:42 Palestine local direct report of an injured fisherman and two damaged boats off Khan Younis, new since previous watch."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "result": "Latest public news item 3 November; no newly published in-window Gaza EMS incident."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring access restriction; OCHA, WHO global and other sources served as alternatives."
+      }
+    ],
+    "excluded_or_unverified": [
+      {
+        "item": "OCHA 9 November Heavy Rains report and Reuters/AP/Al Jazeera reports of flooding, displacement, deaths and shelter damage",
+        "reason": "6–8 November storm and previously assessed reporting, not distinct in-window changes."
+      },
+      {
+        "item": "Jabalia death follow-up, Nuseirat tent-collapse injuries, 23-patient Rafah evacuation and Gaza casualty totals from 9 November",
+        "reason": "Already recorded or pre-window; excluded duplicates."
+      },
+      {
+        "item": "10 November institutional appeals for aid entry and older 2025–early 2026 health/crossings/ceasefire reporting",
+        "reason": "Not a verifiable in-window change in access, capacity or policy."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "current_status": "HTTP_502",
+        "previous_status": "HTTP_502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global portal and OCHA available."
+      },
+      {
+        "publisher": "UNRWA",
+        "current_status": "HTTP_403",
+        "previous_status": "HTTP_403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA and established agencies available."
+      },
+      {
+        "publisher": "UN News",
+        "current_status": "ROBOTS_BLOCKED",
+        "previous_status": "SEARCH_BLOCKED_ROBOTS",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA official source accessible."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked first; 12 subsequent targeted searches plus direct publisher checks. One new traceable WAFA report of civilian fishery impact identified. Source is single-agency reporting; no independent corroboration or severity detail. Partial recurring access limitations warrant DEGRADED, not FAILED.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no merge",
+      "no deployment",
+      "no social posting",
+      "no schedule change",
+      "no automation disable"
+    ]
+  }
+}

@@ -1063,7 +1063,7 @@ def _render_edition(bundle: CatchupBundle) -> bytes:
             ]
         )
         chunks.extend(
-            f'<li><a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(copy["publisher"])}</a></li>'
+            f'<li><a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(urlsplit(url).hostname or url)}</a></li>'
             for url in copy["source_links"]
         )
         chunks.append("</ul></article>")

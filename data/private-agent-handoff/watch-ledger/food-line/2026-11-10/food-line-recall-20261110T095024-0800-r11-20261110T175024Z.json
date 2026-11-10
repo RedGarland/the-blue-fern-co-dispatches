@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T095024-0800-r11-20261110T175024Z",
+  "scheduled_for": "2026-11-10T09:45:54-08:00",
+  "started_at": "2026-11-10T09:50:24-08:00",
+  "completed_at": "2026-11-10T09:51:56.804-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T08:49:28.947-08:00",
+    "end_at": "2026-11-10T09:51:56.804-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Since prior independently verified watch-ledger completed_at; source publication times compared with hourly bound; historical results excluded.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T084751-0800-r11-20261110T164751Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary four-class recall only; production Food Line collection remains authoritative. A negative result does not establish nationwide absence.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss, closure, fire or disaster",
+      "Disaster/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry or food bank service closure/major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" fire closed November 10 2026 community",
+      "\"sole grocery store\" \"Nov 10\" 2026 flood fire shut",
+      "\"last grocery store\" closed today November 10 2026",
+      "\"food distribution\" cancelled storm November 10 2026 food bank",
+      "\"food pantry\" distribution canceled flooding power outage November 10 2026",
+      "\"food bank\" \"closed\" \"November 10, 2026\" emergency",
+      "\"food pantry\" \"temporarily closed\" \"November 10\" 2026",
+      "\"SNAP\" benefits \"interrupted\" \"November 10, 2026\" state",
+      "\"WIC\" services suspended outage \"November 10\" 2026",
+      "site:gov \"SNAP\" \"EBT\" outage November 10 2026 service disruption",
+      "\"Nov 10, 2026\" \"grocery store\" \"fire\" closed town",
+      "\"November 10, 2026\" \"food distribution\" canceled OR postponed OR suspended"
+    ],
+    "search_engines": "12 targeted fast web searches with 1-day recency preference; actual reported publication/event dates independently reviewed.",
+    "direct_source_checks": {
+      "count": 13,
+      "successful": 11,
+      "failed": 2,
+      "urls": [
+        "https://www.wesanews.org/education/2026-11-10/pittsburgh-schools-snap-cuts-food-pantries",
+        "https://www.fns.usda.gov/snap",
+        "https://www.fns.usda.gov/newsroom",
+        "https://dss.mo.gov/food-assistance/food-stamp-program",
+        "https://dhs.georgia.gov/",
+        "https://dhs.ri.gov/",
+        "https://lcs-la.org/events",
+        "https://unitedfoodbank.org/general/month/",
+        "https://www.northamptonsurvival.org/get-food/calendar/",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden on direct open",
+          "impact": "Federal SNAP direct-page gap; accessible state official pages checked."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden on direct open",
+          "impact": "Federal FNS newsroom direct-page gap; broader search and alternative official state pages remained available."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.wesanews.org/education/2026-11-10/pittsburgh-schools-snap-cuts-food-pantries",
+        "reason": "Published Nov 10 05:32 EST (02:32 PST), before this watch interval. Photos note Brownsville Road Shop 'n Save was already closed by Oct 30; no new immediate closure during this hour. Pantry openings and general SNAP effects are out of this bounded recall."
+      },
+      {
+        "source_url": "https://www.fox10tv.com/video/2026/10/08/prodisee-pantry-cancels-oct-10-food-distribution-stockton-due-weather/",
+        "reason": "Reported October 7 cancellation for October 10; historic, not new."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "November 21 prospective SNAP application/renewal documentation changes, not a new immediate interruption."
+      },
+      {
+        "source_url": "https://www.northamptonsurvival.org/get-food/calendar/",
+        "reason": "November 11 routine holiday closure, not abrupt loss from disaster."
+      },
+      {
+        "source_url": "https://lcs-la.org/events",
+        "reason": "Listed scheduled Nov 10 distribution; no cancellation notice found."
+      },
+      {
+        "source_url": "https://www.hindustantimes.com/cities/pune-news/six-family-members-killed-in-fire-at-grocery-store-in-dharashiv-dist-101794249542790.html",
+        "reason": "Grocery fire is in India, outside U.S. scope."
+      },
+      {
+        "source_url": "https://www.grocerycpg.com/article/sysco-calls-on-teamsters-locals-to-end-la-facility-strike",
+        "reason": "Broadline foodservice labor disruption; not one of the four qualifying miss classes and no confirmed emergency food access interruption."
+      },
+      {
+        "source_url": "https://frtracker.app/fr/2026-22876",
+        "reason": "FY2027 TEFAP availability notice, not emergency distribution cancellation or immediate benefit interruption."
+      }
+    ],
+    "excluded_categories": "Donation campaigns, resource guides, normal distributions, recipe/opinion/inflation articles, planned program changes, foreign incidents, legacy October/2025 disruption reports, duplicates.",
+    "assessment": "No new independently verified qualifying signal surfaced in the bounded November 10 08:49–09:51 PST interval. Two federal USDA direct pages returned 403, causing nonmaterial degraded status; accessible state/food provider sites and searches provided partial coverage. This is not a nationwide clearance.",
+    "material_degradation": false,
+    "approval_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T014813-0800-recall12-20261110T094922Z",
+  "scheduled_for": "2026-11-10T01:45:22-08:00",
+  "started_at": "2026-11-10T01:48:13-08:00",
+  "completed_at": "2026-11-10T01:49:22-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T00:46:22-08:00",
+    "end": "2026-11-10T01:49:22-08:00",
+    "basis": "From prior verified Care Line recall heartbeat completion; bounded searches prioritize only newly identified, concrete, nonduplicate healthcare-access changes; production collection authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Care Line recall check, not the primary national collector.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T004509-0800-recall12-20261110T0846Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T00:46:22-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_visible_notice": "Compassionate Home Health Services — Michigan — CCN 239199 — Termination Notice",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "previous_watch_already_recorded": true,
+      "new_notices_since_previous_watch": 0,
+      "note": "An obsolete CMS URL initially returned an access error; canonical CMS Public Notices page was then located and checked successfully before broader searches."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_recency_days": 2,
+    "targeted_search_queries": [
+      "November 10 2026 hospital emergency room closed suspended ambulance diversion United States",
+      "November 10 2026 maternity labor delivery services closing temporarily suspended hospital",
+      "November 10 2026 rural hospital emergency department closing reopening health services",
+      "November 10 2026 mental health psychiatric behavioral health inpatient facility closed patients",
+      "\"November 10, 2026\" \"dialysis\" \"closed\" OR \"suspended\" United States",
+      "\"November 10, 2026\" oncology cancer clinic primary care \"closing\" \"patients\"",
+      "ambulance paramedic service closed suspended air medical base November 9 10 2026 United States",
+      "hospital emergency services restored reopened November 10 2026 United States",
+      "November 10 2026 November 9 hospital emergency closure interruption news Guam Puerto Rico US Virgin Islands American Samoa CNMI",
+      "\"November 10, 2026\" hospital clinic dialysis ambulance Puerto Rico Guam closed suspended",
+      "site:*.gov \"November 9, 2026\" \"suspension\" \"hospital\" \"services\" health",
+      "\"Nov. 10, 2026\" \"hospital\" \"ambulances\" \"closed\" OR \"reopened\""
+    ],
+    "searched_classes": [
+      "hospital emergency department maternity behavioral-health dialysis oncology primary-care closure or suspension",
+      "emergency or rural service loss",
+      "ambulance air-medical service/base closure or suspension",
+      "CMS provider termination/rescission and CLIA restrictions",
+      "concrete essential-service restoration or reopening",
+      "U.S. states and territories"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania, state-ordered shutdown and future license revocation",
+        "source_url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "New November 9 article recaps preexisting November 4 and November 6 closure actions, already reported by Becker's on November 7; no newly effective event in this observation window."
+      },
+      {
+        "item": "Vista Medical Center East, Waukegan Illinois, EMS bypass",
+        "source_url": "https://abc7chicago.com/post/vista-health-system-news-medical-center-east-waukegan-il-ems-bypass-amid-american-healthcare-systems-payroll-issues/20027472/",
+        "reason": "Previously documented EMS bypass began November 7; duplicate."
+      },
+      {
+        "item": "Vandalia Health Greenbrier Medical Center, West Virginia, labor and delivery plan",
+        "source_url": "https://westvirginiawatch.com/2026/11/05/vandalia-health-osteopathic-school-to-reopen-labor-delivery-services-at-greenbrier-medical-center/",
+        "reason": "November 5 announcement about future reopening; service not confirmed effective in observation window."
+      },
+      {
+        "item": "Guam Memorial Hospital storm-related service suspensions",
+        "source_url": "https://ghs.guam.gov/node/4352",
+        "reason": "Official release dates to October 16, 2026, not new."
+      },
+      {
+        "item": "General CMS 2027 physician fee schedule rule",
+        "source_url": "https://www.cms.gov/medicare/payment/fee-schedules/physician/federal-regulation-notices/cms-1848-f",
+        "reason": "General payment policy; no discrete immediately effective provider-access closure, suspension, or restoration."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "Same-hour local publication/indexing delays may hide events.",
+      "Search budget limits recall of smaller U.S. or territory providers.",
+      "News search results included older events with recent articles; excluded by event chronology.",
+      "Production collector/queue not read; deduplication compared earlier supplementary heartbeat and known prior-watch events."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disabling"
+    ]
+  }
+}

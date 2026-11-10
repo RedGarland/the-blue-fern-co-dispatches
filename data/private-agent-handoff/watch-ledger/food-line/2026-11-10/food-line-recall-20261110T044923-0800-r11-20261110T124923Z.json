@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T044923-0800-r11-20261110T124923Z",
+  "scheduled_for": "2026-11-10T04:45:54-08:00",
+  "started_at": "2026-11-10T04:49:23-08:00",
+  "completed_at": "2026-11-10T12:51:21.756+00:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T02:48:10.740-08:00",
+    "end_at": "2026-11-10T12:51:21.756+00:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Conservative overlap beginning at latest independently verified Food Line heartbeat (02:48 PST). A possible intervening 03:45 checkpoint was not independently enumerated; publication/event timing was evaluated against the confirmed checkpoint and historical stories excluded.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T024512-0800-r11-20261110T104512Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; primary nationwide Food Line production collection remains authoritative. No nationwide clearance claimed.",
+    "target_classes": [
+      "Only/sole/last/full-service local grocery loss or disaster",
+      "Storm/flood/fire/outage/damage-related cancellation of emergency distributions",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast, nominal recency 2 days; result set included out-of-window material",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" fire closed November 9 2026 United States",
+      "\"sole grocery store\" closes fire November 10 2026 rural",
+      "\"last grocery store\" closes \"November 2026\" rural town",
+      "\"full-service grocery\" fire destroyed closure November 10 2026",
+      "\"food distribution\" \"canceled\" storm November 9 2026",
+      "\"food bank\" distribution \"cancelled\" flood November 10 2026",
+      "\"food pantry\" \"closed until further notice\" \"November 10\" 2026",
+      "\"food bank\" \"temporarily closed\" fire flood power \"November 9\" 2026",
+      "\"food pantry\" services suspended facility damage November 2026 US",
+      "SNAP EBT outage benefits delay November 10 2026 state agency notice",
+      "WIC clinic closed benefits interrupted November 9 2026 state health department",
+      "site:gov November 10 2026 SNAP benefits paused systems outage emergency"
+    ],
+    "direct_source_checks": {
+      "count": 10,
+      "successful": 9,
+      "failed": 1,
+      "urls": [
+        "https://www.fns.usda.gov/snap/updates",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://mms.lcps.net/o/mhs/live-feed",
+        "https://dfcs.georgia.gov/",
+        "https://www.fmpfoodbank.org/",
+        "https://hawaiifoodbank.org/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Web direct fetch returned internal/unavailable error.",
+          "impact": "Nonmaterial, recurring federal endpoint blind spot; four state SNAP/WIC channels and several direct providers remained accessible; cannot clear this federal page."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://mms.lcps.net/o/mhs/live-feed",
+        "reason": "November 5 distribution cancellation due to planned construction; outside current window and not storm/disaster/facility damage; search result timestamp could not be independently matched to current view."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Featured skimming-related QUEST PIN reset warning is older (page last revised October 16); no new dated interruption."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Housing/utility documentation change scheduled November 21; no immediate benefits interruption in window."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing processing center telephone delays, without newly dated immediate interruption."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC notice dated September 2 says offices and benefits remain available."
+      },
+      {
+        "source_url": "https://www.fmpfoodbank.org/",
+        "reason": "November 9 provider social update advertises Clark/Trempealeau County distributions rather than cancellation."
+      },
+      {
+        "source_url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "reason": "November 10 and subsequent distributions listed as scheduled; no explicit fresh cancellation."
+      },
+      {
+        "source_url": "https://www.wbng.com/2026/09/11/shur-fine-food-mart-burns-after-afternoon-fire-spencer/",
+        "reason": "Spencer, NY sole grocery fire dated September 11; historic."
+      },
+      {
+        "source_url": "https://northmetrorealty.com/blog/arvada-loses-its-safeway-and-the-bluegrass-this-fall-heres-where-november-goes-instead",
+        "reason": "Arvada closing Safeway not sole/full-service grocery (King Soopers and others remain); Oct 29 announcement."
+      }
+    ],
+    "excluded_categories": "Donation drives, scheduled distributions and guidance, historic reports, generic price stories, out-of-country events, routine planned closures, duplicate incidents and nonimmediate policy changes.",
+    "assessment": "No new qualifying, source-backed disruption found within bounded searches and direct checks. USDA SNAP update endpoint inaccessible; useful state/provider coverage retained.",
+    "material_degradation": false,
+    "approval_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T034837-0800-r11-20261110T114837Z",
+  "scheduled_for": "2026-11-10T03:45:54-08:00",
+  "started_at": "2026-11-10T03:48:37-08:00",
+  "completed_at": "2026-11-10T03:49:51-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T02:48:10.740-08:00",
+    "end_at": "2026-11-10T03:49:51-08:00",
+    "observation_date": "2026-11-10",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since independently verified prior Food Line heartbeat; recency-limited targeted searches also reviewed recent overlapping material to avoid date-index misses.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T024512-0800-r11-20261110T104512Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch for high-value misses; primary nationwide Food Line production collector remains authoritative. No nationwide absence claim.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery lost to closure, fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or damage",
+      "Abrupt food-pantry or food-bank shutdown or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast with 2-day recency setting; returned some historical results that were filtered by actual publication date.",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" fire closed November 10 2026 town",
+      "\"sole grocery store\" closure fire November 9 2026 United States",
+      "\"last grocery store\" \"November\" \"2026\" closing town",
+      "\"full-service grocery\" fire closed November 2026 rural",
+      "\"food distribution\" \"canceled\" storm flood November 10 2026",
+      "\"food bank\" \"distribution\" canceled November 9 2026 weather",
+      "\"emergency food distribution\" suspended due to damage November 2026",
+      "\"mobile food pantry\" canceled today November 10 2026",
+      "\"food pantry\" \"closed until further notice\" November 10 2026",
+      "\"food bank\" \"temporarily closed\" November 9 2026 outage",
+      "SNAP EBT system outage benefits interrupted November 10 2026 state agency",
+      "WIC benefits office closed interrupted November 10 2026 state department"
+    ],
+    "direct_source_checks": {
+      "count": 9,
+      "successful": 8,
+      "failed": 1,
+      "urls": [
+        "https://www.fns.usda.gov/snap/updates",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://dfcs.georgia.gov/",
+        "https://hawaiifoodbank.org/",
+        "https://www.fmpfoodbank.org/",
+        "https://www.kcbd.com/2026/11/09/south-plains-food-bank-announces-holiday-closures-updates/",
+        "https://www.953mnc.com/2026/11/10/food-bank-of-northern-indiana-2026-turkeys-on-the-table-distributions/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct source fetch returned internal error/inaccessible; also unavailable in preceding runs.",
+          "impact": "Nonmaterial to this bounded run, given accessible state notices and targeted searches; official federal SNAP updates page was not cleared."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.kcbd.com/2026/11/09/south-plains-food-bank-announces-holiday-closures-updates/",
+        "reason": "Published Nov 9; scheduled holidays, not an abrupt weather/facility interruption; excluded as routine closure."
+      },
+      {
+        "source_url": "https://www.953mnc.com/2026/11/10/food-bank-of-northern-indiana-2026-turkeys-on-the-table-distributions/",
+        "reason": "Nov 10 planned food distributions, not a cancellation or reduced access."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Previously noted documentation requirement starts Nov 21; no immediate cutoff in the observation window."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing longer telephone processing waits without new time-stamped interruption."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "Sep 2 update confirms California WIC offices and benefits operational."
+      },
+      {
+        "source_url": "https://www.fmpfoodbank.org/",
+        "reason": "Nov 9 provider post advertises upcoming Clark and Trempealeau county distributions, not a cancellation."
+      },
+      {
+        "source_url": "https://hawaiifoodbank.org/",
+        "reason": "Assistance and disaster-response resources, no new dated suspension apparent."
+      }
+    ],
+    "excluded_categories": "Previously reported or historical closures/fires, routine holiday closings, planned distributions, generic resource guides, promotional donation appeals, stale SNAP news and incidents without a newly confirmed immediate disruption.",
+    "assessment": "No new qualifying evidence in 12 targeted web searches and 9 direct-source checks. One persistently inaccessible USDA source endpoint; otherwise useful coverage retained.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261109T194657-0800-recall12-20261110T0348Z",
+  "scheduled_for": "2026-11-09T19:45:22-08:00",
+  "started_at": "2026-11-09T19:46:57-08:00",
+  "completed_at": "2026-11-09T19:48:39.893-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-09",
+    "start": "2026-11-09T18:51:59.027-08:00",
+    "end": "2026-11-09T19:48:39.893-08:00",
+    "basis": "Beginning at completion of latest verified prior Care Line Watch heartbeat; evaluated notice dates, event dates and publication timestamps separately from search-index crawl time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall; production nationwide collection remains authoritative and was not changed.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-09/care-line-watch-20261109T184912-0800-recall12-20261110T025159027Z.json",
+    "prior_heartbeat_completed_at": "2026-11-09T18:51:59.027-08:00",
+    "prior_heartbeat_verified": true,
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "live_index_accessible": true,
+      "latest_visible_notice_date": "2026-11-09",
+      "latest_notice": "Compassionate Home Health Services — Michigan — termination notice — Home Health Agency — CCN 239199",
+      "exact_supporting_passage": "2026-11-09  | Compassionate Home Health Services  | Termination Notice  | 239199  | Home Health Agency (HHA)  | MI",
+      "new_notices_since_prior_heartbeat": 0,
+      "note": "Live opened CMS index shows November 9 notice, already recorded as pending_review in earlier heartbeat; search-preview snippet lagged to November 2. No novel CMS index entries found."
+    },
+    "additional_targeted_searches_count": 12,
+    "targeted_search_queries": [
+      "\"November 9, 2026\" hospital \"emergency department\" closure suspended United States",
+      "\"November 9, 2026\" maternity labor delivery unit closing suspended hospital",
+      "\"November 9, 2026\" behavioral health psychiatric hospital unit services closing",
+      "\"November 9, 2026\" dialysis oncology chemotherapy clinic closing services",
+      "\"November 9, 2026\" EMS ambulance emergency medical service station closure suspension",
+      "\"November 9, 2026\" air medical helicopter ambulance base closing service",
+      "November 9 2026 rural hospital emergency room suspended services loss medical center US counties",
+      "November 9 2026 urgent care primary care clinic closed patients notice healthcare",
+      "November 9 2026 hospital emergency reopened restoration dialysis maternity services United States",
+      "November 9 2026 Medicare CMS termination notice provider CLIA suspension rescission November 9",
+      "November 9 2026 Puerto Rico Guam Virgin Islands Mariana Islands American Samoa hospital clinic service suspension emergency",
+      "November 9 2026 hospital shutting down patients transfers emergency care local news November 10"
+    ],
+    "targeted_search_recency_days": 2,
+    "searched_classes": [
+      "hospital, ED, maternity, behavioral health, dialysis, oncology, primary-care closure/suspension",
+      "emergency and rural service loss",
+      "ambulance and air-medical base/service closure",
+      "CMS termination/rescission and CLIA limitation/suspension",
+      "concrete restoration of previously lost essential service",
+      "U.S. territories"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Vista Medical Center East, Waukegan IL full EMS bypass",
+        "source_url": "https://abc7chicago.com/post/vista-health-system-news-medical-center-east-waukegan-il-ems-bypass-amid-american-healthcare-systems-payroll-issues/20027472/",
+        "reason": "EMS bypass began November 7 and was reviewed in prior watches; ABC7 November 9 10:54 PM Central reporting is after this run's 7:47 PM Pacific cutoff and does not establish a newly changed service this hour."
+      },
+      {
+        "item": "Boca Raton Regional Hospital new Gloria Drummond Patient Tower",
+        "source_url": "https://baptisthealth.net/newsroom/press-release/boca-raton-regional-hospital-opens-new-gloria-drummond-patient-tower",
+        "reason": "November 9 opening expands existing services; not restoration of a previously lost essential service."
+      },
+      {
+        "item": "North Devon District Hospital maternity unit remains closed",
+        "source_url": "https://www.aol.com/articles/maternity-unit-remain-shut-over-180403000.html",
+        "reason": "United Kingdom, outside U.S. and territories; prolonged prior closure, no new U.S. service effect."
+      },
+      {
+        "item": "Bradford Regional Medical Center PA previously announced closure",
+        "source_url": "https://radio.wpsu.org/2026-02-18/bradford-regional-medical-center-mckean-county-pa-hospital-closing-inpatient-emergency-services",
+        "reason": "February 2026 announcement, not new in current observation window."
+      },
+      {
+        "item": "Watsonville Community Hospital potential future closure",
+        "source_url": "https://pajaronian.com/watsonville-hospital-facing-closure-as-staff-urges-financial-improvements/",
+        "reason": "September report of financial risk and conditional closure in six to twelve months, no new concrete service change."
+      },
+      {
+        "item": "Veterans Day modified outpatient hours at Fort Campbell",
+        "source_url": "https://www.clarksvilleonline.com/2026/11/07/bach-announces-holiday-hours-for-veterans-day-and-fort-campbell-donsa/",
+        "reason": "Preannounced routine holiday schedule, not sudden loss/restoration in current watch window."
+      }
+    ],
+    "source_access_errors": [],
+    "coverage_limitations": [
+      "CMS search-preview was stale, but the live canonical index was opened successfully and verified.",
+      "Same-hour reporting lag limits discoverability of incidents occurring during this brief observation window.",
+      "Bounded public search results provide limited territory-local coverage and do not establish exhaustive national absence.",
+      "No independent production-queue check; duplicate screening used prior authoritative watch heartbeat and earlier documented findings."
+    ],
+    "material_coverage_loss": false,
+    "notification_warranted": false,
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no schedule modification",
+      "no task disablement"
+    ]
+  }
+}

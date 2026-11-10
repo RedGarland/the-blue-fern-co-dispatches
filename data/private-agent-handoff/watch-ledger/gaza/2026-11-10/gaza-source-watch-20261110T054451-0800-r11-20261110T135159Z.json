@@ -1,0 +1,179 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T054451-0800-r11-20261110T135159Z",
+  "scheduled_for": "2026-11-10T05:44:51-08:00",
+  "started_at": "2026-11-10T05:49:49-08:00",
+  "completed_at": "2026-11-10T13:53:22.812Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T04:50:20-08:00",
+    "end": "2026-11-10T13:53:22.812Z",
+    "previous_run_completed_at": "2026-11-10T04:50:20-08:00",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Started from the prior verified Gaza Source Watch heartbeat. Includes distinct late-discovered prior-window casualty report and a newly dated operational shelter-access disclosure; source publication timestamps are not assumed to indicate incident timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-daraj-near-school-airstrike-one-killed-reuters",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+      "title": "Reuters reports one additional person killed in a strike near a school in Gaza City's Daraj neighborhood",
+      "publisher": "Reuters",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": "2026-11-10T11:47:00Z",
+      "publication_time_pst": "2026-11-10T03:47:00-08:00",
+      "updated_at": null,
+      "event_date": "2026-11-10",
+      "event_time": null,
+      "location": "Daraj neighborhood, Gaza City, Gaza Strip, near an unidentified school",
+      "affected_population_system": "One person reported killed in an Israeli airstrike near a school; victim identity and civilian/combatant status not verified. Separate from two previously logged al-Zeitoun deaths and one previously logged Khan Younis death. School damage or casualties among school occupants not established.",
+      "exact_supporting_passage": "A third Palestinian was killed in an Israeli airstrike near a school in Gaza City's Daraj neighbourhood, health officials added.",
+      "source_type": "Established international news agency attributing death to Gaza health officials and separately reporting Israeli military acknowledgement of a strike in the area",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "discovered_during_run": "2026-11-10T05:49:49-08:00 onward",
+        "publication_in_observation_window": false,
+        "late_discovered_prior_window_miss": true,
+        "prior_reuters_coverage_in_previous_heartbeat": "Earlier prior-run Reuters finding covered al-Zeitoun father and son and previously logged Khan Younis fatality, but did not identify Daraj casualty.",
+        "distinct_new_death_report_count": 1,
+        "verification": "Reuters cites health officials for fatality; Israeli military told Reuters it struck militants in both Gaza City areas, without giving further details. A separate corroborating medical-source publication was not found in bounded checks.",
+        "uncertainty": "Reuters page may have been updated after its initial 03:47 PST timestamp, but no exact update time is displayed. Cannot establish incident time or whether death was reflected in existing published ministry aggregate.",
+        "search_source": "Additional targeted Reuters search #2, Daraj follow-up #7, direct Reuters article read"
+      }
+    },
+    {
+      "finding_id": "gaza-20261110-prcs-only-1618-tents-received-2026-shelter-supply-followup",
+      "canonical_source_url": "https://www.palestinercs.org/public/files/image/2026/press%20releases/PRCS%20Calls%20On%20the%20International%20Community%20for%20Immediate%20Action.pdf",
+      "title": "Palestine Red Crescent discloses receiving only 1,618 tents since start of 2026 amid Gaza shelter and access shortfalls",
+      "publisher": "Palestine Red Crescent Society (PRCS)",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": null,
+      "publication_time_pst": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Shelter provision for displaced households; PRCS's reported receipt of 1,618 tents during 2026 to date, versus widespread flood and emergency shelter needs. This is PRCS-specific cumulative supply, not a Gaza-wide tent-entry total or a newly occurring interdiction.",
+      "exact_supporting_passage": "For example, PRCS has only received 1618 of tents since the start of 2026 which does not meet the immense needs of displaced families.",
+      "source_type": "Primary humanitarian organization dated public statement (official two-page PDF)",
+      "classification": "follow-up",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "discovered_during_run": "2026-11-10T05:49:49-08:00 onward",
+        "publication_in_observation_window": null,
+        "newly_dated_disclosure": true,
+        "novel_evidence": "Specific 2026-to-date PRCS tent receipt count previously absent from verified immediately preceding watch heartbeat.",
+        "verification": "PRCS own website lists statement as 10 Nov 2026; statement read and both PDF pages visually inspected. Count not independently audited.",
+        "uncertainty": "Publication hour and underlying transaction dates unavailable; no discrete in-window supply disruption confirmed.",
+        "deduplication": "Earlier OCHA storm casualty and flooding numbers repeated in PRCS statement were excluded; only PRCS-specific new quantified shelter capacity retained.",
+        "search_source": "Direct PRCS newsroom check after targeted search #4"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Primary daily Gaza collector and publisher remain authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T044451-0800-r11-20261110T125020Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest dated listing is 9 Nov 2026 heavy rains report for 8 Nov effects; same known storm damage and aid constraints, no distinct newly posted situation update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502",
+        "result": "Canonical WHO page accessible with no newly dated November 10 Gaza health operations; regional portal returned recurring HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps 10 November 2026 Gaza killed injured latest afternoon",
+      "site:reuters.com/world/middle-east/ 2026-11-10 Gaza November 10 2026 killed injured strikes new",
+      "site:apnews.com Gaza November 10 2026 attacks ceasefire aid",
+      "site:palestinercs.org 10 November 2026 Gaza ambulance hospital attacks",
+      "site:wfp.org November 10 2026 Gaza food aid crossings",
+      "site:unicef.org November 10 2026 Gaza displaced flood water child health",
+      "Gaza November 10 2026 Daraj neighborhood school airstrike killed November 10 Reuters",
+      "حي الدرج مدرسة استشهاد غارة 10 نوفمبر 2026 غزة",
+      "Gaza November 10 2026 ambulance medical evacuation hospital power fuel WHO updates",
+      "Gaza November 10 2026 crossing humanitarian aid opening trucks Kerem Shalom Rafah UN",
+      "Gaza November 10 2026 afternoon latest civilian strikes casualties Al Jazeera WAFA",
+      "Gaza November 10 2026 hostage detainee ceasefire negotiation withdrawal civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "status": "ACCESSIBLE",
+        "result": "One Daraj near-school death not in previous heartbeat; prior al-Zeitoun and Khan Younis fatalities not counted again."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "result": "Latest homepage November 10 stories included previously logged al-Zeitoun, Khan Younis and casualty aggregate, no new independently corroborated Daraj death; November 9 Nuseirat tent-wall injuries are historic, excluded."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "Previously logged Gaza incidents and medical detainee case, no additional qualifying post-previous-window incident established."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "result": "Newly listed Nov 10 official statement; specific PRCS tent receipt count retained as follow-up. Other storm fatalities and damage repeat earlier reporting."
+      }
+    ],
+    "exclusions": [
+      "Previously logged al-Zeitoun father and 13-year-old son, Khan Younis fatality, fisherman injury and 74,645/175,978 aggregate; no double-count.",
+      "November 9 Nuseirat tent collapse injuring three described by WAFA predates this observation window; not established as a previously missed novelty.",
+      "November 7–9 floods, sand embankment deaths, and food aid shortfalls were reported before this window.",
+      "Unverified AI-compiled social feed posts about Daraj school attack were excluded; Reuters agency reporting retained instead.",
+      "Older 2025 or early-2026 crossings/evacuation stories, general ceasefire negotiation deadlock and undated opinions excluded."
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "current_status": "HTTP_502",
+        "previous_status": "HTTP_502",
+        "material_new_deterioration": false
+      },
+      {
+        "publisher": "UNRWA",
+        "current_status": "NOT_RECHECKED",
+        "previous_status": "HTTP_403",
+        "material_new_deterioration": null
+      },
+      {
+        "publisher": "UN News",
+        "current_status": "NOT_RECHECKED",
+        "previous_status": "RESTRICTED",
+        "material_new_deterioration": null
+      }
+    ],
+    "coverage_assessment": "Two meaningful new-to-ledger items: a separate Reuters-reported death near a school in Daraj (late discovery relative to previous observation window) and PRCS's new dated quantification of 2026 shelter-tent receipts. OCHA/WHO checked first and exactly 12 additional targeted searches performed. WHO EMRO access remains impaired, but useful authoritative and established reporting available; DEGRADED rather than FAILED.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no approval",
+      "no production publication",
+      "no deployment",
+      "no merge",
+      "no social posting",
+      "no schedule change",
+      "no automation disable"
+    ]
+  }
+}

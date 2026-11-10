@@ -1,0 +1,147 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T084451-0800-r11-20261110T164918319Z",
+  "scheduled_for": "2026-11-10T08:44:51-08:00",
+  "started_at": "2026-11-10T08:47:24-08:00",
+  "completed_at": "2026-11-10T16:49:18.319Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T15:47:25.302Z",
+    "end": "2026-11-10T16:49:18.319Z",
+    "previous_run_completed_at": "2026-11-10T15:47:25.302Z",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Newly verified published evidence relative to authenticated previous hourly ledger at 07:47:25 PST; event timestamps and publication/update timestamps distinguished; previous incident findings not double counted."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-ap-shifa-four-killed-three-gaza-city-strikes-five-total-followup",
+      "canonical_source_url": "https://apnews.com/article/mideast-news-yemen-saudi-iran-november-10-2026-f4407845b6dd105e54190ccab7d55f8d",
+      "title": "AP updates November 10 Gaza casualties from four to five, citing four killed in three separate Gaza City strikes",
+      "publisher": "Associated Press (citing Shifa Hospital and Nasser Hospital)",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_utc": null,
+      "event_date": "2026-11-10",
+      "event_time": null,
+      "location": "Gaza City (three Israeli strikes; exact third-strike location unknown), and Khan Younis (previously recorded shooting), Gaza Strip",
+      "affected_population_system": "One additional fatality reported compared with earlier AP total of four, with Gaza City toll now four in three separate strikes according to Shifa Hospital; Khan Younis shooting death remains one. Civilian status, identity and precise time of added death unknown.",
+      "exact_supporting_passage": "Four people were killed in three separate Israeli strikes in Gaza City, according to Shifa Hospital.",
+      "source_type": "Established international news agency report attributing fatality count to local hospital authorities",
+      "classification": "follow-up",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "discovered_during_run": "2026-11-10T08:47:24-08:00 onward",
+        "appeared_in_source_review": "AP November 10 live-updated article currently says five deaths; previous authenticated heartbeat quotes AP at four.",
+        "comparison_with_last_heartbeat": "Previous 07:47 PST watch reported AP four fatalities across two Gaza City strikes and Khan Younis. Current AP text says four deaths in three Gaza City strikes plus one in Khan Younis.",
+        "not_added_as_hourly_death": "One additional death is newly documented in updated AP coverage, but its precise time and the article update time are unverified; do not treat as a death occurring this observation hour.",
+        "cross_source_conflict": "Prior WAFA described three killed in al-Daraj in apparent conflict with earlier Reuters/AP one near school. Updated AP figure does not fully reconcile individual Gaza City event counts or identities.",
+        "independent_confirmation": "AP attributes Gaza City fatalities to Shifa Hospital and Khan Younis death to Nasser Hospital; no independent article confirming the third-strike details located in this bounded watch.",
+        "duplication_control": "Do not recount previously reported two al-Zeitoun deaths, Daraj death, or Khan Younis death as new.",
+        "source_access": "AP direct article checked; article edit timestamp unavailable on rendered page."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Daily Gaza collector/publisher authoritative; no schedule/approval/publication/deployment changes.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T074451-0800-r11-20261110T154725Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest OCHA update listed is 09 Nov 2026 heavy-rains report; no new 10 Nov report found."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502",
+        "result": "WHO global crisis page accessible; no newly dated Nov 10 Gaza clinical capacity/evacuation item there; regional OPT page 502 (recurring)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 10 2026 latest Reuters civilian killed aid health 16:00 GMT",
+      "site:english.wafa.ps/Pages/Details/ \"10/November/2026\" Gaza 18:00 injury killed",
+      "site:palestinercs.org Gaza November 10 2026 ambulance hospitals relief flooding",
+      "site:unicef.org \"10 November 2026\" Gaza displaced children flooding water",
+      "site:wfp.org \"10 November 2026\" Gaza food assistance aid crossing",
+      "site:unrwa.org \"10 November 2026\" Gaza shelter aid",
+      "site:reliefweb.int Gaza 10 November 2026 humanitarian flood hospital November 10",
+      "site:apnews.com/article/ November 10 2026 Gaza strikes medical aid ceasefire",
+      "site:reuters.com/world/middle-east/ November 10 2026 Gaza ceasefire aid evacuations",
+      "site:aljazeera.com/news/2026/11/10/ Gaza casualties displacement ceasefire November 10 2026",
+      "site:icrc.org Gaza 10 November 2026 detainees hostages surgery aid",
+      "Gaza November 10 2026 18:00 Palestine time hospital medical evacuation Rafah crossings casualties"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-yemen-saudi-iran-november-10-2026-f4407845b6dd105e54190ccab7d55f8d",
+        "status": "ACCESSIBLE",
+        "result": "Article currently reports 5 Gaza deaths, 4 in 3 Gaza City strikes; compared with previous watch's 4 in 2 Gaza City strikes plus 1 Khan Younis. Update timing unknown."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "TIMEOUT",
+        "result": "Direct homepage timed out this run; targeted search did not surface new verifiable later Gaza report."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage lists prior dated items; no new Gaza operational bulletin."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/jordan/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "status": "SEARCH_ACCESSIBLE",
+        "result": "9 Nov statement/10 Nov repost concerns earlier storm fatalities and flood exposure, not a distinct new hour-current development."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "known_previous": true
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "known_previous": true
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "status": "RESTRICTED",
+        "known_previous": true
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "TIMEOUT",
+        "known_previous": false
+      }
+    ],
+    "exclusions": [
+      "OCHA 9 Nov heavy rains report and UNICEF 9 Nov storm fatalities, camp flooding, infrastructure and shelter risks already covered.",
+      "UNICEF equipment-rejection/Sheikh Radwan basin report, PRCS 1,618 tents cumulative count, al-Zeitoun two killed, al-Daraj disputed strike toll, Khan Younis death and fisherman injury recorded in prior watches.",
+      "Al Jazeera 10 Nov weekly includes dates Nov 1-9 and aggregate/source claims; not treated as new since last hourly check.",
+      "Previous reported fatalities are not added again to the updated AP five-person total; count revision only.",
+      "No separately verified new crossing, medical evacuation, aid, fuel, ceasefire, detention or hostage development found within bound."
+    ],
+    "status_rationale": "DEGRADED due recurring WHO EMRO HTTP 502, UNRWA HTTP 403, UN News restriction and this run's WAFA homepage timeout. OCHA/WHO global/AP/PRCS and humanitarian news/search remain usable, so coverage is not FAILED.",
+    "scope_and_limitations": "Two official checks first, then exactly 12 targeted web searches plus direct publisher reads. Search results often surfaced earlier material; AP article's update time and the third strike's exact event time remain unverified.",
+    "notification_reason": "Positive, previously unlogged hospital-sourced casualty follow-up: AP now reports five rather than four Gaza deaths on November 10 and a third Gaza City strike."
+  }
+}

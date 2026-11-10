@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T134047-0800-recall12-20261110T2142Z",
+  "scheduled_for": "2026-11-10T13:45:22-08:00",
+  "started_at": "2026-11-10T13:40:47-08:00",
+  "completed_at": "2026-11-10T13:42:46-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T12:45:20-08:00",
+    "end": "2026-11-10T13:42:46-08:00",
+    "basis": "Conservative overlap from last recorded prior hourly check start (12:45:20 PST); prior completion timestamp was not available. New reports and concrete service changes screened with delayed-index overlap."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; primary production Care Line collection is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — IL — Limitation of CLIA cert — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "November 10 Illinois CLIA limitation was previously captured as pending review, not new.",
+      "index_note": "Initial search result was stale and omitted the November 10 row; direct opening and find against canonical CMS webpage confirmed the row."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "\"November 10, 2026\" hospital emergency department closure suspended services United States",
+      "\"November 10, 2026\" maternity labor delivery hospital unit closes or suspends",
+      "\"November 10, 2026\" psychiatric behavioral health inpatient facility closure services",
+      "\"November 10, 2026\" dialysis oncology center clinic closure suspension",
+      "hospital rural emergency room closed stopped taking patients November 10 2026 United States local news",
+      "primary care clinic closed patients no longer seen November 10 2026 community",
+      "ambulance EMS coverage ended base shut down November 10 2026 local US",
+      "air medical air ambulance helicopter base close suspend service November 2026 US",
+      "hospital emergency room maternity clinic reopened resumed patients November 10 2026 United States",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands clinic hospital ambulance dialysis services closed suspended restored November 10 2026",
+      "site:gov \"November 10, 2026\" hospital emergency department closure suspension ambulance service",
+      "site:cms.gov \"11/10/2026\" \"termination\" OR \"limitation\" OR \"rescission\" clinical provider"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Advanced Urgent Care, Orland Park, Illinois",
+        "reason": "November 10 official CLIA restriction already captured in previous watch; duplicate",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "King County proposed mental-health crisis center",
+        "reason": "Construction cost change and targeted 2027 opening; no concrete immediate loss or restoration of existing service",
+        "url": "https://www.kiro7.com/news/local/king-county-mental-health-crisis-center-renovation-estimate-more-than-doubles-35-million/HXEXZ44OWFFWNHABPS6IR52YEQ/"
+      },
+      {
+        "item": "Creating Change Counseling Center, Netcong, New Jersey",
+        "reason": "Ordinary new business opening, not restoration of previously lost essential care",
+        "url": "https://wrnjradio.com/creating-change-counseling-center-opens-in-downtown-netcong/"
+      },
+      {
+        "item": "Ridge Meadows Hospital temporary maternity diversion",
+        "reason": "Hospital is in British Columbia, Canada, outside geographic scope",
+        "url": "https://www.fraserhealth.ca/your-community/maple-ridge/Temporary-Maternity-Diversions-at-Ridge-Meadows-Hospital"
+      },
+      {
+        "item": "Guam Memorial Hospital, Guam Regional Medical City temporary suspensions/restorations",
+        "reason": "October 2026 and April 2026 storm-related incidents; not new in current hourly window",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, Illinois base closure",
+        "reason": "September 16, 2026 historical effective date, not new",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      }
+    ],
+    "source_access_errors": [
+      {
+        "source": "https://www.cms.gov/files/document/illinois-advanced-urgent-care-11-10-2026.pdf",
+        "error": "Direct PDF link could not be fetched via web interface; canonical CMS notice table directly confirmed the already-captured action",
+        "material": false
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Local news may have same-hour publication/index delays.",
+      "Twelve targeted searches cannot be exhaustive for all US states and territories.",
+      "Prior hourly check start is known but its heartbeat completion could not be read; the observation window overlaps conservatively.",
+      "No direct confirmation of primary production queue or deduplication."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "Do not notify: zero new qualifying nonduplicates and no material search degradation.",
+    "actions_not_taken": [
+      "No approval",
+      "No publication",
+      "No schedule modification",
+      "No task disabling"
+    ]
+  }
+}

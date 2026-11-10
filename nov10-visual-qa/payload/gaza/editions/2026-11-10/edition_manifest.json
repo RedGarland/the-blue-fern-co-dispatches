@@ -1,0 +1,138 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-10",
+  "generated_at": "2026-11-10T21:06:48.138523+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-10/",
+  "local_output_path": "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/site/gaza/editions/2026-11-10",
+  "local_dispatch_output_path": "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/dispatches/gaza/editions/2026-11-10",
+  "local_backup_path": "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/tmp-backups-pages/gaza/2026-11-10",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 8,
+  "story_count": 5,
+  "source_adequacy_status": "daily_briefing",
+  "source_adequacy_label": "Daily briefing",
+  "publisher_count": 4,
+  "publishers": [
+    "Al Jazeera",
+    "BBC News",
+    "OCHA",
+    "The Guardian"
+  ],
+  "source_adequacy_warnings": [],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/site/gaza/editions/2026-11-10/sources_manifest.json",
+  "curation_manifest_path": "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/site/gaza/editions/2026-11-10/curation_manifest.json",
+  "free_public_artifacts": [
+    "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/site/gaza/editions/2026-11-10/index.html",
+    "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/site/gaza/editions/2026-11-10/edition_manifest.json",
+    "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/site/gaza/editions/2026-11-10/sources_manifest.json",
+    "/workspace/scratch/97d4999c7d89/gaza-daily-cloud-20261110/runtime-07/output/site/gaza/editions/2026-11-10/curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [],
+  "errors": [],
+  "scheduled_run_local_time": "2026-11-10T06:00:00-08:00",
+  "actual_run_local_time": "2026-11-10T13:06:48-08:00",
+  "source_window_start_utc": "2026-11-09T10:41:57Z",
+  "source_window_end_utc": "2026-11-10T15:49:36Z",
+  "first_source_retrieved_at": "2026-11-10T18:34:47.978411Z",
+  "last_source_retrieved_at": "2026-11-10T20:16:08.350297Z",
+  "contains_later_same_day_update": true,
+  "later_same_day_update_count": 7,
+  "later_same_day_update_batch_count": 7,
+  "later_same_day_update_source_count": 7,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-11-10T18:34:47.978411Z",
+      "retrieved_at_local": "2026-11-10T10:34:47-08:00",
+      "retrieved_local_date": "2026-11-10",
+      "batch_classification": "after_scheduled_initial_batch",
+      "source_record_ids": [
+        "gaza-2026-11-10-guardian-world-e0b340c3243d"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-10T20:07:17.875467Z",
+      "retrieved_at_local": "2026-11-10T12:07:17-08:00",
+      "retrieved_local_date": "2026-11-10",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-11-10-ocha-gaza-health-access-query-db79d6c69352"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-10T20:15:13.530462Z",
+      "retrieved_at_local": "2026-11-10T12:15:13-08:00",
+      "retrieved_local_date": "2026-11-10",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-11-10-ocha-opt-updates-20a21ae94ce9"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-10T20:15:17.066692Z",
+      "retrieved_at_local": "2026-11-10T12:15:17-08:00",
+      "retrieved_local_date": "2026-11-10",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-11-10-bbc-middle-east-4f1ef85ecb19"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-10T20:15:20.510722Z",
+      "retrieved_at_local": "2026-11-10T12:15:20-08:00",
+      "retrieved_local_date": "2026-11-10",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-11-10-bbc-middle-east-b49cb248645d"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-10T20:16:00.882600Z",
+      "retrieved_at_local": "2026-11-10T12:16:00-08:00",
+      "retrieved_local_date": "2026-11-10",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-11-10-guardian-world-22f884a89a09"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-10T20:16:04.107747Z",
+      "retrieved_at_local": "2026-11-10T12:16:04-08:00",
+      "retrieved_local_date": "2026-11-10",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-11-10-aljazeera-middle-east-284e74581043"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-10T20:16:08.350297Z",
+      "retrieved_at_local": "2026-11-10T12:16:08-08:00",
+      "retrieved_local_date": "2026-11-10",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-11-10-aljazeera-middle-east-4a208eb159fa"
+      ],
+      "source_count": 1
+    }
+  ]
+}

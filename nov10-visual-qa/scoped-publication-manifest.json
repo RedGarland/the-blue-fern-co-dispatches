@@ -1,0 +1,67 @@
+{
+  "state": "private_proposal_not_authorized",
+  "base_pages_head": "1c050908845bf1f1657891015fa5b52a7e1c7ddb",
+  "source_head": "6f7b921cb6c0833af5c76daef05df6e48964fe45",
+  "packet_sha256": "43ffe7b0e5ea3f69da4a08fd2294192805bad4fb09ee3f5f05ad1536c597cd65",
+  "paths": [
+    {
+      "path": "gaza/index.html",
+      "before_sha256": "170a0cb139c5d1d5557b1db63acc3f70a88e1e1202e3aee9c57d1d2e79a463d0",
+      "after_sha256": "abff83ae487f5819d8ec5338e5d6e879b6adc93ae21a65a57f1a0b967ddaa3fa"
+    },
+    {
+      "path": "gaza/archive.html",
+      "before_sha256": "abe3dc4a8fd1896fcadc1b190ba79ff7b4e6af26f3ac6f8e1824003b09ac23ba",
+      "after_sha256": "9ec7b4209a20f28e4702dacc8df0da7feac1e85d169df28b29cfa8f31b6cbde2"
+    },
+    {
+      "path": "gaza/rss.xml",
+      "before_sha256": "f5d3660ed794654780c32f7b172168879d3a36f6dc91d0d9e769df2dcef3d0f6",
+      "after_sha256": "5529078d934c6d1b26a4c45b06132c3ec23b98f945f0d6b54342ac649180abfb"
+    },
+    {
+      "path": "gaza/editions/2026-11-10/index.html",
+      "before_sha256": null,
+      "after_sha256": "41807d3138e86042ffa11f0474aa4acfd378a1867fa5539d62693d6d3d333c74"
+    },
+    {
+      "path": "gaza/editions/2026-11-10/edition_manifest.json",
+      "before_sha256": null,
+      "after_sha256": "2af0d0787a980cf7201e351326a1d89225f5ee8364a011491e31e09ff88a8bb8"
+    },
+    {
+      "path": "gaza/editions/2026-11-10/curation_manifest.json",
+      "before_sha256": null,
+      "after_sha256": "46e60c457e4638aeed2aad666034cd027f2cb92b988dbfb155f7b134171b1ecb"
+    },
+    {
+      "path": "gaza/editions/2026-11-10/sources_manifest.json",
+      "before_sha256": null,
+      "after_sha256": "5f2c3dbb33679c13ece32d160b4e2d94fa6b71280fc157ca506d005b4a84806a"
+    }
+  ],
+  "exclusions": [
+    "all unrelated paths including CSS, old editions and all audio/podcast files"
+  ],
+  "rollback": "Before any authorized rollback, require each current seven-path blob to equal this release after-hash; if any changed, stop/review to preserve later edits. Restore exact before bytes for three aggregate paths and remove only four new Nov10 files in a new revert commit, without force-reset, only with required authorization.",
+  "verification": [
+    "exact remote parent/head and source CI",
+    "review staged seven-path diff and preservation of all remaining baseline blobs",
+    "validate stage and links/layout",
+    "after authorized push verify remote blobs plus deployment and live Nov10 page/archive/RSS",
+    "social/audio separately unperformed"
+  ],
+  "release_preconditions": [
+    "explicit approval of exact manual-enriched public seven-path content",
+    "resolve copy-parity using independently reviewed scoped expected-site packaging, no validator suppression",
+    "successful exact-content visual validation in permitted environment",
+    "fresh remote Pages baseline and a truthful gh-pages release checkout; detached stage is preparation only"
+  ],
+  "source_merge": {
+    "verified": true,
+    "commit": "3b55ce385a7c6f7f879986a753ec7808956fa4ef",
+    "merged_at": "2026-11-10T21:16:59Z",
+    "all_19_changed_blobs_match_tested_source": true,
+    "production_installation_verified": false
+  }
+}

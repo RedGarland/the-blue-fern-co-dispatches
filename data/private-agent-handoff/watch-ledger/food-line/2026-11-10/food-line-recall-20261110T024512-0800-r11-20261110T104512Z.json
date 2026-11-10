@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T024512-0800-r11-20261110T104512Z",
+  "scheduled_for": "2026-11-10T02:45:54-08:00",
+  "started_at": "2026-11-10T02:45:12-08:00",
+  "completed_at": "2026-11-10T02:48:10.740-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T00:44:45.076-08:00",
+    "end_at": "2026-11-10T02:48:10.740-08:00",
+    "observation_date": "2026-11-10",
+    "timezone": "America/Los_Angeles",
+    "basis": "Conservative overlap from latest independently read verified Food Line heartbeat (00:44 PST); a later nominal 01:45 checkpoint could not be independently enumerated with the available repository file lookup. Search focuses new publication/event evidence and suppresses previously known stories.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T004246-0800-r11-20261110T084246Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall only; nationwide production collection remains authoritative; no claims of complete nationwide clearance.",
+    "target_classes": [
+      "Loss/fire/disaster or closure of only/sole/last/full-service grocery",
+      "Emergency distribution canceled/suspended for storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast, recency 2 days (engine may include historical results)",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 9 2026 town community",
+      "\"sole grocery store\" fire closed November 10 2026",
+      "\"last grocery store\" closes November 2026 rural town",
+      "\"full service grocery store\" fire closure November 9 2026",
+      "\"food distribution\" canceled storm November 10 2026 food bank",
+      "\"food pantry\" distribution cancelled flooding November 9 2026",
+      "\"food bank\" distribution suspended outage November 10 2026",
+      "\"food distribution\" cancelled \"November 10\" 2026 weather",
+      "\"food pantry\" \"closed until further notice\" November 2026",
+      "\"food bank\" \"temporarily closed\" \"November 9\" 2026",
+      "SNAP EBT benefits interruption system outage November 10 2026 state agency",
+      "WIC benefits interrupted suspended November 9 2026 state agency"
+    ],
+    "direct_source_checks": {
+      "count": 11,
+      "successful": 10,
+      "failed": 1,
+      "urls": [
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.fns.usda.gov/snap/updates",
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://dhs.georgia.gov/",
+        "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "https://dfcs.georgia.gov/services/snap/connectebt-website-and-mobile-app/new-security-features-ebt-cards-effective-oct-22",
+        "https://www.fmpfoodbank.org/",
+        "https://hawaiifoodbank.org/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct source fetch inaccessible/internal error.",
+          "impact": "Nonmaterial: current state SNAP/WIC notices in Oregon, Hawaiʻi, California and Georgia remained accessible; federal endpoint not cleared."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "Previously reported Nov 3, updated Nov 6; no new cancellation or change verified in the observation window."
+      },
+      {
+        "source_url": "https://www.fmpfoodbank.org/",
+        "reason": "Nov 9 provider post advertises Clark and Trempealeau County distributions, not cancellation. Previous Eau Claire change not newly announced."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Nov 6 recovery update lists upcoming mobile food distribution, not a new suspension."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Oregon documentation rule starts Nov 21, not an immediate access cutoff in this window."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing SNAP telephone application delays, no newly dated immediate interruption in the window."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC notice dated Sep 2 states offices open and benefits continue."
+      },
+      {
+        "source_url": "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "reason": "Georgia EBT call center restored, no new outage as of this interval."
+      },
+      {
+        "source_url": "https://dfcs.georgia.gov/services/snap/connectebt-website-and-mobile-app/new-security-features-ebt-cards-effective-oct-22",
+        "reason": "Georgia security restrictions effective Oct 22, not newly issued in this window."
+      }
+    ],
+    "excluded_categories": "Historic or out-of-country incidents; opening/restoration stories; donation requests, guides, generic inflation and promotion; already recorded disruptions; changes without verified immediate effect.",
+    "assessment": "No new qualifying source-backed disruption identified by 12 targeted web searches and 11 direct-source checks; 1 repeatedly unavailable USDA endpoint. A later nominal checkpoint could not be verified, so coverage begins at the last confirmed one with intentional overlap.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

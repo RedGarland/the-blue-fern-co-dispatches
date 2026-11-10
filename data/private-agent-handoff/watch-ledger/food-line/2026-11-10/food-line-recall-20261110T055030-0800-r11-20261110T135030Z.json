@@ -1,0 +1,136 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T055030-0800-r11-20261110T135030Z",
+  "scheduled_for": "2026-11-10T05:45:54-08:00",
+  "started_at": "2026-11-10T05:50:30-08:00",
+  "completed_at": "2026-11-10T05:52:09-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T04:51:21.756-08:00",
+    "end_at": "2026-11-10T05:52:09-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Latest independently fetched Food Line heartbeat completed 2026-11-10 04:51:21.756 PST; monitor window conservatively overlaps if any intervening job was not confirmed.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T044923-0800-r11-20261110T124923Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary targeted recall only; production nationwide Food Line collection remains authoritative. No nationwide clearance claimed.",
+    "target_classes": [
+      "Sole/only/last or full-service community grocery loss, disaster, fire or closure",
+      "Emergency food distribution cancellation/suspension due to weather, fire, flood, outage or facility damage",
+      "Abrupt food pantry or food bank closure, or major access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "Eight fast searches with nominal two-day recency and four slow targeted searches; search results include older out-of-window material.",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" (closed OR fire OR destroyed OR shut) November 10 2026",
+      "\"sole grocery store\" fire closure November 2026 town",
+      "\"last grocery store\" \"November 10, 2026\" closed OR fire",
+      "\"full-service grocery\" closed fire November 9 2026",
+      "\"food distribution\" canceled storm flood November 10 2026 food bank",
+      "\"mobile food pantry\" canceled weather November 10 2026",
+      "\"food bank\" \"closed until further notice\" November 2026",
+      "\"SNAP\" \"EBT\" outage delayed benefits November 10 2026 state",
+      "November 10 2026 food pantry food bank closes abruptly fire power outage US",
+      "November 9 2026 only grocery store closes burns community small town United States",
+      "November 10 2026 food distribution cancelled weather flood hurricane United States",
+      "November 10 2026 SNAP WIC benefits unavailable outage state agency"
+    ],
+    "direct_source_checks": {
+      "count": 14,
+      "successful": 10,
+      "failed": 4,
+      "urls": [
+        "https://www.fns.usda.gov/snap/updates",
+        "https://www.fns.usda.gov/disaster-assistance",
+        "https://www.myflfamilies.com/services/public-assistance",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.palmbeachfoodbank.org/",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://fns-prod.azureedge.us/disaster/newmexico",
+        "https://feedingflorida.org/",
+        "https://www.hawaiifoodbank.org/",
+        "https://hawaiifoodbank.org/hunger-blog/all-as-one-hawai%CA%BBi-foodbank-kaua%CA%BBis-response-to-hurricane-lowell/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct open inaccessible via web interface.",
+          "impact": "Recurring federal SNAP endpoint blind spot; other state program notices accessible."
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster-assistance",
+          "error": "Direct open inaccessible via web interface.",
+          "impact": "Disaster-assistance index not verified; alternate USDA mirror returned older snapshot and search results were considered cautiously."
+        },
+        {
+          "url": "https://www.palmbeachfoodbank.org/",
+          "error": "Direct open inaccessible via web interface.",
+          "impact": "Specific local provider not independently checked; Florida DCF, web discovery and other providers provided partial context."
+        },
+        {
+          "url": "https://feedingflorida.org/",
+          "error": "Direct open inaccessible via web interface.",
+          "impact": "State food bank umbrella site not checked; did not block broader news searches."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Provo food-bank closure took effect Nov. 1; established and previously reviewed; not new this hour."
+      },
+      {
+        "source_url": "https://www.aol.com/articles/village-spencer-loses-only-grocery-223930000.html",
+        "reason": "Spencer, NY only grocery store destroyed Sept. 11; historical, not fresh."
+      },
+      {
+        "source_url": "https://hawaiifoodbank.org/hunger-blog/all-as-one-hawai%CA%BBi-foodbank-kaua%CA%BBis-response-to-hurricane-lowell/",
+        "reason": "Hurricane Lowell response describes added emergency distributions after Sept. 7 storm, not new cancellation in observation window."
+      },
+      {
+        "source_url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Nov. 21 proof of housing/utility costs requirement is prospective; no immediate interruption reported."
+      },
+      {
+        "source_url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "Sept. 2 funding notice says WIC offices open, benefits available."
+      },
+      {
+        "source_url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Standing telephone and processing delays, without dated new suspension this hour."
+      },
+      {
+        "source_url": "https://fns-prod.azureedge.us/disaster/newmexico",
+        "reason": "Search result referenced Nov. 5 disaster SNAP loss-replacement waiver; direct mirror delivered older cached snapshot. Even latest search snippet was relief eligibility extension rather than benefit interruption."
+      },
+      {
+        "source_url": "https://www.texastribune.org/2025/11/10/texas-snap-food-stamp-payment-november-start/",
+        "reason": "Historical Nov. 10, 2025 shutdown and delayed SNAP benefits; not Nov. 2026."
+      },
+      {
+        "source_url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "reason": "Distribution information and opt-in cancellation text alerts; no currently dated cancellation published."
+      }
+    ],
+    "excluded_categories": "Donation appeals, general guides, scheduled distributions, opinions, old store fires and food-bank closures, out-of-country incidents, ordinary promotions, generic inflation and 2025 SNAP shutdown stories.",
+    "assessment": "No newly published, source-backed qualifying disruption discovered in the bounded window. Search coverage succeeded; four direct endpoints inaccessible. Recurring USDA federal blind spot and individual provider fetch errors make this DEGRADED but not materially failed.",
+    "material_degradation": false,
+    "approval_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T014451-0800-r11-20261110T094958Z",
+  "scheduled_for": "2026-11-10T01:44:51-08:00",
+  "started_at": "2026-11-10T01:48:34-08:00",
+  "completed_at": "2026-11-10T01:49:58-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T00:49:58.971-08:00",
+    "end": "2026-11-10T01:49:58-08:00",
+    "previous_run_completed_at": "2026-11-10T00:49:58.971-08:00",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Prior completed heartbeat verified via authenticated GitHub read. Detection is based on newly indexed/published material since the prior check, with a short lookback for late-indexed reporting. English WAFA report was published at 11:11 AM Palestine time = 01:11 AM PST, within observation window. Arabic WAFA report was published at 10:43 AM Palestine time = 00:43 AM PST, shortly before previous completion but after the previous check's WAFA index cutoff of 10:22 AM Palestine time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-khan-yunis-nasser-fatal-shooting",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176822",
+      "alternate_source_url": "https://www.wafa.ps/news/2026/11/10/%D8%B4%D9%87%D9%8A%D8%AF-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%81%D9%8A-%D8%AE%D8%A7%D9%86-%D9%8A%D9%88%D9%86%D8%B3",
+      "title": "Israeli forces kill youth outside areas under their control in Gaza's Khan Yunis",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": "2026-11-10T11:11:00+02:00",
+      "first_arabic_publication_time_local": "2026-11-10T10:43:00+02:00",
+      "event_date": "2026-11-10",
+      "event_time": null,
+      "location": "Khan Younis, southern Gaza Strip, occupied Palestinian territory; precise location unknown",
+      "affected_population_system": "One Palestinian resident reportedly killed by Israeli gunfire; Nasser Medical Complex reported death. Identity and combatant/civilian status not independently established.",
+      "exact_supporting_passage": "Nasser Medical Complex reported that the citizen died as a result of being shot by the occupation forces.",
+      "source_type": "Established Palestinian national news agency reporting hospital attribution (Nasser Medical Complex); Arabic and English WAFA coverage are not independent sources",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "first_detected_in_watch": "2026-11-10T01:48:34-08:00 to 2026-11-10T01:49:58-08:00",
+        "in_window_publication": "WAFA English article published 11:11 Palestine time (01:11 PST). WAFA Arabic article published 10:43 Palestine time (00:43 PST), just before prior heartbeat completion but after earlier check last observed 10:22 index.",
+        "evidence": "WAFA English latest-news index and article; WAFA Arabic latest-news index and article; hospital attribution within both.",
+        "deduplication": "Distinct newly reported fatality in Khan Younis, not the earlier reported fisherman injured off Khan Younis coast (already logged during November 9 21:44 watch). No source evidence links the two individuals. Do not count the fisherman twice.",
+        "limitations": "No victim name, precise incident time, independent eyewitness or Israeli military confirmation verified; WAFA Arabic/English are same publisher."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production Gaza collector/publisher remains authoritative and untouched.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T004451-0800-r11-20261110T084958971Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza humanitarian update 9 November: heavy-rains situation report regarding 8 November. No new in-window situation report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502",
+        "result": "WHO global emergency page checked with no newly dated in-window health-system development. Regional report endpoint returned recurring 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details \"10/November/2026\" Gaza injury killed crossing hospital",
+      "site:wafa.ps/Pages/Details 10/11/2026 غزة صباح الثلاثاء 11:00 شهيد إصابة قصف",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"10 Nov 2026\" Gaza hospital displacement food water",
+      "site:who.int OR site:emro.who.int Gaza \"10 November 2026\" medical evacuation aid hospital",
+      "site:reuters.com/world/middle-east Gaza November 10 2026 civilians killed aid crossing ceasefire",
+      "site:apnews.com/article/ Gaza November 10 2026 deaths aid hospital",
+      "site:aljazeera.com/news/2026/11/10 Gaza latest civilian military health crossing displaced",
+      "site:news.un.org/en/ Gaza 10 November 2026 latest humanitarian",
+      "site:unicef.org/sop Gaza \"10 November 2026\" children shelters drinking water",
+      "site:wfp.org/news Gaza \"10 November 2026\" food access trucks",
+      "site:palestinercs.org 10 November 2026 Gaza ambulance hospital relief",
+      "Gaza 10 November 2026 10:30 11:30 Jerusalem local Israeli fire tents relief hospital evacuation border Reuters WAFA"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "Index newly listed 11:11 Palestine local Khan Younis killing; article directly inspected."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "10:43 Palestine local Khan Younis killing verified; earlier 10:42 flooded-tent story is not a distinct new operational development."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "result": "Latest homepage item dated 3 November; no in-window ambulance/medical operations report."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated in-window food-access operational update established."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring source access limitation; alternative authoritative coverage checked."
+      }
+    ],
+    "excluded_or_unverified": [
+      {
+        "item": "Fisherman wounded and two boats damaged off Khan Younis",
+        "reason": "Already logged in 9 November 21:44 watch; referenced again within new WAFA fatal shooting story but not a second finding."
+      },
+      {
+        "item": "Flooded tents and storm deaths in Gaza, OCHA Nov 9 report, Reuters Nov 9, Al Jazeera Nov 10 weekly summary",
+        "reason": "Earlier events and recycled prior reporting; no new in-window count or operational change established."
+      },
+      {
+        "item": "EU and UN reiterations of need to allow relief supplies",
+        "reason": "Based on 9 November statements and prior flooding restrictions; no newly verified crossing operational change."
+      },
+      {
+        "item": "Late-November-9 wall collapse injuries and prior evacuation of 23 patients plus companions",
+        "reason": "Reported before observation window, no new in-window development verified."
+      },
+      {
+        "item": "West Bank arrest and assault reports",
+        "reason": "Outside Gaza dispatch scope."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "current_status": "HTTP_502",
+        "previous_status": "HTTP_502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global portal and OCHA accessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "current_status": "HTTP_403",
+        "previous_status": "HTTP_403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA and other official publisher checks."
+      },
+      {
+        "publisher": "UN News",
+        "current_status": "ROBOTS_BLOCKED",
+        "previous_status": "SEARCH_BLOCKED_ROBOTS",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA and WHO global accessible."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked first; 12 additional targeted searches and accessible direct publisher checks completed. One new distinct fatal shooting report in Khan Younis verified to a named hospital attribution via WAFA. Recurring access restrictions mean DEGRADED rather than FAILED; no novel degradation.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no merge",
+      "no deployment",
+      "no social posting",
+      "no schedule change",
+      "no automation disable"
+    ]
+  }
+}

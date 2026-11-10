@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T225047-0800-r11-20261110T065047Z",
+  "scheduled_for": "2026-11-09T22:45:54-08:00",
+  "started_at": "2026-11-09T22:50:47-08:00",
+  "completed_at": "2026-11-09T22:52:17.119-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T21:50:21-08:00",
+    "end_at": "2026-11-09T22:52:17.119-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completed_at of the preceding verified Food Line heartbeat; item incident/published dates evaluated independently of crawler dates; Eastern U.S. sites may show November 10.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T214855-0800-r11-20261110T054855Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall watch; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only, sole, last or full-service community grocery store closure, fire, or disaster",
+      "Emergency food distributions canceled/suspended because of storm, flood, fire, outage or damage",
+      "Abrupt food bank/pantry service shutdown or major access reduction",
+      "New official SNAP/WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast targeted search",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" fire closed November 9 2026 OR November 10 2026",
+      "\"last grocery store\" closed rural November 9 2026",
+      "\"sole grocery\" shutting down closed fire November 2026 town",
+      "\"food distribution\" canceled storm November 9 2026",
+      "\"food pantry\" distribution suspended flooding power outage Nov 9 2026",
+      "\"food bank\" distribution cancelled closed emergency Nov 10 2026",
+      "\"food pantry\" suddenly closed November 9 2026 OR November 10 2026",
+      "\"food bank\" closed due to damage fire outage November 2026",
+      "\"food pantry\" operations suspended emergency November 2026",
+      "SNAP EBT outage delayed benefits state official notice November 9 2026",
+      "WIC benefits interrupted system outage November 9 2026 state agency",
+      "SNAP emergency interruption November 10 2026 state agency alert"
+    ],
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 5,
+      "failed": 1,
+      "urls": [
+        "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.fns.usda.gov/snap/updates",
+        "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Direct web fetch returned internal/inaccessible error.",
+          "impact": "Nonmaterial: affected one official SNAP updates endpoint; relevant targeted searches and California WIC notice remained accessible. No nationwide agency clearance is claimed."
+        }
+      ],
+      "observations": [
+        "WEAU item for Eau Claire, Wisconsin food bank pop-up distribution shutdown was published Nov 3 and updated Nov 6, 2026, preceding this window. It is known from prior checks, not a new hourly finding.",
+        "Kauaʻi Hurricane Lowell recovery update was published Nov 6, 2026 and listed a food distribution still scheduled; no new cancellation in this interval.",
+        "California WIC official federal-budget notice says WIC services and enrollments continue under a September 2, 2026 continuing resolution; no new interruption.",
+        "Aurora, North Carolina Goodwill Community Cupboard story is a September 15, 2026 grocery opening, not a new community store loss.",
+        "Prodisee Pantry Saturday storm-related cancellation reported October 7, 2026; not a new in-window event."
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.weau.com/2026/11/03/feed-my-people-cancels-pop-up-distributions-eau-claire-location-rest-2026/",
+        "reason": "News dated November 3 and updated November 6; previously observed, out of current window."
+      },
+      {
+        "source_url": "https://kauainownews.com/2026/11/06/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Older hurricane recovery resource update lists a distribution continuing."
+      },
+      {
+        "source_url": "https://wcti12.com/news/local/goodwill-community-cupboard-opens-in-aurora-ending-years-long-food-desert",
+        "reason": "September 15 grocery opening restores food access; does not indicate a new closure."
+      },
+      {
+        "source_url": "https://mynbc15.com/news/local/prodisee-pantry-cancels-saturday-food-distribution-due-to-weather-concerns",
+        "reason": "October 7 storm-related distribution cancellation, not a new November 9 evening event."
+      },
+      {
+        "source_url": "https://www.texastribune.org/2025/10/28/texas-snap-food-stamps-lone-star-card-how-to-help/",
+        "reason": "2025 SNAP shutdown coverage resurfaced in current search results; wrong year."
+      }
+    ],
+    "exclusion_policy": "Removed historical/duplicate events, routine promotions, resource guides, donation appeals, inflation commentary and 2025 shutdown coverage.",
+    "assessment": "No new qualifying U.S. immediate food-access disruption supported by 12 targeted web searches plus six direct-source checks for 2026-11-09 21:50–22:51 PST. Coverage is intentionally bounded and non-exhaustive.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T034451-0800-r11-20261110T114553Z",
+  "scheduled_for": "2026-11-10T03:44:51-08:00",
+  "started_at": "2026-11-10T03:45:53-08:00",
+  "completed_at": "2026-11-10T03:48:33.507-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T02:51:23.201-08:00",
+    "end": "2026-11-10T03:48:33.507-08:00",
+    "previous_run_completed_at": "2026-11-10T02:51:23.201-08:00",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12,
+    "basis": "Started at the previous GitHub heartbeat completion. The WAFA Zeitoun incident was published eight minutes before the prior completed check but was not recorded then; retained as a newly discovered missed event, not falsely characterized as newly published in this window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-zeitoun-drone-strike-two-killed-wafa-1243",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/10/%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%AD%D9%8A-%D8%A7%D9%84%D8%B2%D9%8A%D8%AA%D9%88%D9%86",
+      "title": "WAFA reports two people killed and others injured in an Israeli drone strike in al-Zeitoun neighborhood, Gaza City",
+      "original_title": "شهيدان ومصابون في قصف الاحتلال حي الزيتون جنوب شرق غزة",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": "2026-11-10T12:43:00+02:00",
+      "publication_time_pst": "2026-11-10T02:43:00-08:00",
+      "event_date": "2026-11-10",
+      "event_time": null,
+      "location": "Al-Zeitoun neighborhood, southeast Gaza City, Gaza Strip",
+      "affected_population_system": "WAFA reports two unnamed people killed and an unspecified number of other people injured by an Israeli drone strike; identification and civilian/combatant status unknown. WAFA says the post-October 2025 ceasefire death tally rose from 1,614 in its 12:16 local aggregate to 1,616 after this incident.",
+      "exact_supporting_passage": "غزة 10-11-2026 وفا- استُشهد مواطنان، وأصيب آخرون، اليوم الثلاثاء، في قصف طائرة مسيّرة تابعة للاحتلال على حي الزيتون، جنوب شرق مدينة غزة.",
+      "source_type": "Established Palestinian national news agency reporting a local incident; no independent confirmation found in bounded checks",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "first_detected_in_watch": "2026-11-10T03:45:53-08:00",
+        "observation_window": "2026-11-10T02:51:23.201-08:00 to 2026-11-10T03:48:33.507-08:00",
+        "publication_in_observation_window": false,
+        "late_discovered_prior_window_miss": true,
+        "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T024451-0800-r11-20261110T105123Z.json",
+        "prior_heartbeat_findings": [
+          "gaza-20261110-moh-casualty-tally-1216-wafa"
+        ],
+        "deduplication": "Distinct al-Zeitoun drone strike after WAFA's 12:16 Palestine time casualty aggregate. Two deaths increase reported since-ceasefire total from 1,614 to 1,616 and should not be counted as an independent addition to a later aggregate containing this strike. Different location/event from earlier Khan Younis gunshot fatality and fisherman injury.",
+        "limitations": "WAFA was the only direct case-specific source verified; injury count, victims' names, ages, civilian status, independent corroboration, and precise event time are unknown. Gaza health ministry primary source not independently verified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production daily Gaza collector and publisher remain authoritative.",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "previous_heartbeat_completed_at": "2026-11-10T02:51:23.201-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T024451-0800-r11-20261110T105123Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest update November 9 heavy rains in Gaza for events November 6–8; previously documented and not new."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE;REGIONAL_HTTP_502",
+        "result": "WHO global page accessible but no newly dated November 10 Gaza operational development; regional emergency reports endpoint returned recurring HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ 10 November 2026 Gaza 13:00 killed wounded Khan Younis",
+      "site:wafa.ps/news/2026/11/10 غزة 13:00 14:00 شهيد إصابة قصف غارات",
+      "Gaza November 10 2026 latest strike killed injured civilians hospitals after 12:15 local Reuters AP",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza \"10 Nov 2026\" humanitarian",
+      "site:who.int OR site:emro.who.int Gaza \"10 November 2026\" medical evacuation hospital WHO",
+      "site:news.un.org/en/ Gaza \"10 November 2026\" aid humanitarian displacement",
+      "site:unicef.org Gaza November 10 2026 children storms shelter water",
+      "site:wfp.org Gaza November 10 2026 food aid access distribution",
+      "site:palestinercs.org 10 November 2026 Gaza ambulance emergency",
+      "site:unrwa.org Gaza \"10 November 2026\" shelter storm refugees",
+      "Gaza November 10 2026 Rafah Kerem Shalom crossing movement fuel water medical evacuations ceasefire",
+      "Gaza November 10 2026 hostage detainees negotiations military operations civilians Reuters Al Jazeera"
+    ],
+    "direct_publisher_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "Newly discovered al-Zeitoun drone strike article posted 12:43 Palestine time; original full article verified."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "result": "Latest English Gaza incident indexed was previously recorded Khan Younis killing; Arabic index contained additional al-Zeitoun case."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/jordan/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "status": "ACCESSIBLE",
+        "result": "November 10 web publication with November 9 dateline; three child deaths during Deir al Balah dune collapse and flooding impact previously described in OCHA November 9 report. Not a newly occurring distinct incident."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "result": "Latest newsroom item November 3; no new confirmed incident."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated in-window Gaza food access operational change verified."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "result": "Recurring access restriction."
+      }
+    ],
+    "excluded_or_unverified": [
+      {
+        "item": "UNICEF November 10 press release on three children killed by storm-related dune collapse, flooding and threatened pumping capacity",
+        "reason": "Datelined November 9 and overlapping with OCHA's November 9 report documenting five deaths including three children at Al Berka Reservoir. Not a separate new fatality event; no evidence of new distinct operational change during watch."
+      },
+      {
+        "item": "WAFA Gaza medical source November 10 12:16 Palestine time cumulative casualty tallies (74,645 killed, 175,978 injured)",
+        "reason": "Already logged in preceding hourly heartbeat; does not include later Zeitoun strike based on WAFA same-day reported 1,614 to 1,616 since-ceasefire change."
+      },
+      {
+        "item": "Khan Younis 11:11 local time gunshot fatality and fishing boat attack",
+        "reason": "Previously recorded in prior watch heartbeats; not counted again."
+      },
+      {
+        "item": "West Bank detentions, arrests and settler violence",
+        "reason": "Out of Gaza coverage scope."
+      },
+      {
+        "item": "Unverified breaking claims and opinion/social posts",
+        "reason": "Not treated as eligible."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "current_status": "HTTP_502",
+        "previous_status": "HTTP_502",
+        "material_new_deterioration": false,
+        "mitigation": "WHO global site and OCHA accessible."
+      },
+      {
+        "publisher": "UNRWA",
+        "current_status": "HTTP_403",
+        "previous_status": "HTTP_403",
+        "material_new_deterioration": false,
+        "mitigation": "OCHA and UNICEF checked."
+      },
+      {
+        "publisher": "UN News",
+        "current_status": "ROBOTS_BLOCKED",
+        "previous_status": "SEARCH_BLOCKED_ROBOTS",
+        "material_new_deterioration": false,
+        "mitigation": "Official humanitarian alternatives available."
+      }
+    ],
+    "coverage_assessment": "OCHA OPT and WHO checked first. Exactly 12 additional targeted web searches followed by publisher reads. One previously missed new discrete casualty incident was found on WAFA Arabic, despite its publication preceding the previous hourly cutoff by roughly eight minutes. Known source restrictions persist, hence DEGRADED rather than FAILED.",
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no approval",
+      "no publication",
+      "no deployment",
+      "no merge",
+      "no social posting",
+      "no schedule change",
+      "no automation disable"
+    ]
+  }
+}

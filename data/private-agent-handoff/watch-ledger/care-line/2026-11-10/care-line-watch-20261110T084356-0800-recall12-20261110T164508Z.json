@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T084356-0800-recall12-20261110T164508Z",
+  "scheduled_for": "2026-11-10T08:45:22-08:00",
+  "started_at": "2026-11-10T08:43:56-08:00",
+  "completed_at": "2026-11-10T08:45:08-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T07:43:41.257-08:00",
+    "end": "2026-11-10T08:45:08-08:00",
+    "basis": "Begins at verified preceding supplementary heartbeat completion; seeks newly reported/documented access changes, not only events effective in this interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Care Line recall only; production national collector remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T074216-0800-recall12-20261110T154341Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T07:43:41.257-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — Limitation of CLIA cert — 14D2049789 — IL",
+      "classification": "Previously captured by the 05:50 PST supplementary heartbeat and reconfirmed by 07:43 PST heartbeat; no newer CMS notice visible.",
+      "new_notices_since_previous_watch": 0,
+      "index_cache_note": "Initial search snippet lagged (showed November 9 as latest); directly opening the CMS canonical page confirmed its November 10 Advanced Urgent Care notice. Not counted as a new event."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department shuts down closes suspended services November 10 2026 United States",
+      "November 10 2026 maternity labor delivery unit closure suspension hospital",
+      "November 10 2026 psychiatric behavioral health hospital service closure suspension patients",
+      "November 10 2026 dialysis center oncology infusion clinic service closing suspended",
+      "November 10 2026 rural hospital emergency room closure service disruption",
+      "November 10 2026 primary care clinic closes suddenly patients access",
+      "November 10 2026 ambulance service shut down suspended county EMS base closes",
+      "November 10 2026 air ambulance helicopter base shutdown closure suspension",
+      "November 10 2026 emergency department diversion temporary closure flood fire outage hospital",
+      "November 10 2026 reopened emergency room maternity unit dialysis ambulance service resumes",
+      "site:cms.gov/files/document/ \"11-10-2026\" \"CLIA\" OR \"Termination\"",
+      "November 10 2026 hospital clinic ambulance closure reopening Puerto Rico Guam U.S. Virgin Islands Northern Mariana Islands American Samoa"
+    ],
+    "search_recency_days": 2,
+    "reviewed_exclusions": [
+      {
+        "item": "Advanced Urgent Care, Orland Park, Illinois",
+        "reason": "CMS November 10 CLIA Routine Chemistry limitation previously logged 05:50 PST; no newer action.",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+      },
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "New Nov 10 article repeats Nov 4 regulatory order and Nov 6 emergency-service suspension; already known, not a new hourly change.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "Vista Medical Center East, Waukegan, Illinois",
+        "reason": "State-ordered ambulance bypass took effect Nov 7 and had been reported in earlier watch runs.",
+        "url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/"
+      },
+      {
+        "item": "Roseland Community Hospital maternity ward, Chicago, Illinois",
+        "reason": "News published November 2 about a closure on October 31; historical, outside this hourly window.",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+      },
+      {
+        "item": "Guam Regional Medical City outpatient restoration",
+        "reason": "Resumed services October 19 following Typhoon Champi; not a new Nov 10 development.",
+        "url": "https://www.grmc.gu/2026/10/19/grmc-resumes-normal-visitation-and-outpatient-services-following-super-typhoon-champi/"
+      },
+      {
+        "item": "Rural hospital funding risks and prospective closures",
+        "reason": "General reporting or unimplemented plans without concrete new access effects; excluded."
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Search results had poor same-hour temporal precision; recency filters do not guarantee publication timestamps within the observation window.",
+      "Twelve queries provide bounded recall rather than exhaustive state, local or territorial coverage.",
+      "Some official primary-source notices and local reports may be delayed or unindexed in this interval.",
+      "Production queue and deduplication state were not inspected; production remains authoritative."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No notification: no new qualifying events and no material degradation.",
+    "schedule_timing_note": "Run started before the nominal 08:45:22 PST occurrence; scheduled_for reflects the nominal schedule and started_at reflects the observed run start.",
+    "actions_not_taken": [
+      "No approvals",
+      "No publication",
+      "No schedule changes",
+      "No task disabling"
+    ]
+  }
+}

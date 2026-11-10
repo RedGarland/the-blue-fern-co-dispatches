@@ -1,0 +1,140 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T054749-0800-recall12-20261110T1350Z",
+  "scheduled_for": "2026-11-10T05:45:22-08:00",
+  "started_at": "2026-11-10T05:47:49-08:00",
+  "completed_at": "2026-11-10T05:50:57.205-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T04:52:02.670-08:00",
+    "end": "2026-11-10T05:50:57.205-08:00",
+    "basis": "Starts at verified previous supplementary Care Line heartbeat completion; seeks newly documented qualifying developments, not necessarily changes becoming effective in the observation hour. CMS notice newly visible relative to prior heartbeat."
+  },
+  "findings": [
+    {
+      "finding_id": "cms-clia-limitation-il-advanced-urgent-care-14d2049789-20261110",
+      "canonical_source_url": "https://www.cms.gov/files/document/illinois-advanced-urgent-care-11-10-2026.pdf",
+      "title": "Advanced Urgent Care — limitation of CLIA certificate for Routine Chemistry",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "exact_supporting_passage": "will be limited for the subspecialty of Routine Chemistry due to their failure to meet CLIA requirements.",
+      "source_published_date": "2026-11-10",
+      "state": "IL",
+      "city": "Orland Park",
+      "county": null,
+      "territory": null,
+      "event_type": "clia_certificate_limitation",
+      "service_line": "clinical_laboratory_routine_chemistry",
+      "access_consequences": "CMS notice states Routine Chemistry CLIA certificate limitation will take effect November 25, 2026 at 10 Orland Square Dr., Orland Park, IL 60462. The lab may not perform clinical-purpose testing or report results in the limited testing area during the limitation. No evidence of closure of urgent-care services or of all laboratory service lines.",
+      "affected_population": "Patients relying on the Advanced Urgent Care laboratory for routine chemistry tests; patient count unknown.",
+      "effective_date": "2026-11-25",
+      "announcement_date": "2026-11-10",
+      "confidence": "high",
+      "source_role": "official_primary",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; Care Line national production collector remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T045000-0800-recall12-20261110T1251Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T04:52:02.670-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — Limitation of CLIA cert — 14D2049789 — IL",
+      "new_notices_since_previous_watch": 1,
+      "new_notice_detail_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices/advanced-urgent-care",
+      "new_notice_pdf_url": "https://www.cms.gov/files/document/illinois-advanced-urgent-care-11-10-2026.pdf",
+      "pdf_reviewed": true,
+      "notice_effective_date": "2026-11-25",
+      "notice_scope": "Routine Chemistry only",
+      "index_freshness_note": "An initial search result snippet retained the Nov 9 entry as latest; the directly opened official canonical page showed the newly listed Nov 10 notice. Direct notice and PDF used for finding."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department closure suspended services announced November 10 2026 United States",
+      "maternity labor delivery unit shutdown November 10 2026 hospital local news",
+      "rural hospital urgent care emergency services closure November 10 2026",
+      "dialysis center oncology infusion clinic closure suspension November 10 2026",
+      "ambulance station service suspended base closure EMS announcement November 10 2026 USA",
+      "air ambulance medical helicopter base closure service suspended November 10 2026",
+      "psychiatric behavioral health inpatient hospital unit closure announced November 10 2026",
+      "primary care clinic closes suddenly rural November 10 2026 patients",
+      "hospital ED emergency reopened restored after closure November 10 2026 US",
+      "dialysis treatment service resumed reopened November 10 2026 hospital",
+      "Puerto Rico Guam USVI hospital emergency room medical clinic shutdown reopening November 10 2026",
+      "November 10 2026 healthcare service closing urgent care oncology maternity EMS local news"
+    ],
+    "search_recency_days": 1,
+    "searched_classes": [
+      "hospital/ED and rural service loss",
+      "maternity/obstetric closures",
+      "behavioral health closure",
+      "dialysis and oncology loss",
+      "primary-care closure",
+      "EMS/air-medical base closure",
+      "CMS termination and CLIA action",
+      "effective restoration/reopening",
+      "U.S. states and bounded territory references"
+    ],
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "Nov 10 article restates previously reported Nov 4/6 license and ED actions; no new access change observed since 04:52.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "Watsonville Community Hospital maternity proposal, California",
+        "reason": "October reporting or proposed future action; no new concrete change this hour.",
+        "url": "https://santacruzlocal.org/2026/10/28/watsonville-community-hospital-moves-to-shutter-labor-and-delivery/"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center obstetric restoration plan, West Virginia",
+        "reason": "Nov 9 coverage of Nov 5 letter of intent; reopening date and approvals pending, not yet an effective restoration.",
+        "url": "https://www.mybuckhannon.com/plan-would-restore-labor-and-delivery-at-greenbrier-valley-medical-center/"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur base closure, Illinois",
+        "reason": "Effective September 16, 2026; historical, outside watch window.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Martin General Hospital proposed reopening, North Carolina",
+        "reason": "July 2026 funding/planning report, not an effective reopening.",
+        "url": "https://www.northcarolinahealthnews.org/2026/07/13/martin-general-funds-budget/"
+      }
+    ],
+    "source_access_errors": [
+      {
+        "source": "outdated CMS Public Notices URL",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-public-notices",
+        "result": "inaccessible",
+        "resolution": "Found and directly opened canonical CMS page, then linked notice and PDF; coverage recovered."
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "CMS notice provides a calendar date but not website posting time; newness determined by contrast with the verified previous heartbeat, not an independently known posting timestamp.",
+      "Targeted web results had poor same-hour precision and surfaced older, proposed, or international stories; duplicates and nonqualifying items excluded.",
+      "Reporting and indexing lag can hide within-hour local events, especially in territories; 12 queries are not an exhaustive national or territory census.",
+      "Production deduplication state not examined; review remains pending."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_warranted": true,
+    "actions_not_taken": [
+      "no review approval",
+      "no publication",
+      "no schedule alteration",
+      "no task disabling"
+    ]
+  }
+}

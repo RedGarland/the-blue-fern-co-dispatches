@@ -651,7 +651,7 @@ def test_dirty_or_wrong_pages_and_pages_drift_rejected(tmp_path: Path) -> None:
         _plan(wrong)
 
     drift = _approve_and_merge(_make_case(tmp_path / "drift"))
-    _git(drift["pages"], "commit", "--amend", "--no-edit")
+    _git(drift["pages"], "commit", "--amend", "-m", "rewrite pages fixture history")
     with pytest.raises(GazaHistoricalCatchupError, match="not a strict descendant"):
         _plan(drift)
 

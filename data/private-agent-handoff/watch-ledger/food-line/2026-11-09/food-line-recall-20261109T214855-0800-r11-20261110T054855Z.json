@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T214855-0800-r11-20261110T054855Z",
+  "scheduled_for": "2026-11-09T21:45:54-08:00",
+  "started_at": "2026-11-09T21:48:55-08:00",
+  "completed_at": "2026-11-09T21:50:21-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T20:45:54-08:00",
+    "end_at": "2026-11-09T21:50:21-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completed_at of preceding verified Food Line heartbeat; article publication and incident dates checked, not search crawling timestamps.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T204329-0800-r11-20261110T044329Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire or disaster at a community's only, sole, last or full-service grocery store",
+      "Storm, flood, fire, outage or damage-caused suspension/cancellation of emergency food distributions",
+      "Abrupt food pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast targeted search",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "November 9 2026 \"only grocery store\" closed fire town food access",
+      "November 9 2026 \"sole grocery store\" closing fire community",
+      "November 9 2026 \"last grocery store\" shut down fire rural",
+      "November 9 2026 \"food distribution\" canceled storm flood power outage",
+      "November 9 2026 \"food pantry\" closed suddenly flooded fire",
+      "November 9 2026 \"food bank\" suspended distribution power outage",
+      "November 9 2026 SNAP EBT benefits outage delayed interrupted state agency alert",
+      "November 9 2026 WIC benefits service outage clinic closure official notice",
+      "site:facebook.com \"food pantry\" \"closed\" \"November 9, 2026\" storm OR emergency",
+      "\"distribution canceled\" \"November 9, 2026\" food pantry",
+      "\"grocery store\" \"only\" \"closed\" \"Nov 9, 2026\"",
+      "\"SNAP\" \"outage\" \"November 9, 2026\" state benefits"
+    ],
+    "direct_source_checks": {
+      "count": 6,
+      "successful": 5,
+      "failed": 1,
+      "urls": [
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.northernnewsnow.com/2026/11/10/lincoln-park-grocery-store-holds-soft-opening-superior-street/",
+        "https://www.thelubbock.org/news/south-plains-food-bank-announces-holiday-closures-and-updates",
+        "https://www.downhunter.com/status/snap-ebt",
+        "https://www.fns.usda.gov/snap/updates",
+        "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap/updates",
+          "error": "Web fetch returned inaccessible/internal error",
+          "impact": "Nonmaterial single official page unavailable; targeted official-disruption searches and California WIC agency page were accessible. This was not a comprehensive agency scan."
+        }
+      ],
+      "observations": [
+        "California WIC official federal-budget notice says WIC services remain available under a continuing resolution; last updated in September 2026 and no new interruption.",
+        "Northern News Now reported the new Lincoln Park grocery store opening in Duluth on November 9, 2026; improved access, not a closure.",
+        "South Plains Food Bank published planned Veterans Day and Thanksgiving holiday closures; routine preannounced holiday schedule, not an emergency disruption.",
+        "Third-party SNAP outage report page gave no evidence of an official in-window interruption; latest content can differ by crawl, so it was not treated as an authoritative clearance.",
+        "KVIA El Paso food-bank storm closure occurred September 25, 2026; out of current interval."
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Only-store fire in Spencer, New York occurred in September 2026; previously reported historical event."
+      },
+      {
+        "source_url": "https://kvia.com/news/top-stories/2026/09/25/el-paso-food-bank-to-close-today-due-to-storm-damage/",
+        "reason": "Severe weather food-bank distribution closure was originally reported September 25, 2026."
+      },
+      {
+        "source_url": "https://www.northernnewsnow.com/2026/11/10/lincoln-park-grocery-store-holds-soft-opening-superior-street/",
+        "reason": "November 9 grocery opening rather than food access loss."
+      },
+      {
+        "source_url": "https://www.thelubbock.org/news/south-plains-food-bank-announces-holiday-closures-and-updates",
+        "reason": "Routine announced holiday schedule, not abrupt disaster-related loss."
+      },
+      {
+        "source_url": "https://www.michigan.gov/mdhhs/inside-mdhhs/newsroom/2025/11/08/supreme-court-emergency-order-pauses-november--snap-payments",
+        "reason": "SNAP benefits pause was November 2025, not November 2026."
+      },
+      {
+        "source_url": "https://www.ncdhhs.gov/news/press-releases/2025/11/08/ncdhhs-pauses-full-snap-payments-after-court-decision-remains-ready-process-benefits-when-authorized",
+        "reason": "SNAP benefits pause was November 2025, not current observation interval."
+      }
+    ],
+    "exclusion_policy": "Excluded donation drives, resource directories, recipes, opinions, promotion, generic inflation, routine holiday closures, old incidents, and duplicates. No in-window incident confirmed.",
+    "assessment": "No new qualifying U.S. food-access disruption was substantiated by 12 targeted searches and available direct-source checks. Search recall is not exhaustive; one official SNAP updates URL was inaccessible.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T094451-0800-r11-20261110T175019920Z",
+  "scheduled_for": "2026-11-10T09:44:51-08:00",
+  "started_at": "2026-11-10T09:47:52-08:00",
+  "completed_at": "2026-11-10T17:50:19.920Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T16:49:18.319Z",
+    "end": "2026-11-10T17:50:19.920Z",
+    "previous_run_completed_at": "2026-11-10T16:49:18.319Z",
+    "basis": "Newly discoverable and not previously logged evidence since last authenticated hourly heartbeat. WAFA story timestamp 18:47 Palestine time (08:47 PST) slightly precedes previous heartbeat completion (08:49 PST); event is from Nov 9 and is explicitly not counted as a new death during this hour.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261109-sabra-al-maghrabi-workshop-strike-two-killed-eight-injured-late-recall",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176841",
+      "title": "Two killed, eight injured in Israeli strike on Gaza City",
+      "publisher": "Palestinian News and Information Agency (WAFA), correspondent",
+      "source_date": "2026-11-10",
+      "publication_date": "2026-11-10",
+      "publication_time_local": "18:47:00+02:00",
+      "publication_time_pst": "2026-11-10T08:47:00-08:00",
+      "event_date": "2026-11-09",
+      "event_time": null,
+      "location": "Lathing workshop on al-Maghrabi Street, Sabra neighborhood, Gaza City, Gaza Strip",
+      "affected_population_system": "Two people reported killed and eight injured in an Israeli combat-drone strike against a workshop; identity, civilian/combatant status, injury severity and independent confirmation unknown.",
+      "exact_supporting_passage": "An Israeli strike on Monday evening targeted the Sabra neighborhood of Gaza City, killing two Palestinians and injuring eight others",
+      "source_type": "Palestinian public news agency direct correspondent account; single-source",
+      "classification": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "discovered_at_utc": "2026-11-10T17:50:19.920Z",
+        "observed_publication_utc": "2026-11-10T16:47:00Z",
+        "previous_heartbeat_completed_utc": "2026-11-10T16:49:18.319Z",
+        "why_qualifies": "Direct, date/location-specific report on casualties at a distinct Sabra workshop; omitted from preceding authenticated heartbeat; publication slightly before previous run completed, caught by supplementary recall.",
+        "temporal_caveat": "The reported strike occurred Monday evening 9 November Palestine time, not during this hourly observation period.",
+        "duplication_control": "Distinct reported geography and event date from the Nov 10 Zeitoun shelter strike, Daraj school-area strikes, Khan Younis death, Nov 10 aggregate and AP count update. Do not add 2 to Nov 10 daily tally or assume source figures have been reconciled.",
+        "cross_source_confirmation": null,
+        "source_qualification": "Direct WAFA correspondent account; no separate corroboration found within search cap; casualty claims attributed, not independently verified.",
+        "source_url_reviewed": "https://english.wafa.ps/Pages/Details/176841"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; primary daily production authoritative. No publishing, approvals, branch merges, schedule changes or task disabling.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T084451-0800-r11-20261110T164918319Z.json",
+    "previous_heartbeat_verified_using_authenticated_github_fetch": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed report Nov 9 on heavy rains; no Nov 10 report newly posted."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE; REGIONAL_HTTP_502",
+        "result": "Global crisis page accessible, no newly dated Nov 10 Gaza medical evacuation or hospital capacity release; EMRO oPt direct request returned 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 10 2026 Reuters new updates civilians strikes aid negotiations 17:00 GMT",
+      "site:english.wafa.ps/Pages/Details/ Gaza Tuesday November 10 2026 19:00 killed wounded",
+      "site:palestinercs.org 10 November 2026 Gaza ambulances hospital shelter",
+      "site:unicef.org Gaza 10 November 2026 flooding water health update",
+      "site:wfp.org Gaza 10 November 2026 food aid crossing access",
+      "site:unrwa.org Gaza 10 November 2026 shelter health displaced",
+      "site:apnews.com/article/ Gaza November 10 2026 afternoon Israeli strikes casualty update",
+      "site:reuters.com/world/middle-east/ Gaza November 10 2026 ceasefire aid flood shelters civilians",
+      "site:aljazeera.com/news/2026/11/10/ Gaza Israel 10 November 2026 latest killed injuries shelters",
+      "site:icrc.org/en Gaza November 10 2026 hostages detainees humanitarian aid",
+      "Gaza November 10 2026 latest ceasefire talks Israel Hamas bodies return Yellow Line",
+      "Gaza Rafah Kerem Shalom November 10 2026 medical evacuation hospitals fuel crossing operational change"
+    ],
+    "direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "result": "Nov 10 18:47 Palestine-time report revealed previously unlogged Sabra workshop incident on Monday evening Nov 9. Nov 10 18:24 UN chief ceasefire criticism is a statement, not confirmed operational change."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/mideast-news-yemen-saudi-iran-november-10-2026-f4407845b6dd105e54190ccab7d55f8d",
+        "status": "ACCESSIBLE",
+        "result": "Five reported killed Tuesday Gaza; no further change from preceding heartbeat."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "status": "ACCESSIBLE",
+        "result": "Nov 10 report at 11:47 UTC covers previously reported Zeitoun, Daraj and Khan Younis incidents, no new distinct incident."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/jordan/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "status": "ACCESSIBLE",
+        "result": "10 Nov local repost of UNICEF Nov 9 statement; weekend deaths and storms already covered."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "result": "No new 10 Nov incident bulletin visible."
+      },
+      {
+        "publisher": "ICRC",
+        "url": "https://www.icrc.org/en",
+        "status": "ACCESSIBLE",
+        "result": "No new Nov 10 Gaza update visible."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "HTTP 502",
+        "new_this_run": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "Previously HTTP 403; direct site not retested this run",
+        "new_this_run": false
+      },
+      {
+        "publisher": "UN News",
+        "status": "Previously restricted; direct site not retested this run",
+        "new_this_run": false
+      }
+    ],
+    "exclusions": [
+      "AP five Nov 10 deaths and Reuters earlier four are previous findings; not re-counted.",
+      "WAFA three deaths al-Daraj, two deaths al-Zeitoun, Khan Younis man, prior Nov 10 hospital aggregate all previously logged.",
+      "UNICEF storm/flooding update Nov 9/10 and Sheikh Radwan blocked equipment already logged.",
+      "Al Jazeera Nov 10 weekly roundup reports historical Nov 1-9 items, not novel verified hourly developments.",
+      "WAFA's Nov 10 UN secretary-general comments about ceasefire implementation and humanitarian access are attributable statements, but do not independently establish a specific new crossing, ceasefire, negotiation or operational change."
+    ],
+    "status_rationale": "DEGRADED: WHO regional oPt endpoint continues to return HTTP 502, though the global WHO page, OCHA updates, international news agencies, WAFA and other sources were accessible; not a new material deterioration.",
+    "scope_and_limitations": "Two OCHA/WHO priority searches, followed by exactly twelve targeted searches and direct site/article reads. Single-source Sabra claim warrants further corroboration and is explicitly a recalled Nov 9 event, not a new Nov 10 fatality.",
+    "notification_reason": "One distinct, previously unlogged, source-traceable Gaza City casualty incident was recovered despite publication before the previous heartbeat finished."
+  }
+}

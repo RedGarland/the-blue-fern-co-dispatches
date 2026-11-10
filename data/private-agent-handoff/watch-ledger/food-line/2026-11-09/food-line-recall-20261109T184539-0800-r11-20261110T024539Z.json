@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261109T184539-0800-r11-20261110T024539Z",
+  "scheduled_for": "2026-11-09T18:45:54-08:00",
+  "started_at": "2026-11-09T18:45:39-08:00",
+  "completed_at": "2026-11-09T18:47:08-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-09T17:45:11-08:00",
+    "end_at": "2026-11-09T18:47:08-08:00",
+    "observation_date": "2026-11-09",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since completed_at of most recent independently verified Food Line watch heartbeat; source freshness checked against publication/incident date rather than search crawl time.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-09/food-line-recall-20261109T174433-0800-r11-20261110T014433Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall watch; primary nationwide production collector remains authoritative.",
+    "target_classes": [
+      "Only, sole, last, or full-service grocery store lost to closure/fire/disaster",
+      "Emergency food distributions canceled/suspended because of storms, flooding, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank closure or material reduction of service",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_engine": "web fast search, recency=1 day (search results independently date screened)",
+    "search_query_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" fire closed November 9 2026 community",
+      "\"last grocery store\" closure announced November 9 2026 rural",
+      "\"sole grocery\" fire shutdown November 2026 town",
+      "\"full service grocery store\" closed November 9 2026 small town",
+      "\"food distribution\" canceled November 9 2026 storm weather outage",
+      "\"mobile food pantry\" canceled November 9 2026 flooding storm",
+      "\"food bank\" food distribution suspended November 9 2026 damage",
+      "\"food pantry\" \"closed\" November 9 2026 emergency",
+      "\"food bank\" \"closed\" November 9 2026 fire flood outage",
+      "site:gov \"SNAP\" \"outage\" \"November 9, 2026\"",
+      "site:gov \"WIC\" \"interruption\" November 9 2026",
+      "SNAP EBT benefits unavailable delayed November 9 2026 state agency"
+    ],
+    "direct_source_checks": {
+      "count": 8,
+      "successful": 6,
+      "failed": 2,
+      "urls": [
+        "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "https://dphss.guam.gov/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.dss.virginia.gov/alerts/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.cdss.ca.gov/inforesources/calfresh",
+        "https://www.fns.usda.gov/snap/news-updates",
+        "https://www.feedwm.org/mobile-pantry-schedule/"
+      ],
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Direct webpage timed out; indexed page snapshot exposed latest announcements through Nov 6, 2026, including prior Guam WIC waiver change."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/news-updates",
+          "error": "Direct page inaccessible via web tool; recurring USDA access limitation."
+        }
+      ],
+      "observations": [
+        "KCRG article about JW's Foods, Kalona, Iowa, was first published Nov 8, 2026 at 10:39 PM CST (8:39 PM PST), outside window. Owners are seeking a buyer; store has not closed and discussions with buyers are active.",
+        "Guam DPHSS indexed home page lists Nov 5, 2026 termination of temporary WIC waivers, not a new in-window event. Direct page timed out.",
+        "Wisconsin FoodShare member-news page last revised Oct 16, 2026; card PIN reset and other alerts were preexisting.",
+        "Virginia DSS alerts page showed no verified newly published in-window SNAP/WIC access interruption.",
+        "Hawaii BESSD benefits processing and call-center delay information was preexisting and not attributable to a new in-window announcement.",
+        "California CDSS CalFresh page contained ongoing program and benefit resource information, not a newly announced immediate interruption.",
+        "Feeding America West Michigan mobile pantry schedule again displayed Dec 3, 2026 Ishpeming cancellation, with no dated posting or documented disaster cause; already observed in previous watch.",
+        "Search results were dominated by 2025 SNAP shutdown stories, older 2026 grocery access losses, historic weather cancellations, unrelated or non-U.S. developments."
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "source_url": "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "reason": "Potential future loss, not an actual closure; first published before current hourly interval."
+      },
+      {
+        "source_url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Previously seen Dec 3 mobile pantry cancellation without established disaster cause or new update time."
+      },
+      {
+        "source_url": "https://dphss.guam.gov/",
+        "reason": "Indexed Nov 5 Guam WIC waiver notice predates this interval; no evidence of new in-window interruption."
+      },
+      {
+        "source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Preexisting October FoodShare and storm replacement benefits notices."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/government-shutdown-snap-benefits-delayed-usda/",
+        "reason": "Published October 2025, not a November 2026 SNAP interruption."
+      }
+    ],
+    "exclusion_policy": "Exclude donation drives, resource guides, recipes, opinion, program promotion, routine holiday closures, generic inflation, previously recorded incidents and out-of-window events.",
+    "assessment": "No newly qualifying U.S. food-access disruption verified within the bounded recall interval. Two direct page failures limit coverage; remaining independent searches and direct sources provide useful coverage. No assertion of exhaustive nationwide absence.",
+    "material_degradation": false,
+    "changes_to_production": false,
+    "approval_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

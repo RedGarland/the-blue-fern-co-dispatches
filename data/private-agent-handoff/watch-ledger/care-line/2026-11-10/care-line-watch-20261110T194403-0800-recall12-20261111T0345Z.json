@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T194403-0800-recall12-20261111T0345Z",
+  "scheduled_for": "2026-11-10T19:45:22-08:00",
+  "started_at": "2026-11-10T19:44:03-08:00",
+  "completed_at": "2026-11-11T03:46:00.983Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T18:43:28.228-08:00",
+    "end": "2026-11-11T03:46:00.983Z",
+    "basis": "From the last verified supplementary Care Line heartbeat completion through this watch; November 10 publications screened for new changes, excluding previously recorded, historic, proposed and non-access-affecting developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production national collector remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T184124-0800-recall12-20261111T024328Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-10T18:43:28.228-08:00",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — IL — CLIA certificate limitation — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "previously_recorded_finding_id": "cms-clia-limitation-il-advanced-urgent-care-14d2049789-20261110",
+      "note": "Official CMS page itself lists November 10 Advanced Urgent Care at top; a search-result extract was stale and showed November 9 first. Direct CMS page resolved that discrepancy."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department services suspended closure announced November 10 2026 United States",
+      "labor delivery maternity unit closure suspension announced November 10 2026 hospital",
+      "behavioral health psychiatric hospital unit closed suspended services November 10 2026",
+      "dialysis facility service closed suspended patients November 10 2026",
+      "oncology cancer clinic primary care practice abruptly closed November 10 2026",
+      "rural hospital emergency services suspended closure announced November 10 2026",
+      "ambulance EMS service shutdown base station closure November 10 2026",
+      "air ambulance medevac helicopter base suspended closed November 10 2026",
+      "Medicare Medicaid provider termination notice CLIA November 10 2026 state department health access",
+      "emergency department maternity hospital clinic reopened resumed services November 10 2026",
+      "Puerto Rico US Virgin Islands medical hospital emergency dialysis service closure reopening November 10 2026",
+      "Guam Northern Mariana Islands American Samoa ambulance hospital clinic suspended reopened November 10 2026"
+    ],
+    "search_recency_days": 2,
+    "search_methods": "CMS index direct-open first, followed by exactly 12 focused searches covering closures/suspensions/restorations across service lines and U.S. territories; priority to official notices and verified local reports.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, PA",
+        "reason": "Closure/ER suspension and state licensing action dated Nov 4–7 and already recorded; Nov 9 article recaps earlier decisions, not a fresh change.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "Roseland Community Hospital, Chicago, IL",
+        "reason": "Maternity ward closure reported in Nov 6 bankruptcy article; no new change in current observation window.",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-files-bankruptcy-days-closing-maternity-ward-chicagos-south-side/20018238/"
+      },
+      {
+        "item": "Sun Valley Psychiatry, Dalton, GA",
+        "reason": "New office opening is service expansion but not a concrete restoration of previously lost essential service; outside high-value recall criteria.",
+        "url": "https://www.citybiz.co/article/931735/sun-valley-psychiatry-opens-dalton-office-expanding-mental-health-services-in-georgia/"
+      },
+      {
+        "item": "Minnesota residential child treatment center investigation",
+        "reason": "New maltreatment reporting without documented closure, service suspension, or access restoration.",
+        "url": "https://www.startribune.com/nexus-sexual-abuse-maltreatment-austin-child-mental-health-facility/601915412"
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Search results lack reliable hourly publication filtering; indexing/reporting may lag and recent stories can appear in later checks.",
+      "Bounded 12-search sampling cannot establish exhaustive coverage of all states or U.S. territories.",
+      "Production queue not queried; deduplication verified against previous supplemental heartbeat and known CMS record, not the primary collector."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "No approval",
+      "No publication",
+      "No schedule changes",
+      "No task disabling"
+    ]
+  }
+}

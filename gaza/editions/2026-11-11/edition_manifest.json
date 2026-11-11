@@ -1,0 +1,45 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-11",
+  "generated_at": "2026-11-11T18:05:32.073120+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-11/",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 4,
+  "story_count": 1,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 3,
+  "publishers": [
+    "The Associated Press",
+    "WAFA",
+    "Reuters, syndicated by Internazionale"
+  ],
+  "source_adequacy_warnings": [
+    "Four source records from three publishers cover one overlapping Gaza City development; this is not a full daily briefing.",
+    "The later fourth death is attributed to WAFA and is not independently corroborated by the earlier AP and Reuters reports reviewed."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "sources_manifest.json",
+  "curation_manifest_path": "curation_manifest.json",
+  "free_public_artifacts": [
+    "index.html",
+    "edition_manifest.json",
+    "sources_manifest.json",
+    "curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "source_window_start_utc": "2026-11-11T00:00:00Z",
+  "source_window_end_utc": "2026-11-11T23:59:59Z",
+  "first_source_retrieved_at": "2026-11-11",
+  "last_source_retrieved_at": "2026-11-11",
+  "contains_later_same_day_update": true,
+  "later_same_day_update_count": 1,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0
+}

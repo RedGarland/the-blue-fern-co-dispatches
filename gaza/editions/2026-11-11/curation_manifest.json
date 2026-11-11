@@ -1,0 +1,48 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-11-001",
+    "title": "WAFA reports four deaths following Gaza City strikes",
+    "summary": "Earlier AP, WAFA and Reuters reports said separate Israeli strikes in Gaza City on Wednesday killed three Palestinians, citing Shifa Hospital and other medical sources. WAFA later reported four deaths, citing medical and local sources, including a 30-year-old who died from injuries sustained in the tent strike. AP and Reuters have not independently corroborated that later death in the reports reviewed here. Israel's military said both strikes targeted military operatives and provided no further details. The accounts appear to overlap; exact cross-report identity matching remains uncertain. The reported counts are not added together, and no Gaza-wide casualty total or civilian/militant status is inferred.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-11-ap-gaza-city-shifa-3deaths",
+      "gaza-2026-11-11-wafa-sheikh-radwan-3deaths",
+      "gaza-2026-11-11-reuters-sheikh-radwan-3deaths",
+      "gaza-2026-11-11-wafa-gaza-city-later-4deaths"
+    ],
+    "source_urls": [
+      "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+      "https://english.wafa.ps/Pages/Details/176857",
+      "https://www.internazionale.it/ultime-notizie-reuters/2026/11/11/israeli-strikes-kill-three-people-including-two-brothers-in-gaza-medics-say",
+      "https://english.wafa.ps/Pages/Details/176860"
+    ],
+    "publisher_names": [
+      "The Associated Press",
+      "WAFA",
+      "Reuters, syndicated by Internazionale"
+    ],
+    "generated_at": "2026-11-11T18:05:32.073120+00:00",
+    "substantive_ground": true,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "development_type": "primary_report_with_later_same_day_update",
+    "affected_system": "conflict",
+    "location": "Gaza City",
+    "event_date": "2026-11-11",
+    "attribution": "Earlier three-death reports: Shifa Hospital and medical sources as reported by AP, WAFA and Reuters; later four-death report: medical and local sources as reported by WAFA; Israeli military position as reported by AP and Reuters",
+    "uncertainty": "Later fourth death reported only by WAFA in reviewed sources; cross-report identity matching inferred, not independently established",
+    "casualty_counts": {},
+    "prior_story_matched": null,
+    "prior_edition_date": "2026-11-10",
+    "dedupe_classification": "new_development_same_day;not_duplicate_of_nov10_storm_or_attacks",
+    "dedupe_reasons": [
+      "Distinct November 11 Gaza City strikes, separate from the November 10 edition.",
+      "Earlier three-death reports and later WAFA four-death report appear to cover the same incident cluster and are not summed.",
+      "WAFA says the fourth person succumbed to wounds from the same tent shelling; exact cross-report identity matching remains uncertain."
+    ]
+  }
+]

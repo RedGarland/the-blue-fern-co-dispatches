@@ -1,0 +1,65 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T224932-0800-recall12",
+  "scheduled_for": "2026-11-10T22:45:22-08:00",
+  "started_at": "2026-11-10T22:49:32-08:00",
+  "completed_at": "2026-11-10T22:50:48-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-10T21:43:53-08:00",
+    "end": "2026-11-10T22:50:48-08:00",
+    "observation_date": "2026-11-10",
+    "prior_check_basis": "Previous ops/watch-ledger Care Line heartbeat care-line-watch-20261110T214225-0800-recall12.json; completed_at 2026-11-10T21:43:53-08:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall watch; national production Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, limitation of CLIA cert, Illinois, CCN 14D2049789",
+      "disposition": "Previously recorded in prior hourly checks; no newly listed notices in this observation window"
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended reopened November 10 2026 United States",
+      "maternity labor delivery unit closed temporarily suspended November 10 2026 hospital",
+      "rural hospital emergency services shutdown closure November 10 2026",
+      "behavioral health psychiatric inpatient hospital closure services halted November 10 2026",
+      "dialysis center closed patients transferred November 10 2026",
+      "cancer center oncology infusion services suspended November 10 2026",
+      "primary care clinic closed abruptly November 10 2026 patient access",
+      "ambulance service base closed suspended service November 10 2026",
+      "air ambulance medical helicopter base closure grounding November 10 2026",
+      "site:gov \"November 10, 2026\" hospital \"closure\" emergency care",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana Islands hospital clinic emergency services closure reopening November 10 2026",
+      "hospital emergency department reopened restored service November 10 2026"
+    ],
+    "exclusions": [
+      {
+        "title": "Sharon Regional Medical Center license revocation and emergency service suspension",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "Already recorded; emergency-service suspension Nov. 6 and state order Nov. 4 predate this watch window; article is follow-up reporting."
+      },
+      {
+        "title": "Stanford Medicine Sutter Health Cancer Center, Oakland",
+        "url": "https://www.sfchronicle.com/health/article/sutter-stanford-cancer-oakland-22517128.php",
+        "reason": "Nov. 9 announcement of planned service opening Dec. 1 and Feb. 3 with planned Berkeley/Emeryville consolidation; not an abrupt effective loss/restoration in observation window."
+      },
+      {
+        "title": "Rural and maternity healthcare coverage",
+        "url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center",
+        "reason": "Background report without new concrete service change in watch window."
+      }
+    ],
+    "limitations": [
+      "Same-hour reporting and search indexing delays may hide events.",
+      "Searches are targeted rather than exhaustive for every county or U.S. territory; source availability in Guam and smaller territories is limited."
+    ],
+    "review_action": "No new qualifying pending_review candidates; no approvals, publications, task changes, or schedule changes."
+  }
+}

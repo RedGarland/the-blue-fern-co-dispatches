@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T164430-0800-r11-20261111T004430Z",
+  "scheduled_for": "2026-11-10T16:45:54-08:00",
+  "started_at": "2026-11-10T16:44:30.000-08:00",
+  "completed_at": "2026-11-10T16:46:04.000-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T15:47:39.211-08:00",
+    "end_at": "2026-11-10T16:46:04.000-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Since most recent independently verified heartbeat completion on ops/watch-ledger; assessed source publication and disruption onset independently of discovery time.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T154557-0800-r11-20261110T234557Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall of high-value missing food-access disruptions; production collector remains authoritative. An empty finding set is not evidence of nationwide absence.",
+    "target_classes": [
+      "Only, sole, last, or full-service grocery loss/closure/fire/disaster",
+      "Emergency distribution cancellation/suspension caused by storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" fire OR closed OR flood November 10 2026 United States",
+      "\"sole grocery store\" damaged OR closes OR fire November 2026",
+      "\"only full service grocery\" closed November 10 2026",
+      "\"last grocery store\" closing fire November 2026 town",
+      "\"food distribution canceled\" storm flood outage November 10 2026",
+      "\"food pantry distribution cancelled\" power outage fire 2026 November 10",
+      "\"emergency food distribution\" suspended weather flood November 10 2026",
+      "\"food bank\" \"closed until further notice\" November 10 2026",
+      "\"food pantry\" \"temporarily closed\" fire damage November 2026",
+      "\"SNAP EBT\" system outage November 10 2026 state official",
+      "\"WIC\" system down benefits unavailable November 10 2026",
+      "site:gov \"SNAP\" benefits delayed suspended outage \"November 10, 2026\""
+    ],
+    "search_query_errors_observed": 0,
+    "search_engine": "Twelve targeted web searches with recency one or seven days. Search results mostly returned older or irrelevant incidents, rather than a qualifying newly reported disruption in this watch interval.",
+    "direct_source_checks": {
+      "distinct_urls": 12,
+      "accessible": 10,
+      "failed": 2,
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA access restriction; partially mitigated by state benefits pages and processor status."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA access restriction; partially mitigated by state benefits pages and processor status."
+        }
+      ],
+      "urls": [
+        "https://status.joinforage.app/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.ri.gov/",
+        "https://dhs.georgia.gov/",
+        "https://www.fns.usda.gov/snap",
+        "https://www.fns.usda.gov/newsroom",
+        "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "https://www.northamptonsurvival.org/get-food/calendar/",
+        "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "reason": "Published November 8; Kalona, Iowa only full-service grocery still open, owners seeking purchaser, earlier reviewed prospective risk, not actual abrupt loss."
+      },
+      {
+        "url": "https://www.ksl.com/article/51642853/nonprofit-temporarily-closes-its-doors-impacting-more-than-20000",
+        "reason": "Published October 31; Utah food bank closure began November 1, previously known and outside new hourly interval."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Processor service shown operational; November 10 maintenance completed at 12:00 UTC (04:00 PST), well before this interval; future November 12 and November 15 maintenance not immediate interruptions."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "SNAP verification/documentation requirement begins November 21, no current benefit interruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Ongoing unspecified phone/application processing delays, no newly dated onset or material change in hourly interval."
+      },
+      {
+        "url": "https://www.northamptonsurvival.org/get-food/calendar/",
+        "reason": "Routine Veterans Day November 11 holiday closure; November 10 food distribution still listed."
+      },
+      {
+        "url": "https://local12.com/news/local/cincinnati-country-meat-co-marketplace-grocery-store-avondale-closing-owners-cite-theft-rising-costs-violence",
+        "reason": "Only full-service grocery closure reported July 11, 2026, historical and outside interval."
+      },
+      {
+        "url": "https://katu.com/news/local/why-oregon-was-one-of-the-first-states-to-get-snap-benefits-back-online",
+        "reason": "Published November 2025, historical SNAP interruption/restoration."
+      }
+    ],
+    "excluded_categories": "Donations, guides, recipes, commentary, promotions, inflation stories, old/potential grocery closures, routine holiday schedules, completed processor maintenance, prospective SNAP regulation and unrelated events.",
+    "assessment": "No new sufficiently substantiated high-value food-access disruption identified in 2026-11-10 15:47:39–16:46:04 PST. Fresh local/official searches were noisy and indexing lag is possible. Two recurring USDA 403 restrictions reduced direct federal coverage; ten alternative direct pages remained accessible. This is a nonmaterial limitation rather than failure of the overall watch.",
+    "material_degradation": false,
+    "approvals_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false,
+    "notification_reason": "No qualifying new signal or material failure/degradation."
+  }
+}

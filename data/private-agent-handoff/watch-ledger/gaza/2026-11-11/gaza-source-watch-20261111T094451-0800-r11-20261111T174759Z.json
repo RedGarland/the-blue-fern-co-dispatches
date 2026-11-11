@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T094451-0800-r11-20261111T174759Z",
+  "scheduled_for": "2026-11-11T09:44:51-08:00",
+  "started_at": "2026-11-11T09:47:59-08:00",
+  "completed_at": "2026-11-11T09:49:10-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T16:43:33.214Z",
+    "end": "2026-11-11T17:49:10Z",
+    "start_local": "2026-11-11T08:43:33.214-08:00",
+    "end_local": "2026-11-11T09:49:10-08:00",
+    "previous_run_completed_at": "2026-11-11T16:43:33.214Z",
+    "basis": "Latest authenticated Gaza watch heartbeat on ops/watch-ledger; assessed distinct event changes and source observations since previous completion, not merely same-day publication.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only. Primary daily Gaza publisher/collector remains authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T084451-0800-r11-20261111T164101Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest indexed Gaza report 9 November 2026 about 8 November rains. No new in-window Gaza bulletin."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "WHO global conflict page accessible with no in-window situation update; WHO EMRO OPT direct page returned HTTP 502, unchanged from previous watch."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza 11/11/2026 07:00 PM 08:00 PM killed displacement airstrike",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 16:00 UTC 17:00 UTC 18:00 GMT latest Israeli strike",
+      "site:apnews.com/article/ Gaza November 11 2026 Wednesday evening casualty aid cross hospital new",
+      "site:aljazeera.com/news/2026/11/11/ Gaza November 11 2026 latest evening displacement attacks injured water",
+      "site:palestine.un.org/en/ Gaza November 11 2026 ceasefire aid civilian infrastructure humanitarian update",
+      "site:palestinercs.org/en Gaza November 11 2026 ambulance rescue emergency hospital 11 November",
+      "Gaza November 11 2026 18:00 19:00 Palestine Wednesday latest killed injured new airstrikes hospital",
+      "site:unicef.org \"11 November 2026\" Gaza water shelter flood supplies access",
+      "site:wfp.org/news \"11 November 2026\" Gaza food meals assistance crossing",
+      "site:msf.org Gaza November 11 2026 medical hospital evacuations supplies fuel",
+      "site:icrc.org November 11 2026 Gaza Israeli hostages Palestinian prisoners humanitarian crossings",
+      "November 11 2026 Gaza Rafah Kerem Shalom aid trucks medical evacuation ceasefire talks November 11 latest 19:00"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza item remains 11 November 17:02 Palestine time, reporting four deaths and two al-Maghazi houses, already captured in prior 07:44 watch."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "result": "12:47 UTC reporting on Wednesday strikes precedes observation window and overlaps preceding Gaza City casualty updates."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest official news dated 10 November 2026; no in-window ambulance or healthcare operation update."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Latest Gaza winter flooding story listed 10 November; no in-window operational change."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/50075bc97e07d41fa3b66fc28858c06b",
+        "result": "Search results contain Wednesday three-fatality report and pre-existing winter aid restrictions; direct AP article inaccessible by URL, but search-surfaced version reviewed. Not distinct event."
+      },
+      {
+        "publisher": "The Guardian",
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "result": "Published 05:00 GMT and last modified 13:39 GMT 11 Nov (05:39 PST), before prior check; 3,900 unsheltered households and pending tents reference already-existing storm response."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/features/2026/11/11/as-gaza-flood-waters-subside-palestinians-assess-human-and-material-damage",
+        "result": "11 November feature documents November 8 storm and fatal sandbank collapse; no distinct in-window new event."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news/readout-world-food-programme-executive-director-luke-j-lindbergs-humanitarian-briefing-g7",
+        "result": "G7 readout references Palestine as a supply-chain pilot without newly verified Gaza delivery or crossing change."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176860",
+        "reason": "Four deaths and two homes east of al-Maghazi already logged in 07:44 watch; no newer update."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "reason": "Three Wednesday strike deaths overlap earlier four-death update; do not sum."
+      },
+      {
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "reason": "Publication and update before observation window, reporting weekend flooding and earlier humanitarian constraints."
+      },
+      {
+        "url": "https://www.aljazeera.com/features/2026/11/11/as-gaza-flood-waters-subside-palestinians-assess-human-and-material-damage",
+        "reason": "Retrospective account of 8 November collapse rather than new event."
+      },
+      {
+        "url": "https://www.wfp.org/news/readout-world-food-programme-executive-director-luke-j-lindbergs-humanitarian-briefing-g7",
+        "reason": "No new verifiable Gaza access/aid operation change."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "AP direct URL",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "status": "DIRECT_OPEN_UNAVAILABLE",
+        "previously_observed": null,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO OPT remained HTTP 502; other official direct pages and targeted search coverage remained available, and the condition was already documented rather than new material deterioration.",
+    "limitations": "Search indexing, local source updates and incident timing may lag the window. No independently established additional qualifying development between 08:43:33 and 09:49:10 PST.",
+    "changes_to_production": "None. No approval, publication, merging, schedule adjustment, disabling, or production changes; only this one watch-ledger heartbeat."
+  }
+}

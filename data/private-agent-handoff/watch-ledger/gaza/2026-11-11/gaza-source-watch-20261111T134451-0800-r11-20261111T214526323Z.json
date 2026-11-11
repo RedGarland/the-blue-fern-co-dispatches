@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T134451-0800-r11-20261111T214526323Z",
+  "scheduled_for": "2026-11-11T13:44:51-08:00",
+  "started_at": "2026-11-11T13:43:30-08:00",
+  "completed_at": "2026-11-11T21:45:26.323Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T12:42:26.095-08:00",
+    "end": "2026-11-11T13:45:26.323-08:00",
+    "previous_run_completed_at": "2026-11-11T12:42:26.095-08:00",
+    "basis": "Authenticated latest prior Gaza Source Watch heartbeat; newly traceable distinct developments after cutoff, excluding older reports and duplicated counts.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; not production collection or publication.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T124451-0800-r11-20261111T204226095Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest 11 November winter-supply statement already covered by previous watch; no newly timestamped Gaza operations change in this window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "HTTP 502 persisted; long-running restriction, not a materially new failure.",
+        "global_alternative": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"11/November/2026\" \"PM\" Gaza 11:00",
+      "Gaza November 11 2026 evening latest deaths strikes 21:00 UTC November 11",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 late evening aid water hospital ceasefire",
+      "site:apnews.com/article/ Gaza November 11 2026 late afternoon latest humanitarian ceasefire",
+      "site:un.org 11 November 2026 Gaza latest humanitarian situation medical evacuation crossings 21:00",
+      "site:palestinercs.org 11 November 2026 Gaza ambulance casualties medical",
+      "November 11 2026 Gaza November 11 21:00 UTC humanitarian breaking health aid crossings",
+      "site:unicef.org Gaza \"11 November 2026\" water basin floods access",
+      "site:unrwa.org Gaza \"11 November 2026\" shelters food access clinics",
+      "site:wfp.org Gaza November 11 2026 food distribution crossing trucks",
+      "site:aljazeera.com/news/2026/11/11 Gaza late Wednesday November 11 2026 strikes aid ceasefire",
+      "site:english.wafa.ps/Pages/Details/ 11 November 2026 Gaza late night casualties humanitarian"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Most recent posting remains 11 November OCHA relief chief winter supplies statement; covered in prior runs."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, no newly dated in-window Gaza medical evacuation, facility capacity, or hospital operations changes visible."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "List displays 23:24 Palestine local (13:24 PST) article about Tulkarm, not Gaza; latest Gaza item at 20:42 Palestine local (10:42 PST), before previous watch completion."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "result": "Published 12:47 UTC (04:47 PST); Wednesday Gaza City fatalities already reviewed; no new in-window update."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "result": "Earlier flood-camp responsibility remarks and aid supplies pending, already covered."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176863",
+        "reason": "Cumulative Gaza casualties published 20:42 Palestine local (10:42 PST), before previous cutoff and previously reviewed."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "reason": "Earlier Gaza City casualty reports overlap prior AP/WAFA reporting."
+      },
+      {
+        "url": "https://www.reuters.com/business/environment/unicef-says-israel-blocks-gaza-basin-repairs-warns-flood-risk-2026-11-10/",
+        "reason": "UNICEF Sheikh Radwan basin repair restrictions published 10 November; previously reported, no new restriction verified."
+      },
+      {
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "reason": "Prior weekend storm and shelter shortfall; not newly changed in observation window."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO regional Palestine endpoint returned 502, consistent with the already-known recurring restriction. OCHA OPT, WHO global hub and twelve targeted searches remained usable.",
+    "limitations": "Search indexing lag and lack of precise event timestamps may prevent assigning a publication to the exact window. No distinct verifiable new Gaza event or material change identified in searched sources.",
+    "notification_warranted": false,
+    "changes_to_production": "None. No publishing, approval, schedule change, or automation disabling."
+  }
+}

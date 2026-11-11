@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T084451-0800-r11-20261111T164101Z",
+  "scheduled_for": "2026-11-11T08:44:51-08:00",
+  "started_at": "2026-11-11T08:41:01-08:00",
+  "completed_at": "2026-11-11T16:43:33.214Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T15:51:13.505Z",
+    "end": "2026-11-11T16:43:33.214Z",
+    "start_local": "2026-11-11T07:51:13.505-08:00",
+    "end_local": "2026-11-11T08:43:33-08:00",
+    "previous_run_completed_at": "2026-11-11T15:51:13.505Z",
+    "basis": "Previous authenticated Gaza watch heartbeat; window applies to new source observations and qualifying event changes, not simply article date.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production Gaza publisher/collector remains authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T074451-0800-r11-20261111T155113505Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest on updates index is 9 November 2026, heavy-rains report covering 8 November. No newly listed in-window Gaza bulletin."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "WHO global conflict page accessible with no new 11 November Gaza situation update. EMRO OPT direct page returned 502 Bad Gateway, same ongoing restriction as previous heartbeat; not materially worsened."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"11/11/2026\" \"Gaza\" \"06:00 PM\" OR \"07:00 PM\" OR \"08:00 PM\"",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 Israeli strike Wednesday latest deaths aid after four killed",
+      "site:apnews.com/article/ November 11 2026 Gaza hospital aid killing ceasefire November 11",
+      "site:aljazeera.com/news/2026/11/11/ Gaza killed injured latest Wednesday evening shelter",
+      "site:palestine.un.org/en/ Gaza November 11 2026 civilians hospitals aid evacuations",
+      "site:palestinercs.org November 11 2026 Gaza ambulance paramedics injured transport fuel",
+      "Gaza November 11 2026 11 Nov latest medical evacuation Rafah hospital closures supplies oxygen WHO",
+      "Gaza 11 November 2026 strike Maghazi homes Gaza City casualties updates afternoon new attacks",
+      "site:unicef.org/press-releases Gaza \"11 November 2026\" new water children displacement",
+      "site:wfp.org/news Gaza \"11 November 2026\" aid deliveries food access crossings",
+      "site:msf.org Gaza \"11 November 2026\" hospital surgery patients emergency",
+      "Gaza November 11 2026 latest 18:00 19:00 Israeli operations casualties ceasefire Kerem Shalom Rafah detention hostages"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest listed Gaza article remains 11 November 17:02 local display; already included in previous heartbeat (four deaths and two Maghazi houses). No new Gaza item shown after that time."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176860",
+        "result": "Four fatalities, injury detail, and al-Maghazi demolition previously captured; exclude as duplicate."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "result": "Wednesday three-strike-death count overlaps previous Gaza City casualties; rain and blocked winter supplies predate window; no separately new verified development."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "result": "11 November 12:47 UTC initial article about three Wednesday deaths already in previous watch; Tuesday Sabra foundry damage excluded."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest news dated 10 November about winter catastrophe, predating window; no new 11 November EMS item."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news/readout-world-food-programme-executive-director-luke-j-lindbergs-humanitarian-briefing-g7",
+        "result": "11 November G7 readout mentions Palestine as a supply-chain pilot but no verified newly executed Gaza access/food-delivery change; excluded as generic initiative."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176860",
+        "reason": "Four-death Wednesday update and two reported destroyed homes both recorded by immediately previous watch; duplicate."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "reason": "Previous Wednesday strikes, count overlap; no additive fatalities."
+      },
+      {
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "reason": "Prior Gaza strike casualty reports and earlier flood-related supply restriction; not a distinct in-window change."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "reason": "10 November winter humanitarian statement outside observation window."
+      },
+      {
+        "url": "https://www.wfp.org/news/readout-world-food-programme-executive-director-luke-j-lindbergs-humanitarian-briefing-g7",
+        "reason": "No demonstrable new Gaza operation, movement or access state change."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO Eastern Mediterranean OPT remained HTTP 502; WHO global and OCHA OPT were accessible, direct PRCS and other reporting available, and 12 targeted searches were performed. Failure is recurring, not a new material deterioration.",
+    "limitations": "Search indexing and source reporting may lag. Exact timestamps of already captured strikes or demolitions are not independently known. No qualifying distinct new incident or operational change was verified in the bounded window.",
+    "scheduling_note": "The runtime start was reported as 08:41:01 PST, ahead of the nominal 08:44:51 hourly schedule; scheduled_for reflects the nominal slot, not an assertion that work started afterward.",
+    "changes_to_production": "None; no approvals, merges, publication, schedule changes, or task disabling. Exactly this ledger heartbeat added."
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T024520-0800-recall12",
+  "scheduled_for": "2026-11-11T02:45:22-08:00",
+  "started_at": "2026-11-11T02:45:20-08:00",
+  "completed_at": "2026-11-11T02:46:42-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-11T01:45:48-08:00",
+    "end": "2026-11-11T02:46:42-08:00",
+    "observation_date": "2026-11-11",
+    "prior_check_basis": "Verified ops/watch-ledger heartbeat care-line-watch-20261111T014403-0800-recall12.json completed_at 2026-11-11T01:45:48-08:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall for all U.S. states, DC and territories; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "verification": "CMS official live Public Notices page found in CMS-specific initial search; current notice table inspected before the 12 supplemental searches.",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, Limitation of CLIA cert, IL, CCN 14D2049789",
+      "disposition": "No new dated CMS notices since the previous verified heartbeat. November 10 Illinois CLIA limitation and November 9 Michigan HHA termination are already recorded and predate the observation window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended reopened \"November 11, 2026\" OR \"November 10, 2026\" United States",
+      "rural hospital emergency services temporarily closed November 10 11 2026 county",
+      "maternity obstetrics labor delivery unit closure November 10 11 2026 hospital",
+      "behavioral health psychiatric hospital closure suspension November 10 11 2026",
+      "dialysis center closure patients November 10 11 2026",
+      "cancer center oncology radiation treatment services closed November 10 11 2026",
+      "primary care clinic FQHC closure service suspension November 10 11 2026",
+      "ambulance EMS service shut down base closure November 10 11 2026",
+      "air medical helicopter medevac base closing suspended November 10 11 2026",
+      "hospital emergency room reopening restored services November 10 11 2026",
+      "Puerto Rico Guam Virgin Islands Northern Mariana American Samoa hospital clinic emergency ambulance suspension November 2026",
+      "site:gov \"November 11, 2026\" healthcare facility closure provider termination hospital dialysis"
+    ],
+    "search_assessment": "12 bounded searches spanning hospital/ED, rural emergencies, maternity, behavioral health, dialysis, oncology, primary care, ground/air EMS, restorations, federal announcements and territories; no qualifying verified new event in the interval.",
+    "exclusions": [
+      {
+        "title": "Greenbrier Valley Medical Center maternity ward restoration announcement (WV)",
+        "url": "https://www.wdbj7.com/2026/11/05/greenbrier-valley-medical-center-reopening-maternity-ward-wv-governor-announces/",
+        "reason": "Published November 5 and announced well before this hourly observation window; not a new abrupt same-hour restoration."
+      },
+      {
+        "title": "Stanford Medicine and Sutter Health cancer center expansion (Oakland, CA)",
+        "url": "https://med.stanford.edu/news/all-news/2026/11/stanford-medicine-sutter-health-cancer-center.html",
+        "reason": "New or expanded oncology capacity, not verified reopening of previously suspended essential service; reported before observation window."
+      },
+      {
+        "title": "Nebraska Medicine proton therapy announcement",
+        "url": "https://www.nebraskamed.com/health/conditions-and-services/cancer-care/new-proton-therapy-will-advance-cancer-care-in-the",
+        "reason": "November 10 announcement of new treatment capability, not service loss or abrupt restoration; predates hourly window."
+      },
+      {
+        "title": "Dauphin Regional Health Centre recovery (Manitoba, Canada)",
+        "url": "https://winnipeg.citynews.ca/2026/11/10/manitoba-provides-update-on-rebuild-efforts-at-dauphin-regional-health-centre/",
+        "reason": "Canada, outside U.S. states or territories; November 10 reporting."
+      },
+      {
+        "title": "Fresenius Eastman dialysis closure in Georgia",
+        "url": "https://wgxa.tv/news/local/fresenius-dialysis-clinic-set-to-close-in-march-impacting-nearly-40-patients-in-eastman-fresenius-kidney-care-end-stage-renal-disease-center-dodge-county-closes-march-27-ga-department-of-community-health-30-day-notice-healthcare-needs-rural-georgia",
+        "reason": "Historical March 2026 clinic closure, not newly developed in this hourly window."
+      },
+      {
+        "title": "Scheduled Veterans Day closures",
+        "url": "https://www.10news.com/news/local-news/veterans-day-to-bbrings-observances-holiday-closures-to-san-diego-county-2026",
+        "reason": "Planned routine holiday hours do not establish an unexpected loss of essential medical service."
+      }
+    ],
+    "degraded_sources": [],
+    "limitations": [
+      "Search engine relevance and recency filters returned older/unrelated entries; same-hour publication and indexing lag limits completeness.",
+      "A bounded 12-query supplementary search cannot exhaust all U.S. states, DC or territories.",
+      "No new qualifying service changes were independently verified; zero results does not prove no real-world event occurred."
+    ],
+    "review_action": "No pending_review findings created. No approval, publication, merges, changes to schedules, or disabling of tasks."
+  }
+}

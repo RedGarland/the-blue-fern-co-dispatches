@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T134507-0800-recall12-20261111T214507Z",
+  "scheduled_for": "2026-11-11T13:45:22-08:00",
+  "started_at": "2026-11-11T13:45:07-08:00",
+  "completed_at": "2026-11-11T13:47:03.971-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T12:48:25.101-08:00",
+    "end": "2026-11-11T13:47:03.971-08:00",
+    "prior_check_basis": "Directly verified the most recent prior ops/watch-ledger Care Line heartbeat care-line-watch-20261111T124654-0800-recall12-20261111T204654Z.json, completed_at 12:48:25.101 PST."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S. states and territories Care Line recall; primary production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS Public Notices accessed; no November 11 notices in current table. Latest 2026-11-10 Advanced Urgent Care, IL, Limitation of CLIA cert 14D2049789, previously recorded. Second latest 2026-11-09 Compassionate Home Health Services, MI, termination."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended services November 11 2026 US",
+      "maternity labor delivery unit closes suspends November 11 2026 hospital",
+      "rural hospital emergency room stopped accepting patients closure November 11 2026",
+      "ambulance EMS station shut down suspended service November 11 2026 state",
+      "air ambulance medical helicopter base closing Nov 11 2026 US",
+      "dialysis center closing patients services November 11 2026",
+      "inpatient psychiatric behavioral health unit closing suspended hospital November 11 2026",
+      "oncology infusion cancer center closes suspends treatment November 11 2026 US",
+      "primary care clinic shutting permanently effective November 11 2026",
+      "emergency department reopens resumed operations after closure November 11 2026 US",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa hospital clinic emergency health services closures November 11 2026",
+      "site:gov \"November 11, 2026\" \"closure\" hospital health clinic ambulance"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "No new qualifying nonduplicate healthcare-access service closure/suspension, official CMS sanction or rescission, emergency or rural service loss, or effective restoration verified during this observation window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Vista Medical Center East, Waukegan, Illinois",
+        "url": "https://www.lakemchenryscanner.com/2026/11/11/dogged-by-issues-congressman-waukegan-mayor-call-for-owner-of-vista-medical-center-east-to-sell-hospital/",
+        "reason": "November 11 article chiefly calls for ownership change. EMS diversion began Saturday November 7 and trauma designation revoked October 23; no newly effective service action identified in this check. Existing access concern is real but predates window."
+      },
+      {
+        "title": "Valley Baptist Medical Center Brownsville pediatric inpatient unit, Texas",
+        "url": "https://hoodline.com/2026/11/brownsville-loses-its-last-pediatric-hospital-beds-families-face-long-drives/",
+        "reason": "Article dated November 10, repeating November 4 announcement and planned November 13 admissions stop/November 14 closing; not a new report/action inside window."
+      },
+      {
+        "title": "U.S. Naval Hospital Guam restricted service during Sinlaku, Guam",
+        "url": "https://ghs.guam.gov/node/4161",
+        "reason": "Official Guam alert dated April 13, 2026, not a new development."
+      },
+      {
+        "title": "Veterans Day office and routine clinic hours",
+        "url": null,
+        "reason": "Routine scheduled holiday closures, not unexpected essential-service access loss."
+      },
+      {
+        "title": "HALO-Flight new medical helicopter order, Texas",
+        "url": "https://www.airmedandrescue.com/latest/news/halo-flight-orders-seventh-ifr-equipped-bell-407gxi-south-texas-operations",
+        "reason": "Procurement/expansion without effective restoration of previously lost essential air-medical coverage."
+      }
+    ],
+    "source_access_notes": [
+      "CMS official public notices successfully opened; all 12 supplemental targeted web searches returned results without a service error."
+    ],
+    "limitations": [
+      "Search result indexing and publication-time metadata may lag the observation window.",
+      "Twelve targeted searches cannot exhaustively cover every U.S. locality or territory.",
+      "No findings means no verifiable new qualifying changes in this bounded recall, not that no service changes occurred."
+    ],
+    "review_status": "No new findings submitted for review.",
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

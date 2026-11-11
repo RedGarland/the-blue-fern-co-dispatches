@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T124451-0800-r11-20261111T204226095Z",
+  "scheduled_for": "2026-11-11T12:44:51-08:00",
+  "started_at": "2026-11-11T12:41:11-08:00",
+  "completed_at": "2026-11-11T20:42:26.095Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T11:50:30.606-08:00",
+    "end": "2026-11-11T12:42:26.095-08:00",
+    "previous_run_completed_at": "2026-11-11T11:50:30.606-08:00",
+    "basis": "Previous authenticated Gaza Source Watch heartbeat; distinct newly reported developments or verified follow-up after previous run, not recycled events or cumulative overlapping totals.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch, not an authoritative collector or publisher.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T114451-0800-r11-20261111T194818Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage latest 11 November 2026 statement on entry of winter supplies, checked directly; no new in-window operational aid/crossing event distinguished.",
+        "statement_url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza"
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "REGIONAL_HTTP_502",
+        "result": "Regional Palestine news endpoint returned HTTP 502, matching previously known regional source degradation; alternate WHO global emergency hub accessible, no newly dated in-window health update.",
+        "global_alternative": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 11 2026 November 11 humanitarian updates OCHA WHO medical evacuations",
+      "Gaza November 11 2026 20:00 UTC hospital patients ambulances aid crossings WHO",
+      "site:ochaopt.org November 11 2026 Gaza new displacement aid access latest",
+      "site:who.int Gaza 11 November 2026 health emergency fuel medical evacuations",
+      "site:un.org Gaza 11 November 2026 humanitarian latest noon New York tents shelter health",
+      "site:reliefweb.int/report/occupied-palestinian-territory 11 Nov 2026 Gaza update food water hospital",
+      "site:wafa.ps November 11 2026 Gaza November 11 afternoon killed displaced wounded tents demolition",
+      "Gaza November 11 2026 new 11am EST 2pm EST water pumps medical aid Palestine Red Crescent",
+      "November 11 2026 Gaza late evening 22:00 Palestine time strike death hospital Wednesday November 11",
+      "site:english.wafa.ps/Pages/Details/ \"11/November/2026\" \"PM\" \"Gaza\" 09 OR 10",
+      "site:apnews.com/article Gaza November 11 2026 new hospital tent shelter aid crossing latest",
+      "site:reuters.com/world/middle-east/ 2026-11-11 Gaza Wednesday evening ceasefire aid medical shelters"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "result": "Dated 11 November but release time missing and documented aid/shelter shortages pre-existing; not a new independently verified in-window change."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; news and health updates displayed on hub not newly dated within observation window."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest Gaza casualty tally dated 11 November 20:42 Palestine local (10:42 PST), prior to the preceding watch cutoff; prior four-fatality story at 17:02 Palestine (07:02 PST). No later in-window new incident listed."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "result": "11 November report covering two brothers killed in Sheikh Radwan and a separate rooftop fatality; overlaps previously logged Gaza City attacks."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "result": "Netanyahu denial of responsibility for Gaza flood camp conditions and UN reported 150,000 tents pending entry; no independently established new restriction or operational change after prior watch cutoff."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176860",
+        "reason": "Four fatalities and al-Maghazi residential destruction captured in earlier watches; publication before observation start."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "reason": "Earlier Wednesday casualties overlap prior WAFA/AP reports; cannot count separately."
+      },
+      {
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "reason": "11 November feature on weekend storm impacts and existing pending shelter deliveries; no distinct new event verified within window."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "reason": "11 November advocacy statement already reviewed in last watch; no verifiable in-window change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176863",
+        "reason": "Cumulative death toll published before previous cutoff; overlaps already recorded casualties."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO regional news remains HTTP 502; this is a recurring, not materially worsened, failure. WHO global hub, OCHA OPT and twelve other targeted searches provided usable coverage.",
+    "limitations": "Search indexing can lag; new posts without precise timestamps cannot establish that an event occurred or was first reported inside the observation window. No newly distinct casualty, shelter, healthcare, infrastructure, crossing, detention or negotiation change verified.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no publication, approval, schedule change or disabling."
+  }
+}

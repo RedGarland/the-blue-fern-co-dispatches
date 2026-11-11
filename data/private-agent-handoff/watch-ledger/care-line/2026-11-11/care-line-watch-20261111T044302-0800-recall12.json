@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T044302-0800-recall12",
+  "scheduled_for": "2026-11-11T04:45:22-08:00",
+  "started_at": "2026-11-11T04:43:02-08:00",
+  "completed_at": "2026-11-11T04:45:32.887-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T02:46:42-08:00",
+    "end": "2026-11-11T04:45:32.887-08:00",
+    "prior_check_basis": "Latest directly verified earlier ledger heartbeat: care-line-watch-20261111T024520-0800-recall12.json, completed 2026-11-11T02:46:42-08:00. Could not independently enumerate branch directory to determine whether another heartbeat was written afterward; conservative overlap used."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S., DC and territories recall; primary production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "method": "CMS-targeted lookup, then direct official current notices table before supplementary searches.",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, Limitation of CLIA cert, IL, 14D2049789",
+      "disposition": "No notice dated later than November 10, 2026; November 10 Illinois CLIA limitation and November 9 Michigan home health termination precede watch window and appeared in earlier heartbeats."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended services November 11 2026 United States",
+      "maternity labor delivery unit abrupt closure November 11 2026 hospital United States",
+      "rural hospital emergency department shuts down services November 10 11 2026",
+      "ambulance air medical helicopter base service suspension closing November 11 2026 United States",
+      "November 11 2026 behavioral health psychiatric inpatient facility closing suspended admissions US",
+      "November 11 2026 dialysis center cancer infusion oncology service closure hospital",
+      "November 11 2026 community clinic primary care shut doors patients local news",
+      "November 11 2026 healthcare services reopening hospital emergency department restoration US",
+      "November 11 2026 hospital closure emergency care Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands",
+      "November 10 11 2026 state health department hospital service closure suspension notice effective",
+      "November 11 2026 ambulance service stopped operations no longer responding rural US EMS",
+      "November 11 2026 dialysis OR oncology OR maternity OR emergency room reopened United States hospital"
+    ],
+    "search_assessment": "Official CMS Notices checked first and 12 targeted searches completed. No independently verified newly published, nonduplicate changes in high-value service closure, suspension, emergency/rural EMS, CMS enforcement or concrete restoration classes. Search results dominated by older incidents and irrelevant holiday/international stories.",
+    "exclusions": [
+      {
+        "title": "Sharon Regional Medical Center emergency-service suspension and Pennsylvania license order",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "Order November 4, emergency suspension November 6, Nov 9 report; precedes observation window and documented in earlier watches."
+      },
+      {
+        "title": "TidalHealth Federalsburg rural primary-care closure",
+        "url": "https://www.wmdt.com/2026/11/1tidalhealth-to-close-rural-primary-care-center/",
+        "reason": "Announced November 2 with November 15 closure date; earlier disclosure, not newly developed in watch window."
+      },
+      {
+        "title": "Greenbrier Valley Medical Center planned maternity restoration",
+        "url": "https://westvirginiawatch.com/2026/11/05/vandalia-health-osteopathic-school-to-reopen-labor-delivery-services-at-greenbrier-medical-center/",
+        "reason": "November 5 announcement; phased agreement starting July 2027, not an abrupt effective restoration."
+      },
+      {
+        "title": "Kula Hospital restoration contract and anticipated reopening",
+        "url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "November 2 contract; projected reopening in 2027 and no current restoration."
+      },
+      {
+        "title": "Greene County Alabama EMS ambulance service suspension",
+        "url": "https://abc3340.com/news/local/greene-county-ems-suspends-ambulance-service",
+        "reason": "Historical July 5, 2026 incident."
+      },
+      {
+        "title": "Non-U.S. healthcare service changes and routine Veterans Day closures",
+        "reason": "Out of geographic or event scope."
+      }
+    ],
+    "degraded_sources": [],
+    "limitations": [
+      "Same-hour reporting and search-index lag limit discovery of events within minutes of completion.",
+      "Twelve targeted searches do not exhaust every U.S. jurisdiction or territory.",
+      "A GitHub web directory listing was inaccessible, but a prior heartbeat file was independently fetched using the GitHub connector; conservative two-hour overlap was used instead of guessing a later baseline.",
+      "No new qualifying event verified; zero findings is not evidence that no event happened."
+    ],
+    "review_action": "No findings pending review; no approval, publication, branch merge, schedule change or disable action."
+  }
+}

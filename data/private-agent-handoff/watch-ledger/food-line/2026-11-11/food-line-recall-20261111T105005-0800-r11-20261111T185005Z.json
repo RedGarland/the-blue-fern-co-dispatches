@@ -1,0 +1,127 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261111T105005-0800-r11-20261111T185005Z",
+  "scheduled_for": "2026-11-11T10:45:54-08:00",
+  "started_at": "2026-11-11T10:50:05-08:00",
+  "completed_at": "2026-11-11T10:51:38.155-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-11T09:44:16-08:00",
+    "end_at": "2026-11-11T10:51:38.155-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "basis": "Search for newly source-confirmed access disruptions occurring after the previous independently verified watch completion, not for old events freshly crawled.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-11/food-line-recall-20261111T094300-0800-r11-20261111T174300Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary national Food Line production collector remains authoritative. No findings is not evidence that no disruptions occurred.",
+    "target_classes": [
+      "Closure/fire/disaster affecting the only/sole/last/full-service grocery store",
+      "Emergency food distributions canceled by severe weather, disaster, outage or damage",
+      "Abrupt food pantry or food bank closure/major access reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate loss of access"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "November 11 2026 \"only grocery store\" closed fire town",
+      "November 11 2026 \"sole grocery\" store closes fire flooding",
+      "November 11 2026 \"last grocery store\" shut down community",
+      "November 11 2026 \"full service grocery\" closed town disaster",
+      "November 11 2026 food distribution canceled storm flood weather power",
+      "November 11 2026 food bank distribution postponed cancelled damage storm",
+      "November 11 2026 emergency food pantry abruptly closed broken pipe fire",
+      "November 11 2026 food bank forced to close access services clients",
+      "November 11 2026 SNAP EBT outage delayed benefits official state",
+      "November 11 2026 WIC disruption benefits card outage state notice",
+      "November 11 2026 emergency food distribution canceled power outage local",
+      "November 11 2026 official SNAP deposits delayed system issue recipients"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "web_search_assessment": "Twelve targeted fresh web queries yielded mostly outdated articles, 2025 SNAP shutdown coverage, contextual/policy material, or no qualifying matches. No new in-window service loss was substantiated; search-index recency was not treated as event recency.",
+    "direct_source_checks": {
+      "distinct_urls": 12,
+      "accessible_at_least_once": 9,
+      "persistently_inaccessible": 3,
+      "urls": [
+        "https://status.joinforage.app/",
+        "https://dhs.georgia.gov/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.ri.gov/",
+        "https://dphss.guam.gov/",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.fns.usda.gov/snap",
+        "https://www.fns.usda.gov/newsroom",
+        "https://www.ynfp.org/",
+        "https://www.bountifulfoodpantry.org/"
+      ],
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout fetching",
+          "impact": "Recurring inability to directly verify Guam DPHSS notices; no credible corroborated new disruption identified by targeted searches."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA direct-page denial; other state and EBT processor sources remained accessible."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA newsroom denial; other state and processor sources remained accessible."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "reason": "Nov 8, 2026 report on Kalona, Iowa's only full-service grocery being for sale; still open and not yet lost, not an event starting in this hourly window."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Nov 11 EBT processor status reports operational systems and no incidents; Nov 12 and Nov 15 maintenance notices were previously posted and are prospective, not newly occurring access interruptions."
+      },
+      {
+        "url": "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "reason": "Georgia EBT telephone service reports restoration after an older offline period, not a new in-window loss; page lacks a verifiable new onset timestamp."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Future Nov 21 application/renewal verification rule, not an immediate interruption."
+      },
+      {
+        "url": "https://www.ynfp.org/",
+        "reason": "Providence Nov 15-Dec 1 planned holiday food distribution suspension was previously reviewed; not newly abrupt/in window."
+      },
+      {
+        "url": "https://www.bountifulfoodpantry.org/",
+        "reason": "Preannounced Nov 11 Veterans Day closure with expected Nov 12 reopening, not unexpected service loss."
+      },
+      {
+        "url": "https://dhs.ri.gov/",
+        "reason": "Undated pest-treatment remote-service conversion at two offices still has phone/portal/alternate office access; no newly established food-assistance access loss."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing undated SNAP call delays without source-supported onset in this hour."
+      }
+    ],
+    "excluded_categories": "Donation drives, guides, recipes, opinion, routine promotion, generic inflation/policy analyses, historical events, foreign news, preannounced routine holiday closures, scheduled EBT maintenance and duplicates.",
+    "assessment": "No verified new qualifying food-access disruption during 09:44:16-10:51 PST. Search coverage usable; 9/12 direct sources accessible. DEGRADED records the three recurring direct-source access failures without overstating their materiality.",
+    "material_degradation": false,
+    "approvals_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false,
+    "notification_reason": "No new qualifying signal, no new material degradation, and one heartbeat written."
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T224451-0800-r11-20261111T064433700Z",
+  "scheduled_for": "2026-11-10T22:44:51-08:00",
+  "started_at": "2026-11-10T22:42:47-08:00",
+  "completed_at": "2026-11-11T06:44:33.700Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-11T05:44:59.750Z",
+    "end": "2026-11-11T06:44:33.700Z",
+    "start_local": "2026-11-10T21:44:59.750-08:00",
+    "end_local": "2026-11-10T22:44:33.700-08:00",
+    "previous_run_completed_at": "2026-11-11T05:44:59.750Z",
+    "basis": "New independently traceable developments since previous authenticated Gaza heartbeat; reject previously tracked November 10 casualty stories and November 6–9 storm reports.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall. Daily Gaza production collector and publisher remain authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T214451-0800-r11-20261111T054459750Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Most recent listed update dated 9 Nov 2026, covering 6–8 Nov rain/flooding; no new in-window impact or operational change confirmed."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_TIMEOUT",
+        "result": "WHO global situation page accessible; no new in-window health/evacuation/capacity event. WHO EMRO OPT endpoint timed out, continuing a previously documented access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"November 11, 2026\" killed wounded ambulance shelters",
+      "site:reuters.com/world/middle-east/ Gaza \"November 11, 2026\" ceasefire strike aid civilian",
+      "site:apnews.com Gaza \"Nov. 11, 2026\" Israeli strikes flood ceasefire",
+      "site:palestine.un.org/en \"11 November 2026\" Gaza humanitarian",
+      "site:wfp.org/news Gaza \"11 November 2026\" food aid distribution trucks",
+      "site:unicef.org/press-releases Gaza \"11 November 2026\" water children displacement",
+      "site:palestinercs.org/en Gaza 11 November 2026 ambulance hospital rescue casualties",
+      "site:msf.org Gaza 11 November 2026 flood health clinics hospital emergency",
+      "site:icrc.org Gaza November 11 2026 hostages detainees bodies transfer ceasefire",
+      "Gaza Rafah Kerem Shalom crossings November 11 2026 COGAT humanitarian aid trucks closed reopened",
+      "Gaza November 11 2026 airstrike injured killed ceasefire hospitals aid 07:00 Palestine",
+      "site:aljazeera.com/news/2026/11/11 Gaza Israel attacks ceasefire deaths displacement"
+    ],
+    "additional_sources_checked": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Newest listing at 11 Nov 07:41 Palestine time was a weather forecast; latest Gaza casualty report remains 10 Nov 18:47 Palestine time, prior to observation window."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Latest Gaza story, dated 10 Nov, relays previously documented weekend flood impacts; no fresh independently qualifying change."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest PRCS statement dated 10 Nov concerns Gaza winter humanitarian emergency; not a verified distinct operational event in this window."
+      },
+      {
+        "publisher": "Reuters/AP/WFP/UNICEF/MSF/ICRC/crossing coverage",
+        "result": "Targeted searches found no qualifying newly dated, distinct, corroborated in-window events; many matches were stale, contextual, or non-Gaza."
+      }
+    ],
+    "exclusions": [
+      "WAFA Gaza City casualty reports published 10 Nov before this watch window; previously tracked by prior Gaza watches.",
+      "OCHA 9 Nov storm situation report and UN Palestine 10 Nov recycling of 6–8 Nov flood damage, casualties, health service impacts, and shortages.",
+      "PRCS 10 Nov humanitarian winter appeal, without verified fresh in-window operational delta.",
+      "Old or generic articles about Rafah/Kerem Shalom, medical evacuation, water, medicine shortages, hostages/detainees and negotiations without new in-window event.",
+      "Unsupported, opinion-based, non-Gaza, and outdated search matches."
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "Previously observed HTTP 403; not retested",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO regional OPT page timed out. OCHA OPT, WHO global, WAFA, UN Palestine, PRCS, and other source search coverage remained useful; restriction not materially worse than previous checks.",
+    "limitations": "Search publication and indexing delay may conceal very recent Gaza events. This is supplementary recall, not production publication authority. Verified distinct findings: zero.",
+    "notification_reason": "No new qualifying development and no newly material watch degradation.",
+    "changes_to_production": "None. No approval, publication, deployment, schedule change, or task disabling."
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T124654-0800-recall12-20261111T204654Z",
+  "scheduled_for": "2026-11-11T12:45:22-08:00",
+  "started_at": "2026-11-11T12:46:54-08:00",
+  "completed_at": "2026-11-11T12:48:25.101-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T11:51:09-08:00",
+    "end": "2026-11-11T12:48:25.101-08:00",
+    "prior_check_basis": "Last committed care-line heartbeat 2026-11-11T11:48:49-0800-recall12-20261111T195011Z.json read directly on ops/watch-ledger; completed_at 11:51:09 PST."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary US-state-and-territory Care Line recall; production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official table checked directly; no Nov. 11, 2026 entry. Latest is 2026-11-10 Advanced Urgent Care, IL, Limitation of CLIA certificate 14D2049789 (previously recorded); second latest 2026-11-09 Compassionate Home Health Services, MI, termination."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspension November 11 2026 United States breaking news",
+      "maternity labor delivery hospital stops births November 11 2026 closure",
+      "rural hospital emergency room closure suspension November 11 2026",
+      "ambulance EMS service suspends operations station closes November 11 2026",
+      "air medical helicopter base closes grounded November 11 2026 US",
+      "dialysis clinic center closes operations patients November 11 2026 USA",
+      "psychiatric behavioral health inpatient unit shutdown suspension November 11 2026 hospital US",
+      "oncology chemotherapy infusion cancer center abruptly closing November 11 2026 patients",
+      "primary care family practice clinic closing immediately November 11 2026 United States",
+      "hospital emergency department reopens care resumes November 11 2026 after closure US",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa clinic hospital emergency services closure November 11 2026",
+      "site:gov \"November 11, 2026\" \"hospital\" \"suspend\" \"services\" health department"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "No new qualifying and nonduplicative healthcare-access closure, suspension, official termination/CLIA notice, or restoration verified for this observation window. Results are dominated by earlier closures, plans, routine holiday hours, new service expansion, or out-of-scope foreign facilities.",
+    "reviewed_exclusions": [
+      {
+        "title": "Sharon Regional Medical Center, Pennsylvania",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "State order Nov. 4; ER suspended Nov. 6; previously considered and outside hourly window."
+      },
+      {
+        "title": "Possible Nov. 12 nurses strike, Brigham and Women's Hospital, Massachusetts",
+        "url": "https://www.bostonglobe.com/2026/11/11/business/brigham-nurses-strike-information/",
+        "reason": "A scheduled possible future strike with no verified concrete service suspension or access consequence during this window."
+      },
+      {
+        "title": "Bookmark Medical, Ashland City, Tennessee",
+        "url": "https://smokeybarn.com/bookmark-medical-celebrates-ashland-city-clinic-opening-with-november-12-ribbon-cutting/",
+        "reason": "New clinic opened Nov. 9, rather than documented restoration of previously lost essential service; before window."
+      },
+      {
+        "title": "Veterans East Orange VA investigation, New Jersey",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "Retrospective investigation about previous care disruptions; reported in earlier hourly coverage; no event newly effective this hour."
+      },
+      {
+        "title": "Proposed rural health funding, Hermann Area District Hospital, Missouri",
+        "url": "https://www.gasconadecountyrepublican.com/stories/hadh-researches-options-to-boost-rural-health-care-funding%2C302709",
+        "reason": "Financing and grants discussion, not a concrete service loss or restoration."
+      }
+    ],
+    "source_access_notes": [
+      "An obsolete CMS URL initially failed to open; the correct current official CMS Public Notices URL was opened and verified, so CMS coverage was not lost.",
+      "Twelve targeted search queries returned results without reported search-service errors."
+    ],
+    "limitations": [
+      "New articles may index after this check, and exact publication times are often unavailable.",
+      "Bounded searches cannot exhaustively cover all facilities across all states and territories.",
+      "No findings reflects verification within this recall, not proof that no access changes occurred."
+    ],
+    "review_status": "No new findings submitted for review.",
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

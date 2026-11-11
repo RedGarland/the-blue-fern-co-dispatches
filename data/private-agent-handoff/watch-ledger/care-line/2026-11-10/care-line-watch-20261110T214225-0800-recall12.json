@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T214225-0800-recall12",
+  "scheduled_for": "2026-11-10T21:45:22-08:00",
+  "started_at": "2026-11-10T21:42:25-08:00",
+  "completed_at": "2026-11-10T21:43:53-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-10T20:48:00-08:00",
+    "end": "2026-11-10T21:43:53-08:00",
+    "observation_date": "2026-11-10",
+    "prior_check_basis": "Previously verified 2026-11-10 19:46–20:48 PST hourly heartbeat, commit 0a037b60b067059a5065516fe4ec46faae84fb4f"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "bounded supplementary recall; primary Care Line production collection remains authoritative",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, Limitation of CLIA cert, Illinois",
+      "disposition": "previously captured; no new listing"
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended November 10 2026 9 pm United States",
+      "hospital maternity labor delivery closure suspension November 10 2026 rural",
+      "behavioral health psychiatric hospital unit closure halted patients November 10 2026",
+      "dialysis clinic closed services suspended November 10 2026 local news",
+      "cancer oncology center chemotherapy suspended closed November 10 2026",
+      "primary care clinic shut down closed patients November 10 2026",
+      "ambulance service ceased operations suspended November 10 2026 local",
+      "air ambulance helicopter base shut down grounding November 10 2026 local",
+      "rural emergency hospital trauma services closure November 10 2026",
+      "hospital emergency department reopened services restored November 10 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa CNMI hospital clinic ambulance closed reopened November 10 2026",
+      "state health department medical facility license suspension emergency closure November 10 2026"
+    ],
+    "exclusions": [
+      {
+        "title": "Sharon Regional Medical Center Pennsylvania closure",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "Older Nov 4/6 access suspension and prior recorded; not new within observation window"
+      },
+      {
+        "title": "Oregon Planned Parenthood affiliate consolidation",
+        "url": "https://www.opb.org/article/2026/11/10/oregon-planned-parenthood-lane-county-rogue-valley-health/",
+        "reason": "Ownership consolidation; clinics in Eugene, Springfield and Medford explicitly remain open with no interruption; earlier closures historical"
+      }
+    ],
+    "limitations": [
+      "Publication and search-indexing delays can hide same-hour changes",
+      "Bounded national/territory searches do not constitute exhaustive territory or county-by-county coverage"
+    ],
+    "review_action": "No candidates needing pending_review; no approval or publication actions"
+  }
+}

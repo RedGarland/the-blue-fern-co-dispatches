@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T154041-0800-recall12-20261111T234041Z",
+  "scheduled_for": "2026-11-11T15:45:22-08:00",
+  "started_at": "2026-11-11T15:40:41-08:00",
+  "completed_at": "2026-11-11T15:42:09-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T14:45:31.320-08:00",
+    "end": "2026-11-11T15:42:09-08:00",
+    "prior_check_basis": "Read ops/watch-ledger file care-line-watch-20261111T144357-0800-recall12-20261111T224357Z.json; completed_at 2026-11-11T14:45:31.320-08:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S. and territory healthcare-access recall; primary production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS table opened. No November 11 notices listed at check. Latest was previously recorded November 10 Advanced Urgent Care (IL) CLIA limitation (14D2049789); next November 9 Compassionate Home Health Services (MI) Medicare termination."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 11, 2026\" hospital \"emergency department\" closed suspended reopened",
+      "\"November 11, 2026\" maternity obstetrics labor delivery hospital closes suspends",
+      "\"November 11, 2026\" rural hospital emergency room loss closure suspension",
+      "\"November 11, 2026\" ambulance EMS rescue service closed suspended coverage",
+      "\"November 11, 2026\" air ambulance helicopter medical base closing suspended",
+      "\"November 11, 2026\" dialysis clinic closing services oncology infusion shut down",
+      "\"November 11, 2026\" behavioral health psychiatric hospital inpatient unit closing suspension",
+      "\"November 11, 2026\" primary care family clinic abrupt closure patients",
+      "\"November 11, 2026\" emergency hospital maternity clinic reopened resumed services",
+      "\"November 11, 2026\" CMS Medicare terminated CLIA certificate limitation suspension facility",
+      "\"November 11, 2026\" hospital clinic ambulance service closure Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands",
+      "\"November 11, 2026\" \"healthcare\" \"closure\" \"patients\" hospital emergency local news"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "No newly announced or newly effective high-value U.S./territory essential healthcare-access loss, reinstatement, or CMS regulatory access-risk action verified in this run's 14:45:31–15:42:09 PST window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Vista Medical Center East political calls for sale; existing ambulance diversion",
+        "url": "https://www.lakemchenryscanner.com/2026/11/11/dogged-by-issues-congressman-waukegan-mayor-call-for-owner-of-vista-medical-center-east-to-sell-hospital/",
+        "reason": "Current-day story updates calls for ownership transfer. Ambulance diversion started Saturday November 7; trauma designation revoked October 23. Neither changed in current hour."
+      },
+      {
+        "title": "Monadnock Community Hospital halted elective surgery and outpatient lab/radiology; ambulances diverted during network outage",
+        "url": "https://www.newsradiokeene.com/news/new-hampshire/network-failure-forces-monadnock-community-hospital-to-halt-elective-surgeries/",
+        "reason": "Serious service disruption described as announced Tuesday night November 10; story published November 11 11:16 AM Eastern (08:16 PST), before prior watch endpoint. Full page retrieval failed; search extract available. Not a verified newly occurring development in this hour; potentially relevant prior-window production/backfill reconciliation."
+      },
+      {
+        "title": "AHN Waterworks outpatient center briefly evacuated for gas smell and reopened",
+        "url": "https://cmg-cmg-tv-10080-prod.web.arc-cdn.net/news/local/ahn-waterworks-location-evacuated/XFV4MEMHUZDFBGP6NQHFWD4V5I/",
+        "reason": "Temporary same-morning closure and resumption documented at 11:07 AM Eastern (08:07 PST), before window; not newly effective this hour. Full page retrieval failed but search excerpt described resolution."
+      },
+      {
+        "title": "Sharon Regional ER and acute-care closures",
+        "url": "https://vantagepointnews.net/news/synth_20261111_002153_deb904",
+        "reason": "A synthesized November 11 page repeats a prospective November 13 suspension, but prior watch already tracked and excluded earlier November 4 ER and November 6 broader service suspensions. No primary confirmation of new change this hour."
+      },
+      {
+        "title": "HCA Florida Pasadena Hospital future inpatient transition",
+        "url": "https://medicaidmonitor.org/articles/5dca9f6e-90f0-4fc3-a064-4d3cee34bf22",
+        "reason": "Secondary recap notes transition expected by year-end rather than concretely effective now; exclude future plan."
+      },
+      {
+        "title": "Veterans Day routine clinic office hours",
+        "url": "https://ehhd.org/office-closed/",
+        "reason": "Routine one-day holiday scheduling excluded."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices official source returned a complete current table and was checked before the topical sweep.",
+      "All 12 targeted searches returned results; the relevant Monadnock Community Hospital and AHN Waterworks article full-text openings returned DisabledError, though search-result excerpts were accessible.",
+      "The Vista Medical Center East local article opened and confirmed the underlying ambulance bypass is older than the observation window."
+    ],
+    "limitations": [
+      "Two relevant full-text article retrievals failed; status DEGRADED per one-source-failure policy, though CMS and all searches remained functional. This is an isolated, not material, coverage degradation for current-window findings.",
+      "Same-hour news indexing can lag. Strict 12-search recall is not comprehensive across all 50 states and U.S. territories.",
+      "Monadnock Community Hospital outage is a candidate for separate prior-window production/backfill review, not a new current-hour finding.",
+      "No findings means no verified qualifying new event in this bounded watch; it does not imply no underlying service change anywhere."
+    ],
+    "review_status": "No new findings placed into review.",
+    "publication_action": false,
+    "approval_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

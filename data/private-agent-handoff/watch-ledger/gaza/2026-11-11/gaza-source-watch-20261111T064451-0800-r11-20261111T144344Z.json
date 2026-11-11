@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T064451-0800-r11-20261111T144344Z",
+  "scheduled_for": "2026-11-11T06:44:51-08:00",
+  "started_at": "2026-11-11T06:43:44-08:00",
+  "completed_at": "2026-11-11T06:46:25.841-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T13:49:49Z",
+    "end": "2026-11-11T14:46:25.841Z",
+    "start_local": "2026-11-11T05:49:49-08:00",
+    "end_local": "2026-11-11T06:46:25.841-08:00",
+    "previous_run_completed_at": "2026-11-11T13:49:49Z",
+    "basis": "Authenticated latest preceding ops/watch-ledger Gaza heartbeat; an observation/discovery window, not a requirement that event time be within the window. New reports were checked against prior events to avoid duplication.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary daily production collector/publisher remains authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T054451-0800-r11-20261111T134949Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed update 9 November 2026 (8 November rain report); no newly posted 11 November Gaza situation report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "WHO global Gaza situation page accessible, with no dated in-window medical/evacuation bulletin; WHO regional OPT site returned HTTP 502. Same regional restriction documented in preceding watch."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza 11/11/2026 15:00 16:00 deaths humanitarian",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 after 13:50 GMT ceasefire casualties",
+      "site:apnews.com/article/ Gaza November 11 2026 Wednesday afternoon killed hospital strikes",
+      "site:aljazeera.com/news/2026/11/11 Gaza humanitarian latest deaths shelling displacement",
+      "site:palestine.un.org/en/ Gaza November 11 2026 humanitarian crossing medical aid",
+      "site:palestinercs.org Gaza November 11 2026 ambulance evacuation casualties",
+      "site:unicef.org Gaza 11 November 2026 flooding drinking water displaced children response",
+      "site:wfp.org Gaza 11 November 2026 food distribution crossings supplies hunger",
+      "site:unrwa.org Gaza November 11 2026 shelters flooded displacement aid updates",
+      "site:msf.org Gaza November 11 2026 hospitals medical staff shortages evacuations",
+      "Gaza Rafah Kerem Shalom crossing fuel ambulances medical evacuations November 11 2026 latest",
+      "Gaza hostage prisoner exchange ceasefire negotiations November 11 2026 new decision"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest displayed Gaza casualty story was 14:11 Palestine-site time (earlier watch finding). Newer 16:08 item concerns a water well near Jenin in the West Bank, outside Gaza scope."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "result": "November 11 running Middle East update describes same three Gaza City fatalities already captured by earlier watches and Netanyahu's denial over existing winter aid restrictions. No demonstrable new crossing, authorization, policy or aid-delivery change; article's precise update time not verified."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/11/gaza-infrastructure-collapse-leaves-residents-defenceless-against-floods",
+        "result": "11 November report gives municipal equipment, pump, sewage network and flooding figures in connection with November 6–8 storm; no reliably timed fresh in-window loss or new service shutdown."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "result": "Earlier 11 November report on three Gaza City fatalities including Sheikh Radwan tent strike; recorded/deduplicated by earlier two heartbeats."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/",
+        "result": "Latest new Gaza-specific release found is 9 November 2026 about heavy rains and child deaths, previously covered."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176857",
+        "reason": "Three Gaza City fatalities and Sheikh Radwan tent strike already committed in preceding hours; no additive count."
+      },
+      {
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "reason": "Reiterates same three casualties; Netanyahu response to prior aid restrictions is a disputed statement rather than independently verified new restrictions/operational change; exact publication/update hour unknown."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/11/gaza-infrastructure-collapse-leaves-residents-defenceless-against-floods",
+        "reason": "Source-date 11 November, event/operational damage dates relate to earlier storm and conflict; no established new change during search window."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "reason": "16:08 West Bank Jenin water-well story geographically out of scope."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent WHO EMRO HTTP 502; OCHA OPT and WHO global accessible, all 12 additional targeted searches completed; no new distinct, temporally traceable qualifying development found and no newly material degradation.",
+    "limitations": "Search indexing and undated in-article update times may miss recent changes. No claim of comprehensive non-occurrence. WHO regional page unavailable. AP live updates can change after this observation.",
+    "changes_to_production": "None; no approvals, publication, scheduling, task disabling or other repository writes."
+  }
+}

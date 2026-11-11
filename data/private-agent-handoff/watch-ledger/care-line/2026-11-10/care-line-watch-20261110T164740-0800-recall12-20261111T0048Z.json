@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T164740-0800-recall12-20261111T0048Z",
+  "scheduled_for": "2026-11-10T16:45:22-08:00",
+  "started_at": "2026-11-10T16:47:40-08:00",
+  "completed_at": "2026-11-10T16:48:42-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T15:50:46-08:00",
+    "end": "2026-11-10T16:48:42-08:00",
+    "basis": "From immediately preceding verified Care Line Watch heartbeat completion to this execution. Targeted search recency of one day provides overlap for delayed discovery; event and publication dates assessed against the observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Care Line recall only; primary nationwide production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — IL — Limitation of CLIA certificate — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "Previously recorded November 10 Illinois CLIA limitation; no newer notice observed.",
+      "retrieval_note": "Initial guessed CMS URL failed; a CMS-specific lookup located the canonical Public Notices page. Canonical page opened and verified, without material coverage loss."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department closed suspended November 10 2026 patients services",
+      "hospital maternity labor delivery unit closed November 10 2026",
+      "rural hospital emergency department service suspension November 10 2026",
+      "behavioral health inpatient psychiatric facility closed stopped admitting November 10 2026",
+      "dialysis center closure patients November 10 2026",
+      "oncology cancer center closing treatments November 10 2026",
+      "primary care clinic sudden closure patients November 10 2026",
+      "ambulance service emergency medical services base closing November 10 2026",
+      "air ambulance helicopter base closure suspended November 10 2026",
+      "hospital emergency department reopened restored services November 10 2026",
+      "Guam Puerto Rico US Virgin Islands hospital clinic dialysis ambulance closure reopening November 10 2026",
+      "Alaska Hawaii American Samoa Northern Mariana Islands hospital emergency ambulance closure November 2026"
+    ],
+    "search_methods": "Official CMS Public Notices verified first; 12 subsequent targeted web searches with recency=1 day, supplemented by viewing relevant result metadata and comparing to previous durable heartbeat.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "November 10 secondary story recaps state action dated November 4 and ED suspension November 6 already recorded in earlier watches; no new access effect established in this window.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "Watsonville Community Hospital maternity/NICU, California",
+        "reason": "October 28 report concerns a possible future labor-and-delivery closure requiring further action; no newly effective change during this observation window.",
+        "url": "https://santacruzlocal.org/2026/10/28/watsonville-community-hospital-moves-to-shutter-labor-and-delivery/"
+      },
+      {
+        "item": "English NHS birth-center closures",
+        "reason": "Outside U.S./territory jurisdiction and historical.",
+        "url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights"
+      }
+    ],
+    "source_access_errors": [
+      {
+        "url": "https://www.cms.gov/medicare/quality/clinical-laboratory-improvement-amendments/public-notices",
+        "reason": "Guessed noncanonical URL inaccessible; canonical source retrieved successfully."
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Indexing and local publication delays can obscure developments first reported within the last hour.",
+      "Twelve targeted searches do not constitute comprehensive U.S. state and territory coverage.",
+      "Direct production Care Line queue was not available for independent deduplication; verified previous watch heartbeat and named prior findings used.",
+      "Some search returns were historic, foreign, or proposal-only and excluded."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No notification: no verified new qualifying nonduplicate finding or material watch degradation.",
+    "actions_not_taken": [
+      "No approval",
+      "No publication",
+      "No schedule modification",
+      "No task disabling"
+    ]
+  }
+}

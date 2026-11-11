@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T024451-0800-r11-20261111T104946529Z",
+  "scheduled_for": "2026-11-11T02:44:51-08:00",
+  "started_at": "2026-11-11T02:47:55-08:00",
+  "completed_at": "2026-11-11T02:49:46-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T09:46:10Z",
+    "end": "2026-11-11T10:49:46.529Z",
+    "start_local": "2026-11-11T01:46:10-08:00",
+    "end_local": "2026-11-11T02:49:46-08:00",
+    "previous_run_completed_at": "2026-11-11T09:46:10Z",
+    "basis": "Since authenticated prior Gaza watch heartbeat on ops/watch-ledger; source article publication, occurrence time, and prior coverage were checked separately. Earlier events and new indexing of previously reported impacts excluded.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded high-value recall watch only; production Gaza collector and publisher remain authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T014451-0800-r11-20261111T094610Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed update 9 Nov 2026, heavy rains in Gaza during 6–8 Nov; no source report dated in the observation window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "WHO global overview accessible with no newly dated in-window Gaza health bulletin. WHO EMRO OPT reports returned HTTP 502 again; repeat of known restriction, not newly material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 11 2026 12:00 noon killed wounded artillery strike",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 latest civilian killed ceasefire talks",
+      "site:apnews.com/article/ Gaza November 11 2026 Israeli strike civilians aid",
+      "site:palestine.un.org/en 11 November 2026 Gaza flooding shelters crossing medical",
+      "site:unicef.org 11 November 2026 Gaza water children access displaced",
+      "site:wfp.org 11 November 2026 Gaza humanitarian food delivery crossing",
+      "site:msf.org Gaza 11 November 2026 hospital clinic patient evacuation emergency",
+      "site:icrc.org Gaza November 11 2026 detainees hostages remains release crossing",
+      "site:palestinercs.org Gaza 11 November 2026 ambulance paramedic hospital emergency",
+      "Gaza November 11 2026 Rafah Kerem Shalom Zikim crossing aid fuel medical evacuations new",
+      "Gaza November 11 2026 ceasefire negotiations talks Gaza Hamas Israeli troop withdrawal civilian impact latest",
+      "Gaza November 11 2026 12 pm local Palestine strikes killings medical casualty displacement"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "At observed refresh, 11 Nov 11:53 Palestine-time item was about a memorial wreath, not Gaza; latest Gaza-specific 11 Nov 10:33 item (health-system warning) preceded previous watch cutoff 01:46 PST and had no verified new onset."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en/Category/4/news",
+        "result": "Latest Gaza-specific release listed 10 Nov on winter floods; not newly published during window."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Latest Gaza storm bulletin dated 10 Nov summarises 6–8 Nov flood damage and shelter deficits; no in-window fresh report."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "result": "Report published 10 Nov 11:47 UTC covers Tuesday 10 Nov deaths, not newly reported in this observation window."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/environment/unicef-says-israel-blocks-gaza-basin-repairs-warns-flood-risk-2026-11-10/",
+        "result": "Published 10 Nov 13:57 UTC concerning previously disclosed Sheikh Radwan basin import rejection; outside current window."
+      },
+      {
+        "publisher": "The Guardian",
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "result": "Published 11 Nov 05:00 UTC (10 Nov 21:00 PST); recaps existing storm impacts, flood-risk and shelter shortages, not an in-window event."
+      }
+    ],
+    "search_results_summary": "Official source pages plus 12 targeted searches covering casualties, displacement and winter storms, water/food and crossings, aid, health care and evacuation, detention/hostages and ceasefire/security found no new, verifiable qualifying development since 2026-11-11 01:46:10 PST.",
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176853",
+        "reason": "Gaza healthcare warning listed at 10:33 Palestine time on 11 Nov, before previous observation window ended. Onset dates of laboratory/healthcare changes not supplied."
+      },
+      {
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "reason": "Published 10 Nov 21:00 PST, before previous cutoff. Storm damage and restricted shelter supplies were previously documented."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "reason": "10 Nov events already within previously surveyed period; no fresh civilian-impact incident established."
+      },
+      {
+        "url": "https://www.reuters.com/business/environment/unicef-says-israel-blocks-gaza-basin-repairs-warns-flood-risk-2026-11-10/",
+        "reason": "UNICEF basin-repair denial reported well before previous hourly check; not a fresh change."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED for continued WHO EMRO OPT 502, consistent with past watch results; WHO global, OCHA and other sources available. No materially new watch failure and no fresh verified Gaza finding.",
+    "limitations": "Bounded twelve-query recall search; indexing latency, time zones, and unstated event dates can obscure later confirmation. No primary production state consulted or altered.",
+    "changes_to_production": "None; no approve, publish, schedule, permission or automation changes."
+  }
+}

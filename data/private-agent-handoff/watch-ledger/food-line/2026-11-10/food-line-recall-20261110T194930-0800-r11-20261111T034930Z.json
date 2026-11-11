@@ -1,0 +1,138 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T194930-0800-r11-20261111T034930Z",
+  "scheduled_for": "2026-11-10T19:45:54-08:00",
+  "started_at": "2026-11-10T19:49:30-08:00",
+  "completed_at": "2026-11-10T19:51:46.454-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T18:46:45-08:00",
+    "end_at": "2026-11-10T19:51:46.454-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Since latest independently fetched and parsed ops/watch-ledger Food Line heartbeat; newly reported or newly occurring event within this interval required.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T184429-0800-r11-20261111T024429Z.json",
+    "prior_run_status": "SUCCESS",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Food Line missed-signal recall only. Production nationwide collection is authoritative; zero result cannot establish absence of all U.S. food-access disruptions.",
+    "target_classes": [
+      "Closure/fire/disaster loss of only/sole/last/full-service community grocery",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance outage or interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "November 10 2026 only grocery store fire closed community local news",
+      "November 10 2026 sole grocery store shuts down fire flood town",
+      "November 10 2026 last full service grocery store closes community",
+      "November 10 2026 emergency food distribution canceled storm flooding outage",
+      "November 10 2026 food pantry distribution suspended due to power outage or fire",
+      "November 10 2026 food bank sudden closure operations emergency local news",
+      "November 10 2026 SNAP EBT outage benefits interruption official state",
+      "November 10 2026 WIC office or benefits system outage official state",
+      "\"food pantry\" \"November 10, 2026\" \"closed\" \"weather\"",
+      "\"food distribution\" \"Nov. 10, 2026\" canceled flood storm",
+      "SNAP EBT service outage Tuesday November 10 2026 announcement",
+      "Ocean Shores food pantry food distribution closed power outage November 10 2026"
+    ],
+    "search_recency_days": 1,
+    "search_errors_observed": 0,
+    "search_assessment": "12 targeted recency-limited queries, biased to 2026-11-10 local reports; search engines mostly returned older/nonqualifying reports, programs and proposals. No confirmed new onset or report within this 18:46:45–completion local window.",
+    "direct_source_checks": {
+      "distinct_urls": 14,
+      "accessible_at_least_once": 12,
+      "persistently_inaccessible": 2,
+      "transient_failures": 1,
+      "urls": [
+        "https://status.joinforage.app/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://dhs.ri.gov/",
+        "https://dhs.georgia.gov/",
+        "https://viconsortium.com/vi-community_center/virgin-islands-usda-approved-snap-replacement-delivers--539-891-to-3-755-st--thomas-st--john-households-after-wapa-outages",
+        "https://komonews.com/news/local/ocean-shores-state-of-emergency-storm-damage-shoreline-erosion-infrastructure-disruptions-electrical-outages-coastal-flooding-property-concerns-high-water-levels",
+        "https://www.reuters.com/world/us/trump-administration-moves-cut-food-stamps-63-million-people-2026-11-10/",
+        "https://reachstpete.org/popuppantry",
+        "https://www.ynfp.org/",
+        "https://www.fns.usda.gov/snap",
+        "https://www.fns.usda.gov/newsroom"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Persistent federal FNS direct-page restriction; state agencies and processor status consulted as partial alternatives."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Persistent federal FNS newsroom direct-page restriction; alternatives used."
+        },
+        {
+          "url": "https://dhs.ri.gov/",
+          "error": "Intermittent HTTP 403 on second open after successful first fetch",
+          "impact": "First fetch accessible; no persistent total loss of Rhode Island source coverage."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Reports all systems operational, November 10 MT/PA/NJ/AS processor maintenance completed 12:00 UTC, and future maintenance November 12/15; no current-hour outage."
+      },
+      {
+        "url": "https://viconsortium.com/vi-community_center/virgin-islands-usda-approved-snap-replacement-delivers--539-891-to-3-755-st--thomas-st--john-households-after-wapa-outages",
+        "reason": "November 10 article on USVI restored replacement SNAP for October 21 outage, automatically issued November 7; recovery of prior event, not newly interrupted issuance."
+      },
+      {
+        "url": "https://komonews.com/news/local/ocean-shores-state-of-emergency-storm-damage-shoreline-erosion-infrastructure-disruptions-electrical-outages-coastal-flooding-property-concerns-high-water-levels",
+        "reason": "November 10 article updated 7:07 p.m. PST documents storm damage and outages, but no verified closed sole grocer, canceled food distribution, or pantry service interruption."
+      },
+      {
+        "url": "https://www.reuters.com/world/us/trump-administration-moves-cut-food-stamps-63-million-people-2026-11-10/",
+        "reason": "USDA proposal reported earlier November 10 to change SNAP automatic eligibility with comment period, not an implemented immediate interruption."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Future November 21 SNAP verification policy change; no new present-hour access interruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Undated/continuing call-center delays; no new hourly interruption established."
+      },
+      {
+        "url": "https://dhs.georgia.gov/",
+        "reason": "Georgia EBT IVR call center back online; service restoration, not new outage."
+      },
+      {
+        "url": "https://reachstpete.org/popuppantry",
+        "reason": "Temporary pop-up pantry suspension during facility move remains published from earlier period; not newly reported hourly onset."
+      },
+      {
+        "url": "https://www.ynfp.org/",
+        "reason": "Providence food pantry planned November 15–December 1 holiday pause, already announced; not abrupt emergency current-hour interruption."
+      },
+      {
+        "url": "https://dhs.ri.gov/",
+        "reason": "Previously observed remote offices/pest treatment; no independently verified newly initiated SNAP loss or program interruption."
+      }
+    ],
+    "excluded_categories": "Donation drives, food-resource guides, recipes, editorials, routine program promotion, inflation stories, unrelated storm stories, old closures, speculative future store losses, completed processor maintenance, proposals, normal holiday shutdowns, duplicates.",
+    "assessment": "No newly verified U.S. food access disruption from 2026-11-10 18:46:45 PST to completion. Some recurring direct USDA page access restrictions and one transient state access error, but broad useful searches and alternate sources remained; nonmaterial degradation.",
+    "material_degradation": false,
+    "approvals_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false,
+    "notification_reason": "No new qualifying signal or material watch failure/degradation."
+  }
+}

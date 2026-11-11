@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T094102-0800-recall12-20261111T174253Z",
+  "scheduled_for": "2026-11-11T09:45:22-08:00",
+  "started_at": "2026-11-11T09:41:02-08:00",
+  "completed_at": "2026-11-11T09:42:53-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T08:52:08-08:00",
+    "end": "2026-11-11T09:42:53-08:00",
+    "prior_check_basis": "Read back prior Care Line Watch heartbeat committed to ops/watch-ledger (completed_at 2026-11-11T08:52:08-08:00)."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S. and territories healthcare-access recall; primary national production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS Public Notices opened and current table verified before additional targeted searches. Latest: 2026-11-10 Advanced Urgent Care, Illinois, limitation of CLIA certificate, #14D2049789; prior 2026-11-09 Compassionate Home Health Services, Michigan, termination. No 2026-11-11 notice visible; previously evaluated notices excluded.",
+      "initial_url_error": "An obsolete CMS path returned an access error; correct official CMS Public Notices page was located and successfully checked. No lasting official-source gap."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 11 2026 hospital emergency department closure suspension US local news",
+      "November 11 2026 hospital labor delivery maternity unit closes ceases services",
+      "November 11 2026 rural hospital emergency room service closed suspended",
+      "November 11 2026 ambulance EMS base air medical helicopter service closure suspension",
+      "November 11 2026 behavioral health psychiatric hospital clinic closes suspends admissions",
+      "November 11 2026 dialysis facility clinic closure stops treatment patients",
+      "November 11 2026 cancer oncology clinic infusion service closure suspended",
+      "November 11 2026 primary care clinic closure immediate patients healthcare access",
+      "November 11 2026 emergency department maternity dialysis hospital reopened service restored",
+      "November 11 2026 state department health hospital notice shutdown license termination clinical service",
+      "November 11 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana healthcare hospital emergency clinic shutdown reopening",
+      "November 11 2026 county ambulance EMS station ended operations service suspended resumed"
+    ],
+    "searches_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_assessment": "Twelve targeted searches yielded no verified new, nonduplicate U.S. or territorial hospital, ED, maternity, behavioral-health, dialysis, oncology, primary-care, rural/emergency, ambulance/air-medical closure or suspension; no new CMS provider access-risk notice; and no effective abrupt restoration within the observation window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Sharon Regional Medical Center ED suspension and ordered closure, Pennsylvania",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "Order November 4 and ED suspension effective November 6, already evaluated in earlier watches."
+      },
+      {
+        "title": "Roseland Community Hospital maternity ward closure, Illinois",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-files-bankruptcy-days-closing-maternity-ward-chicagos-south-side/20018238/",
+        "reason": "Report November 6 describes earlier maternity-ward closure; no new service-change event in this window."
+      },
+      {
+        "title": "Henderson Hospital maternity/NICU services, Nevada",
+        "url": "https://www.fox5vegas.com/2026/08/12/henderson-hospital-end-maternity-nicu-services/",
+        "reason": "Closure announced August 12, planned for September 30; historical."
+      },
+      {
+        "title": "Fresenius Eastman dialysis closure, Georgia",
+        "url": "https://wgxa.tv/news/local/fresenius-dialysis-clinic-set-to-close-in-march-impacting-nearly-40-patients-in-eastman-fresenius-kidney-care-end-stage-renal-disease-center-dodge-county-closes-march-27-ga-department-of-community-health-30-day-notice-healthcare-needs-rural-georgia",
+        "reason": "March 2026 reporting and effective date, outside window."
+      },
+      {
+        "title": "CLS Health Webster surgical campus, Texas",
+        "url": "https://www.newswire.com/news/cls-health-advances-construction-on-new-webster-surgical-campus-22886900",
+        "reason": "Nov 11 release concerns construction with services planned for 2027, not an effective restoration of lost services."
+      },
+      {
+        "title": "Non-U.S. services and routine holiday operating hours",
+        "reason": "Excluded non-U.S. events, proposals without current effects, holiday hours and general policy/business coverage."
+      }
+    ],
+    "limitations": [
+      "Publisher and indexing delays can conceal same-hour service changes.",
+      "Searches are bounded and do not exhaust every locality or U.S. territory.",
+      "Absence of verified new findings does not prove absence of qualifying events."
+    ],
+    "review_status": "No new findings submitted; no publication or approval action.",
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

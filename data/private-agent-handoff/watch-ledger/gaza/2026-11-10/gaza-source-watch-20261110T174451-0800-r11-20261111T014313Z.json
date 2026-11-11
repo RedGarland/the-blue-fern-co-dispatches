@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T174451-0800-r11-20261111T014313Z",
+  "scheduled_for": "2026-11-10T17:44:51-08:00",
+  "started_at": "2026-11-10T17:43:13-08:00",
+  "completed_at": "2026-11-11T01:45:31.524Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-11T00:49:14.951Z",
+    "end": "2026-11-11T01:45:31.524Z",
+    "start_local": "2026-11-10T16:49:14.951-08:00",
+    "end_local": "2026-11-10T17:45:31-08:00",
+    "previous_run_completed_at": "2026-11-11T00:49:14.951Z",
+    "basis": "Developments first substantiated or newly published after previous verified hourly heartbeat; prior incidents and previously published developments excluded. Source-time ambiguity disclosed.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall. Primary Gaza production collector/publisher remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T164451-0800-r11-20261111T004914951Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage latest update 9 Nov 2026 on 6-8 Nov rains; direct report inspected; no new OCHA release within observation window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/health-emergency-situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_INACCESSIBLE",
+        "result": "WHO global Gaza/OPT page accessible without newly dated health change; WHO EMRO direct report endpoint inaccessible via retriever, repeating known restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:reuters.com/world/middle-east/ Gaza \"November 11, 2026\" killed injured strikes aid",
+      "site:apnews.com/article/ Gaza November 11 2026 November 10 late Israeli strikes civilians",
+      "site:english.wafa.ps/Pages/Details Gaza \"11/November/2026\" killed injured early morning",
+      "site:palestinercs.org Gaza November 11 2026 ambulance patients operations",
+      "site:unicef.org Gaza November 11 2026 floods shelter water children",
+      "site:wfp.org Gaza November 11 2026 food aid distribution crossing",
+      "site:palestine.un.org/en Gaza 11 November 2026 displaced health aid casualties",
+      "site:icrc.org Gaza November 11 2026 hostages detainees civilian impact",
+      "site:msf.org Gaza November 11 2026 hospitals medical transport fuel",
+      "Gaza ceasefire Rafah crossing aid trucks negotiations 11 November 2026 Reuters",
+      "Gaza November 11 2026 new hospital functioning fuel medevac clean water system",
+      "site:unrwa.org Gaza November 11 2026 medical services displacement emergency aid"
+    ],
+    "source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest listed news dated Nov 10 22:39 Palestine time (Nov 10 12:39 PST); no newly published Gaza casualty, infrastructure, crossing, or humanitarian service change in observation window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/public/files/image/2026/press%20releases/PRCS%20Calls%20On%20the%20International%20Community%20for%20Immediate%20Action.pdf",
+        "result": "Nov 10 winter emergency statement: storm dated Nov 7; 70,000 tents reportedly flooded and only 1,618 tents PRCS says received in 2026. Publication hour unknown, likely pre-window and existing event; reviewed as potential backfill, excluded from fresh finding; primary PDF page visually inspected."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "result": "Storm impacts dated Nov 6-8: earlier-known five dune-collapse deaths, shelter and health disruption; not a new event."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176842",
+        "result": "WHO/Japan JPY 294m (~$1.97m) health response grant and EMT coordination plan published Nov 10 19:50 Palestine time (09:50 PST), before prior run completion; not a new in-window development."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Most recent Gaza news indexed Nov 10 covering earlier flooding, reviewed previously."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/palestine",
+        "result": "No newly dated Gaza-specific operational update located by targeted search."
+      },
+      {
+        "publisher": "UNICEF, WFP, ICRC, PRCS, Reuters, AP, UNRWA",
+        "url": null,
+        "result": "Remaining targeted searches yielded no independent, newly dated, qualifying Gaza event in requested time window."
+      }
+    ],
+    "exclusions": [
+      "Previously logged Nov 10 Gaza City, Sabra, al-Daraj, Zeitoun, Khan Younis casualty accounts and unresolved casualty discrepancies.",
+      "Nov 6-8 flooding and storm deaths, Nov 9-10 reporting and pre-existing health service disruptions, including previously logged blocked Sheikh Radwan rehabilitation.",
+      "Nov 10 PRCS press release adds figures but dated event is older and publication hour unverified; cannot establish new post-previous-run development.",
+      "Nov 10 WHO/Japan grant news published before previous watch; not treated as new since prior check.",
+      "Older or undated reports, repeated background metrics, opinion, unsupported social posts and West Bank-only incidents."
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "Regional situation-report endpoint inaccessible via web retriever",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "Previously reported 403; not confirmed independently through direct retrieval this run",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO regional endpoint remained inaccessible; material deterioration not newly observed. OCHA OPT and WHO global accessible, with WAFA, PRCS, UN Palestine, and MSF usable. No qualifying newly verified development.",
+    "limitations": "Source discovery/indexing is not comprehensive; pre-existing WHO EMRO access restriction limits direct regional validation. Two OCHA/WHO first searches, then exactly 12 additional targeted searches; direct opens/clicks and one PDF screenshot did not add search queries.",
+    "notification_reason": "No new qualifying findings and no new material watch degradation.",
+    "changes_to_production": "none: no approval, publication, merge, schedule, permission, or production change"
+  }
+}

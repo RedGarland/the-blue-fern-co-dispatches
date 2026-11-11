@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T204628-0800-recall12-20261111T0448Z",
+  "scheduled_for": "2026-11-10T20:45:22-08:00",
+  "started_at": "2026-11-10T20:46:28-08:00",
+  "completed_at": "2026-11-11T04:48:36.849Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T19:46:00.983-08:00",
+    "end": "2026-11-11T04:48:36.849Z",
+    "basis": "From the latest verified supplementary Care Line heartbeat completion through this run, with November 10 source publication recency checked against older reports and already-recorded events."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; production national Care Line collection is authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/care-line/2026-11-10/care-line-watch-20261110T194403-0800-recall12-20261111T0345Z.json",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_completed_at": "2026-11-11T03:46:00.983Z",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — IL — CLIA limitation — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "previously_recorded_finding_id": "cms-clia-limitation-il-advanced-urgent-care-14d2049789-20261110",
+      "note": "Direct CMS page listed the November 10 Illinois notice first; it predates this window and was recorded earlier on November 10. A stale search preview listed November 9 first; the opened official page resolved the discrepancy."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "\"November 10, 2026\" hospital emergency department closed suspended services",
+      "\"November 10, 2026\" maternity labor delivery unit closing suspended hospital",
+      "\"November 10, 2026\" psychiatric behavioral health hospital service closure suspended",
+      "\"November 10, 2026\" dialysis center clinic services close patients",
+      "\"November 10, 2026\" oncology cancer center primary care clinic closing patients",
+      "\"November 10, 2026\" rural hospital emergency room shut down suspended",
+      "\"November 10, 2026\" ambulance EMS service closure suspended base rural United States",
+      "\"November 10, 2026\" air ambulance flight medevac helicopter base closes suspended",
+      "\"November 10, 2026\" medicare provider termination CLIA suspension rescission public notice",
+      "\"November 10, 2026\" hospital emergency room reopened resumed services after closure United States",
+      "\"November 10, 2026\" Puerto Rico Virgin Islands hospital emergency maternity dialysis services suspended reopening",
+      "\"November 10, 2026\" Guam Saipan Northern Mariana American Samoa medical clinic hospital ambulance closure reopening"
+    ],
+    "search_recency_days": 2,
+    "search_methods": "CMS Public Notices direct page read first, followed by exactly 12 additional focused web searches, with candidate source opening and supplementary ledger comparison.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sea Pines Rehabilitation Hospital, Melbourne, Florida",
+        "reason": "Indefinite flood-related closure began around November 1–2, was disclosed in November 6 filing, and had already been screened in November 10 14:44 PST heartbeat. November 10 story repeats previously known loss, not a new hourly change.",
+        "url": "https://amp.insurancejournal.com/news/southeast/2026/11/10/892171.htm"
+      },
+      {
+        "item": "Soncy Medical Center, Amarillo, Texas",
+        "reason": "Property grand reopening following 2025 flooding, but available secondary source does not establish newly resumed essential clinical service that was unavailable to patients immediately before reopening; medical tenants previously relocated.",
+        "url": "https://wisevoter.com/world/us/tx/amarillo/2026/11/10/soncy-medical-center-reopens-amarillo-flood-renovations"
+      },
+      {
+        "item": "WVU Cancer Institute at Summersville Regional Medical Center, West Virginia",
+        "reason": "New/expanded oncology capacity, not verified restoration after loss of essential service.",
+        "url": "https://wvumedicine.org/news/article/wvu-medicine/front-page/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center, West Virginia",
+        "reason": "Proposed return of labor and delivery through letter of intent; services not confirmed restored.",
+        "url": "https://www.mybuckhannon.com/plan-would-restore-labor-and-delivery-at-greenbrier-valley-medical-center/"
+      },
+      {
+        "item": "DaVita/Fresenius Washington state antitrust action",
+        "reason": "New litigation alleging competition restrictions, not a documented new dialysis service closure/suspension or effective restoration.",
+        "url": "https://www.reuters.com/legal/litigation/washington-state-accuses-largest-dialysis-providers-davita-fresenius-suppressing-2026-11-10/"
+      },
+      {
+        "item": "Isla Community Health Kagman clinic, Northern Mariana Islands",
+        "reason": "Typhoon damage and transfer of services reported around November 2–3; no new November 10 service change verified.",
+        "url": "https://www.northernmarianaislandshealthnews.com/executive-report"
+      }
+    ],
+    "source_access_errors": [],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "News/search indexing can lag the actual announcement; hourly filtering is approximate, so delayed reports may surface later.",
+      "Twelve targeted searches are not exhaustive across all U.S. states and territories; limited fresh territory-specific coverage.",
+      "Production Care Line queue not queried directly; deduplication used existing supplemental ledger and documented known CMS finding."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_warranted": false,
+    "actions_not_taken": [
+      "No approval",
+      "No publication",
+      "No schedule changes",
+      "No task disabling"
+    ]
+  }
+}

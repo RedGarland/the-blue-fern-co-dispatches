@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T174249-0800-r11-20261111T014249Z",
+  "scheduled_for": "2026-11-10T17:45:54-08:00",
+  "started_at": "2026-11-10T17:42:49-08:00",
+  "completed_at": "2026-11-10T17:44:31.776-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T16:46:04-08:00",
+    "end_at": "2026-11-10T17:44:31.776-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Since latest independently fetched and verified ops/watch-ledger Food Line heartbeat; strict new-publication/onset screening rather than rediscovery.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T164430-0800-r11-20261111T004430Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary targeted recall for high-value possible missed U.S. food-access disruptions. Production nationwide collector remains authoritative; absence of findings cannot establish nationwide absence.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss or disaster",
+      "Storm, flood, fire, outage or damaged facility causing emergency food distribution cancellation",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 10 2026",
+      "\"sole grocery store\" fire flood closure November 2026",
+      "\"last grocery store\" shut down November 10 2026",
+      "\"only full service grocery\" disaster November 2026",
+      "\"food distribution\" canceled storm November 10 2026",
+      "\"food distribution\" suspended flood outage November 10 2026",
+      "food pantry abruptly closed November 10 2026",
+      "food bank closed suddenly service suspended November 10 2026",
+      "SNAP benefits interrupted outage November 10 2026 state EBT",
+      "WIC benefits service interruption November 10 2026 official",
+      "site:gov SNAP EBT system down November 10 2026",
+      "food pantry emergency closure fire November 2026"
+    ],
+    "search_query_errors_observed": 0,
+    "search_engine": "12 recency-constrained targeted web searches (primarily 1 day, some 2 days); source pages checked independently. Fresh local indexing remains incomplete; search results heavily returned older news.",
+    "direct_source_checks": {
+      "distinct_urls": 13,
+      "accessible": 11,
+      "failed": 2,
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring federal direct-access restriction, mitigated in part by state agency and processor pages."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring federal newsroom direct-access restriction, mitigated in part by state agency and processor pages."
+        }
+      ],
+      "urls": [
+        "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/",
+        "https://www.kcbd.com/2026/11/09/south-plains-food-bank-announces-holiday-closures-updates/",
+        "https://status.joinforage.app/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.fns.usda.gov/snap",
+        "https://www.fns.usda.gov/newsroom",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://dhs.ri.gov/",
+        "https://dhs.georgia.gov/",
+        "https://www.northamptonsurvival.org/get-food/calendar/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "reason": "Published November 8, 2026; Kalona IA's only full-service grocery is still operating and owners seek a buyer; prospective risk already reviewed, not new actual loss."
+      },
+      {
+        "url": "https://townlift.com/2026/11/summit-county-weighs-25000-in-emergency-funding-following-food-pantry-closures/",
+        "reason": "Published November 7, 2026; confirmed Coalville/Oakley UT pantry closures, but prior incident and well outside last-hour reporting window."
+      },
+      {
+        "url": "https://www.kcbd.com/2026/11/09/south-plains-food-bank-announces-holiday-closures-updates/",
+        "reason": "Published November 9, 2026; routine announced Veterans Day/holiday schedule, no abrupt emergency closure or disaster interruption."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Processor status currently reports all systems operational; upcoming November 12 and 15 maintenance is future and earlier announced, not a present or newly reported disruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Hawaii reports continuing application/telephone processing delays with no freshly dated interruption in hourly window."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "November 21 Oregon SNAP documentation rule is future; no immediate access interruption identified."
+      },
+      {
+        "url": "https://dhs.ri.gov/",
+        "reason": "Rhode Island agency page notes two offices operating remotely during pest treatment; no dated new onset or immediate SNAP loss demonstrated, with alternate service channels available."
+      },
+      {
+        "url": "https://dhs.georgia.gov/",
+        "reason": "Georgia agency indicates EBT IVR call center back online, not evidence of a newly active interruption."
+      },
+      {
+        "url": "https://www.northamptonsurvival.org/get-food/calendar/",
+        "reason": "Provider calendar lists routine holiday service notices, not a new emergency distribution failure."
+      }
+    ],
+    "excluded_categories": "Donation appeals, resource guides, recipes, opinion, routine program promotion, generic inflation, older known closure incidents, prospective grocery-sale risks, planned maintenance, standard holidays, unrelated stories.",
+    "assessment": "No source verified a newly reported qualifying event between November 10 16:46:04 and this watch completion, PST. Two recurring USDA endpoint 403 errors lower direct federal coverage but 11 other direct sources were readable; nonmaterial degradation, not a failure of this bounded watch.",
+    "material_degradation": false,
+    "approvals_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false,
+    "notification_reason": "No new qualifying signal and no material watch failure or degradation."
+  }
+}

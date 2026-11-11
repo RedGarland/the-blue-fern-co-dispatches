@@ -1,0 +1,84 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T064808-0800-recall12",
+  "scheduled_for": "2026-11-11T06:45:22-08:00",
+  "started_at": "2026-11-11T06:48:08-08:00",
+  "completed_at": "2026-11-11T06:50:48-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-11T04:45:32.887-08:00",
+    "end": "2026-11-11T06:50:48-08:00",
+    "observation_date": "2026-11-11",
+    "prior_check_basis": "Latest independently fetched prior Care Line heartbeat: care-line-watch-20261111T044302-0800-recall12.json, completed 2026-11-11T04:45:32.887-08:00. A potential intervening 05:45 heartbeat was not independently established; window conservatively overlaps it if present."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall for United States (all states and DC) and territories; national production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "verification": "CMS Public Notices was checked through a CMS-specific search and official live page before any of the 12 supplemental targeted searches.",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, Limitation of CLIA cert, Illinois, 14D2049789",
+      "disposition": "No notice dated November 11 or later. November 10 Illinois CLIA limitation and November 9 Michigan home-health termination are already recorded and precede this search window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed temporarily reopened November 11 2026 United States",
+      "hospital labor delivery maternity service closure announced November 11 2026 rural",
+      "ambulance service shutdown base closure November 11 2026 county",
+      "hospital behavioral health psychiatric unit suspended closed November 11 2026",
+      "\"Nov. 11, 2026\" \"dialysis\" \"closure\" clinic United States",
+      "\"Nov. 11, 2026\" \"cancer center\" \"closed\" or \"suspended\" oncology",
+      "\"Nov. 11, 2026\" \"primary care\" clinic \"closing\" patients",
+      "\"November 11, 2026\" rural hospital emergency service \"reopen\" \"closed\"",
+      "hospital emergency department ambulance service closure suspended \"Nov 10\" \"2026\" \"Nov 11\" United States",
+      "air ambulance base shut down suspended service November 2026 hospital",
+      "Puerto Rico Guam US Virgin Islands hospital emergency clinic suspension closed November 2026",
+      "hospital service dialysis maternity emergency unit reopened restored \"November 10\" \"2026\""
+    ],
+    "search_assessment": "Twelve targeted web searches after CMS review examined hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency response, EMS/air medical, territories and confirmed reopenings. No independently verified new qualifying nonduplicate access changes were found in the bounded observation period.",
+    "exclusions": [
+      {
+        "title": "Sharon Regional Medical Center, Pennsylvania emergency-service suspension and license revocation",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "State order Nov. 4, emergency service suspension Nov. 6; later Nov. 10 reporting is a follow-up to an already tracked development, not a new change in this window."
+      },
+      {
+        "title": "Greenbrier Valley Medical Center, West Virginia maternity restoration plan",
+        "url": "https://westvirginiawatch.com/2026/11/05/vandalia-health-osteopathic-school-to-reopen-labor-delivery-services-at-greenbrier-medical-center/",
+        "reason": "November 5 announcement of future restoration, not abrupt currently effective reopened service."
+      },
+      {
+        "title": "Kula Hospital, Hawaii restoration contract and future reopening",
+        "url": "https://mauinow.com/2026/11/02/maui-health-selects-general-contractor-for-kula-hospital-restoration-targets-late-summer-2027-reopening/",
+        "reason": "November 2 agreement with planned 2027 reopening; not current restoration."
+      },
+      {
+        "title": "Thomasville Regional Medical Center, Alabama possible sale",
+        "url": "https://southalnews.com/thomasville-hospital-sale-announcement/",
+        "reason": "Potential buyer and paperwork without verified reopening or a change in patient access."
+      },
+      {
+        "title": "Texas state microbiology lab Veterans Day routine closure",
+        "url": "https://www.dshs.texas.gov/laboratory-services/programs-laboratories/microbiology-unit/microbiology-unit-notices",
+        "reason": "Scheduled federal-holiday closure, not an unexpected essential-care disruption."
+      },
+      {
+        "title": "Non-U.S. ambulance and hospital stories",
+        "reason": "Excluded as outside the specified U.S. and territory geographic scope."
+      }
+    ],
+    "degraded_sources": [],
+    "limitations": [
+      "The search engine returned older and out-of-scope results despite recency constraints; same-hour indexing and publication lag can hide events.",
+      "Twelve queries cannot comprehensively cover every U.S. county or territory.",
+      "A newer prior-hour heartbeat, if any, was not independently located; the latest verified 04:45 receipt was used as a conservative baseline.",
+      "Zero verified findings does not establish that no real-world changes occurred."
+    ],
+    "review_action": "No pending_review findings, approvals, publication, merges, task disabling or schedule modifications."
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T104039-0800-recall12-20261111T184240Z",
+  "scheduled_for": "2026-11-11T10:45:22-08:00",
+  "started_at": "2026-11-11T10:40:39-08:00",
+  "completed_at": "2026-11-11T10:42:40.278-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T09:42:53-08:00",
+    "end": "2026-11-11T10:42:40.278-08:00",
+    "prior_check_basis": "Prior independently verified ops/watch-ledger Care Line Watch heartbeat completed_at 2026-11-11T09:42:53-08:00, read via GitHub connector."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall for US states and territories; primary Care Line national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official table directly opened and verified. Latest posted notice remains 2026-11-10 Advanced Urgent Care, Illinois, limitation of CLIA certificate 14D2049789; the next notice is 2026-11-09 Compassionate Home Health Services, Michigan, termination. No 2026-11-11 notice visible; both prior notices excluded as duplicates.",
+      "initial_lookup_issue": "An obsolete CMS URL was inaccessible, then the current official Public Notices page was located and directly verified without ongoing CMS access gap."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 11 2026 hospital emergency department closure suspension emergency care services US",
+      "November 11 2026 maternity labor and delivery hospital service closing announcement",
+      "November 11 2026 rural hospital emergency room closed stopped accepting patients",
+      "November 11 2026 ambulance EMS air medical base closure service suspension reopening",
+      "November 11 2026 psychiatric behavioral health hospital inpatient unit closed admissions suspended November 11",
+      "November 11 2026 dialysis center closing stopped accepting patients kidney care",
+      "November 11 2026 oncology cancer chemotherapy infusion clinic closure service suspended",
+      "November 11 2026 primary care family medicine clinic sudden closure patients transferred",
+      "November 11 2026 emergency room hospital maternity reopened resumed admissions service restored US",
+      "November 11 2026 state health department emergency hospital closure license suspend ambulance diversion notice",
+      "November 11 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital clinic ambulance service closure",
+      "November 11 2026 EMS station ambulance service ceased operations suspended restored county local news"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "source_detail_errors": [
+      {
+        "url": "https://www.wvnews.com/prestoncountynews/news/preston-county-commission-addresses-ems-troubles-awards-generator-bid/article_d782662a-f21b-42c4-bb25-5ef89569cd91.html",
+        "error": "HTTP 429 Too Many Requests on full-text open; search excerpt remained available. Article publication dated 2026-11-10 and describes historical suspensions/new county EMS operations, not verified new within 2026-11-11 09:42:53-10:42 PST window.",
+        "material_to_window": false
+      }
+    ],
+    "search_assessment": "Twelve searches returned no newly verifiable qualifying development within the hourly window. The single inaccessible supplementary article was published the prior day and does not prevent meaningful window coverage; conservatively persisted DEGRADED per source-failure instruction.",
+    "reviewed_exclusions": [
+      {
+        "title": "Advanced Urgent Care CLIA limitation, Illinois",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "CMS notice dated 2026-11-10; previously recorded and not a new notice."
+      },
+      {
+        "title": "Vista Medical Center East ambulance bypass, Illinois",
+        "url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+        "reason": "EMS bypass began 2026-11-07, outside observation window."
+      },
+      {
+        "title": "Bruceton Community Ambulance/Preston County EMS, West Virginia",
+        "url": "https://www.wvnews.com/prestoncountynews/news/preston-county-commission-addresses-ems-troubles-awards-generator-bid/article_d782662a-f21b-42c4-bb25-5ef89569cd91.html",
+        "reason": "2026-11-10 article; source detail rate-limited, excerpt describes earlier Bruceton suspensions and start of county EMS, not verified as new in this window."
+      },
+      {
+        "title": "Prevea Washington Street Health Center, Wisconsin",
+        "url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center",
+        "reason": "Provider page states last patient care 2026-11-13 but has no new publication or announcement time to establish a change since prior check."
+      },
+      {
+        "title": "Sharon Regional Medical Center, Pennsylvania",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "State order dated Nov 4, emergency service suspension Nov 6, reported Nov 7-9; already evaluated."
+      },
+      {
+        "title": "Kula Hospital restoration, Hawaii",
+        "url": "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/",
+        "reason": "Reopening remains a future plan with no confirmed effective restoration."
+      },
+      {
+        "title": "Guam Memorial Hospital Typhoon Champi service suspension",
+        "url": "https://ghs.guam.gov/node/4352",
+        "reason": "Dated 2026-10-16, historical."
+      },
+      {
+        "title": "Jersey County Illinois ambulance tax question",
+        "url": "https://www.thetelegraph.com/news/article/jersey-county-ambulance-tax-ballot-2027-election-22524587.php",
+        "reason": "Funding ballot proposal for 2027, no concrete present suspension."
+      }
+    ],
+    "limitations": [
+      "Time-to-index and publication delay can hide developments in a short hourly observation window.",
+      "Bounded searches cannot provide exhaustive state and territory coverage.",
+      "One earlier supplementary source returned HTTP 429 on full-text retrieval, though its dated excerpt was accessible.",
+      "No verified finding does not establish that no qualifying event occurred."
+    ],
+    "review_status": "No new findings submitted; no publication or approval.",
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

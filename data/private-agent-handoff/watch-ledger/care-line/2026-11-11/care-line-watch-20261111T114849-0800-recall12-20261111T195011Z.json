@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T114849-0800-recall12-20261111T195011Z",
+  "scheduled_for": "2026-11-11T11:45:22-08:00",
+  "started_at": "2026-11-11T11:48:49-08:00",
+  "completed_at": "2026-11-11T11:51:09-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T10:42:40.278-08:00",
+    "end": "2026-11-11T11:51:09-08:00",
+    "prior_check_basis": "Prior Care Line Watch heartbeat on ops/watch-ledger, fetched and read directly. Prior completed_at 2026-11-11T10:42:40.278-08:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall across US states and territories; production national Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS Public Notices listing directly opened; most recent entry remains Nov. 10, 2026 Advanced Urgent Care, Illinois, Limitation of CLIA cert 14D2049789. Next latest is Nov. 9, 2026 Compassionate Home Health Services, Michigan, termination. No Nov. 11 entry as observed."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closes temporarily November 11 2026 United States today",
+      "maternity labor delivery unit closing suspending services November 11 2026 hospital",
+      "rural hospital emergency service suspended November 11 2026 latest",
+      "ambulance EMS station base closure suspension November 11 2026 USA",
+      "air medical helicopter base closing grounding November 11 2026",
+      "dialysis center closure interruption patients November 11 2026 US",
+      "behavioral health psychiatric inpatient hospital service suspension closure November 11 2026 United States",
+      "oncology cancer infusion clinic shutdown patients November 11 2026 USA",
+      "primary care medical clinic closes immediately November 11 2026 patients",
+      "hospital emergency department reopens resumes operations November 11 2026 USA",
+      "Puerto Rico Guam US Virgin Islands hospital clinic emergency ambulance closure suspension November 11 2026",
+      "state health department hospital closure notice Nov 11 2026 dialysis OB emergency rural service"
+    ],
+    "search_recency_days": 1,
+    "search_errors_observed": 0,
+    "search_assessment": "No newly verified access-affecting closure, suspension, termination, rescission, or concrete restoration during the observed interval. Source results chiefly historical, retrospective, unrelated care expansions or proposals, and routine Veterans Day closures. No discovery qualified as a new current-window event.",
+    "reviewed_exclusions": [
+      {
+        "title": "ProPublica investigation into East Orange VA Medical Center operating-room interruptions and cancer-radiation suspension, New Jersey",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "Published Nov. 11 at 5:00 a.m. per article, before prior watch completed 10:42 a.m. PST; documents earlier months and a repeat OR interruption last week, not a new event established between checks. Substantive retrospective lead but excluded from new hourly findings."
+      },
+      {
+        "title": "Sharon Regional Medical Center, Pennsylvania",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "State order Nov. 4 and ED suspension Nov. 6; November 9 report already considered in prior checks."
+      },
+      {
+        "title": "Roseland Community Hospital maternity services, Illinois",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Nov. 2 reporting of already effective October/November service losses; historical."
+      },
+      {
+        "title": "Bookmark Medical new primary-care clinic, Tennessee",
+        "url": "https://smokeybarn.com/bookmark-medical-celebrates-ashland-city-clinic-opening-with-november-12-ribbon-cutting/",
+        "reason": "New clinic opening Nov. 9, but not restoration of previously lost essential service, and outside hourly window."
+      },
+      {
+        "title": "Veterans Day service-hours articles",
+        "url": "https://abc7.com/post/whats-open-closed-veterans-day-2026/20028141/",
+        "reason": "Routine holiday schedules not abrupt durable healthcare-service loss."
+      }
+    ],
+    "limitations": [
+      "Source publication time is frequently not available to the minute; some new reports may index late.",
+      "Twelve targeted searches do not exhaustively cover every US territory, county, facility or service.",
+      "Retrospective ProPublica investigation discusses meaningful prior VA service disruptions, but does not document an event new to this observation window.",
+      "No findings is a bounded-recall result, not proof of absence."
+    ],
+    "review_status": "No new findings submitted for review.",
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

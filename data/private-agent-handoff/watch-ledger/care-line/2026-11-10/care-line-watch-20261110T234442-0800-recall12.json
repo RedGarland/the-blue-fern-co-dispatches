@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T234442-0800-recall12",
+  "scheduled_for": "2026-11-10T23:45:22-08:00",
+  "started_at": "2026-11-10T23:44:42-08:00",
+  "completed_at": "2026-11-10T23:45:46-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-10T22:50:48-08:00",
+    "end": "2026-11-10T23:45:46-08:00",
+    "observation_date": "2026-11-10",
+    "prior_check_basis": "Previously committed ops/watch-ledger Care Line heartbeat care-line-watch-20261110T224932-0800-recall12.json; completed_at 2026-11-10T22:50:48-08:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; production Care Line national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, limitation of CLIA cert, Illinois, CCN 14D2049789",
+      "disposition": "Official CMS listing checked; no additions later than previously documented November 10 notice.",
+      "note": "An obsolete/unavailable CMS URL failed first; the correct official CMS Public Notices page was then retrieved and reviewed."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed temporarily reopened November 10 2026 US local news",
+      "hospital maternity labor delivery service closure suspension November 10 2026 local news",
+      "rural hospital emergency room closure diversion November 10 2026",
+      "behavioral health psychiatric hospital clinic closing access November 10 2026",
+      "November 10 2026 dialysis center closes abruptly stops treatment United States",
+      "November 10 2026 oncology cancer clinic closing services suspended hospital",
+      "November 10 2026 primary care clinic shuts down patients closure city county",
+      "November 10 2026 ambulance service station closure air medical helicopter base grounded",
+      "site:gov November 10 2026 hospital services clinic closure suspended emergency care state health department",
+      "November 10 2026 US Virgin Islands Puerto Rico Guam American Samoa Northern Mariana Islands hospital clinic ambulance service disruption reopened",
+      "November 10 2026 ambulance EMS service closed shut down suspension rural county November 2026",
+      "November 10 2026 hospital emergency department reopened resumed dialysis behavioral service restoration United States"
+    ],
+    "exclusions": [
+      {
+        "title": "Advanced Urgent Care Illinois CLIA certificate limitation",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "November 10 CMS notice already identified in multiple prior hourly heartbeats; not new in current observation window."
+      },
+      {
+        "title": "Bay View Obstetrics & Gynecology Petoskey and St. Ignace clinic closures",
+        "url": "https://www.traverseticker.com/news/tcbn-petoskey-clinic-closure-causes-shockwaves/",
+        "reason": "Published November 10 but describes clinic closures effective late August 2026; no new service change during watch window."
+      },
+      {
+        "title": "Valley Baptist Brownsville pediatric inpatient unit closure",
+        "url": "https://www.mysanantonio.com/news/local/article/brownsville-hospital-pediatric-units-close-22522908.php",
+        "reason": "November 10 follow-up on November 4 announcement of planned November 14 closure; no new development in observation window."
+      },
+      {
+        "title": "Sanford Luverne Medical Center inpatient labor and delivery/newborn services",
+        "url": "https://www.health.mn.gov/news/pressrel/2026/hearing111026.html",
+        "reason": "November 10 state hearing notice for scheduled April 28, 2027 cessation; not a new effective service loss within this hour; full official page could not be opened (403), search excerpt accessible."
+      },
+      {
+        "title": "WVU Cancer Institute Summersville facility",
+        "url": "https://wvumedicine.org/news/article/wvu-medicine/front-page/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/",
+        "reason": "November 10 new capacity expansion, not restoration of a lost essential service within specified recall classes."
+      },
+      {
+        "title": "Washington dialysis-provider noncompete lawsuit",
+        "url": "https://www.reuters.com/legal/litigation/washington-state-accuses-largest-dialysis-providers-davita-fresenius-suppressing-2026-11-10/",
+        "reason": "Litigation about competition without a verified current dialysis facility or service closure or suspension."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "url": "https://www.health.mn.gov/news/pressrel/2026/hearing111026.html",
+        "issue": "Direct retrieval HTTP 403; authoritative title, publication date, and planned effective date available from search result excerpt.",
+        "impact": "Could not fully verify contents of this supplementary state notice."
+      }
+    ],
+    "limitations": [
+      "Same-hour source-publication and search indexing lag may hide qualifying events.",
+      "The 12 searches are high-value recall coverage, not a comprehensive sweep of every county or territory.",
+      "The Minnesota health department notice blocked direct retrieval (HTTP 403); official search excerpt did not indicate an in-window effective closure.",
+      "An initially attempted outdated CMS URL failed but was replaced with the correct publicly accessible official CMS notices page."
+    ],
+    "review_action": "No qualifying pending_review candidates; no approval, publication, or schedule modifications."
+  }
+}

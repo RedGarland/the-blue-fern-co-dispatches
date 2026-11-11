@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T194451-0800-r11-20261111T034819Z",
+  "scheduled_for": "2026-11-10T19:44:51-08:00",
+  "started_at": "2026-11-10T19:46:36-08:00",
+  "completed_at": "2026-11-11T03:48:19.413Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-11T02:44:31.830Z",
+    "end": "2026-11-11T03:48:19.413Z",
+    "start_local": "2026-11-10T18:44:31.830-08:00",
+    "end_local": "2026-11-10T19:48:19.413-08:00",
+    "previous_run_completed_at": "2026-11-11T02:44:31.830Z",
+    "basis": "New traceable reports after prior authenticated heartbeat, not recycled stories or previously recorded events.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; primary daily production collection and publication authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T184451-0800-r11-20261111T024221Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "status": "ACCESSIBLE",
+        "result": "Latest relevant official Gaza assessment dated 9 Nov on Nov 6–8 rain impacts; no in-window new event established."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/news-room/",
+        "regional_url": "https://www.emro.who.int/opt/index.html",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_INACCESSIBLE",
+        "result": "Global newsroom had 10 Nov updates unrelated to Gaza. WHO Health Cluster and EMRO prior materials checked; direct regional OPT endpoint returned inaccessible, repeating longstanding restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org/content/ \"10 Nov 2026\" Gaza humanitarian",
+      "site:who.int/news \"10 November 2026\" Gaza hospitals",
+      "site:un.org/unispal \"10 November 2026\" Gaza aid children",
+      "Gaza November 10 2026 evening November 11 casualties Reuters AP new strikes",
+      "site:wafa.ps \"November 10, 2026\" Gaza Tuesday evening casualties",
+      "site:reuters.com/world/middle-east/ Gaza \"November 10, 2026\" OR \"November 11, 2026\" medical aid ceasefire",
+      "site:unicef.org Gaza \"10 November 2026\" water Sheikh Radwan flood basin",
+      "site:reliefweb.int \"Gaza\" \"10 Nov 2026\" health shelter",
+      "Gaza November 11 2026 02:00 GMT 03:00 GMT new casualty airstrike humanitarian",
+      "site:palestine.un.org/en \"11 November 2026\" Gaza",
+      "site:msf.org Gaza 10 November 2026 hospital ambulance supplies",
+      "site:icrc.org Gaza 10 November 2026 hostages detainees humanitarian"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/jordan/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "result": "10 Nov page describes Nov 6–9 flooding; already recorded before observation window."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/environment/unicef-says-israel-blocks-gaza-basin-repairs-warns-flood-risk-2026-11-10/",
+        "result": "Story published 10 Nov 13:57 UTC (05:57 PST), documenting Sheikh Radwan repair rejections, previously reported water-infrastructure restriction, not new in-window."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "result": "Tuesday casualties in Zeitoun, Daraj, Khan Younis and Sabra already recorded prior to this run."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176841",
+        "result": "Sabra casualty incident dated Tuesday local evening with Monday evening event; known from earlier heartbeat."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/f4407845b6dd105e54190ccab7d55f8d",
+        "result": "Five reported deaths in already known November 10 events, no separate post-window incident."
+      },
+      {
+        "publisher": "ICRC",
+        "url": "https://www.icrc.org/en/news-release/israel-and-occupied-territories-release-and-transfer-operations-under-ceasefire-agreement-completed",
+        "result": "No in-window detention or hostage change; search returned January 2026 release."
+      }
+    ],
+    "exclusions": [
+      "Previously logged November 10 Gaza City Zeitoun, Daraj and Sabra, and Khan Younis casualties; Reuters/AP/WAFA discrepancies are not new incidents.",
+      "November 6–9 flood fatalities, 26,000+ affected households, damaged shelters, disrupted health facilities, and children at risk.",
+      "Previously documented Sheikh Radwan sewage/flood basin repairs and UNICEF access restrictions, reported earlier November 10.",
+      "Older January 2026 detainee/hostage exchange; undated or old medevac, crossing, aid and negotiations context.",
+      "Unverified social material and opinion."
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "Direct regional OPT endpoint inaccessible",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "403 previously observed; not retested",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO OPT endpoint remains inaccessible; OCHA, global WHO, UNICEF, Reuters, WAFA, AP and ICRC search coverage nevertheless useful. No new material watch deterioration.",
+    "limitations": "Web indexing and timestamps may lag local event occurrence. Search count: two official-first checks plus exactly 12 targeted searches; subsequent opens are not additional searches.",
+    "notification_reason": "No new qualifying development or material new watch degradation.",
+    "changes_to_production": "none; no publication, approval, branch merge, permissions or schedule change."
+  }
+}

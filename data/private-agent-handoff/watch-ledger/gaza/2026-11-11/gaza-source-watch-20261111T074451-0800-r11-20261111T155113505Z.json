@@ -1,0 +1,175 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T074451-0800-r11-20261111T155113505Z",
+  "scheduled_for": "2026-11-11T07:44:51-08:00",
+  "started_at": "2026-11-11T07:49:44-08:00",
+  "completed_at": "2026-11-11T07:51:13.505-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T14:46:25.841Z",
+    "end": "2026-11-11T15:51:13.505Z",
+    "start_local": "2026-11-11T06:46:25.841-08:00",
+    "end_local": "2026-11-11T07:51:13.505-08:00",
+    "previous_run_completed_at": "2026-11-11T14:46:25.841Z",
+    "basis": "Authenticated preceding Gaza heartbeat; bounded discovery window, with source publication/event date checked separately and duplicate incidents excluded.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261111-gaza-city-4-fatalities-wafa-followup-176860",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176860",
+      "title": "Four Palestinians killed, others injured in Israeli attacks across Gaza",
+      "publisher": "WAFA (Palestine News & Information Agency)",
+      "source_publication_date": "2026-11-11",
+      "source_publication_at": null,
+      "source_publication_local_time": "17:02 (WAFA displayed; time zone not explicitly specified)",
+      "event_date": "2026-11-11",
+      "event_at": null,
+      "location": "Gaza City: al-Jalaa Street and near the Italian Complex, Gaza Strip",
+      "affected_population_or_system": "Palestinian residents and displaced shelter occupants; WAFA reports four killed since Wednesday morning, versus three in its earlier report, including a 30-year-old who died of wounds from the tent shelling; also describes a civilian struck while collecting water on a rooftop. Some injuries; identities and incident-level overlap not independently verified.",
+      "exact_supporting_passage": "A civilian, aged 30, also succumbed to wounds",
+      "source_type": "established_local_news_agency_attributing_to_medical_and_local_sources",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "first_observed_at": "2026-11-11T15:50:00Z",
+        "source_listing": "WAFA latest-news index listed item dated 11 November 2026 at 05:02 PM; earlier 02:11 PM item reported three fatalities.",
+        "prior_source_url": "https://english.wafa.ps/Pages/Details/176857",
+        "previous_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T064451-0800-r11-20261111T144344Z.json",
+        "new_information": "WAFA increased its Wednesday Gaza fatality count from three to four and reported one 30-year-old later dying of injuries, with details of a victim hit while collecting water.",
+        "overlap_warning": "Earlier AP/Reuters/WAFA reported three killed (two brothers in a tent strike and one rooftop death). Current four is a total update, NOT four additional deaths; the rooftop water-collection incident may be the previously counted rooftop fatality. Only one increase relative to WAFA's earlier three is indicated.",
+        "timing_limit": "Incident and death timing not stated precisely; first observed as a newly posted source report during the watch.",
+        "independent_confirmation": "Not obtained within 12-search bound; keep attributed to WAFA pending corroboration.",
+        "qualification": "New traceable casualty-count follow-up and documented civilian impact; supplementary finding only, not publication approval."
+      }
+    },
+    {
+      "finding_id": "gaza-20261111-maghazi-two-homes-demolished-wafa-176860",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176860",
+      "title": "Reported destruction of two homes east of al-Maghazi camp",
+      "publisher": "WAFA (Palestine News & Information Agency)",
+      "source_publication_date": "2026-11-11",
+      "source_publication_at": null,
+      "source_publication_local_time": "17:02 (WAFA displayed; time zone not explicitly specified)",
+      "event_date": "2026-11-11",
+      "event_at": null,
+      "location": "East of al-Maghazi refugee camp, central Gaza Strip",
+      "affected_population_or_system": "Two residential properties reportedly belonging to an Al-Aqsa University administrator and a local resident; occupancy, displacement and injuries not reported.",
+      "exact_supporting_passage": "Israeli forces also blew up two homes east of the al-Maghazi refugee camp.",
+      "source_type": "established_local_news_agency_attributing_to_local_sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "first_observed_at": "2026-11-11T15:50:00Z",
+        "source_listing": "WAFA 11 November 2026 05:02 PM Gaza incident summary",
+        "previous_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T064451-0800-r11-20261111T144344Z.json",
+        "new_information": "Specific alleged destruction of two civilian residential properties in central Gaza not described in preceding Gaza watch ledger.",
+        "independent_confirmation": "Not obtained within 12-search bound; single attributed local report.",
+        "timing_limit": "Report summarizes activity since Wednesday morning; demolition time unverified.",
+        "qualification": "New traceable report of damage to civilian residential infrastructure; supplementary candidate only."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary daily production collector and publisher remain authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T064451-0800-r11-20261111T144344Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed posting 9 November 2026 (heavy rains report dated 8 November); no new 11 November bulletin."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "WHO global overview accessible with no newly dated 11 November Gaza health item; regional site returned HTTP 502, a continuing prior restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"11/11/2026\" Gaza 16:00 17:00 Palestinians killed",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 new after 14:45 GMT strike casualties ceasefire",
+      "site:apnews.com/article/ Gaza November 11 2026 latest afternoon strike hospitals aid",
+      "site:aljazeera.com/news/2026/11/11/ Gaza attack killed displacement hospitals flood latest",
+      "site:palestine.un.org/en/ Gaza 11 November 2026 new humanitarian crossings medical facilities",
+      "site:palestinercs.org November 11 2026 Gaza ambulance emergency casualties evacuation",
+      "Gaza November 11 2026 four killed 30 year old died wounds Khudari Italian Complex water containers roof afternoon",
+      "Gaza 11 November 2026 al Maghazi two houses blown up university administrator shelling",
+      "site:unicef.org/press-releases Gaza 11 November 2026 shelter flood clean water crisis",
+      "site:wfp.org/news Gaza 11 November 2026 food trucks crossings aid distributions",
+      "site:msf.org Gaza 11 November 2026 hospital medical evacuation surgeries fuel ambulances",
+      "Gaza November 11 2026 Kerem Shalom Rafah aid crossing hostage ceasefire negotiations latest developments"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "17:02 Gaza story reports 4 killed and two homes blown up; preceding 14:11 story reports 3 killed; 16:08 water-well item was Jenin/West Bank, excluded."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176860",
+        "result": "New casualty follow-up and Maghazi residential damage; no independent confirmation obtained."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "No in-window Gaza update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No dated new Gaza medical situation bulletin."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "result": "Existing Gaza strike/deaths previously captured; no verified distinct new operational change."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176857",
+        "reason": "Previously recorded three Gaza City fatalities; not counted as new casualties."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "reason": "Previously recorded three fatalities, overlaps latest WAFA four; not additive."
+      },
+      {
+        "url": "https://www.unicef.org/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "reason": "9 November statement regarding earlier weekend flooding and deaths, previously captured."
+      },
+      {
+        "url": "https://www.aljazeera.com/features/2026/11/11/as-gaza-flood-waters-subside-palestinians-assess-human-and-material-damage",
+        "reason": "11 November retrospective of earlier storm and collapse; no new event with verified in-window occurrence."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "reason": "16:08 Jenin water well story outside Gaza geographic scope."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO Eastern Mediterranean OPT returned the recurring HTTP 502. OCHA and WHO global were accessible, all 12 additional targeted searches completed. Two newly reported traceable developments identified in a 17:02 WAFA bulletin; independently uncorroborated and appropriately qualified.",
+    "limitations": "Single-source, attributed local reporting for both findings; publication time displayed by WAFA without explicit time zone; incident timestamps, identity and exact overlap remain unverified. Search indexing may lag. A distinct increase from three to four is reported, not seven total.",
+    "changes_to_production": "None; no approvals, publication, scheduling or task disabling; only this heartbeat file added."
+  }
+}

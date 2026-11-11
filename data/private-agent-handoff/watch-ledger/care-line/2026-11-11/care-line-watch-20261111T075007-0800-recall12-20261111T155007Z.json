@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T075007-0800-recall12-20261111T155007Z",
+  "scheduled_for": "2026-11-11T07:45:22-08:00",
+  "started_at": "2026-11-11T07:50:07-08:00",
+  "completed_at": "2026-11-11T07:52:16.268-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T04:45:32.887-08:00",
+    "end": "2026-11-11T07:52:16.268-08:00",
+    "prior_check_basis": "The latest independently fetched prior Care Line heartbeat was care-line-watch-20261111T044302-0800-recall12.json, completed at 04:45:32.887 PST. Branch directory listing was unavailable, so the search conservatively covers the period from that verified receipt instead of assuming intervening hourly check times. This wider overlap does not establish that intervening heartbeats are missing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary national and U.S. territories Care Line recall; primary production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "method": "Official CMS Public Notices table checked before the 12 additional searches.",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, limitation of CLIA certificate, Illinois, CLIA 14D2049789",
+      "disposition": "No notice dated November 11 or later as of this run; November 10 Illinois limitation and November 9 Michigan home health termination are pre-window and were previously recorded."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 11 2026 hospital emergency department closed suspended services patients local US",
+      "November 11 2026 rural hospital emergency services closure suspension",
+      "November 10 11 2026 maternity labor delivery unit closes stops delivering babies hospital",
+      "November 11 2026 dialysis clinic temporarily closed treatment interruption",
+      "November 11 2026 cancer center oncology services closed suspended patients",
+      "November 11 2026 psychiatric behavioral health hospital unit closure patients",
+      "November 11 2026 primary care clinic closed abruptly patients notified",
+      "November 11 2026 ambulance service suspended closes station city county",
+      "November 11 2026 air ambulance helicopter medical base closing stopped service",
+      "November 11 2026 emergency room reopens restores services after closure",
+      "site:gov \"November 11, 2026\" hospital closure \"emergency\" health department",
+      "November 2026 Puerto Rico Guam Virgin Islands Northern Mariana American Samoa hospital emergency ambulance service closure suspension"
+    ],
+    "searches_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_assessment": "No new U.S. or territory service closure, suspension, official CMS access-risk notice or concrete effective essential-service restoration verified within the conservatively overlapped observation period. Most returned items were older incidents, general hospital risk reporting, Veterans Day routine operations, planned changes, or Canadian/foreign news.",
+    "reviewed_exclusions": [
+      {
+        "title": "Sharon Regional Medical Center license revocation / emergency suspension in Pennsylvania",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "Nov 4 order and Nov 6 emergency-service suspension; published Nov 10 but historical and already considered in earlier watches."
+      },
+      {
+        "title": "Minnesota maternity care access gaps",
+        "url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center",
+        "reason": "Published Nov 8 and concerns aggregate history, not a newly effective service change."
+      },
+      {
+        "title": "Vermont Psychiatric Care Hospital staff/bed cuts",
+        "url": "https://vtdigger.org/2026/08/10/vermont-psychiatric-care-hospital-cuts-staff-and-beds-despite-pushback/",
+        "reason": "August 10 report, outside observation window."
+      },
+      {
+        "title": "Veterans Day routine service hours and non-U.S. health stories",
+        "reason": "Holiday hours or outside the geographic and substantive qualifying criteria."
+      }
+    ],
+    "degraded_sources": [],
+    "limitations": [
+      "Search indexing and source publication can lag same-hour real-world changes.",
+      "Twelve targeted searches cannot exhaust every state, locality or territory.",
+      "Exact most-recent preceding hourly Care Line heartbeat was not independently established; an earlier verified heartbeat was used as the conservative boundary.",
+      "No verified new finding does not prove no new event occurred."
+    ],
+    "approvals_or_publication": false,
+    "schedule_changed": false,
+    "task_disabled": false,
+    "review_action": "No qualifying finding to queue; no approvals, publication, merges, production changes, schedule edits or disabling."
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T004451-0800-r11-20261111T084549Z",
+  "scheduled_for": "2026-11-11T00:44:51-08:00",
+  "started_at": "2026-11-11T00:44:45-08:00",
+  "completed_at": "2026-11-11T00:45:49-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T07:50:37.459Z",
+    "end": "2026-11-11T08:45:49Z",
+    "start_local": "2026-11-10T23:50:37-08:00",
+    "end_local": "2026-11-11T00:45:49-08:00",
+    "previous_run_completed_at": "2026-11-11T07:50:37.459Z",
+    "basis": "Since the authenticated prior ops/watch-ledger Gaza heartbeat; source publication and event dates separately assessed.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; Gaza daily production collector and publisher remain authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T234451-0800-r11-20261111T075037459Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest visible Gaza update published 9 Nov about the 6–8 Nov heavy rains; no in-window newly documented Gaza development."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "WHO global situation page accessible without newly dated Gaza update; WHO Eastern Mediterranean situation-report endpoint returned 502, an access restriction observed in multiple previous watches."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 11 2026 killed injured Israeli forces morning",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 airstrikes ceasefire casualties",
+      "site:apnews.com/article/ Gaza November 11 2026 strike civilians aid ceasefire",
+      "site:palestine.un.org/en Gaza November 11 2026 humanitarian shelter displaced",
+      "site:wfp.org Gaza November 11 2026 trucks meal aid crossing",
+      "site:unicef.org Gaza November 11 2026 flood children water health",
+      "site:palestinercs.org/en Gaza 11 November 2026 ambulance hospital evacuation medical",
+      "site:msf.org Gaza November 11 2026 clinic patient medical supplies",
+      "site:icrc.org Gaza November 11 2026 hostage detainee body remains",
+      "Gaza November 11 2026 Rafah Kerem Shalom crossing aid restriction fuel medical evacuation",
+      "Gaza November 11 2026 killed wounded overnight artillery gunfire Palestinian health authorities",
+      "site:aljazeera.com/news/2026/11/11/gaza ceasefire strikes flood displacement"
+    ],
+    "additional_sources_checked": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Nov 11 listing: 10:10 and 10:00 Palestine-time entries were West Bank, not Gaza; 09:31 item about 14 detained doctors was already present in prior run, with article body dated Nov 5 and rulings' dates unverified."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "result": "Nov 10 Gaza casualty cluster of at least seven fatalities was already reviewed by preceding watch; event is not in this observation window."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Newest listed Gaza item 10 Nov repeats 6–8 Nov storm and displacement impacts already known."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/emergencies/children-gaza-need-lifesaving-support",
+        "result": "Static background page updated in August; no traceable new in-window child, WASH or health event."
+      },
+      {
+        "publisher": "AP, WFP, PRCS, MSF, ICRC, Al Jazeera and crossings coverage",
+        "result": "No independently verifiable new Gaza event published or occurring in the bounded observation window; relevant hits were previous-day, older, or generic."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176849",
+        "reason": "Previously seen 09:31 Palestine-time listed court-ruling article has Nov 5 dateline; ruling dates not established; not fresh."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "reason": "Nov 10 casualty incidents previously covered; repeated indexed result, not an in-window update."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "reason": "Prior 6–8 Nov storm effects; already recorded."
+      },
+      {
+        "url": "https://palestine.un.org/en",
+        "reason": "Nov 10 UN story recaps older storm damage, no fresh distinct incident."
+      },
+      {
+        "url": "https://gazaherald.com/2026/11/10/gaza-authorities-rafah-kerem-shalom-crossings-open-zikim-kissufim-remain-closed/",
+        "reason": "Crossing status report dates to Nov 10, before current window; only secondary attribution and no separately verified in-window status change."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to continued WHO EMRO 502; OCHA OPT, WHO global and other sources remained searchable; no new material deterioration.",
+    "limitations": "Freshly occurring events can be delayed in indexing and official reporting. No independently dated new Gaza development was found in this narrow hourly interval.",
+    "notification_reason": "No new qualifying development and no materially worsened access failure; durable heartbeat recorded.",
+    "changes_to_production": "None; no publication, approval, deployment, schedule change or task disabling."
+  }
+}

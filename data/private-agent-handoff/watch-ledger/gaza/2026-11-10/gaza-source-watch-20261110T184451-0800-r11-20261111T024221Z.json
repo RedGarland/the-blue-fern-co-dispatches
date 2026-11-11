@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261110T184451-0800-r11-20261111T024221Z",
+  "scheduled_for": "2026-11-10T18:44:51-08:00",
+  "started_at": "2026-11-10T18:42:21-08:00",
+  "completed_at": "2026-11-11T02:44:31.830Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-11T01:45:31.524Z",
+    "end": "2026-11-11T02:44:31.830Z",
+    "start_local": "2026-11-10T17:45:31.524-08:00",
+    "end_local": "2026-11-10T18:44:31.830-08:00",
+    "previous_run_completed_at": "2026-11-11T01:45:31.524Z",
+    "basis": "Only newly published/verified traceable developments after prior verified heartbeat; earlier casualty, storm, aid, and healthcare incidents deduplicated.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; primary Gaza production collector/publisher remains authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-10/gaza-source-watch-20261110T174451-0800-r11-20261111T014313Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Site's newest listed update was 9 November (heavy rains in Gaza, describing 6-8 November impacts); no new OCHA Gaza update within observation window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_TIMEOUT",
+        "result": "WHO global oPt emergency page accessible without new dated health-capacity/evacuation event; WHO EMRO OPT direct request timed out, repeating known restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"Wednesday, 11/November/2026\" Gaza Israeli killed injured",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 Israeli ceasefire strikes",
+      "site:apnews.com/article/ gaza \"November 11, 2026\" airstrike aid",
+      "site:palestinercs.org Gaza Nov 11 2026 ambulance healthcare",
+      "site:unicef.org Gaza November 11 2026 water shelter child health",
+      "site:un.org/unispal Gaza November 11 2026 humanitarian operations casualties",
+      "site:wfp.org/news Gaza 11 November 2026 aid crossing food",
+      "site:palestine.un.org/en \"11 November 2026\" Gaza displacement medical humanitarian",
+      "site:icrc.org/en Gaza \"11 November 2026\" detainees hostages crossings",
+      "site:msf.org Gaza November 11 2026 hospital ambulance evacuation",
+      "Gaza Rafah Kerem Shalom crossings November 11 2026 overnight aid cargo 10 November Reuters",
+      "Gaza late Tuesday night early Wednesday November 11 2026 shelling killed injured hospital Gaza City"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest visible headlines dated 10 November, 22:39 Jerusalem local time (12:39 PST); Gaza strike headlines 18:47 Jerusalem (08:47 PST) and earlier. No newly posted Gaza report for 17:45-~18:44 PST window."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "result": "Seven reported killed Tuesday including Zeitoun, Daraj, Khan Younis and Sabra; previously known incidents and casualty discrepancies, not new post-prior-watch events."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/f4407845b6dd105e54190ccab7d55f8d",
+        "result": "Five deaths Tuesday as previously logged; not a new separate in-window occurrence."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "result": "Latest relevant Gaza press release visible dated 19 October about aid cuts; no new in-window food-access change."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/fr/communiques-de-presse/gaza-les-fortes-pluies-coutent-la-vie-a-trois-enfants",
+        "result": "9 November flooding release and prior Reuters Sheikh Radwan basin restrictions; already-covered earlier impacts, not new."
+      }
+    ],
+    "exclusions": [
+      "November 10 Zeitoun, Daraj, Khan Younis and Sabra casualties (Reuters/AP/WAFA) previously known; inconsistent incident totals do not establish new post-window fatalities.",
+      "November 6-9 flooding, dune/sand embankment collapse, shelter losses and risk estimates previously covered.",
+      "Existing Sheikh Radwan stormwater-basin repair blockage and previously known WFP food-aid reductions.",
+      "Older or undated crossing, hospital, medevac, detention and negotiations context without distinct, verifiable in-window change.",
+      "Unsupported or opinion material excluded."
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO",
+        "status": "Direct OPT regional endpoint timed out",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UNRWA",
+        "status": "Prior 403 restriction reported; not newly tested this run",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to continuing WHO EMRO access timeout, but OCHA OPT, WHO global, WAFA, Reuters/AP and humanitarian agency materials provided useful coverage. No new material failure beyond historical limitation.",
+    "limitations": "Time-limited web source indexing may miss later-posted reports; no independent new Gaza event established. OCHA and WHO checked first, 12 subsequent targeted searches exactly; direct opens not counted as searches.",
+    "notification_reason": "No new qualifying development and no newly material degradation; routine historical restriction only.",
+    "changes_to_production": "none: no publication, approval, merge, schedule, permissions, or production change."
+  }
+}

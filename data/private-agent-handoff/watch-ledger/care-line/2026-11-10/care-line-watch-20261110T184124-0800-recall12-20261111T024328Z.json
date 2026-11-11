@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T184124-0800-recall12-20261111T024328Z",
+  "scheduled_for": "2026-11-10T18:45:22-08:00",
+  "started_at": "2026-11-10T18:41:24-08:00",
+  "completed_at": "2026-11-10T-6:43:28.228-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T17:44:30.194-08:00",
+    "end": "2026-11-10T-6:43:28.228-08:00",
+    "basis": "Prior verified Care Line Watch heartbeat completed at 17:44:30.194 PST. Targeted recency=2-day searches screened newly surfaced results for concrete changes affecting access during the current window, excluding older events and previously recorded notices."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; production national collector is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — IL — CLIA certificate limitation — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "Previously recorded on November 10; no later CMS notice in official index. Initial guessed CMS URL was inaccessible; found and read canonical Public Notices page. Search index initially omitted Nov 10 notice, corrected by reading full page."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "November 10 2026 hospital emergency department closed suspended service patients United States",
+      "November 10 2026 labor delivery maternity unit closure suspension hospital",
+      "November 10 2026 rural hospital emergency room service suspended closure",
+      "November 10 2026 behavioral health psychiatric unit hospital closure suspension",
+      "November 10 2026 dialysis center closure treatment suspended",
+      "November 10 2026 oncology cancer clinic primary care clinic suddenly closed patients",
+      "November 10 2026 ambulance service ceased operations station base closed",
+      "November 10 2026 air ambulance medical helicopter base closed suspended",
+      "November 10 2026 emergency room labor delivery hospital reopens resumes services",
+      "November 10 2026 Puerto Rico hospital emergency closure dialysis service closure",
+      "November 10 2026 Guam CNMI Virgin Islands American Samoa hospital clinic ambulance shut down restored",
+      "site:gov \"November 10, 2026\" \"hospital\" \"closure\" \"emergency\" health department"
+    ],
+    "search_methods": "Official CMS notices first; exactly 12 targeted web searches with two-day recency, screened for new source publication, effective date and concrete access effect; official and local reporting prioritized.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "November 10 republished reporting concerns Pennsylvania licensing action dated November 4, ED suspension November 6 and planned November 17 closure; already captured in prior watch, no newly announced access change during this hourly window.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "West Suburban Medical Center, Oak Park, Illinois",
+        "reason": "April 15, 2026 partial outpatient service resumption; historic and not new in current window.",
+        "url": "https://abc7chicago.com/post/west-suburban-medical-center-resumes-hospital-based-clinic-services-er-remain-suspended/18891103/"
+      },
+      {
+        "item": "Tehama County air-medical base, California",
+        "reason": "September 17, 2026 report about historical closure; no new change.",
+        "url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times"
+      },
+      {
+        "item": "Minnesota birthing-center access study",
+        "reason": "November 8 contextual report on preexisting access deserts, not new confirmed service closure or restoration in the current hour.",
+        "url": "https://www.mprnews.org/story/2026/11/08/one-in-10-minnesota-women-of-childbearing-age-live-in-counties-without-a-birthing-center"
+      }
+    ],
+    "source_access_errors": [
+      {
+        "url": "https://www.cms.gov/medicare/quality/clinical-laboratory-improvement-amendments/public-notices",
+        "reason": "Noncanonical guessed CMS page could not be opened; recovered immediately through current canonical public-notices page."
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Same-hour reporting and search-indexing latency can delay discovery until subsequent runs.",
+      "Twelve targeted searches are nonexhaustive for states and U.S. territories, with sparse relevant territory-specific results.",
+      "No direct read of primary Care Line production queue; deduplication against prior heartbeat and known recorded CMS finding."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No notification: no newly verified nonduplicate qualifying development or material watch degradation.",
+    "actions_not_taken": [
+      "No approval",
+      "No publication",
+      "No schedule modification",
+      "No task disabling"
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T014451-0800-r11-20261111T094610Z",
+  "scheduled_for": "2026-11-11T01:44:51-08:00",
+  "started_at": "2026-11-11T01:43:43-08:00",
+  "completed_at": "2026-11-11T01:46:10-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T08:45:49Z",
+    "end": "2026-11-11T09:46:10Z",
+    "start_local": "2026-11-11T00:45:49-08:00",
+    "end_local": "2026-11-11T01:46:10-08:00",
+    "previous_run_completed_at": "2026-11-11T08:45:49Z",
+    "basis": "Since authenticated previous Gaza ops/watch-ledger heartbeat. Separately evaluate source publication date, actual event timing and late indexing; do not treat rediscovery of older events as fresh.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall check only; production Gaza collector/publisher authoritative.",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T004451-0800-r11-20261111T084549Z.json",
+    "previous_heartbeat_authenticated_read": true,
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza update 9 Nov 2026 covers 6–8 Nov storm; no in-window update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "WHO global Gaza emergency page accessible; no newly dated in-window Gaza health bulletin. EMRO OPT situation-report endpoint returned recurring HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 11 2026 killed injured bombardment morning",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 killed ceasefire humanitarian",
+      "site:apnews.com/article/ Gaza November 11 2026 strikes casualties humanitarian",
+      "site:palestine.un.org/en Gaza November 11 2026 displaced shelter flooding humanitarian",
+      "site:wfp.org Gaza November 11 2026 food deliveries aid crossing hunger",
+      "site:unicef.org Gaza November 11 2026 water children displacement health",
+      "site:palestinercs.org/en Gaza 11 November 2026 ambulance hospital injured evacuation",
+      "site:msf.org Gaza 11 November 2026 hospital clinic patients supplies",
+      "site:icrc.org Gaza 11 November 2026 detainees bodies hostages releases",
+      "Gaza November 11 2026 Rafah Kerem Shalom crossing truck aid fuel medical evacuations",
+      "Gaza November 11 2026 ceasefire negotiations Israel Hamas military operation civilians",
+      "site:aljazeera.com/news/2026/11/11/gaza killed hospital food shelter aid"
+    ],
+    "additional_sources_checked": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest visible Gaza-related item 11 Nov 10:33 Palestine time (00:33 PST) on PRCS health official: this preceded previous heartbeat cutoff 00:45:49 PST. Item about women at Damon Prison 10:39 Palestine time did not establish a specifically Gaza-linked new event."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en/Category/4/news",
+        "result": "Latest release dated 10 Nov; confirms 70,000 flooded tents is a previous-day assessment, not a newly established in-window incident."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en",
+        "result": "Newest story dated 10 Nov recaps 6–8 Nov storm and displacement impacts; older than window."
+      },
+      {
+        "publisher": "WFP, UNICEF, MSF, ICRC, Reuters, AP, Al Jazeera, crossings and negotiations",
+        "result": "Targeted searches and accessible source pages yielded background, older articles, or no independently dated in-window casualty, crossing, humanitarian, medical, detainee or negotiation development."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176853",
+        "source_publication_date": "2026-11-11",
+        "source_publication_time": "10:33 Asia/Jerusalem (approximately 00:33 America/Los_Angeles)",
+        "reason": "Newly visible, but published before previous 00:45:49 PST check ended. PRCS interview reports health risks, shortages, no MRI machines and several labs no longer operating, without dates for onset; insufficient basis to classify as new in-window change. Flood count repeats prior PRCS statement."
+      },
+      {
+        "url": "https://www.palestinercs.org/public/files/image/2026/press%20releases/PRCS%20Calls%20On%20the%20International%20Community%20for%20Immediate%20Action.pdf",
+        "source_publication_date": "2026-11-10",
+        "reason": "Original official source for >70,000 tents flooded, associated with 7 Nov storm; precedes interval and overlaps known flooding reports."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176854",
+        "source_publication_date": "2026-11-11",
+        "reason": "10:39 Palestine-time Palestinian female detainee health report predates interval, is not distinctly Gaza specific, and restates previously reported detention issues."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176849",
+        "reason": "9:31 Palestine-time listing for 14 Gaza doctors has older 5 Nov dateline; dates of court decisions unverified, carried forward as nonfresh."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to recurring WHO Eastern Mediterranean 502, as observed in prior runs; other official source coverage remained available and no new material deterioration identified.",
+    "limitations": "Source publication delays, indexing latency and unspecific onset dates can obscure an hourly change. Searches were bounded to twelve additional targeted queries; direct navigation/open of known official source pages was used for verification.",
+    "notification_reason": "No newly verified qualifying in-window event; no new material failure. Single heartbeat persisted without alert.",
+    "changes_to_production": "None: no approval, publication, deployment, schedule change or task disabling."
+  }
+}

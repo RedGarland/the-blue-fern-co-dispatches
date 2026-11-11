@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T004858-0800-recall12",
+  "scheduled_for": "2026-11-11T00:45:22-08:00",
+  "started_at": "2026-11-11T00:48:58-08:00",
+  "completed_at": "2026-11-11T00:50:00-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-10T23:45:46-08:00",
+    "end": "2026-11-11T00:50:00-08:00",
+    "observation_date": "2026-11-11",
+    "prior_check_basis": "Latest verified ops/watch-ledger Care Line heartbeat care-line-watch-20261110T234442-0800-recall12.json with completed_at 2026-11-10T23:45:46-08:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall for U.S. states and territories; production Care Line national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, limitation of CLIA cert, Illinois, CCN 14D2049789",
+      "disposition": "No later-dated notice; previously recorded Illinois limitation and Michigan Nov 9 home health termination are duplicates, not current-window findings.",
+      "verification": "CMS official page read directly; latest table entries visible."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 11, 2026\" hospital \"closed\" emergency department rural patients",
+      "\"November 11, 2026\" maternity unit OR labor delivery \"closing\" \"hospital\"",
+      "\"November 11, 2026\" psychiatric OR behavioral health facility \"closed\" \"suspended\" patients",
+      "\"November 11, 2026\" dialysis OR cancer clinic OR primary care closure patients",
+      "hospital \"November 10, 2026\" \"closing\" emergency services patients",
+      "\"November 10, 2026\" ambulance service \"suspended\" OR \"closed\" county",
+      "\"November 10, 2026\" \"air ambulance\" \"base\" \"closing\" OR \"suspended\"",
+      "\"November 10, 2026\" \"emergency department\" \"reopened\" OR \"resumed\" care",
+      "site:gov \"November 11, 2026\" \"hospital\" \"suspension\" \"services\" health",
+      "\"Nov 11, 2026\" clinic hospital ambulance dialysis \"service\" \"temporarily closed\" -Canada",
+      "\"November 10, 2026\" Guam Puerto Rico Virgin Islands Northern Mariana American Samoa hospital health center service suspended",
+      "\"Nov 10, 2026\" \"reopen\" hospital emergency room maternity rural clinic after closure"
+    ],
+    "exclusions": [
+      {
+        "title": "Advanced Urgent Care, Illinois",
+        "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "Official November 10 CLIA limitation already recorded before this observation window."
+      },
+      {
+        "title": "Valley Baptist Brownsville pediatric unit",
+        "url": "https://hoodline.com/2026/11/brownsville-loses-its-last-pediatric-hospital-beds-families-face-long-drives/",
+        "reason": "November 10 follow-up of a closure announced November 4 with effective date November 14; previously evaluated in preceding receipts."
+      },
+      {
+        "title": "Hiram W. Davis Medical Center proposed closure",
+        "url": "https://wisevoter.com/world/us/va/2026/11/10/virginia-commission-hiram-davis-medical-center-closure",
+        "reason": "Future closure recommendation/political deliberation, no presently effective access change."
+      },
+      {
+        "title": "Veterans Day clinic holiday schedules",
+        "url": "https://www.uwmedicine.org/patient-resources/inclement-weather-and-holiday-hours",
+        "reason": "Routine scheduled holiday clinic hours; not abrupt essential-service loss or reopening; emergency departments remain open."
+      },
+      {
+        "title": "Clarinda Regional Health Center holiday clinic hours",
+        "url": "https://www.clarindahealth.com/holiday-clinic-hours-for-2026",
+        "reason": "Announced holiday schedule; emergency department still open year round."
+      },
+      {
+        "title": "Canadian ER status feed",
+        "url": "https://erstat.ca/feed",
+        "reason": "Geographically out of scope: Canada."
+      },
+      {
+        "title": "Sanford Luverne Medical Center maternity public hearing",
+        "url": "https://www.health.mn.gov/news/pressrel/2026/hearing111026.html",
+        "reason": "Previously evaluated November 10 notice concerning proposed April 2027 closure; no newly verified current-window action."
+      }
+    ],
+    "degraded_sources": [],
+    "limitations": [
+      "Twelve targeted searches returned many old or unrelated articles, suggesting same-hour discoverability/indexing lag; absence of verified findings is not proof no events occurred.",
+      "Federal Veterans Day can delay local notice publication; scheduled holiday hours were excluded.",
+      "Bounded recall queries do not individually exhaust all 50 states, DC, and territories.",
+      "No new CMS notices later than the Nov 10 item were visible during this check."
+    ],
+    "review_action": "No new pending_review candidates. No approval, publication, merge, schedule alteration, or task disabling."
+  }
+}

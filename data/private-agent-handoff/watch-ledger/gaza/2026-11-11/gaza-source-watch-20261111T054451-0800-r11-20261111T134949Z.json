@@ -1,0 +1,123 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T054451-0800-r11-20261111T134949Z",
+  "scheduled_for": "2026-11-11T05:44:51-08:00",
+  "started_at": "2026-11-11T05:48:38-08:00",
+  "completed_at": "2026-11-11T05:49:49-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T12:49:33.537Z",
+    "end": "2026-11-11T13:49:49Z",
+    "start_local": "2026-11-11T04:49:33.537-08:00",
+    "end_local": "2026-11-11T05:49:49-08:00",
+    "previous_run_completed_at": "2026-11-11T12:49:33.537Z",
+    "basis": "Authenticated preceding ops/watch-ledger Gaza heartbeat; bounded observation/discovery window. Events may precede first reporting.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not the authoritative daily collector or publisher.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T044451-0800-r11-20261111T124933537Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest displayed OCHA Gaza report dated 9 November 2026; no 11 November in-window report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/news",
+        "regional_url": "https://www.emro.who.int/opt/",
+        "status": "GLOBAL_SEARCH_ACCESSIBLE_REGIONAL_HTTP_502",
+        "result": "WHO global search available without fresh Gaza in-window clinical/evacuation bulletin; WHO Eastern Mediterranean regional OPT page returned HTTP 502, consistent with prior hourly reports."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"11/11/2026\" Gaza killed injured tent airstrike hospital",
+      "site:apnews.com Gaza November 11 2026 strikes civilian aid casualties",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 Wednesday ceasefire aid",
+      "site:un.org/unispal Gaza 11 November 2026 humanitarian aid crossings",
+      "site:unicef.org Gaza November 11 2026 health water aid",
+      "site:who.int Gaza medical evacuation November 11 2026",
+      "site:palestinercs.org Gaza November 11 2026 ambulance injury",
+      "site:aljazeera.com/news/2026/11/11/gaza Palestine strikes casualties",
+      "Gaza November 11 2026 13:00 UTC latest deaths ambulance hospital tent strikes new",
+      "site:english.wafa.ps/Pages/Details \"November 11, 2026\" Gaza Wednesday casualties aid Rafah",
+      "Gaza November 11 2026 15:00 Palestine time new airstrikes deaths updates",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"11 Nov 2026\" humanitarian Gaza"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "result": "Report dated 11 Nov 12:47 UTC (04:47 PST), before current watch's 04:49:33 PST start; three Gaza City fatalities coincide with Sheikh Radwan and rooftop strike already identified in immediately preceding heartbeat. Adds names Mahmoud and Jamil Al-Absi, but not treated as a distinct new incident. Informational follow-up only."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176857",
+        "result": "11 Nov report posted 14:11 site local time, previously captured in preceding heartbeat: three Gaza City deaths, including two killed in Sheikh Radwan tent strike. No newly distinguishable victim/event; 24-hour cumulative count not added."
+      },
+      {
+        "publisher": "The Guardian",
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "result": "11 Nov 05:00 GMT (10 Nov 21:00 PST) published before this watch; refers to storm impact and existing shelter blockage, not in-window incident."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway, pre-existing failure."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "reason": "Same three Gaza City deaths reported by prior WAFA finding; Reuters publication 04:47 PST, before previous 04:49:33 PST completion."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176857",
+        "reason": "Previously committed finding in 04:49 PST heartbeat; overlapping 24-hour receipt totals, no additional distinct incident."
+      },
+      {
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "reason": "Earlier publication (10 Nov 21:00 PST), reports existing weekend storm and shelter shortfalls; no in-window change."
+      },
+      {
+        "url": "https://www.reuters.com/business/environment/unicef-says-israel-blocks-gaza-basin-repairs-warns-flood-risk-2026-11-10/",
+        "reason": "10 Nov reporting of persistent basin repair denial, not an in-window decision."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176853",
+        "reason": "Morning 11 Nov WAFA health report was assessed in earlier watches, lacks newly dated laboratory shutdown or equipment loss within this interval."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "WHO emergency situation alternative URL",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "status": "HTTP_404",
+        "previously_observed": null,
+        "materially_worsened": false,
+        "mitigation": "WHO global content accessible via indexed search; this alternative address may simply be invalid."
+      }
+    ],
+    "status_rationale": "DEGRADED: recurring WHO EMRO HTTP 502 prevents regional coverage; OCHA updates and WHO global search available and 12 targeted searches completed. No material new deterioration; no new qualifying distinct development discovered since previous 04:49:33 PST heartbeat.",
+    "limitations": "Search index latency and exact event times not always known. WHO EMRO direct retrieval unavailable. Claims of no findings apply only to bounded recall interval and consulted sources.",
+    "changes_to_production": "None. No approvals, publication, schedule, permissions, automation changes or file writes beyond this single authorized ledger heartbeat."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T054239-0800-recall12",
+  "scheduled_for": "2026-11-11T05:45:22-08:00",
+  "started_at": "2026-11-11T05:42:39-08:00",
+  "completed_at": "2026-11-11T05:44:00-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T04:45:32.887-08:00",
+    "end": "2026-11-11T05:44:00-08:00",
+    "prior_check_basis": "Independently fetched ops/watch-ledger prior heartbeat care-line-watch-20261111T044302-0800-recall12.json, completed at 2026-11-11T04:45:32.887-08:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S., DC and territories recall; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, Limitation of CLIA cert, Illinois, 14D2049789",
+      "disposition": "No notice dated November 11 or later; the November 10 Illinois CLIA limitation and November 9 Michigan home-health termination already predated this observation window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 11 2026 hospital emergency department suddenly closed suspended services United States",
+      "November 11 2026 hospital labor delivery maternity unit closure suspended admissions",
+      "November 11 2026 rural hospital emergency room closure patients service access",
+      "November 11 2026 ambulance EMS service stops responding air ambulance base closed",
+      "November 11 2026 inpatient psychiatric behavioral health treatment facility emergency closing",
+      "November 11 2026 dialysis center oncology infusion center closed suspended treatments",
+      "November 11 2026 primary care clinic shutting down closed doors patients location",
+      "November 11 2026 hospital emergency room maternity wing reopens restored services officially",
+      "November 11 2026 state health department enforcement hospital suspension provider medical services notice",
+      "November 11 2026 ambulance medical clinic hospital closure Puerto Rico Guam Virgin Islands CNMI American Samoa",
+      "November 11 2026 sudden hospital service suspension closure emergency patients news",
+      "November 10 11 2026 urgent health services shutdown dialysis hospital emergency medical transport local news"
+    ],
+    "search_assessment": "CMS Public Notices explicitly checked first; 12 additional targeted web searches completed with no individual search failures. No new qualifying, verifiable, nonduplicate healthcare service closure, suspension, emergency/EMS loss, CMS notice, or concrete reopening disclosed during this observation window.",
+    "exclusions": [
+      {
+        "title": "Sharon Regional Medical Center emergency suspension / Pennsylvania license revocation",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "November 4 order, emergency services suspended November 6, previously recorded; not a new development."
+      },
+      {
+        "title": "Vista Medical Center East Illinois EMS diversion",
+        "url": "https://www.lakemchenryscanner.com/2026/11/07/state-tells-ambulances-to-stop-taking-patients-to-vista-medical-center-east-in-waukegan-until-further-notice/",
+        "reason": "November 7 EMS bypass; material access loss but precedes current window; do not duplicate."
+      },
+      {
+        "title": "Delaware mental health mobile crisis coverage decline",
+        "url": "https://spotlightdelaware.org/2026/11/11/a-decade-later-a-revitalized-delaware-mental-health-system-begins-to-falter/",
+        "reason": "New November 11 reporting identifies longstanding vacancies and decline from 2020-2025, with occasional prior night/weekend nonresponse, but no newly effective closure or abrupt service suspension in this window."
+      },
+      {
+        "title": "Other historical closures, proposed policy/program changes and Veterans Day routine hours",
+        "reason": "No new, concrete essential-service access effect within observation window."
+      }
+    ],
+    "degraded_sources": [],
+    "limitations": [
+      "Same-hour news publication and search indexing can lag the observation window.",
+      "Twelve searches cannot establish exhaustive coverage across all states and territories.",
+      "Search snippets and publisher date labels may be coarse; no new positive finding was sufficiently verified."
+    ],
+    "review_action": "No pending_review findings; no approval, publishing, schedule change or automation disable."
+  }
+}

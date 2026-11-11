@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T014403-0800-recall12",
+  "scheduled_for": "2026-11-11T01:45:22-08:00",
+  "started_at": "2026-11-11T01:44:03-08:00",
+  "completed_at": "2026-11-11T01:45:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-11T00:50:00-08:00",
+    "end": "2026-11-11T01:45:48-08:00",
+    "observation_date": "2026-11-11",
+    "prior_check_basis": "Prior verified ops/watch-ledger heartbeat care-line-watch-20261111T004858-0800-recall12.json completed_at 2026-11-11T00:50:00-08:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall for U.S. states, DC and territories. Production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "verification": "Official CMS Public Notices page read directly, including current table entries; two CMS-specific discovery queries preceded the 12 additional searches.",
+      "latest_dated_notice": "2026-11-10 Advanced Urgent Care, Limitation of CLIA cert, Illinois, CCN 14D2049789",
+      "disposition": "No later-dated new notices. November 10 Illinois CLIA limitation and November 9 Michigan home-health termination previously seen and outside the present observation window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"Nov 11, 2026\" \"hospital\" \"emergency department\" closed suspended US",
+      "\"November 11, 2026\" \"labor and delivery\" closure hospital",
+      "\"November 11, 2026\" \"behavioral health\" \"hospital\" closure patients",
+      "\"November 11, 2026\" dialysis center oncology clinic closed patients",
+      "\"November 10, 2026\" rural emergency hospital service suspended shutdown",
+      "\"November 11, 2026\" ambulance service ceases operations base closes",
+      "\"Nov 10, 2026\" \"air medical\" base closed suspended emergency",
+      "\"November 10, 2026\" emergency room reopening reopened after closure hospital US",
+      "\"November 11, 2026\" \"primary care\" clinic suddenly closes patients",
+      "site:gov \"November 10, 2026\" hospital ambulance maternity dialysis \"closed\" OR \"suspended\"",
+      "\"Nov 10, 2026\" Guam Puerto Rico Virgin Islands American Samoa Northern Mariana hospital clinic ambulance closure",
+      "\"November 11, 2026\" medical center emergency department \"services resume\" \"reopened\""
+    ],
+    "exclusions": [
+      {
+        "title": "Sharon Regional Medical Center (Pennsylvania) license revocation and closure order",
+        "url": "https://openminds.com/market-intelligence/bulletins/pennsylvania-revokes-sharon-hospitals-license-orders-closure/",
+        "reason": "Secondary article dated November 10 described existing November 4-6 service suspension and November 17 license-closure effective date; predates current Nov 11 observation window. Direct article fetch was blocked; not treated as a verified new change."
+      },
+      {
+        "title": "Sea Pines Rehabilitation Hospital, Melbourne, Florida",
+        "url": "https://amp.insurancejournal.com/news/southeast/2026/11/10/892171.htm",
+        "reason": "November 10 report of flood-related closure already evaluated in prior watch."
+      },
+      {
+        "title": "University of Washington Medicine Veterans Day primary care hours",
+        "url": "https://www.uwmedicine.org/patient-resources/inclement-weather-and-holiday-hours",
+        "reason": "Routine announced November 11 holiday schedule, with hospitals and emergency rooms open; no abrupt essential-service loss."
+      },
+      {
+        "title": "Dauphin hospital services restoration",
+        "url": "https://www.winnipegfreepress.com/breakingnews/2026/11/10/kinew-reports-progress-in-restoring-services-at-dauphin-hospital",
+        "reason": "Canada, outside United States and territories."
+      },
+      {
+        "title": "Guam Memorial Hospital November 10 operational partnership",
+        "url": "https://guamnewsnetwork.com/topics/gmha",
+        "reason": "Operational management partnership, not a concrete access loss or reopening."
+      },
+      {
+        "title": "Grace Medical Center Baltimore renovation completion",
+        "url": "https://hoodline.com/2026/11/west-baltimore-s-grace-medical-center-finishes-61-6m-overhaul-after-five-years/",
+        "reason": "Renovation and service expansion rather than restoration of a previously lost essential service."
+      }
+    ],
+    "degraded_sources": [
+      {
+        "source": "OPEN MINDS (secondary report on Sharon Regional)",
+        "url": "https://openminds.com/market-intelligence/bulletins/pennsylvania-revokes-sharon-hospitals-license-orders-closure/",
+        "failure": "Direct page open returned DisabledError. Search-result excerpt remained available, and the event predates the hourly window; no unsupported details were promoted to findings."
+      }
+    ],
+    "limitations": [
+      "A secondary reporting page could not be opened, so status is DEGRADED despite useful CMS and targeted search coverage.",
+      "Same-hour publication and search indexing delays mean zero verified findings does not prove zero real-world events.",
+      "This bounded set of 12 additional queries does not exhaust every U.S. state, DC or territory.",
+      "Local calendar date is November 11, 2026 (America/Los_Angeles); some November 10 material surfaced but predates observation window."
+    ],
+    "review_action": "No new pending_review findings. No approval, publication, merges, schedule changes, or task disabling."
+  }
+}

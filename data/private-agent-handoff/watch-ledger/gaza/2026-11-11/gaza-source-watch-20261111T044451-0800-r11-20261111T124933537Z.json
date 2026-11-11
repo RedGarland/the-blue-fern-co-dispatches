@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T044451-0800-r11-20261111T124933537Z",
+  "scheduled_for": "2026-11-11T04:44:51-08:00",
+  "started_at": "2026-11-11T04:47:37-08:00",
+  "completed_at": "2026-11-11T04:49:33.537-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T11:50:36.423Z",
+    "end": "2026-11-11T12:49:33.537Z",
+    "start_local": "2026-11-11T03:50:36-08:00",
+    "end_local": "2026-11-11T04:49:33.537-08:00",
+    "previous_run_completed_at": "2026-11-11T11:50:36.423Z",
+    "basis": "Authenticated preceding ops/watch-ledger Gaza heartbeat, previous finding checked for overlaps. Search window denotes observation/discovery; source event time may precede discovery.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261111-gaza-city-sheikh-radwan-tent-strike-wafa-176857",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176857",
+      "title": "Three Palestinians killed in Israeli airstrikes across Gaza City",
+      "publisher": "WAFA (Palestine News & Information Agency)",
+      "source_publication_date": "2026-11-11",
+      "source_publication_at": null,
+      "source_publication_local_time": "14:11 (WAFA display, 11 November 2026; displayed time zone not explicit)",
+      "event_date": "2026-11-11",
+      "event_at": null,
+      "location": "Sheikh Radwan, north Gaza City, and other areas of Gaza City, Gaza Strip",
+      "affected_population_or_system": "WAFA says two people were killed and others injured in an Israeli strike on a tent sheltering displaced people in Sheikh Radwan; medical sources say three killed across Gaza City on Wednesday morning. Civilian/combatant status and identities unverified; whether the victims were displaced residents not independently established.",
+      "exact_supporting_passage": "Medical sources said three Palestinians had been killed in Israeli airstrikes targeting several areas across Gaza City since this morning.",
+      "source_type": "established_local_news_agency_with_medical_source_attribution",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "first_observed_at": "2026-11-11T12:49:33.537Z",
+        "source_listing": "WAFA latest-news page listed story at 11 November 2026 02:11 PM local site time; appeared after previous 03:50 PST heartbeat.",
+        "previous_watch_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T034451-0800-r11-20261111T115036423Z.json",
+        "new_information": "Newly reported Sheikh Radwan strike with two fatalities and injuries at a tent for displaced people; new contemporaneous medical-source count of three across Gaza City.",
+        "overlap_warning": "Previous heartbeat included AP's one-person fatal Gaza City strike on Wednesday morning. WAFA's total of three may include that AP death; do not add counts or assert four separate fatalities. Exact incident times and whether AP fatality is one of these three remain unverified.",
+        "non_distinct_context": "WAFA also cites 8 bodies and 29 injured people received across the Strip in a previous 24-hour interval and cumulative post-ceasefire figures; not separately counted as new because the interval overlaps earlier reporting.",
+        "qualification": "Qualifies due to new source-dated report of multiple strikes, confirmed medical-source fatalities, and a specific strike on shelter for displaced people. Independent casualty/civilian-status confirmation is pending.",
+        "primary_production_authority": "Supplementary candidate only; not a publication approval."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not production publisher or collector.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T034451-0800-r11-20261111T115036423Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed report dated 9 Nov 2026 (heavy rains); no new 11 Nov OCHA update."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "regional_url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "GLOBAL_ACCESSIBLE_REGIONAL_TIMEOUT_OR_HTTP_502",
+        "result": "Global emergency situation page accessible without dated in-window medical bulletin. WHO EMRO pages timed out or returned HTTP 502, a pre-existing restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza Wednesday November 11 2026 killed wounded hospital 14:00",
+      "site:reuters.com/world/middle-east/ Gaza November 11 2026 strikes civilians aid ceasefire",
+      "site:apnews.com/article/ Gaza November 11 2026 casualties 11 killed hospital Gaza City",
+      "site:palestine.un.org/en Gaza November 11 2026 aid medical evacuation displacement",
+      "site:unicef.org Gaza November 11 2026 water children floods infrastructure",
+      "site:wfp.org Gaza November 11 2026 food aid deliveries crossings update",
+      "site:msf.org Gaza November 11 2026 hospital fuel ambulances treatment",
+      "site:palestinercs.org November 11 2026 Gaza ambulance rescue killed injuries",
+      "site:icrc.org Gaza November 11 2026 detained hostage families Red Cross",
+      "Gaza Rafah Kerem Shalom crossing fuel aid medical evacuation November 11 2026 afternoon",
+      "Gaza ceasefire negotiations November 11 2026 Israel Hamas peace hostages truce changes",
+      "Gaza November 11 2026 afternoon Israeli military operations civilian killed injured displaced Gaza City Khan Younis"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "New article at 14:11 Palestine-site time on three Gaza City deaths, two in strike on displaced persons' tent; full article verified."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "result": "Wednesday one-person Shifa Hospital strike already recorded prior; treated as potential overlap, not a second finding."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible, no dated in-window update."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.unicef.org/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "reason": "9 November report on earlier storm fatalities; previously documented."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-father-son-gaza-medics-say-2026-11-10/",
+        "reason": "10 November incident, previously documented; excluded as older."
+      },
+      {
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-11-2026-50075bc97e07d41fa3b66fc28858c06b",
+        "reason": "One Wednesday-morning fatal strike already present in immediate previous heartbeat; possible inclusion in WAFA cumulative 3."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "HTTP_502_OR_TIMEOUT",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistently inaccessible WHO EMRO regional reporting. OCHA and WHO global sources accessible; no new material access deterioration. Newly published WAFA casualty report qualifies as source-traceable new recall.",
+    "limitations": "Publication was verified at 14:11 in WAFA's listing but event times and overlap between AP and WAFA counts cannot be established. Search indexing latency. No primary production or publication state changed.",
+    "changes_to_production": "None; no approvals, publishing, permissions, schedules, automation or branch changes beyond single authorized ledger heartbeat."
+  }
+}

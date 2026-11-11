@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T144357-0800-recall12-20261111T224357Z",
+  "scheduled_for": "2026-11-11T14:45:22-08:00",
+  "started_at": "2026-11-11T14:43:57-08:00",
+  "completed_at": "2026-11-11T14:45:31.320-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T13:47:03.971-08:00",
+    "end": "2026-11-11T14:45:31.320-08:00",
+    "prior_check_basis": "Independently read prior ops/watch-ledger heartbeat care-line-watch-20261111T134507-0800-recall12-20261111T214507Z.json, completed 2026-11-11T13:47:03.971-08:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S. and territory Care Line recall; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "CMS official table successfully opened before supplemental searches. No November 11 public notice. Most recent 2026-11-10 Advanced Urgent Care (Illinois), CLIA cert limitation 14D2049789; preceding 2026-11-09 Compassionate Home Health Services (Michigan), termination. Both predate the window and were previously tracked."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 11 2026 hospital emergency department closes suspends services today United States",
+      "November 11 2026 maternity labor delivery obstetrics unit closing suspended hospital",
+      "November 11 2026 rural hospital emergency room service suspended closed",
+      "November 11 2026 ambulance EMS service operations closure suspension county",
+      "November 11 2026 medical helicopter air ambulance base closes operations suspended",
+      "November 11 2026 dialysis clinic shutdown oncology infusion services closure",
+      "November 11 2026 psychiatric behavioral health hospital program inpatient services closed suspended reopen",
+      "November 11 2026 family medicine primary care clinic immediate shutdown patients closed",
+      "November 11 2026 emergency department reopened services resumed after closure hospital",
+      "November 11 2026 Medicare terminated hospital effective CMS",
+      "November 11 2026 hospital closed Guam Puerto Rico Virgin Islands American Samoa Northern Mariana Islands",
+      "November 11 2026 local news hospital clinic care access closure suspends ambulance afternoon"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "No newly announced or newly effective, qualifying, nonduplicate U.S./territory healthcare access loss, CMS action, or concrete essential-service restoration was verified in the 13:47–14:45 PST observation window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Kalamazoo Behavioral Health Hospital Medicare agreement cancellation",
+        "url": "https://wwmt.com/news/local/kalamazoo-behavioral-health-hospital-medicare-agreement-cancelled-united-states-dhhs-investigation-license-patient-injuries-staff-failures-texas-township-west-michigan",
+        "reason": "Local story published November 11 at 12:49 p.m. Eastern (09:49 PST); CMS posted termination notice on October 30. Medicare payment cutoff November 16 is a previously recorded future effective action, not new in this check."
+      },
+      {
+        "title": "Sharon Regional Medical Center emergency and service suspension",
+        "url": "https://www.medicaldaily.com/sharon-regional-closes-its-er-and-suspends-all-services-480866",
+        "reason": "ER closed November 4; general services suspended November 6; older event before observation window."
+      },
+      {
+        "title": "VA East Orange hospital staffing and surgical care investigation",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "November 11 report published 05:00 a.m.; documents historical surgical operational disruptions but no newly effective access loss within this hour."
+      },
+      {
+        "title": "Roseland Community Hospital maternity ward",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Maternity ward stopped deliveries November 1, historical and duplicate."
+      },
+      {
+        "title": "Georgian Bay General Hospital obstetric staffing interruption",
+        "url": "https://www.midlandtoday.ca/local-news/gbgh-obstetrical-closures-continue-as-staffing-challenges-persist-12985861",
+        "reason": "Canada, outside U.S. and territories; interruption previously announced."
+      },
+      {
+        "title": "Veterans Day office/clinic schedules",
+        "url": null,
+        "reason": "Routine holiday hours, not abrupt or sustained essential healthcare access change."
+      }
+    ],
+    "source_access_notes": [
+      "CMS official Public Notices and all twelve targeted web searches returned usable results; selected WWMT, ProPublica, CMS source pages were opened and evaluated."
+    ],
+    "limitations": [
+      "Fresh stories may not yet be indexed; search engines can date articles by last modification rather than the substantive event.",
+      "A twelve-query supplementary sweep is non-exhaustive for all U.S. counties and territories.",
+      "No findings means no verified new qualifying item in this watch, not proof that no changes occurred."
+    ],
+    "review_status": "No new findings to submit for review.",
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

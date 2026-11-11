@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261110T174300-0800-recall12-20261111T014430Z",
+  "scheduled_for": "2026-11-10T17:45:22-08:00",
+  "started_at": "2026-11-10T17:43:00-08:00",
+  "completed_at": "2026-11-10T17:44:30.194-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "start": "2026-11-10T16:48:42-08:00",
+    "end": "2026-11-10T17:44:30.194-08:00",
+    "basis": "From prior verified Care Line Watch heartbeat completion to current run. Recency=2-day searches allow discovery of newly indexed items; event date, publication date, and concrete new access effect screened against this observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary national Care Line collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "accessible": true,
+      "latest_visible_notice_date": "2026-11-10",
+      "latest_visible_notice": "Advanced Urgent Care — IL — CLIA certificate limitation — 14D2049789",
+      "new_notices_since_previous_watch": 0,
+      "classification": "Already recorded in earlier November 10 supplementary watch. Current official CMS index has no newer notice. Initial guessed URL inaccessible but exact canonical CMS page retrieved; search result briefly showed a stale listing, resolved by reading the canonical page."
+    },
+    "additional_targeted_searches_count": 12,
+    "additional_targeted_searches": [
+      "hospital emergency department closing suspending services November 10 2026 US",
+      "maternity labor delivery unit closed suspended November 10 2026 hospital",
+      "hospital mental health behavioral health psychiatric unit closed patients November 10 2026",
+      "dialysis center closure patients November 10 2026 local news",
+      "cancer oncology clinic closure patients November 10 2026",
+      "rural hospital emergency services suspended closed November 10 2026",
+      "ambulance service base shutdown no longer responding November 10 2026 county",
+      "air medical helicopter base closes suspends service November 10 2026",
+      "primary care clinic closing suddenly patients November 10 2026",
+      "hospital emergency department reopens services restored November 10 2026 United States",
+      "Guam Puerto Rico US Virgin Islands American Samoa Northern Mariana Islands hospital clinic closure service suspended November 10 2026",
+      "November 10 2026 hospital medical service closure emergency local news evening Nov 10 2026"
+    ],
+    "search_methods": "CMS official Public Notices page checked first, then exactly 12 targeted web searches with recency=2 days; examined surfaced official/local reporting, dates and concrete access changes.",
+    "reviewed_exclusions": [
+      {
+        "item": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "November 10 secondary reports recap state licensing action dated November 4 and hospital ED/service suspension November 4–6, already known; no fresh effective access change during 16:48–17:44 PST.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "item": "Bay View Obstetrics & Gynecology, Petoskey and St. Ignace, Michigan",
+        "reason": "Locally reported November 10 impact on hundreds of patients, but the clinics closed in late August; not a new change in this hourly window.",
+        "url": "https://www.traverseticker.com/news/tcbn-petoskey-clinic-closure-causes-shockwaves/"
+      },
+      {
+        "item": "Greenbrier Valley Medical Center labor and delivery, West Virginia",
+        "reason": "November 9 proposed agreement/funding plan for reopening; no restored service presently effective.",
+        "url": "https://www.mybuckhannon.com/plan-would-restore-labor-and-delivery-at-greenbrier-valley-medical-center/"
+      },
+      {
+        "item": "WVU Cancer Institute at Summersville Regional Medical Center, West Virginia",
+        "reason": "New oncology facility opening announcement, but not established as abrupt restoration/reopening of a previously lost essential service; outside narrowly defined recall class.",
+        "url": "https://wvumedicine.org/news/article/wvu-medicine/front-page/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/"
+      },
+      {
+        "item": "Air Evac Lifeteam Decatur, Illinois base",
+        "reason": "Closure effective September 16, 2026, historical; existing alternate bases continue coverage.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "item": "Lansing Planned Parenthood, Michigan",
+        "reason": "November 9 impact story discusses center closure dated August 1, 2026; historical.",
+        "url": "https://statenews.com/article/2026/11/lansing-planned-parenthood-closure-highlights-local-reproductive-health-desert"
+      }
+    ],
+    "source_access_errors": [
+      {
+        "url": "https://www.cms.gov/medicare/audits-compliance/partnerships-public-notices",
+        "reason": "Guessed CMS Public Notices URL inaccessible; canonical official CMS notices page later opened successfully."
+      }
+    ],
+    "material_coverage_loss": false,
+    "coverage_limitations": [
+      "Same-hour indexing/reporting delays mean recent events may emerge in later checks.",
+      "Twelve targeted searches cannot provide comprehensive coverage of all U.S. states and territories; territory-specific results were sparse.",
+      "Production Care Line queue not available for direct deduplication; prior verified heartbeat plus known findings used.",
+      "Searches yielded historical reports and proposals; these were excluded."
+    ],
+    "production_collection_authoritative": true,
+    "production_dedupe_verified": false,
+    "notification_decision": "No notification: no newly verified qualifying nonduplicate development and no material watch degradation.",
+    "actions_not_taken": [
+      "No approval",
+      "No publication",
+      "No schedule modification",
+      "No task disabling"
+    ]
+  }
+}

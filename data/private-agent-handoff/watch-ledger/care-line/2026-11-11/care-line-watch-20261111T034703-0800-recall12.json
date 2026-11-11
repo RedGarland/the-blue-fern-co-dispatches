@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T034703-0800-recall12",
+  "scheduled_for": "2026-11-11T03:45:22-08:00",
+  "started_at": "2026-11-11T03:47:03-08:00",
+  "completed_at": "2026-11-11T03:48:01-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-11-11T02:46:42-08:00",
+    "end": "2026-11-11T03:48:01-08:00",
+    "observation_date": "2026-11-11",
+    "prior_check_basis": "Read back verified previous ops/watch-ledger heartbeat care-line-watch-20261111T024520-0800-recall12.json; completed_at 2026-11-11T02:46:42-08:00."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall across the United States, DC, and U.S. territories; production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "verification": "Official CMS current notice table surfaced and reviewed prior to all twelve additional targeted searches.",
+      "latest_dated_notice": "2026-11-10: Advanced Urgent Care, Illinois, limitation of CLIA certificate (14D2049789).",
+      "disposition": "No new notice dated November 11 or new-to-watch CMS item. November 10 Advanced Urgent Care CLIA limitation and November 9 Compassionate Home Health Services Michigan termination predate the observation window and were already recorded."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department suspended closed effective November 11 2026 rural United States",
+      "November 11 2026 maternity labor delivery unit halted closing hospital patients",
+      "November 11 2026 inpatient psychiatric behavioral health hospital service closure suspended",
+      "November 11 2026 dialysis center shutdown closed patients transfer",
+      "November 11 2026 oncology cancer infusion clinic closed abruptly access patients",
+      "November 11 2026 ambulance EMS air medical base closure service suspended communities",
+      "health department emergency hospital closure service suspension November 11 2026 site:gov",
+      "hospital reopened emergency room maternity services resumed November 11 2026",
+      "November 11 2026 primary care clinic sudden closure patients rural health",
+      "November 11 2026 EMS ambulance service shuts down base closed rural",
+      "November 11 2026 Puerto Rico Guam Virgin Islands hospital emergency dialysis closure",
+      "November 11 2026 hospital obstetrics dialysis clinic loss access county local news"
+    ],
+    "search_assessment": "Twelve targeted searches were completed after the official CMS check. No reliable new, nonduplicate, concrete essential-service closure, suspension, regulatory restriction, or restoration was identified within the hourly window.",
+    "exclusions": [
+      {
+        "title": "Sharon Regional Medical Center ER closure, services suspension, Pennsylvania license revocation",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "November 4 state order, November 4 ER closure, November 6 service suspension and November 9 coverage predate window; previously documented."
+      },
+      {
+        "title": "Sharon Regional Medical Center ER and all-service suspension",
+        "url": "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+        "reason": "Published November 5 and concerns earlier closure; duplicate earlier verified event."
+      },
+      {
+        "title": "NHS birth centre closures",
+        "url": "https://www.theguardian.com/society/2026/nov/07/nhs-birth-centre-maternity-unit-closures-england-womens-rights",
+        "reason": "United Kingdom; outside U.S. and territories and published before window."
+      },
+      {
+        "title": "LifeFlight of Maine 2025 flight totals",
+        "url": "https://avi-go.com/news/articles/31aa1e26f9e8ec9f30a7925618327bbc",
+        "reason": "Operational statistics, not a verified new base closure or service suspension."
+      },
+      {
+        "title": "Federal hospital outpatient payment rule",
+        "url": "https://www.federalregister.gov/documents/2026/11/06/2026-22739/medicare-program-hospital-outpatient-prospective-payment-and-ambulatory-surgical-center-payment",
+        "reason": "Regulatory payment policy, not a new discrete provider loss of access during the observation window."
+      }
+    ],
+    "degraded_sources": [],
+    "limitations": [
+      "Search result relevance was noisy, and recency filtering returned older entries; lack of same-hour indexing can delay detection.",
+      "No comprehensive state/territory census was attempted under the twelve-search limit, especially for Guam, American Samoa, Northern Mariana Islands, Puerto Rico, and U.S. Virgin Islands.",
+      "No finding in this bounded recall does not establish no real-world healthcare-access change occurred."
+    ],
+    "review_action": "No pending_review findings added. No approval, publication, branch merge, schedule alteration, or task disabling occurred."
+  }
+}

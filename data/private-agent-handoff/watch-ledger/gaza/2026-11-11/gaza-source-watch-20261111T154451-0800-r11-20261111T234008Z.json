@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T154451-0800-r11-20261111T234008Z",
+  "scheduled_for": "2026-11-11T15:44:51-08:00",
+  "started_at": "2026-11-11T15:40:08-08:00",
+  "completed_at": "2026-11-11T15:42:34.388-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T14:47:22.439-08:00",
+    "end": "2026-11-11T15:42:34.388-08:00",
+    "previous_run_completed_at": "2026-11-11T14:47:22.439-08:00",
+    "basis": "Latest authenticated existing Gaza watch heartbeat on ops/watch-ledger; reports/updates published after that completion, with distinct events prioritized and older cumulative/duplicate items excluded.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-khan-younis-nasser-hospital-airstrike-four-deaths-reuters-20261111",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+      "title": "Israeli strike on southern Gaza hospital kills four, Gaza civil defence says",
+      "publisher": "Reuters",
+      "source_publication_date": "2026-11-11",
+      "source_publication_at": "2026-11-11T23:26:00Z",
+      "source_publication_local_time": "2026-11-11 15:26 PST (America/Los_Angeles)",
+      "event_date": "2026-11-12",
+      "event_at": null,
+      "location": "Nasser Hospital, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "At least four people reportedly killed and several wounded in an airstrike on a building at Nasser Hospital, according to Gaza Civil Defence spokesman quoted by Reuters. Victim identities and civilian/combatant status unverified; building function, structural damage, clinical service interruption and operational capacity impacts unverified.",
+      "exact_supporting_passage": "killed at least four people and wounded several others early on Thursday",
+      "source_type": "established_international_news_agency_attributing_to_gaza_civil_defence_spokesman",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "first_observed_at": "2026-11-11T23:42:34.388Z",
+        "discovery_method": "Targeted Reuters search after OCHA OPT and WHO official checks; article opened and its source dateline and publication timestamp checked.",
+        "source_timestamp_basis": "Reuters article states 'November 11, 2026 11:26 PM UTC'; 15:26 PST, after prior heartbeat completion at 14:47:22 PST.",
+        "prior_watch_completed_at": "2026-11-11T14:47:22.439-08:00",
+        "prior_watch_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T144451-0800-r11-20261111T224526Z.json",
+        "new_information": "Distinct reported strike on hospital building in Khan Younis early Thursday 12 November (Palestinian local time) with at least four fatalities and several injuries, not earlier Wednesday Gaza City incidents.",
+        "overlap_warning": "Do not add this to the prior November 11 Gaza City four-fatality local update without per-incident reconciliation. Geography and event date distinguish the new report; identity and casualty list not independently verified.",
+        "independent_confirmation": "Not found within the bounded twelve additional targeted searches; Reuters attributes incident to Gaza Civil Defence spokesman; Israeli military did not immediately comment.",
+        "timing_limit": "Event time given only as 'early Thursday' in Gaza; exact minute, whether patients/staff were among casualties, and facility service impact unknown.",
+        "qualification": "High-value new reported casualties and direct strike involving a hospital facility; supplementary watch finding, not production publication or approval."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall only. Production collector and daily publisher remain authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T144451-0800-r11-20261111T224526Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "11 November winter-supply entry appeal still most recent listing. No newly dated in-window operations change on its update list.",
+        "targeted_search": "site:ochaopt.org Gaza humanitarian situation update November 11 2026 casualties access latest"
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "TIMEOUT",
+        "result": "Regional news endpoint could not be fetched (timeout), consistent with longstanding WHO EMRO 502/availability restriction; not newly materially worsened.",
+        "targeted_search": "site:who.int Gaza 11 November 2026 health hospitals medical evacuation",
+        "global_alternative": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "global_alternative_status": "ACCESSIBLE",
+        "global_alternative_result": "WHO global emergency hub reachable, no new November 11 Gaza operation update on latest-news listing."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"11/November/2026\" Gaza 23:00 OR 12 November",
+      "Gaza November 11 2026 Wednesday afternoon 23:00 UTC fresh casualty airstrike water tent",
+      "site:reuters.com/world/middle-east/ 2026-11-11 Gaza latest 23:00 GMT humanitarian hospitals truce",
+      "site:apnews.com/article/ Gaza November 11 2026 latest late Wednesday evening military civilians",
+      "site:un.org Gaza 11 November 2026 late news humanitarian 23:00 UTC crossing aid",
+      "site:palestinercs.org 11 November 2026 Gaza ambulance hospital evacuation latest",
+      "Nasser Hospital Khan Younis November 12 2026 airstrike four killed early Thursday civil defense WHO emergency",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"Nasser\" hospital",
+      "site:aljazeera.com/news/2026/11/12 Gaza Nasser hospital four killed Israeli strike",
+      "site:unicef.org OR site:unrwa.org 11 November 2026 Gaza new shelters water fuel aid",
+      "site:wfp.org Gaza \"11 November 2026\" food kitchens trucks crossing humanitarian",
+      "site:msf.org OR site:icrc.org Gaza 11 November 2026 hospitals ambulances medical patients displacement"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Report explicitly timestamps publication 23:26 UTC (15:26 PST) and dates hospital strike early 12 November Gaza local time; new qualifying report; no Israeli comment at publication."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Most recent Gaza-specific listing from 11 Nov 20:42 Palestine time (10:42 PST), prior to watch window; no visible new 12 Nov hospital item."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Latest 11 Nov statement is pre-existing winter-supply appeal."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible global WHO oPt hub; latest news section shows no new in-window Gaza update."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "reason": "Earlier Wednesday Gaza City fatalities previously logged."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176863",
+        "reason": "11 Nov cumulative Gaza death total 74,653 is older and non-additive."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "reason": "Previously examined winter-supply access appeal, not evidence of new in-window entry restriction."
+      },
+      {
+        "url": "https://www.theguardian.com/global-development/2026/nov/11/thousands-without-shelter-lethal-cold-storm-gaza-israel-tents-displaced-people-flood",
+        "reason": "Covers earlier weekend storm and already documented flood-related shelter losses; no distinct new in-window event."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "TIMEOUT",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO Palestine news endpoint timed out; previous runs repeatedly found HTTP 502. Official OCHA and global WHO alternative accessible, as were Reuters and other queries. One Reuters-reported new hospital-strike incident qualified.",
+    "limitations": "New hospital attack reported through Reuters based on Gaza Civil Defence; no independent confirmation within bounded watch. Exact event minute, victim civilian status, staff/patient status, and hospital functioning damage unverified. Searches may lag new reporting.",
+    "notification_warranted": true,
+    "changes_to_production": "None. No approval, publishing, scheduler or task configuration changes."
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261110T184429-0800-r11-20261111T024429Z",
+  "scheduled_for": "2026-11-10T18:45:54-08:00",
+  "started_at": "2026-11-10T18:44:29-08:00",
+  "completed_at": "2026-11-10T18:46:45-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-10T17:44:31.776-08:00",
+    "end_at": "2026-11-10T18:46:45-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-10",
+    "basis": "Since last independently read-back verified Food Line watch-ledger heartbeat; publication/onset in window required for a new hourly finding.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-10/food-line-recall-20261110T174249-0800-r11-20261111T014249Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value miss-class recall, not the authoritative nationwide production collector. No findings does not prove absence of all U.S. disruptions.",
+    "target_classes": [
+      "Loss, closure, fire or disaster affecting only/sole/last/full-service grocery store",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, outage or facility damage",
+      "Abrupt pantry or food-bank closure or major service access reduction",
+      "New official SNAP, WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 10 2026 town",
+      "\"last grocery store\" burned closed \"November 10\" 2026",
+      "\"only full-service grocery\" closed fire flood today November 2026",
+      "\"sole grocery store\" fire closes rural town November 2026",
+      "\"food distribution\" canceled due to storm Tuesday November 10 2026",
+      "\"food pantry\" closed flooding power outage November 10 2026",
+      "\"food bank\" \"temporarily closed\" \"Nov 10, 2026\" service",
+      "\"food pantry\" \"suspend\" distribution November 10 2026",
+      "\"SNAP\" \"benefits\" \"interrupted\" \"November 10, 2026\" state",
+      "\"WIC\" \"outage\" \"November 10, 2026\" benefits",
+      "site:gov \"EBT\" \"outage\" \"Nov 10, 2026\" benefits",
+      "\"food bank\" \"closed\" \"Nov. 10, 2026\" damaged fire flood"
+    ],
+    "search_recency_days": 1,
+    "search_errors_observed": 0,
+    "search_assessment": "Recent-only targeted searches heavily resurfaced older 2020-2026 events and future benefit proposals. No verified new publication/onset in the current watch hour.",
+    "direct_source_checks": {
+      "distinct_urls": 10,
+      "accessible": 10,
+      "failed": 0,
+      "urls": [
+        "https://status.joinforage.app/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://dhs.ri.gov/",
+        "https://dhs.georgia.gov/",
+        "https://reachstpete.org/popuppantry",
+        "https://www.ynfp.org/",
+        "https://ebtcheckup.com/ebt-news/"
+      ],
+      "limitations": "Two USDA federal pages that repeatedly returned HTTP 403 in earlier runs were not re-requested. State agency and EBT processor direct pages provided partial alternative federal-program coverage. One review page was independent/secondary rather than official."
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Processor reports all systems operational. Nov 10 MT/PA/NJ/AS maintenance completed at 12:00 UTC, well before current hour; Nov 12 and 15 maintenance remains upcoming."
+      },
+      {
+        "url": "https://www.ynfp.org/",
+        "reason": "Providence pantry announces regular holiday suspension Nov 15 to Dec 1, not unexpected emergency closure or current-hour interruption."
+      },
+      {
+        "url": "https://reachstpete.org/popuppantry",
+        "reason": "Provider reports temporary closure for facility move, but change was publicly noted before current hour (September 2026), not new."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Nov 21 documentation requirement is future and not a new immediate disruption."
+      },
+      {
+        "url": "https://dhs.ri.gov/",
+        "reason": "Rhode Island offices under remote service for pest treatment, but no new onset within hour or demonstrated immediate benefit loss; alternative channels available."
+      },
+      {
+        "url": "https://dhs.georgia.gov/",
+        "reason": "Georgia EBT IVR call center back online; restoration is not a new disruption."
+      },
+      {
+        "url": "https://ebtcheckup.com/ebt-news/",
+        "reason": "Nov 10 update is independent aggregator about already announced Nov 10 processor maintenance and prospective SNAP changes, not newly observed active interruption."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Only-grocery-store fire in Spencer NY, but event reported Sep 14, not current hour."
+      },
+      {
+        "url": "https://www.fox10tv.com/2026/10/07/prodisee-pantry-cancels-saturday-food-distribution-stockton-due-weather/",
+        "reason": "October 10 storm-related cancellation, older known event."
+      }
+    ],
+    "excluded_categories": "Donation appeals, resource directories, recipes, opinion, routine program announcements, generic inflation, already documented disruptions, speculative future closures, planned or completed EBT maintenance, ordinary holiday closures, undated changes.",
+    "assessment": "No newly verified qualifying U.S. food-access disruption in the approximately 61-minute period since the prior heartbeat. Targeted coverage succeeded; publication indexing and incomplete direct federal coverage remain bounded limitations.",
+    "material_degradation": false,
+    "approvals_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false,
+    "notification_reason": "No qualifying new finding and no material watch failure/degradation."
+  }
+}

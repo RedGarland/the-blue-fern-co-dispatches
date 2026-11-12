@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261112T094429-0800-r11-20261112T174429Z",
+  "scheduled_for": "2026-11-12T09:45:54-08:00",
+  "started_at": "2026-11-12T09:44:29-08:00",
+  "completed_at": "2026-11-12T17:46:22.392Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-12T16:49:58.961Z",
+    "end_at": "2026-11-12T17:46:22.392Z",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "basis": "Since read-back-verified previous hourly watch heartbeat completion at 2026-11-12 08:49:58.961 PST. A source/event must be newly reported or newly confirmed in this bounded interval, not merely retrieved today.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-12/food-line-recall-20261112T084752-0800-r11-20261112T164752Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall of audited high-value miss classes, not the nationwide production collector. Negative result does not establish absence of disruptions nationwide.",
+    "target_classes": [
+      "Loss/closure/fire/disaster affecting the only, sole, last or full-service grocery in a community",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt food pantry or food bank closure or major service-access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate practical access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 12 2026 town",
+      "\"last grocery store\" \"closed\" November 2026 community",
+      "\"sole grocery store\" fire closed Nov 11 2026 Nov 12 2026",
+      "\"full service grocery\" closing \"November 12\" 2026 town",
+      "\"food distribution\" canceled storm November 12 2026 pantry",
+      "\"food distribution\" suspended flooding November 11 2026",
+      "\"mobile pantry\" canceled \"November 12\" 2026 weather",
+      "\"food bank\" \"closed\" fire flood November 12 2026",
+      "\"food pantry\" \"temporarily closed\" November 12 2026",
+      "SNAP benefits interrupted EBT outage November 12 2026 state agency",
+      "WIC benefits suspended system outage November 12 2026 agency",
+      "emergency food assistance distribution canceled power outage November 12 2026"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_result_limitation": "Twelve targeted freshness-filtered searches returned predominantly historical or unrelated results. Search index freshness is not a guarantee; no newly corroborated qualifying event located.",
+    "direct_source_checks": {
+      "distinct_urls": 13,
+      "accessible": 9,
+      "inaccessible": 4,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.sjcs.org/thepantry-vadc",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.kjct8.com/2026/11/11/polis-state-agencies-detail-response-southwestern-colorado-flooding/?outputType=amp"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Direct federal SNAP update page inaccessible; alternative state/processor sources and indexed search were accessible."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Direct federal FNS newsroom inaccessible; no new federal notice independently verified."
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Request timeout",
+          "impact": "Guam DPHSS primary notices unavailable; localized coverage gap remains."
+        },
+        {
+          "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Previously accessible Rhode Island page newly inaccessible this run; other state sources provide supplementary coverage but not Rhode Island-specific confirmation."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, NY only-grocery loss was reported September 2026, not a new November 12 signal."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Nov 12 state-processor maintenance was announced November 2 and completed at 12:00 UTC (04:00 PST), before this interval; system operational during check. Future Connecticut November 15 conversion previously announced August 20."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "December 3 Ishpeming, MI mobile food pantry is marked canceled, but cancellation posting time and a qualifying disaster/outage cause are not established; future event outside observation window."
+      },
+      {
+        "url": "https://www.sjcs.org/thepantry-vadc",
+        "reason": "November 11 Annandale and November 12 Woodbridge pop-ups listed without a newly verified storm/fire/flood/outage cancellation."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Prospective November 21 renewal documentation change not an immediate benefits interruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing call-center delay notice does not establish a newly reported immediate access interruption in the observed hour."
+      },
+      {
+        "url": "https://www.kjct8.com/2026/11/11/polis-state-agencies-detail-response-southwestern-colorado-flooding/?outputType=amp",
+        "reason": "November 11 report describes flood impacts and road closures, but provides no evidence of qualifying food distribution cancellation or grocery loss; published before interval."
+      },
+      {
+        "url": "https://www.nj.gov/humanservices/njsnap/",
+        "reason": "General federal-rule changes and EBT-card promotions, no newly dated immediate disruption identified."
+      }
+    ],
+    "interpretation": "No new verified qualifying signal. DEGRADED reflects ongoing federal USDA 403 and Guam timeout plus a newly observed Rhode Island 403. Alternative direct-source and local-news search coverage remained useful; this is not assessed as material watch-wide degradation.",
+    "publication_or_approval_changes": false,
+    "production_collection_modified": false,
+    "schedule_or_task_changes": false
+  }
+}

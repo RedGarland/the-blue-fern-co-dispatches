@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T235212-0800-recall12-20261112T075349877Z",
+  "scheduled_for": "2026-11-11T23:45:22-08:00",
+  "started_at": "2026-11-11T23:52:12-08:00",
+  "completed_at": "2026-11-11T23:53:49.877-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T22:47:16.385-08:00",
+    "end": "2026-11-11T23:53:49.877-08:00",
+    "prior_check_basis": "Prior Care Line Watch heartbeat on ops/watch-ledger, run care-line-watch-20261111T224543-0800-recall12-20261112T064716385Z, fetched and verified; its completed_at was 2026-11-11T22:47:16.385-08:00. New qualifying changes are assessed against that end time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; authoritative U.S. and territory production collection remains separate.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official table opened before any targeted searches. Most recent listing remains November 10, 2026, Advanced Urgent Care (IL), limitation of CLIA certificate 14D2049789; next November 9, 2026, Compassionate Home Health Services (MI) termination. No newer CMS notice listed. Both predate this window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended diverted November 11 2026 United States",
+      "rural hospital emergency services closure November 11 2026",
+      "labor delivery maternity unit closing suspended November 11 2026 hospital",
+      "behavioral health psychiatric inpatient facility closed suspension November 11 2026",
+      "dialysis oncology clinic suddenly closed halted treatment November 11 2026",
+      "ambulance EMS station base service closed suspended November 11 2026",
+      "air medical helicopter air ambulance base closing November 11 2026",
+      "hospital emergency department reopened resumed service November 11 2026",
+      "primary care medical clinic closure patients November 11 2026",
+      "Puerto Rico Guam Virgin Islands hospital emergency dialysis service closure November 2026",
+      "Northern Mariana Islands American Samoa hospital clinic ambulance service outage November 2026",
+      "hospital temporarily suspended operations patients November 11 2026 late"
+    ],
+    "search_recency_days": 2,
+    "search_assessment": "Twelve bounded targeted web searches completed. No verified new, nonduplicate, in-window service loss, access-risk notice, or effective restoration identified. Several results dated November 11 concern earlier incidents, prospective changes, non-U.S. services, or unrelated administration/expansion. One full-article retrieval failed, leaving coverage DEGRADED, though search result metadata was obtained.",
+    "reviewed_exclusions": [
+      {
+        "title": "How Trump’s Dismantling of the VA Left a Veterans Hospital in Crisis",
+        "publisher": "ProPublica",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "November 11 05:00 publication, before current 22:47 window. Documents important prior-month/earlier 2026 oncology radiation, operating room, surgical and other care suspensions, but no newly effective or announced in-window service change; production reconciliation of older disclosures is separate."
+      },
+      {
+        "title": "Sharon Regional's license revoked after unpaid electric bill, forcing Pennsylvania hospital to close",
+        "publisher": "Medical Daily",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "November 9 reporting of state action ordered November 4 and emergency service suspension effective November 6; historical/previously covered."
+      },
+      {
+        "title": "Tehama County air ambulance base closes amid insurer dispute, adding to response times",
+        "publisher": "KRCR",
+        "url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times",
+        "reason": "September 17, 2026 original report; predates window."
+      },
+      {
+        "title": "Elliot becomes medical resource hospital for Manchester Fire, AMR",
+        "publisher": "Manchester Ink Link",
+        "url": "https://manchester.inklink.news/elliot-becomes-medical-resource-hospital-for-manchester-fire-amr/",
+        "reason": "November 11 article surfaced, but search metadata describes EMS resource-hospital affiliation, not a verified closure, suspension, or restoration of a lost service; full article retrieval failed."
+      },
+      {
+        "title": "How a rural healthcare system navigated out of debt",
+        "publisher": "Healthcare Finance News",
+        "url": "https://www.healthcarefinancenews.com/video/how-rural-healthcare-system-navigated-out-debt",
+        "reason": "November 11 business and EHR cost discussion about East Adams Rural Healthcare; no newly effective loss/restoration in window."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices fetched and inspected first.",
+      "Previous persisted heartbeat fetched on ops/watch-ledger to set exact window boundary and avoid duplicates.",
+      "One attempted full-article fetch, Manchester Ink Link EMS affiliation report, returned DisabledError; source search metadata remained accessible. Other searched sources were available; this isolated issue does not establish an unverified service change."
+    ],
+    "limitations": [
+      "DEGRADED because one relevant full-article fetch failed; bounded alternate search metadata remained available.",
+      "Same-hour publication/indexing delays can hide very recent announcements.",
+      "Bounded search cannot guarantee complete coverage of all U.S. states and territories.",
+      "No production approval, publishing, schedule, permission, or task modification."
+    ],
+    "review_status": "No qualifying current-window findings; none pending review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

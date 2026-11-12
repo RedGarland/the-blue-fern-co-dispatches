@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T155001-0800-recall12-20261112T235001Z",
+  "scheduled_for": "2026-11-12T15:45:22-08:00",
+  "started_at": "2026-11-12T15:50:01-08:00",
+  "completed_at": "2026-11-12T15:51:17.039-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T14:50:40-08:00",
+    "end": "2026-11-12T15:51:17.039-08:00",
+    "prior_check_basis": "Read previous durable Care Line heartbeat on ops/watch-ledger, completed at 2026-11-12T14:50:40-08:00.",
+    "event_time_basis": "Newly reported or effective concrete access change since prior heartbeat; older events and previously identified candidates excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; primary national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois; limitation of CLIA certification; CCN 14D2049789.",
+      "next_notice_date": "2026-11-09",
+      "result": "No newer CMS notice on directly retrieved official table."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 12, 2026\" hospital closure emergency department closed patients United States",
+      "\"November 12, 2026\" labor delivery maternity unit closing suspended hospital",
+      "\"November 12, 2026\" rural hospital emergency services suspended closure",
+      "\"November 12, 2026\" psychiatric behavioral health inpatient hospital closing patients",
+      "\"November 12, 2026\" dialysis center oncology clinic primary care closed no longer serving patients",
+      "\"November 12, 2026\" ambulance service EMS station air ambulance base closing suspended",
+      "November 12 2026 \"emergency department\" \"suspended\" OR \"diverting\" OR \"closed\" hospital",
+      "November 12 2026 \"ambulance\" \"suspending\" OR \"closing\" OR \"out of service\" county",
+      "November 12 2026 \"reopened\" OR \"resumed\" \"emergency department\" OR \"maternity\" OR \"dialysis\"",
+      "November 12 2026 \"hospital\" \"services\" \"discontinued\" OR \"suspension\" OR \"shutting down\"",
+      "November 12 2026 Puerto Rico Guam Virgin Islands American Samoa health clinic hospital services suspended closed",
+      "November 12 2026 \"clinic\" \"permanently closed\" OR \"closing Friday\" OR \"last day of patient care\""
+    ],
+    "targeted_search_method": "12 targeted fresh web searches with two-day recency; category, U.S. territory, and service restoration coverage.",
+    "search_result": "No verifiable new, nonduplicate, qualifying closure, suspension, emergency/rural service loss, ambulance/air-medical base loss, CMS access-risk notice, or concrete restoration of previously lost essential care in observation window.",
+    "reviewed_exclusions": [
+      {
+        "event": "Bradford Regional Medical Center, Bradford PA",
+        "reason": "November 12 feature recounts emergency department ending May 17, 2026; previously covered, not a new event."
+      },
+      {
+        "event": "Prevea Washington Street Health Center, Green Bay WI",
+        "reason": "Previously reviewed and corroborated November 13 final patient-care date; not first announced in this observation window."
+      },
+      {
+        "event": "New Hopes Kennewick, WA",
+        "reason": "November 12 article described new 32-bed mental health facility expected to open November 17; not restoration of previously lost service, previously reviewed."
+      },
+      {
+        "event": "WVU Cancer Institute at Summersville Regional Medical Center, WV",
+        "reason": "November 11 article about November 10 opening/expansion; not restoration of previously lost access and outside observation window."
+      },
+      {
+        "event": "Oklahoma rural hospital closure risk report",
+        "reason": "November 12 report describes risk of future closure, not concrete present-day service change."
+      },
+      {
+        "event": "Baptist Health Doctors Hospital (FL) and Boone Health (MO)",
+        "reason": "Philanthropic improvement and acquisition reporting; no concrete service suspension or restoration."
+      },
+      {
+        "event": "Guam and Northern Mariana Islands typhoon-related service notices",
+        "reason": "Retrieved notices dated April and October 2026; outside observation window."
+      }
+    ],
+    "source_access_notes": [
+      "Direct CMS public notices retrieval succeeded before twelve targeted searches.",
+      "Prior heartbeat independently fetched from ops/watch-ledger to establish observation boundary.",
+      "All twelve searches returned without tool-level errors."
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Bounded targeted searches cannot establish exhaustive nationwide or territory coverage.",
+      "Search indexing may lag same-hour local notices and service changes.",
+      "No findings is not proof of no access changes."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

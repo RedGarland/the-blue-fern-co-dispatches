@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T194454-0800-recall12-20261112T034641261Z",
+  "scheduled_for": "2026-11-11T19:45:22-08:00",
+  "started_at": "2026-11-11T19:44:54-08:00",
+  "completed_at": "2026-11-11T19:46:41.261-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T18:51:01.535-08:00",
+    "end": "2026-11-11T19:46:41.261-08:00",
+    "prior_check_basis": "Read back preceding 2026-11-11 18:49:19 PST Care Line Watch heartbeat on ops/watch-ledger, completed_at 18:51:01.535 PST, status SUCCESS, outcome no_findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S. and territory healthcare-access recall. Production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS Public Notices table checked first; latest entry remains 2026-11-10 Advanced Urgent Care, Illinois, Limitation of CLIA certificate 14D2049789; next 2026-11-09 Compassionate Home Health Services, Michigan, termination. No new current-window notice."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 11 2026 hospital emergency department closes suspends patients services US",
+      "November 11 2026 maternity obstetrics labor delivery hospital service closes suspended",
+      "November 11 2026 mental behavioral health inpatient psychiatric hospital closing suspends services",
+      "November 11 2026 dialysis center closure oncology chemotherapy clinic suspension service",
+      "November 11 2026 rural hospital emergency room temporary shutdown service diversion",
+      "November 11 2026 ambulance EMS station base closure air medical helicopter suspends operations",
+      "November 11 2026 primary care clinic closes abruptly patients displaced medical practice",
+      "November 11 2026 emergency department hospital reopened service resumed after suspension",
+      "November 11 2026 CMS Medicare termination provider CLIA suspended rescission notice health services",
+      "November 11 2026 Puerto Rico Guam U.S. Virgin Islands hospital clinic emergency ambulance closure reopened",
+      "November 11 2026 Northern Mariana Islands American Samoa health center emergency ambulance service disruption",
+      "November 11 2026 county EMS ambulance service shutting down lack of staff residents"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "Twelve targeted current-day/recent searches returned usable results. No independently verifiable newly effective hospital, ED, maternity, behavioral-health, dialysis, oncology or primary-care loss; rural/EMS/air-medical loss; new CMS action; or concrete restoration first identified in the observation window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Sharon Regional suspension and state license revocation",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "November 4 state order, November 4-6 access loss, November 9 reporting, and already covered in earlier watches; scheduled November 17 revocation is not a fresh announcement in this window."
+      },
+      {
+        "title": "East Orange VA hospital service disruption investigation",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "November 11 reporting discusses established OR/service issues and already reviewed in preceding heartbeat; no newly effective hour-specific service loss."
+      },
+      {
+        "title": "Roseland Community Hospital maternity unit ended births",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "Maternity service ended before this observation window; earlier coverage."
+      },
+      {
+        "title": "Guam Regional Medical City weather suspensions",
+        "url": "https://www.grmc.gu/2026/04/10/grmc-announces-suspension-of-visitations-and-clinic-operations-rehabilitation-and-or-services-monday-to-wednesday-due-to-tropical-storm-sinlaku/",
+        "reason": "April 2026 historical service restrictions; not new."
+      },
+      {
+        "title": "Haiti MSF Cité Soleil hospital reopening",
+        "url": "https://www.doctorswithoutborders.org/latest/haiti-msf-hospital-cite-soleil-reopens-after-three-week-closure",
+        "reason": "June 2026 and outside U.S./territory scope."
+      }
+    ],
+    "source_access_notes": [
+      "Official CMS page fetched successfully before targeted searches.",
+      "Six initial and six follow-up targeted searches returned usable results, no material retrieval outage.",
+      "Preceding 18:49:19 PST watch heartbeat fetched from the specified GitHub branch to anchor deduplication."
+    ],
+    "limitations": [
+      "Same-hour official/news indexing delay can delay discovery.",
+      "Search was deliberately bounded, not an exhaustive census of each state or territory.",
+      "Article publication date alone is insufficient to infer new effective access change."
+    ],
+    "review_status": "No qualifying findings pending review.",
+    "publication_action": false,
+    "approval_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

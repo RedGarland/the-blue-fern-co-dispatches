@@ -1,0 +1,135 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T104451-0800-r11-20261112T184541000Z",
+  "scheduled_for": "2026-11-12T10:44:51-08:00",
+  "started_at": "2026-11-12T10:44:12-08:00",
+  "completed_at": "2026-11-12T10:45:41-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T09:48:12.017-08:00",
+    "end": "2026-11-12T10:45:41-08:00",
+    "previous_run_completed_at": "2026-11-12T09:48:12.017-08:00",
+    "basis": "Read prior ops/watch-ledger heartbeat; bounded retrospective discovery from prior verified completion and checked source/event/publication dates. Site publication times lack explicit timezone in some cases.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall; not the daily Gaza collector or publisher. Production remains authoritative.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T094451-0800-r11-20261112T174812017Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage checked first. Most recent displayed update: 11 November winter supplies access appeal; no new 12 November operational change."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Canonical Gaza crisis page and WHO homepage accessible; no 12 November report affecting care, evacuation or health capacity. Initial outdated emergency URL returned 404, corrected by source discovery."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "INACCESSIBLE",
+        "result": "Direct request timed out, consistent with established endpoint errors in preceding runs (previously 502). Not a newly material deterioration."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 12 2026 20:00 casualties displaced hospitals aid crossings developments",
+      "site:ochaopt.org 12 November 2026 Gaza situation update",
+      "site:un.org Gaza November 12 2026 humanitarian aid crossings OCHA briefing",
+      "site:unicef.org Gaza November 12 2026 water displaced shelter",
+      "site:wafa.ps November 12 2026 Gaza killed wounded evening strike",
+      "Gaza November 12 2026 Reuters AP Israel humanitarian ceasefire hostages crossings",
+      "site:palestinercs.org November 12 2026 Gaza ambulance hospital emergency",
+      "site:reliefweb.int Gaza 12 November 2026 new situation report casualties hospitals",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"PM\" Gaza casualties strike",
+      "Gaza November 12 2026 humanitarian 53 countries joint statement hospitals aid 12 November update evening",
+      "site:aljazeera.com/news/2026/11/12 Gaza killed humanitarian aid ceasefire November 12 2026",
+      "site:reuters.com/world/middle-east/ 2026-11-12 Gaza Israel strikes crossings ceasefire"
+    ],
+    "targeted_search_method": "12 targeted fresh web searches (one-day recency), after initial OCHA OPT and WHO checks; separate WHO source identification search was part of WHO initial check. Direct source opens/clicks were not counted as searches.",
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "result": "11 November winter supplies appeal, no verified subsequent implementation."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new 12 November update."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest visible WAFA item at 19:26 site time concerns OIC condemnation, not a new civilian-impact event or operational change. Earlier 18:48 and 18:04 items predate previous run and/or already captured."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176885",
+        "result": "OIC 19:26 statement condemns already-documented Nasser Hospital attack, with no new operational action; not a qualifying new event."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176880",
+        "result": "16:20 report includes previously recorded Al-Shifa vicinity, Deir al-Balah and Jabalia casualties; no fresh incremental information."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Nasser Hospital damage and casualties plus previously reported Bureij, Jabalia and vehicle strike; no newly timestamped incremental event after previous watch. Board of Peace appeal is not verified as newly occurring within window."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Most recent listed Gaza winter appeal dated 10 November; no 12 November operational report."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "WAFA 19:26 OIC condemnation",
+        "reason": "Political condemnation of previously documented hospital strike; no new aid, healthcare, civilian casualty, ceasefire or other operational change."
+      },
+      {
+        "subject": "Nasser Hospital strike, Al-Shifa vicinity, Deir al-Balah car strike, Jabalia cemetery casualties, Bureij gunfire, Deir al-Balah fishermen detentions",
+        "reason": "Previously recorded in hourly ledger, and newer articles gave no verified material change."
+      },
+      {
+        "subject": "53-country humanitarian aid-access appeal",
+        "reason": "Previously recorded; no verified crossing or aid implementation change."
+      },
+      {
+        "subject": "Reuters Board of Peace ceasefire appeal",
+        "reason": "Contained in 11 November-timestamped Reuters story; precise issuance not shown to be inside this hour and no documented ceasefire change. Avoid retrospective duplication."
+      },
+      {
+        "subject": "West Bank settler violence and EU Commission review of initiative",
+        "reason": "Outside specific Gaza high-value operational impact classes in this window."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "TIMEOUT",
+        "previously_observed": true,
+        "materially_worsened": false,
+        "notes": "WHO global crisis page accessible; recurring regional source failure."
+      }
+    ],
+    "status_rationale": "DEGRADED for inaccessible WHO Eastern Mediterranean endpoint; OCHA OPT, WHO Global, WAFA, Reuters, PRCS and web index provided useful coverage. No newly material degradation and no qualifying new event confirmed.",
+    "limitations": "Fresh publication indexing can lag and many reports lack minute-precise publication times. Negative result means no verified new qualifying item found in bounded sources, not proof none occurred.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no approval, publication, workflow, schedule or production changes."
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T034451-0800-r11-20261112T114221Z",
+  "scheduled_for": "2026-11-12T03:44:51-08:00",
+  "started_at": "2026-11-12T03:40:46-08:00",
+  "completed_at": "2026-11-12T03:42:21-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T02:46:12.975-08:00",
+    "end": "2026-11-12T03:42:21-08:00",
+    "previous_run_completed_at": "2026-11-12T02:46:12.975-08:00",
+    "basis": "Authenticated previous 02:44 watch heartbeat on ops/watch-ledger; source review in the 03:40–03:42 PST interval.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; primary production collector/publisher remains authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T024451-0800-r11-20261112T104612975Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed update remains November 11 emergency appeal for winter supplies; no November 12 Gaza bulletin."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Crisis overview and latest news include no newly dated Gaza health event during the search window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/index.html",
+        "status": "INACCESSIBLE",
+        "result": "Direct source still inaccessible; homepage returned HTTP 502 and regional detail was blocked. Previously documented issue, without new material deterioration."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" Gaza latest 13:00 14:00",
+      "site:reuters.com/world/middle-east/ Gaza November 12 2026 hospital civilians crossing aid morning",
+      "site:apnews.com/article/ Gaza November 12 2026 latest Nasser hospital Gaza civilians",
+      "site:aljazeera.com/news/2026/11/12 Gaza Thursday November 12 latest casualties ceasefire",
+      "site:reliefweb.int/report/occupied-palestinian-territory 12 November 2026 Gaza humanitarian hospital flood",
+      "site:unrwa.org Gaza 12 November 2026 shelter winter flooding displaced",
+      "site:wfp.org Gaza November 12 2026 aid trucks access food situation new update",
+      "site:unicef.org Gaza 12 November 2026 water hospital children",
+      "site:who.int Gaza \"12 November 2026\" medical evacuation hospital",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"11:\" Gaza",
+      "Gaza November 12 2026 14:00 Thursday local hospital shooting fishermen displaced new news",
+      "site:aa.com.tr/en/middle-east/ Gaza \"November 12, 2026\" Thursday humanitarian civilians"
+    ],
+    "targeted_search_engine": "Web fast search, 12 searches after the first OCHA and WHO direct checks, plus direct URL source verification.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "By 13:16 Gaza local time, new listed articles were West Bank or political matters; the latest Gaza-relevant dispatches remained 09:15 and 09:17, both previously logged."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "result": "Nasser six killed, at least 28 wounded, surgical recovery-area damage already recorded in previous heartbeat. No verified later revision."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Nasser six killed/20 wounded and Israeli military statement remain part of the same previously logged strike, not new event."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "No newly dated Gaza update in interval."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "reason": "Six fatalities, 28 injuries and fourth-floor recovery-area damage already logged in immediately preceding heartbeat."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176870",
+        "reason": "Hassan Abu Khreis fatality and Al-Mawasi gunfire casualties already logged November 11; avoid double count."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176871",
+        "reason": "Deir al-Balah fishermen detention already logged November 11; no verified new disposition."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176868",
+        "reason": "Repetition of OCHA November 11 winter aid appeal and older storm impacts."
+      },
+      {
+        "url": "https://groups.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "reason": "Older (October 2026) WFP funding/ration reductions, not a newly issued development in this hour."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED solely because the WHO regional endpoint remained inaccessible, a known restriction; meaningful coverage continued through OCHA, WHO Global, WAFA, Reuters, AP and bounded targeted searches.",
+    "limitations": "No new verified qualifying event found in the hourly window. Source publication timestamps and search indexing can lag; absence of findings is not evidence that nothing occurred. Previous Nasser figures retained without double-counting.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no publish, approval, schedule, credentials or permissions change."
+  }
+}

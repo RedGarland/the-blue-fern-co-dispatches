@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T174026-0800-r11-20261112T014215934Z",
+  "scheduled_for": "2026-11-11T17:40:26-08:00",
+  "started_at": "2026-11-11T17:40:26-08:00",
+  "completed_at": "2026-11-11T17:42:56.313-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T16:47:33.519-08:00",
+    "end": "2026-11-11T17:42:56.313-08:00",
+    "previous_run_completed_at": "2026-11-11T16:47:33.519-08:00",
+    "basis": "Authenticated immediately preceding watch heartbeat. Newness is measured by newly verified developments or material follow-ups, not reprints, cumulative figures or changes that predate this interval.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary source-recall watch; production collector/publisher remains authoritative. No approval, publication, scheduler or automation changes.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T164451-0800-r11-20261112T004530Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listing remains 11 November winter-supply appeal; no new in-window situation report or operational change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Repeated 502 from previously restricted endpoint; no independently established worsening of access."
+      },
+      {
+        "publisher": "WHO global situation hub (fallback direct check)",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza health service/evacuation bulletin in latest-news listing. An alternate incorrectly named WHO conflict URL returned 404 and was superseded by this confirmed canonical hub."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 12 2026 00:45 01:40 UTC new deaths Nasser hospital Reuters AP latest",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" Gaza killed wounded hospital",
+      "site:ochaopt.org \"12 November 2026\" Gaza hospital aid latest",
+      "site:who.int \"12 November 2026\" Gaza hospital health evacuation",
+      "site:un.org \"12 November 2026\" Gaza humanitarian latest ceasefire",
+      "site:aljazeera.com/news/2026/11/12 Gaza hospital aid killed latest",
+      "site:unrwa.org OR site:unicef.org \"12 November 2026\" Gaza tent water food medical",
+      "site:wfp.org OR site:icrc.org \"12 November 2026\" Gaza aid crossing fuel supplies",
+      "site:msf.org OR site:palestinercs.org Gaza November 12 2026 Nasser hospital ambulance casualties",
+      "site:apnews.com/article/ Gaza Thursday November 12 2026 Nasser hospital deaths",
+      "Gaza Rafah Kerem Shalom crossing medical evacuation November 12 2026 01:00 UTC new access",
+      "Gaza November 12 2026 ceasefire talks Hamas hostage detainees civilian impact latest 01:00 UTC"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza-related stories listed 11 Nov 20:42 Palestine local (cumulative fatality figure) and 17:02 Palestine local (four fatal attacks); both earlier than interval and already accounted for."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Five deaths including surgeon Rezik Abushira, 20 wounded and Nasser Hospital surgery-department damage remain identical to immediately previous heartbeat; no verified new operational or casualty change."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "reason": "Same Nasser Hospital strike five-death/20-injured/surgery damage update already logged previous interval. No incremental detail."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strikes-kill-three-people-including-two-brothers-gaza-medics-say-2026-11-11/",
+        "reason": "Older 11 November Gaza City casualties; previously logged and overlapping four-death updates."
+      },
+      {
+        "url": "https://www.reuters.com/business/environment/four-killed-gaza-after-sand-embankment-collapses-tents-2026-11-09/",
+        "reason": "Older storm/flood fatality and shelter incident."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "reason": "Newest Gaza total is cumulative and predates watch; no distinct new in-window incident."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent WHO Eastern Mediterranean HTTP 502. OCHA and global WHO accessible and all 12 targeted searches completed; meaningful coverage retained. No new material access failure.",
+    "limitations": "Targeted web indices may lag very recent developments. Reports do not establish any new post-16:47:33 PST civilian impact, crossing decision, aid delivery, hospital capacity change, medical evacuation, detention, ceasefire or casualty update during this run.",
+    "notification_warranted": false,
+    "changes_to_production": "None"
+  }
+}

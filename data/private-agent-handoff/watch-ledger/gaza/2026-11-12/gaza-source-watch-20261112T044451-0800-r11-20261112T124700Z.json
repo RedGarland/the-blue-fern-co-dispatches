@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T044451-0800-r11-20261112T124700Z",
+  "scheduled_for": "2026-11-12T04:44:51-08:00",
+  "started_at": "2026-11-12T04:43:40-08:00",
+  "completed_at": "2026-11-12T04:47:00.368-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T03:42:21-08:00",
+    "end": "2026-11-12T04:47:00.368-08:00",
+    "previous_run_completed_at": "2026-11-12T03:42:21-08:00",
+    "basis": "Authenticated previous 03:44 hourly watch heartbeat on ops/watch-ledger; fresh source review after 04:43 PST.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-al-shifa-gate-drone-fatality-wafa-176879",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176879",
+      "title": "Palestinian killed, several others injured in Israeli drone strike near Al-Shifa Hospital in Gaza",
+      "publisher": "Palestinian News and Information Agency (WAFA)",
+      "source_date": "2026-11-12",
+      "publication_date": "2026-11-12",
+      "publication_time_as_printed": "02:36 PM; site timezone not explicitly stated",
+      "event_date": "2026-11-12",
+      "location": "Outside Al-Shifa Medical Complex gate, western Gaza City, Gaza Strip",
+      "affected_population_or_system": "Palestinians near a functioning hospital; reported one fatality and several injured; no verified hospital service damage from this incident",
+      "affected_population": "Palestinians outside Al-Shifa Medical Complex; civilian/combatant status not verified",
+      "supporting_passage": "A Palestinian was killed and several others injured on Thursday in an Israeli drone strike outside the gate of Al-Shifa Medical Complex",
+      "exact_supporting_passage": "A Palestinian was killed and several others injured on Thursday in an Israeli drone strike outside the gate of Al-Shifa Medical Complex",
+      "source_type": "Palestinian official news agency; citing local and medical sources",
+      "classification": "new",
+      "new_or_follow_up": "new",
+      "confidence": "moderate",
+      "bounded_discovery_context": {
+        "first_observed": "2026-11-12, during 04:43-04:45 PST recall",
+        "window_note": "WAFA header states 12 November 2026, 02:36 PM (presumed local to its publication). Story body mistakenly begins 'November 14, 2026'; event described as Thursday, consistent with Nov 12. No independent corroboration located in bounded searches.",
+        "deduplication": "Separate location from previously logged Nasser Hospital strike and Al-Bureij/Al-Mawasi reports. WAFA's nine deaths since dawn includes six Nasser deaths, so do not add nine as new fatalities.",
+        "limitations": "Direct WAFA report with attributed local/medical sources; independent confirmation, identities, precise incident time and victims' civilian status unavailable."
+      }
+    },
+    {
+      "finding_id": "gaza-20261112-nasser-hospital-department-services-suspended-ap-50b547b5",
+      "canonical_source_url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+      "title": "Israeli strike on Gaza hospital kills 6 people, including a doctor and a child, Health Ministry says",
+      "publisher": "Associated Press",
+      "source_date": "2026-11-12",
+      "publication_date": "2026-11-12",
+      "event_date": "2026-11-12",
+      "location": "Nasser Medical Complex, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Hospital patients and health-care services; operations/surgeries, radiology and laboratory work suspended after damage to surgical wing",
+      "affected_population": "Patients needing specialized surgery; operating theater staff and hospital patients",
+      "supporting_passage": "He said surgeries had been suspended, as had work in the radiology department and the laboratory",
+      "exact_supporting_passage": "He said surgeries had been suspended, as had work in the radiology department and the laboratory",
+      "source_type": "Established international news agency; on-site reporting and attributed hospital director",
+      "classification": "follow-up",
+      "new_or_follow_up": "follow-up",
+      "confidence": "high for hospital director's reported service suspensions; duration unverified",
+      "bounded_discovery_context": {
+        "finding_scope": "Newly verified functioning-capacity impact from previously logged Nasser strike; not a new strike or additional deaths/injuries",
+        "secondary_source_url": "https://www.theguardian.com/world/2026/nov/12/israeli-airstrike-nasser-hospital-gaza-kills-surgeon",
+        "secondary_reporting": "The Guardian 12 Nov 06:24 EST, revised 07:17 EST, reports surgical operations, radiology, laboratories and surgical inpatient wards suspended, attributing to director Dr Ahmed al-Fara.",
+        "timing": "The Guardian initial article 03:24 PST predates the preceding watch's 03:42 PST completion; precise AP revision time unavailable. Retrospectively detected follow-up and verification of previous 'service impact unverified' gap.",
+        "deduplication": "Previously logged Nasser six deaths, at least 28 wounded and fourth-floor recovery damage retained; no repeated casualty count as an independent event.",
+        "limitations": "Duration of suspended departments, resumption date, displaced patients and ability to divert surgeries elsewhere not independently quantified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; primary Gaza collection and publication remain authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T034451-0800-r11-20261112T114221Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest home news remained Nov 11 statement on urgent winter supplies, Nov 9 storm situation report; no new OCHA OPT factual event in window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza health bulletin in WHO Global news list during interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "INACCESSIBLE",
+        "result": "HTTP 502; previously established restriction and no newly observed worsening."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 12 2026 latest OCHA aid situation ceasefire November 12",
+      "Gaza November 12 2026 WHO hospital Nasser medical evacuation ambulance healthcare",
+      "Gaza 12 November 2026 Reuters AP casualties strikes ceasefire early morning",
+      "site:english.wafa.ps November 12 2026 Gaza killed wounded detained fishermen",
+      "Gaza Nov 12 2026 Rafah Kerem Shalom crossing food relief aid fuel update",
+      "site:english.wafa.ps/Pages/Details/ 12/November/2026 Gaza al-Shifa drone strike wounded location",
+      "November 12 2026 Gaza al Shifa Hospital drone killed wounded Reuters Anadolu latest",
+      "site:unrwa.org Gaza November 12 2026 situation update aid health shelter water",
+      "site:unicef.org Gaza November 12 2026 water children health access",
+      "site:reliefweb.int Gaza November 12 2026 report crossing malnutrition hospital",
+      "November 12 2026 Al Shifa hospital gate Gaza drone strike Palestinian killed injured 2:36 PM WAFA",
+      "site:english.wafa.ps/Pages/Details/1768 Gaza 12 November 2026 casualties airstrikes medical evacuations"
+    ],
+    "targeted_search_engine": "Web fast search; direct source fetches in addition to exactly 12 targeted queries.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176879",
+        "result": "New Al-Shifa-gate fatal drone strike; date inconsistency in report body explicitly noted."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "result": "Director reports surgery, radiology and lab activities suspended after Nasser strike; casualty and fourth-floor damage repeated."
+      },
+      {
+        "publisher": "The Guardian",
+        "url": "https://www.theguardian.com/world/2026/nov/12/israeli-airstrike-nasser-hospital-gaza-kills-surgeon",
+        "result": "Corroborating director account lists four interrupted departments; publication began prior to previous watch closure."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Nasser previous strike and casualty figures, no separate event."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176871",
+        "reason": "Fishermen off Deir al-Balah already in watch ledger; no newly verified update."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "reason": "Statement dated Nov 11, outside interval and already observed."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176879",
+        "reason": "Drone activity toward fishing boats off al-Shati and group near Khan Younis lack independently documented casualties or concrete new humanitarian impact; not separated into findings."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED solely due to persistent WHO Eastern Mediterranean HTTP 502; useful OCHA OPT, WHO Global, WAFA, AP and Guardian coverage retained.",
+    "limitations": "Al-Shifa report carries internally inconsistent date line and no independently verified civilian classification. Nasser service outage is retrospectively detected; unknown onset/recovery details. Search indexing/publication delays may cause gaps. No claims of production incorporation.",
+    "notification_warranted": true,
+    "changes_to_production": "None: no publish, approval, schedule, credentials or permissions changes."
+  }
+}

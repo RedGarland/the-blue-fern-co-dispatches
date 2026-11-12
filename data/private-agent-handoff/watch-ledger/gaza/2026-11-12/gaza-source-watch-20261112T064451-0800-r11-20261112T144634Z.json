@@ -1,0 +1,164 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T064451-0800-r11-20261112T144634Z",
+  "scheduled_for": "2026-11-12T06:44:51-08:00",
+  "started_at": "2026-11-12T06:46:34-08:00",
+  "completed_at": "2026-11-12T06:49:13.073-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T05:46:49.222-08:00",
+    "end": "2026-11-12T06:49:13.073-08:00",
+    "previous_run_completed_at": "2026-11-12T05:46:49.222-08:00",
+    "basis": "Previous hourly watch heartbeat fetched and authenticated from ops/watch-ledger; newly published updates searched against prior coverage without altering production.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-deir-al-balah-al-barka-vehicle-strike-awwad",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176880",
+      "title": "Deir al-Balah vehicle strike kills Nashat Fouad Awwad, injures others",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-12",
+      "publication_date": "2026-11-12",
+      "publication_time_as_displayed": "16:20 (WAFA page, time zone not explicitly specified)",
+      "event_date": "2026-11-12",
+      "event_time": null,
+      "location": "Al-Barka Street, south of Deir al-Balah, central Gaza Strip",
+      "affected_population_or_system": "Occupants or nearby civilians at a vehicle struck by a drone; 26-year-old Nashat Fouad Awwad reported killed, others injured (number not given).",
+      "exact_supporting_passage": "26-year-old Nashat Fouad Awwad was killed and others injured",
+      "source_type": "Established Palestinian news agency reporting a local casualty incident",
+      "classification": "new",
+      "confidence": "moderate",
+      "independent_corrobation": false,
+      "bounded_discovery_context": {
+        "observed_in": "New WAFA 12 Nov 2026 16:20 report surfaced in six initial targeted web searches, opened and checked directly after OCHA OPT and WHO; prior heartbeat completed 05:46:49 PST; 16:20 Palestine display is later than prior 15:46 Palestine local equivalent.",
+        "search_window": "2026-11-12 05:46:49 PST through completion",
+        "deduplication": "Separate Deir al-Balah incident, not the previously recorded Nasser Hospital or Al-Shifa-gate strike. Do not add three from WAFA headline, which includes an already-recorded Al-Shifa death.",
+        "uncertainty": "WAFA is the only direct report found within the bounded watch; injury count, civilian status of all casualties and precise incident time not independently verified."
+      }
+    },
+    {
+      "finding_id": "gaza-20261112-jabalia-al-nazla-cemetery-group-strike",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176880",
+      "title": "Strike near Jabalia al-Nazla Cemetery reportedly kills one and wounds several",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-12",
+      "publication_date": "2026-11-12",
+      "publication_time_as_displayed": "16:20 (WAFA page, time zone not explicitly specified)",
+      "event_date": "2026-11-12",
+      "event_time": null,
+      "location": "Near Jabalia al-Nazla Cemetery, northern Gaza Strip",
+      "affected_population_or_system": "Group of people struck; one Palestinian reportedly killed and several injured (identities and precise number not supplied).",
+      "exact_supporting_passage": "another Palestinian was killed and several others injured",
+      "source_type": "Established Palestinian news agency reporting a local casualty incident",
+      "classification": "new",
+      "confidence": "moderate",
+      "independent_corrobation": false,
+      "bounded_discovery_context": {
+        "observed_in": "New WAFA 12 Nov 2026 16:20 report surfaced in targeted searches and direct page verification; checked against previous 05:46:49 PST heartbeat.",
+        "search_window": "2026-11-12 05:46:49 PST through completion",
+        "deduplication": "Distinct geographic location and event; not Nasser Hospital, Al-Shifa entrance, fishermen detention, or prior al-Bureij and al-Mawasi incidents.",
+        "uncertainty": "WAFA only, no independent corroboration found during bounded searches; individual civilian status unverified; event clock time and exact injury count unknown."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only. Production collection and daily publisher remain authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T054451-0800-r11-20261112T134649Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest homepage item 11 Nov 2026 UN relief chief statement concerning winter supplies and crossings; previously covered; no new item within observation window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-opt",
+        "status": "ACCESSIBLE",
+        "result": "WHO Gaza/OPT health crisis page accessible, no newly dated 12 Nov healthcare bulletin observed."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "INACCESSIBLE",
+        "result": "HTTP 502 Bad Gateway; recurring known restriction, not a new material deterioration. Also checked WHO EMRO occupied Palestinian territory link with same HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza 12 November 2026 latest 14:00 GMT hospital deaths injuries ceasefire airstrikes",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" Gaza killed wounded civilians",
+      "site:ochaopt.org/content/ 12 November 2026 Gaza aid winter flooding crossing",
+      "site:who.int Gaza November 12 2026 health hospital medical evacuation",
+      "site:unrwa.org Gaza November 12 2026 food aid displacement",
+      "site:unicef.org Gaza November 12 2026 water children shelter health",
+      "Gaza November 12 2026 \"Nashat Fouad Awwad\" Deir al Balah vehicle killed",
+      "Gaza 12 Nov 2026 Jabalia al Nazla cemetery killed airstrike two wounded",
+      "Gaza 12 November 2026 14:00 UTC Reuters AP AFP killed strikes hospitals",
+      "Gaza 12 November 2026 Rafah Kerem Shalom crossings food aid fuel water access new update",
+      "Gaza 12 November 2026 new Nasser hospital surgery services WHO medical evacuation transport fuel",
+      "Gaza 12 November 2026 ceasefire negotiations hostages detainees latest UN Reuters"
+    ],
+    "targeted_search_engine": "Web fast search; recency 1 day; direct opens were verifications, not additional searches.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176880",
+        "result": "12 Nov 16:20 page describes three deaths across Gaza; al-Shifa death already logged; new Deir al-Balah and Jabalia al-Nazla incidents recorded separately. Headline 11 since morning not treated as an extra event."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Index appeared stale/incomplete and did not surface latest 16:20 article; directly opened and verified canonical article."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "result": "11 Nov statement, older than interval."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Nasser Hospital six-death report previously observed, not independently corroborating Deir al-Balah or Jabalia developments."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176880",
+        "reason": "Al-Shifa Hospital entrance death Hossam Ali Saleha was already reported in prior 04:44 watch; only two additional distinct casualties retained. Eleven since morning is cumulative, not eleven new deaths."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "reason": "Nasser attack/casualty and service disruption already captured by earlier hourly runs."
+      },
+      {
+        "url": "https://www.unicef.org/",
+        "reason": "Latest visible Gaza storm mortality release 9 Nov 2026, outside window."
+      },
+      {
+        "url": "https://www.unrwa.org/sites/default/files/content/resources/unrwa_gaza_sitrep_238_4november_2026_eng.pdf",
+        "reason": "Previous weekly report covering 21 Oct–3 Nov; outside window; not newly published event."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED solely because WHO EMRO continues HTTP 502; OCHA OPT and WHO Global accessible and 12 useful targeted searches plus WAFA direct confirmation available.",
+    "limitations": "Fresh local casualty reporting from a single established agency; no independent corroboration in bounded queries. Search and indexing delay, location/date ambiguity possible. WAFA publication time zone not explicit; compare displayed 16:20 to prior check with caution.",
+    "notification_warranted": true,
+    "changes_to_production": "None; no publication, approval, schedule, security, branch other than ops/watch-ledger or production changes."
+  }
+}

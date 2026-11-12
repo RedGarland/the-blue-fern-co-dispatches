@@ -1,0 +1,147 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T024451-0800-r11-20261112T104612975Z",
+  "scheduled_for": "2026-11-12T02:44:51-08:00",
+  "started_at": "2026-11-12T02:43:14-08:00",
+  "completed_at": "2026-11-12T02:46:12.975-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T01:49:13-08:00",
+    "end": "2026-11-12T02:46:12.975-08:00",
+    "previous_run_completed_at": "2026-11-12T01:49:13-08:00",
+    "basis": "Previous 01:44 Pacific watch heartbeat read on ops/watch-ledger; current run checked sources around 02:43–02:45 PST.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-nasser-hospital-28-wounded-ap-followup",
+      "canonical_source_url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+      "title": "Israeli strike on a Gaza hospital kills 6 people, health authorities say",
+      "publisher": "Associated Press",
+      "source_date": "2026-11-12",
+      "publication_date": "2026-11-12",
+      "publication_timestamp": null,
+      "event_date": "2026-11-12",
+      "event_timestamp": null,
+      "location": "Nasser Hospital, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Hospital patients and medical staff; surgical wing and postoperative recovery area",
+      "summary": "AP now attributes at least 28 wounded to Gaza's Health Ministry, compared with the 20 wounded recorded by Reuters/WAFA in prior watches. AP quotes a volunteer surgeon that the recovery area on the surgical department's fourth floor was reduced to rubble; other floors were severely damaged. Six deaths, including surgeon Rizk Abu Shaira, are unchanged. This is an update to the same early-12-November Nasser Hospital strike, not a separate attack.",
+      "exact_supporting_passage": "wounded at least 28 more, Gaza’s Health Ministry said.",
+      "additional_exact_supporting_passage": "The recovery area on the same floor was reduced to rubble, he said.",
+      "source_type": "Established news reporting based on Gaza Health Ministry casualty count and firsthand volunteer surgeon eyewitness account; AP reporter observed hospital damage",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "first_observed_in_watch": "2026-11-12T02:43:00-08:00",
+        "previous_watch_completed_at": "2026-11-12T01:49:13-08:00",
+        "prior_record": "Six reported killed; 20 wounded in Reuters/WAFA; extensive surgical department damage at Nasser Hospital. Previous watch saw AP report without a figure of 28.",
+        "novelty": "A previously unrecorded 28-injured figure and more precise damage to a recovery area; no new strike or additional deaths.",
+        "revision_timing": "Exact AP publish/revision hour unverified; may have been available before preceding heartbeat and is recorded as retrospectively detected follow-up, not guaranteed first reported in this hour.",
+        "deduplication": "Replace rather than add the earlier 20 injured. Do not double-count the six deceased.",
+        "comparison_source_urls": [
+          "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+          "https://english.wafa.ps/Pages/Details/176867"
+        ]
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; primary Gaza production collector/publisher is authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T014451-0800-r11-20261112T094913303Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Current update list still begins with November 11 winter supplies statement, already reviewed; November 9 heavy-rain situation report precedes window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global crisis overview accessible; no new dated Gaza health event in the interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/index.html",
+        "status": "INACCESSIBLE",
+        "result": "Direct web access failed; same previously documented regional restriction; exact HTTP status not available from this interface."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"Gaza\" \"12:\"",
+      "site:reuters.com/world/middle-east/ Gaza November 12 2026 Thursday afternoon Gaza hospital killed fishermen ceasefire aid",
+      "site:apnews.com/article/ Gaza Israel November 12 2026 Thursday hospital civilians",
+      "site:aljazeera.com/news/2026/11/12/ Gaza noon Thursday casualties aid medical services",
+      "site:ochaopt.org/updates Gaza November 12 2026 flood humanitarian 12 Nov",
+      "site:emro.who.int/pse/palestine-news 12 November 2026 Gaza medical evacuations hospital",
+      "site:unrwa.org Gaza November 12 2026 rainfall shelter schools",
+      "site:wfp.org Gaza 12 November 2026 crossing food aid",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"12:00\" \"Gaza\"",
+      "site:unicef.org/sop Gaza November 12 2026 hospital water evacuation children",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"12 Nov 2026\" Gaza humanitarian November",
+      "Gaza November 12 2026 midday Nasser 28 wounded surgery ward Rafah ceasefire new developments"
+    ],
+    "targeted_search_engine": "web fast, 12 additional targeted queries exactly, after two official-first searches; used direct source opens for verification.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest listed Gaza pieces remain 09:15 and 09:17 Gaza local time (23:15–23:17 PST November 11), previously logged; newest 10:36 entry is a West Bank event."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "result": "Article reports six dead and at least 28 wounded at Nasser and firsthand description of fourth-floor recovery area damage. Revision hour not provided."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Older casualty baseline of 6 dead and 20 wounded; same incident."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "No November 12 humanitarian bulletin posted yet."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176871",
+        "reason": "Deir al-Balah fishermen detention already logged November 11."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176870",
+        "reason": "Al-Bureij death and al-Mawasi shooting injuries already logged; avoid duplicating."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176868",
+        "reason": "Reiteration of earlier winter-supply appeal."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "reason": "Historical heavy-rain impacts November 6–8, not new in interval."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO Eastern Mediterranean direct endpoint remains unavailable, with useful coverage continuing through accessible WHO global, OCHA, WAFA, AP, Reuters and other targeted searches.",
+    "limitations": "AP does not display a precise publication or update time; 28-injury revision may predate start of hourly observation. Search indexing lags and missing update timestamps reduce temporal precision. No confirmed hospital-wide shutdown.",
+    "notification_warranted": true,
+    "changes_to_production": "None; no publish, approval, schedule, task, or permissions change."
+  }
+}
